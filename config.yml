@@ -1,0 +1,60 @@
+#HalfminerSystem Config
+localization:
+  prefix: '&7%PREFIX% &e>>&r '
+  noPermission: '&cDu hast kein Recht dies zu verwenden'
+  configReloaded: '&aKonfiguration neugeladen'
+  commandHmsUsage: '&cVerwendung: &f/hms setmotd, reload'
+  commandHmsMotdUpdated: '&7Die MOTD wurde geaendert zu: &r&7%NEWMOTD%'
+  commandHmsMotdFailed: '&cVerwendung: &f/hms setmotd <motd>'
+  commandSigneditUsage: '&cVerwendung: &f/signedit copy [anzahl], /signedit <zeile> [text]'
+  commandSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu aendern'
+  commandSigneditCopy: '&7Klicke das Schild, welches du kopieren moechtest, erstelle &e%AMOUNT% &7Kopien'
+  autoMessagePlaceholder: '&e&m------------------------------------------------'
+  killfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
+  killfarmingNoCommand: '&cKommandos sind fuer dich weitere %TIME% Sekunden deaktiviert, da du Killfarming betrieben hast'
+  killfarmingNoPvPAttack: '&cZum Schutz vor Killfarming darfst du weitere %TIME% Sekunden kein PvP betreiben'
+  killfarmingNoPvPProtect: '&6%PLAYER% ist zum Schutz vor Killfarming weitere %TIME% vom PvP ausgeschlossen'
+  killfarmingBlockedKiller: '&cZum Schutz vor Killfarming wurdest du fuer %TIME% Minuten vom PvP und verwenden von Kommandos ausgeschlossen, weil du &6%PLAYER% &czu haeufig getoetet hast. Weitere Infos: &a/regeln Killfarming'
+  killfarmingBlockedVictim: '&cZum Schutz vor Killfarming wurdest du fuer %TIME% Minuten vom PvP und verwenden von Kommandos ausgeschlossen, weil &6%PLAYER% &cdich zu haeufig getoetet hat. Weitere Infos: &a/regeln Killfarming'
+  killfarmingBlockedBroadcast: '&6%KILLER% und &6%VICTIM% &cwurden wegen Killfarming temporaer vom PvP und verwenden von Kommandos ausgeschlossen'
+  signeditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
+  signeditSignPasted: '&aText eingefuegt, es verbleiben &e%AMOUNT% &aKopien'
+  signeditLinePasted: '&aSchild editiert'
+  bedrockPlayerGlitching: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION%'
+  motdSetNews: '&7Die MOTD wurde gesetzt zu: &r&7%MOTD%'
+  hopperLimitReached: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
+autoMessage:
+  intervalSeconds: 240
+  messages:
+  - 'Set messages here'
+killfarming:
+  #Starting amount of in seconds the block will take
+  blockTime: 300
+  #Amount of kills that are allowed
+  thresholdUntilBlock: 5
+  #Amount of seconds until the short progression is broken and the counter resets
+  thresholdUntilRemoval: 100
+  #List of commands that are still allowed
+  killfarmingCommandExemptions:
+  - 'regeln'
+  - 'hilfe'
+  - 'warn'
+  - 'ban'
+  - 'tempban'
+  - 'bminfo'
+motd:
+  randomColors:
+  - 2
+  - 3
+  - 6
+  - 9
+  - b
+  topLine: '%COLOR%Server'
+  bottomLine: '&7%REPLACE%&7! (mc.halfminer.de)'
+  placeholder: 'Empty'
+redstoneLimit:
+  ticksDelayUntilClear: 160
+  howMuchRedstoneAllowed: 32
+  howManyPistonsAllowed: 400
+  hopperLimit: 64
+  hopperLimitRadius: 7

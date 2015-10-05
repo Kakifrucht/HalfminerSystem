@@ -1,0 +1,27 @@
+name: HalfminerSystem
+main: de.halfminer.hms.HalfminerSystem
+version: 2.3
+description: Halfminer.de Coreplugin
+authors: [Kakifrucht]
+commands:
+  ?:
+    description: Bukkit override, protects from viewing all commands
+  hms:
+    description: HalfminerSystem basecommand
+  signedit:
+    description: Edit the contents of a sign or copy it
+    aliases: [se]
+  vtapi:
+    description: Command API
+    aliases: [c,hilfe,spenden,stats,regeln,neutp,vote,rang,tools,kiste,deo]
+permissions:
+  hms.default:
+    default: true
+    description: Standard permission
+  hms.signedit:
+    description: Access to sign editing
+  hms.operator:
+    default: op
+    description: Operator commands
+  hms.admin:
+    description: Admin/Moderator commands
