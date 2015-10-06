@@ -83,9 +83,9 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
 
     private boolean tooManyHoppers(Location loc) {
         int hopperCount = 0;
-        for(int x = loc.getBlockX() - hopperLimitRadius; x < loc.getBlockX() + hopperLimitRadius; x++) {
-            for(int y = loc.getBlockY() - hopperLimitRadius; y < loc.getBlockY() + hopperLimitRadius; y++) {
-                for(int z = loc.getBlockZ() - hopperLimitRadius; z < loc.getBlockZ() + hopperLimitRadius; z++) {
+        for(int x = loc.getBlockX() - hopperLimitRadius; x <= loc.getBlockX() + hopperLimitRadius; x++) {
+            for(int y = loc.getBlockY() - hopperLimitRadius; y <= loc.getBlockY() + hopperLimitRadius; y++) {
+                for(int z = loc.getBlockZ() - hopperLimitRadius; z <= loc.getBlockZ() + hopperLimitRadius; z++) {
                     if (loc.getWorld().getBlockAt(x, y, z).getType() == Material.HOPPER) hopperCount++;
                 }
             }
