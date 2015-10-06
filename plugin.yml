@@ -1,6 +1,6 @@
 name: HalfminerSystem
 main: de.halfminer.hms.HalfminerSystem
-version: 2.3
+version: 2.4
 description: Halfminer.de Coreplugin
 authors: [Kakifrucht]
 commands:

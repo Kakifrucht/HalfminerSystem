@@ -36,7 +36,8 @@ public class HalfminerSystem extends JavaPlugin {
                 new ModBedrockProtection(),
                 new ModMOTD(),
                 new ModSignEdit(),
-                new ModRedstoneLimit()
+                new ModRedstoneLimit(),
+                new ModCombatLog()
         };
 
         for (HalfminerModule mod : modules)
