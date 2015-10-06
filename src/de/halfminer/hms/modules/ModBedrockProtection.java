@@ -28,7 +28,7 @@ public class ModBedrockProtection implements HalfminerModule, Listener {
 
         if (!e.getPlayer().hasPermission("hms.admin") && e.getFrom().getBlock().getType() == Material.BEDROCK) {
             if (lastMessage.get(e.getPlayer()) == null || lastMessage.get(e.getPlayer()) < System.currentTimeMillis() / 1000) {
-                Bukkit.broadcast(Language.placeholderReplace(message, "%PREFIX%", "Warnung", "%PLAYER%", e.getPlayer().getName(), "%LOCATION%", Language.getStringFromLocation(e.getTo())), "hms.admin");
+                Bukkit.broadcast(Language.placeholderReplace(message, "%PLAYER%", e.getPlayer().getName(), "%LOCATION%", Language.getStringFromLocation(e.getTo())), "hms.admin");
                 lastMessage.put(e.getPlayer(), System.currentTimeMillis() / 1000);
             }
         }
@@ -37,6 +37,6 @@ public class ModBedrockProtection implements HalfminerModule, Listener {
 
     @Override
     public void reloadConfig() {
-        message = Language.getMessage("bedrockPlayerGlitching", true);
+        message = Language.getMessagePlaceholderReplace("modBedrockPlayerGlitching", true, "%PREFIX%", "Warnung");
     }
 }

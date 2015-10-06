@@ -32,7 +32,7 @@ public class ModAutoMessage implements HalfminerModule {
         }
         messages = new ArrayList<>(messagesList.size());
         for (String str : messagesList) messages.add(ChatColor.translateAlternateColorCodes('&', str));
-        placeholder = Language.getMessage("autoMessagePlaceholder", false);
+        placeholder = Language.getMessage("modAutoMessagePlaceholder", false);
 
         //Set task
         if (running != null) running.cancel();

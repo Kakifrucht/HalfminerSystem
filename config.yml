@@ -9,20 +9,24 @@ localization:
   commandSigneditUsage: '&cVerwendung: &f/signedit copy [anzahl], /signedit <zeile> [text]'
   commandSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu aendern'
   commandSigneditCopy: '&7Klicke das Schild, welches du kopieren moechtest, erstelle &e%AMOUNT% &7Kopien'
-  autoMessagePlaceholder: '&e&m------------------------------------------------'
-  killfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
-  killfarmingNoCommand: '&cKommandos sind fuer dich weitere %TIME% Sekunden deaktiviert, da du Killfarming betrieben hast'
-  killfarmingNoPvPAttack: '&cZum Schutz vor Killfarming darfst du weitere %TIME% Sekunden kein PvP betreiben'
-  killfarmingNoPvPProtect: '&6%PLAYER% ist zum Schutz vor Killfarming weitere %TIME% vom PvP ausgeschlossen'
-  killfarmingBlockedKiller: '&cZum Schutz vor Killfarming wurdest du fuer %TIME% Minuten vom PvP und verwenden von Kommandos ausgeschlossen, weil du &6%PLAYER% &czu haeufig getoetet hast. Weitere Infos: &a/regeln Killfarming'
-  killfarmingBlockedVictim: '&cZum Schutz vor Killfarming wurdest du fuer %TIME% Minuten vom PvP und verwenden von Kommandos ausgeschlossen, weil &6%PLAYER% &cdich zu haeufig getoetet hat. Weitere Infos: &a/regeln Killfarming'
-  killfarmingBlockedBroadcast: '&6%KILLER% und &6%VICTIM% &cwurden wegen Killfarming temporaer vom PvP und verwenden von Kommandos ausgeschlossen'
-  signeditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
-  signeditSignPasted: '&aText eingefuegt, es verbleiben &e%AMOUNT% &aKopien'
-  signeditLinePasted: '&aSchild editiert'
-  bedrockPlayerGlitching: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION%'
-  motdSetNews: '&7Die MOTD wurde gesetzt zu: &r&7%MOTD%'
-  hopperLimitReached: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
+  modAutoMessagePlaceholder: '&e&m------------------------------------------------'
+  modKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
+  modKillfarmingNoCommand: '&cKommandos sind fuer dich weitere %TIME% Sekunden deaktiviert, da du Killfarming betrieben hast'
+  modKillfarmingNoPvPAttack: '&cZum Schutz vor Killfarming darfst du weitere %TIME% Sekunden kein PvP betreiben'
+  modKillfarmingNoPvPProtect: '&6%PLAYER% ist zum Schutz vor Killfarming weitere %TIME% vom PvP ausgeschlossen'
+  modKillfarmingBlockedKiller: '&cZum Schutz vor Killfarming wurdest du fuer %TIME% Minuten vom PvP und verwenden von Kommandos ausgeschlossen, weil du &6%PLAYER% &czu haeufig getoetet hast. Weitere Infos: &a/regeln Killfarming'
+  modKillfarmingBlockedVictim: '&cZum Schutz vor Killfarming wurdest du fuer %TIME% Minuten vom PvP und verwenden von Kommandos ausgeschlossen, weil &6%PLAYER% &cdich zu haeufig getoetet hat. Weitere Infos: &a/regeln Killfarming'
+  modKillfarmingBlockedBroadcast: '&6%KILLER% und &6%VICTIM% &cwurden wegen Killfarming temporaer vom PvP und verwenden von Kommandos ausgeschlossen'
+  modSigneditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
+  modSigneditSignPasted: '&aText eingefuegt, es verbleiben &e%AMOUNT% &aKopien'
+  modSigneditLinePasted: '&aSchild editiert'
+  modBedrockPlayerGlitching: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION%'
+  modHopperLimitReached: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
+  modCombatLogTagged: '&cDu bist jetzt fuer &e%TIME% &cSekunden im Kampf, ausloggen fuehrt zum Tod'
+  modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
+  modCombatLogUntagged: '&cDu bist nicht mehr im Kampf'
+  modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
+  modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
 autoMessage:
   intervalSeconds: 240
   messages:
@@ -58,3 +62,6 @@ redstoneLimit:
   howManyPistonsAllowed: 400
   hopperLimit: 64
   hopperLimitRadius: 7
+combatLog:
+  broadcastLog: true
+  tagTime: 30

@@ -103,7 +103,7 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
         hopperLimit = hms.getConfig().getInt("redstoneLimit.hopperLimit", 64);
         hopperLimitRadius = hms.getConfig().getInt("redstoneLimit.hopperLimitRadius", 7);
 
-        hopperLimitMessage = Language.getMessagePlaceholderReplace("hopperLimitReached", true, "%PREFIX%", "Hinweis");
+        hopperLimitMessage = Language.getMessagePlaceholderReplace("modHopperLimitReached", true, "%PREFIX%", "Hinweis");
 
         if(taskId != 0) hms.getServer().getScheduler().cancelTask(taskId);
         taskId = hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
