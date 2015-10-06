@@ -19,14 +19,17 @@ import java.util.Map;
 public class ModRedstoneLimit implements HalfminerModule, Listener {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
+    //Storage for limitations
     private final Map<Location, Integer> lastStored = new HashMap<>();
+    private int pistonCount = 0;
     private int taskId = 0;
+    //Redstone and pistons config
     private int howMuchRedstoneAllowed;
     private int howManyPistonsAllowed;
-    private int pistonCount = 0;
-
+    //Hopper limit config
     private int hopperLimit;
     private int hopperLimitRadius;
+    private boolean logHopperLimit;
     private String hopperLimitMessage;
 
     public ModRedstoneLimit() {
@@ -65,7 +68,8 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
             if (tooManyHoppers(block.getLocation())) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(hopperLimitMessage);
-                hms.getLogger().info(e.getPlayer().getName() + " reached Hopper limit (" + hopperLimit + ") at " + Language.getStringFromLocation(block.getLocation()));
+                if (logHopperLimit)
+                    hms.getLogger().info(e.getPlayer().getName() + " reached Hopper limit (" + hopperLimit + ") at " + Language.getStringFromLocation(block.getLocation()));
             }
         }
     }
@@ -99,6 +103,7 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
         howManyPistonsAllowed = hms.getConfig().getInt("redstoneLimit.howManyPistonsAllowed", 400);
         hopperLimit = hms.getConfig().getInt("redstoneLimit.hopperLimit", 64);
         hopperLimitRadius = hms.getConfig().getInt("redstoneLimit.hopperLimitRadius", 7);
+        logHopperLimit = hms.getConfig().getBoolean("redstoneLimit.hopperLimitLog", false);
 
         hopperLimitMessage = Language.getMessagePlaceholderReplace("modHopperLimitReached", true, "%PREFIX%", "Hinweis");
 

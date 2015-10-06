@@ -62,6 +62,7 @@ redstoneLimit:
   howManyPistonsAllowed: 400
   hopperLimit: 64
   hopperLimitRadius: 7
+  hopperLimitLog: false
 combatLog:
   broadcastLog: true
   tagTime: 30
