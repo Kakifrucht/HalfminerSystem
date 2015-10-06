@@ -26,7 +26,7 @@ public class ModMOTD implements HalfminerModule, Listener {
     }
 
     public void updateMotd(String newMotd) {
-        hms.getConfig().set("motd.placeholder", newMotd.replace('§', '&'));
+        hms.getConfig().set("motd.placeHolder", newMotd.replace('§', '&'));
         hms.saveConfig();
         reloadConfig();
     }
@@ -34,12 +34,11 @@ public class ModMOTD implements HalfminerModule, Listener {
     @Override
     public void reloadConfig() {
 
-        String setMotd = hms.getConfig().getString("motd.topLine")
-                + "\n" + Language.placeholderReplace(hms.getConfig().getString("motd.bottomLine"), "%REPLACE%", hms.getConfig().getString("motd.placeholder"));
+        String setMotd = Language.getMessagePlaceholderReplace("modMotdLine", false, "%REPLACE%", hms.getConfig().getString("motd.placeHolder"));
+
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");
         motd = new String[strList.size()];
-        for (int i = 0; i < strList.size(); i++) {
+        for (int i = 0; i < strList.size(); i++)
             motd[i] = Language.placeholderReplaceColor(setMotd, "%COLOR%", '&' + strList.get(i));
-        }
     }
 }

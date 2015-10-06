@@ -22,6 +22,7 @@ localization:
   modSigneditLinePasted: '&aSchild editiert'
   modBedrockPlayerGlitching: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION%'
   modHopperLimitReached: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
+  modMotdLine: '%COLOR%Server\n&7%REPLACE%&7! (mc.halfminer.de)'
   modCombatLogTagged: '&cDu bist jetzt fuer &e%TIME% &cSekunden im Kampf, ausloggen fuehrt zum Tod'
   modCombatLogUntagged: '&cDu bist nicht mehr im Kampf'
   modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
@@ -53,9 +54,7 @@ motd:
   - 6
   - 9
   - b
-  topLine: '%COLOR%Server'
-  bottomLine: '&7%REPLACE%&7! (mc.halfminer.de)'
-  placeholder: 'Empty'
+  placeHolder: 'Empty'
 redstoneLimit:
   ticksDelayUntilClear: 160
   howMuchRedstoneAllowed: 32
