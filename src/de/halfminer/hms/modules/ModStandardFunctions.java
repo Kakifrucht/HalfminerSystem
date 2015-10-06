@@ -22,11 +22,6 @@ public class ModStandardFunctions implements Listener, HalfminerModule {
     }
 
     @EventHandler
-    public void onKick(PlayerKickEvent e) {
-        e.setLeaveMessage("");
-    }
-
-    @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         e.setDeathMessage("");
     }
