@@ -1,5 +1,7 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.util.Language;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +17,12 @@ import java.util.Map;
 
 public class ModCombatLog implements HalfminerModule, Listener {
 
-    private final Map<Player, Long> loggedPlayers = new HashMap<>();
+    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
+    private final Map<String, String> lang = new HashMap<>();
+    private final Map<Player, Integer> tagged = new HashMap<>();
+    private boolean broadcastLog;
+    private int tagTime;
+    private String untaggedMessage;
 
     public ModCombatLog() {
         reloadConfig();
@@ -24,16 +31,18 @@ public class ModCombatLog implements HalfminerModule, Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onDeath(PlayerDeathEvent e) {
-        if(loggedPlayers.containsKey(e.getEntity().getPlayer())) {
-
-            //TODO remove tag(s)
+        if (tagged.containsKey(e.getEntity().getPlayer())) {
+            untagPlayer(e.getEntity().getPlayer());
+        }
+        if (tagged.containsKey(e.getEntity().getKiller())) {
+            untagPlayer(e.getEntity().getKiller());
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onLogout(PlayerQuitEvent e) {
-        if(loggedPlayers.containsKey(e.getPlayer())) {
+        if (tagged.containsKey(e.getPlayer())) {
 
             //TODO Remove tag, kill if necessary
         }
@@ -62,9 +71,35 @@ public class ModCombatLog implements HalfminerModule, Listener {
         //TODO disable during tag
     }
 
+    private void tagPlayer(final Player p) {
+
+        hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+            @Override
+            public void run() {
+                untagPlayer(p);
+            }
+        }, tagTime);
+    }
+
+    private void untagPlayer(Player p) {
+
+        hms.getServer().getScheduler().cancelTask(tagged.get(p));
+
+
+    }
+
     @Override
     public void reloadConfig() {
 
-        //TODO load parameters
+        broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
+        tagTime = hms.getConfig().getInt("combatLog.tagTime", 30);
+
+        lang.clear();
+        lang.put("tagged", Language.getMessagePlaceholderReplace("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
+        lang.put("untagged", Language.getMessagePlaceholderReplace("modCombatLogUntagged", true, "%PREFIX%", "PvP"));
+        lang.put("loggedOut", Language.getMessagePlaceholderReplace("modCombatLogLoggedOut", true, "%PREFIX%", "PvP"));
+        lang.put("noEommmand", Language.getMessagePlaceholderReplace("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
+        lang.put("noEnderpearl", Language.getMessagePlaceholderReplace("modCombatLogNoEnderpearl", true, "%PREFIX%", "PvP"));
+
     }
 }

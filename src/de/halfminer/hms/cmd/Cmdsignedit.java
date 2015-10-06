@@ -52,7 +52,8 @@ public class Cmdsignedit extends BaseCommand {
                             usageMessage(player);
                             return;
                         }
-                    } catch (NumberFormatException e) {}
+                    } catch (NumberFormatException e) {
+                    }
                 }
             }
             usageMessage(player);

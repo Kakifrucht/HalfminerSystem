@@ -19,12 +19,9 @@ import java.util.Map;
 public class ModRedstoneLimit implements HalfminerModule, Listener {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
-
-    private int taskId = 0;
-
-    private int howMuchRedstoneAllowed;
     private final Map<Location, Integer> lastStored = new HashMap<>();
-
+    private int taskId = 0;
+    private int howMuchRedstoneAllowed;
     private int howManyPistonsAllowed;
     private int pistonCount = 0;
 
@@ -62,10 +59,10 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onHopperPlace(BlockPlaceEvent e) {
-        if(e.getPlayer().isOp()) return;
+        if (e.getPlayer().isOp()) return;
         Block block = e.getBlock();
-        if(block.getType() == Material.HOPPER) {
-            if(tooManyHoppers(block.getLocation())) {
+        if (block.getType() == Material.HOPPER) {
+            if (tooManyHoppers(block.getLocation())) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(hopperLimitMessage);
                 hms.getLogger().info(e.getPlayer().getName() + " reached Hopper limit (" + hopperLimit + ") at " + Language.getStringFromLocation(block.getLocation()));
@@ -74,7 +71,7 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
     }
 
     private boolean increasePistonCount() {
-        if(pistonCount > howManyPistonsAllowed) return true;
+        if (pistonCount > howManyPistonsAllowed) return true;
         else {
             pistonCount++;
             return false;
@@ -83,9 +80,9 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
 
     private boolean tooManyHoppers(Location loc) {
         int hopperCount = 0;
-        for(int x = loc.getBlockX() - hopperLimitRadius; x <= loc.getBlockX() + hopperLimitRadius; x++) {
-            for(int y = loc.getBlockY() - hopperLimitRadius; y <= loc.getBlockY() + hopperLimitRadius; y++) {
-                for(int z = loc.getBlockZ() - hopperLimitRadius; z <= loc.getBlockZ() + hopperLimitRadius; z++) {
+        for (int x = loc.getBlockX() - hopperLimitRadius; x <= loc.getBlockX() + hopperLimitRadius; x++) {
+            for (int y = loc.getBlockY() - hopperLimitRadius; y <= loc.getBlockY() + hopperLimitRadius; y++) {
+                for (int z = loc.getBlockZ() - hopperLimitRadius; z <= loc.getBlockZ() + hopperLimitRadius; z++) {
                     if (loc.getWorld().getBlockAt(x, y, z).getType() == Material.HOPPER) hopperCount++;
                 }
             }
@@ -105,7 +102,7 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
 
         hopperLimitMessage = Language.getMessagePlaceholderReplace("modHopperLimitReached", true, "%PREFIX%", "Hinweis");
 
-        if(taskId != 0) hms.getServer().getScheduler().cancelTask(taskId);
+        if (taskId != 0) hms.getServer().getScheduler().cancelTask(taskId);
         taskId = hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
             @Override
             public void run() {

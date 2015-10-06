@@ -23,8 +23,8 @@ localization:
   modBedrockPlayerGlitching: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION%'
   modHopperLimitReached: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
   modCombatLogTagged: '&cDu bist jetzt fuer &e%TIME% &cSekunden im Kampf, ausloggen fuehrt zum Tod'
-  modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
   modCombatLogUntagged: '&cDu bist nicht mehr im Kampf'
+  modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
   modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
 autoMessage:

@@ -29,7 +29,7 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        modules = new HalfminerModule[] {
+        modules = new HalfminerModule[]{
                 new ModStandardFunctions(),
                 new ModAutoMessage(),
                 new ModAntiKillfarming(),
