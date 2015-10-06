@@ -2,8 +2,8 @@
 localization:
   prefix: '&7%PREFIX% &e>>&r '
   noPermission: '&cDu hast kein Recht dies zu verwenden'
-  configReloaded: '&aKonfiguration neugeladen'
   commandHmsUsage: '&cVerwendung: &f/hms setmotd, reload'
+  commandHmsConfigReloaded: '&aKonfiguration neugeladen'
   commandHmsMotdUpdated: '&7Die MOTD wurde geaendert zu: &r&7%NEWMOTD%'
   commandHmsMotdFailed: '&cVerwendung: &f/hms setmotd <motd>'
   commandSigneditUsage: '&cVerwendung: &f/signedit copy [anzahl], /signedit <zeile> [text]'

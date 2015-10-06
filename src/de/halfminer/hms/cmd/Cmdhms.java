@@ -43,7 +43,7 @@ public class Cmdhms extends BaseCommand {
 
     private void reload(CommandSender sender) {
         hms.loadConfig();
-        sender.sendMessage(Language.getMessagePlaceholderReplace("configReloaded", true, "%PREFIX%", "Hinweis"));
+        sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsConfigReloaded", true, "%PREFIX%", "Hinweis"));
     }
 
 }
