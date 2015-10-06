@@ -247,6 +247,10 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
         lang.put("blockedVictim", Language.getMessagePlaceholderReplace("modKillfarmingBlockedVictim", true, "%PREFIX%", "PvP"));
     }
 
+    /**
+     * Class containing the information about which players
+     * were killed, how often, when, and how many blocks a player already had
+     */
     private class AntiKillfarmingContainer {
 
         final HashMap<UUID, Values> players = new HashMap<>();
@@ -326,8 +330,8 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
         }
 
         class Values {
-            public long timestamp = System.currentTimeMillis() / 1000;
-            public short amount = 1;
+            long timestamp = System.currentTimeMillis() / 1000;
+            short amount = 1;
         }
 
     }
