@@ -66,7 +66,7 @@ public class HalfminerSystem extends JavaPlugin {
             return true;
         }
 
-        if (command.hasPermission(sender) || sender.isOp()) {
+        if (command.hasPermission(sender)) {
             command.run(sender, cmd, label, args);
         } else sender.sendMessage(Language.getMessagePlaceholderReplace("noPermission", true, "%PREFIX%", "Hinweis"));
         return true;
