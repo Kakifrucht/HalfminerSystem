@@ -3,6 +3,7 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -161,7 +162,10 @@ public class ModCombatLog implements HalfminerModule, Listener {
         if (!tagged.containsKey(p)) return;
 
         hms.getServer().getScheduler().cancelTask(tagged.get(p));
-        if (messagePlayer) p.sendMessage(lang.get("untagged"));
+        if (messagePlayer) {
+            p.sendMessage(lang.get("untagged"));
+            p.playSound(p.getLocation(), Sound.NOTE_PLING, 1, 2f);
+        }
         tagged.remove(p);
 
     }
