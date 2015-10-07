@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.util.Language;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -71,6 +72,6 @@ public class Cmdvtapi extends BaseCommand {
                     break;
             }
 
-        } else sender.sendMessage("This command can only be executed as player");
+        } else sender.sendMessage(Language.getMessage("notAPlayer", false));
     }
 }

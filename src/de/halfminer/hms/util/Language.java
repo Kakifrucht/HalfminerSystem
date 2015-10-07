@@ -78,4 +78,21 @@ public class Language {
         return loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ();
     }
 
+    /**
+     * Takes an array and creates the string with spaces between entries, starting from given index
+     *
+     * @param args  Array to convert
+     * @param index int to start from
+     * @param translateColor if true, will also translate color codes &
+     * @return String
+     */
+    public static String arrayToString(String[] args, int index, boolean translateColor) {
+        String toReturn = "";
+        for (int i = index; i < args.length; i++) {
+            toReturn += args[i] + ' ';
+        }
+        if (translateColor) toReturn = ChatColor.translateAlternateColorCodes('&', toReturn);
+        return toReturn.substring(0, toReturn.length() - 1);
+    }
+
 }

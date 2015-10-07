@@ -1,7 +1,6 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,13 +36,10 @@ public class Cmdsignedit extends BaseCommand {
                     try {
                         byte line = Byte.parseByte(args[0]);
                         if (line > 0 && line < 5) {
-
                             String setTo = "";
                             if (args.length > 1) {
-                                for (int i = 1; i < args.length; i++) setTo += args[i] + ' '; //build string
-                                setTo = setTo.substring(0, setTo.length() - 1); //cut last space
+                                setTo = Language.arrayToString(args, 1, true);
                                 if (setTo.length() > 15) setTo = setTo.substring(0, 15); //truncate if necessary
-                                setTo = ChatColor.translateAlternateColorCodes('&', setTo); //translate colors
                                 hms.getSignEdit().setLine(player, line, setTo);
                             } else hms.getSignEdit().setLine(player, line, ""); //empty line
                             player.sendMessage(Language.getMessagePlaceholderReplace("commandSigneditSet", true, "%PREFIX%", "Hinweis", "%LINE%", Byte.toString(line), "%TEXT%", setTo));
@@ -57,7 +53,7 @@ public class Cmdsignedit extends BaseCommand {
                 }
             }
             usageMessage(player);
-        } else sender.sendMessage("This command cannot be executed from console");
+        } else sender.sendMessage(Language.getMessage("notAPlayer", false));
 
     }
 
