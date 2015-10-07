@@ -46,7 +46,7 @@ public class ModCombatLog implements HalfminerModule, Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     @SuppressWarnings("unused")
     public void onLogout(PlayerQuitEvent e) {
         if (tagged.containsKey(e.getPlayer())) {
@@ -83,42 +83,6 @@ public class ModCombatLog implements HalfminerModule, Listener {
             }
         }
 
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
-    public void onPotion(PotionSplashEvent e) {
-
-        if (e.getPotion().getShooter() instanceof Player) {
-
-            Iterator<PotionEffect> it = e.getPotion().getEffects().iterator();
-            PotionEffectType effect;
-            while (it.hasNext()) {
-                effect = it.next().getType();
-                if (effect != PotionEffectType.BLINDNESS
-                        && effect != PotionEffectType.CONFUSION
-                        && effect != PotionEffectType.HARM
-                        && effect != PotionEffectType.POISON
-                        && effect != PotionEffectType.SLOW
-                        && effect != PotionEffectType.SLOW_DIGGING
-                        && effect != PotionEffectType.WEAKNESS
-                        && effect != PotionEffectType.WITHER)
-                    return;
-            }
-
-            Player attacker = (Player) e.getPotion().getShooter();
-
-            boolean hitPlayer = false;
-            for (LivingEntity entity : e.getAffectedEntities())
-                if (entity instanceof Player) {
-                    Player victim = (Player) entity;
-                    if (victim != attacker) {
-                        tagPlayer(victim);
-                        hitPlayer = true;
-                    }
-                }
-            if (hitPlayer) tagPlayer(attacker);
-        }
     }
 
     @EventHandler(ignoreCancelled = true)
