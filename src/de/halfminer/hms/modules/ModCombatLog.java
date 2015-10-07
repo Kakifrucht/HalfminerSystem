@@ -31,10 +31,10 @@ public class ModCombatLog implements HalfminerModule, Listener {
     @SuppressWarnings("unused")
     public void onDeath(PlayerDeathEvent e) {
         if (tagged.containsKey(e.getEntity().getPlayer())) {
-            untagPlayer(e.getEntity().getPlayer());
+            untagPlayer(e.getEntity().getPlayer(), false);
         }
         if (tagged.containsKey(e.getEntity().getKiller())) {
-            untagPlayer(e.getEntity().getKiller());
+            untagPlayer(e.getEntity().getKiller(), true);
         }
     }
 
@@ -42,9 +42,11 @@ public class ModCombatLog implements HalfminerModule, Listener {
     @SuppressWarnings("unused")
     public void onLogout(PlayerQuitEvent e) {
         if (tagged.containsKey(e.getPlayer())) {
-            untagPlayer(e.getPlayer());
-            if (e.getPlayer().getLastDamageCause().getEntity() instanceof Player) {
-                untagPlayer((Player) e.getPlayer().getLastDamageCause().getEntity());
+            untagPlayer(e.getPlayer(), false);
+
+            EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) e.getPlayer().getLastDamageCause();
+            if (e2.getDamager() instanceof Player) {
+                untagPlayer((Player) e2.getDamager(), true);
             }
             if(broadcastLog)
                 hms.getServer().broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), e.getPlayer().getName());
@@ -92,17 +94,17 @@ public class ModCombatLog implements HalfminerModule, Listener {
         int id = hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
             @Override
             public void run() {
-                untagPlayer(p);
+                untagPlayer(p, true);
             }
         }, tagTime);
 
         tagged.put(p, id);
     }
 
-    private void untagPlayer(Player p) {
+    private void untagPlayer(Player p, boolean messagePlayer) {
 
         hms.getServer().getScheduler().cancelTask(tagged.get(p));
-        p.sendMessage(lang.get("untagged"));
+        if (messagePlayer) p.sendMessage(lang.get("untagged"));
         tagged.remove(p);
 
     }
