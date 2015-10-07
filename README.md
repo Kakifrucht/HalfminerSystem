@@ -9,11 +9,12 @@ Current set of features:
 - Protection against killfarming (configurable)
 - Automessager (configurable)
 - Admin alert when player is suspected of bedrock glitching
-- Own combatlog support
+- Includes CombatLog support
 - Custom MOTD with colors and settable via command (configurable)
 - Redstone, Piston and Hopper limiter (configurable)
 - Signediting and copying functionality /signedit
 - Adds some small features for VariableTriggers integration /vtapi
+- Item rename /hms rename
 - All messages customizable
 - Removes default messages
 - Adds capslock filter
