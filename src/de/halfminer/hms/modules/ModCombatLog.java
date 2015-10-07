@@ -2,17 +2,24 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
+import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class ModCombatLog implements HalfminerModule, Listener {
@@ -44,13 +51,14 @@ public class ModCombatLog implements HalfminerModule, Listener {
         if (tagged.containsKey(e.getPlayer())) {
             untagPlayer(e.getPlayer(), false);
 
+            if (broadcastLog)
+                hms.getServer().broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), "hms.default");
+
             EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) e.getPlayer().getLastDamageCause();
-            if (e2.getDamager() instanceof Player) {
+            if (e2.getDamager() instanceof Player) { //TODO fix npe with bypass
                 untagPlayer((Player) e2.getDamager(), true);
             }
-            if(broadcastLog)
-                hms.getServer().broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), e.getPlayer().getName());
-            e.getPlayer().setHealth(0);
+            e.getPlayer().setHealth(0.0);
         }
     }
 
@@ -58,37 +66,84 @@ public class ModCombatLog implements HalfminerModule, Listener {
     @SuppressWarnings("unused")
     public void onPvP(EntityDamageByEntityEvent e) {
 
-        //TODO tag players / retag
+        if (e.getEntity() instanceof Player) {
+
+            Player victim = (Player)e.getEntity();
+            Player attacker = null;
+
+            if (e.getDamager() instanceof Player) attacker = (Player) e.getDamager();
+            else if (e.getDamager() instanceof Projectile) {
+                Projectile projectile = (Projectile) e.getDamager();
+                if (projectile.getShooter() instanceof Player) attacker = (Player) projectile.getShooter();
+            }
+            if(attacker != null && attacker != victim) {
+                tagPlayer(victim);
+                tagPlayer(attacker);
+            }
+        }
 
     }
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onPotion(PotionSplashEvent e) {
-        //TODO tag players / retag
+
+        if (e.getPotion().getShooter() instanceof Player) {
+
+            Iterator<PotionEffect> it = e.getPotion().getEffects().iterator();
+            PotionEffectType effect;
+            while (it.hasNext()) {
+                effect = it.next().getType();
+                if (effect != PotionEffectType.BLINDNESS
+                        && effect != PotionEffectType.CONFUSION
+                        && effect != PotionEffectType.HARM
+                        && effect != PotionEffectType.POISON
+                        && effect != PotionEffectType.SLOW
+                        && effect != PotionEffectType.SLOW_DIGGING
+                        && effect != PotionEffectType.WEAKNESS
+                        && effect != PotionEffectType.WITHER)
+                    return;
+            }
+
+            Player attacker = (Player) e.getPotion().getShooter();
+
+            boolean hitPlayer = false;
+            for (LivingEntity entity : e.getAffectedEntities())
+                if (entity instanceof Player) {
+                    Player victim = (Player) entity;
+                    if (victim != attacker) {
+                        tagPlayer(victim);
+                        hitPlayer = true;
+                    }
+                }
+            if (hitPlayer) tagPlayer(attacker);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onCommand(PlayerCommandPreprocessEvent e) {
-        if(tagged.containsKey(e.getPlayer())) {
-            e.setCancelled(true);
+        if (tagged.containsKey(e.getPlayer())) {
             e.getPlayer().sendMessage(lang.get("noCommand"));
+            e.setCancelled(true);
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     @SuppressWarnings("unused")
     public void onEnderpearl(PlayerInteractEvent e) {
-        if(tagged.containsKey(e.getPlayer())) {
-            e.setCancelled(true);
+        if (e.hasItem() && e.getItem().getType() == Material.ENDER_PEARL && tagged.containsKey(e.getPlayer()) && ((e.getAction() == Action.RIGHT_CLICK_BLOCK) || (e.getAction() == Action.RIGHT_CLICK_AIR))) {
             e.getPlayer().sendMessage(lang.get("noEnderpearl"));
+            e.getPlayer().updateInventory();
+            e.setCancelled(true);
         }
     }
 
     private void tagPlayer(final Player p) {
 
-        if(tagged.containsKey(p)) hms.getServer().getScheduler().cancelTask(tagged.get(p));
+        if(p.isOp() || p.hasPermission("hms.bypasscombatlog")) return;
+
+        if (tagged.containsKey(p)) hms.getServer().getScheduler().cancelTask(tagged.get(p));
         else p.sendMessage(lang.get("tagged"));
 
         int id = hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
@@ -96,12 +151,14 @@ public class ModCombatLog implements HalfminerModule, Listener {
             public void run() {
                 untagPlayer(p, true);
             }
-        }, tagTime);
+        }, tagTime * 20);
 
         tagged.put(p, id);
     }
 
     private void untagPlayer(Player p, boolean messagePlayer) {
+
+        if (!tagged.containsKey(p)) return;
 
         hms.getServer().getScheduler().cancelTask(tagged.get(p));
         if (messagePlayer) p.sendMessage(lang.get("untagged"));
@@ -119,7 +176,7 @@ public class ModCombatLog implements HalfminerModule, Listener {
         lang.put("tagged", Language.getMessagePlaceholderReplace("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
         lang.put("untagged", Language.getMessagePlaceholderReplace("modCombatLogUntagged", true, "%PREFIX%", "PvP"));
         lang.put("loggedOut", Language.getMessagePlaceholderReplace("modCombatLogLoggedOut", true, "%PREFIX%", "PvP"));
-        lang.put("noCommmand", Language.getMessagePlaceholderReplace("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
+        lang.put("noCommand", Language.getMessagePlaceholderReplace("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
         lang.put("noEnderpearl", Language.getMessagePlaceholderReplace("modCombatLogNoEnderpearl", true, "%PREFIX%", "PvP"));
 
     }

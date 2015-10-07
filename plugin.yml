@@ -20,6 +20,8 @@ permissions:
     description: Standard permission
   hms.signedit:
     description: Access to sign editing
+  hms.bypasscombatlog:
+    description: Bypass combat logging
   hms.operator:
     default: op
     description: Operator commands
