@@ -22,7 +22,6 @@ public class ModCombatLog implements HalfminerModule, Listener {
     private final Map<Player, Integer> tagged = new HashMap<>();
     private boolean broadcastLog;
     private int tagTime;
-    private String untaggedMessage;
 
     public ModCombatLog() {
         reloadConfig();
@@ -43,18 +42,18 @@ public class ModCombatLog implements HalfminerModule, Listener {
     @SuppressWarnings("unused")
     public void onLogout(PlayerQuitEvent e) {
         if (tagged.containsKey(e.getPlayer())) {
-
-            //TODO Remove tag, kill if necessary
+            untagPlayer(e.getPlayer());
+            if (e.getPlayer().getLastDamageCause().getEntity() instanceof Player) {
+                untagPlayer((Player) e.getPlayer().getLastDamageCause().getEntity());
+            }
+            if(broadcastLog)
+                hms.getServer().broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), e.getPlayer().getName());
+            e.getPlayer().setHealth(0);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onCommand(PlayerCommandPreprocessEvent e) {
-
-        //TODO block command during fight
-    }
-
-    @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("unused")
     public void onPvP(EntityDamageByEntityEvent e) {
 
         //TODO tag players / retag
@@ -62,29 +61,49 @@ public class ModCombatLog implements HalfminerModule, Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("unused")
     public void onPotion(PotionSplashEvent e) {
         //TODO tag players / retag
     }
 
     @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("unused")
+    public void onCommand(PlayerCommandPreprocessEvent e) {
+        if(tagged.containsKey(e.getPlayer())) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(lang.get("noCommand"));
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("unused")
     public void onEnderpearl(PlayerInteractEvent e) {
-        //TODO disable during tag
+        if(tagged.containsKey(e.getPlayer())) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(lang.get("noEnderpearl"));
+        }
     }
 
     private void tagPlayer(final Player p) {
 
-        hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+        if(tagged.containsKey(p)) hms.getServer().getScheduler().cancelTask(tagged.get(p));
+        else p.sendMessage(lang.get("tagged"));
+
+        int id = hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
             @Override
             public void run() {
                 untagPlayer(p);
             }
         }, tagTime);
+
+        tagged.put(p, id);
     }
 
     private void untagPlayer(Player p) {
 
         hms.getServer().getScheduler().cancelTask(tagged.get(p));
-
+        p.sendMessage(lang.get("untagged"));
+        tagged.remove(p);
 
     }
 
@@ -98,7 +117,7 @@ public class ModCombatLog implements HalfminerModule, Listener {
         lang.put("tagged", Language.getMessagePlaceholderReplace("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
         lang.put("untagged", Language.getMessagePlaceholderReplace("modCombatLogUntagged", true, "%PREFIX%", "PvP"));
         lang.put("loggedOut", Language.getMessagePlaceholderReplace("modCombatLogLoggedOut", true, "%PREFIX%", "PvP"));
-        lang.put("noEommmand", Language.getMessagePlaceholderReplace("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
+        lang.put("noCommmand", Language.getMessagePlaceholderReplace("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
         lang.put("noEnderpearl", Language.getMessagePlaceholderReplace("modCombatLogNoEnderpearl", true, "%PREFIX%", "PvP"));
 
     }
