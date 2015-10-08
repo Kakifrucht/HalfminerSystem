@@ -6,6 +6,7 @@ Current features
 -------
 - Modular and lightweight
 - Functionality and messages configurable
+- **Complete duelling solution HalfminerDuel** // information below
 - Protection against Killfarming
 - Protection against CombatLogging
 - Protection against Bedrock glitching (alert and log)
@@ -19,3 +20,14 @@ Current features
 - Capslock filter
 - Disables hitting self with bow
 - Blocks usage of /pluginname:command
+
+##HalfminerDuel
+-------
+- Lightweight and efficient
+- Endless amount of arenas
+- Custom kits per arena
+- Tested and bug free
+- Recovers players completely after fight
+- Robust queue system
+- Duelling per request or via match /duel match
+- Language completely customizable

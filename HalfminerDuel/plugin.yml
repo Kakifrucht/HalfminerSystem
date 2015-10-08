@@ -1,8 +1,11 @@
 name: HalfminerDuel
-main: de.halfminer.hmduel.HalfminerDuel
 version: 1.5
 description: Halfminer.de Duel
-authors: [Kakifrucht]
+author: Kakifrucht
+website: https://halfminer.de
+
+main: de.halfminer.hmduel.HalfminerDuel
+
 commands:
   duel:
     description: Duel base command
