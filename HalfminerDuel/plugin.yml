@@ -1,0 +1,21 @@
+name: HalfminerDuel
+main: de.halfminer.hmduel.HalfminerDuel
+version: 1.5
+description: Halfminer.de Duel
+authors: [Kakifrucht]
+commands:
+  duel:
+    description: Duel base command
+    usage: /duel <subcommand/playername>
+    aliases: [1vs1,duell]
+  duela:
+    description: Duel administrative command
+    usage: /duela <subcommand> [argument]
+permissions:
+  hmd.duel:
+    default: true
+    description: Default permission, allows usage of /duel
+  hmd.duel.exempt:
+    description: Exempt players cannot be duel requested
+  hmd.admin:
+    description: Administrative permission
