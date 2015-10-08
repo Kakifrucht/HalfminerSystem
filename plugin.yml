@@ -1,8 +1,11 @@
 name: HalfminerSystem
-main: de.halfminer.hms.HalfminerSystem
 version: 2.4
 description: Halfminer.de Coreplugin
-authors: [Kakifrucht]
+author: Kakifrucht
+website: https://halfminer.de
+
+main: de.halfminer.hms.HalfminerSystem
+
 commands:
   ?:
     description: Bukkit override, protects from viewing all commands
@@ -15,15 +18,44 @@ commands:
     description: Command API
     aliases: [c,hilfe,spenden,stats,regeln,neutp,vote,rang,tools,kiste,deo]
 permissions:
+  hms.*:
+    description: Access to all permissions
+    default: false
+    hms.default: true
+    hms.signedit: true
+    hms.admin: true
+    hms.bypass.*: true
+  hms.bypass.*:
+    description: Access to all bypass permission
+    default: op
+    hms.bypass.combatlog: true
+    hms.bypass.capsfilter: true
+    hms.bypass.commandfilter: true
+    hms.bypass.hopperlimit: true
+    hms.bypass.bedrockcheck: true
+    hms.bypass.nokillfarming: true
   hms.default:
     default: true
-    description: Standard permission
+    description: Default permission
   hms.signedit:
     description: Access to sign editing
-  hms.bypasscombatlog:
-    description: Bypass combat logging
-  hms.operator:
-    default: op
-    description: Operator commands
   hms.admin:
-    description: Admin/Moderator commands
+    description: Access to administrative commands
+  hms.bypass.combatlog:
+    description: Bypass combat logging
+    default: op
+  hms.bypass.capsfilter:
+    description: Bypass chat caps filter
+    default: op
+  hms.bypass.commandfilter:
+    description: Bypass chat command filter
+    default: op
+  hms.bypass.hopperlimit:
+    description: Bypass hopper placement limit
+    default: op
+  hms.bypass.bedrockcheck:
+    description: Bypass bedrock movement check
+    default: op
+  hms.bypass.nokillfarming:
+    description: Bypass killfarming check
+    default: op
