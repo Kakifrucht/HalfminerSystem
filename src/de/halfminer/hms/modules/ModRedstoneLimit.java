@@ -62,7 +62,7 @@ public class ModRedstoneLimit implements HalfminerModule, Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onHopperPlace(BlockPlaceEvent e) {
-        if (e.getPlayer().isOp()) return;
+        if (e.getPlayer().hasPermission("hms.bypass.hopperlimit")) return;
         Block block = e.getBlock();
         if (block.getType() == Material.HOPPER) {
             if (tooManyHoppers(block.getLocation())) {

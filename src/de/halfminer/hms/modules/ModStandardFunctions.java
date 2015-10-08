@@ -35,7 +35,7 @@ public class ModStandardFunctions implements Listener, HalfminerModule {
     public void onChat(AsyncPlayerChatEvent e) {
 
         String message = e.getMessage();
-        if (message.length() < 4 || e.getPlayer().isOp()) return;
+        if (e.getPlayer().hasPermission("hms.bypass.capsfilter") || message.length() < 4) return;
 
         int amountUppercase = 0;
         for (Character check : message.toCharArray()) if (Character.isUpperCase(check)) amountUppercase++;
@@ -46,7 +46,7 @@ public class ModStandardFunctions implements Listener, HalfminerModule {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPreCommand(PlayerCommandPreprocessEvent e) {
 
-        if (e.getPlayer().isOp()) return;
+        if (e.getPlayer().hasPermission("hms.bypass.commandfilter")) return;
 
         for (Character check : e.getMessage().toLowerCase().toCharArray()) {
             if (check.equals(' ')) return;

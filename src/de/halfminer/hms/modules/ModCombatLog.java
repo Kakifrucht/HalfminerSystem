@@ -101,7 +101,7 @@ public class ModCombatLog implements HalfminerModule, Listener {
 
     private void tagPlayer(final Player p) {
 
-        if (p.isOp() || p.hasPermission("hms.bypasscombatlog")) return;
+        if (p.hasPermission("hms.bypass.combatlog")) return;
 
         if (tagged.containsKey(p)) hms.getServer().getScheduler().cancelTask(tagged.get(p));
         else p.sendMessage(lang.get("tagged"));

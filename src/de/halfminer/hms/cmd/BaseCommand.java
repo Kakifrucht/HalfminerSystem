@@ -12,7 +12,7 @@ public abstract class BaseCommand {
     public abstract void run(CommandSender sender, Command cmd, String label, String[] args);
 
     public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission(permission) || sender.isOp();
+        return sender.hasPermission(permission);
     }
 
 }
