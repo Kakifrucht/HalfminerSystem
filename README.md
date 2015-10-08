@@ -6,7 +6,7 @@ Current features
 -------
 - Modular and lightweight
 - Functionality and messages configurable
-- **Complete duelling solution HalfminerDuel** // information below
+- **Complete dueling solution HalfminerDuel** // information below
 - Protection against Killfarming
 - Protection against CombatLogging
 - Protection against Bedrock glitching (alert and log)
