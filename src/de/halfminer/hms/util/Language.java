@@ -81,8 +81,8 @@ public class Language {
     /**
      * Takes an array and creates the string with spaces between entries, starting from given index
      *
-     * @param args  Array to convert
-     * @param index int to start from
+     * @param args           Array to convert
+     * @param index          int to start from
      * @param translateColor if true, will also translate color codes &
      * @return String
      */

@@ -2,7 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,6 +13,7 @@ import java.util.Random;
 public class ModAutoMessage implements HalfminerModule {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
+
     private final Random rnd = new Random();
     private BukkitRunnable running;
     private List<String> messages;

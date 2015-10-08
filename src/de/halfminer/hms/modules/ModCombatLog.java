@@ -33,12 +33,10 @@ public class ModCombatLog implements HalfminerModule, Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onDeath(PlayerDeathEvent e) {
-        if (tagged.containsKey(e.getEntity().getPlayer())) {
+        if (tagged.containsKey(e.getEntity().getPlayer()))
             untagPlayer(e.getEntity().getPlayer(), false);
-        }
-        if (tagged.containsKey(e.getEntity().getKiller())) {
+        if (tagged.containsKey(e.getEntity().getKiller()))
             untagPlayer(e.getEntity().getKiller(), true);
-        }
     }
 
     @EventHandler
@@ -51,9 +49,10 @@ public class ModCombatLog implements HalfminerModule, Listener {
                 hms.getServer().broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), "hms.default");
 
             EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) e.getPlayer().getLastDamageCause();
-            if (e2 != null && e2.getDamager() instanceof Player) {
+
+            if (e2 != null && e2.getDamager() instanceof Player)
                 untagPlayer((Player) e2.getDamager(), true);
-            }
+
             e.getPlayer().setHealth(0.0);
         }
     }
@@ -64,7 +63,7 @@ public class ModCombatLog implements HalfminerModule, Listener {
 
         if (e.getEntity() instanceof Player) {
 
-            Player victim = (Player)e.getEntity();
+            Player victim = (Player) e.getEntity();
             Player attacker = null;
 
             if (e.getDamager() instanceof Player) attacker = (Player) e.getDamager();
@@ -72,7 +71,7 @@ public class ModCombatLog implements HalfminerModule, Listener {
                 Projectile projectile = (Projectile) e.getDamager();
                 if (projectile.getShooter() instanceof Player) attacker = (Player) projectile.getShooter();
             }
-            if(attacker != null && attacker != victim) {
+            if (attacker != null && attacker != victim) {
                 tagPlayer(victim);
                 tagPlayer(attacker);
             }
@@ -101,7 +100,7 @@ public class ModCombatLog implements HalfminerModule, Listener {
 
     private void tagPlayer(final Player p) {
 
-        if(p.isOp() || p.hasPermission("hms.bypasscombatlog")) return;
+        if (p.isOp() || p.hasPermission("hms.bypasscombatlog")) return;
 
         if (tagged.containsKey(p)) hms.getServer().getScheduler().cancelTask(tagged.get(p));
         else p.sendMessage(lang.get("tagged"));
