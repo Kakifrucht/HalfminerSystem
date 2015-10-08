@@ -17,4 +17,5 @@ Current features
 - Adds some small features for VariableTriggers integration /vtapi
 - Removes default join/leave/death messages
 - Capslock filter
+- Disables hitting self with bow
 - Blocks usage of /pluginname:command

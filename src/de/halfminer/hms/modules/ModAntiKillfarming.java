@@ -16,6 +16,8 @@ import java.util.*;
 
 public class ModAntiKillfarming implements HalfminerModule, Listener {
 
+    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
+
     /**
      * Time in seconds the player is blocked from teleporting and PvPing
      */
@@ -29,8 +31,6 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
      */
     private static int THRESHOLD_UNTIL_REMOVAL_SECONDS;
 
-    private final HalfminerSystem hms;
-
     private final Map<String, String> lang = new HashMap<>();
     private final Set<String> commandExemptList = new HashSet<>();
 
@@ -38,67 +38,14 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
     private final HashMap<UUID, Long> blockList = new HashMap<>();
 
     public ModAntiKillfarming() {
-        hms = HalfminerSystem.getInstance();
         reloadConfig();
     }
 
     /**
-     * Called when a EntityDamageByEntityEvent is fired, checks if the players are blocked and should not be able to hit
-     * each other. When returning true, the event should be cancelled.
+     * Called when a player dies, check if PvP and update anti killfarming variables
      *
-     * @param e EntityDamageByEntityEvent that was fired
+     * @param e PlayerDeathEvent
      */
-    @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
-    public void checkBlockTime(EntityDamageByEntityEvent e) {
-        if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-            short time = getBlockTime((Player) e.getDamager());
-            if (time >= 0) {
-                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"), "%TIME%", Short.toString(time)));
-                e.setCancelled(true);
-                return;
-            }
-            time = getBlockTime((Player) e.getEntity());
-            if (time >= 0) {
-                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"), "%PLAYER%", e.getEntity().getName(), "%TIME%", Short.toString(time)));
-                e.setCancelled(true);
-                return;
-            }
-        }
-
-        if (e.getDamager() instanceof TNTPrimed && e.getEntity() instanceof Player) {
-            TNTPrimed tnt = (TNTPrimed) e.getDamager();
-            if (tnt.getSource() instanceof Player) {
-                Player victim = (Player) e.getEntity();
-                short time = getBlockTime(victim);
-                if (time >= 0) {
-                    e.setCancelled(true);
-                    return;
-                }
-            }
-        }
-        if (e.getEntity() instanceof Player && e.getDamager() instanceof Projectile && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
-            Player attacker = (Player) ((Projectile) e.getDamager()).getShooter();
-            Player victim = (Player) e.getEntity();
-
-            if (attacker.equals(victim)) { //Bowboosting protection
-                e.setCancelled(true);
-                return;
-            }
-            short timeAttacker = getBlockTime(attacker);
-            short timeVictim = getBlockTime(victim);
-            if (timeAttacker >= 0) {
-                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"), "%TIME%", Short.toString(timeAttacker)));
-                e.setCancelled(true);
-                return;
-            }
-            if (timeVictim >= 0) {
-                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"), "%PLAYER%", e.getEntity().getName(), "%TIME%", Short.toString(timeVictim)));
-                e.setCancelled(true);
-            }
-        }
-    }
-
     @EventHandler
     @SuppressWarnings("unused")
     private void onDeath(PlayerDeathEvent e) {
@@ -143,9 +90,67 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
 
     }
 
+    /**
+     * Check if players are engaging in PvP, prevent if blocked and send messages
+     *
+     * @param e EntityDamageByEntityEvent that was fired
+     */
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onCommand(PlayerCommandPreprocessEvent e) {
+    public void onPvPCheckIfAllowed(EntityDamageByEntityEvent e) {
+        if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+            short time = getBlockTime((Player) e.getDamager());
+            if (time >= 0) {
+                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"), "%TIME%", Short.toString(time)));
+                e.setCancelled(true);
+                return;
+            }
+            time = getBlockTime((Player) e.getEntity());
+            if (time >= 0) {
+                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"), "%PLAYER%", e.getEntity().getName(), "%TIME%", Short.toString(time)));
+                e.setCancelled(true);
+                return;
+            }
+        }
+
+        //prevent death by tnt ignition
+        if (e.getDamager() instanceof TNTPrimed && e.getEntity() instanceof Player) {
+            TNTPrimed tnt = (TNTPrimed) e.getDamager();
+            if (tnt.getSource() instanceof Player) {
+                Player victim = (Player) e.getEntity();
+                short time = getBlockTime(victim);
+                if (time >= 0) {
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
+        if (e.getEntity() instanceof Player && e.getDamager() instanceof Projectile && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
+            Player attacker = (Player) ((Projectile) e.getDamager()).getShooter();
+            Player victim = (Player) e.getEntity();
+
+            if (attacker.equals(victim)) { //Disallow hitting yourself with bow
+                e.setCancelled(true);
+                return;
+            }
+
+            short timeAttacker = getBlockTime(attacker);
+            short timeVictim = getBlockTime(victim);
+            if (timeAttacker >= 0) {
+                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"), "%TIME%", Short.toString(timeAttacker)));
+                e.setCancelled(true);
+                return;
+            }
+            if (timeVictim >= 0) {
+                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"), "%PLAYER%", e.getEntity().getName(), "%TIME%", Short.toString(timeVictim)));
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("unused")
+    public void onCommandCheckIfAllowed(PlayerCommandPreprocessEvent e) {
         short time = hms.getAntiKillfarming().getBlockTime(e.getPlayer());
         if (time > 0) {
             String command = e.getMessage().split(" ")[0].toLowerCase();
@@ -158,7 +163,7 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onPotion(PotionSplashEvent e) {
+    public void onPotionCheckIfAllowed(PotionSplashEvent e) {
         if (e.getEntity().getShooter() instanceof Player) {
             Player thrower = (Player) e.getEntity().getShooter();
             short time = hms.getAntiKillfarming().getBlockTime(thrower);
@@ -214,11 +219,15 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
         for (int i = 1; i < killerVal.getAmountBlocked(); i++) blockTimeKiller *= 2;
         for (int i = 1; i < victimVal.getAmountBlocked(); i++) blockTimeVictim *= 2;
 
-        //update the player in the killers kill list and add to the block list
+        //update the player in the killers kill list, ensuring that once one of the blocks (either killer or victim)
+        //runs out, and the killer kills the victim again, it will still block them both
         killerVal.updatePlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
-        blockList.put(killer.getUniqueId(), blockTimeKiller + systemTime);
-        blockList.put(victim.getUniqueId(), blockTimeVictim + systemTime);
 
+        //add to block list
+        blockList.put(killer.getUniqueId(), systemTime + blockTimeKiller);
+        blockList.put(victim.getUniqueId(), systemTime + blockTimeVictim);
+
+        //send messages
         hms.getServer().broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"), "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
         killer.sendMessage(Language.placeholderReplace(lang.get("blockedKiller"), "%TIME%", Long.toString(blockTimeKiller / 60), "%PLAYER%", victim.getName()));
         victim.sendMessage(Language.placeholderReplace(lang.get("blockedVictim"), "%TIME%", Long.toString(blockTimeVictim / 60), "%PLAYER%", killer.getName()));
@@ -253,7 +262,13 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
      */
     private class AntiKillfarmingContainer {
 
+        /**
+         * Map containing the players that got killed by the containers owner
+         */
         final HashMap<UUID, Values> players = new HashMap<>();
+        /**
+         * Total amount player got blocked already, the higher it is, the longer the block
+         */
         byte amountBlocked = 0;
 
         AntiKillfarmingContainer() {
@@ -276,7 +291,7 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
         }
 
         /**
-         * Update a players timestamp and amount
+         * Update a players last killed timestamp and amount he died
          *
          * @param toUpdate - Player that will be updated
          */
@@ -288,7 +303,8 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
          * Update a players timestamp and amount
          *
          * @param toUpdate - Player that will be updated
-         * @param timeDiff - additional time that will be added to the threshold, for instance after a block expires still keeping the player in
+         * @param timeDiff - additional time that will be added to the threshold,
+         *                 useful for making sure that after a block the players can't proceed with killfarming
          */
         void updatePlayer(Player toUpdate, long timeDiff) {
             Values val = players.get(toUpdate.getUniqueId());
@@ -329,6 +345,9 @@ public class ModAntiKillfarming implements HalfminerModule, Listener {
             return amountBlocked;
         }
 
+        /**
+         * Wrapper for death amount of the containers victim and when the last kill happened
+         */
         class Values {
             long timestamp = System.currentTimeMillis() / 1000;
             short amount = 1;
