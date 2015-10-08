@@ -21,7 +21,7 @@ Current features
 - Disables hitting self with bow
 - Blocks usage of /pluginname:command
 
-##HalfminerDuel
+HalfminerDuel
 -------
 - Lightweight and efficient
 - Endless amount of arenas
