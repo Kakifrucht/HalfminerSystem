@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Halfminer1vs1">
-    <output-path>$USER_HOME$/Downloads</output-path>
-    <root id="archive" name="Halfminer1vs1.jar">
-      <element id="module-output" name="Halfminer1vs1" />
-    </root>
-  </artifact>
-</component>
