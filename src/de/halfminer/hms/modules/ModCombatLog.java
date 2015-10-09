@@ -49,10 +49,11 @@ public class ModCombatLog implements HalfminerModule, Listener {
             if (broadcastLog)
                 hms.getServer().broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), "hms.default");
 
-            EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) e.getPlayer().getLastDamageCause();
-
-            if (e2 != null && e2.getDamager() instanceof Player)
-                untagPlayer((Player) e2.getDamager(), true);
+            if (e.getPlayer().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) e.getPlayer().getLastDamageCause();
+                if (e2.getDamager() instanceof Player)
+                    untagPlayer((Player) e2.getDamager(), true);
+            }
 
             e.getPlayer().setHealth(0.0);
         }
