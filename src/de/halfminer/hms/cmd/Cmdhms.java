@@ -40,7 +40,7 @@ public class Cmdhms extends BaseCommand {
             sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsMotdFailed", true, "%PREFIX%", "Hinweis"));
         else {
             String motd = Language.arrayToString(args, 1, false);
-            hms.getMotd().updateMotd(motd);
+            hms.getMotd().updateMotd(motd.replace('§', '&'));
             sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsMotdUpdated", true, "%PREFIX%", "Hinweis", "%NEWMOTD%", motd));
         }
     }
