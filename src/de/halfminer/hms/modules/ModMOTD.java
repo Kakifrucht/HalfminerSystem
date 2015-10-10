@@ -26,7 +26,7 @@ public class ModMOTD implements HalfminerModule, Listener {
     }
 
     public void updateMotd(String newMotd) {
-        hms.getConfig().set("motd.placeHolder", newMotd);
+        hms.getConfig().set("motd.placeHolder", newMotd.replace('§', '&'));
         hms.saveConfig();
         reloadConfig();
     }

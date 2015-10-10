@@ -23,7 +23,7 @@ commands:
 permissions:
   hms.*:
     description: Access to all permissions
-    default: false
+    default: op
     hms.default: true
     hms.lag: true
     hms.signedit: true
