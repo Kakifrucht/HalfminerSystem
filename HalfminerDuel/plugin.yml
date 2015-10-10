@@ -10,7 +10,7 @@ commands:
   duel:
     description: Duel base command
     usage: /duel <subcommand/playername>
-    aliases: [1vs1,duell]
+    aliases: [1vs1,duell,pvp]
   duela:
     description: Duel administrative command
     usage: /duela <subcommand> [argument]
