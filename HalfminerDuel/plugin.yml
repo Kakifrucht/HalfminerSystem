@@ -11,9 +11,9 @@ commands:
     description: Duel base command
     usage: /duel <subcommand/playername>
     aliases: [1vs1,duell,pvp]
-  duela:
+  hmd:
     description: Duel administrative command
-    usage: /duela <subcommand> [argument]
+    usage: /hmd <subcommand> [argument]
 permissions:
   hmd.duel:
     default: true

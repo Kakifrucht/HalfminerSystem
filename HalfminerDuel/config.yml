@@ -41,14 +41,14 @@ localization:
   gameBroadcast: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7gewonnen'
   randomArena: 'Zufall'
   noPermission: '&cDu hast keine Rechte dies zu verwenden'
-  adminHelp: '&7/duela create <name> | /duela remove <name> | /duela spawnA <name> | /duela spawnB <name> | /duela setkit <arenaname> | /duela reload'
-  adminCreate: '&aDie Arena &e%ARENA%&a wurde erstellt. Verwende &6/duela spawnA/spawnB %ARENA%&a um die Spawns zu setzen'
+  adminHelp: '&7/hmd create <name> | /hmd remove <name> | /hmd spawnA <name> | /hmd spawnB <name> | /hmd setkit <arenaname> | /hmd reload'
+  adminCreate: '&aDie Arena &e%ARENA%&a wurde erstellt. Verwende &6/hmd spawnA/spawnB %ARENA%&a um die Spawns zu setzen'
   adminCreateFailed: '&cDie Arena &e%ARENA%&c existiert bereits'
   adminRemove: '&aDie Arena &e%ARENA%&a wurde entfernt'
   adminArenaDoesntExist: '&cDie Arena &e%ARENA%&c existiert nicht'
   adminSetSpawn: '&aDer Spawn fuer die Arena &e%ARENA%&a wurde gesetzt'
   adminSetKit: '&aDas Kit fuer die Arena &e%ARENA%&a wurde gesetzt'
   adminSettingsReloaded: '&aDie Konfiguration wurde neugeladen'
-#Arenas and Kits, to avoid issues don't edit them manually, use /duela
+#Arenas and Kits, to avoid issues don't edit them manually, use /hmd
 arenas: []
 kits: []

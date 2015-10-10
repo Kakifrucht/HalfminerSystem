@@ -77,7 +77,7 @@ public class HalfminerDuel extends JavaPlugin {
             return true;
         }
 
-        if(cmd.getName().equalsIgnoreCase("duela")) {
+        if(cmd.getName().equalsIgnoreCase("hmd")) {
             if(sender instanceof Player) {
                 Player player = (Player) sender;
                 if(player.hasPermission("hmd.admin")) {
