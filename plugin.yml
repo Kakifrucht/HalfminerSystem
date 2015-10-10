@@ -14,6 +14,9 @@ commands:
   signedit:
     description: Edit the contents of a sign or copy it
     aliases: [se]
+  lag:
+    description: View the connection info
+    aliases: [ping]
   vtapi:
     description: Command API
     aliases: [c,hilfe,spenden,stats,regeln,neutp,vote,rang,tools,kiste,deo]
@@ -22,6 +25,7 @@ permissions:
     description: Access to all permissions
     default: false
     hms.default: true
+    hms.lag: true
     hms.signedit: true
     hms.admin: true
     hms.bypass.*: true
@@ -37,6 +41,8 @@ permissions:
   hms.default:
     default: true
     description: Default permission
+  hms.lag:
+    description: Access to lag command
   hms.signedit:
     description: Access to sign editing
   hms.admin:

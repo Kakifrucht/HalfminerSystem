@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.util.Language;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -17,10 +18,21 @@ public class Cmdlag extends BaseCommand {
     public void run(CommandSender sender, Command cmd, String label, String[] args) {
 
         if(sender instanceof Player) {
-            CraftPlayer player = (CraftPlayer) sender;
+            CraftPlayer player;
+            if (args.length > 0) {
+                Player toGet = hms.getServer().getPlayer(args[0]);
+                if (toGet != null) {
+                    player = (CraftPlayer) toGet;
+                } else {
+                    sender.sendMessage("Player not online");
+                    return; //TODO messages, make it work correctly
+                }
+            } else {
+                player = (CraftPlayer) sender;
+            }
             int ping = player.getHandle().ping;
-            //TODO add
-        }
+            sender.sendMessage("Ping von " + player.getName() + ": " + ping);
+        } else sender.sendMessage(Language.getMessage("notAPlayer", false));
 
     }
 }
