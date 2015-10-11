@@ -1,7 +1,7 @@
 #HalfminerSystem Config
 localization:
   prefix: '&7%PREFIX% &e>>&r '
-  noPermission: '&cDu hast kein Recht dies zu verwenden'
+  noPermission: '&cDu hast nicht die Berechtigung dies zu verwenden'
   notAPlayer: 'Dieses Kommando kann nur als Spieler ausgefuehrt werden'
   commandHmsUsage: '&cVerwendung: &f/hms setmotd, reload, rename [name]'
   commandHmsConfigReloaded: '&aKonfiguration neugeladen'
@@ -13,9 +13,8 @@ localization:
   commandSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu aendern'
   commandSigneditCopy: '&7Klicke das Schild, welches du kopieren moechtest, erstelle &e%AMOUNT% &7Kopien'
   commandLagPlayerNotOnline: '&cDieser Spieler ist nicht online'
-  commandLagPlayerError: '&cEin Problem ist aufgetreten. Bitte versuche es in Kuerze erneut'
-  commandLagPlayerInfo: '&7Latenz von %PLAYER%: &e%LATENCY% &7ms (niedriger ist besser)'
-  commandLagServerInfo: '&7Server Zustand: &a%TPS%&7/20.0 TPS'
+  commandLagPlayerInfo: '&7Latenz von %PLAYER%: %LATENCY% &7ms (niedriger ist besser)'
+  commandLagServerInfo: '&7Server Zustand: %TPS%&7/20.0 TPS'
   commandLagStable: '&aDie Verbindung ist stabil'
   commandLagServerUnstable: '&cDer Server ist etwas instabil, das Team arbeitet daran'
   commandLagServerLag: '&cDer Server ist sehr instabil, das Team arbeitet mit Hochdruck daran'

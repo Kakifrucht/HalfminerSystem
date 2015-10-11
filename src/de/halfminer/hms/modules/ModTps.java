@@ -56,9 +56,9 @@ public class ModTps implements HalfminerModule, Listener {
 
                 double currentTps = ticksBetweenUpdate * 1000.0 / lastUpdate;
 
-                if (currentTps > 20.0d) return;
+                if (currentTps > 20.0d) return; //disregard peaks
 
-                if (tpsHistory.size() >= historySize) tpsHistory.remove(0);
+                if (tpsHistory.size() >= historySize) tpsHistory.pop();
                 tpsHistory.add(currentTps);
 
                 //Get average value

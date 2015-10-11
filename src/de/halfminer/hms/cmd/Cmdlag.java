@@ -1,6 +1,7 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -17,6 +18,7 @@ public class Cmdlag extends BaseCommand {
     @Override
     public void run(CommandSender sender, Command cmd, String label, String[] args) {
 
+        //determine latency
         CraftPlayer player;
         boolean showSummary = false;
         if (args.length > 0) { //get other player
@@ -43,29 +45,45 @@ public class Cmdlag extends BaseCommand {
             return;
         }
 
-        //get values and send message
+        //get latency and tps
         int ping = player.getHandle().ping;
         double tps = hms.getModTps().getTps();
-        if (ping > 2000) { //weird behaviour in ping value, causing it to show extremely high numbers under certain circumstances
-            sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagPlayerError", true, "%PREFIX%", "Lag"));
-            return;
+
+        //values for summary, determine who is lagging
+        int summaryServerLag = 0;
+        boolean summaryPlayerLag = true; //set to false if player is not lagging
+
+        String pingString;
+        if (ping > 2000) pingString = ChatColor.GRAY + "?"; //ping not yet known
+        else {
+            pingString = String.valueOf(ping);
+            if (ping > 200) pingString = ChatColor.RED + pingString;
+            else if (ping > 100) pingString = ChatColor.YELLOW + pingString;
+            else {
+                pingString = ChatColor.GREEN + pingString;
+                summaryPlayerLag = false;
+            }
         }
-        sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagPlayerInfo", true, "%PREFIX%", "Lag", "%PLAYER%", player.getName(), "%LATENCY%", String.valueOf(ping)));
-        sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagServerInfo", true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(hms.getModTps().getTps())));
+
+        String tpsString = String.valueOf(tps);
+        if (tps < 12.0d) {
+            tpsString = ChatColor.RED + tpsString;
+            summaryServerLag = 2;
+        } else if (tps < 16.0d) {
+            tpsString = ChatColor.YELLOW + tpsString;
+            summaryServerLag = 1;
+        } else tpsString = ChatColor.GREEN + tpsString;
+
+        //Send ping and tps information to player
+        sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagPlayerInfo", true, "%PREFIX%", "Lag", "%PLAYER%", player.getName(), "%LATENCY%", pingString));
+        sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagServerInfo", true, "%PREFIX%", "Lag", "%TPS%", tpsString));
 
         if (showSummary) { //determines the summary message, only shown when viewing own status
-            int statusServerLag = 0;
-            boolean statusPlayerLag = false;
-
-            if (tps < 12.0d) statusServerLag = 2;
-            else if (tps < 16.0d) statusServerLag = 1;
-            if (ping > 100) statusPlayerLag = true;
-
-            if (statusServerLag == 0 && !statusPlayerLag)
+            if (summaryServerLag == 0 && !summaryPlayerLag)
                 sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagStable", true, "%PREFIX%", "Lag"));
-            else if (statusServerLag == 1)
+            else if (summaryServerLag == 1)
                 sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagServerUnstable", true, "%PREFIX%", "Lag"));
-            else if (statusServerLag == 2)
+            else if (summaryServerLag == 2)
                 sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagServerLag", true, "%PREFIX%", "Lag"));
             else
                 sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagPlayerLag", true, "%PREFIX%", "Lag"));
