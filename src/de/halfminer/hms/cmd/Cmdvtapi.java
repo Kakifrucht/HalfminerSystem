@@ -72,6 +72,6 @@ public class Cmdvtapi extends BaseCommand {
                     break;
             }
 
-        } else sender.sendMessage(Language.getMessage("notAPlayer", false));
+        } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
 }

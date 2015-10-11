@@ -66,7 +66,7 @@ public class Cmdhms extends BaseCommand {
 
             player.sendMessage(Language.getMessagePlaceholderReplace("commandHmsRenameDone", true, "%PREFIX%", "Hinweis", "%NAME%", newName));
 
-        } else sender.sendMessage(Language.getMessage("notAPlayer", false));
+        } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
 
     private void reload(CommandSender sender) {

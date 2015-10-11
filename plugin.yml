@@ -26,8 +26,10 @@ permissions:
     default: op
     hms.default: true
     hms.lag: true
+    hms.lag.others: true
     hms.signedit: true
     hms.admin: true
+    hms.notifylag: true
     hms.bypass.*: true
   hms.bypass.*:
     description: Access to all bypass permission
@@ -43,10 +45,14 @@ permissions:
     description: Default permission
   hms.lag:
     description: Access to lag command
+  hms.lag.others:
+    description: View the latency of other players
   hms.signedit:
     description: Access to sign editing
   hms.admin:
     description: Access to administrative commands
+  hms.notifylag:
+    description: Sends lag notifications to admin
   hms.bypass.combatlog:
     description: Bypass combat logging
     default: op

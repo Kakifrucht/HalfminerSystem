@@ -9,21 +9,17 @@ public class Language {
     private static final HalfminerSystem hms = HalfminerSystem.getInstance();
 
     /**
-     * Get a message from the localization config, while translating color codes, adding newlines and adding a prefix
+     * Get a message from the localization config, while translating color codes and adding newlines
      *
      * @param messageKey key of the message, without "localization." as key
-     * @param prefix     if true, adds the prefix
      * @return String containing the message with prefix or not, converted newlines and translated color codes
      */
-    public static String getMessage(String messageKey, boolean prefix) {
+    public static String getMessage(String messageKey) {
 
         String toReturn = hms.getConfig().getString("localization." + messageKey);
         if (toReturn == null || toReturn.length() == 0) return ""; //Allow messages to be removed
         //Get proper color codes and newlines, add prefix
         toReturn = ChatColor.translateAlternateColorCodes('&', toReturn).replace("\\n", "\n");
-
-        if (prefix)
-            toReturn = ChatColor.translateAlternateColorCodes('&', hms.getConfig().getString("localization.prefix")) + toReturn;
 
         return toReturn;
     }
@@ -65,7 +61,12 @@ public class Language {
      * @return String containing the finished message
      */
     public static String getMessagePlaceholderReplace(String messageKey, boolean prefix, String... replacements) {
-        return placeholderReplace(getMessage(messageKey, prefix), replacements);
+        String toReturn = getMessage(messageKey);
+
+        if (prefix)
+            toReturn = ChatColor.translateAlternateColorCodes('&', hms.getConfig().getString("localization.prefix")) + toReturn;
+
+        return placeholderReplace(toReturn, replacements);
     }
 
     /**

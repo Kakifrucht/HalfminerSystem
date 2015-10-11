@@ -53,7 +53,7 @@ public class Cmdsignedit extends BaseCommand {
                 }
             }
             usageMessage(player);
-        } else sender.sendMessage(Language.getMessage("notAPlayer", false));
+        } else sender.sendMessage(Language.getMessage("notAPlayer"));
 
     }
 

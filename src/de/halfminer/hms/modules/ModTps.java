@@ -1,7 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.HalfminerSystem;
-import org.bukkit.Server;
+import de.halfminer.hms.util.Language;
 import org.bukkit.event.Listener;
 
 import java.util.LinkedList;
@@ -9,13 +9,17 @@ import java.util.LinkedList;
 public class ModTps implements HalfminerModule, Listener {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
-    private final static Server server = hms.getServer();
+
+    private int taskId;
 
     private final LinkedList<Double> tpsHistory = new LinkedList<>();
-    private double lastAverageTps = 20.0d;
-    private long lastTaskTimestamp = System.currentTimeMillis();
+    private double lastAverageTps;
+    private long lastTaskTimestamp;
+
+    //config
     private int ticksBetweenUpdate;
-    private boolean serverIsLaggy;
+    private int historySize;
+    private double alertStaff;
 
     public ModTps() {
         reloadConfig();
@@ -34,18 +38,27 @@ public class ModTps implements HalfminerModule, Listener {
     public void reloadConfig() {
 
         ticksBetweenUpdate = hms.getConfig().getInt("tps.ticksBetweenUpdate", 100);
+        historySize = hms.getConfig().getInt("tps.historySize", 6);
+        alertStaff = hms.getConfig().getDouble("tps.alertThreshold", 17.0d);
+
+        if (taskId > 0) hms.getServer().getScheduler().cancelTask(taskId);
 
         tpsHistory.clear();
         tpsHistory.add(20.0);
-        hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
+        lastAverageTps = 20.0;
+        lastTaskTimestamp = System.currentTimeMillis();
+        taskId = hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
             @Override
             public void run() {
                 long now = System.currentTimeMillis();
-                long lastUpdate = now - lastTaskTimestamp;
+                long lastUpdate = now - lastTaskTimestamp; //time in milliseconds since last check
+                lastTaskTimestamp = now;
 
                 double currentTps = ticksBetweenUpdate * 1000.0 / lastUpdate;
 
-                if (tpsHistory.size() > 9) tpsHistory.remove(0);
+                if (currentTps > 20.0d) return;
+
+                if (tpsHistory.size() >= historySize) tpsHistory.remove(0);
                 tpsHistory.add(currentTps);
 
                 //Get average value
@@ -54,18 +67,9 @@ public class ModTps implements HalfminerModule, Listener {
                 lastAverageTps /= tpsHistory.size();
                 lastAverageTps = Math.round(lastAverageTps * 100.0) / 100.0; //round value to two decimals
 
-                if (serverIsLaggy && lastAverageTps > 18.0d) {
-                    server.dispatchCommand(server.getConsoleSender(), "timings paste");
-                    server.dispatchCommand(server.getConsoleSender(), "timings off");
-                    serverIsLaggy = false;
-                    server.broadcast("Server laggt nicht mehr", "hms.notifylag");
-                } else if (!serverIsLaggy && lastAverageTps < 15.0) {
-                    serverIsLaggy = true;
-                    server.broadcast("Server laggt", "hms.notifylag"); //TODO proper messages, plugin.yml
-                    server.dispatchCommand(server.getConsoleSender(), "timings on");
-                }
-
-                lastTaskTimestamp = now;
+                //send message if server is unstable
+                if (lastAverageTps < alertStaff && tpsHistory.size() == historySize)
+                    hms.getServer().broadcast(Language.getMessagePlaceholderReplace("modTpsServerUnstable", true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(lastAverageTps)), "hms.notifylag");
             }
         }, ticksBetweenUpdate, ticksBetweenUpdate);
     }
