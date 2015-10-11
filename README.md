@@ -13,8 +13,8 @@ Current features
 - Protection against redstone/pistons/hopper lag
 - Automessager
 - Lag command showing player latency, tps and summary for player
-- Lag command allows to see other players latency
-- If TPS is too low, notifys staff
+- See other players latency
+- If TPS is too low, notifies staff
 - Custom Motd with colors and settable via command
 - Edit and copy signs /signedit
 - Rename items /hms rename
