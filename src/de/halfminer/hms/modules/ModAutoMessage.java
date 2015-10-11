@@ -37,12 +37,13 @@ public class ModAutoMessage implements HalfminerModule {
 
         //Set task
         if (running != null) running.cancel();
-        Integer interval = hms.getConfig().getInt("autoMessage.intervalSeconds", 240) * 20; //20 ticks per second
+        int interval = hms.getConfig().getInt("autoMessage.intervalSeconds", 240) * 20; //20 ticks per second
         running = new BukkitRunnable() {
             @Override
             public void run() {
+                int random = rnd.nextInt(messages.size());
                 for (Player player : hms.getServer().getOnlinePlayers()) {
-                    player.sendMessage(" \n" + placeholder + "\n" + ChatColor.RESET + messages.get(rnd.nextInt(messages.size())) + ChatColor.RESET + "\n" + placeholder + ChatColor.RESET + "\n ");
+                    player.sendMessage(" \n" + placeholder + "\n" + ChatColor.RESET + messages.get(random) + ChatColor.RESET + "\n" + placeholder + ChatColor.RESET + "\n ");
                 }
             }
         };
