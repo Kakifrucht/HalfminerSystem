@@ -34,10 +34,11 @@ public class HalfminerSystem extends JavaPlugin {
                 new ModAutoMessage(),
                 new ModAntiKillfarming(),
                 new ModBedrockProtection(),
-                new ModMOTD(),
+                new ModMotd(),
                 new ModSignEdit(),
                 new ModRedstoneLimit(),
-                new ModCombatLog()
+                new ModCombatLog(),
+                new ModTps()
         };
 
         for (HalfminerModule mod : modules)
@@ -73,16 +74,20 @@ public class HalfminerSystem extends JavaPlugin {
     }
 
     //Module getters
-    public ModAntiKillfarming getAntiKillfarming() {
+    public ModAntiKillfarming getModAntiKillfarming() {
         return (ModAntiKillfarming) modules[2];
     }
 
-    public ModMOTD getMotd() {
-        return (ModMOTD) modules[4];
+    public ModMotd getModMotd() {
+        return (ModMotd) modules[4];
     }
 
-    public ModSignEdit getSignEdit() {
+    public ModSignEdit getModSignEdit() {
         return (ModSignEdit) modules[5];
+    }
+
+    public ModTps getModTps() {
+        return (ModTps) modules[8];
     }
 
     public void loadConfig() {

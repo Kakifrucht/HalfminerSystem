@@ -68,3 +68,5 @@ redstoneLimit:
 combatLog:
   broadcastLog: true
   tagTime: 30
+tps:
+  ticksBetweenUpdate: 100

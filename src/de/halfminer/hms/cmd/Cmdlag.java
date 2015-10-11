@@ -32,6 +32,7 @@ public class Cmdlag extends BaseCommand {
             }
             int ping = player.getHandle().ping;
             sender.sendMessage("Ping von " + player.getName() + ": " + ping);
+            sender.sendMessage("Server TPS: " + hms.getModTps().getTps());
         } else sender.sendMessage(Language.getMessage("notAPlayer", false));
 
     }

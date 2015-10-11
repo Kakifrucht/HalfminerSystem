@@ -9,13 +9,13 @@ import org.bukkit.event.server.ServerListPingEvent;
 import java.util.List;
 import java.util.Random;
 
-public class ModMOTD implements HalfminerModule, Listener {
+public class ModMotd implements HalfminerModule, Listener {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
     private final Random rnd = new Random();
     private String[] motd;
 
-    public ModMOTD() {
+    public ModMotd() {
         reloadConfig();
     }
 

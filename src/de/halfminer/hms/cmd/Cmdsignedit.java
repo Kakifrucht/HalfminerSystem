@@ -29,7 +29,7 @@ public class Cmdsignedit extends BaseCommand {
                         } catch (NumberFormatException e) {
                         }
                     }
-                    hms.getSignEdit().makeCopies(player, amountToCopy);
+                    hms.getModSignEdit().makeCopies(player, amountToCopy);
                     player.sendMessage(Language.getMessagePlaceholderReplace("commandSigneditCopy", true, "%PREFIX%", "Hinweis", "%AMOUNT%", Byte.toString(amountToCopy)));
                     return;
                 } else {
@@ -40,8 +40,8 @@ public class Cmdsignedit extends BaseCommand {
                             if (args.length > 1) {
                                 setTo = Language.arrayToString(args, 1, true);
                                 if (setTo.length() > 15) setTo = setTo.substring(0, 15); //truncate if necessary
-                                hms.getSignEdit().setLine(player, line, setTo);
-                            } else hms.getSignEdit().setLine(player, line, ""); //empty line
+                                hms.getModSignEdit().setLine(player, line, setTo);
+                            } else hms.getModSignEdit().setLine(player, line, ""); //empty line
                             player.sendMessage(Language.getMessagePlaceholderReplace("commandSigneditSet", true, "%PREFIX%", "Hinweis", "%LINE%", Byte.toString(line), "%TEXT%", setTo));
                             return;
                         } else {
