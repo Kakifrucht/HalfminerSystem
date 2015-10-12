@@ -54,7 +54,7 @@ public class Cmdlag extends BaseCommand {
         boolean summaryPlayerLag = true; //set to false if player is not lagging
 
         String pingString;
-        if (ping > 2000) pingString = ChatColor.GRAY + "?"; //ping not yet known
+        if (ping > 1000) pingString = ChatColor.DARK_RED + "> 1000"; //ping not yet known
         else {
             pingString = String.valueOf(ping);
             if (ping > 200) pingString = ChatColor.RED + pingString;
