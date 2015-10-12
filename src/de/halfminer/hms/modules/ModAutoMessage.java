@@ -41,9 +41,9 @@ public class ModAutoMessage implements HalfminerModule {
         running = new BukkitRunnable() {
             @Override
             public void run() {
-                int random = rnd.nextInt(messages.size());
+                String message = messages.get(rnd.nextInt(messages.size()));
                 for (Player player : hms.getServer().getOnlinePlayers()) {
-                    player.sendMessage(" \n" + placeholder + "\n" + ChatColor.RESET + messages.get(random) + ChatColor.RESET + "\n" + placeholder + ChatColor.RESET + "\n ");
+                    player.sendMessage(" \n" + placeholder + "\n" + ChatColor.RESET + message + ChatColor.RESET + "\n" + placeholder + ChatColor.RESET + "\n ");
                 }
             }
         };
