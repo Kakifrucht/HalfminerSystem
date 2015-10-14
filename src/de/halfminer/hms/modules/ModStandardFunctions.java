@@ -9,7 +9,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffectType;
 
 @SuppressWarnings("unused")
-public class ModStandardFunctions implements Listener, HalfminerModule {
+public class ModStandardFunctions extends HalfminerModule implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -56,9 +56,5 @@ public class ModStandardFunctions implements Listener, HalfminerModule {
                 return;
             }
         }
-    }
-
-    @Override
-    public void reloadConfig() {
     }
 }

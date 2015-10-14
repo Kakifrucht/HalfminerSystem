@@ -33,7 +33,7 @@ public class Cmdlag extends BaseCommand {
             if (toGet != null) {
                 player = (CraftPlayer) toGet;
             } else {
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagPlayerNotOnline", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true, "%PREFIX%", "Lag"));
                 return;
             }
 

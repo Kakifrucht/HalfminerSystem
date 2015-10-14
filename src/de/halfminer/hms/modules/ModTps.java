@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 
 import java.util.LinkedList;
 
-public class ModTps implements HalfminerModule, Listener {
+public class ModTps extends HalfminerModule implements Listener {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
 

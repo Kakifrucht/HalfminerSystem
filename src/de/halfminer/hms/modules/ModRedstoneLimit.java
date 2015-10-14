@@ -1,6 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,9 +15,8 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModRedstoneLimit implements HalfminerModule, Listener {
+public class ModRedstoneLimit extends HalfminerModule implements Listener {
 
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
     //Storage for limitations
     private final Map<Location, Integer> lastStored = new HashMap<>();
     private int pistonCount = 0;

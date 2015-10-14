@@ -8,6 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * HalfminerSystem Main class
@@ -17,7 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class HalfminerSystem extends JavaPlugin {
 
     private static HalfminerSystem instance;
-    private HalfminerModule[] modules;
+    private List<HalfminerModule> modules;
 
     public static HalfminerSystem getInstance() {
         return instance;
@@ -29,19 +32,18 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        modules = new HalfminerModule[]{
-                new ModStandardFunctions(),
-                new ModAutoMessage(),
-                new ModAntiKillfarming(),
-                new ModBedrockProtection(),
-                new ModMotd(),
-                new ModSignEdit(),
-                new ModRedstoneLimit(),
-                new ModCombatLog(),
-                new ModTps(),
-                new ModStorage(),
-                new ModStats()
-        };
+        modules = new ArrayList<>(11);
+        modules.add(new ModStandardFunctions());
+        modules.add(new ModAutoMessage());
+        modules.add(new ModAntiKillfarming());
+        modules.add(new ModBedrockProtection());
+        modules.add(new ModMotd());
+        modules.add(new ModSignEdit());
+        modules.add(new ModRedstoneLimit());
+        modules.add(new ModCombatLog());
+        modules.add(new ModTps());
+        modules.add(new ModStorage());
+        modules.add(new ModStats());
 
         for (HalfminerModule mod : modules)
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
@@ -52,6 +54,7 @@ public class HalfminerSystem extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        for (HalfminerModule mod : modules) mod.onDisable(); //make sure all modules disable properly
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("HalfminerSystem disabled");
     }
@@ -77,23 +80,23 @@ public class HalfminerSystem extends JavaPlugin {
 
     //Module getters
     public ModAntiKillfarming getModAntiKillfarming() {
-        return (ModAntiKillfarming) modules[2];
+        return (ModAntiKillfarming) modules.get(2);
     }
 
     public ModMotd getModMotd() {
-        return (ModMotd) modules[4];
+        return (ModMotd) modules.get(4);
     }
 
     public ModSignEdit getModSignEdit() {
-        return (ModSignEdit) modules[5];
+        return (ModSignEdit) modules.get(5);
     }
 
     public ModTps getModTps() {
-        return (ModTps) modules[8];
+        return (ModTps) modules.get(8);
     }
 
     public ModStorage getModStorage() {
-        return (ModStorage) modules[9];
+        return (ModStorage) modules.get(9);
     }
 
     public void loadConfig() {

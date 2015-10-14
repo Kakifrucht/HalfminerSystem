@@ -12,10 +12,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModBedrockProtection implements HalfminerModule, Listener {
+public class ModBedrockProtection extends HalfminerModule implements Listener {
 
     private final Map<Player, Long> lastMessage = new HashMap<>();
-
     private String message;
 
     public ModBedrockProtection() {

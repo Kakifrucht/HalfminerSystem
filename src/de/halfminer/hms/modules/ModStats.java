@@ -1,6 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,9 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 
-public class ModStats implements HalfminerModule, Listener {
-
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
+public class ModStats extends HalfminerModule implements Listener {
 
     private final ModStorage storage = hms.getModStorage();
     private final HashMap<Player, Long> timeOnline = new HashMap<>();
@@ -34,6 +31,8 @@ public class ModStats implements HalfminerModule, Listener {
 
         //Name checking
         String lastName = storage.getPlayerString(player, "lastName");
+        //Called on first join
+        if (lastName.length() == 0) storage.setPlayer(player, "lastName", player.getName());
         if (!lastName.equals(player.getName())) {
             String lastNames = storage.getPlayerString(player, "lastNames");
             storage.setPlayer(player, "lastNames", lastNames + lastName);
@@ -89,10 +88,5 @@ public class ModStats implements HalfminerModule, Listener {
     private double calculateKDRatio(Player player) {
         double calc = storage.getPlayerInt(player, "kills") / storage.getPlayerInt(player, "deaths");
         return Math.round(calc * 100) / 100;
-    }
-
-
-    @Override
-    public void reloadConfig() {
     }
 }

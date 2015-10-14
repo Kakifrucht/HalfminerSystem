@@ -1,6 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,9 +8,8 @@ import org.bukkit.event.server.ServerListPingEvent;
 import java.util.List;
 import java.util.Random;
 
-public class ModMotd implements HalfminerModule, Listener {
+public class ModMotd extends HalfminerModule implements Listener {
 
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
     private final Random rnd = new Random();
     private String[] motd;
 

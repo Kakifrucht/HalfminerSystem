@@ -1,6 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -8,9 +7,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 
-public class ModStorage implements HalfminerModule {
-
-    private static final HalfminerSystem hms = HalfminerSystem.getInstance();
+public class ModStorage extends HalfminerModule {
 
     private File file;
     private FileConfiguration fileConfig;
@@ -36,7 +33,7 @@ public class ModStorage implements HalfminerModule {
     }
 
     public String getString(String path) {
-        return fileConfig.getString(path, "Null");
+        return fileConfig.getString(path, "");
     }
 
     public int getInt(String path) {
@@ -67,16 +64,19 @@ public class ModStorage implements HalfminerModule {
         hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
-                try {
-                    fileConfig.save(file);
-                    hms.getLogger().info("Saving data was successful"); //TODO localization
-                } catch (IOException e) {
-                    hms.getLogger().warning("Saving data was not successful");
-                    e.printStackTrace();
-                }
-
+                onDisable();
             }
         }, 1000, 1000); //TODO use config values
+    }
 
+    @Override
+    public void onDisable() {
+        try {
+            fileConfig.save(file);
+            hms.getLogger().info("Saving data was successful"); //TODO localization
+        } catch (IOException e) {
+            hms.getLogger().warning("Saving data was not successful");
+            e.printStackTrace();
+        }
     }
 }

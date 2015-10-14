@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModSignEdit implements HalfminerModule, Listener {
+public class ModSignEdit extends HalfminerModule implements Listener {
 
     private final Map<Player, EditInfo> edit = new HashMap<>();
 
@@ -65,10 +65,6 @@ public class ModSignEdit implements HalfminerModule, Listener {
 
     public void setLine(Player player, byte line, String toEdit) {
         edit.put(player, new EditInfo(line, toEdit));
-    }
-
-    @Override
-    public void reloadConfig() {
     }
 
     private class EditInfo {

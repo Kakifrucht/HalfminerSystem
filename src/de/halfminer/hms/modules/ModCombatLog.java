@@ -1,6 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,9 +18,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModCombatLog implements HalfminerModule, Listener {
+public class ModCombatLog extends HalfminerModule implements Listener {
 
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
     private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, Integer> tagged = new HashMap<>();
     private boolean broadcastLog;

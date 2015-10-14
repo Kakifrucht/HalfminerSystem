@@ -1,8 +1,10 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.modules.ModStorage;
+import de.halfminer.hms.util.Language;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
 public class Cmdstats extends BaseCommand {
@@ -16,7 +18,50 @@ public class Cmdstats extends BaseCommand {
     @Override
     public void run(CommandSender sender, Command cmd, String label, String[] args) {
 
-        //TODO implement
+        if (args.length > 0) {
+            Player player = hms.getServer().getPlayer(args[0]); //TODO also check offline players
+            if (player != null) showStats(sender, player);
+            else sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true, "%PREFIX%", "Stats"));
+        } else {
+            if (sender instanceof Player) showStats(sender, (Player) sender);
+            else sender.sendMessage(Language.getMessage("notAPlayer"));
+        }
 
     }
+
+    private void showStats(final CommandSender sendTo, final Player toShow) {
+        final String skillGroup = storage.getPlayerString(toShow, "skillGroup");
+        final int skillLevel = storage.getPlayerInt(toShow, "skillLevel");
+        final int timeOnline = storage.getPlayerInt(toShow, "timeOnline");
+        final int joins = storage.getPlayerInt(toShow, "joins");
+        final int kills = storage.getPlayerInt(toShow, "kills");
+        final int deaths = storage.getPlayerInt(toShow, "deaths");
+        final int votes = storage.getPlayerInt(toShow, "votes");
+        final int mobKills = storage.getPlayerInt(toShow, "mobKills");
+        final int blocksPlaced = storage.getPlayerInt(toShow, "blocksPlaced");
+        final int blocksBroken = storage.getPlayerInt(toShow, "blocksBroken");
+        final String oldNames = storage.getPlayerString(toShow, "lastNames");
+        //Will iterate quite often, so better async it
+        hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+            @Override
+            public void run() {
+                String message = Language.getMessage("commandStatsTop") + "\n";
+                message += Language.getMessagePlaceholderReplace("commandStatsShow", false, "%PLAYER%", toShow.getName(),
+                        "%SKILLGROUP%", skillGroup, "%SKILLLEVEL%", String.valueOf(skillLevel),
+                        "%ONLINETIME%", String.valueOf(timeOnline), "%JOINS%", String.valueOf(joins),
+                        "%KILLS%", String.valueOf(kills), "%DEATHS%", String.valueOf(deaths),
+                        "%VOTES%", String.valueOf(votes), "%MOBKILLS%", String.valueOf(mobKills),
+                        "%BLOCKSPLACED%", String.valueOf(blocksPlaced), "%BLOCKSBROKEN%", String.valueOf(blocksBroken),
+                        "%OLDNAMES%", oldNames) + "\n";
+                if (oldNames.length() > 0) message += Language.getMessagePlaceholderReplace("commandStatsOldnames", false, "%OLDNAMES%", oldNames) + "\n";
+                if (sendTo.getName().equals(toShow.getName())) message += Language.getMessage("commandStatsShowotherStats") + "\n";
+                message += Language.getMessage("commandStatsBottom");
+
+                sendTo.sendMessage(message);
+            }
+        });
+
+        //TODO implement
+    }
+
 }

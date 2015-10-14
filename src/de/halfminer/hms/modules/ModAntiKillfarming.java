@@ -1,6 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -14,9 +13,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.*;
 
-public class ModAntiKillfarming implements HalfminerModule, Listener {
-
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
+public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
     /**
      * Time in seconds the player is blocked from teleporting and PvPing
