@@ -4,33 +4,48 @@ Website: https://halfminer.de
 
 Current features
 -------
-- Modular and lightweight
-- Functionality and messages configurable
+- Modular, lightweight, efficient
 - **Complete dueling solution HalfminerDuel** // information below
-- Protection against Killfarming
-- Protection against CombatLogging
-- Protection against Bedrock glitching (alert and log)
-- Protection against redstone/pistons/hopper lag
+- Statistics for every player with /stats
+- View latency and server status with /lag
+  - Information if player or server laggs
+  - View other players latency/ping
+  - Notifies staff when Tps is too low
+- Inbuilt protections against:
+  - Killfarming
+  - CombatLogging
+  - Bedrock glitching (alert and log)
+  - Lag caused by Redstone/Pistons/Hoppers
 - Automessager
-- Lag command showing player latency, tps and summary for player
-- See other players latency
-- If TPS is too low, notifies staff
 - Custom Motd with colors and settable via command
 - Edit and copy signs /signedit
 - Rename items /hms rename
-- Adds some small features for VariableTriggers integration /vtapi
-- Removes default join/leave/death messages
-- Capslock filter
-- Disables hitting self with bow
-- Blocks usage of /pluginname:command
+- Functionality and messages configurable
+- Small extras:
+  - Removes default join/leave/death messages
+  - Capslock filter
+  - Disables hitting self with bow
+  - Blocks usage of /pluginname:command
+  - Small features for VariableTriggers /vtapi
 
 HalfminerDuel
 -------
 - Lightweight and efficient
 - Endless amount of arenas
 - Custom kits per arena
-- Tested and bug free
+- Tested and should be bug free
 - Recovers players completely after fight
 - Robust queue system
-- Duelling per request or via match /duel match
+  - Kicks player from queue when engaging in PvP outside of arena
+- Duelling per request (/duel playername) or via match (/duel match)
+- When waiting too long for match, will broadcast that a player is waiting
+- Dynamic arena selection system, only shows vacant arenas
+- Consists of a single queue (pipeline), not per arena queue, improving performance
+- Shows current arena status with /duel list
+- Countdown before game start
+- Set maximum game time
+- Disables while fighting:
+  - Hunger loss in duel (optional)
+  - Item pickup
+  - Command usage
 - Language completely customizable

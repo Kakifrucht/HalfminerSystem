@@ -38,7 +38,9 @@ public class HalfminerSystem extends JavaPlugin {
                 new ModSignEdit(),
                 new ModRedstoneLimit(),
                 new ModCombatLog(),
-                new ModTps()
+                new ModTps(),
+                new ModStorage(),
+                new ModStats()
         };
 
         for (HalfminerModule mod : modules)
@@ -88,6 +90,10 @@ public class HalfminerSystem extends JavaPlugin {
 
     public ModTps getModTps() {
         return (ModTps) modules[8];
+    }
+
+    public ModStorage getModStorage() {
+        return (ModStorage) modules[9];
     }
 
     public void loadConfig() {
