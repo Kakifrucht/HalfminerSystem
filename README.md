@@ -8,9 +8,9 @@ Current features
 - **Complete dueling solution HalfminerDuel** // information below
 - Statistics for every player with /stats
 - View latency and server status with /lag
-  - Information if player or server laggs
+  - Information if player or server lags
   - View other players latency/ping
-  - Notifies staff when Tps is too low
+  - Notifies staff when tps is too low
 - Inbuilt protections against:
   - Killfarming
   - CombatLogging
@@ -20,7 +20,7 @@ Current features
 - Custom Motd with colors and settable via command
 - Edit and copy signs /signedit
 - Rename items /hms rename
-- Functionality and messages configurable
+- Functionality mostly and messages completely configurable
 - Small extras:
   - Removes default join/leave/death messages
   - Capslock filter
