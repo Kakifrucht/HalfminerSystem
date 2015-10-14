@@ -4,7 +4,7 @@ import de.halfminer.hms.HalfminerSystem;
 
 public abstract class HalfminerModule {
 
-    protected final static HalfminerSystem hms = HalfminerSystem.getInstance();
+    final static HalfminerSystem hms = HalfminerSystem.getInstance();
 
     /**
      * Reloads the modules config
