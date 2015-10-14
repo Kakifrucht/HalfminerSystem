@@ -21,7 +21,7 @@ commands:
     description: View the statistics of a player
   vtapi:
     description: Command API
-    aliases: [c,hilfe,spenden,stats,regeln,neutp,vote,rang,tools,kiste,deo]
+    aliases: [c,hilfe,spenden,regeln,neutp,vote,rang,tools,kiste,deo]
 permissions:
   hms.*:
     description: Access to all permissions
@@ -46,12 +46,13 @@ permissions:
   hms.default:
     default: true
     description: Default permission
+  hms.stats:
+    default: true
+    description: Access to stats command
   hms.lag:
     description: Access to lag command
   hms.lag.others:
     description: View the latency of other players
-  hms.stats:
-    description: Access to stats command
   hms.signedit:
     description: Access to sign editing
   hms.admin:

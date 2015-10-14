@@ -1,5 +1,6 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.util.Language;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,24 +34,20 @@ public class ModStats extends HalfminerModule implements Listener {
         String lastName = storage.getPlayerString(player, "lastName");
         //Called on first join
         if (lastName.length() == 0) storage.setPlayer(player, "lastName", player.getName());
-        if (!lastName.equals(player.getName())) {
+        else if (!lastName.equals(player.getName())) {
             String lastNames = storage.getPlayerString(player, "lastNames");
-            storage.setPlayer(player, "lastNames", lastNames + lastName);
+            hms.getServer().broadcast(Language.getMessagePlaceholderReplace("modStatsNameChange", true,
+                    "%PREFIX%", "Name", "%OLDNAME%", lastName, "%NEWNAME%", player.getName()), "hms.default");
+            storage.setPlayer(player, "lastNames", lastNames + ' ' + lastName);
             storage.setPlayer(player, "lastName", player.getName());
-            hms.getServer().broadcast("nameChanged", "hms.default"); //TODO message
         }
+        storage.set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void playerLeave(PlayerQuitEvent e) {
-
-        int time;
-        Player player = e.getPlayer();
-
-        time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
-        storage.incrementPlayerInt(player, "timeOnline", time);
-        timeOnline.remove(player);
+        setOnlineTime(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -89,4 +86,19 @@ public class ModStats extends HalfminerModule implements Listener {
         double calc = storage.getPlayerInt(player, "kills") / storage.getPlayerInt(player, "deaths");
         return Math.round(calc * 100) / 100;
     }
+
+    private void setOnlineTime(Player player) {
+        int time;
+
+        time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
+        storage.incrementPlayerInt(player, "timeOnline", time);
+        timeOnline.remove(player);
+    }
+
+    @Override
+    public void onDisable() {
+        for (Player player : timeOnline.keySet()) setOnlineTime(player);
+        timeOnline.clear(); //make sure that calculations are not done twice
+    }
+
 }

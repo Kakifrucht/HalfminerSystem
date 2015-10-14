@@ -54,7 +54,7 @@ public class HalfminerSystem extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (HalfminerModule mod : modules) mod.onDisable(); //make sure all modules disable properly
+        for (int i = modules.size() - 1; i >= 0; i--) modules.get(i).onDisable(); //disable all modules backwards
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("HalfminerSystem disabled");
     }

@@ -2,9 +2,12 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class Cmdstats extends BaseCommand {
@@ -19,9 +22,11 @@ public class Cmdstats extends BaseCommand {
     public void run(CommandSender sender, Command cmd, String label, String[] args) {
 
         if (args.length > 0) {
-            Player player = hms.getServer().getPlayer(args[0]); //TODO also check offline players
+            OfflinePlayer player = null;
+            String uid = storage.getString("uid." + args[0].toLowerCase());
+            if (uid.length() > 0) player = hms.getServer().getOfflinePlayer(UUID.fromString(uid));
             if (player != null) showStats(sender, player);
-            else sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true, "%PREFIX%", "Stats"));
+            else sender.sendMessage(Language.getMessagePlaceholderReplace("commandPlayerNotFound", true, "%PREFIX%", "Stats"));
         } else {
             if (sender instanceof Player) showStats(sender, (Player) sender);
             else sender.sendMessage(Language.getMessage("notAPlayer"));
@@ -29,10 +34,10 @@ public class Cmdstats extends BaseCommand {
 
     }
 
-    private void showStats(final CommandSender sendTo, final Player toShow) {
+    private void showStats(final CommandSender sendTo, final OfflinePlayer toShow) {
         final String skillGroup = storage.getPlayerString(toShow, "skillGroup");
         final int skillLevel = storage.getPlayerInt(toShow, "skillLevel");
-        final int timeOnline = storage.getPlayerInt(toShow, "timeOnline");
+        final int timeOnline = storage.getPlayerInt(toShow, "timeOnline") / 60;
         final int joins = storage.getPlayerInt(toShow, "joins");
         final int kills = storage.getPlayerInt(toShow, "kills");
         final int deaths = storage.getPlayerInt(toShow, "deaths");
@@ -53,7 +58,8 @@ public class Cmdstats extends BaseCommand {
                         "%VOTES%", String.valueOf(votes), "%MOBKILLS%", String.valueOf(mobKills),
                         "%BLOCKSPLACED%", String.valueOf(blocksPlaced), "%BLOCKSBROKEN%", String.valueOf(blocksBroken),
                         "%OLDNAMES%", oldNames) + "\n";
-                if (oldNames.length() > 0) message += Language.getMessagePlaceholderReplace("commandStatsOldnames", false, "%OLDNAMES%", oldNames) + "\n";
+                if (oldNames.length() > 0) message += Language.getMessagePlaceholderReplace("commandStatsOldnames", false,
+                        "%OLDNAMES%", oldNames) + "\n";
                 if (sendTo.getName().equals(toShow.getName())) message += Language.getMessage("commandStatsShowotherStats") + "\n";
                 message += Language.getMessage("commandStatsBottom");
 
@@ -61,7 +67,6 @@ public class Cmdstats extends BaseCommand {
             }
         });
 
-        //TODO implement
     }
 
 }

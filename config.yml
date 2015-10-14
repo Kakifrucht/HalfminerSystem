@@ -19,8 +19,9 @@ localization:
   commandLagServerUnstable: '&eDer Server ist etwas instabil, das Team arbeitet daran'
   commandLagServerLag: '&cDer Server ist sehr instabil, das Team arbeitet daran'
   commandLagPlayerLag: '&cDeine Verbindung ist instabil (Server ist stabil)'
+  commandPlayerNotFound: '&cDieser Spieler wurde noch nicht auf Halfminer gesehen'
   commandStatsTop: '&e&m-------------------&c&l Statistiken &e&m-------------------'
-  commandStatsShow: '&3Statistiken für %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGejoined: &d%JOINS% &7mal\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e)\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBlöcke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
+  commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGejoined: &d%JOINS% &7mal\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e)\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBloecke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
   commandStatsOldnames: 'Alte Namen: &d%OLDNAMES%'
   commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &d/stats [Spieler]'
   commandStatsBottom: '&e&m------------------------------------------------'
@@ -44,6 +45,9 @@ localization:
   modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
   modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
+  modStatsNameChange: '%OLDNAME% &bhat seinen Namen zu &a%NEWNAME% &bgewechselt'
+  modStorageSaveSuccessful: 'Die Daten wurden gespeichert'
+  modStorageSaveUnsuccessful: 'Die Daten konnten nicht gespeichert werden'
 autoMessage:
   intervalSeconds: 240
   messages:
@@ -97,3 +101,6 @@ tps:
   historySize: 6
   #If the tps falls under this tps, players with notify permission will be notified
   alertThreshold: 17.0
+storage:
+  #Time in minutes the storage will be autosaving
+  autoSaveMinutes: 15

@@ -1,8 +1,9 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.util.Language;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class ModStorage extends HalfminerModule {
         fileConfig.set(path, value);
     }
 
-    public void setPlayer(Player player, String path, Object value) {
+    public void setPlayer(OfflinePlayer player, String path, Object value) {
         set(player.getUniqueId().toString() + '.' + path, value);
     }
 
@@ -28,7 +29,7 @@ public class ModStorage extends HalfminerModule {
         fileConfig.set(path, fileConfig.getInt(path, 0) + incrementBy);
     }
 
-    public void incrementPlayerInt(Player player, String path, int incrementBy) {
+    public void incrementPlayerInt(OfflinePlayer player, String path, int incrementBy) {
         incrementInt(player.getUniqueId().toString() + "." + path, incrementBy);
     }
 
@@ -44,15 +45,15 @@ public class ModStorage extends HalfminerModule {
         return fileConfig.getBoolean(path);
     }
 
-    public String getPlayerString(Player player, String path) {
+    public String getPlayerString(OfflinePlayer player, String path) {
         return getString(player.getUniqueId().toString() + '.' + path);
     }
 
-    public int getPlayerInt(Player player, String path) {
+    public int getPlayerInt(OfflinePlayer player, String path) {
         return getInt(player.getUniqueId().toString() + '.' + path);
     }
 
-    public boolean getPlayerBoolean(Player player, String path) {
+    public boolean getPlayerBoolean(OfflinePlayer player, String path) {
         return getBoolean(player.getUniqueId().toString() + '.' + path);
     }
 
@@ -61,21 +62,22 @@ public class ModStorage extends HalfminerModule {
         if (file == null) file = new File(hms.getDataFolder(), "storage.yml");
         fileConfig = YamlConfiguration.loadConfiguration(file);
 
+        int saveInterval = hms.getConfig().getInt("storage.autoSaveMinutes", 15) * 60 * 20;
         hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
                 onDisable();
             }
-        }, 1000, 1000); //TODO use config values
+        }, saveInterval, saveInterval);
     }
 
     @Override
     public void onDisable() {
         try {
             fileConfig.save(file);
-            hms.getLogger().info("Saving data was successful"); //TODO localization
+            hms.getLogger().info(Language.getMessage("modStorageSaveSuccessful"));
         } catch (IOException e) {
-            hms.getLogger().warning("Saving data was not successful");
+            hms.getLogger().warning(Language.getMessage("modStorageSaveUnsuccessful"));
             e.printStackTrace();
         }
     }
