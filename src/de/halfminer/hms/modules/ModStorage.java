@@ -12,6 +12,7 @@ public class ModStorage extends HalfminerModule {
 
     private File file;
     private FileConfiguration fileConfig;
+    private int taskId;
 
     public ModStorage() {
         reloadConfig();
@@ -77,12 +78,13 @@ public class ModStorage extends HalfminerModule {
         fileConfig = YamlConfiguration.loadConfiguration(file);
 
         int saveInterval = hms.getConfig().getInt("storage.autoSaveMinutes", 15) * 60 * 20;
-        hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
+        if (taskId > 0) hms.getServer().getScheduler().cancelTask(taskId);
+        taskId = hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
                 saveConfig();
             }
-        }, saveInterval, saveInterval);
+        }, saveInterval, saveInterval).getTaskId();
     }
 
     @Override
