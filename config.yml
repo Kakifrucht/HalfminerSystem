@@ -4,7 +4,8 @@ localization:
   noPermission: '&cDu hast nicht die Berechtigung dies zu verwenden'
   notAPlayer: 'Dieses Kommando kann nur als Spieler ausgefuehrt werden'
   playerNotOnline: '&cDieser Spieler ist nicht online'
-  commandHmsUsage: '&cVerwendung: &f/hms setmotd, reload, rename [name]'
+  playerDoesNotExist: '&cDieser Spieler existiert nicht'
+  commandHmsUsage: '&cVerwendung: &f/hms setmotd [motd], reload, rename [name]'
   commandHmsConfigReloaded: '&aKonfiguration neugeladen'
   commandHmsMotdUpdated: '&7Die MOTD wurde geaendert zu: &r&7%NEWMOTD%'
   commandHmsMotdFailed: '&cVerwendung: &f/hms setmotd <motd>'
@@ -19,12 +20,17 @@ localization:
   commandLagServerUnstable: '&eDer Server ist etwas instabil, das Team arbeitet daran'
   commandLagServerLag: '&cDer Server ist sehr instabil, das Team arbeitet daran'
   commandLagPlayerLag: '&cDeine Verbindung ist instabil (Server ist stabil)'
-  commandPlayerNotFound: '&cDieser Spieler wurde noch nicht auf Halfminer gesehen'
   commandStatsTop: '&e&m-------------------&c&l Statistiken &e&m-------------------'
   commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGejoined: &d%JOINS% &7mal\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e)\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBloecke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
   commandStatsOldnames: 'Alte Namen: &d%OLDNAMES%'
   commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &d/stats [Spieler]'
   commandStatsBottom: '&e&m------------------------------------------------'
+  commandHmstoreUsage: '&cVerwendung: &f/hmstore get/set/setint/setbool/remove/save <path> [value]'
+  commandHmstoreSet: '&7Der Wert &o%PATH% &7wurde gesetzt zu &r%VALUE%'
+  commandHmstoreSetError: '&7Die Eingabe ist ungueltig, der Wert wurde nicht gesetzt'
+  commandHmstoreGet: '&7Der Wert &o%PATH% &7lautet: &r%VALUE%'
+  commandHmstoreRemove: '&7Der Wert &o%PATH% &7wurde entfernt'
+  commandHmstoreSave: '&7Die Variablen wurden gespeichert'
   modAutoMessagePlaceholder: '&e&m------------------------------------------------'
   modKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
   modKillfarmingNoCommand: '&cKommandos sind fuer dich weitere &a%TIME% &cSekunden deaktiviert, da du Killfarming betrieben hast'
@@ -104,3 +110,4 @@ tps:
 storage:
   #Time in minutes the storage will be autosaving
   autoSaveMinutes: 15
+skillLevel:

@@ -22,7 +22,7 @@ public class Cmdstats extends BaseCommand {
             String uid = storage.getString("uid." + args[0].toLowerCase());
             if (uid.length() > 0) showStats(sender, uid);
             else
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandPlayerNotFound", true, "%PREFIX%", "Stats"));
+                sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Stats"));
         } else {
             if (sender instanceof Player) showStats(sender, ((Player) sender).getUniqueId().toString());
             if (sender instanceof Player) showStats(sender, ((Player) sender).getUniqueId().toString());
@@ -32,18 +32,18 @@ public class Cmdstats extends BaseCommand {
     }
 
     private void showStats(final CommandSender sendTo, final String uid) {
-        final String playerName = storage.getString(uid + ".lastName");
-        final String skillGroup = storage.getString(uid + ".skillGroup");
-        final int skillLevel = storage.getInt(uid + ".skillLevel");
-        final int timeOnline = storage.getInt(uid + ".timeOnline") / 60;
+        final String playerName = storage.getString(uid + ".lastname");
+        final String skillGroup = storage.getString(uid + ".skillgroup");
+        final int skillLevel = storage.getInt(uid + ".skilllevel");
+        final int timeOnline = storage.getInt(uid + ".timeonline") / 60;
         final int joins = storage.getInt(uid + ".joins");
         final int kills = storage.getInt(uid + ".kills");
         final int deaths = storage.getInt(uid + ".deaths");
         final int votes = storage.getInt(uid + ".votes");
-        final int mobKills = storage.getInt(uid + ".mobKills");
-        final int blocksPlaced = storage.getInt(uid + ".blocksPlaced");
-        final int blocksBroken = storage.getInt(uid + ".blocksBroken");
-        final String oldNames = storage.getString(uid + ".lastNames");
+        final int mobKills = storage.getInt(uid + ".mobkills");
+        final int blocksPlaced = storage.getInt(uid + ".blocksplaced");
+        final int blocksBroken = storage.getInt(uid + ".blocksbroken");
+        final String oldNames = storage.getString(uid + ".lastnames");
         //Will iterate quite often, so better async it
         hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
             @Override

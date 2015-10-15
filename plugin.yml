@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 2.5
+version: 3.0
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -11,6 +11,8 @@ commands:
     description: Bukkit override, protects from viewing all commands
   hms:
     description: HalfminerSystem basecommand
+  hmstore:
+    description: Data storage manipulation
   signedit:
     description: Edit the contents of a sign or copy it
     aliases: [se]
@@ -43,6 +45,7 @@ permissions:
     hms.bypass.hopperlimit: true
     hms.bypass.bedrockcheck: true
     hms.bypass.nokillfarming: true
+    hms.bypass.skilllevel: true
   hms.default:
     default: true
     description: Default permission
@@ -61,19 +64,15 @@ permissions:
     description: Sends lag notifications to admin
   hms.bypass.combatlog:
     description: Bypass combat logging
-    default: op
   hms.bypass.capsfilter:
     description: Bypass chat caps filter
-    default: op
   hms.bypass.commandfilter:
     description: Bypass chat command filter
-    default: op
   hms.bypass.hopperlimit:
     description: Bypass hopper placement limit
-    default: op
   hms.bypass.bedrockcheck:
     description: Bypass bedrock movement check
-    default: op
   hms.bypass.nokillfarming:
     description: Bypass killfarming check
-    default: op
+  hms.bypass.skilllevel:
+    description: Bypass setting of skilllevel

@@ -31,15 +31,15 @@ public class ModStats extends HalfminerModule implements Listener {
         timeOnline.put(player, System.currentTimeMillis() / 1000);
 
         //Name checking
-        String lastName = storage.getPlayerString(player, "lastName");
+        String lastName = storage.getPlayerString(player, "lastname");
         //Called on first join
-        if (lastName.length() == 0) storage.setPlayer(player, "lastName", player.getName());
+        if (lastName.length() == 0) storage.setPlayer(player, "lastname", player.getName());
         else if (!lastName.equals(player.getName())) {
-            String lastNames = storage.getPlayerString(player, "lastNames");
+            String lastNames = storage.getPlayerString(player, "lastnames");
             hms.getServer().broadcast(Language.getMessagePlaceholderReplace("modStatsNameChange", true,
                     "%PREFIX%", "Name", "%OLDNAME%", lastName, "%NEWNAME%", player.getName()), "hms.default");
-            storage.setPlayer(player, "lastNames", lastNames + ' ' + lastName);
-            storage.setPlayer(player, "lastName", player.getName());
+            storage.setPlayer(player, "lastnames", lastNames + ' ' + lastName);
+            storage.setPlayer(player, "lastname", player.getName());
         }
         storage.set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
     }
@@ -57,30 +57,30 @@ public class ModStats extends HalfminerModule implements Listener {
         Player victim = e.getEntity().getPlayer();
         if (killer != null) {
             storage.incrementPlayerInt(killer, "kills", 1);
-            storage.setPlayer(killer, "kdRatio", calculateKDRatio(killer));
+            storage.setPlayer(killer, "kdratio", calculateKDRatio(killer));
             storage.setPlayer(killer, "lastkill", System.currentTimeMillis() / 1000);
         }
         storage.incrementPlayerInt(victim, "deaths", 1);
-        storage.setPlayer(victim, "kdRatio", calculateKDRatio(victim));
+        storage.setPlayer(victim, "kdratio", calculateKDRatio(victim));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void playerMobkill(EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Player) && e.getEntity().getKiller() != null)
-            storage.incrementPlayerInt(e.getEntity().getKiller(), "mobKills", 1);
+            storage.incrementPlayerInt(e.getEntity().getKiller(), "mobkills", 1);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void blockPlace(BlockPlaceEvent e) {
-        storage.incrementPlayerInt(e.getPlayer(), "blocksPlaced", 1);
+        storage.incrementPlayerInt(e.getPlayer(), "blocksplaced", 1);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void blockBreak(BlockBreakEvent e) {
-        storage.incrementPlayerInt(e.getPlayer(), "blocksBroken", 1);
+        storage.incrementPlayerInt(e.getPlayer(), "blocksbroken", 1);
     }
 
     private double calculateKDRatio(Player player) {
@@ -92,7 +92,7 @@ public class ModStats extends HalfminerModule implements Listener {
         int time;
 
         time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
-        storage.incrementPlayerInt(player, "timeOnline", time);
+        storage.incrementPlayerInt(player, "timeonline", time);
         timeOnline.remove(player);
     }
 

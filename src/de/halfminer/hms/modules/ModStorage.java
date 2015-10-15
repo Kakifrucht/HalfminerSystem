@@ -61,6 +61,16 @@ public class ModStorage extends HalfminerModule {
         return getBoolean(player.getUniqueId().toString() + '.' + path);
     }
 
+    public void saveConfig() {
+        try {
+            fileConfig.save(file);
+            hms.getLogger().info(Language.getMessage("modStorageSaveSuccessful"));
+        } catch (IOException e) {
+            hms.getLogger().warning(Language.getMessage("modStorageSaveUnsuccessful"));
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void reloadConfig() {
         if (file == null) file = new File(hms.getDataFolder(), "storage.yml");
@@ -70,19 +80,13 @@ public class ModStorage extends HalfminerModule {
         hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
-                onDisable();
+                saveConfig();
             }
         }, saveInterval, saveInterval);
     }
 
     @Override
     public void onDisable() {
-        try {
-            fileConfig.save(file);
-            hms.getLogger().info(Language.getMessage("modStorageSaveSuccessful"));
-        } catch (IOException e) {
-            hms.getLogger().warning(Language.getMessage("modStorageSaveUnsuccessful"));
-            e.printStackTrace();
-        }
+        saveConfig();
     }
 }
