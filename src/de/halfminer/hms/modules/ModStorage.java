@@ -33,6 +33,10 @@ public class ModStorage extends HalfminerModule {
         incrementInt(player.getUniqueId().toString() + "." + path, incrementBy);
     }
 
+    public Object get(String path) {
+        return fileConfig.get(path);
+    }
+
     public String getString(String path) {
         return fileConfig.getString(path, "");
     }

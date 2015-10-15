@@ -58,6 +58,7 @@ public class ModStats extends HalfminerModule implements Listener {
         if (killer != null) {
             storage.incrementPlayerInt(killer, "kills", 1);
             storage.setPlayer(killer, "kdRatio", calculateKDRatio(killer));
+            storage.setPlayer(killer, "lastkill", System.currentTimeMillis() / 1000);
         }
         storage.incrementPlayerInt(victim, "deaths", 1);
         storage.setPlayer(victim, "kdRatio", calculateKDRatio(victim));
@@ -66,7 +67,7 @@ public class ModStats extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void playerMobkill(EntityDeathEvent e) {
-        if(!(e.getEntity() instanceof Player) && e.getEntity().getKiller() != null)
+        if (!(e.getEntity() instanceof Player) && e.getEntity().getKiller() != null)
             storage.incrementPlayerInt(e.getEntity().getKiller(), "mobKills", 1);
     }
 
