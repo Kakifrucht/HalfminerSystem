@@ -4,8 +4,9 @@ Website: https://halfminer.de
 
 Current features
 -------
+- **Complete dueling solution HalfminerDuel**
+  - More information below
 - Modular, lightweight, efficient
-- **Complete dueling solution HalfminerDuel** // information below
 - Statistics for every player with /stats
 - View latency and server status with /lag
   - Information if player or server lags
@@ -30,7 +31,6 @@ Current features
 
 HalfminerDuel
 -------
-- Lightweight and efficient
 - Endless amount of arenas
 - Custom kits per arena
 - Tested and should be bug free
