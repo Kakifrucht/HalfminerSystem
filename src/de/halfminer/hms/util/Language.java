@@ -25,19 +25,49 @@ public class Language {
     }
 
     /**
-     * Replace the placeholders from a given string with the given placeholders
+     * Replace the placeholders from a given string with the given placeholders. The String will only be iterated once,
+     * so the performance of this algorithm lies within O(n). Placeholders must start and end with character '%'.
      *
      * @param originalMessage string containing the message that contains the placeholders
-     * @param replacements    array containing as even index the placeholder and odd index with what to replace it
+     * @param replacements    array containing as even index the placeholder in format %PLACEHOLDER%
+     *                        and odd index the string that will replace the placeholder
      * @return String containing the finished replaced message
      */
     public static String placeholderReplace(String originalMessage, String... replacements) {
         if (replacements == null) return originalMessage;
-        String toReturn = originalMessage;
-        for (int i = 0; i < replacements.length; i += 2) {
-            toReturn = toReturn.replace(replacements[i], replacements[i + 1]);
+
+        StringBuilder toReturn = new StringBuilder(originalMessage);
+        StringBuilder placeholder = new StringBuilder();
+        for (int i = 0; i < toReturn.length(); i++) {
+
+            //Go into placeholder read mode
+            if (toReturn.charAt(i) == '%') {
+
+                //get the placeholder
+                placeholder.append('%');
+                for (int j = i + 1; j < toReturn.length() && toReturn.charAt(j) != '%'; j++) {
+                    placeholder.append(toReturn.charAt(j));
+                }
+                placeholder.append('%');
+
+                //get the string that will replace the placeholder
+                String replaceWith = null;
+                for (int j = 0; j < replacements.length; j += 2) {
+                    if (replacements[j].equals(placeholder.toString())) {
+                        replaceWith = replacements[j + 1];
+                        break;
+                    }
+                }
+                //Do the replacement, add length of string to the outer loop index, since we do not want to iterate over
+                //it again, or if no replacement was found, add the length of the read placeholder to skip it
+                if (replaceWith != null) {
+                    toReturn.replace(i, i + placeholder.length(), replaceWith);
+                    i += replaceWith.length();
+                } else i += placeholder.length();
+                placeholder.setLength(0);
+            }
         }
-        return toReturn;
+        return toReturn.toString();
     }
 
     /**
