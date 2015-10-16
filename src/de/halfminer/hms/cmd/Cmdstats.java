@@ -33,6 +33,7 @@ public class Cmdstats extends BaseCommand {
 
     private void showStats(final CommandSender sendTo, final String uid) {
 
+        //collect vars
         final String playerName = storage.getString(uid + ".lastname");
         final String skillGroup = storage.getString(uid + ".skillgroup");
         final int skillLevel = storage.getInt(uid + ".skilllevel");
@@ -46,31 +47,25 @@ public class Cmdstats extends BaseCommand {
         final int blocksBroken = storage.getInt(uid + ".blocksbroken");
         final String oldNames = storage.getString(uid + ".lastnames");
 
-        //Will iterate quite often, so better async it
-        hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
-            @Override
-            public void run() {
+        //build the message
+        String message = Language.getMessage("commandStatsTop") + "\n";
+        message += Language.getMessagePlaceholderReplace("commandStatsShow", false, "%PLAYER%", playerName,
+                "%SKILLGROUP%", skillGroup, "%SKILLLEVEL%", String.valueOf(skillLevel),
+                "%ONLINETIME%", String.valueOf(timeOnline), "%JOINS%", String.valueOf(joins),
+                "%KILLS%", String.valueOf(kills), "%DEATHS%", String.valueOf(deaths),
+                "%VOTES%", String.valueOf(votes), "%MOBKILLS%", String.valueOf(mobKills),
+                "%BLOCKSPLACED%", String.valueOf(blocksPlaced), "%BLOCKSBROKEN%", String.valueOf(blocksBroken),
+                "%OLDNAMES%", oldNames) + "\n";
 
-                String message = Language.getMessage("commandStatsTop") + "\n";
-                message += Language.getMessagePlaceholderReplace("commandStatsShow", false, "%PLAYER%", playerName,
-                        "%SKILLGROUP%", skillGroup, "%SKILLLEVEL%", String.valueOf(skillLevel),
-                        "%ONLINETIME%", String.valueOf(timeOnline), "%JOINS%", String.valueOf(joins),
-                        "%KILLS%", String.valueOf(kills), "%DEATHS%", String.valueOf(deaths),
-                        "%VOTES%", String.valueOf(votes), "%MOBKILLS%", String.valueOf(mobKills),
-                        "%BLOCKSPLACED%", String.valueOf(blocksPlaced), "%BLOCKSBROKEN%", String.valueOf(blocksBroken),
-                        "%OLDNAMES%", oldNames) + "\n";
+        if (oldNames.length() > 0)
+            message += Language.getMessagePlaceholderReplace("commandStatsOldnames", false,
+                    "%OLDNAMES%", oldNames) + "\n";
 
-                if (oldNames.length() > 0)
-                    message += Language.getMessagePlaceholderReplace("commandStatsOldnames", false,
-                            "%OLDNAMES%", oldNames) + "\n";
+        if (sendTo.getName().equals(playerName))
+            message += Language.getMessage("commandStatsShowotherStats") + "\n";
 
-                if (sendTo.getName().equals(playerName))
-                    message += Language.getMessage("commandStatsShowotherStats") + "\n";
-
-                message += Language.getMessage("commandStatsBottom");
-                sendTo.sendMessage(message);
-            }
-        });
+        message += Language.getMessage("commandStatsBottom");
+        sendTo.sendMessage(message);
 
     }
 
