@@ -52,6 +52,8 @@ localization:
   modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
   modStatsNameChange: '%OLDNAME% &bhat seinen Namen zu &a%NEWNAME% &bgewechselt'
+  modStatsRightClick: '&fSkillgruppe: &6%SKILLGROUP% &7| &fKills: &6%KILLS% &7| &fTode: &6%DEATHS%'
+  modStatsRightClickExempt: '&fist ein Serverteammitglied und nimmt am Spiel nicht teil'
   modStorageSaveSuccessful: 'Die Daten wurden gespeichert'
   modStorageSaveUnsuccessful: 'Die Daten konnten nicht gespeichert werden'
 autoMessage:
@@ -111,3 +113,5 @@ storage:
   #Time in minutes the storage will be autosaving
   autoSaveMinutes: 15
 skillLevel:
+  timeUntilDerankDays: 4
+  derankLossAmount: 250

@@ -8,6 +8,9 @@ Current features
   - More information below
 - Modular, lightweight, efficient
 - Statistics for every player with /stats
+  - Rightclick player to view some stats
+- PvP based Skilllevel System, similar to ELO
+  - Adds level to scoreboard, colors name
 - View latency and server status with /lag
   - Information if player or server lags
   - View other players latency/ping
