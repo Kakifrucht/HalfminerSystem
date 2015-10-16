@@ -32,6 +32,7 @@ public class Cmdstats extends BaseCommand {
     }
 
     private void showStats(final CommandSender sendTo, final String uid) {
+
         final String playerName = storage.getString(uid + ".lastname");
         final String skillGroup = storage.getString(uid + ".skillgroup");
         final int skillLevel = storage.getInt(uid + ".skilllevel");
@@ -44,10 +45,12 @@ public class Cmdstats extends BaseCommand {
         final int blocksPlaced = storage.getInt(uid + ".blocksplaced");
         final int blocksBroken = storage.getInt(uid + ".blocksbroken");
         final String oldNames = storage.getString(uid + ".lastnames");
+
         //Will iterate quite often, so better async it
         hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
+
                 String message = Language.getMessage("commandStatsTop") + "\n";
                 message += Language.getMessagePlaceholderReplace("commandStatsShow", false, "%PLAYER%", playerName,
                         "%SKILLGROUP%", skillGroup, "%SKILLLEVEL%", String.valueOf(skillLevel),
@@ -56,13 +59,15 @@ public class Cmdstats extends BaseCommand {
                         "%VOTES%", String.valueOf(votes), "%MOBKILLS%", String.valueOf(mobKills),
                         "%BLOCKSPLACED%", String.valueOf(blocksPlaced), "%BLOCKSBROKEN%", String.valueOf(blocksBroken),
                         "%OLDNAMES%", oldNames) + "\n";
+
                 if (oldNames.length() > 0)
                     message += Language.getMessagePlaceholderReplace("commandStatsOldnames", false,
                             "%OLDNAMES%", oldNames) + "\n";
+
                 if (sendTo.getName().equals(playerName))
                     message += Language.getMessage("commandStatsShowotherStats") + "\n";
-                message += Language.getMessage("commandStatsBottom");
 
+                message += Language.getMessage("commandStatsBottom");
                 sendTo.sendMessage(message);
             }
         });

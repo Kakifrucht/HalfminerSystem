@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -64,6 +66,24 @@ public class ModStats extends HalfminerModule implements Listener {
         storage.setPlayer(victim, "kdratio", calculateKDRatio(victim));
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @SuppressWarnings("unused")
+    public void onInteract(PlayerInteractEntityEvent e) {
+        if (e.getRightClicked() instanceof Player) {
+            Player clicked = (Player) e.getRightClicked();
+            String message = Language.getMessagePlaceholderReplace("modStatsRightClickExempt", true, "%PREFIX%", clicked.getName());
+            if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
+                String skillgroup = storage.getPlayerString(clicked, "skillgroup");
+                String kills = String.valueOf(storage.getPlayerInt(clicked, "kills"));
+                String deaths = String.valueOf(storage.getPlayerInt(clicked, "deaths"));
+                message = Language.getMessagePlaceholderReplace("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
+                        "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%DEATHS%", deaths);
+            }
+            e.getPlayer().sendMessage(message);
+            clicked.playSound(clicked.getLocation(), Sound.NOTE_STICKS, 1.0f, 1.4f);
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void playerMobkill(EntityDeathEvent e) {
@@ -101,7 +121,6 @@ public class ModStats extends HalfminerModule implements Listener {
     @Override
     public void onDisable() {
         for (Player player : timeOnline.keySet()) setOnlineTime(player);
-        timeOnline.clear(); //make sure that calculations are not done twice
     }
 
 }

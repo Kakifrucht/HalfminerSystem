@@ -26,12 +26,14 @@ public class ModStorage extends HalfminerModule {
         set(player.getUniqueId().toString() + '.' + path, value);
     }
 
-    public void incrementInt(String path, int incrementBy) {
-        fileConfig.set(path, fileConfig.getInt(path, 0) + incrementBy);
+    public int incrementInt(String path, int incrementBy) {
+        int value = fileConfig.getInt(path, 0) + incrementBy;
+        fileConfig.set(path, value);
+        return value;
     }
 
-    public void incrementPlayerInt(OfflinePlayer player, String path, int incrementBy) {
-        incrementInt(player.getUniqueId().toString() + "." + path, incrementBy);
+    public int incrementPlayerInt(OfflinePlayer player, String path, int incrementBy) {
+        return incrementInt(player.getUniqueId().toString() + "." + path, incrementBy);
     }
 
     public Object get(String path) {

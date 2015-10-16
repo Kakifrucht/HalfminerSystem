@@ -46,6 +46,7 @@ permissions:
     hms.bypass.bedrockcheck: true
     hms.bypass.nokillfarming: true
     hms.bypass.skilllevel: true
+    hms.bypass.statsrightclick: true
   hms.default:
     default: true
     description: Default permission
@@ -76,3 +77,5 @@ permissions:
     description: Bypass killfarming check
   hms.bypass.skilllevel:
     description: Bypass setting of skilllevel
+  hms.bypass.statsrightclick:
+    description: Bypass stats on rightclick
