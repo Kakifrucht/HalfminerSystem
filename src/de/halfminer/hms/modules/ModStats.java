@@ -21,10 +21,6 @@ public class ModStats extends HalfminerModule implements Listener {
     private final ModStorage storage = hms.getModStorage();
     private final HashMap<Player, Long> timeOnline = new HashMap<>();
 
-    public ModStats() {
-        reloadConfig();
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void playerJoin(PlayerJoinEvent e) {

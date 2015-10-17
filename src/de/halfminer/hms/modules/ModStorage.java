@@ -76,8 +76,10 @@ public class ModStorage extends HalfminerModule {
 
     @Override
     public void reloadConfig() {
-        if (file == null) file = new File(hms.getDataFolder(), "storage.yml");
-        fileConfig = YamlConfiguration.loadConfiguration(file);
+        if (file == null) {
+            file = new File(hms.getDataFolder(), "storage.yml");
+            fileConfig = YamlConfiguration.loadConfiguration(file);
+        }
 
         int saveInterval = hms.getConfig().getInt("storage.autoSaveMinutes", 15) * 60 * 20;
         if (taskId > 0) hms.getServer().getScheduler().cancelTask(taskId);
