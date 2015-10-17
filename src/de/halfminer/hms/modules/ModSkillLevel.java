@@ -1,5 +1,6 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.util.Language;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,8 +25,12 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         Player player = e.getPlayer();
         if (player.hasPermission("hms.bypass.skilllevel")) return;
 
-        if (storage.getPlayerInt(player, "lastkill") + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
-            updateSkill(player, -1 * derankLossAmount);
+        if (storage.getPlayerInt(player, "skilllevel") > 15 &&
+                storage.getPlayerInt(player, "lastkill") + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
+            //derank due to inactivity
+            updateSkill(player, derankLossAmount);
+            player.sendMessage(Language.getMessagePlaceholderReplace("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
+
         } else updateSkill(player, 0);
 
     }
@@ -54,16 +59,27 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         int levelNo = storage.incrementPlayerInt(p, "skillnumber", modifier);
         int level = storage.getPlayerInt(p, "skilllevel");
 
+        int newLevel = getLevel(levelNo);
 
+        if (newLevel != level) {
+
+        }
+
+
+
+
+    }
+
+    private int getLevel(int skillNo) {
         //TODO find clever way of implementing this
-
+        return 1;
     }
 
     @Override
     public void reloadConfig() {
 
         timeUntilDerankSeconds = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
-        derankLossAmount = hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
+        derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
 
     }
 
