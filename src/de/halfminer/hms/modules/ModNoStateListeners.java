@@ -10,7 +10,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffectType;
 
 @SuppressWarnings("unused")
-public class ModStandardFunctions extends HalfminerModule implements Listener {
+public class ModNoStateListeners extends HalfminerModule implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -28,7 +28,6 @@ public class ModStandardFunctions extends HalfminerModule implements Listener {
         Player killer = e.getEntity().getKiller();
         if (killer != null && killer != e.getEntity()) {
             killer.setHealth(killer.getMaxHealth());
-
         } else {
             //TODO play sound on kill and death
         }

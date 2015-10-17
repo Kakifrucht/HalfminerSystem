@@ -30,6 +30,7 @@ Current features
   - Capslock filter
   - Disables hitting self with bow
   - Blocks usage of /pluginname:command
+  - Heals player after kill and plays sound
   - Small features for VariableTriggers /vtapi
 
 HalfminerDuel

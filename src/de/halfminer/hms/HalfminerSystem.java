@@ -33,7 +33,7 @@ public class HalfminerSystem extends JavaPlugin {
         loadConfig();
 
         modules = new ArrayList<>(11);
-        modules.add(new ModStandardFunctions());
+        modules.add(new ModNoStateListeners());
         modules.add(new ModAutoMessage());
         modules.add(new ModAntiKillfarming());
         modules.add(new ModBedrockProtection());
