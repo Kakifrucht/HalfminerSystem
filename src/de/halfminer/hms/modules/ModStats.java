@@ -56,11 +56,29 @@ public class ModStats extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void playerDeath(PlayerDeathEvent e) {
         Player killer = e.getEntity().getKiller();
-        Player victim = e.getEntity().getPlayer();
-        if (killer != null) {
+        Player victim = e.getEntity();
+        if (killer != null && victim != killer) {
             storage.incrementPlayerInt(killer, "kills", 1);
             storage.setPlayer(killer, "kdratio", calculateKDRatio(killer));
             storage.setPlayer(killer, "lastkill", System.currentTimeMillis() / 1000);
+
+            killer.sendMessage(Language.getMessagePlaceholderReplace("modStatsPvPKill", true, "%PREFIX%", "PvP",
+                    "%VICTIM%", victim.getName(), "%KILLS%", String.valueOf(storage.getPlayerInt(killer, "kills")),
+                    "%KDRATIO%", String.valueOf(calculateKDRatio(killer))));
+
+            victim.sendMessage(Language.getMessagePlaceholderReplace("modStatsPvPDeath", true, "%PREFIX%", "PvP",
+                    "%KILLER%", killer.getName(), "%DEATHS%", String.valueOf(storage.getPlayerInt(victim, "deaths")),
+                    "%KDRATIO%", String.valueOf(calculateKDRatio(victim))));
+
+            hms.getLogger().info(Language.getMessagePlaceholderReplace("modStatsPvPLog", false,
+                    "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
+        } else {
+
+            victim.sendMessage(Language.getMessagePlaceholderReplace("modStatsDeath", true, "%PREFIX%", "PvP",
+                    "%DEATHS%", String.valueOf(storage.getPlayerInt(victim, "deaths"))));
+
+            hms.getLogger().info(Language.getMessagePlaceholderReplace("modStatsDeathLog", false,
+                    "%PLAYER%", victim.getName()));
         }
         storage.incrementPlayerInt(victim, "deaths", 1);
         storage.setPlayer(victim, "kdratio", calculateKDRatio(victim));

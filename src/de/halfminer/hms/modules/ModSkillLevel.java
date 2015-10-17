@@ -20,14 +20,14 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
     @EventHandler
     @SuppressWarnings("unused")
     public void onJoin(PlayerJoinEvent e) {
+
         Player player = e.getPlayer();
         if (player.hasPermission("hms.bypass.skilllevel")) return;
-        if (storage.getPlayerInt(e.getPlayer(), "skilllevel") == 0) {
-            updateSkill(player, 0);
-        }
+
         if (storage.getPlayerInt(player, "lastkill") + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
             updateSkill(player, -1 * derankLossAmount);
-        }
+        } else updateSkill(player, 0);
+
     }
 
     @EventHandler
@@ -44,7 +44,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
             else modifier = (((killerLevel - victimLevel) * 3) - 65) * -1;
 
             updateSkill(killer, modifier);
-            updateSkill(victim, modifier * -1);
+            updateSkill(victim, -modifier);
         }
 
     }

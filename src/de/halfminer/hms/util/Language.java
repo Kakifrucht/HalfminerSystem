@@ -34,19 +34,20 @@ public class Language {
      * @return String containing the finished replaced message
      */
     public static String placeholderReplace(String originalMessage, String... replacements) {
+
         if (replacements == null) return originalMessage;
 
-        StringBuilder toReturn = new StringBuilder(originalMessage);
+        StringBuilder message = new StringBuilder(originalMessage);
         StringBuilder placeholder = new StringBuilder();
-        for (int i = 0; i < toReturn.length(); i++) {
+        for (int i = 0; i < message.length(); i++) {
 
             //Go into placeholder read mode
-            if (toReturn.charAt(i) == '%') {
+            if (message.charAt(i) == '%') {
 
                 //get the placeholder
                 placeholder.append('%');
-                for (int j = i + 1; j < toReturn.length() && toReturn.charAt(j) != '%'; j++) {
-                    placeholder.append(toReturn.charAt(j));
+                for (int j = i + 1; j < message.length() && message.charAt(j) != '%'; j++) {
+                    placeholder.append(message.charAt(j));
                 }
                 placeholder.append('%');
 
@@ -58,16 +59,18 @@ public class Language {
                         break;
                     }
                 }
+
                 //Do the replacement, add length of string to the outer loop index, since we do not want to iterate over
                 //it again, or if no replacement was found, add the length of the read placeholder to skip it
                 if (replaceWith != null) {
-                    toReturn.replace(i, i + placeholder.length(), replaceWith);
+                    message.replace(i, i + placeholder.length(), replaceWith);
                     i += replaceWith.length();
                 } else i += placeholder.length();
+
                 placeholder.setLength(0);
             }
         }
-        return toReturn.toString();
+        return message.toString();
     }
 
     /**

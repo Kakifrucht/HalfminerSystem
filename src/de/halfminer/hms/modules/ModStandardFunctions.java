@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,6 +25,13 @@ public class ModStandardFunctions extends HalfminerModule implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         e.setDeathMessage("");
+        Player killer = e.getEntity().getKiller();
+        if (killer != null && killer != e.getEntity()) {
+            killer.setHealth(killer.getMaxHealth());
+
+        } else {
+            //TODO play sound on kill and death
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
