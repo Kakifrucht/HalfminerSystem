@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,12 +25,25 @@ public class ModNoStateListeners extends HalfminerModule implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
+
         e.setDeathMessage("");
-        Player killer = e.getEntity().getKiller();
+
+        //Heal and play sound
+        final Player killer = e.getEntity().getKiller();
+        final Player died = e.getEntity();
         if (killer != null && killer != e.getEntity()) {
+
             killer.setHealth(killer.getMaxHealth());
+            killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 2.0f);
+            hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+                @Override
+                public void run() {
+                    killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 2.0f);
+                }
+            });
+
         } else {
-            //TODO play sound on kill and death
+            died.playSound(e.getEntity().getLocation(), Sound.AMBIENCE_CAVE, 1.0f, 1.4f);
         }
     }
 
