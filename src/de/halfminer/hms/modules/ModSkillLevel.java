@@ -20,7 +20,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
     private final ModStorage storage = hms.getModStorage();
 
     private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();
-    private Objective skillObjective = scoreboard.getObjective("skill");
+    private Objective skillObjective = scoreboard.getObjective("Skill");
 
     private final Map<String, Long> lastKill = new HashMap<>();
     private String[] teams;
@@ -42,6 +42,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         if (storage.getPlayerInt(player, "skilllevel") > 15 &&
                 storage.getPlayerInt(player, "lastkill") + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
             //derank due to inactivity
+            storage.setPlayer(player, "lastkill", System.currentTimeMillis() / 1000);
             updateSkill(player, derankLossAmount);
             player.sendMessage(Language.getMessagePlaceholderReplace("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
 
@@ -58,8 +59,11 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
             storage.setPlayer(killer, "lastkill", System.currentTimeMillis() / 1000);
 
-            long lastKillLong = lastKill.get(killer.getName() + victim.getName());
-            if (lastKillLong > 0 && lastKillLong + timeUntilKillCountAgainSeconds > System.currentTimeMillis() / 1000) return;
+            if (lastKill.containsKey(killer.getName() + victim.getName())) {
+                long lastKillLong = lastKill.get(killer.getName() + victim.getName());
+                if (lastKillLong > 0 && lastKillLong + timeUntilKillCountAgainSeconds > System.currentTimeMillis() / 1000) return;
+            }
+
 
             int modifier;
             int killerLevel = storage.getPlayerInt(killer, "skilllevel");
@@ -79,15 +83,23 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         int levelNo = storage.incrementPlayerInt(p, "skillnumber", modifier);
         int level = storage.getPlayerInt(p, "skilllevel");
 
+        //bounds for levels and elo
+        if (levelNo < 0) levelNo = 0;
+        else if (levelNo > 4200) levelNo = 4200;
+        if (level < 1) level = 1;
+        else if (level > 22) level = 22;
+        storage.setPlayer(p, "skillnumber", levelNo);
+        storage.setPlayer(p, "skilllevel", level);
+
+        //function to determine new level based on elo (skillnumber)
         int newLevel;
-        //function to determine level
-        double calc = ((1.9d * levelNo) - (0.0002d * (levelNo * levelNo)) / 212) + 1;
+        double calc = ((1.9d * levelNo - (0.0002d * (levelNo * levelNo))) / 212) + 1;
         if (modifier < 0) newLevel = (int) Math.ceil(calc);
         else newLevel = (int) Math.floor(calc);
 
         if (newLevel != level) {
 
-            String teamName = teams[newLevel - 1];
+            String teamName = teams[newLevel - 1].substring(1);
             storage.setPlayer(p, "skilllevel", newLevel);
             storage.setPlayer(p, "skillgroup", teamName);
 
@@ -133,7 +145,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         }
 
         if (skillObjective == null) {
-            skillObjective = scoreboard.registerNewObjective("skill", "dummy");
+            skillObjective = scoreboard.registerNewObjective("Skill", "dummy");
             skillObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         }
 
