@@ -34,9 +34,16 @@ public class ModStats extends HalfminerModule implements Listener {
         if (lastName.length() == 0) storage.setPlayer(player, "lastname", player.getName());
         else if (!lastName.equals(player.getName())) {
             String lastNames = storage.getPlayerString(player, "lastnames");
+
+            if (lastNames.length() > 0) {
+                storage.setPlayer(player, "lastnames", lastNames + ' ' + lastName);
+            } else {
+                storage.setPlayer(player, "lastnames", lastName);
+            }
+
             hms.getServer().broadcast(Language.getMessagePlaceholderReplace("modStatsNameChange", true,
                     "%PREFIX%", "Name", "%OLDNAME%", lastName, "%NEWNAME%", player.getName()), "hms.default");
-            storage.setPlayer(player, "lastnames", lastNames + ' ' + lastName);
+
             storage.setPlayer(player, "lastname", player.getName());
         }
         storage.set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
@@ -54,20 +61,27 @@ public class ModStats extends HalfminerModule implements Listener {
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity();
         if (killer != null && victim != killer) {
-            storage.incrementPlayerInt(killer, "kills", 1);
-            storage.setPlayer(killer, "kdratio", calculateKDRatio(killer));
+            int killsKiller = storage.incrementPlayerInt(killer, "kills", 1);
+            int deathsVictim = storage.incrementPlayerInt(victim, "deaths", 1);
+            double kdRatioKiller = calculateKDRatio(killer);
+            double kdRatioVictim = calculateKDRatio(victim);
+            storage.setPlayer(killer, "kdratio", kdRatioKiller);
+            storage.setPlayer(victim, "kdratio", kdRatioVictim);
 
             killer.sendMessage(Language.getMessagePlaceholderReplace("modStatsPvPKill", true, "%PREFIX%", "PvP",
-                    "%VICTIM%", victim.getName(), "%KILLS%", String.valueOf(storage.getPlayerInt(killer, "kills")),
-                    "%KDRATIO%", String.valueOf(calculateKDRatio(killer))));
+                    "%VICTIM%", victim.getName(), "%KILLS%", String.valueOf(killsKiller),
+                    "%KDRATIO%", String.valueOf(kdRatioKiller)));
 
             victim.sendMessage(Language.getMessagePlaceholderReplace("modStatsPvPDeath", true, "%PREFIX%", "PvP",
-                    "%KILLER%", killer.getName(), "%DEATHS%", String.valueOf(storage.getPlayerInt(victim, "deaths")),
-                    "%KDRATIO%", String.valueOf(calculateKDRatio(victim))));
+                    "%KILLER%", killer.getName(), "%DEATHS%", String.valueOf(deathsVictim),
+                    "%KDRATIO%", String.valueOf(kdRatioVictim)));
 
             hms.getLogger().info(Language.getMessagePlaceholderReplace("modStatsPvPLog", false,
                     "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
         } else {
+
+            storage.incrementPlayerInt(victim, "deaths", 1);
+            storage.setPlayer(victim, "kdratio", calculateKDRatio(victim));
 
             victim.sendMessage(Language.getMessagePlaceholderReplace("modStatsDeath", true, "%PREFIX%", "PvP",
                     "%DEATHS%", String.valueOf(storage.getPlayerInt(victim, "deaths"))));
@@ -75,8 +89,7 @@ public class ModStats extends HalfminerModule implements Listener {
             hms.getLogger().info(Language.getMessagePlaceholderReplace("modStatsDeathLog", false,
                     "%PLAYER%", victim.getName()));
         }
-        storage.incrementPlayerInt(victim, "deaths", 1);
-        storage.setPlayer(victim, "kdratio", calculateKDRatio(victim));
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -119,9 +132,9 @@ public class ModStats extends HalfminerModule implements Listener {
     private double calculateKDRatio(Player player) {
 
         int deaths = storage.getPlayerInt(player, "deaths");
-        if (deaths == 0) return 999999.0d;
-        double calc = storage.getPlayerInt(player, "kills") / deaths;
-        return Math.round(calc * 100) / 100;
+        if (deaths == 0) return 999999.99d;
+        double calc = storage.getPlayerInt(player, "kills") / (double) deaths;
+        return Math.round(calc * 100.0d) / 100.0d;
     }
 
     private void setOnlineTime(Player player) {
