@@ -47,7 +47,7 @@ public class Cmdstats extends BaseCommand {
         final int blocksBroken = storage.getInt(uid + ".blocksbroken");
         final String oldNames = storage.getString(uid + ".lastnames");
 
-        //build the message
+        //build the message TODO add kd ratio to stats
         String message = Language.getMessage("commandStatsTop") + "\n";
         message += Language.getMessagePlaceholderReplace("commandStatsShow", false, "%PLAYER%", playerName,
                 "%SKILLGROUP%", skillGroup, "%SKILLLEVEL%", String.valueOf(skillLevel),
