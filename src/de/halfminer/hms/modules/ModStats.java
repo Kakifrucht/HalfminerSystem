@@ -117,7 +117,10 @@ public class ModStats extends HalfminerModule implements Listener {
     }
 
     private double calculateKDRatio(Player player) {
-        double calc = storage.getPlayerInt(player, "kills") / storage.getPlayerInt(player, "deaths");
+
+        int deaths = storage.getPlayerInt(player, "deaths");
+        if (deaths == 0) return 999999.0d;
+        double calc = storage.getPlayerInt(player, "kills") / deaths;
         return Math.round(calc * 100) / 100;
     }
 
