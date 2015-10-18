@@ -127,6 +127,7 @@ storage:
 skillLevel:
   #Time until a player will be deranked when he didn't fight in the meantime
   timeUntilDerankDays: 4
-  #
+  #Amount of elo points the player will lose on derank
   derankLossAmount: 250
+  #Time in minutes until a kill will be counted again towards elo after a kill
   timeUntilKillCountAgainMinutes: 10

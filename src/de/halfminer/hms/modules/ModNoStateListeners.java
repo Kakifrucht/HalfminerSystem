@@ -34,13 +34,18 @@ public class ModNoStateListeners extends HalfminerModule implements Listener {
         if (killer != null && killer != e.getEntity()) {
 
             killer.setHealth(killer.getMaxHealth());
-            killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 2.0f);
             hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
                 @Override
                 public void run() {
                     killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 2.0f);
+                    try {
+                        Thread.sleep(300L);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 0.5f);
                 }
-            });
+            }, 5);
 
         } else {
             died.playSound(e.getEntity().getLocation(), Sound.AMBIENCE_CAVE, 1.0f, 1.4f);
