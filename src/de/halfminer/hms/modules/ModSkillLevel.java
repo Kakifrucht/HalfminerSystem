@@ -1,17 +1,31 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.TitleSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModSkillLevel extends HalfminerModule implements Listener {
 
     private final ModStorage storage = hms.getModStorage();
 
+    private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();
+    private Objective skillObjective = scoreboard.getObjective("skill");
+
+    private final Map<String, Long> lastKill = new HashMap<>();
+    private String[] teams;
     private int timeUntilDerankSeconds;
+    private int timeUntilKillCountAgainSeconds;
     private int derankLossAmount;
 
     public ModSkillLevel() {
@@ -42,6 +56,11 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         Player victim = e.getEntity().getPlayer();
         if (killer != null && !killer.hasPermission("hms.bypass.skilllevel") && !victim.hasPermission("hms.bypass.skilllevel")) {
 
+            storage.setPlayer(killer, "lastkill", System.currentTimeMillis() / 1000);
+
+            long lastKillLong = lastKill.get(killer.getName() + victim.getName());
+            if (lastKillLong > 0 && lastKillLong + timeUntilKillCountAgainSeconds > System.currentTimeMillis() / 1000) return;
+
             int modifier;
             int killerLevel = storage.getPlayerInt(killer, "skilllevel");
             int victimLevel = storage.getPlayerInt(victim, "skilllevel");
@@ -50,6 +69,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
             updateSkill(killer, modifier);
             updateSkill(victim, -modifier);
+            lastKill.put(killer.getName() + victim.getName(), System.currentTimeMillis() / 1000);
         }
 
     }
@@ -59,27 +79,63 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         int levelNo = storage.incrementPlayerInt(p, "skillnumber", modifier);
         int level = storage.getPlayerInt(p, "skilllevel");
 
-        int newLevel = getLevel(levelNo);
+        int newLevel;
+        //function to determine level
+        double calc = ((1.9d * levelNo) - (0.0002d * (levelNo * levelNo)) / 212) + 1;
+        if (modifier < 0) newLevel = (int) Math.ceil(calc);
+        else newLevel = (int) Math.floor(calc);
 
         if (newLevel != level) {
 
+            String teamName = teams[newLevel - 1];
+            storage.setPlayer(p, "skilllevel", newLevel);
+            storage.setPlayer(p, "skillgroup", teamName);
+
+            skillObjective.getScore(p.getName()).setScore(newLevel);
+            scoreboard.getTeam(teamName).addEntry(teamName);
+
+            String sendTitle;
+            if (newLevel > level) {
+                sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelUprankTitle", false, "%SKILLLEVEL%",
+                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
+            } else {
+                sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
+                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
+            }
+            TitleSender.sendTitle(p, sendTitle);
+            hms.getLogger().info(Language.getMessagePlaceholderReplace("modSkillLevelLog", false, "%PLAYER%", p.getName(),
+                    "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(levelNo)));
         }
-
-
-
-
-    }
-
-    private int getLevel(int skillNo) {
-        //TODO find clever way of implementing this
-        return 1;
     }
 
     @Override
     public void reloadConfig() {
 
         timeUntilDerankSeconds = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
+        timeUntilKillCountAgainSeconds = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
+
+        //setup scoreboards, TODO do not hardcode teams, more config usage
+        teams = new String[]{ //first character is colorcode
+                "7Noob",
+                "8Eisen", "8Eisen", "8Eisen", "8Eisen", "8Eisen",
+                "6Gold", "6Gold", "6Gold", "6Gold", "6Gold",
+                "bDiamant", "bDiamant", "bDiamant", "bDiamant", "bDiamant",
+                "aEmerald", "aEmerald", "aEmerald", "aEmerald", "aEmerald",
+                "0Pro"
+        };
+
+        for (String team : teams) {
+            if (scoreboard.getTeam(team.substring(1)) == null) {
+                Team registered = scoreboard.registerNewTeam(team.substring(1));
+                registered.setPrefix('§' + team.substring(0, 1));
+            }
+        }
+
+        if (skillObjective == null) {
+            skillObjective = scoreboard.registerNewObjective("skill", "dummy");
+            skillObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+        }
 
     }
 

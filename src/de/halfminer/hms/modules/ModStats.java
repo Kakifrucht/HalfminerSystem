@@ -56,7 +56,6 @@ public class ModStats extends HalfminerModule implements Listener {
         if (killer != null && victim != killer) {
             storage.incrementPlayerInt(killer, "kills", 1);
             storage.setPlayer(killer, "kdratio", calculateKDRatio(killer));
-            storage.setPlayer(killer, "lastkill", System.currentTimeMillis() / 1000);
 
             killer.sendMessage(Language.getMessagePlaceholderReplace("modStatsPvPKill", true, "%PREFIX%", "PvP",
                     "%VICTIM%", victim.getName(), "%KILLS%", String.valueOf(storage.getPlayerInt(killer, "kills")),

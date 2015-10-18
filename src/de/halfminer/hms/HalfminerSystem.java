@@ -44,6 +44,7 @@ public class HalfminerSystem extends JavaPlugin {
         modules.add(new ModTps());
         modules.add(new ModStorage());
         modules.add(new ModStats());
+        modules.add(new ModSkillLevel());
 
         for (HalfminerModule mod : modules)
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);

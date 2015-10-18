@@ -125,5 +125,8 @@ storage:
   #Time in minutes the storage will be autosaving
   autoSaveMinutes: 15
 skillLevel:
+  #Time until a player will be deranked when he didn't fight in the meantime
   timeUntilDerankDays: 4
+  #
   derankLossAmount: 250
+  timeUntilKillCountAgainMinutes: 10
