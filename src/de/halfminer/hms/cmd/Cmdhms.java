@@ -28,6 +28,9 @@ public class Cmdhms extends BaseCommand {
                 case "rename":
                     renameItem(sender, args);
                     return;
+                case "rmhomeblock":
+                    rmHomeBlock(sender, args);
+                    return;
                 case "updateskill":
                     updateSkill(sender, args);
                     return;
@@ -37,6 +40,19 @@ public class Cmdhms extends BaseCommand {
             }
         }
         sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsUsage", true, "%PREFIX%", "Hinweis"));
+    }
+
+    private void rmHomeBlock(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            String playerUid = hms.getModStorage().getString("uid." + args[1].toLowerCase());
+            if (playerUid.length() == 0) {
+                sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Hinweis"));
+                return;
+            }
+            hms.getModStorage().set("vote." + playerUid, Long.MAX_VALUE);
+            sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsHomeblockRemove", true, "%PREFIX%", "Hinweis",
+                    "%PLAYER%", hms.getModStorage().getString(playerUid + ".lastname")));
+        } else sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsUsage", true, "%PREFIX%", "Hinweis"));
     }
 
     private void updateMotd(CommandSender sender, String[] args) {
