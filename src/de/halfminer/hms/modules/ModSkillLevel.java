@@ -97,12 +97,15 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
         int newLevelUp = (int) Math.ceil(calc);
         int newLevelDown = (int) Math.floor(calc);
-
-        if (newLevelDown > level && modifier > 0) {
-            newLevel = newLevelDown;
-        } else if (newLevelUp < level && modifier <= 0) {
-            newLevel = newLevelUp;
-        }
+        /*
+           Example: Player is Level 4, calc is 3.4, you stay level 4 when calc is 3.0 - 4.9, rank down occurs when player
+           is lower than 3.0 and rank up when player has reached 5.0. Only rank down when the ceiling of the calc value
+           is actually lower than the players level and only rank up when the flooring of the calc is already higher
+           than the new level. If modifier is 0, allow both upranking and downranking, otherwise do not rank down on kill
+           and no not rank up on death
+        */
+        if (newLevelDown > level && modifier >= 0) newLevel = newLevelDown;     //rank up
+        else if (newLevelUp < level && modifier <= 0) newLevel = newLevelUp;    //rank down
 
         //make sure kdratio constraints are met
         if (newLevel > 11 && kdRatio < 1.0d) newLevel = 11;
