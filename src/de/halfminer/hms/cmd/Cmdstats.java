@@ -21,8 +21,9 @@ public class Cmdstats extends BaseCommand {
         if (args.length > 0) {
             String uid = storage.getString("uid." + args[0].toLowerCase());
             if (uid.length() > 0) showStats(sender, uid);
-            else
+            else {
                 sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Stats"));
+            }
         } else {
             if (sender instanceof Player) showStats(sender, ((Player) sender).getUniqueId().toString());
             if (sender instanceof Player) showStats(sender, ((Player) sender).getUniqueId().toString());
@@ -41,18 +42,19 @@ public class Cmdstats extends BaseCommand {
         final int joins = storage.getInt(uid + ".joins");
         final int kills = storage.getInt(uid + ".kills");
         final int deaths = storage.getInt(uid + ".deaths");
+        final double kdratio = storage.getDouble(uid + ".kdratio");
         final int votes = storage.getInt(uid + ".votes");
         final int mobKills = storage.getInt(uid + ".mobkills");
         final int blocksPlaced = storage.getInt(uid + ".blocksplaced");
         final int blocksBroken = storage.getInt(uid + ".blocksbroken");
         final String oldNames = storage.getString(uid + ".lastnames");
 
-        //build the message TODO add kd ratio to stats
+        //build the message
         String message = Language.getMessage("commandStatsTop") + "\n";
         message += Language.getMessagePlaceholderReplace("commandStatsShow", false, "%PLAYER%", playerName,
                 "%SKILLGROUP%", skillGroup, "%SKILLLEVEL%", String.valueOf(skillLevel),
                 "%ONLINETIME%", String.valueOf(timeOnline), "%JOINS%", String.valueOf(joins),
-                "%KILLS%", String.valueOf(kills), "%DEATHS%", String.valueOf(deaths),
+                "%KILLS%", String.valueOf(kills), "%DEATHS%", String.valueOf(deaths), "%KDRATIO%", String.valueOf(kdratio),
                 "%VOTES%", String.valueOf(votes), "%MOBKILLS%", String.valueOf(mobKills),
                 "%BLOCKSPLACED%", String.valueOf(blocksPlaced), "%BLOCKSBROKEN%", String.valueOf(blocksBroken),
                 "%OLDNAMES%", oldNames) + "\n";

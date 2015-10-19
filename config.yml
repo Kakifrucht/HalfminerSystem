@@ -23,7 +23,7 @@ localization:
   commandLagServerLag: '&cDer Server ist sehr instabil, das Team arbeitet daran'
   commandLagPlayerLag: '&cDeine Verbindung ist instabil (Server ist stabil)'
   commandStatsTop: '&e&m-------------------&c&l Statistiken &e&m-------------------'
-  commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGejoined: &d%JOINS% &7mal\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e)\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBloecke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
+  commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGejoined: &d%JOINS% &7mal\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e) | &rK/D: &d%KDRATIO%\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBloecke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
   commandStatsOldnames: 'Alte Namen: &d%OLDNAMES%'
   commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &d/stats [Spieler]'
   commandStatsBottom: '&e&m------------------------------------------------'

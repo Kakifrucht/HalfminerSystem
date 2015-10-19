@@ -93,7 +93,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         //function to determine new level based on elo (skillnumber)
         int newLevel;
         double calc = ((1.9d * elo - (0.0002d * (elo * elo))) / 212) + 1;
-        if (modifier < 0) newLevel = (int) Math.ceil(calc);
+        if (modifier <= 0) newLevel = (int) Math.ceil(calc);
         else newLevel = (int) Math.floor(calc);
 
         //make sure kdratio constraints are met
@@ -156,11 +156,15 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
             skillObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         }
 
+        for (Player player : hms.getServer().getOnlinePlayers()) {
+            if (!player.hasPermission("hms.bypass.skilllevel")) updateSkill(player, 0);
+        }
+
     }
 
     @Override
     public void onDisable() {
-        //unregister all registered teams to clean up
+        //unregister all registered teams
         Team currentTeam;
         for (String team : teams) {
             if ((currentTeam = scoreboard.getTeam(team.substring(1))) != null) {
