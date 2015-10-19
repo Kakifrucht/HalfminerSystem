@@ -15,11 +15,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ModStats extends HalfminerModule implements Listener {
 
     private final ModStorage storage = hms.getModStorage();
-    private final HashMap<Player, Long> timeOnline = new HashMap<>();
+    private final Map<Player, Long> timeOnline = new HashMap<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
@@ -145,11 +146,6 @@ public class ModStats extends HalfminerModule implements Listener {
         time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
         storage.incrementPlayerInt(player, "timeonline", time);
         timeOnline.remove(player);
-    }
-
-    @Override
-    public void onDisable() {
-        for (Player player : timeOnline.keySet()) setOnlineTime(player);
     }
 
 }
