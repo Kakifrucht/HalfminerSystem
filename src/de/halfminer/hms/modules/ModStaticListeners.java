@@ -83,11 +83,4 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
             }
         }
     }
-
-    @Override
-    public void onDisable() {
-        for (Player player : hms.getServer().getOnlinePlayers()) {
-            player.kickPlayer(Language.getMessage("modStaticListenersRestart"));
-        }
-    }
 }
