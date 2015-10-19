@@ -11,7 +11,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffectType;
 
 @SuppressWarnings("unused")
-public class ModNoStateListeners extends HalfminerModule implements Listener {
+public class ModStaticListeners extends HalfminerModule implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
