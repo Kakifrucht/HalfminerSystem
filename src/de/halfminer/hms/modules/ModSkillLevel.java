@@ -24,6 +24,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
     private final Map<String, Long> lastKill = new HashMap<>();
     private String[] teams;
+    private int derankThreshold;
     private int timeUntilDerankSeconds;
     private int timeUntilKillCountAgainSeconds;
     private int derankLossAmount;
@@ -39,7 +40,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         Player player = e.getPlayer();
         if (player.hasPermission("hms.bypass.skilllevel")) return;
 
-        if (storage.getPlayerInt(player, "skilllevel") > 15 &&
+        if (storage.getPlayerInt(player, "skilllevel") >= derankThreshold &&
                 storage.getPlayerInt(player, "lastkill") + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
             //derank due to inactivity
             storage.setPlayer(player, "lastkill", System.currentTimeMillis() / 1000);
@@ -92,7 +93,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
         //function to determine new level based on elo (skillnumber)
         int newLevel;
-        double calc = ((1.9d * elo - (0.0002d * (elo * elo))) / 212) + 1;
+        double calc = ((1.9d * elo - (0.0002d * (elo * elo))) / 212) + 1; //TODO optimize function
         if (modifier <= 0) newLevel = (int) Math.ceil(calc);
         else newLevel = (int) Math.floor(calc);
 
@@ -130,6 +131,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
     @Override
     public void reloadConfig() {
 
+        derankThreshold = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
         timeUntilDerankSeconds = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
         timeUntilKillCountAgainSeconds = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
