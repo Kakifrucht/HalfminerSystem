@@ -38,6 +38,10 @@ public class ModStorage extends HalfminerModule {
         return fileConfig.getInt(path);
     }
 
+    public long getLong(String path) {
+        return fileConfig.getLong(path);
+    }
+
     public double getDouble(String path) {
         return fileConfig.getDouble(path);
     }

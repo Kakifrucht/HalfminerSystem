@@ -1,13 +1,18 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class Cmdvtapi extends BaseCommand {
@@ -21,14 +26,39 @@ public class Cmdvtapi extends BaseCommand {
 
         if (!label.equalsIgnoreCase("vtapi") || args.length == 0 || !sender.isOp()) return;
 
-        if (sender instanceof Player) {
+        if (args.length > 0) {
 
-            Player player = (Player) sender;
-            ConsoleCommandSender consoleInstance = hms.getServer().getConsoleSender();
-            switch (args[0].toLowerCase()) {
-                case "takecase":
+            if (args[0].equalsIgnoreCase("vote")) {
+                if (args.length < 2) return;
+
+                ModStorage storage = hms.getModStorage();
+
+                OfflinePlayer hasVoted = hms.getServer().getPlayer(args[1]);
+                if (hasVoted == null) {
+                    String uid = storage.getString("uid." + args[1]);
+                    if (uid.length() == 0) return;
+                    hasVoted = hms.getServer().getOfflinePlayer(UUID.fromString(uid));
+                }
+
+                storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
+                storage.incrementPlayerInt(hasVoted, "votes", 1);
+                hms.getServer().broadcast(Language.getMessagePlaceholderReplace("commandVtapiVoted", true, "%PREFIX%",
+                        "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
+                if (hasVoted instanceof Player) {
+                    Player playerHasVoted = (Player) hasVoted;
+                    playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.NOTE_PLING, 1.0f, 2.0f);
+                }
+                return;
+            }
+
+            if (sender instanceof Player) {
+
+                Player player = (Player) sender;
+                ConsoleCommandSender consoleInstance = hms.getServer().getConsoleSender();
+
+                if (args[0].equalsIgnoreCase("takecase")) {
+
                     String playername = player.getName();
-
                     //Check if the held Item has an Display Name (cases always do)
                     if (player.getItemInHand().getItemMeta().hasDisplayName()) {
 
@@ -47,8 +77,8 @@ public class Cmdvtapi extends BaseCommand {
                         hms.getLogger().info("Das von " + playername + " gehaltene Item ist ungültig");
                         hms.getServer().dispatchCommand(consoleInstance, "vt run casino:error " + playername);
                     }
-                    break;
-                case "takehead":
+                } else if (args[0].equalsIgnoreCase("takehead")) {
+
                     ItemStack item = player.getItemInHand();
                     if ((item != null) && (item.getType() == Material.SKULL_ITEM)) {
 
@@ -69,9 +99,8 @@ public class Cmdvtapi extends BaseCommand {
                         hms.getServer().dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
 
                     } else hms.getServer().dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
-                    break;
+                }
             }
-
-        } else sender.sendMessage(Language.getMessage("notAPlayer"));
+        }
     }
 }

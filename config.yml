@@ -13,6 +13,7 @@ localization:
   commandHmsMotdFailed: '&cVerwendung: &f/hms setmotd <motd>'
   commandHmsRenameFailed: '&cHalte den Gegenstand, den du umbenennen willst in deiner Hand'
   commandHmsRenameDone: '&aDer Gegenstand wurde umbenannt in &r%NAME%'
+  commandVtapiVoted: '&e%PLAYER% hat eben mit &a/vote &egevotet'
   commandSigneditUsage: '&cVerwendung: &f/signedit copy [anzahl], /signedit <zeile> [text]'
   commandSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu aendern'
   commandSigneditCopy: '&7Klicke das Schild, welches du kopieren moechtest, erstelle &e%AMOUNT% &7Kopien'
@@ -38,6 +39,8 @@ localization:
   commandNeutpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'
   commandNeutpLog: 'Neutp: %PLAYER% wurde zu %LOCATION% teleportiert'
   commandNeutpDocumentation: '&7Es wurde ein automatischer Homepunkt angelegt (&e/home&7). Du kannst einen neuen mit &e/sethome&7 setzen. Alle wichtigen Kommandos unter &e/hilfe&7, lies das &e&oHalfminer Handbuch &7um mehr ueber den Server zu erfahren'
+  commandHomeDenied: '&dHallo %PLAYER%, du spielst bereits seit ueber 15 Minuten und hast noch nicht gevoted. Bitte verwende &6&l/vote&d, um wieder Zugriff auf &o/home &dzu erhalten. Voting ist wichtig damit der Server immer schoen gefuellt und somit am Leben bleibt. Als Dankeschoen erhaelst du zudem 2 Votekisten'
+  commandHomeDeniedLog: 'Home: %PLAYER% wurde /home verweigert'
   modStaticListenersRestart: '&eDer Server wird heruntergefahren und ist bald zurueck'
   modAutoMessagePlaceholder: '&e&m------------------------------------------------'
   modKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
@@ -77,6 +80,9 @@ general:
   titleCommandPlayer: 'tm msg -fadeIn=%FADEIN% -stay=%STAY% -fadeOut=%FADEOUT% %PLAYER% %MESSAGE%'
   titleCommandBroadcast: 'tm bc -fadeIn=%FADEIN% -stay=%STAY% -fadeOut=%FADEOUT% %MESSAGE%'
 command:
+  home:
+    #Time until /home will be blocked
+    timeUntilHomeBlockMinutes: 15
   neutp:
     #Bounds in which the generated position will lie in
     boundMin: 1000

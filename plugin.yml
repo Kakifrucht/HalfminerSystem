@@ -23,6 +23,8 @@ commands:
     description: View the statistics of a player
   neutp:
     description: Teleports the player to a random location
+  home:
+    description: Teleports the player to his home
   vtapi:
     description: Command API
     aliases: [c,hilfe,spenden,regeln,neutp,vote,rang,tools,kiste,deo]
@@ -35,6 +37,7 @@ permissions:
     hms.lag.others: true
     hms.stats: true
     hms.neutp: true
+    hms.home: true
     hms.signedit: true
     hms.admin: true
     hms.notifylag: true
@@ -59,6 +62,9 @@ permissions:
   hms.neutp:
     default: true
     description: Access to neutp command
+  hms.home:
+    default: true
+    description: Access to home command
   hms.lag:
     description: Access to lag command
   hms.lag.others:

@@ -122,6 +122,7 @@ public class Language {
      */
     public static String arrayToString(String[] args, int index, boolean translateColor) {
         String toReturn = "";
+        if (args.length == 0) return toReturn;
         for (int i = index; i < args.length; i++) {
             toReturn += args[i] + ' ';
         }

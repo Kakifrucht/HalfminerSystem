@@ -22,6 +22,8 @@ public class ModStats extends HalfminerModule implements Listener {
     private final ModStorage storage = hms.getModStorage();
     private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
 
+    private int timeUntilHomeBlockSeconds;
+
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void playerJoin(PlayerJoinEvent e) {
@@ -48,6 +50,12 @@ public class ModStats extends HalfminerModule implements Listener {
             storage.setPlayer(player, "lastname", player.getName());
         }
         storage.set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
+
+        //Votebarrier setting
+        if (storage.getInt("vote." + player.getUniqueId().toString()) == 0) {
+            System.out.println(timeUntilHomeBlockSeconds);
+            storage.set("vote." + player.getUniqueId().toString(), ((System.currentTimeMillis() / 1000) + timeUntilHomeBlockSeconds));
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -146,6 +154,11 @@ public class ModStats extends HalfminerModule implements Listener {
         time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
         storage.incrementPlayerInt(player, "timeonline", time);
         timeOnline.remove(player);
+    }
+
+    @Override
+    public void reloadConfig() {
+        timeUntilHomeBlockSeconds = hms.getConfig().getInt("command.home.timeUntilHomeBlockMinutes") * 60;
     }
 
     @Override
