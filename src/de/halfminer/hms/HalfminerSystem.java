@@ -32,7 +32,7 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        modules = new ArrayList<>(11);
+        modules = new ArrayList<>(12);
         modules.add(new ModAutoMessage());
         modules.add(new ModAntiKillfarming());
         modules.add(new ModBedrockProtection());
@@ -98,6 +98,10 @@ public class HalfminerSystem extends JavaPlugin {
 
     public ModStorage getModStorage() {
         return (ModStorage) modules.get(8);
+    }
+
+    public ModSkillLevel getModSkillLevel() {
+        return (ModSkillLevel) modules.get(10);
     }
 
     public void loadConfig() {

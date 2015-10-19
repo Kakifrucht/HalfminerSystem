@@ -61,7 +61,8 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
             if (lastKill.containsKey(killer.getName() + victim.getName())) {
                 long lastKillLong = lastKill.get(killer.getName() + victim.getName());
-                if (lastKillLong > 0 && lastKillLong + timeUntilKillCountAgainSeconds > System.currentTimeMillis() / 1000) return;
+                if (lastKillLong > 0 && lastKillLong + timeUntilKillCountAgainSeconds > System.currentTimeMillis() / 1000)
+                    return;
             }
 
             int modifier;
@@ -77,11 +78,11 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
     }
 
-    private void updateSkill(Player p, int modifier) {
+    public void updateSkill(Player player, int modifier) {
 
-        int elo = storage.getPlayerInt(p, "skillelo") + modifier;
-        int level = storage.getPlayerInt(p, "skilllevel");
-        int kdRatio = storage.getPlayerInt(p, "kdratio");
+        int elo = storage.getPlayerInt(player, "skillelo") + modifier;
+        int level = storage.getPlayerInt(player, "skilllevel");
+        int kdRatio = storage.getPlayerInt(player, "kdratio");
 
         //bounds for levels and elo
         if (elo < 0) elo = 0;
@@ -102,12 +103,12 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
         //Set the new values
         String teamName = teams[newLevel - 1].substring(1);
-        storage.setPlayer(p, "skillelo", elo);
-        storage.setPlayer(p, "skilllevel", newLevel);
-        storage.setPlayer(p, "skillgroup", teamName.substring(1));
+        storage.setPlayer(player, "skillelo", elo);
+        storage.setPlayer(player, "skilllevel", newLevel);
+        storage.setPlayer(player, "skillgroup", teamName.substring(1));
 
-        skillObjective.getScore(p.getName()).setScore(newLevel);
-        scoreboard.getTeam(teamName).addEntry(p.getName());
+        skillObjective.getScore(player.getName()).setScore(newLevel);
+        scoreboard.getTeam(teamName).addEntry(player.getName());
 
         //Send title/log if necessary
         if (newLevel != level) {
@@ -120,8 +121,8 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
                 sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
                         String.valueOf(newLevel), "%SKILLGROUP%", teamName.substring(1));
             }
-            TitleSender.sendTitle(p, sendTitle, 10, 50, 10);
-            hms.getLogger().info(Language.getMessagePlaceholderReplace("modSkillLevelLog", false, "%PLAYER%", p.getName(),
+            TitleSender.sendTitle(player, sendTitle, 10, 50, 10);
+            hms.getLogger().info(Language.getMessagePlaceholderReplace("modSkillLevelLog", false, "%PLAYER%", player.getName(),
                     "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(elo)));
         }
     }

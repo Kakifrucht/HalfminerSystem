@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,6 +27,9 @@ public class Cmdhms extends BaseCommand {
                     return;
                 case "rename":
                     renameItem(sender, args);
+                    return;
+                case "updateskill":
+                    updateSkill(sender, args);
                     return;
                 case "reload":
                     reload(sender);
@@ -64,9 +68,44 @@ public class Cmdhms extends BaseCommand {
             item.setItemMeta(meta);
             player.updateInventory();
 
-            player.sendMessage(Language.getMessagePlaceholderReplace("commandHmsRenameDone", true, "%PREFIX%", "Hinweis", "%NAME%", newName));
+            player.sendMessage(Language.getMessagePlaceholderReplace("commandHmsRenameDone", true, "%PREFIX%",
+                    "Hinweis", "%NAME%", newName));
 
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
+    }
+
+    private void updateSkill(CommandSender sender, String[] args) {
+
+        if (args.length < 2) {
+            sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
+            return;
+        }
+
+        Player player = hms.getServer().getPlayer(args[1]);
+
+        if (player == null) {
+            sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
+            return;
+        }
+
+        ModStorage storage = hms.getModStorage();
+        storage.getPlayerInt(player, "skillelo");
+        int modifier = -storage.getPlayerInt(player, "skillelo");
+
+        if (args.length > 2) {
+            try {
+                modifier += Integer.decode(args[2]);
+            } catch (NumberFormatException e) {
+                sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
+                return;
+            }
+        }
+
+        hms.getModSkillLevel().updateSkill(player, modifier);
+
+        sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
+                "%PLAYER%", player.getName(), "%SKILLLEVEL%", String.valueOf(storage.getPlayerInt(player, "skilllevel")),
+                "%SKILLELO%", String.valueOf(storage.getPlayerInt(player, "skillelo"))));
     }
 
     private void reload(CommandSender sender) {
