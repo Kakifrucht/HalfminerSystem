@@ -64,7 +64,6 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
                 if (lastKillLong > 0 && lastKillLong + timeUntilKillCountAgainSeconds > System.currentTimeMillis() / 1000) return;
             }
 
-
             int modifier;
             int killerLevel = storage.getPlayerInt(killer, "skilllevel");
             int victimLevel = storage.getPlayerInt(victim, "skilllevel");
@@ -80,43 +79,50 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
     private void updateSkill(Player p, int modifier) {
 
-        int levelNo = storage.incrementPlayerInt(p, "skillnumber", modifier);
+        int elo = storage.getPlayerInt(p, "skillelo") + modifier;
         int level = storage.getPlayerInt(p, "skilllevel");
+        int kdRatio = storage.getPlayerInt(p, "kdratio");
 
         //bounds for levels and elo
-        if (levelNo < 0) levelNo = 0;
-        else if (levelNo > 4200) levelNo = 4200;
+        if (elo < 0) elo = 0;
+        else if (elo > 4200) elo = 4200;
         if (level < 1) level = 1;
         else if (level > 22) level = 22;
-        storage.setPlayer(p, "skillnumber", levelNo);
-        storage.setPlayer(p, "skilllevel", level);
 
         //function to determine new level based on elo (skillnumber)
         int newLevel;
-        double calc = ((1.9d * levelNo - (0.0002d * (levelNo * levelNo))) / 212) + 1;
+        double calc = ((1.9d * elo - (0.0002d * (elo * elo))) / 212) + 1;
         if (modifier < 0) newLevel = (int) Math.ceil(calc);
         else newLevel = (int) Math.floor(calc);
 
+        //make sure kdratio constraints are met
+        if (newLevel > 11 && kdRatio < 1.0d) newLevel = 11;
+        else if (newLevel > 16 && kdRatio < 3.0d) newLevel = 16;
+        else if (newLevel == 22 && kdRatio < 5.0d) newLevel = 21;
+
+        //Set the new values
+        String teamName = teams[newLevel - 1].substring(1);
+        storage.setPlayer(p, "skillelo", elo);
+        storage.setPlayer(p, "skilllevel", newLevel);
+        storage.setPlayer(p, "skillgroup", teamName.substring(1));
+
+        skillObjective.getScore(p.getName()).setScore(newLevel);
+        scoreboard.getTeam(teamName).addEntry(p.getName());
+
+        //Send title/log if necessary
         if (newLevel != level) {
-
-            String teamName = teams[newLevel - 1].substring(1);
-            storage.setPlayer(p, "skilllevel", newLevel);
-            storage.setPlayer(p, "skillgroup", teamName);
-
-            skillObjective.getScore(p.getName()).setScore(newLevel);
-            scoreboard.getTeam(teamName).addEntry(teamName);
 
             String sendTitle;
             if (newLevel > level) {
                 sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelUprankTitle", false, "%SKILLLEVEL%",
-                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
+                        String.valueOf(newLevel), "%SKILLGROUP%", teamName.substring(1));
             } else {
                 sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
-                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
+                        String.valueOf(newLevel), "%SKILLGROUP%", teamName.substring(1));
             }
-            TitleSender.sendTitle(p, sendTitle);
+            TitleSender.sendTitle(p, sendTitle, 10, 50, 10);
             hms.getLogger().info(Language.getMessagePlaceholderReplace("modSkillLevelLog", false, "%PLAYER%", p.getName(),
-                    "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(levelNo)));
+                    "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(elo)));
         }
     }
 
@@ -127,14 +133,14 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         timeUntilKillCountAgainSeconds = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
 
-        //setup scoreboards, TODO do not hardcode teams, more config usage
-        teams = new String[]{ //first character is colorcode
-                "7Noob",
-                "8Eisen", "8Eisen", "8Eisen", "8Eisen", "8Eisen",
-                "6Gold", "6Gold", "6Gold", "6Gold", "6Gold",
-                "bDiamant", "bDiamant", "bDiamant", "bDiamant", "bDiamant",
-                "aEmerald", "aEmerald", "aEmerald", "aEmerald", "aEmerald",
-                "0Pro"
+        //setup scoreboards, TODO find good way for move to config
+        teams = new String[]{ //first character is colorcode, second sorting id
+                "76Noob",
+                "85Eisen", "85Eisen", "85Eisen", "85Eisen", "85Eisen",
+                "64Gold", "64Gold", "64Gold", "64Gold", "64Gold",
+                "b3Diamant", "b3Diamant", "b3Diamant", "b3Diamant", "b3Diamant",
+                "a2Emerald", "a2Emerald", "a2Emerald", "a2Emerald", "a2Emerald",
+                "01Pro"
         };
 
         for (String team : teams) {
@@ -149,6 +155,17 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
             skillObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         }
 
+    }
+
+    @Override
+    public void onDisable() {
+        //unregister all registered teams to clean up
+        Team currentTeam;
+        for (String team : teams) {
+            if ((currentTeam = scoreboard.getTeam(team.substring(1))) != null) {
+                currentTeam.unregister();
+            }
+        }
     }
 
 }
