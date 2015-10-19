@@ -20,7 +20,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
     private final ModStorage storage = hms.getModStorage();
 
     private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();
-    private Objective skillObjective = scoreboard.getObjective("Skill");
+    private Objective skillObjective = scoreboard.getObjective("skill");
 
     private final Map<String, Long> lastKill = new HashMap<>();
     private String[] teams;
@@ -92,10 +92,17 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         else if (level > 22) level = 22;
 
         //function to determine new level based on elo (skillnumber)
-        int newLevel;
+        int newLevel = level;
         double calc = ((1.9d * elo - (0.0002d * (elo * elo))) / 212) + 1; //TODO optimize function
-        if (modifier <= 0) newLevel = (int) Math.ceil(calc);
-        else newLevel = (int) Math.floor(calc);
+
+        int newLevelUp = (int) Math.ceil(calc);
+        int newLevelDown = (int) Math.floor(calc);
+
+        if (newLevelDown > level && modifier > 0) {
+            newLevel = newLevelDown;
+        } else if (newLevelUp < level && modifier <= 0) {
+            newLevel = newLevelUp;
+        }
 
         //make sure kdratio constraints are met
         if (newLevel > 11 && kdRatio < 1.0d) newLevel = 11;
@@ -154,7 +161,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         }
 
         if (skillObjective == null) {
-            skillObjective = scoreboard.registerNewObjective("Skill", "dummy");
+            skillObjective = scoreboard.registerNewObjective("skill", "dummy");
             skillObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         }
 
