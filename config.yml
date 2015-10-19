@@ -31,6 +31,7 @@ localization:
   commandHmstoreGet: '&7Der Wert &o%PATH% &7lautet: &r%VALUE%'
   commandHmstoreRemove: '&7Der Wert &o%PATH% &7wurde entfernt'
   commandHmstoreSave: '&7Die Variablen wurden gespeichert'
+  modStaticListenersRestart: '&eDer Server wird heruntergefahren und ist bald zurueck'
   modAutoMessagePlaceholder: '&e&m------------------------------------------------'
   modKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
   modKillfarmingNoCommand: '&cKommandos sind fuer dich weitere &a%TIME% &cSekunden deaktiviert, da du Killfarming betrieben hast'

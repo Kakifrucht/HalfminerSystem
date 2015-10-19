@@ -38,7 +38,7 @@ public class TitleSender {
             command = Language.placeholderReplace(command, "%FADEIN%", String.valueOf(fadeIn), "%STAY%", String.valueOf(stay),
                     "%FADEOUT%", String.valueOf(fadeOut), "%PLAYER%", player.getName(), "%MESSAGE%", title);
         }
-        dispatchCommand(command);
+        dispatchCommand(command.replace("\n", "<nl>"));
     }
 
     private static void dispatchCommand(String command) {
