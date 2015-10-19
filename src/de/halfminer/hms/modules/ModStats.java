@@ -53,7 +53,6 @@ public class ModStats extends HalfminerModule implements Listener {
 
         //Votebarrier setting
         if (storage.getInt("vote." + player.getUniqueId().toString()) == 0) {
-            System.out.println(timeUntilHomeBlockSeconds);
             storage.set("vote." + player.getUniqueId().toString(), ((System.currentTimeMillis() / 1000) + timeUntilHomeBlockSeconds));
         }
     }

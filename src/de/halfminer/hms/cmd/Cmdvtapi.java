@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -47,6 +48,8 @@ public class Cmdvtapi extends BaseCommand {
                 if (hasVoted instanceof Player) {
                     Player playerHasVoted = (Player) hasVoted;
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.NOTE_PLING, 1.0f, 2.0f);
+                    InetAddress address = playerHasVoted.getAddress().getAddress();
+                    storage.set("vote.ip" + address.toString(), true);
                 }
                 return;
             }
