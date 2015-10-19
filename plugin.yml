@@ -21,6 +21,8 @@ commands:
     aliases: [ping]
   stats:
     description: View the statistics of a player
+  neutp:
+    description: Teleports the player to a random location
   vtapi:
     description: Command API
     aliases: [c,hilfe,spenden,regeln,neutp,vote,rang,tools,kiste,deo]
@@ -32,6 +34,7 @@ permissions:
     hms.lag: true
     hms.lag.others: true
     hms.stats: true
+    hms.neutp: true
     hms.signedit: true
     hms.admin: true
     hms.notifylag: true
@@ -53,6 +56,9 @@ permissions:
   hms.stats:
     default: true
     description: Access to stats command
+  hms.neutp:
+    default: true
+    description: Access to neutp command
   hms.lag:
     description: Access to lag command
   hms.lag.others:

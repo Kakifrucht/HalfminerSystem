@@ -33,6 +33,11 @@ localization:
   commandHmstoreGet: '&7Der Wert &o%PATH% &7lautet: &r%VALUE%'
   commandHmstoreRemove: '&7Der Wert &o%PATH% &7wurde entfernt'
   commandHmstoreSave: '&7Die Variablen wurden gespeichert'
+  commandNeutpAlreadyUsed: '&cDu kannst diesen Befehl nur einmal verwenden'
+  commandNeutpCountdown: '&aDu wirst in 5 Sekunden an einen eigenen Ort geportet'
+  commandNeutpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'
+  commandNeutpLog: 'Neutp: %PLAYER% wurde zu %LOCATION% teleportiert'
+  commandNeutpDocumentation: '&7Es wurde ein automatischer Homepunkt angelegt (&e/home&7). Du kannst einen neuen mit &e/sethome&7 setzen. Alle wichtigen Kommandos unter &e/hilfe&7, lies das &e&oHalfminer Handbuch &7um mehr ueber den Server zu erfahren'
   modStaticListenersRestart: '&eDer Server wird heruntergefahren und ist bald zurueck'
   modAutoMessagePlaceholder: '&e&m------------------------------------------------'
   modKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
@@ -71,6 +76,11 @@ localization:
 general:
   titleCommandPlayer: 'tm msg -fadeIn=%FADEIN% -stay=%STAY% -fadeOut=%FADEOUT% %PLAYER% %MESSAGE%'
   titleCommandBroadcast: 'tm bc -fadeIn=%FADEIN% -stay=%STAY% -fadeOut=%FADEOUT% %MESSAGE%'
+command:
+  neutp:
+    #Bounds in which the generated position will lie in
+    boundMin: 1000
+    boundMax: 10000
 autoMessage:
   intervalSeconds: 240
   messages:
