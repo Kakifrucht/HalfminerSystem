@@ -23,8 +23,8 @@ public class Cmdhome extends BaseCommand {
             ModStorage storage = hms.getModStorage();
             String command = "ehome" + ' ' + Language.arrayToString(args, 0, false);
 
-            //if (player.hasPermission("essentials.home")) hms.getServer().dispatchCommand(player, command);
-             if (storage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
+            if (player.hasPermission("essentials.home")) hms.getServer().dispatchCommand(player, command);
+            else if (storage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
                     || storage.getPlayerInt(player, "timeonline") < 18000) {
 
                 ConsoleCommandSender console = hms.getServer().getConsoleSender();
