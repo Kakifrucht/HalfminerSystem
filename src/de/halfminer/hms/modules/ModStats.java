@@ -107,7 +107,7 @@ public class ModStats extends HalfminerModule implements Listener {
                         "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%DEATHS%", deaths);
             }
             e.getPlayer().sendMessage(message);
-            clicked.playSound(clicked.getLocation(), Sound.NOTE_STICKS, 1.0f, 1.4f);
+            clicked.getWorld().playSound(clicked.getLocation(), Sound.NOTE_STICKS, 1.0f, 1.4f);
         }
     }
 
