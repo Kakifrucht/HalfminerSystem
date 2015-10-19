@@ -33,7 +33,6 @@ public class HalfminerSystem extends JavaPlugin {
         loadConfig();
 
         modules = new ArrayList<>(11);
-        modules.add(new ModNoStateListeners());
         modules.add(new ModAutoMessage());
         modules.add(new ModAntiKillfarming());
         modules.add(new ModBedrockProtection());
@@ -45,6 +44,7 @@ public class HalfminerSystem extends JavaPlugin {
         modules.add(new ModStorage());
         modules.add(new ModStats());
         modules.add(new ModSkillLevel());
+        modules.add(new ModNoStateListeners());
 
         for (HalfminerModule mod : modules)
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
@@ -81,23 +81,23 @@ public class HalfminerSystem extends JavaPlugin {
 
     //Module getters
     public ModAntiKillfarming getModAntiKillfarming() {
-        return (ModAntiKillfarming) modules.get(2);
+        return (ModAntiKillfarming) modules.get(1);
     }
 
     public ModMotd getModMotd() {
-        return (ModMotd) modules.get(4);
+        return (ModMotd) modules.get(3);
     }
 
     public ModSignEdit getModSignEdit() {
-        return (ModSignEdit) modules.get(5);
+        return (ModSignEdit) modules.get(4);
     }
 
     public ModTps getModTps() {
-        return (ModTps) modules.get(8);
+        return (ModTps) modules.get(7);
     }
 
     public ModStorage getModStorage() {
-        return (ModStorage) modules.get(9);
+        return (ModStorage) modules.get(8);
     }
 
     public void loadConfig() {
