@@ -19,7 +19,7 @@ public class Cmdneutp extends BaseCommand {
 
     private Random rnd = new Random();
     private World world = hms.getServer().getWorlds().get(0);
-    private Block block = null;
+    private Block block;
     private int boundMin;
     private int boundMax;
 
@@ -50,15 +50,17 @@ public class Cmdneutp extends BaseCommand {
                     @Override
                     public void run() {
 
-                        while (block == null || block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER
-                                || block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
+                        int maxIteration = 0;
+                        do {
+                            maxIteration++;
                             int x = rnd.nextInt(boundMax) + boundMin;
                             int z = rnd.nextInt(boundMax) + boundMin;
                             if (rnd.nextBoolean()) x = -x;
                             if (rnd.nextBoolean()) z = -z;
                             int y = world.getHighestBlockAt(x, z).getLocation().getBlockY();
                             block = world.getBlockAt(x, y - 1, z);
-                        }
+                        } while (maxIteration < 10 && block.getType() == Material.WATER || block.getType() == Material.LAVA
+                                || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.STATIONARY_LAVA);
 
                         Location loc = block.getLocation();
                         loc.setY(block.getLocation().getBlockY() + 1);
@@ -72,14 +74,13 @@ public class Cmdneutp extends BaseCommand {
                         hms.getLogger().info(Language.getMessagePlaceholderReplace("commandNeutpLog", false, "%PLAYER%", player.getName(),
                                 "%LOCATION%", Language.getStringFromLocation(loc)));
 
-                        try {
-                            Thread.sleep(3000l);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+                            @Override
+                            public void run() {
+                                player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpDocumentation", true, "%PREFIX%", "Neutp"));
 
-                        player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpDocumentation", true, "%PREFIX%", "Neutp"));
-
+                            }
+                        }, 60);
                     }
                 }, 100);
 
