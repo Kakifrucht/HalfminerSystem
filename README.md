@@ -23,6 +23,9 @@ Current features
 - Automessager
 - Custom Motd with colors and settable via command
 - Edit and copy signs /signedit
+- Increase votes by disabling /home
+- Teleport to a random location
+  - It will make sure that you land on an island
 - Rename items /hms rename
 - Functionality mostly and messages completely configurable
 - Small extras:
