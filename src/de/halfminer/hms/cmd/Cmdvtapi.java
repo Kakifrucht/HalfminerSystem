@@ -1,6 +1,5 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -27,8 +26,6 @@ public class Cmdvtapi extends BaseCommand {
         if (!label.equalsIgnoreCase("vtapi") || args.length == 0 || !sender.isOp()) return;
 
         if (args.length > 0) {
-
-            ModStorage storage = hms.getModStorage();
 
             if (args[0].equalsIgnoreCase("vote")) {
 

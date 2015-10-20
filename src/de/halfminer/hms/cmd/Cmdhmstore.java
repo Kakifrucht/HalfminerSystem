@@ -1,14 +1,11 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 @SuppressWarnings("unused")
 public class Cmdhmstore extends BaseCommand {
-
-    private final ModStorage storage = hms.getModStorage();
 
     public Cmdhmstore() {
         this.permission = "hms.admin";

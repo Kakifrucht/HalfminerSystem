@@ -1,6 +1,5 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -104,7 +103,6 @@ public class Cmdhms extends BaseCommand {
             return;
         }
 
-        ModStorage storage = hms.getModStorage();
         storage.getPlayerInt(player, "skillelo");
         int modifier = -storage.getPlayerInt(player, "skillelo");
 

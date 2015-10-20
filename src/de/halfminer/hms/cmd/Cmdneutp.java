@@ -1,6 +1,5 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,7 +32,6 @@ public class Cmdneutp extends BaseCommand {
         if (sender instanceof Player) {
 
             final Player player = (Player) sender;
-            ModStorage storage = hms.getModStorage();
 
             if (!storage.getPlayerBoolean(player, "neutp")) {
 

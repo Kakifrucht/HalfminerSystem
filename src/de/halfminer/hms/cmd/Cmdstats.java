@@ -1,6 +1,5 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -8,8 +7,6 @@ import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
 public class Cmdstats extends BaseCommand {
-
-    private final ModStorage storage = hms.getModStorage();
 
     public Cmdstats() {
         this.permission = "hms.stats";
