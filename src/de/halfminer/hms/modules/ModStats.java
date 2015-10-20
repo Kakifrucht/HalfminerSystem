@@ -24,6 +24,10 @@ public class ModStats extends HalfminerModule implements Listener {
 
     private int timeUntilHomeBlockSeconds;
 
+    public ModStats() {
+        reloadConfig();
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     @SuppressWarnings("unused")
     public void playerJoin(PlayerJoinEvent e) {
