@@ -26,7 +26,6 @@ public class Cmdstats extends BaseCommand {
             }
         } else {
             if (sender instanceof Player) showStats(sender, ((Player) sender).getUniqueId().toString());
-            if (sender instanceof Player) showStats(sender, ((Player) sender).getUniqueId().toString());
             else sender.sendMessage(Language.getMessage("notAPlayer"));
         }
 
