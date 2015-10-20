@@ -48,7 +48,7 @@ public class Cmdvtapi extends BaseCommand {
                 if (hasVoted instanceof Player) {
                     Player playerHasVoted = (Player) hasVoted;
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.NOTE_PLING, 1.0f, 2.0f);
-                    String address = playerHasVoted.getAddress().getAddress().toString();
+                    String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
                     storage.set("vote.ip" + address, true);
                 }
                 return;

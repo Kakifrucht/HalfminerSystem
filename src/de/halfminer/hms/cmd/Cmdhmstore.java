@@ -15,7 +15,7 @@ public class Cmdhmstore extends BaseCommand {
     }
 
     @Override
-    public void run(CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(final CommandSender sender, Command cmd, String label, String[] args) {
 
         if (args.length > 2 && args[0].equalsIgnoreCase("set")) {
 
@@ -63,8 +63,13 @@ public class Cmdhmstore extends BaseCommand {
                     "%PATH%", path));
 
         } else if (args.length == 1 && args[0].equalsIgnoreCase("save")) {
-            storage.saveConfig();
-            sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmstoreSave", true, "%PREFIX%", "Hinweis"));
+            hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+                @Override
+                public void run() {
+                    storage.saveConfig();
+                    sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmstoreSave", true, "%PREFIX%", "Hinweis"));
+                }
+            });
         } else showUsage(sender);
     }
 
