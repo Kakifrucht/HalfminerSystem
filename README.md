@@ -9,7 +9,7 @@ Current features
 - Modular, lightweight, efficient
 - Statistics for every player with /stats
   - Rightclick player to view some stats
-- PvP based Skilllevel System, similar to ELO
+- PvP based Skilllevel System, ELO
   - Adds level to scoreboard, colors name
 - View latency and server status with /lag
   - Information if player or server lags
@@ -25,7 +25,7 @@ Current features
 - Edit and copy signs /signedit
 - Increase votes by disabling /home
 - Teleport to a random location
-  - It will make sure that you land on an island
+  - It will make sure that you do not land in water/lava
 - Rename items /hms rename
 - Functionality mostly and messages completely configurable
 - Small extras:

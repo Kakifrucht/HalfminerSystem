@@ -26,7 +26,7 @@ public class Cmdhome extends BaseCommand {
             if (player.hasPermission("essentials.home")) hms.getServer().dispatchCommand(player, command);
             else if (storage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
                     || storage.getPlayerInt(player, "timeonline") < 18000
-                    || storage.getBoolean("vote.ip" + player.getAddress().getAddress().toString().replace('.', 'i').substring(1))) {
+                    || storage.getInt("vote.ip" + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) == 2) {
 
                 ConsoleCommandSender console = hms.getServer().getConsoleSender();
                 hms.getServer().dispatchCommand(console, "manuaddp " + player.getName() + " essentials.home");
