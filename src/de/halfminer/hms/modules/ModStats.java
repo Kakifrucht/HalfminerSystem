@@ -24,7 +24,7 @@ public class ModStats extends HalfminerModule implements Listener {
 
     private int timeUntilHomeBlockSeconds;
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     @SuppressWarnings("unused")
     public void playerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
@@ -49,7 +49,9 @@ public class ModStats extends HalfminerModule implements Listener {
 
             storage.setPlayer(player, "lastname", player.getName());
         }
+
         storage.set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
+        storage.setPlayer(player, "kdratio", calculateKDRatio(player));
 
         //Votebarrier setting
         if (storage.getInt("vote." + player.getUniqueId().toString()) == 0) {

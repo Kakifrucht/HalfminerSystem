@@ -28,10 +28,11 @@ public class Cmdvtapi extends BaseCommand {
 
         if (args.length > 0) {
 
-            if (args[0].equalsIgnoreCase("vote")) {
-                if (args.length < 2) return;
+            ModStorage storage = hms.getModStorage();
 
-                ModStorage storage = hms.getModStorage();
+            if (args[0].equalsIgnoreCase("vote")) {
+
+                if (args.length < 2) return;
 
                 OfflinePlayer hasVoted = hms.getServer().getPlayer(args[1]);
                 if (hasVoted == null) {
@@ -91,7 +92,14 @@ public class Cmdvtapi extends BaseCommand {
                             return;
                         }
                         //Set the skull
-                        hms.getServer().dispatchCommand(consoleInstance, "vt setstr temp headname_" + player.getName() + " " + skull.getOwner());
+                        String skullOwner = skull.getOwner();
+
+                        int level = 1;
+                        String uid = storage.getString("uid." + skullOwner.toLowerCase());
+                        if (uid.length() > 0) level = storage.getInt(uid + ".skilllevel");
+
+                        hms.getServer().dispatchCommand(consoleInstance, "vt setstr temp headname_" + player.getName() + " " + skullOwner);
+                        hms.getServer().dispatchCommand(consoleInstance, "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
 
                         //Remove the skull
                         int amount = item.getAmount();
