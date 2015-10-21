@@ -39,8 +39,10 @@ permissions:
     hms.lag: true
     hms.lag.others: true
     hms.lag.notify: true
+    hms.moderator: true
     hms.stats: true
     hms.chat: true
+    hms.chat.advanced: true
     hms.neutp: true
     hms.home: true
     hms.signedit: true
@@ -94,6 +96,8 @@ permissions:
     description: Access to sign editing
   hms.admin:
     description: Access to administrative commands
+  hms.moderator:
+    description: Access to moderative commands
   hms.bypass.combatlog:
     description: Bypass combat logging
   hms.bypass.capsfilter:

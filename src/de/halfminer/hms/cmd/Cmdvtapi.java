@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Cmdvtapi extends BaseCommand {
 
     public Cmdvtapi() {
-        this.permission = "hms.default";
+        this.permission = "hms.admin";
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Cmdhms extends BaseCommand {
 
     public Cmdhms() {
-        this.permission = "hms.admin";
+        this.permission = "hms.moderator";
     }
 
     @Override
