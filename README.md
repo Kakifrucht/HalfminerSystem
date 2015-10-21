@@ -21,12 +21,24 @@ Current features
   - Bedrock glitching (alert and log)
   - Lag caused by Redstone/Pistons/Hoppers
 - Automessager
-- Custom Motd with colors and settable via command
+- News title on log on
+- Chattools
+  - Globalmute
+  - Clear chat
+  - Title broadcast
+  - Send custom messages to player or broadcast
+  - Set news and motd message
+  - Show a countdown
+- Custom serverlist motd
 - Edit and copy signs /signedit
-- Increase votes by disabling /home
+- Increase servers votes by restricting /home
+  - Wont be restricting for new players
+  - Will not restrict first 15 Minutes after join
+  - Will also lift block for every member of household
 - Teleport to a random location
   - It will make sure that you do not land in water/lava
 - Rename items /hms rename
+- Permission levels 0-6, restrict access to certain ranks
 - Functionality mostly and messages completely configurable
 - Small extras:
   - Removes default join/leave/death messages
