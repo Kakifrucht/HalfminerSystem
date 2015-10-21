@@ -29,8 +29,8 @@ commands:
   home:
     description: Teleports the player to his home
   vtapi:
-    description: Command API
-    aliases: [c,hilfe,spenden,regeln,neutp,vote,rang,tools,kiste,deo]
+    description: VT Command API
+    aliases: [hilfe, spenden, regeln, vote, rang, tools, kiste, deo]
 permissions:
   hms.*:
     description: Access to all permissions
