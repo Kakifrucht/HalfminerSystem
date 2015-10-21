@@ -1,7 +1,6 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 @SuppressWarnings("unused")
@@ -12,7 +11,7 @@ public class Cmdhmstore extends BaseCommand {
     }
 
     @Override
-    public void run(final CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(final CommandSender sender, String label, String[] args) {
 
         if (args.length > 2 && args[0].equalsIgnoreCase("set")) {
 

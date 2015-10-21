@@ -14,8 +14,6 @@ import org.bukkit.potion.PotionEffectType;
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
 
-    ModStorage storage = hms.getModStorage();
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");

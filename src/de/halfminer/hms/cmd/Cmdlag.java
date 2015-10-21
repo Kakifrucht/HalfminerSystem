@@ -2,7 +2,6 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -16,7 +15,7 @@ public class Cmdlag extends BaseCommand {
     }
 
     @Override
-    public void run(CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(CommandSender sender, String label, String[] args) {
 
         //determine latency
         CraftPlayer player;

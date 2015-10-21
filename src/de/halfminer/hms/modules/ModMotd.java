@@ -26,7 +26,6 @@ public class ModMotd extends HalfminerModule implements Listener {
     @Override
     public void reloadConfig() {
 
-        ModStorage storage = hms.getModStorage();
         String setMotd = Language.getMessagePlaceholderReplace("modMotdLine", false, "%REPLACE%", storage.getString("sys.news"));
 
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");

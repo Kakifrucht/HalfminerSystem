@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -27,7 +26,7 @@ public class Cmdneutp extends BaseCommand {
     }
 
     @Override
-    public void run(CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(CommandSender sender, String label, String[] args) {
 
         if (sender instanceof Player) {
 

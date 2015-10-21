@@ -1,7 +1,6 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -13,7 +12,7 @@ public class Cmdstats extends BaseCommand {
     }
 
     @Override
-    public void run(CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(CommandSender sender, String label, String[] args) {
 
         if (args.length > 0) {
             String uid = storage.getString("uid." + args[0].toLowerCase());

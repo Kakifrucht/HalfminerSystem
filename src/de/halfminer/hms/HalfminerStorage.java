@@ -1,4 +1,4 @@
-package de.halfminer.hms.modules;
+package de.halfminer.hms;
 
 import de.halfminer.hms.util.Language;
 import org.bukkit.OfflinePlayer;
@@ -8,13 +8,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class ModStorage extends HalfminerModule {
+public class HalfminerStorage {
+
+    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
 
     private File file;
     private FileConfiguration fileConfig;
     private int taskId;
 
-    public ModStorage() {
+    public HalfminerStorage() {
         reloadConfig();
     }
 
@@ -82,7 +84,6 @@ public class ModStorage extends HalfminerModule {
         }
     }
 
-    @Override
     public void reloadConfig() {
         if (file == null) {
             file = new File(hms.getDataFolder(), "storage.yml");
@@ -99,8 +100,8 @@ public class ModStorage extends HalfminerModule {
         }, saveInterval, saveInterval).getTaskId();
     }
 
-    @Override
     public void onDisable() {
         saveConfig();
     }
+
 }

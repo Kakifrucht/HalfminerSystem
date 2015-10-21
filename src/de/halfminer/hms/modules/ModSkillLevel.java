@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class ModSkillLevel extends HalfminerModule implements Listener {
 
-    private final ModStorage storage = hms.getModStorage();
-
     private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();
     private Objective skillObjective = scoreboard.getObjective("skill");
 

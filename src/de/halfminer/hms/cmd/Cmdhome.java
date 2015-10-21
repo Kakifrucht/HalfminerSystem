@@ -1,8 +1,6 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.modules.ModStorage;
 import de.halfminer.hms.util.Language;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -15,12 +13,11 @@ public class Cmdhome extends BaseCommand {
     }
 
     @Override
-    public void run(CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(CommandSender sender, String label, String[] args) {
 
         if (sender instanceof Player) {
 
             Player player = (Player) sender;
-            ModStorage storage = hms.getModStorage();
             String command = "ehome" + ' ' + Language.arrayToString(args, 0, false);
 
             if (player.hasPermission("essentials.home")) hms.getServer().dispatchCommand(player, command);

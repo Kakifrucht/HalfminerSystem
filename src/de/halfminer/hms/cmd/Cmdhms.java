@@ -3,7 +3,6 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +16,7 @@ public class Cmdhms extends BaseCommand {
     }
 
     @Override
-    public void run(CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(CommandSender sender, String label, String[] args) {
 
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
@@ -40,14 +39,14 @@ public class Cmdhms extends BaseCommand {
 
     private void rmHomeBlock(CommandSender sender, String[] args) {
         if (args.length == 2) {
-            String playerUid = hms.getModStorage().getString("uid." + args[1].toLowerCase());
+            String playerUid = storage.getString("uid." + args[1].toLowerCase());
             if (playerUid.length() == 0) {
                 sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Hinweis"));
                 return;
             }
-            hms.getModStorage().set("vote." + playerUid, Long.MAX_VALUE);
+            storage.set("vote." + playerUid, Long.MAX_VALUE);
             sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsHomeblockRemove", true, "%PREFIX%", "Hinweis",
-                    "%PLAYER%", hms.getModStorage().getString(playerUid + ".lastname")));
+                    "%PLAYER%", storage.getString(playerUid + ".lastname")));
         } else sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsUsage", true, "%PREFIX%", "Hinweis"));
     }
 

@@ -4,7 +4,6 @@ import de.halfminer.hms.util.Language;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ public class Cmdvtapi extends BaseCommand {
     }
 
     @Override
-    public void run(CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(CommandSender sender, String label, String[] args) {
 
         if (!label.equalsIgnoreCase("vtapi") || args.length == 0 || !sender.isOp()) return;
 

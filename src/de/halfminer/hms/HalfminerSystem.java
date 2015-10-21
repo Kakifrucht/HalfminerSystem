@@ -20,6 +20,7 @@ import java.util.List;
 public class HalfminerSystem extends JavaPlugin {
 
     private static HalfminerSystem instance;
+    private HalfminerStorage storage;
     private List<HalfminerModule> modules;
 
     public static HalfminerSystem getInstance() {
@@ -32,8 +33,7 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        modules = new ArrayList<>(12);
-        modules.add(new ModStorage());
+        modules = new ArrayList<>(11);
         modules.add(new ModAutoMessage());
         modules.add(new ModAntiKillfarming());
         modules.add(new ModBedrockProtection());
@@ -55,7 +55,8 @@ public class HalfminerSystem extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (int i = modules.size() - 1; i >= 0; i--) modules.get(i).onDisable(); //disable all modules backwards
+        for (HalfminerModule mod : modules) mod.onDisable();
+        storage.saveConfig();
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("HalfminerSystem disabled");
     }
@@ -74,34 +75,34 @@ public class HalfminerSystem extends JavaPlugin {
         }
 
         if (command.hasPermission(sender)) {
-            command.run(sender, cmd, label, args);
+            command.run(sender, label, args);
         } else sender.sendMessage(Language.getMessagePlaceholderReplace("noPermission", true, "%PREFIX%", "Hinweis"));
         return true;
     }
 
     //Module getters
-    public ModStorage getModStorage() {
-        return (ModStorage) modules.get(0);
+    public HalfminerStorage getStorage() {
+        return storage;
     }
 
     public ModAntiKillfarming getModAntiKillfarming() {
-        return (ModAntiKillfarming) modules.get(2);
+        return (ModAntiKillfarming) modules.get(1);
     }
 
     public ModMotd getModMotd() {
-        return (ModMotd) modules.get(4);
+        return (ModMotd) modules.get(3);
     }
 
     public ModSignEdit getModSignEdit() {
-        return (ModSignEdit) modules.get(5);
+        return (ModSignEdit) modules.get(4);
     }
 
     public ModTps getModTps() {
-        return (ModTps) modules.get(8);
+        return (ModTps) modules.get(7);
     }
 
     public ModSkillLevel getModSkillLevel() {
-        return (ModSkillLevel) modules.get(10);
+        return (ModSkillLevel) modules.get(9);
     }
 
     public void loadConfig() {
@@ -110,6 +111,11 @@ public class HalfminerSystem extends JavaPlugin {
         getConfig().options().copyDefaults(true); //if parameters are missing, add them
         saveConfig(); //save config.yml to disk
 
+        //Load storage
+        if (storage != null) storage.reloadConfig();
+        else storage = new HalfminerStorage();
+
+        //Reload modules
         if (modules != null) for (HalfminerModule mod : modules) mod.reloadConfig();
     }
 

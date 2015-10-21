@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ModStats extends HalfminerModule implements Listener {
 
-    private final ModStorage storage = hms.getModStorage();
     private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
 
     private int timeUntilHomeBlockSeconds;

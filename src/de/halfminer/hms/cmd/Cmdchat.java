@@ -3,7 +3,6 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,7 +17,7 @@ public class Cmdchat extends BaseCommand {
     }
 
     @Override
-    public void run(CommandSender sender, Command cmd, String label, String[] args) {
+    public void run(CommandSender sender, String label, String[] args) {
 
         this.sender = sender;
 
