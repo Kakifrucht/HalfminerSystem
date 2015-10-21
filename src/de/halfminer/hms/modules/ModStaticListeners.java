@@ -90,7 +90,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     public void onChat(AsyncPlayerChatEvent e) {
 
         Player p = e.getPlayer();
-        if (storage.getBoolean("sys.globalmute") && !p.hasPermission("hms.chat.bypass")) {
+        if (storage.getBoolean("sys.globalmute") && !p.hasPermission("hms.chat.advanced")) {
             p.sendMessage(Language.getMessagePlaceholderReplace("commandChatGlobalmuteDenied", true,
                     "%PREFIX%", "Globalmute"));
             e.setCancelled(true);

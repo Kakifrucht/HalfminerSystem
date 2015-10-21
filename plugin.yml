@@ -115,6 +115,7 @@ permissions:
   hms.bypass.statsrightclick:
     description: Bypass stats on rightclick
   hms.level.0:
+    default: true
     description: Access to commands restricted to level 0
   hms.level.1:
     description: Access to commands restricted to level 1
