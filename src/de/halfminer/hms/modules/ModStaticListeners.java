@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,9 +14,22 @@ import org.bukkit.potion.PotionEffectType;
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
 
+    ModStorage storage = hms.getModStorage();
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
+
+        //Title on join
+        Player joined = e.getPlayer();
+        int timeOnline = storage.getPlayerInt(joined, "timeonline");
+
+        if (timeOnline == 0) {
+            TitleSender.sendTitle(joined, Language.getMessage("modStaticListenersNewPlayersFormat"));
+        } else {
+            TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
+                    false, "%NEWS%", storage.getString("sys.news")), 40, 180, 40);
+        }
     }
 
     @EventHandler
@@ -60,13 +74,18 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
 
-        String message = e.getMessage();
-        if (e.getPlayer().hasPermission("hms.bypass.capsfilter") || message.length() < 4) return;
+        if (storage.getBoolean("sys.globalmute") && !e.getPlayer().hasPermission("hms.chat.bypass")) {
+            e.getPlayer().sendMessage(Language.getMessagePlaceholderReplace("commandChatGlobalmuteDenied", true,
+                    "%PREFIX%", "Globalmute"));
+            e.setCancelled(true);
+        } else {
+            String message = e.getMessage();
+            if (e.getPlayer().hasPermission("hms.bypass.capsfilter") || message.length() < 4) return;
 
-        int amountUppercase = 0;
-        for (Character check : message.toCharArray()) if (Character.isUpperCase(check)) amountUppercase++;
-        if (amountUppercase > (message.length() / 2)) e.setMessage(message.toLowerCase());
-
+            int amountUppercase = 0;
+            for (Character check : message.toCharArray()) if (Character.isUpperCase(check)) amountUppercase++;
+            if (amountUppercase > (message.length() / 2)) e.setMessage(message.toLowerCase());
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
