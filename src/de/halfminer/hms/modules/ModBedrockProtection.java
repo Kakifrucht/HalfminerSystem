@@ -25,7 +25,9 @@ public class ModBedrockProtection extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void onMoveBedrockCheck(PlayerMoveEvent e) {
 
-        if (!e.getPlayer().hasPermission("hms.bypass.bedrockcheck") && (e.getFrom().getBlock().getType() == Material.BEDROCK || e.getFrom().getBlock().getType() == Material.OBSIDIAN) && Math.round(e.getFrom().getY()) == e.getFrom().getBlockY()) {
+        if ((e.getFrom().getBlock().getType() == Material.BEDROCK || e.getFrom().getBlock().getType() == Material.OBSIDIAN)
+                && !e.getPlayer().hasPermission("hms.bypass.bedrockcheck")
+                && Math.round(e.getFrom().getY()) == e.getFrom().getBlockY()) {
             if (lastMessage.get(e.getPlayer()) == null || lastMessage.get(e.getPlayer()) < System.currentTimeMillis() / 1000) {
                 Bukkit.broadcast(Language.placeholderReplace(message, "%PLAYER%", e.getPlayer().getName(), "%LOCATION%", Language.getStringFromLocation(e.getTo())), "hms.admin");
                 lastMessage.put(e.getPlayer(), (System.currentTimeMillis() / 1000) + 4);
