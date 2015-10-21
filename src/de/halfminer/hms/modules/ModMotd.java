@@ -23,16 +23,11 @@ public class ModMotd extends HalfminerModule implements Listener {
         e.setMotd(motd[rnd.nextInt(motd.length)]);
     }
 
-    public void updateMotd(String newMotd) {
-        hms.getConfig().set("motd.placeHolder", newMotd.replace('§', '&'));
-        hms.saveConfig();
-        reloadConfig();
-    }
-
     @Override
     public void reloadConfig() {
 
-        String setMotd = Language.getMessagePlaceholderReplace("modMotdLine", false, "%REPLACE%", hms.getConfig().getString("motd.placeHolder"));
+        ModStorage storage = hms.getModStorage();
+        String setMotd = Language.getMessagePlaceholderReplace("modMotdLine", false, "%REPLACE%", storage.getString("sys.news"));
 
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");
         motd = new String[strList.size()];

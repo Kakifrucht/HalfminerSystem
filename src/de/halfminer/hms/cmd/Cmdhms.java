@@ -21,9 +21,6 @@ public class Cmdhms extends BaseCommand {
 
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
-                case "setmotd":
-                    updateMotd(sender, args);
-                    return;
                 case "rename":
                     renameItem(sender, args);
                     return;
@@ -52,16 +49,6 @@ public class Cmdhms extends BaseCommand {
             sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsHomeblockRemove", true, "%PREFIX%", "Hinweis",
                     "%PLAYER%", hms.getModStorage().getString(playerUid + ".lastname")));
         } else sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsUsage", true, "%PREFIX%", "Hinweis"));
-    }
-
-    private void updateMotd(CommandSender sender, String[] args) {
-        if (args.length < 2)
-            sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsMotdFailed", true, "%PREFIX%", "Hinweis"));
-        else {
-            String motd = Language.arrayToString(args, 1, false);
-            hms.getModMotd().updateMotd(motd);
-            sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsMotdUpdated", true, "%PREFIX%", "Hinweis", "%NEWMOTD%", ChatColor.translateAlternateColorCodes('&', motd)));
-        }
     }
 
     private void renameItem(CommandSender sender, String[] args) {

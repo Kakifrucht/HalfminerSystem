@@ -21,14 +21,29 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         e.setJoinMessage("");
 
         //Title on join
-        Player joined = e.getPlayer();
+        final Player joined = e.getPlayer();
         int timeOnline = storage.getPlayerInt(joined, "timeonline");
 
         if (timeOnline == 0) {
-            TitleSender.sendTitle(joined, Language.getMessage("modStaticListenersNewPlayersFormat"));
+            TitleSender.sendTitle(joined, Language.getMessage("modStaticListenersNewPlayerFormat"));
         } else {
-            TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
-                    false, "%NEWS%", storage.getString("sys.news")), 40, 180, 40);
+            hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+                @Override
+                public void run() {
+                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modStaticListenersJoinFormat",
+                            false, "%NEWS%", storage.getString("sys.news")));
+
+                    try {
+                        Thread.sleep(6000l);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
+                            false, "%NEWS%", storage.getString("sys.news")), 40, 180, 40);
+                }
+            });
+
         }
     }
 

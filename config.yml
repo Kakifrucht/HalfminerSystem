@@ -6,7 +6,7 @@ localization:
   playerNotOnline: '&cDieser Spieler ist nicht online'
   playerDoesNotExist: '&cDieser Spieler existiert nicht'
   consoleName: 'Konsole'
-  commandHmsUsage: '&cVerwendung: &f/hms reload, setmotd <motd>, rename [name], updateskill <spieler>, rmhomeblock <spieler>'
+  commandHmsUsage: '&cVerwendung: &f/hms reload, rename [name], updateskill <spieler>, rmhomeblock <spieler>'
   commandHmsConfigReloaded: '&aKonfiguration neugeladen'
   commandHmsSkillUsage: '&cVerwendung: &f/hms updateskill <spieler> [modifier]'
   commandHmsSkillUpdated: '&7Das Skilllevel von &e%PLAYER% &7wurde auf Level &e%SKILLLEVEL% (&o%SKILLELO%&e) &7gesetzt'
@@ -55,7 +55,8 @@ localization:
   commandChatSendToAll: '&7Deine Nachricht wurde an alle versendet'
   commandChatSendToPlayer: '&7Deine Nachricht wurde an %PLAYER% versendet'
   commandChatMessageSet: '&aNachricht gespeichert'
-  modStaticListenersNewPlayersFormat: 'animation:join<nl>animation:joinbottom'
+  modStaticListenersNewPlayerFormat: 'animation:newplayer'
+  modStaticListenersJoinFormat: 'animation:join<nl>animation:joinbottom'
   modStaticListenersNewsFormat: '&7&l&nNeuigkeiten\n%NEWS%'
   modAutoMessagePlaceholder: '&e&m------------------------------------------------'
   modKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
@@ -128,8 +129,6 @@ motd:
   - 6
   - 9
   - b
-  #Can/should be set via /hms motd
-  placeHolder: 'Empty'
 redstoneLimit:
   #Delay in ticks until the blocks will be lifted
   ticksDelayUntilClear: 160

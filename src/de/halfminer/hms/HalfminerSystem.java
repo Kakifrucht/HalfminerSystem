@@ -33,6 +33,7 @@ public class HalfminerSystem extends JavaPlugin {
         loadConfig();
 
         modules = new ArrayList<>(12);
+        modules.add(new ModStorage());
         modules.add(new ModAutoMessage());
         modules.add(new ModAntiKillfarming());
         modules.add(new ModBedrockProtection());
@@ -41,7 +42,6 @@ public class HalfminerSystem extends JavaPlugin {
         modules.add(new ModRedstoneLimit());
         modules.add(new ModCombatLog());
         modules.add(new ModTps());
-        modules.add(new ModStorage());
         modules.add(new ModStats());
         modules.add(new ModSkillLevel());
         modules.add(new ModStaticListeners());
@@ -80,24 +80,24 @@ public class HalfminerSystem extends JavaPlugin {
     }
 
     //Module getters
+    public ModStorage getModStorage() {
+        return (ModStorage) modules.get(0);
+    }
+
     public ModAntiKillfarming getModAntiKillfarming() {
-        return (ModAntiKillfarming) modules.get(1);
+        return (ModAntiKillfarming) modules.get(2);
     }
 
     public ModMotd getModMotd() {
-        return (ModMotd) modules.get(3);
+        return (ModMotd) modules.get(4);
     }
 
     public ModSignEdit getModSignEdit() {
-        return (ModSignEdit) modules.get(4);
+        return (ModSignEdit) modules.get(5);
     }
 
     public ModTps getModTps() {
-        return (ModTps) modules.get(7);
-    }
-
-    public ModStorage getModStorage() {
-        return (ModStorage) modules.get(8);
+        return (ModTps) modules.get(8);
     }
 
     public ModSkillLevel getModSkillLevel() {

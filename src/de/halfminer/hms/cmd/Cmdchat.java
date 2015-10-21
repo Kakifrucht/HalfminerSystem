@@ -89,8 +89,8 @@ public class Cmdchat extends BaseCommand {
 
             } else if (args[0].equalsIgnoreCase("news") && verifyMessage()) {
 
-                hms.getModMotd().updateMotd(message);
                 storage.set("sys.news", message);
+                hms.getModMotd().reloadConfig();
                 if (sender instanceof Player) {
                     TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
                             false, "%NEWS%", message), 40, 180, 40);
