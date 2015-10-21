@@ -60,6 +60,10 @@ public class HalfminerStorage {
         return getInt(player.getUniqueId().toString() + '.' + path);
     }
 
+    public double getPlayerDouble(OfflinePlayer player, String path) {
+        return getDouble(player.getUniqueId().toString() + '.' + path);
+    }
+
     public boolean getPlayerBoolean(OfflinePlayer player, String path) {
         return getBoolean(player.getUniqueId().toString() + '.' + path);
     }

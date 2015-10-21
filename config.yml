@@ -79,7 +79,7 @@ localization:
   modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
   modStatsNameChange: '&e%OLDNAME% &bhat den Namen zu &a%NEWNAME% &bgewechselt'
-  modStatsRightClick: '&fSkillgruppe: &6%SKILLGROUP% &7| &fKills: &6%KILLS% &7| &fTode: &6%DEATHS%'
+  modStatsRightClick: '&fSkillgruppe: &6%SKILLGROUP% &7| &fKills: &6%KILLS% &7| &fK/D: &6%KDRATIO%'
   modStatsRightClickExempt: '&fist ein Serverteammitglied und nimmt am Spiel nicht teil'
   modStatsPvPKill: '&7Du hast &e%VICTIM% &7eliminiert! Kills: &e%KILLS% &7| K/D: &e%KDRATIO%'
   modStatsPvPDeath: '&e%KILLER% &7hat dich eliminiert! Tode: &e%DEATHS% &7| K/D: &e%KDRATIO%'

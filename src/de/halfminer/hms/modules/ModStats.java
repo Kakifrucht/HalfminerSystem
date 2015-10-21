@@ -114,9 +114,9 @@ public class ModStats extends HalfminerModule implements Listener {
             if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
                 String skillgroup = storage.getPlayerString(clicked, "skillgroup");
                 String kills = String.valueOf(storage.getPlayerInt(clicked, "kills"));
-                String deaths = String.valueOf(storage.getPlayerInt(clicked, "deaths"));
+                String kdratio = String.valueOf(storage.getPlayerDouble(clicked, "kdratio"));
                 message = Language.getMessagePlaceholderReplace("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
-                        "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%DEATHS%", deaths);
+                        "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%KDRATIO%", kdratio);
             }
             e.getPlayer().sendMessage(message);
             clicked.getWorld().playSound(clicked.getLocation(), Sound.NOTE_STICKS, 1.0f, 1.4f);
