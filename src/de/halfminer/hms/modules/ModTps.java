@@ -9,10 +9,8 @@ import java.util.LinkedList;
 public class ModTps extends HalfminerModule implements Listener {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
-
-    private int taskId;
-
     private final LinkedList<Double> tpsHistory = new LinkedList<>();
+    private int taskId;
     private double lastAverageTps;
     private long lastTaskTimestamp;
 

@@ -15,11 +15,9 @@ import java.util.Arrays;
 class Arena {
 
     private static final HalfminerDuel hmd = HalfminerDuel.getInstance();
-
-    private boolean isFree = true;
-
     //Arena information
     private final String name;
+    private boolean isFree = true;
     private Location locationA;
     private Location locationB;
     private ItemStack[] kitArmor;
@@ -74,6 +72,7 @@ class Arena {
 
     /**
      * Returns the arenas locations, used when arenas are reloaded to update them
+     *
      * @return Location array, where index 0 is spawnA and index 1 spawnB
      */
     public Location[] getLocations() {
@@ -85,16 +84,18 @@ class Arena {
 
     /**
      * Set the location of the arena
-     * @param loc to set the spawn from
+     *
+     * @param loc       to set the spawn from
      * @param locationA true if spawnA is being set, false if spawnB
      */
     public void setLocation(Location loc, boolean locationA) {
-        if(locationA) this.locationA = loc;
+        if (locationA) this.locationA = loc;
         else this.locationB = loc;
     }
 
     /**
      * (Re)set the arenas kit
+     *
      * @param kit array containing the kit, where index 0-3 are armor and 4-39 is content
      */
     public void setKit(ItemStack[] kit) {
@@ -104,6 +105,7 @@ class Arena {
 
     /**
      * Issues the arena to lock and start the game, prepares the fight
+     *
      * @param a playerA in the arena
      * @param b playerB in the arena
      */
@@ -120,7 +122,7 @@ class Arena {
         Util.sendMessage(a, "gameStartingCountdown", new String[]{"%PLAYER%", b.getName(), "%ARENA%", name});
         Util.sendMessage(b, "gameStartingCountdown", new String[]{"%PLAYER%", a.getName(), "%ARENA%", name});
 
-        if(hmd.getConfig().getInt("gameTime") > 20) timeLeft = hmd.getConfig().getInt("gameTime") + 5;
+        if (hmd.getConfig().getInt("gameTime") > 20) timeLeft = hmd.getConfig().getInt("gameTime") + 5;
         else timeLeft = 305; //set default if config value is too low
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(hmd, new Runnable() {
 
@@ -159,26 +161,27 @@ class Arena {
      * Called once a game ends. Will issue restoring of players and resetting.
      * This happens due to death of a player (duel win), time running out, reloading of plugin
      * or logging out.
-     * @param loser player that caused the game end
+     *
+     * @param loser     player that caused the game end
      * @param hasWinner true if a duel has a winner (logout or death), false if not (reload, time ran out)
      */
     public void gameEnd(Player loser, boolean hasWinner) {
 
         Bukkit.getScheduler().cancelTask(taskId);
 
-        if(playerA.isDead()) afterFightDead(playerA);
+        if (playerA.isDead()) afterFightDead(playerA);
         else {
             healPlayer(playerA);
             restorePlayer(playerA);
         }
 
-        if(playerB.isDead()) afterFightDead(playerB);
+        if (playerB.isDead()) afterFightDead(playerB);
         else {
             healPlayer(playerB);
             restorePlayer(playerB);
         }
 
-        if(hasWinner) {
+        if (hasWinner) {
             Player winner = loser.equals(playerA) ? playerB : playerA;
             Util.sendMessage(winner, "gameWon", new String[]{"%PLAYER%", loser.getName()});
             Util.sendMessage(loser, "gameLost", new String[]{"%PLAYER%", winner.getName()});
@@ -195,6 +198,7 @@ class Arena {
 
     /**
      * Heals player before fight, stores his data, tps him into arena
+     *
      * @param player player to heal/store/tp
      */
     private void beforeFight(Player player) {
@@ -205,12 +209,12 @@ class Arena {
         data.armor = player.getInventory().getArmorContents();
 
         //Make sure that invs are closed and no mounts are taken into arena
-        if(player.isInsideVehicle()) player.leaveVehicle();
+        if (player.isInsideVehicle()) player.leaveVehicle();
         player.closeInventory();
 
         //Store and teleport
         boolean isPlayerA = player.equals(playerA);
-        if(isPlayerA) {
+        if (isPlayerA) {
             playerAContainer = data;
             player.teleport(locationA);
         } else {
@@ -232,6 +236,7 @@ class Arena {
 
     /**
      * Heals and restores player, however also respawns him and does it one tick later to not cause issues
+     *
      * @param player player to respawn, heal and restore
      */
     private void afterFightDead(final Player player) {
@@ -254,6 +259,7 @@ class Arena {
 
     /**
      * Heals a player
+     *
      * @param player will be healed
      */
     private void healPlayer(final Player player) {
@@ -263,12 +269,13 @@ class Arena {
         player.setSaturation(10);
         player.setExhaustion(0F);
         player.setFireTicks(0);
-        for(PotionEffect effect: player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
+        for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
 
     }
 
     /**
      * Restore the players state pre duel
+     *
      * @param player to restore the state from
      */
     private void restorePlayer(Player player) {

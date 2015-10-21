@@ -153,7 +153,7 @@ public class ModStats extends HalfminerModule implements Listener {
     private void setOnlineTime(Player player) {
         int time;
 
-        if(!timeOnline.containsKey(player)) return; //if reload occurred
+        if (!timeOnline.containsKey(player)) return; //if reload occurred
 
         time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
         storage.incrementPlayerInt(player, "timeonline", time);

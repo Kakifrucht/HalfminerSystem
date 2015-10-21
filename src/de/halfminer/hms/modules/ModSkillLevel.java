@@ -18,9 +18,8 @@ import java.util.Map;
 public class ModSkillLevel extends HalfminerModule implements Listener {
 
     private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();
-    private Objective skillObjective = scoreboard.getObjective("skill");
-
     private final Map<String, Long> lastKill = new HashMap<>();
+    private Objective skillObjective = scoreboard.getObjective("skill");
     private String[] teams;
     private int derankThreshold;
     private int timeUntilDerankSeconds;

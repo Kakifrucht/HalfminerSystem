@@ -52,7 +52,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
             Player killer = e.getEntity().getKiller();
             Player victim = e.getEntity().getPlayer();
 
-            if (killer.equals(victim) || killer.hasPermission("hms.bypass.nokillfarming") || victim.hasPermission("hms.bypass.nokillfarming")) return;
+            if (killer.equals(victim) || killer.hasPermission("hms.bypass.nokillfarming") || victim.hasPermission("hms.bypass.nokillfarming"))
+                return;
 
             //remove the killer from the victims map, to reset the killfarm counter
             if (deathMap.containsKey(victim.getUniqueId()) && deathMap.get(victim.getUniqueId()).containsPlayer(killer)) {

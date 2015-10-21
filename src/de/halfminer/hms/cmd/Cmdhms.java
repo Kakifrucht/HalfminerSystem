@@ -47,7 +47,8 @@ public class Cmdhms extends BaseCommand {
             storage.set("vote." + playerUid, Long.MAX_VALUE);
             sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsHomeblockRemove", true, "%PREFIX%", "Hinweis",
                     "%PLAYER%", storage.getString(playerUid + ".lastname")));
-        } else sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsUsage", true, "%PREFIX%", "Hinweis"));
+        } else
+            sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsUsage", true, "%PREFIX%", "Hinweis"));
     }
 
     private void renameItem(CommandSender sender, String[] args) {

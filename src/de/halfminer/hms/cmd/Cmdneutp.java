@@ -56,7 +56,8 @@ public class Cmdneutp extends BaseCommand {
                             if (rnd.nextBoolean()) z = -z;
                             int y = world.getHighestBlockAt(x, z).getLocation().getBlockY();
                             block = world.getBlockAt(x, y - 1, z);
-                        } while (maxIteration < 10 && block.getType() == Material.WATER || block.getType() == Material.LAVA
+                        }
+                        while (maxIteration < 10 && block.getType() == Material.WATER || block.getType() == Material.LAVA
                                 || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.STATIONARY_LAVA);
 
                         Location loc = block.getLocation();

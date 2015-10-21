@@ -32,12 +32,12 @@ public class ArenaManager {
 
         kits = loadKits(); //Simply override old ones, as they are not crucial
 
-        if(arenas.size() > 0) { //Arenas are reloaded, make sure that existing ones are updated and not replaced
+        if (arenas.size() > 0) { //Arenas are reloaded, make sure that existing ones are updated and not replaced
             List<Arena> newArenas = loadArenas();
-            for(Arena newArena: newArenas) { //Instead of creating new arenas, simply refresh already existing ones
+            for (Arena newArena : newArenas) { //Instead of creating new arenas, simply refresh already existing ones
                 boolean arenaExists = false;
-                for(Arena currentArena: arenas) {
-                    if(newArena.getName().equalsIgnoreCase(currentArena.getName())) {
+                for (Arena currentArena : arenas) {
+                    if (newArena.getName().equalsIgnoreCase(currentArena.getName())) {
                         currentArena.setLocation(newArena.getLocations()[0], true);
                         currentArena.setLocation(newArena.getLocations()[1], false);
                         currentArena.setKit(getKit(currentArena.getName()));
@@ -45,7 +45,7 @@ public class ArenaManager {
                         break;
                     }
                 }
-                if(!arenaExists) arenas.add(newArena);
+                if (!arenaExists) arenas.add(newArena);
             }
         } else {
             arenas = loadArenas(); //arenas not yet loaded
@@ -55,6 +55,7 @@ public class ArenaManager {
 
     /**
      * Determine if arenas exist, used to disable the plugin, if this is not the case
+     *
      * @return true if there is no arena (and the plugin should be disabled), else false
      */
     public boolean noArenaExists() {
@@ -63,6 +64,7 @@ public class ArenaManager {
 
     /**
      * Returns the already generated list of arenas, used for the ArenaQueue
+     *
      * @return list of arenas
      */
     List<Arena> getArenas() {
@@ -71,6 +73,7 @@ public class ArenaManager {
 
     /**
      * Load the arena section from the config
+     *
      * @return list containing all arenas read in the config
      */
     private List<Arena> loadArenas() {
@@ -78,8 +81,8 @@ public class ArenaManager {
         List<Arena> toReturn = new ArrayList<>();
 
         ConfigurationSection section = hmd.getConfig().getConfigurationSection("arenas");
-        if(section != null) {
-            for(String s: section.getKeys(false)) {
+        if (section != null) {
+            for (String s : section.getKeys(false)) {
 
                 Location[] locations = new Location[]
                         {stringToLocation(section.getString(s + ".spawn1")), stringToLocation(section.getString(s + ".spawn2"))};
@@ -93,6 +96,7 @@ public class ArenaManager {
 
     /**
      * Load the kit section from the config
+     *
      * @return HashMap, where String is a
      */
     private Map<String, ItemStack[]> loadKits() {
@@ -100,12 +104,12 @@ public class ArenaManager {
         Map<String, ItemStack[]> returnMap = new HashMap<>();
 
         ConfigurationSection kitSection = hmd.getConfig().getConfigurationSection("kits");
-        if(kitSection != null) {
-            for(String s: kitSection.getKeys(false)) {
+        if (kitSection != null) {
+            for (String s : kitSection.getKeys(false)) {
 
                 ItemStack[] kit = new ItemStack[40];
                 List<?> list = kitSection.getList(s);
-                for(int i = 0;i < list.size();i++) {
+                for (int i = 0; i < list.size(); i++) {
                     kit[i] = (ItemStack) list.get(i);
                 }
 
@@ -139,7 +143,7 @@ public class ArenaManager {
     private void saveKits() {
         hmd.getConfig().set("kits", null);
         if (kits.keySet().size() != 0) {
-            for(Map.Entry<String, ItemStack[]> items : kits.entrySet()) {
+            for (Map.Entry<String, ItemStack[]> items : kits.entrySet()) {
                 hmd.getConfig().set("kits." + items.getKey(), items.getValue());
             }
         }
@@ -149,30 +153,32 @@ public class ArenaManager {
     /**
      * Adds an arena to the list, without requiring any sorts of reloads.
      * A location will have to be added
+     *
      * @param name name of the arena to add
-     * @param loc default spawn location of the arena
+     * @param loc  default spawn location of the arena
      * @return true if creation was successful, false if not, because the arena exists already
      */
     public boolean addArena(String name, Location loc) {
 
-        for(Arena arena: arenas) { //check if arena with given name exists already
-            if(arena.getName().equalsIgnoreCase(name)) return false;
+        for (Arena arena : arenas) { //check if arena with given name exists already
+            if (arena.getName().equalsIgnoreCase(name)) return false;
         }
 
-        arenas.add(new Arena(name, new Location[] {loc, loc}, getKit(name)));
+        arenas.add(new Arena(name, new Location[]{loc, loc}, getKit(name)));
         saveArenas();
         return true;
     }
 
     /**
      * Remove an arena from the list. If a game is running in it, it will still finish
+     *
      * @param name name of the arena to remove
      * @return true if arena was removed, false if arena does not exist
      */
     public boolean delArena(String name) {
 
-        for(int i = 0;i < arenas.size();i++) {
-            if(arenas.get(i).getName().equalsIgnoreCase(name)) {
+        for (int i = 0; i < arenas.size(); i++) {
+            if (arenas.get(i).getName().equalsIgnoreCase(name)) {
                 String arenaName = arenas.get(i).getName();
                 arenas.remove(i);
                 kits.remove(arenaName);
@@ -187,8 +193,9 @@ public class ArenaManager {
 
     /**
      * Set the spawns of an arena
+     *
      * @param arenaName Name of the arena that is being set
-     * @param location Location of the spawn
+     * @param location  Location of the spawn
      * @param setArenaA true if spawnA is being set, false if spawnB
      * @return true if spawn was set, false if creation was unsuccessful
      */
@@ -206,15 +213,16 @@ public class ArenaManager {
 
     /**
      * Set the kit of given arena
-     * @param arenaName Name to set the inventory from
+     *
+     * @param arenaName    Name to set the inventory from
      * @param armorContent Armor area of the kit
-     * @param content Content area of the kit
+     * @param content      Content area of the kit
      * @return true if kit could be set, false if arena doesnt exist
      */
     public boolean setKit(String arenaName, ItemStack[] armorContent, ItemStack[] content) {
 
-        for (Arena arena: arenas) {
-            if(arena.getName().equalsIgnoreCase(arenaName)) {
+        for (Arena arena : arenas) {
+            if (arena.getName().equalsIgnoreCase(arenaName)) {
                 ItemStack[] newKit = ArrayUtils.addAll(armorContent, content);
                 kits.put(arena.getName(), newKit);
                 arena.setKit(newKit);
@@ -227,6 +235,7 @@ public class ArenaManager {
 
     /**
      * Return the kit of a given Arena, if it was not set, return empty inventory
+     *
      * @param arenaName name of the arena the kit should be returned
      * @return ItemStack[40] where index 0-3 are the armor contents, and 4-39 are the contents
      */
@@ -236,6 +245,7 @@ public class ArenaManager {
 
     /**
      * Converts a string to a location
+     *
      * @param toLocation String in correct format
      * @return Location that the string points to
      */
@@ -251,6 +261,7 @@ public class ArenaManager {
 
     /**
      * Converts a given location to a string
+     *
      * @param loc Location that is supposed to be converted
      * @return String that can be converted back into a Location
      */
