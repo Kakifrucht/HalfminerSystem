@@ -13,6 +13,9 @@ commands:
     description: HalfminerSystem basecommand
   hmstore:
     description: Data storage manipulation
+  chat:
+    description: Chat manipulation tools
+    aliases: [c]
   signedit:
     description: Edit the contents of a sign or copy it
     aliases: [se]
@@ -35,12 +38,13 @@ permissions:
     hms.default: true
     hms.lag: true
     hms.lag.others: true
+    hms.lag.notify: true
     hms.stats: true
+    hms.chat: true
     hms.neutp: true
     hms.home: true
     hms.signedit: true
     hms.admin: true
-    hms.notifylag: true
     hms.bypass.*: true
   hms.bypass.*:
     description: Access to all bypass permission
@@ -65,16 +69,20 @@ permissions:
   hms.home:
     default: true
     description: Access to home command
+  hms.chat:
+    description: Access to chat clearing command
+  hms.chat.advanced:
+    description: Access to advanced chat manipulation
   hms.lag:
     description: Access to lag command
   hms.lag.others:
     description: View the latency of other players
+  hms.lag.notify:
+      description: Sends lag notifications to admin
   hms.signedit:
     description: Access to sign editing
   hms.admin:
     description: Access to administrative commands
-  hms.notifylag:
-    description: Sends lag notifications to admin
   hms.bypass.combatlog:
     description: Bypass combat logging
   hms.bypass.capsfilter:
