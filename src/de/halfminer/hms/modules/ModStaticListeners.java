@@ -74,13 +74,15 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
 
-        if (storage.getBoolean("sys.globalmute") && !e.getPlayer().hasPermission("hms.chat.bypass")) {
-            e.getPlayer().sendMessage(Language.getMessagePlaceholderReplace("commandChatGlobalmuteDenied", true,
+        Player p = e.getPlayer();
+        if (storage.getBoolean("sys.globalmute") && !p.hasPermission("hms.chat.bypass")) {
+            p.sendMessage(Language.getMessagePlaceholderReplace("commandChatGlobalmuteDenied", true,
                     "%PREFIX%", "Globalmute"));
             e.setCancelled(true);
         } else {
             String message = e.getMessage();
-            if (e.getPlayer().hasPermission("hms.bypass.capsfilter") || message.length() < 4) return;
+            p.playSound(p.getLocation(), Sound.NOTE_STICKS, 1.0f, 1.9f);
+            if (p.hasPermission("hms.bypass.capsfilter") || message.length() < 4) return;
 
             int amountUppercase = 0;
             for (Character check : message.toCharArray()) if (Character.isUpperCase(check)) amountUppercase++;
