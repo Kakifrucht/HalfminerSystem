@@ -17,10 +17,6 @@ public class ModSignEdit extends HalfminerModule implements Listener {
 
     private final Map<Player, EditInfo> edit = new HashMap<>();
 
-    public ModSignEdit() {
-        reloadConfig();
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onInteract(PlayerInteractEvent e) {

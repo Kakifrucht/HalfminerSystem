@@ -62,6 +62,8 @@ public class Cmdneutp extends BaseCommand {
 
                         Location loc = block.getLocation();
                         loc.setY(block.getLocation().getBlockY() + 1);
+                        loc.setYaw(player.getLocation().getYaw());
+                        loc.setPitch(player.getLocation().getPitch());
                         player.teleport(loc);
 
                         hms.getServer().dispatchCommand(player, "sethome neutp");
