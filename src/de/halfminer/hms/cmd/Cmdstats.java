@@ -1,8 +1,12 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.StatsType;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class Cmdstats extends BaseCommand {
@@ -16,33 +20,34 @@ public class Cmdstats extends BaseCommand {
 
         if (args.length > 0) {
             String uid = storage.getString("uid." + args[0].toLowerCase());
-            if (uid.length() > 0) showStats(sender, uid);
+            OfflinePlayer player = hms.getServer().getOfflinePlayer(UUID.fromString(uid));
+            if (player != null) showStats(sender, player);
             else {
                 sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Stats"));
             }
         } else {
-            if (sender instanceof Player) showStats(sender, ((Player) sender).getUniqueId().toString());
+            if (sender instanceof Player) showStats(sender, (Player) sender);
             else sender.sendMessage(Language.getMessage("notAPlayer"));
         }
 
     }
 
-    private void showStats(final CommandSender sendTo, final String uid) {
+    private void showStats(final CommandSender sendTo, final OfflinePlayer player) {
 
         //collect vars
-        final String playerName = storage.getString(uid + ".lastname");
-        final String skillGroup = storage.getString(uid + ".skillgroup");
-        final int skillLevel = storage.getInt(uid + ".skilllevel");
-        final int timeOnline = storage.getInt(uid + ".timeonline") / 60;
-        final int joins = storage.getInt(uid + ".joins");
-        final int kills = storage.getInt(uid + ".kills");
-        final int deaths = storage.getInt(uid + ".deaths");
-        final double kdratio = storage.getDouble(uid + ".kdratio");
-        final int votes = storage.getInt(uid + ".votes");
-        final int mobKills = storage.getInt(uid + ".mobkills");
-        final int blocksPlaced = storage.getInt(uid + ".blocksplaced");
-        final int blocksBroken = storage.getInt(uid + ".blocksbroken");
-        final String oldNames = storage.getString(uid + ".lastnames");
+        final String playerName = storage.getStatsString(player, StatsType.LAST_NAME);
+        final String skillGroup = storage.getStatsString(player, StatsType.SKILL_GROUP);
+        final int skillLevel = storage.getStatsInt(player, StatsType.SKILL_LEVEL);
+        final int timeOnline = storage.getStatsInt(player, StatsType.TIME_ONLINE) / 60;
+        final int joins = storage.getStatsInt(player, StatsType.JOINS);
+        final int kills = storage.getStatsInt(player, StatsType.KILLS);
+        final int deaths = storage.getStatsInt(player, StatsType.DEATHS);
+        final double kdratio = storage.getStatsDouble(player, StatsType.KD_RATIO);
+        final int votes = storage.getStatsInt(player, StatsType.VOTES);
+        final int mobKills = storage.getStatsInt(player, StatsType.MOB_KILLS);
+        final int blocksPlaced = storage.getStatsInt(player, StatsType.BLOCKS_PLACED);
+        final int blocksBroken = storage.getStatsInt(player, StatsType.BLOCKS_BROKEN);
+        final String oldNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
         //build the message
         String message = Language.getMessage("commandStatsTop") + "\n";
@@ -58,7 +63,7 @@ public class Cmdstats extends BaseCommand {
             message += Language.getMessagePlaceholderReplace("commandStatsOldnames", false,
                     "%OLDNAMES%", oldNames) + "\n";
 
-        if (sendTo.getName().equals(playerName))
+        if (sendTo.equals(player))
             message += Language.getMessage("commandStatsShowotherStats") + "\n";
 
         message += Language.getMessage("commandStatsBottom");

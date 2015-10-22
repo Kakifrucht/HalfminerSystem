@@ -115,8 +115,10 @@ public class Cmdchat extends BaseCommand {
 
             } else {
 
-                storage.set("sys.chatmessage", Language.arrayToString(args, 0, true));
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatMessageSet", true, "%PREFIX%", "Chat"));
+                String message = Language.arrayToString(args, 0, true);
+                storage.set("sys.chatmessage", message);
+                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatMessageSet", true, "%PREFIX%", "Chat",
+                        "%MESSAGE%", message));
 
             }
 

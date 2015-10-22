@@ -63,7 +63,7 @@ public class HalfminerStorage {
         return getInt(player.getUniqueId().toString() + '.' + stats);
     }
 
-    public double getStatsPlayers(OfflinePlayer player, StatsType stats) {
+    public double getStatsDouble(OfflinePlayer player, StatsType stats) {
         return getDouble(player.getUniqueId().toString() + '.' + stats);
     }
 

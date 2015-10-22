@@ -57,7 +57,7 @@ localization:
   commandChatNewsSetTo: '&aNachricht als News gesetzt'
   commandChatSendToAll: '&7Deine Nachricht wurde an alle versendet'
   commandChatSendToPlayer: '&7Deine Nachricht wurde an %PLAYER% versendet'
-  commandChatMessageSet: '&aNachricht gespeichert'
+  commandChatMessageSet: '&aNachricht gesetzt zu:&r\n%MESSAGE%'
   modStaticListenersNewPlayerFormat: 'animation:newplayer'
   modStaticListenersJoinFormat: 'animation:join<nl>animation:joinbottom'
   modStaticListenersNewsFormat: '&7&l&nNeuigkeiten\n%NEWS%'
@@ -169,3 +169,12 @@ skillLevel:
   derankLossAmount: 250
   #Time in minutes until a kill will be counted again towards elo after a kill
   timeUntilKillCountAgainMinutes: 10
+  #Six skillgroups need to be set, first character is the color code
+  #Upper level in the list are the top levels
+  skillGroups:
+  - 0Pro
+  - aEmerald
+  - bDiamant
+  - 6Gold
+  - 8Eisen
+  - 7Noob
