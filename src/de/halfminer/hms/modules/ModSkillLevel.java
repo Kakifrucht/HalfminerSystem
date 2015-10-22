@@ -183,7 +183,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         //unregister all registered teams
         Team currentTeam;
         for (String team : teams) {
-            if ((currentTeam = scoreboard.getTeam(team.substring(1))) != null) {
+            if ((currentTeam = scoreboard.getTeam(team)) != null) {
                 currentTeam.unregister();
             }
         }
