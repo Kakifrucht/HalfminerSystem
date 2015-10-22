@@ -149,7 +149,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onCommandCheckIfAllowed(PlayerCommandPreprocessEvent e) {
-        short time = hms.getModAntiKillfarming().getBlockTime(e.getPlayer());
+        short time = getBlockTime(e.getPlayer());
         if (time > 0) {
             String command = e.getMessage().split(" ")[0].toLowerCase();
             if (!commandExemptList.contains(command.substring(1, command.length()))) {
@@ -164,7 +164,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     public void onPotionCheckIfAllowed(PotionSplashEvent e) {
         if (e.getEntity().getShooter() instanceof Player) {
             Player thrower = (Player) e.getEntity().getShooter();
-            short time = hms.getModAntiKillfarming().getBlockTime(thrower);
+            short time = getBlockTime(thrower);
             if (time >= 0) {
                 thrower.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"), "%TIME%", Short.toString(time)));
                 e.setCancelled(true);

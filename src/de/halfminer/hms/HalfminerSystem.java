@@ -85,10 +85,6 @@ public class HalfminerSystem extends JavaPlugin {
         return storage;
     }
 
-    public ModAntiKillfarming getModAntiKillfarming() {
-        return (ModAntiKillfarming) modules.get(1);
-    }
-
     public ModMotd getModMotd() {
         return (ModMotd) modules.get(3);
     }
