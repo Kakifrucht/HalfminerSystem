@@ -17,6 +17,10 @@ public class ModBedrockProtection extends HalfminerModule implements Listener {
     private final Map<Player, Long> lastMessage = new HashMap<>();
     private String message;
 
+    public ModBedrockProtection() {
+        reloadConfig();
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onMoveBedrockCheck(PlayerMoveEvent e) {

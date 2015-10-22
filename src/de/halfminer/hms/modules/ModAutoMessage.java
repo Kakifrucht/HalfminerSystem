@@ -16,6 +16,10 @@ public class ModAutoMessage extends HalfminerModule {
     private List<String> messages;
     private String placeholder;
 
+    public ModAutoMessage() {
+        reloadConfig();
+    }
+
     @Override
     public void reloadConfig() {
         //Load messages

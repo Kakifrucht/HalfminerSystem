@@ -19,6 +19,10 @@ public class ModTps extends HalfminerModule implements Listener {
     private int historySize;
     private double alertStaff;
 
+    public ModTps() {
+        reloadConfig();
+    }
+
     /**
      * Returns average TPS over last 10 polled values
      *

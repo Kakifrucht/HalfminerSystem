@@ -27,6 +27,10 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
     private int timeUntilKillCountAgainSeconds;
     private int derankLossAmount;
 
+    public ModSkillLevel() {
+        reloadConfig();
+    }
+
     @EventHandler
     @SuppressWarnings("unused")
     public void onJoin(PlayerJoinEvent e) {

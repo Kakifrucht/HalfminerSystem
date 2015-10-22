@@ -8,14 +8,13 @@ public abstract class HalfminerModule {
     final static HalfminerSystem hms = HalfminerSystem.getInstance();
     final static HalfminerStorage storage = hms.getStorage();
 
-    public HalfminerModule() {
-        reloadConfig();
-    }
-
     /**
      * Reloads the modules config
      */
-    public abstract void reloadConfig();
+    public void reloadConfig() {
+        //does nothing on default, although we don't want submodules who
+        //do not use it either having to override an empty function
+    }
 
     /**
      * Called when server shuts down

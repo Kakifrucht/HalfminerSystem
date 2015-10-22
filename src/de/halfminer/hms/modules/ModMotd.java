@@ -13,6 +13,10 @@ public class ModMotd extends HalfminerModule implements Listener {
     private final Random rnd = new Random();
     private String[] motd;
 
+    public ModMotd() {
+        reloadConfig();
+    }
+
     @EventHandler
     @SuppressWarnings("unused")
     public void serverPing(ServerListPingEvent e) {
