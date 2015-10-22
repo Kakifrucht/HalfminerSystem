@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.TitleSender;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -110,13 +111,16 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         else if (newLevel == 22 && kdRatio < 5.0d) newLevel = 21;
 
         //Set the new values
-        String teamName = teams[newLevel - 1].substring(1);
-        storage.setPlayer(player, "skillelo", elo);
-        storage.setPlayer(player, "skilllevel", newLevel);
-        storage.setPlayer(player, "skillgroup", teamName.substring(1));
+        String teamName = teams[newLevel - 1];
 
         skillObjective.getScore(player.getName()).setScore(newLevel);
         scoreboard.getTeam(teamName).addEntry(player.getName());
+
+        teamName = teamName.substring(2); //remove sorting id
+
+        storage.setPlayer(player, "skillelo", elo);
+        storage.setPlayer(player, "skilllevel", newLevel);
+        storage.setPlayer(player, "skillgroup", teamName);
 
         //Send title/log if necessary
         if (newLevel != level) {
@@ -124,10 +128,10 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
             String sendTitle;
             if (newLevel > level) {
                 sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelUprankTitle", false, "%SKILLLEVEL%",
-                        String.valueOf(newLevel), "%SKILLGROUP%", teamName.substring(1));
+                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
             } else {
                 sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
-                        String.valueOf(newLevel), "%SKILLGROUP%", teamName.substring(1));
+                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
             }
             TitleSender.sendTitle(player, sendTitle, 10, 50, 10);
             hms.getLogger().info(Language.getMessagePlaceholderReplace("modSkillLevelLog", false, "%PLAYER%", player.getName(),
@@ -144,20 +148,23 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
 
         //setup scoreboards, TODO find good way for move to config
-        teams = new String[]{ //first character is colorcode, second sorting id
-                "76Noob",
-                "85Eisen", "85Eisen", "85Eisen", "85Eisen", "85Eisen",
-                "64Gold", "64Gold", "64Gold", "64Gold", "64Gold",
-                "b3Diamant", "b3Diamant", "b3Diamant", "b3Diamant", "b3Diamant",
-                "a2Emerald", "a2Emerald", "a2Emerald", "a2Emerald", "a2Emerald",
-                "01Pro"
+        teams = new String[]{ //first character is colorcode, second and third sorting id
+                "722Noob",
+                "821Eisen", "820Eisen", "819Eisen", "818Eisen", "817Eisen",
+                "616Gold", "615Gold", "614Gold", "613Gold", "612Gold",
+                "b11Diamant", "b10Diamant", "b09Diamant", "b08Diamant", "b07Diamant",
+                "a06Emerald", "a05Emerald", "a04Emerald", "a03Emerald", "a02Emerald",
+                "001Pro"
         };
 
-        for (String team : teams) {
-            if (scoreboard.getTeam(team.substring(1)) == null) {
-                Team registered = scoreboard.registerNewTeam(team.substring(1));
-                registered.setPrefix('§' + team.substring(0, 1));
+        for (int i = 0; i < teams.length; i++) {
+            String teamName = teams[i].substring(1);
+            String colorCode = teams[i].substring(0, 1);
+            if (scoreboard.getTeam(teamName) == null) {
+                Team registered = scoreboard.registerNewTeam(teamName);
+                registered.setPrefix(ChatColor.COLOR_CHAR + colorCode);
             }
+            teams[i] = teamName; //Remove color code
         }
 
         if (skillObjective == null) {
