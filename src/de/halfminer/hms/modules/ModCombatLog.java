@@ -25,10 +25,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     private boolean broadcastLog;
     private int tagTime;
 
-    public ModCombatLog() {
-        reloadConfig();
-    }
-
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onDeath(PlayerDeathEvent e) {

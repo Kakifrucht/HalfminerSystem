@@ -117,4 +117,8 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
             }
         }
     }
+
+    @Override
+    public void reloadConfig() {
+    }
 }

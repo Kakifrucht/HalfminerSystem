@@ -30,10 +30,6 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
     private boolean logHopperLimit;
     private String hopperLimitMessage;
 
-    public ModRedstoneLimit() {
-        reloadConfig();
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void pistonExtend(BlockPistonExtendEvent e) {
