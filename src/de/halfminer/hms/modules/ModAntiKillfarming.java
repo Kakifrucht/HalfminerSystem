@@ -246,7 +246,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
         //Get language
         lang.clear();
         lang.put("killfarmWarning", Language.getMessagePlaceholderReplace("modKillfarmingWarning", true, "%PREFIX%", "PvP"));
-        lang.put("noCommand", Language.getMessagePlaceholderReplace("modKillfarmingNoCommand", true, "%PREFIX%", "Hinweis"));
+        lang.put("noCommand", Language.getMessagePlaceholderReplace("modKillfarmingNoCommand", true, "%PREFIX%", "Info"));
         lang.put("noPvPAttack", Language.getMessagePlaceholderReplace("modKillfarmingNoPvPAttack", true, "%PREFIX%", "PvP"));
         lang.put("noPvPProtect", Language.getMessagePlaceholderReplace("modKillfarmingNoPvPProtect", true, "%PREFIX%", "PvP"));
         lang.put("blockedBroadcast", Language.getMessagePlaceholderReplace("modKillfarmingBlockedBroadcast", true, "%PREFIX%", "PvP"));

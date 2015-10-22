@@ -111,7 +111,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         for (Character check : e.getMessage().toLowerCase().toCharArray()) {
             if (check.equals(' ')) return;
             if (check.equals(':')) {
-                e.getPlayer().sendMessage(Language.getMessagePlaceholderReplace("noPermission", true, "%PREFIX%", "Hinweis"));
+                e.getPlayer().sendMessage(Language.getMessagePlaceholderReplace("noPermission", true, "%PREFIX%", "Info"));
                 e.setCancelled(true);
                 return;
             }
