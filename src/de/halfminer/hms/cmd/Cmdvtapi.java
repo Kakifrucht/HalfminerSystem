@@ -1,6 +1,7 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.StatsType;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -38,7 +39,7 @@ public class Cmdvtapi extends BaseCommand {
                 }
 
                 storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
-                storage.incrementPlayerInt(hasVoted, "votes", 1);
+                storage.incrementStatsInt(hasVoted, StatsType.VOTES, 1);
                 hms.getServer().broadcast(Language.getMessagePlaceholderReplace("commandVtapiVoted", true, "%PREFIX%",
                         "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
                 if (hasVoted instanceof Player) {

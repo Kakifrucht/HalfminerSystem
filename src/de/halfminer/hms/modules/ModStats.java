@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.StatsType;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,30 +32,30 @@ public class ModStats extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void playerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        storage.incrementPlayerInt(player, "joins", 1);
+        storage.incrementStatsInt(player, StatsType.JOINS, 1);
         timeOnline.put(player, System.currentTimeMillis() / 1000);
 
         //Name checking
-        String lastName = storage.getPlayerString(player, "lastname");
+        String lastName = storage.getStatsString(player, StatsType.LAST_NAME);
         //Called on first join
-        if (lastName.length() == 0) storage.setPlayer(player, "lastname", player.getName());
+        if (lastName.length() == 0) storage.setStats(player, StatsType.LAST_NAME, player.getName());
         else if (!lastName.equals(player.getName())) {
-            String lastNames = storage.getPlayerString(player, "lastnames");
+            String lastNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
             if (lastNames.length() > 0) {
-                storage.setPlayer(player, "lastnames", lastNames + ' ' + lastName);
+                storage.setStats(player, StatsType.LAST_NAMES, lastNames + ' ' + lastName);
             } else {
-                storage.setPlayer(player, "lastnames", lastName);
+                storage.setStats(player, StatsType.LAST_NAMES, lastName);
             }
 
             hms.getServer().broadcast(Language.getMessagePlaceholderReplace("modStatsNameChange", true,
                     "%PREFIX%", "Name", "%OLDNAME%", lastName, "%NEWNAME%", player.getName()), "hms.default");
 
-            storage.setPlayer(player, "lastname", player.getName());
+            storage.setStats(player, StatsType.LAST_NAME, player.getName());
         }
 
         storage.set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
-        storage.setPlayer(player, "kdratio", calculateKDRatio(player));
+        storage.setStats(player, StatsType.KD_RATIO, calculateKDRatio(player));
 
         //Votebarrier setting
         if (storage.getInt("vote." + player.getUniqueId().toString()) == 0) {
@@ -74,12 +75,12 @@ public class ModStats extends HalfminerModule implements Listener {
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity();
         if (killer != null && victim != killer) {
-            int killsKiller = storage.incrementPlayerInt(killer, "kills", 1);
-            int deathsVictim = storage.incrementPlayerInt(victim, "deaths", 1);
+            int killsKiller = storage.incrementStatsInt(killer, StatsType.KILLS, 1);
+            int deathsVictim = storage.incrementStatsInt(victim, StatsType.DEATHS, 1);
             double kdRatioKiller = calculateKDRatio(killer);
             double kdRatioVictim = calculateKDRatio(victim);
-            storage.setPlayer(killer, "kdratio", kdRatioKiller);
-            storage.setPlayer(victim, "kdratio", kdRatioVictim);
+            storage.setStats(killer, StatsType.KD_RATIO, kdRatioKiller);
+            storage.setStats(victim, StatsType.KD_RATIO, kdRatioVictim);
 
             killer.sendMessage(Language.getMessagePlaceholderReplace("modStatsPvPKill", true, "%PREFIX%", "PvP",
                     "%VICTIM%", victim.getName(), "%KILLS%", String.valueOf(killsKiller),
@@ -93,11 +94,11 @@ public class ModStats extends HalfminerModule implements Listener {
                     "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
         } else {
 
-            storage.incrementPlayerInt(victim, "deaths", 1);
-            storage.setPlayer(victim, "kdratio", calculateKDRatio(victim));
+            storage.incrementStatsInt(victim, StatsType.DEATHS, 1);
+            storage.setStats(victim, StatsType.KD_RATIO, calculateKDRatio(victim));
 
             victim.sendMessage(Language.getMessagePlaceholderReplace("modStatsDeath", true, "%PREFIX%", "PvP",
-                    "%DEATHS%", String.valueOf(storage.getPlayerInt(victim, "deaths"))));
+                    "%DEATHS%", String.valueOf(storage.getStatsInt(victim, StatsType.DEATHS))));
 
             hms.getLogger().info(Language.getMessagePlaceholderReplace("modStatsDeathLog", false,
                     "%PLAYER%", victim.getName()));
@@ -112,9 +113,9 @@ public class ModStats extends HalfminerModule implements Listener {
             Player clicked = (Player) e.getRightClicked();
             String message = Language.getMessagePlaceholderReplace("modStatsRightClickExempt", true, "%PREFIX%", clicked.getName());
             if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
-                String skillgroup = storage.getPlayerString(clicked, "skillgroup");
-                String kills = String.valueOf(storage.getPlayerInt(clicked, "kills"));
-                String kdratio = String.valueOf(storage.getPlayerDouble(clicked, "kdratio"));
+                String skillgroup = storage.getStatsString(clicked, StatsType.SKILL_GROUP);
+                String kills = String.valueOf(storage.getStatsInt(clicked, StatsType.KILLS));
+                String kdratio = String.valueOf(storage.getStatsPlayers(clicked, StatsType.KD_RATIO));
                 message = Language.getMessagePlaceholderReplace("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
                         "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%KDRATIO%", kdratio);
             }
@@ -127,26 +128,26 @@ public class ModStats extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void playerMobkill(EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Player) && e.getEntity().getKiller() != null)
-            storage.incrementPlayerInt(e.getEntity().getKiller(), "mobkills", 1);
+            storage.incrementStatsInt(e.getEntity().getKiller(), StatsType.MOB_KILLS, 1);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void blockPlace(BlockPlaceEvent e) {
-        storage.incrementPlayerInt(e.getPlayer(), "blocksplaced", 1);
+        storage.incrementStatsInt(e.getPlayer(), StatsType.BLOCKS_PLACED, 1);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void blockBreak(BlockBreakEvent e) {
-        storage.incrementPlayerInt(e.getPlayer(), "blocksbroken", 1);
+        storage.incrementStatsInt(e.getPlayer(), StatsType.BLOCKS_BROKEN, 1);
     }
 
     private double calculateKDRatio(Player player) {
 
-        int deaths = storage.getPlayerInt(player, "deaths");
+        int deaths = storage.getStatsInt(player, StatsType.DEATHS);
         if (deaths == 0) return 999999.99d;
-        double calc = storage.getPlayerInt(player, "kills") / (double) deaths;
+        double calc = storage.getStatsInt(player, StatsType.KILLS) / (double) deaths;
         return Math.round(calc * 100.0d) / 100.0d;
     }
 
@@ -156,7 +157,7 @@ public class ModStats extends HalfminerModule implements Listener {
         if (!timeOnline.containsKey(player)) return; //if reload occurred
 
         time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
-        storage.incrementPlayerInt(player, "timeonline", time);
+        storage.incrementStatsInt(player, StatsType.TIME_ONLINE, time);
         timeOnline.remove(player);
     }
 

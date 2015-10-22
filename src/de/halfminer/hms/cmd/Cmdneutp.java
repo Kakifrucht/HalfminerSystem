@@ -1,6 +1,7 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.StatsType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -32,9 +33,9 @@ public class Cmdneutp extends BaseCommand {
 
             final Player player = (Player) sender;
 
-            if (!storage.getPlayerBoolean(player, "neutp")) {
+            if (!storage.getStatsBoolean(player, StatsType.NEUTP_USED)) {
 
-                storage.setPlayer(player, "neutp", true);
+                storage.setStats(player, StatsType.NEUTP_USED, true);
 
                 boundMin = hms.getConfig().getInt("command.neutp.boundMin", 1000);
                 boundMax = hms.getConfig().getInt("command.neutp.boundMax", 10000) - boundMin;

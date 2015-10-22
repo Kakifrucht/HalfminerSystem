@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
 
         //Title on join
         final Player joined = e.getPlayer();
-        int timeOnline = storage.getPlayerInt(joined, "timeonline");
+        int timeOnline = storage.getStatsInt(joined, StatsType.TIME_ONLINE);
 
         if (timeOnline == 0) {
             TitleSender.sendTitle(joined, Language.getMessage("modStaticListenersNewPlayerFormat"));

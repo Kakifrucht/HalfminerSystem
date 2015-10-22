@@ -1,6 +1,7 @@
 package de.halfminer.hms;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.StatsType;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,14 +25,6 @@ public class HalfminerStorage {
         fileConfig.set(path, value);
     }
 
-    public void setPlayer(OfflinePlayer player, String path, Object value) {
-        set(player.getUniqueId().toString() + '.' + path, value);
-    }
-
-    public Object get(String path) {
-        return fileConfig.get(path);
-    }
-
     public String getString(String path) {
         return fileConfig.getString(path, "");
     }
@@ -52,30 +45,34 @@ public class HalfminerStorage {
         return fileConfig.getBoolean(path);
     }
 
-    public String getPlayerString(OfflinePlayer player, String path) {
-        return getString(player.getUniqueId().toString() + '.' + path);
-    }
-
-    public int getPlayerInt(OfflinePlayer player, String path) {
-        return getInt(player.getUniqueId().toString() + '.' + path);
-    }
-
-    public double getPlayerDouble(OfflinePlayer player, String path) {
-        return getDouble(player.getUniqueId().toString() + '.' + path);
-    }
-
-    public boolean getPlayerBoolean(OfflinePlayer player, String path) {
-        return getBoolean(player.getUniqueId().toString() + '.' + path);
-    }
-
     public int incrementInt(String path, int incrementBy) {
         int value = fileConfig.getInt(path, 0) + incrementBy;
         fileConfig.set(path, value);
         return value;
     }
 
-    public int incrementPlayerInt(OfflinePlayer player, String path, int incrementBy) {
-        return incrementInt(player.getUniqueId().toString() + "." + path, incrementBy);
+    public void setStats(OfflinePlayer player, StatsType stats, Object value) {
+        set(player.getUniqueId().toString() + '.' + stats, value);
+    }
+
+    public String getStatsString(OfflinePlayer player, StatsType stats) {
+        return getString(player.getUniqueId().toString() + '.' + stats);
+    }
+
+    public int getStatsInt(OfflinePlayer player, StatsType stats) {
+        return getInt(player.getUniqueId().toString() + '.' + stats);
+    }
+
+    public double getStatsPlayers(OfflinePlayer player, StatsType stats) {
+        return getDouble(player.getUniqueId().toString() + '.' + stats);
+    }
+
+    public boolean getStatsBoolean(OfflinePlayer player, StatsType stats) {
+        return getBoolean(player.getUniqueId().toString() + '.' + stats);
+    }
+
+    public int incrementStatsInt(OfflinePlayer player, StatsType stats, int incrementBy) {
+        return incrementInt(player.getUniqueId().toString() + "." + stats, incrementBy);
     }
 
     public void saveConfig() {
@@ -103,9 +100,4 @@ public class HalfminerStorage {
             }
         }, saveInterval, saveInterval).getTaskId();
     }
-
-    public void onDisable() {
-        saveConfig();
-    }
-
 }

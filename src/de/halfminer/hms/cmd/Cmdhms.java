@@ -1,6 +1,7 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -95,7 +96,7 @@ public class Cmdhms extends BaseCommand {
             return;
         }
 
-        int oldValue = storage.getPlayerInt(player, "skillelo");
+        int oldValue = storage.getStatsInt(player, StatsType.SKILL_ELO);
         int modifier = -oldValue;
 
         if (args.length > 2) {
@@ -110,8 +111,8 @@ public class Cmdhms extends BaseCommand {
         hms.getModSkillLevel().updateSkill(player, modifier);
 
         sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
-                "%PLAYER%", player.getName(), "%SKILLLEVEL%", String.valueOf(storage.getPlayerInt(player, "skilllevel")),
-                "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", String.valueOf(storage.getPlayerInt(player, "skillelo"))));
+                "%PLAYER%", player.getName(), "%SKILLLEVEL%", String.valueOf(storage.getStatsInt(player, StatsType.SKILL_LEVEL)),
+                "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", String.valueOf(storage.getStatsInt(player, StatsType.SKILL_ELO))));
     }
 
     private void ringPlayer(CommandSender sender, String[] args) {
