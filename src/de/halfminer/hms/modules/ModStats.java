@@ -58,7 +58,7 @@ public class ModStats extends HalfminerModule implements Listener {
                     "%PREFIX%", "Name", "%OLDNAME%", lastName, "%NEWNAME%", player.getName()), "hms.default");
         }
 
-        storage.setUUID(lastName, player.getUniqueId());
+        storage.setUUID(player);
         storage.setStats(player, StatsType.LAST_NAME, player.getName());
         storage.setStats(player, StatsType.KD_RATIO, calculateKDRatio(player));
 

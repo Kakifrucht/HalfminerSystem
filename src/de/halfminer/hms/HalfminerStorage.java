@@ -33,8 +33,8 @@ public class HalfminerStorage {
         return value;
     }
 
-    public void setUUID(String playerName, UUID uid) {
-        set("uid." + playerName.toLowerCase(), uid.toString());
+    public void setUUID(OfflinePlayer player) {
+        set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
     }
 
     public void setStats(OfflinePlayer player, StatsType stats, Object value) {
