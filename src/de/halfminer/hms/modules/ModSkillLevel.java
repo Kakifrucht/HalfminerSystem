@@ -160,27 +160,17 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         int sortId = 1;
         for (String skillGroup : skillGroupConfig) {
 
-            //Highest level and lowest level only once
-            if (sortId == 1) {
+            int amountIterate = 5;
+            if (sortId > 22) break;
+            if (sortId == 1 || sortId == 22) amountIterate = 1;
 
-                teams[21] = skillGroup.substring(0, 1) + "01" + skillGroup.substring(1);
+            for (int i = 0; i < amountIterate; i++) {
+                String sortString = String.valueOf(sortId);
+                if (sortId < 10) sortString = '0' + sortString;
+                teams[22 - sortId] = skillGroup.substring(0, 1) + sortString + skillGroup.substring(1);
                 sortId++;
-
-            } else if (sortId == 22) {
-
-                teams[0] = skillGroup.substring(0, 1) + "22" + skillGroup.substring(1);
-                sortId++;
-
-            } else if (sortId > 22) {
-                break;
-            } else {
-                for (int i = 0; i < 5; i++) {
-                    String sortString = String.valueOf(sortId);
-                    if (sortId < 10) sortString = '0' + sortString;
-                    teams[22 - sortId] = skillGroup.substring(0, 1) + sortString + skillGroup.substring(1);
-                    sortId++;
-                }
             }
+
         }
 
         for (int i = 0; i < teams.length; i++) {
