@@ -27,6 +27,20 @@ public class HalfminerStorage {
         fileConfig.set(path, value);
     }
 
+    public int incrementInt(String path, int incrementBy) {
+        int value = fileConfig.getInt(path, 0) + incrementBy;
+        fileConfig.set(path, value);
+        return value;
+    }
+
+    public void setUUID(String playerName, UUID uid) {
+        set("uid." + playerName.toLowerCase(), uid.toString());
+    }
+
+    public void setStats(OfflinePlayer player, StatsType stats, Object value) {
+        set(player.getUniqueId().toString() + '.' + stats, value);
+    }
+
     public String getString(String path) {
         return fileConfig.getString(path, "");
     }
@@ -53,16 +67,6 @@ public class HalfminerStorage {
         else throw new PlayerNotFoundException();
     }
 
-    public int incrementInt(String path, int incrementBy) {
-        int value = fileConfig.getInt(path, 0) + incrementBy;
-        fileConfig.set(path, value);
-        return value;
-    }
-
-    public void setStats(OfflinePlayer player, StatsType stats, Object value) {
-        set(player.getUniqueId().toString() + '.' + stats, value);
-    }
-
     public String getStatsString(OfflinePlayer player, StatsType stats) {
         return getString(player.getUniqueId().toString() + '.' + stats);
     }
@@ -77,10 +81,6 @@ public class HalfminerStorage {
 
     public boolean getStatsBoolean(OfflinePlayer player, StatsType stats) {
         return getBoolean(player.getUniqueId().toString() + '.' + stats);
-    }
-
-    public int incrementStatsInt(OfflinePlayer player, StatsType stats, int incrementBy) {
-        return incrementInt(player.getUniqueId().toString() + "." + stats, incrementBy);
     }
 
     public void saveConfig() {

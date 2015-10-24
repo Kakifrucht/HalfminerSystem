@@ -31,30 +31,35 @@ public class ModStats extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     @SuppressWarnings("unused")
     public void playerJoin(PlayerJoinEvent e) {
+
         Player player = e.getPlayer();
         storage.incrementStatsInt(player, StatsType.JOINS, 1);
         timeOnline.put(player, System.currentTimeMillis() / 1000);
 
-        //Name checking
         String lastName = storage.getStatsString(player, StatsType.LAST_NAME);
         //Called on first join
-        if (lastName.length() == 0) storage.setStats(player, StatsType.LAST_NAME, player.getName());
-        else if (!lastName.equals(player.getName())) {
+        if (lastName.length() == 0) {
+            lastName = player.getName();
+        } else if (!lastName.equals(player.getName())) {
+
             String lastNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
             if (lastNames.length() > 0) {
-                storage.setStats(player, StatsType.LAST_NAMES, lastNames + ' ' + lastName);
+                //Do not store old name if it was used already
+                if (!lastName.contains(lastName)) {
+                    storage.setStats(player, StatsType.LAST_NAMES, lastNames + ' ' + lastName);
+                }
+
             } else {
                 storage.setStats(player, StatsType.LAST_NAMES, lastName);
             }
 
             hms.getServer().broadcast(Language.getMessagePlaceholderReplace("modStatsNameChange", true,
                     "%PREFIX%", "Name", "%OLDNAME%", lastName, "%NEWNAME%", player.getName()), "hms.default");
-
-            storage.setStats(player, StatsType.LAST_NAME, player.getName());
         }
 
-        storage.set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
+        storage.setUUID(lastName, player.getUniqueId());
+        storage.setStats(player, StatsType.LAST_NAME, lastName);
         storage.setStats(player, StatsType.KD_RATIO, calculateKDRatio(player));
 
         //Votebarrier setting
