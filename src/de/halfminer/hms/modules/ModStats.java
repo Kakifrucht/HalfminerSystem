@@ -109,9 +109,13 @@ public class ModStats extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onInteract(PlayerInteractEntityEvent e) {
+
         if (e.getRightClicked() instanceof Player) {
+
             Player clicked = (Player) e.getRightClicked();
-            String message = Language.getMessagePlaceholderReplace("modStatsRightClickExempt", true, "%PREFIX%", clicked.getName());
+            String message = Language.getMessagePlaceholderReplace("modStatsRightClickExempt", true,
+                    "%PREFIX%", clicked.getName());
+
             if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
                 String skillgroup = storage.getStatsString(clicked, StatsType.SKILL_GROUP);
                 String kills = String.valueOf(storage.getStatsInt(clicked, StatsType.KILLS));
@@ -119,9 +123,12 @@ public class ModStats extends HalfminerModule implements Listener {
                 message = Language.getMessagePlaceholderReplace("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
                         "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%KDRATIO%", kdratio);
             }
+
             e.getPlayer().sendMessage(message);
-            clicked.getWorld().playSound(clicked.getLocation(), Sound.NOTE_STICKS, 1.0f, 1.4f);
+            e.getPlayer().playSound(clicked.getLocation(), Sound.NOTE_STICKS, 1.0f, 1.4f);
+
         }
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
