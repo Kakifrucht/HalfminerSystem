@@ -20,7 +20,8 @@ public class Cmdstats extends BaseCommand {
 
         if (args.length > 0) {
             String uid = storage.getString("uid." + args[0].toLowerCase());
-            OfflinePlayer player = hms.getServer().getOfflinePlayer(UUID.fromString(uid));
+            OfflinePlayer player = null;
+            if (uid.length() > 0) player = hms.getServer().getOfflinePlayer(UUID.fromString(uid));
             if (player != null) showStats(sender, player);
             else {
                 sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Stats"));
