@@ -95,7 +95,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
         //function to determine new level based on elo (skillnumber)
         int newLevel = level;
-        double calc = ((1.9d * elo - (0.0002d * (elo * elo))) / 212) + 1; //TODO optimize function
+        double calc = ((1.9d * elo - (0.0002d * (elo * elo))) / 212) + 1;
 
         int newLevelUp = (int) Math.ceil(calc);
         int newLevelDown = (int) Math.floor(calc);
@@ -151,29 +151,37 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         timeUntilKillCountAgainSeconds = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
 
-        List<String> skillLevel = hms.getConfig().getStringList("skillLevel.skillGroups");
-        teams = new String[22];
-        String sortString;
-        for (int sortId = 1; sortId < 23; sortId++) {
-            sortString = String.valueOf(sortId);
-            if (sortString.length() == 1) sortString = '0' + sortString;
-            if (sortId == 1) teams[sortId - 1] = sortString + skillLevel.get(0);
-            else if (sortId == 22) teams[sortId - 1] = sortString + skillLevel.get(5);
-            else {
+        List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 
+        //ensure that teams are being removed on reload
+        if (teams != null) onDisable();
+
+        teams = new String[22]; //first character of String is colorcode, second and third sorting id, rest name
+        int sortId = 1;
+        for (String skillGroup : skillGroupConfig) {
+
+            //Highest level and lowest level only once
+            if (sortId == 1) {
+
+                teams[0] = skillGroup.substring(0, 1) + "01" + skillGroup.substring(1);
+                sortId++;
+
+            } else if (sortId == 22) {
+
+                teams[21] = skillGroup.substring(0, 1) + "22" + skillGroup.substring(1);
+                sortId++;
+
+            } else if (sortId > 22) {
+                break;
+            } else {
+                for (int i = 0; i < 5; i++) {
+                    String sortString = String.valueOf(sortId);
+                    if (sortId < 10) sortString = '0' + sortString;
+                    teams[sortId - 1] = skillGroup.substring(0, 1) + sortString + skillGroup.substring(1);
+                    sortId++;
+                }
             }
-
         }
-
-        //setup scoreboards, TODO find good way for move to config
-        teams = new String[]{ //first character is colorcode, second and third sorting id
-                "722Noob",
-                "821Eisen", "820Eisen", "819Eisen", "818Eisen", "817Eisen",
-                "616Gold", "615Gold", "614Gold", "613Gold", "612Gold",
-                "b11Diamant", "b10Diamant", "b09Diamant", "b08Diamant", "b07Diamant",
-                "a06Emerald", "a05Emerald", "a04Emerald", "a03Emerald", "a02Emerald",
-                "001Pro"
-        };
 
         for (int i = 0; i < teams.length; i++) {
             String teamName = teams[i].substring(1);

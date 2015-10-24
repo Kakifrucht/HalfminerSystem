@@ -4,7 +4,6 @@ import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
 
 @SuppressWarnings("unused")
 public class Cmdhome extends BaseCommand {
@@ -26,7 +25,7 @@ public class Cmdhome extends BaseCommand {
                     || storage.getStatsInt(player, StatsType.TIME_ONLINE) < 18000
                     || storage.getInt("vote.ip" + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) > 1) {
 
-                PermissionAttachment newPermission = player.addAttachment(hms, "essentials.home", true, 0);
+                player.addAttachment(hms, "essentials.home", true, 0);
                 hms.getServer().dispatchCommand(player, command);
 
             } else {

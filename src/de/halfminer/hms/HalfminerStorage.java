@@ -68,19 +68,23 @@ public class HalfminerStorage {
     }
 
     public String getStatsString(OfflinePlayer player, StatsType stats) {
-        return getString(player.getUniqueId().toString() + '.' + stats);
+        return getString(player.getUniqueId() + "." + stats);
     }
 
     public int getStatsInt(OfflinePlayer player, StatsType stats) {
-        return getInt(player.getUniqueId().toString() + '.' + stats);
+        return getInt(player.getUniqueId() + "." + stats);
     }
 
     public double getStatsDouble(OfflinePlayer player, StatsType stats) {
-        return getDouble(player.getUniqueId().toString() + '.' + stats);
+        return getDouble(player.getUniqueId() + "." + stats);
     }
 
     public boolean getStatsBoolean(OfflinePlayer player, StatsType stats) {
-        return getBoolean(player.getUniqueId().toString() + '.' + stats);
+        return getBoolean(player.getUniqueId() + "." + stats);
+    }
+
+    public int incrementStatsInt(OfflinePlayer player, StatsType stats, int incrementBy) {
+        return incrementInt(player.getUniqueId() + "." + stats, incrementBy);
     }
 
     public void saveConfig() {
