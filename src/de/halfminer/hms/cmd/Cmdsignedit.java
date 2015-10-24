@@ -18,9 +18,13 @@ public class Cmdsignedit extends BaseCommand {
         if (sender instanceof Player) {
 
             Player player = (Player) sender;
+
             if (args.length > 0) {
+
                 if (args[0].equalsIgnoreCase("copy")) {
+
                     byte amountToCopy = 1;
+
                     if (args.length > 1) {
                         try {
                             amountToCopy = Byte.parseByte(args[1]);
@@ -28,10 +32,13 @@ public class Cmdsignedit extends BaseCommand {
                         } catch (NumberFormatException e) {
                         }
                     }
+
                     hms.getModSignEdit().makeCopies(player, amountToCopy);
                     player.sendMessage(Language.getMessagePlaceholderReplace("commandSigneditCopy", true, "%PREFIX%", "Info", "%AMOUNT%", Byte.toString(amountToCopy)));
                     return;
+
                 } else {
+
                     try {
                         byte line = Byte.parseByte(args[0]);
                         if (line > 0 && line < 5) {
@@ -51,7 +58,9 @@ public class Cmdsignedit extends BaseCommand {
                     }
                 }
             }
+
             usageMessage(player);
+
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
 
     }

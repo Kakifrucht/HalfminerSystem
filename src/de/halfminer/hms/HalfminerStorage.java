@@ -1,5 +1,6 @@
 package de.halfminer.hms;
 
+import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import org.bukkit.OfflinePlayer;
@@ -8,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class HalfminerStorage {
 
@@ -43,6 +45,12 @@ public class HalfminerStorage {
 
     public boolean getBoolean(String path) {
         return fileConfig.getBoolean(path);
+    }
+
+    public UUID getUUID(String playerName) throws PlayerNotFoundException {
+        String uuidString = getString("uid." + playerName.toLowerCase());
+        if (uuidString.length() > 0) return UUID.fromString(uuidString);
+        else throw new PlayerNotFoundException();
     }
 
     public int incrementInt(String path, int incrementBy) {

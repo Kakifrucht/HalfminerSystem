@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import org.bukkit.Material;
@@ -21,6 +22,7 @@ public class Cmdvtapi extends BaseCommand {
     }
 
     @Override
+    @SuppressWarnings("EmptyCatchBlock")
     public void run(CommandSender sender, String label, String[] args) {
 
         if (!label.equalsIgnoreCase("vtapi") || args.length == 0 || !sender.isOp()) return;
@@ -31,27 +33,25 @@ public class Cmdvtapi extends BaseCommand {
 
                 if (args.length < 2) return;
 
-                OfflinePlayer hasVoted = hms.getServer().getPlayer(args[1]);
-                if (hasVoted == null) {
-                    String uid = storage.getString("uid." + args[1]);
-                    if (uid.length() == 0) return;
-                    hasVoted = hms.getServer().getOfflinePlayer(UUID.fromString(uid));
+                OfflinePlayer hasVoted;
+                try {
+                    hasVoted = hms.getServer().getOfflinePlayer(storage.getUUID(args[1]));
+                } catch (PlayerNotFoundException e) {
+                    return;
                 }
 
                 storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
                 storage.incrementStatsInt(hasVoted, StatsType.VOTES, 1);
                 hms.getServer().broadcast(Language.getMessagePlaceholderReplace("commandVtapiVoted", true, "%PREFIX%",
                         "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
+
                 if (hasVoted instanceof Player) {
                     Player playerHasVoted = (Player) hasVoted;
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.NOTE_PLING, 1.0f, 2.0f);
                     String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
                     storage.incrementInt("vote.ip" + address, 1);
                 }
-                return;
-            }
-
-            if (sender instanceof Player) {
+            } else if (sender instanceof Player) {
 
                 Player player = (Player) sender;
                 ConsoleCommandSender consoleInstance = hms.getServer().getConsoleSender();
@@ -88,12 +88,15 @@ public class Cmdvtapi extends BaseCommand {
                             hms.getServer().dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
                             return;
                         }
-                        //Set the skull
+                        //Get the owner
                         String skullOwner = skull.getOwner();
 
                         int level = 1;
-                        String uid = storage.getString("uid." + skullOwner.toLowerCase());
-                        if (uid.length() > 0) level = storage.getInt(uid + ".skilllevel");
+                        try {
+                            UUID uid = storage.getUUID(skullOwner);
+                            level = storage.getStatsInt(hms.getServer().getOfflinePlayer(uid), StatsType.SKILL_LEVEL);
+                        } catch (PlayerNotFoundException e) {
+                        }
 
                         hms.getServer().dispatchCommand(consoleInstance, "vt setstr temp headname_" + player.getName() + " " + skullOwner);
                         hms.getServer().dispatchCommand(consoleInstance, "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));

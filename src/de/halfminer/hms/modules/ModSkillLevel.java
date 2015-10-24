@@ -15,6 +15,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModSkillLevel extends HalfminerModule implements Listener {
@@ -149,6 +150,20 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         timeUntilDerankSeconds = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
         timeUntilKillCountAgainSeconds = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
+
+        List<String> skillLevel = hms.getConfig().getStringList("skillLevel.skillGroups");
+        teams = new String[22];
+        String sortString;
+        for (int sortId = 1; sortId < 23; sortId++) {
+            sortString = String.valueOf(sortId);
+            if (sortString.length() == 1) sortString = '0' + sortString;
+            if (sortId == 1) teams[sortId - 1] = sortString + skillLevel.get(0);
+            else if (sortId == 22) teams[sortId - 1] = sortString + skillLevel.get(5);
+            else {
+
+            }
+
+        }
 
         //setup scoreboards, TODO find good way for move to config
         teams = new String[]{ //first character is colorcode, second and third sorting id

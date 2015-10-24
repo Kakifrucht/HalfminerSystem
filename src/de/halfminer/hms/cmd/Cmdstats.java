@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import org.bukkit.OfflinePlayer;
@@ -19,16 +20,19 @@ public class Cmdstats extends BaseCommand {
     public void run(CommandSender sender, String label, String[] args) {
 
         if (args.length > 0) {
-            String uid = storage.getString("uid." + args[0].toLowerCase());
-            OfflinePlayer player = null;
-            if (uid.length() > 0) player = hms.getServer().getOfflinePlayer(UUID.fromString(uid));
-            if (player != null) showStats(sender, player);
-            else {
+
+            try {
+                UUID playerUUID = storage.getUUID(args[0]);
+                showStats(sender, hms.getServer().getOfflinePlayer(playerUUID));
+            } catch (PlayerNotFoundException e) {
                 sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Stats"));
             }
+
         } else {
+
             if (sender instanceof Player) showStats(sender, (Player) sender);
             else sender.sendMessage(Language.getMessage("notAPlayer"));
+
         }
 
     }

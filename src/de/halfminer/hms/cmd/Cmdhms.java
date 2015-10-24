@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
@@ -10,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class Cmdhms extends BaseCommand {
@@ -69,15 +72,17 @@ public class Cmdhms extends BaseCommand {
     }
 
     private void rmHomeBlock(CommandSender sender, String[] args) {
+
         if (args.length == 2) {
-            String playerUid = storage.getString("uid." + args[1].toLowerCase());
-            if (playerUid.length() == 0) {
+            try {
+                UUID playerUid = storage.getUUID(args[1]);
+                storage.set("vote." + playerUid, Long.MAX_VALUE);
+                sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsHomeblockRemove", true, "%PREFIX%", "Info",
+                        "%PLAYER%", hms.getServer().getOfflinePlayer(playerUid).getName()));
+            } catch (PlayerNotFoundException e) {
                 sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Info"));
-                return;
             }
-            storage.set("vote." + playerUid, Long.MAX_VALUE);
-            sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsHomeblockRemove", true, "%PREFIX%", "Info",
-                    "%PLAYER%", storage.getString(playerUid + ".lastname")));
+
         } else
             sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsUsage", true, "%PREFIX%", "Info"));
     }

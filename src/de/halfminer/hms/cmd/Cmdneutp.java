@@ -31,8 +31,6 @@ public class Cmdneutp extends BaseCommand {
 
                 storage.setStats(player, StatsType.NEUTP_USED, true);
 
-
-
                 player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpCountdown", true, "%PREFIX%", "Neutp"));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));

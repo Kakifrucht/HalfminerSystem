@@ -1,7 +1,10 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
 import org.bukkit.command.CommandSender;
+
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class Cmdhmstore extends BaseCommand {
@@ -80,10 +83,15 @@ public class Cmdhmstore extends BaseCommand {
 
         String toReturn = "";
         String[] split = path.toLowerCase().split("[.]");
-        String uid = storage.getString("uid." + split[0]);
-        if (uid.length() > 0) split[0] = uid;
-        for (String str : split) toReturn += str + ".";
-        return toReturn.substring(0, toReturn.length() - 1);
+
+        try {
+            UUID playerUid = storage.getUUID(split[0]);
+            split[0] = playerUid.toString();
+            for (String str : split) toReturn += str + ".";
+            return toReturn.substring(0, toReturn.length() - 1);
+        } catch (PlayerNotFoundException e) {
+            return path.toLowerCase();
+        }
 
     }
 
