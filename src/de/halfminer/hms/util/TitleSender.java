@@ -28,12 +28,14 @@ public class TitleSender {
      * @param fadeOut time in milliseconds until message faded out after it stay
      */
     public static void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
+
         String command;
         if (player == null) {
             command = hms.getConfig().getString("general.titleCommandBroadcast");
             command = Language.placeholderReplace(command, "%FADEIN%", String.valueOf(fadeIn), "%STAY%", String.valueOf(stay),
                     "%FADEOUT%", String.valueOf(fadeOut), "%MESSAGE%", title);
         } else {
+            if (!player.isOnline()) return;
             command = hms.getConfig().getString("general.titleCommandPlayer");
             command = Language.placeholderReplace(command, "%FADEIN%", String.valueOf(fadeIn), "%STAY%", String.valueOf(stay),
                     "%FADEOUT%", String.valueOf(fadeOut), "%PLAYER%", player.getName(), "%MESSAGE%", title);
