@@ -3,8 +3,8 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 
 @SuppressWarnings("unused")
 public class Cmdhome extends BaseCommand {
@@ -26,10 +26,9 @@ public class Cmdhome extends BaseCommand {
                     || storage.getStatsInt(player, StatsType.TIME_ONLINE) < 18000
                     || storage.getInt("vote.ip" + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) > 1) {
 
-                ConsoleCommandSender console = hms.getServer().getConsoleSender();
-                hms.getServer().dispatchCommand(console, "manuaddp " + player.getName() + " essentials.home");
+                PermissionAttachment newPermission = player.addAttachment(hms, "essentials.home", true, 0);
                 hms.getServer().dispatchCommand(player, command);
-                hms.getServer().dispatchCommand(console, "manudelp " + player.getName() + " essentials.home");
+
             } else {
 
                 player.sendMessage(Language.getMessagePlaceholderReplace("commandHomeDenied", true, "%PREFIX%", "Home",
