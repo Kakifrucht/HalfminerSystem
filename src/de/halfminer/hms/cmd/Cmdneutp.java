@@ -16,12 +16,6 @@ import java.util.Random;
 @SuppressWarnings("unused")
 public class Cmdneutp extends BaseCommand {
 
-    private Random rnd = new Random();
-    private World world = hms.getServer().getWorlds().get(0);
-    private Block block;
-    private int boundMin;
-    private int boundMax;
-
     public Cmdneutp() {
         this.permission = "hms.neutp";
     }
@@ -37,8 +31,7 @@ public class Cmdneutp extends BaseCommand {
 
                 storage.setStats(player, StatsType.NEUTP_USED, true);
 
-                boundMin = hms.getConfig().getInt("command.neutp.boundMin", 1000);
-                boundMax = hms.getConfig().getInt("command.neutp.boundMax", 10000) - boundMin;
+
 
                 player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpCountdown", true, "%PREFIX%", "Neutp"));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
@@ -48,9 +41,17 @@ public class Cmdneutp extends BaseCommand {
                     @Override
                     public void run() {
 
-                        int maxIteration = 0;
+                        Random rnd = new Random();
+
+                        int boundMin = hms.getConfig().getInt("command.neutp.boundMin", 1000);
+                        int boundMax = hms.getConfig().getInt("command.neutp.boundMax", 10000) - boundMin;
+                        int iterations = 10;
+
+                        World world = hms.getServer().getWorlds().get(0);
+                        Block block;
+
                         do {
-                            maxIteration++;
+                            iterations--;
                             int x = rnd.nextInt(boundMax) + boundMin;
                             int z = rnd.nextInt(boundMax) + boundMin;
                             if (rnd.nextBoolean()) x = -x;
@@ -58,7 +59,7 @@ public class Cmdneutp extends BaseCommand {
                             int y = world.getHighestBlockAt(x, z).getLocation().getBlockY();
                             block = world.getBlockAt(x, y - 1, z);
                         }
-                        while (maxIteration < 10 && block.getType() == Material.WATER || block.getType() == Material.LAVA
+                        while (iterations > 0 && block.getType() == Material.WATER || block.getType() == Material.LAVA
                                 || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.STATIONARY_LAVA);
 
                         Location loc = block.getLocation();
@@ -68,6 +69,7 @@ public class Cmdneutp extends BaseCommand {
                         player.teleport(loc);
 
                         hms.getServer().dispatchCommand(player, "sethome neutp");
+
                         for (int i = 0; i < 100; i++) player.sendMessage("");
                         player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpTpDone", true, "%PREFIX%", "Neutp",
                                 "%PLAYER%", player.getName()));
