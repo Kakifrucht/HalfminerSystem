@@ -46,7 +46,7 @@ public class ModStats extends HalfminerModule implements Listener {
 
             if (lastNames.length() > 0) {
                 //Do not store old name if it was used already
-                if (!lastName.contains(lastName)) {
+                if (!lastNames.contains(lastName)) {
                     storage.setStats(player, StatsType.LAST_NAMES, lastNames + ' ' + lastName);
                 }
 
@@ -59,7 +59,7 @@ public class ModStats extends HalfminerModule implements Listener {
         }
 
         storage.setUUID(lastName, player.getUniqueId());
-        storage.setStats(player, StatsType.LAST_NAME, lastName);
+        storage.setStats(player, StatsType.LAST_NAME, player.getName());
         storage.setStats(player, StatsType.KD_RATIO, calculateKDRatio(player));
 
         //Votebarrier setting
