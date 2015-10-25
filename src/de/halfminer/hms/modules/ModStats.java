@@ -37,7 +37,7 @@ public class ModStats extends HalfminerModule implements Listener {
         timeOnline.put(player, System.currentTimeMillis() / 1000);
 
         String lastName = storage.getStatsString(player, StatsType.LAST_NAME);
-        if (!(lastName.length() == 0) && !lastName.equals(player.getName())) {
+        if (!(lastName.length() == 0) && !lastName.equalsIgnoreCase(player.getName())) {
 
             String lastNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
