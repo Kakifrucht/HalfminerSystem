@@ -3,13 +3,18 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 @SuppressWarnings("unused")
@@ -43,6 +48,17 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                 }
             });
 
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onInventoryClick(InventoryClickEvent e) {
+        Inventory clicked = e.getInventory();
+        if (clicked != null && clicked.getType() == InventoryType.MERCHANT) {
+            ItemStack item = e.getCurrentItem();
+            if (item != null) {
+                if (item.getType() == Material.WRITTEN_BOOK || item.getType() == Material.APPLE) e.setCancelled(true);
+            }
         }
     }
 

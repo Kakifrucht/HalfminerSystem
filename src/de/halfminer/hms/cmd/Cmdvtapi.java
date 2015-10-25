@@ -22,7 +22,6 @@ public class Cmdvtapi extends BaseCommand {
     }
 
     @Override
-    @SuppressWarnings("EmptyCatchBlock")
     public void run(CommandSender sender, String label, String[] args) {
 
         if (!label.equalsIgnoreCase("vtapi") || args.length == 0 || !sender.isOp()) return;
@@ -51,6 +50,7 @@ public class Cmdvtapi extends BaseCommand {
                     String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
                     storage.incrementInt("vote.ip" + address, 1);
                 }
+
             } else if (sender instanceof Player) {
 
                 Player player = (Player) sender;
@@ -59,24 +59,23 @@ public class Cmdvtapi extends BaseCommand {
                 if (args[0].equalsIgnoreCase("takecase")) {
 
                     String playername = player.getName();
-                    //Check if the held Item has an Display Name (cases always do)
+
                     if (player.getItemInHand().getItemMeta().hasDisplayName()) {
 
                         ItemStack hand = player.getItemInHand();
 
-                        //Take the Item by subtracting one, or replace with air
                         hms.getServer().dispatchCommand(consoleInstance, "vt setstr temp casename_" + sender.getName() + " " + hand.getItemMeta().getDisplayName());
                         int amount = hand.getAmount();
-                        if (amount > 1) hand.setAmount(amount - 1);
-                        else player.getInventory().setItemInHand(new ItemStack(Material.AIR));
-                        //Back to VT
+                        if (amount > 1) hand.setAmount(hand.getAmount() - 1);
+                        else player.getInventory().setItemInHand(null);
                         hms.getServer().dispatchCommand(consoleInstance, "vt run casino:caseopen " + playername);
 
                     } else {
-                        //If no display name, exit
-                        hms.getLogger().info("Das von " + playername + " gehaltene Item ist ungültig");
+
                         hms.getServer().dispatchCommand(consoleInstance, "vt run casino:error " + playername);
+
                     }
+
                 } else if (args[0].equalsIgnoreCase("takehead")) {
 
                     ItemStack item = player.getItemInHand();
@@ -84,18 +83,19 @@ public class Cmdvtapi extends BaseCommand {
 
                         SkullMeta skull = (SkullMeta) item.getItemMeta();
                         if (!skull.hasOwner()) {
-                            //Not a valid skull
                             hms.getServer().dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
                             return;
                         }
-                        //Get the owner
+
+
                         String skullOwner = skull.getOwner();
 
-                        int level = 1;
+                        int level;
                         try {
                             UUID uid = storage.getUUID(skullOwner);
                             level = storage.getStatsInt(hms.getServer().getOfflinePlayer(uid), StatsType.SKILL_LEVEL);
                         } catch (PlayerNotFoundException e) {
+                            level = 1;
                         }
 
                         hms.getServer().dispatchCommand(consoleInstance, "vt setstr temp headname_" + player.getName() + " " + skullOwner);
@@ -104,7 +104,7 @@ public class Cmdvtapi extends BaseCommand {
                         //Remove the skull
                         int amount = item.getAmount();
                         if (amount > 1) item.setAmount(amount - 1);
-                        else player.getInventory().setItemInHand(new ItemStack(Material.AIR));
+                        else player.getInventory().setItemInHand(null);
                         //proceed with next step
                         hms.getServer().dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
 

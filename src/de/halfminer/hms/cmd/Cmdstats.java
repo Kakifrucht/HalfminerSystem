@@ -7,8 +7,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 @SuppressWarnings("unused")
 public class Cmdstats extends BaseCommand {
 
@@ -22,8 +20,7 @@ public class Cmdstats extends BaseCommand {
         if (args.length > 0) {
 
             try {
-                UUID playerUUID = storage.getUUID(args[0]);
-                showStats(sender, hms.getServer().getOfflinePlayer(playerUUID));
+                showStats(sender, hms.getServer().getOfflinePlayer(storage.getUUID(args[0])));
             } catch (PlayerNotFoundException e) {
                 sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Stats"));
             }
