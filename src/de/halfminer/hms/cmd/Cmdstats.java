@@ -21,7 +21,7 @@ public class Cmdstats extends BaseCommand {
         if (args.length > 0) {
 
             boolean compare = false;
-            if (args.length > 1 && args[1].equalsIgnoreCase("compare")) compare = true;
+            if (args.length > 1 && args[1].equalsIgnoreCase("compare") && sender instanceof Player) compare = true;
             try {
                 showStats(sender, hms.getServer().getOfflinePlayer(storage.getUUID(args[0])), compare);
             } catch (PlayerNotFoundException e) {
@@ -39,11 +39,10 @@ public class Cmdstats extends BaseCommand {
 
     private void showStats(final CommandSender sendTo, final OfflinePlayer player, boolean compare) {
 
-        boolean comparisonTakesPlace = compare;
         Player compareWith = null;
-        if (comparisonTakesPlace && sendTo instanceof Player) {
+        if (compare) {
             compareWith = (Player) sendTo;
-        } else comparisonTakesPlace = false;
+        }
 
         final String oldNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
@@ -70,9 +69,9 @@ public class Cmdstats extends BaseCommand {
 
         if (sendTo.equals(player))
             message += Language.getMessage("commandStatsShowotherStats") + "\n";
-        else if (comparisonTakesPlace) {
+        else if (compare) {
             message += Language.getMessage("commandStatsCompareLegend");
-        } else {
+        } else if (sendTo instanceof Player) {
             message += Language.getMessagePlaceholderReplace("commandStatsCompareInfo", false, "%PLAYER%", player.getName());
         }
 
