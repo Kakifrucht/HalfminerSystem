@@ -32,6 +32,8 @@ localization:
   commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGejoined: &d%JOINS% &7mal\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e) | &rK/D: &d%KDRATIO%\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBloecke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
   commandStatsOldnames: '&fAlte Namen: &d%OLDNAMES%'
   commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &d/stats [Spieler]'
+  commandStatsCompareLegend: '&7Dein Wert ist &ahoeher&7, Werte sind &egleich&7, dein Wert ist &cgeringer'
+  commandStatsCompareInfo: '&7Verwende &d/stats %PLAYER% compare &7zum vergleichen'
   commandStatsBottom: '&e&m------------------------------------------------'
   commandHmstoreUsage: '&cVerwendung: &f/hmstore get/set/setint/setbool/remove/save <path> [value]'
   commandHmstoreSet: '&7Der Wert &o%PATH% &7wurde gesetzt zu &r%VALUE%'

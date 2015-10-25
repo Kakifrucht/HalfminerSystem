@@ -3,6 +3,7 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,46 +20,48 @@ public class Cmdstats extends BaseCommand {
 
         if (args.length > 0) {
 
+            boolean compare = false;
+            if (args.length > 1 && args[1].equalsIgnoreCase("compare")) compare = true;
             try {
-                showStats(sender, hms.getServer().getOfflinePlayer(storage.getUUID(args[0])));
+                showStats(sender, hms.getServer().getOfflinePlayer(storage.getUUID(args[0])), compare);
             } catch (PlayerNotFoundException e) {
                 sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Stats"));
             }
 
         } else {
 
-            if (sender instanceof Player) showStats(sender, (Player) sender);
+            if (sender instanceof Player) showStats(sender, (Player) sender, false);
             else sender.sendMessage(Language.getMessage("notAPlayer"));
 
         }
 
     }
 
-    private void showStats(final CommandSender sendTo, final OfflinePlayer player) {
+    private void showStats(final CommandSender sendTo, final OfflinePlayer player, boolean compare) {
 
-        //collect vars
-        final String playerName = storage.getStatsString(player, StatsType.LAST_NAME);
-        final String skillGroup = storage.getStatsString(player, StatsType.SKILL_GROUP);
-        final int skillLevel = storage.getStatsInt(player, StatsType.SKILL_LEVEL);
-        final int timeOnline = storage.getStatsInt(player, StatsType.TIME_ONLINE) / 60;
-        final int joins = storage.getStatsInt(player, StatsType.JOINS);
-        final int kills = storage.getStatsInt(player, StatsType.KILLS);
-        final int deaths = storage.getStatsInt(player, StatsType.DEATHS);
-        final double kdratio = storage.getStatsDouble(player, StatsType.KD_RATIO);
-        final int votes = storage.getStatsInt(player, StatsType.VOTES);
-        final int mobKills = storage.getStatsInt(player, StatsType.MOB_KILLS);
-        final int blocksPlaced = storage.getStatsInt(player, StatsType.BLOCKS_PLACED);
-        final int blocksBroken = storage.getStatsInt(player, StatsType.BLOCKS_BROKEN);
+        boolean comparisonTakesPlace = compare;
+        Player compareWith = null;
+        if (comparisonTakesPlace && sendTo instanceof Player) {
+            compareWith = (Player) sendTo;
+        } else comparisonTakesPlace = false;
+
         final String oldNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
         //build the message
         String message = Language.getMessage("commandStatsTop") + "\n";
-        message += Language.getMessagePlaceholderReplace("commandStatsShow", false, "%PLAYER%", playerName,
-                "%SKILLGROUP%", skillGroup, "%SKILLLEVEL%", String.valueOf(skillLevel),
-                "%ONLINETIME%", String.valueOf(timeOnline), "%JOINS%", String.valueOf(joins),
-                "%KILLS%", String.valueOf(kills), "%DEATHS%", String.valueOf(deaths), "%KDRATIO%", String.valueOf(kdratio),
-                "%VOTES%", String.valueOf(votes), "%MOBKILLS%", String.valueOf(mobKills),
-                "%BLOCKSPLACED%", String.valueOf(blocksPlaced), "%BLOCKSBROKEN%", String.valueOf(blocksBroken),
+        message += Language.getMessagePlaceholderReplace("commandStatsShow", false,
+                "%PLAYER%", player.getName(),
+                "%SKILLGROUP%", storage.getStatsString(player, StatsType.SKILL_GROUP),
+                "%SKILLLEVEL%", getIntAndCompare(player, StatsType.SKILL_LEVEL, compareWith),
+                "%ONLINETIME%", getIntAndCompare(player, StatsType.TIME_ONLINE, compareWith),
+                "%JOINS%", getIntAndCompare(player, StatsType.JOINS, compareWith),
+                "%KILLS%", getIntAndCompare(player, StatsType.KILLS, compareWith),
+                "%DEATHS%", getIntAndCompare(player, StatsType.DEATHS, compareWith),
+                "%KDRATIO%", getDoubleAndCompare(player, StatsType.KD_RATIO, compareWith),
+                "%VOTES%", getIntAndCompare(player, StatsType.VOTES, compareWith),
+                "%MOBKILLS%", getIntAndCompare(player, StatsType.MOB_KILLS, compareWith),
+                "%BLOCKSPLACED%", getIntAndCompare(player, StatsType.BLOCKS_PLACED, compareWith),
+                "%BLOCKSBROKEN%", getIntAndCompare(player, StatsType.BLOCKS_BROKEN, compareWith),
                 "%OLDNAMES%", oldNames) + "\n";
 
         if (oldNames.length() > 0)
@@ -67,10 +70,43 @@ public class Cmdstats extends BaseCommand {
 
         if (sendTo.equals(player))
             message += Language.getMessage("commandStatsShowotherStats") + "\n";
+        else if (comparisonTakesPlace) {
+            message += Language.getMessage("commandStatsCompareLegend");
+        } else {
+            message += Language.getMessagePlaceholderReplace("commandStatsCompareInfo", false, "%PLAYER%", player.getName());
+        }
 
         message += Language.getMessage("commandStatsBottom");
         sendTo.sendMessage(message);
 
+    }
+
+    private String getIntAndCompare(OfflinePlayer player, StatsType type, Player compareWith) {
+        String returnString = "";
+        int playerVar = storage.getStatsInt(player, type);
+
+        if (compareWith != null) {
+            int compareVar = storage.getStatsInt(compareWith, type);
+            if (playerVar < compareVar) returnString = ChatColor.GREEN.toString();
+            else if (playerVar > compareVar) returnString = ChatColor.RED.toString();
+            else returnString = ChatColor.YELLOW.toString();
+        }
+
+        return returnString + String.valueOf(playerVar);
+    }
+
+    private String getDoubleAndCompare(OfflinePlayer player, StatsType type, Player compareWith) {
+        String returnString = "";
+        double playerVar = storage.getStatsDouble(player, type);
+
+        if (compareWith != null) {
+            double compareVar = storage.getStatsDouble(compareWith, type);
+            if (playerVar < compareVar) returnString = ChatColor.GREEN.toString();
+            else if (playerVar > compareVar) returnString = ChatColor.RED.toString();
+            else returnString = ChatColor.YELLOW.toString();
+        }
+
+        return returnString + String.valueOf(playerVar);
     }
 
 }

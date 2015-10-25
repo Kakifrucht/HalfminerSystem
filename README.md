@@ -9,6 +9,7 @@ Current features
 - Modular, lightweight, efficient
 - Statistics for every player with /stats
   - Rightclick player to view some stats
+  - Allows to compare statistics easily
 - PvP based Skilllevel System, ELO
   - Adds level to scoreboard, colors name
 - View latency and server status with /lag
@@ -46,6 +47,7 @@ Current features
   - Disables hitting self with bow
   - Blocks usage of /pluginname:command
   - Heals player after kill and plays sound
+  - Disable apple and book trading with villagers
   - Small features for VariableTriggers /vtapi
 
 HalfminerDuel
