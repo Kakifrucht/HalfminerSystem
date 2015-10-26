@@ -40,9 +40,7 @@ public class Cmdstats extends BaseCommand {
     private void showStats(final CommandSender sendTo, final OfflinePlayer player, boolean compare) {
 
         Player compareWith = null;
-        if (compare) {
-            compareWith = (Player) sendTo;
-        }
+        if (compare) compareWith = (Player) sendTo;
 
         final String oldNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
@@ -70,9 +68,10 @@ public class Cmdstats extends BaseCommand {
         if (sendTo.equals(player))
             message += Language.getMessage("commandStatsShowotherStats") + "\n";
         else if (compare) {
-            message += Language.getMessage("commandStatsCompareLegend");
+            message += Language.getMessage("commandStatsCompareLegend") + "\n";
         } else if (sendTo instanceof Player) {
-            message += Language.getMessagePlaceholderReplace("commandStatsCompareInfo", false, "%PLAYER%", player.getName());
+            message += Language.getMessagePlaceholderReplace("commandStatsCompareInfo", false,
+                    "%PLAYER%", player.getName()) + "\n";
         }
 
         message += Language.getMessage("commandStatsBottom");
