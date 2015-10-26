@@ -40,7 +40,7 @@ public class Cmdstats extends BaseCommand {
     private void showStats(final CommandSender sendTo, final OfflinePlayer player, boolean compare) {
 
         Player compareWith = null;
-        if (compare) compareWith = (Player) sendTo;
+        if (compare && !sendTo.equals(player)) compareWith = (Player) sendTo;
 
         final String oldNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
