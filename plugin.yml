@@ -60,6 +60,7 @@ permissions:
     hms.bypass.nokillfarming: true
     hms.bypass.skilllevel: true
     hms.bypass.statsrightclick: true
+    hms.bypass.merchant: true
   hms.level.*:
     description: Access to all commands restricted by level
     default: op
@@ -114,6 +115,8 @@ permissions:
     description: Bypass setting of skilllevel
   hms.bypass.statsrightclick:
     description: Bypass stats on rightclick
+  hms.bypass.merchant:
+    description: Bypass merchant restrictions
   hms.level.0:
     default: true
     description: Access to commands restricted to level 0

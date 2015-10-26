@@ -54,7 +54,9 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
         Inventory clicked = e.getInventory();
-        if (clicked != null && clicked.getType() == InventoryType.MERCHANT) {
+        if (clicked != null
+                && clicked.getType() == InventoryType.MERCHANT
+                && !e.getWhoClicked().hasPermission("hms.bypass.merchant")) {
             ItemStack item = e.getCurrentItem();
             if (item != null) {
                 if (item.getType() == Material.WRITTEN_BOOK || item.getType() == Material.APPLE) e.setCancelled(true);
