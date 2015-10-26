@@ -90,6 +90,7 @@ public class Cmdstats extends BaseCommand {
             else returnString = ChatColor.YELLOW.toString();
         }
 
+        if (type == StatsType.TIME_ONLINE) playerVar /= 60;
         return returnString + String.valueOf(playerVar);
     }
 
