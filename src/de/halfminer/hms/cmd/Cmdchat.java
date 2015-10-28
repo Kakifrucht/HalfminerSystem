@@ -1,6 +1,7 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.ModuleType;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -89,7 +90,7 @@ public class Cmdchat extends BaseCommand {
             } else if (args[0].equalsIgnoreCase("news") && verifyMessage()) {
 
                 storage.set("sys.news", message);
-                hms.getModMotd().reloadConfig();
+                hms.getModule(ModuleType.MOTD).reloadConfig();
                 if (sender instanceof Player) {
                     TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
                             false, "%NEWS%", message), 40, 180, 40);

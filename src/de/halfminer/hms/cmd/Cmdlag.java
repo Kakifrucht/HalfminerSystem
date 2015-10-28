@@ -1,6 +1,8 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.modules.ModTps;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.ModuleType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -46,7 +48,7 @@ public class Cmdlag extends BaseCommand {
 
         //get latency and tps
         int ping = player.getHandle().ping;
-        double tps = hms.getModTps().getTps();
+        double tps = ((ModTps) hms.getModule(ModuleType.TPS)).getTps();
 
         //values for summary, determine who is lagging
         int summaryServerLag = 0;

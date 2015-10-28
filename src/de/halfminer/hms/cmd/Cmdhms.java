@@ -1,7 +1,9 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.ModuleType;
 import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
@@ -113,7 +115,7 @@ public class Cmdhms extends BaseCommand {
             }
         }
 
-        hms.getModSkillLevel().updateSkill(player, modifier);
+        ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(player, modifier);
 
         sender.sendMessage(Language.getMessagePlaceholderReplace("commandHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
                 "%PLAYER%", player.getName(), "%SKILLLEVEL%", String.valueOf(storage.getStatsInt(player, StatsType.SKILL_LEVEL)),

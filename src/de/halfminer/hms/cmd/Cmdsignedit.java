@@ -1,6 +1,8 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.modules.ModSignEdit;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.ModuleType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,6 +20,7 @@ public class Cmdsignedit extends BaseCommand {
         if (sender instanceof Player) {
 
             Player player = (Player) sender;
+            ModSignEdit signEdit = (ModSignEdit) hms.getModule(ModuleType.SIGN_EDIT);
 
             if (args.length > 0) {
 
@@ -33,7 +36,7 @@ public class Cmdsignedit extends BaseCommand {
                         }
                     }
 
-                    hms.getModSignEdit().makeCopies(player, amountToCopy);
+                    signEdit.makeCopies(player, amountToCopy);
                     player.sendMessage(Language.getMessagePlaceholderReplace("commandSigneditCopy", true, "%PREFIX%", "Info", "%AMOUNT%", Byte.toString(amountToCopy)));
                     return;
 
@@ -46,8 +49,8 @@ public class Cmdsignedit extends BaseCommand {
                             if (args.length > 1) {
                                 setTo = Language.arrayToString(args, 1, true);
                                 if (setTo.length() > 15) setTo = setTo.substring(0, 15); //truncate if necessary
-                                hms.getModSignEdit().setLine(player, line, setTo);
-                            } else hms.getModSignEdit().setLine(player, line, ""); //empty line
+                                signEdit.setLine(player, line, setTo);
+                            } else signEdit.setLine(player, line, ""); //empty line
                             player.sendMessage(Language.getMessagePlaceholderReplace("commandSigneditSet", true, "%PREFIX%", "Info", "%LINE%", Byte.toString(line), "%TEXT%", setTo));
                             return;
                         } else {

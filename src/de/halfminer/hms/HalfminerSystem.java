@@ -3,13 +3,14 @@ package de.halfminer.hms;
 import de.halfminer.hms.cmd.BaseCommand;
 import de.halfminer.hms.modules.*;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.ModuleType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -21,7 +22,7 @@ public class HalfminerSystem extends JavaPlugin {
 
     private static HalfminerSystem instance;
     private HalfminerStorage storage;
-    private List<HalfminerModule> modules;
+    private Map<ModuleType, HalfminerModule> modules;
 
     public static HalfminerSystem getInstance() {
         return instance;
@@ -33,20 +34,20 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        modules = new ArrayList<>(11);
-        modules.add(new ModAutoMessage());
-        modules.add(new ModAntiKillfarming());
-        modules.add(new ModBedrockProtection());
-        modules.add(new ModMotd());
-        modules.add(new ModSignEdit());
-        modules.add(new ModRedstoneLimit());
-        modules.add(new ModCombatLog());
-        modules.add(new ModTps());
-        modules.add(new ModStats());
-        modules.add(new ModSkillLevel());
-        modules.add(new ModStaticListeners());
+        modules = new HashMap<>();
+        modules.put(ModuleType.AUTO_MESSAGE, new ModAutoMessage());
+        modules.put(ModuleType.ANTI_KILLFARMING, new ModAntiKillfarming());
+        modules.put(ModuleType.BEDROCK_PROTECTION, new ModBedrockProtection());
+        modules.put(ModuleType.MOTD, new ModMotd());
+        modules.put(ModuleType.SIGN_EDIT, new ModSignEdit());
+        modules.put(ModuleType.REDSTONE_LIMIT, new ModRedstoneLimit());
+        modules.put(ModuleType.COMBAT_LOG, new ModCombatLog());
+        modules.put(ModuleType.TPS, new ModTps());
+        modules.put(ModuleType.STATS, new ModStats());
+        modules.put(ModuleType.SKILL_LEVEL, new ModSkillLevel());
+        modules.put(ModuleType.STATIC_LISTENERS, new ModStaticListeners());
 
-        for (HalfminerModule mod : modules)
+        for (HalfminerModule mod : modules.values())
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
 
         getLogger().info("HalfminerSystem enabled");
@@ -55,7 +56,7 @@ public class HalfminerSystem extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (HalfminerModule mod : modules) mod.onDisable();
+        for (HalfminerModule mod : modules.values()) mod.onDisable();
         storage.saveConfig();
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("HalfminerSystem disabled");
@@ -85,20 +86,8 @@ public class HalfminerSystem extends JavaPlugin {
         return storage;
     }
 
-    public ModMotd getModMotd() {
-        return (ModMotd) modules.get(3);
-    }
-
-    public ModSignEdit getModSignEdit() {
-        return (ModSignEdit) modules.get(4);
-    }
-
-    public ModTps getModTps() {
-        return (ModTps) modules.get(7);
-    }
-
-    public ModSkillLevel getModSkillLevel() {
-        return (ModSkillLevel) modules.get(9);
+    public HalfminerModule getModule(ModuleType type) {
+        return modules.get(type);
     }
 
     public void loadConfig() {
@@ -112,7 +101,7 @@ public class HalfminerSystem extends JavaPlugin {
         else storage = new HalfminerStorage();
 
         //Reload modules
-        if (modules != null) for (HalfminerModule mod : modules) mod.reloadConfig();
+        if (modules != null) for (HalfminerModule mod : modules.values()) mod.reloadConfig();
     }
 
 }
