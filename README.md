@@ -22,7 +22,10 @@ Current features
   - Bedrock glitching (alert and log)
   - Lag caused by Redstone/Pistons/Hoppers
 - Automessager
-- News title on log on
+- Title Support
+  - Send killstreaks via actionbar title
+  - Send news via main title
+  - Send information via tablist titles
 - Chattools
   - Globalmute
   - Clear chat

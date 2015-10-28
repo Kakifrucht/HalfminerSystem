@@ -97,6 +97,8 @@ localization:
   modSkillLevelUprankTitle: '\n&aDu wurdest befoerdert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modSkillLevelDerankTitle: '\n&cDu wurdest degradiert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modSkillLevelLog: 'Skilllevel: %PLAYER% Level %SKILLOLD% -> %SKILLNEW% (%SKILLNO%)'
+  modTitlesKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK%&7 Kills in Folge'
+  modTitlesDeathStreak: '&c&l%PLAYER%&7 ist &c&l%STREAK%&7 mal am Stück gekillt worden'
 command:
   home:
     #Time until /home will be blocked

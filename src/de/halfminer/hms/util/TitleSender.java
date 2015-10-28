@@ -83,8 +83,8 @@ public class TitleSender {
         if (!player.isOnline()) return;
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
 
-        IChatBaseComponent actionbartext = IChatBaseComponent.ChatSerializer.a("{\"text\": \"§cTest du nudel!\"}");
-        PacketPlayOutChat actionbar = new PacketPlayOutChat(actionbartext, (byte) 2);
+        PacketPlayOutChat actionbar = new PacketPlayOutChat(
+                IChatBaseComponent.ChatSerializer.a("{'text': '" + message + "'}"), (byte) 2);
         connection.sendPacket(actionbar);
     }
 

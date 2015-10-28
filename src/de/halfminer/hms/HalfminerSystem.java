@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * HalfminerSystem Main class
  *
@@ -46,16 +45,17 @@ public class HalfminerSystem extends JavaPlugin {
         modules.put(ModuleType.STATS, new ModStats());
         modules.put(ModuleType.SKILL_LEVEL, new ModSkillLevel());
         modules.put(ModuleType.STATIC_LISTENERS, new ModStaticListeners());
+        modules.put(ModuleType.TITLES, new ModTitles());
 
         for (HalfminerModule mod : modules.values())
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
 
         getLogger().info("HalfminerSystem enabled");
-
     }
 
     @Override
     public void onDisable() {
+
         for (HalfminerModule mod : modules.values()) mod.onDisable();
         storage.saveConfig();
         getServer().getScheduler().cancelTasks(this);
@@ -66,6 +66,7 @@ public class HalfminerSystem extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
         if (cmd.getName().equals("?")) return true;
+
         BaseCommand command;
         try {
             command = (BaseCommand) this.getClassLoader().loadClass("de.halfminer.hms.cmd.Cmd" + cmd.getName()).newInstance();
@@ -81,7 +82,6 @@ public class HalfminerSystem extends JavaPlugin {
         return true;
     }
 
-    //Module getters
     public HalfminerStorage getStorage() {
         return storage;
     }
@@ -91,6 +91,7 @@ public class HalfminerSystem extends JavaPlugin {
     }
 
     public void loadConfig() {
+
         saveDefaultConfig(); //Save default config.yml if not yet done
         reloadConfig(); //Make sure that if the file changed, it is reread
         getConfig().options().copyDefaults(true); //if parameters are missing, add them

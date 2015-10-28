@@ -1,8 +1,6 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.StatsType;
-import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -23,36 +21,15 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
+    }
 
-        //Title on join
-        final Player joined = e.getPlayer();
-        int timeOnline = storage.getStatsInt(joined, StatsType.TIME_ONLINE);
-
-        if (timeOnline == 0) {
-            TitleSender.sendTitle(joined, Language.getMessage("modStaticListenersNewPlayerFormat"));
-        } else {
-            hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
-                @Override
-                public void run() {
-                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modStaticListenersJoinFormat",
-                            false, "%NEWS%", storage.getString("sys.news")));
-
-                    try {
-                        Thread.sleep(6000l);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-
-                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
-                            false, "%NEWS%", storage.getString("sys.news")), 40, 180, 40);
-                }
-            });
-
-        }
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        e.setQuitMessage("");
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onInventoryClick(InventoryClickEvent e) {
+    public void merchantBlock(InventoryClickEvent e) {
         Inventory clicked = e.getInventory();
         if (clicked != null
                 && clicked.getType() == InventoryType.MERCHANT
@@ -65,12 +42,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        e.setQuitMessage("");
-    }
-
-    @EventHandler
-    public void onDeath(PlayerDeathEvent e) {
+    public void deathSounds(PlayerDeathEvent e) {
 
         e.setDeathMessage("");
 
@@ -99,12 +71,12 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onTeleport(PlayerTeleportEvent e) {
+    public void teleportRemoveJump(PlayerTeleportEvent e) {
         e.getPlayer().removePotionEffect(PotionEffectType.JUMP);
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
+    public void chatFilter(AsyncPlayerChatEvent e) {
 
         Player p = e.getPlayer();
         if (storage.getBoolean("sys.globalmute") && !p.hasPermission("hms.chat.advanced")) {
@@ -123,7 +95,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPreCommand(PlayerCommandPreprocessEvent e) {
+    public void commandFilter(PlayerCommandPreprocessEvent e) {
 
         if (e.getPlayer().hasPermission("hms.bypass.commandfilter")) return;
 
