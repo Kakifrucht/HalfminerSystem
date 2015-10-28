@@ -97,9 +97,6 @@ localization:
   modSkillLevelUprankTitle: '\n&aDu wurdest befoerdert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modSkillLevelDerankTitle: '\n&cDu wurdest degradiert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modSkillLevelLog: 'Skilllevel: %PLAYER% Level %SKILLOLD% -> %SKILLNEW% (%SKILLNO%)'
-general:
-  titleCommandPlayer: 'tm msg -fadeIn=%FADEIN% -stay=%STAY% -fadeOut=%FADEOUT% %PLAYER% %MESSAGE%'
-  titleCommandBroadcast: 'tm bc -fadeIn=%FADEIN% -stay=%STAY% -fadeOut=%FADEOUT% %MESSAGE%'
 command:
   home:
     #Time until /home will be blocked

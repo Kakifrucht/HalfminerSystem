@@ -1,6 +1,12 @@
 package de.halfminer.hms.util;
 
 import de.halfminer.hms.HalfminerSystem;
+import net.md_5.bungee.api.ChatColor;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
+import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class TitleSender {
@@ -29,24 +35,57 @@ public class TitleSender {
      */
     public static void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
 
-        String command;
+        String[] split = title.split("\n");
+        String topTitle = split[0];
+        String subTitle = "";
+        if (split.length > 1) subTitle = split[1];
+        topTitle = ChatColor.translateAlternateColorCodes('&', topTitle);
+        subTitle = ChatColor.translateAlternateColorCodes('&', subTitle);
+
         if (player == null) {
-            command = hms.getConfig().getString("general.titleCommandBroadcast");
-            command = Language.placeholderReplace(command, "%FADEIN%", String.valueOf(fadeIn), "%STAY%", String.valueOf(stay),
-                    "%FADEOUT%", String.valueOf(fadeOut), "%MESSAGE%", title);
+
+            for (Player sendTo : hms.getServer().getOnlinePlayers()) {
+                sendTitlePackets(sendTo, topTitle, subTitle, fadeIn, stay, fadeOut);
+            }
+
         } else {
-            if (!player.isOnline()) return;
-            command = hms.getConfig().getString("general.titleCommandPlayer");
-            command = Language.placeholderReplace(command, "%FADEIN%", String.valueOf(fadeIn), "%STAY%", String.valueOf(stay),
-                    "%FADEOUT%", String.valueOf(fadeOut), "%PLAYER%", player.getName(), "%MESSAGE%", title);
+
+            sendTitlePackets(player, topTitle, subTitle, fadeIn, stay, fadeOut);
         }
-        command = command.replace("\n", "<nl>");
-        if (command.endsWith("<nl>")) command = command.substring(0, command.length() - 4);
-        dispatchCommand(command.replace("\n", "<nl>"));
     }
 
-    private static void dispatchCommand(String command) {
-        hms.getServer().dispatchCommand(hms.getServer().getConsoleSender(), command);
+    public static void sendActionBar(Player player, String message) {
+
+        String send = ChatColor.translateAlternateColorCodes('&', message);
+        if (player == null) {
+
+            for (Player sendTo : hms.getServer().getOnlinePlayers()) sendActionbarPacket(sendTo, send);
+        } else {
+
+            sendActionbarPacket(player, send);
+        }
+    }
+
+    private static void sendTitlePackets(Player player, String topTitle, String subTitle, int fadeIn, int stay, int fadeOut) {
+
+        if (!player.isOnline()) return;
+        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        connection.sendPacket(new PacketPlayOutTitle(fadeIn, stay, fadeOut));
+        connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE,
+                IChatBaseComponent.ChatSerializer.a("{'text': '" + topTitle + "'}")));
+        connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE,
+                IChatBaseComponent.ChatSerializer.a("{'text': '" + subTitle + "'}")));
+    }
+
+    private static void sendActionbarPacket(Player player, String message) {
+
+        if (!player.isOnline()) return;
+        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        IChatBaseComponent actionbartext = IChatBaseComponent.ChatSerializer.a("{\"text\": \"§cTest du nudel!\"}");
+        PacketPlayOutChat actionbar = new PacketPlayOutChat(actionbartext, (byte) 2);
+        connection.sendPacket(actionbar);
     }
 
 }
