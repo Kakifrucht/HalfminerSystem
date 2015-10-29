@@ -6,6 +6,7 @@ import de.halfminer.hms.util.TitleSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ModTitles extends HalfminerModule {
+public class ModTitles extends HalfminerModule implements Listener {
 
     private final Map<UUID, Integer> killStreaks = new HashMap<>();
     private final Map<UUID, Integer> deathStreaks = new HashMap<>();
@@ -65,11 +66,11 @@ public class ModTitles extends HalfminerModule {
             deathStreaks.remove(killerUid);
             killStreaks.remove(victimUid);
 
-            int killerStreak = killStreaks.get(killerUid);
-            int victimStreak = deathStreaks.get(victimUid);
+            int killerStreak = killStreaks.get(killerUid) + 1;
+            int victimStreak = deathStreaks.get(victimUid) + 1;
 
-            killStreaks.put(killerUid, ++killerStreak);
-            deathStreaks.put(victimUid, ++victimStreak);
+            killStreaks.put(killerUid, killerStreak);
+            deathStreaks.put(victimUid, victimStreak);
 
             if (killerStreak > 4) {
                 TitleSender.sendActionBar(null, Language.getMessagePlaceholderReplace("modTitlesKillStreak", false,

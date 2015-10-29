@@ -2,12 +2,11 @@ package de.halfminer.hms.util;
 
 import de.halfminer.hms.HalfminerSystem;
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
-import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+
+import java.lang.reflect.Field;
 
 public class TitleSender {
 
@@ -66,6 +65,31 @@ public class TitleSender {
         }
     }
 
+    public static void setTablistHeaderFooter(Player player, String messages) {
+
+        String[] messagesParsed = messages.split("\n");
+        String header = messagesParsed[0];
+        String footer = "";
+        if (messagesParsed.length > 1) footer = messagesParsed[1];
+
+        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(
+                IChatBaseComponent.ChatSerializer.a("{'text': '" + header + "'}")
+        );
+
+        try {
+            Field footerField = packet.getClass().getDeclaredField("b");
+            footerField.setAccessible(true);
+            footerField.set(packet, IChatBaseComponent.ChatSerializer.a("{'text': '" + footer + "'}"));
+            footerField.setAccessible(false);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace(); //this should not happen
+        }
+
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    }
+
     private static void sendTitlePackets(Player player, String topTitle, String subTitle, int fadeIn, int stay, int fadeOut) {
 
         if (!player.isOnline()) return;
@@ -81,11 +105,10 @@ public class TitleSender {
     private static void sendActionbarPacket(Player player, String message) {
 
         if (!player.isOnline()) return;
-        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
 
         PacketPlayOutChat actionbar = new PacketPlayOutChat(
                 IChatBaseComponent.ChatSerializer.a("{'text': '" + message + "'}"), (byte) 2);
-        connection.sendPacket(actionbar);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(actionbar);
     }
 
 }
