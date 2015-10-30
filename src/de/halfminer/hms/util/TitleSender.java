@@ -34,12 +34,11 @@ public class TitleSender {
      */
     public static void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
 
-        String[] split = title.split("\n");
+        String[] split = ChatColor.translateAlternateColorCodes('&', title).split("\n");
         String topTitle = split[0];
         String subTitle = "";
         if (split.length > 1) subTitle = split[1];
-        topTitle = ChatColor.translateAlternateColorCodes('&', topTitle);
-        subTitle = ChatColor.translateAlternateColorCodes('&', subTitle);
+        if (split.length > 2) sendActionBar(player, split[2]);
 
         if (player == null) {
 
@@ -58,10 +57,10 @@ public class TitleSender {
         String send = ChatColor.translateAlternateColorCodes('&', message);
         if (player == null) {
 
-            for (Player sendTo : hms.getServer().getOnlinePlayers()) sendActionbarPacket(sendTo, send);
+            for (Player sendTo : hms.getServer().getOnlinePlayers()) sendActionBarPacket(sendTo, send);
         } else {
 
-            sendActionbarPacket(player, send);
+            sendActionBarPacket(player, send);
         }
     }
 
@@ -71,8 +70,6 @@ public class TitleSender {
         String header = messagesParsed[0];
         String footer = "";
         if (messagesParsed.length > 1) footer = messagesParsed[1];
-
-        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
 
         PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(
                 IChatBaseComponent.ChatSerializer.a("{'text': '" + header + "'}")
@@ -102,7 +99,7 @@ public class TitleSender {
                 IChatBaseComponent.ChatSerializer.a("{'text': '" + subTitle + "'}")));
     }
 
-    private static void sendActionbarPacket(Player player, String message) {
+    private static void sendActionBarPacket(Player player, String message) {
 
         if (!player.isOnline()) return;
 

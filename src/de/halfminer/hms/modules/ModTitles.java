@@ -50,6 +50,8 @@ public class ModTitles extends HalfminerModule implements Listener {
                 }
             });
         }
+
+        TitleSender.setTablistHeaderFooter(joined, "Test\nTest");
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -66,8 +68,14 @@ public class ModTitles extends HalfminerModule implements Listener {
             deathStreaks.remove(killerUid);
             killStreaks.remove(victimUid);
 
-            int killerStreak = killStreaks.get(killerUid) + 1;
-            int victimStreak = deathStreaks.get(victimUid) + 1;
+            int killerStreak;
+            int victimStreak;
+
+            if (killStreaks.containsKey(killerUid)) killerStreak = killStreaks.get(killerUid) + 1;
+            else killerStreak = 1;
+
+            if (deathStreaks.containsKey(victimUid)) victimStreak = deathStreaks.get(victimUid) + 1;
+            else victimStreak = 1;
 
             killStreaks.put(killerUid, killerStreak);
             deathStreaks.put(victimUid, victimStreak);
