@@ -74,55 +74,61 @@ public class Cmdchat extends BaseCommand {
                             true, "%PREFIX%", "Globalmute"), "hms.default");
                 }
 
-            } else if (args[0].equalsIgnoreCase("title") && args.length > 1 && verifyMessage()) {
+            } else if (args[0].equalsIgnoreCase("set") && args.length > 1){
 
-                if (message.length() > 0) {
-                    int time;
-                    try {
-                        time = Integer.decode(args[1]);
-                    } catch (NumberFormatException e) {
-                        showUsage();
-                        return;
-                    }
-                    TitleSender.sendTitle(null, message.replace("\\n", "\n"), 10, time * 20 - 20, 10);
-                }
-
-            } else if (args[0].equalsIgnoreCase("news") && verifyMessage()) {
-
-                storage.set("sys.news", message);
-                hms.getModule(ModuleType.MOTD).reloadConfig();
-                if (sender instanceof Player) {
-                    TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
-                            false, "%NEWS%", message), 40, 180, 40);
-                }
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatNewsSetTo", true,
-                        "%PREFIX%", "Chat"));
-
-            } else if (args[0].equalsIgnoreCase("alle") && verifyMessage()) {
-
-                hms.getServer().broadcast(message, "hms.default");
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatSendToAll", true, "%PREFIX%", "Chat"));
-
-            } else if (args[0].equalsIgnoreCase("spieler") && args.length > 1 && verifyMessage()) {
-
-                Player player = hms.getServer().getPlayer(args[1]);
-                if (player != null) {
-                    player.sendMessage(message);
-                    sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatSendToPlayer", true, "%PREFIX%",
-                            "Chat", "%PLAYER%", player.getName()));
-                } else {
-                    sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true, "%PREFIX%", "Chat"));
-                }
-
-            } else {
-
-                String message = Language.arrayToString(args, 0, true);
+                String message = Language.arrayToString(args, 1, true);
                 storage.set("sys.chatmessage", message);
+                storage.set("sys.chatmessagetime", (System.currentTimeMillis() / 1000));
                 sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatMessageSet", true, "%PREFIX%", "Chat",
                         "%MESSAGE%", message));
 
-            }
+            } else {
 
+                if (verifyMessage()) {
+
+                    if (args[0].equalsIgnoreCase("title") && args.length > 1) {
+
+                        if (message.length() > 0) {
+                            int time;
+                            try {
+                                time = Integer.decode(args[1]);
+                            } catch (NumberFormatException e) {
+                                showUsage();
+                                return;
+                            }
+                            TitleSender.sendTitle(null, message.replace("\\n", "\n"), 10, time * 20 - 20, 10);
+                        }
+
+                    } else if (args[0].equalsIgnoreCase("news")) {
+
+                        storage.set("sys.news", message);
+                        hms.getModule(ModuleType.MOTD).reloadConfig();
+                        if (sender instanceof Player) {
+                            TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
+                                    false, "%NEWS%", message), 40, 180, 40);
+                        }
+                        sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatNewsSetTo", true,
+                                "%PREFIX%", "Chat"));
+
+                    } else if (args[0].equalsIgnoreCase("send")) {
+
+                        if (args.length > 1) {
+                            Player player = hms.getServer().getPlayer(args[1]);
+                            if (player != null) {
+                                player.sendMessage(message);
+                                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatSendToPlayer", true, "%PREFIX%",
+                                        "Chat", "%PLAYER%", player.getName()));
+                            } else {
+                                sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true, "%PREFIX%", "Chat"));
+                            }
+                        } else {
+                            hms.getServer().broadcast(message, "hms.default");
+                            sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatSendToAll", true, "%PREFIX%", "Chat"));
+                        }
+
+                    }  else showUsage();
+                }
+            }
         } else showUsage();
     }
 
@@ -132,12 +138,29 @@ public class Cmdchat extends BaseCommand {
      * @return true if a message has been set
      */
     private boolean verifyMessage() {
+
         message = storage.getString("sys.chatmessage");
+
         if (message.length() == 0) {
+
             sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatMessageNotSet", true,
                     "%PREFIX%", "Chat"));
             return false;
-        } else return true;
+        } else {
+
+            //Clear message if it is old, only keep it for 10 minutes
+            long time = storage.getLong("sys.chatmessagetime");
+            if (time + 600 < (System.currentTimeMillis() / 1000)) {
+
+                message = "";
+                storage.set("sys.chatmessage", null);
+
+                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatMessageNotSet", true,
+                        "%PREFIX%", "Chat"));
+
+                return false;
+            } else return true;
+        }
     }
 
     private void clearChat() {
