@@ -37,7 +37,8 @@ public class Cmdvtapi extends BaseCommand {
                 try {
                     hasVoted = hms.getServer().getOfflinePlayer(storage.getUUID(args[1]));
                 } catch (PlayerNotFoundException e) {
-                    return;
+                    hasVoted = hms.getServer().getPlayer(args[1]);
+                    if (hasVoted == null) return;
                 }
 
                 storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
