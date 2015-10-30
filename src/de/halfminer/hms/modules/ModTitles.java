@@ -51,7 +51,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             });
         }
 
-        TitleSender.setTablistHeaderFooter(joined, "Test\nTest");
+        TitleSender.setTablistHeaderFooter(joined, "Test\nTest"); //TODO via config and placeholders
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -89,5 +89,10 @@ public class ModTitles extends HalfminerModule implements Listener {
                         "%PLAYER%", victim.getName(), "%STREAK%", String.valueOf(victimStreak)));
             }
         }
+    }
+
+    @Override
+    public void reloadConfig() {
+        //TODO dispatch thread to update balance (tab), vault hook
     }
 }

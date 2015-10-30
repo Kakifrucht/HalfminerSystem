@@ -86,18 +86,22 @@ public class Cmdchat extends BaseCommand {
 
                 if (verifyMessage()) {
 
-                    if (args[0].equalsIgnoreCase("title") && args.length > 1) {
+                    if (args[0].equalsIgnoreCase("title")) {
 
-                        if (message.length() > 0) {
-                            int time;
+                        int time = 1;
+                        Player sendTo = null;
+
+                        if (args.length > 1) {
+
                             try {
                                 time = Integer.decode(args[1]);
                             } catch (NumberFormatException e) {
-                                showUsage();
-                                return;
+                                time = 1;
                             }
-                            TitleSender.sendTitle(null, message.replace("\\n", "\n"), 10, time * 20 - 20, 10);
+
+                            if (args.length > 2) sendTo = hms.getServer().getPlayer(args[2]);
                         }
+                        TitleSender.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
 
                     } else if (args[0].equalsIgnoreCase("news")) {
 

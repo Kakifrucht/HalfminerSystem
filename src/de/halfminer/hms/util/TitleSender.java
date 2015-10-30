@@ -34,7 +34,7 @@ public class TitleSender {
      */
     public static void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
 
-        String[] split = ChatColor.translateAlternateColorCodes('&', title).split("\n");
+        String[] split = ChatColor.translateAlternateColorCodes('&', title).replace("\\n", "\n").split("\n");
         String topTitle = split[0];
         String subTitle = "";
         if (split.length > 1) subTitle = split[1];
@@ -66,7 +66,7 @@ public class TitleSender {
 
     public static void setTablistHeaderFooter(Player player, String messages) {
 
-        String[] messagesParsed = messages.split("\n");
+        String[] messagesParsed = messages.replace("\\n", "\n").split("\n");
         String header = messagesParsed[0];
         String footer = "";
         if (messagesParsed.length > 1) footer = messagesParsed[1];

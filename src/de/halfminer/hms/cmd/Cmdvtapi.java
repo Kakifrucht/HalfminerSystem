@@ -3,6 +3,7 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
+import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -49,6 +50,13 @@ public class Cmdvtapi extends BaseCommand {
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.NOTE_PLING, 1.0f, 2.0f);
                     String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
                     storage.incrementInt("vote.ip" + address, 1);
+                }
+
+            } else if (args[0].equalsIgnoreCase("title") && args.length > 2) {
+
+                Player sendTo = hms.getServer().getPlayer(args[1]);
+                if (sendTo != null) {
+                    TitleSender.sendTitle(sendTo, Language.arrayToString(args, 2, false));
                 }
 
             } else if (sender instanceof Player) {
