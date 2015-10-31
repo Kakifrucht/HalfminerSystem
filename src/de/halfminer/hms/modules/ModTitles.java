@@ -20,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ModTitles extends HalfminerModule implements Listener {
 
+    private final Economy econ = HalfminerSystem.getEconomy();
+
     private final Map<UUID, Integer> killStreaks = new HashMap<>();
     private final Map<UUID, Integer> deathStreaks = new HashMap<>();
 
@@ -38,16 +40,23 @@ public class ModTitles extends HalfminerModule implements Listener {
         playercount++;
 
         final Player joined = e.getPlayer();
-        int timeOnline = storage.getStatsInt(joined, StatsType.TIME_ONLINE);
 
-        if (timeOnline == 0) TitleSender.sendTitle(joined, Language.getMessage("modStaticListenersNewPlayerFormat"));
-        else {
+        if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
+            TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modTitlesNewPlayerFormat", false,
+                    "%PLAYER%", joined.getName()), 10, 200, 10);
+        } else {
+
+            final double balance;
+            if (econ != null) {
+                balance = Math.round(econ.getBalance(joined) * 100.0d) / 100.0d;
+            }
+            else balance = 0.0d;
 
             hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
-                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modStaticListenersJoinFormat",
-                            false, "%NEWS%", storage.getString("sys.news")));
+                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modTitlesJoinFormat", false,
+                            "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)), 10, 100, 10);
 
                     try {
                         Thread.sleep(6000l);
@@ -55,8 +64,8 @@ public class ModTitles extends HalfminerModule implements Listener {
                         e1.printStackTrace();
                     }
 
-                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
-                            false, "%NEWS%", storage.getString("sys.news")), 40, 180, 40);
+                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modTitlesNewsFormat",
+                            false, "%NEWS%", storage.getString("sys.news")), 40, 120, 40);
                 }
             });
         }
@@ -124,10 +133,10 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     @Override
     public void reloadConfig() {
+
         hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
             @Override
             public void run() {
-                Economy econ = HalfminerSystem.getEconomy();
                 balances.clear();
                 if (econ != null) {
                     for (Player player : hms.getServer().getOnlinePlayers()) {
@@ -141,7 +150,5 @@ public class ModTitles extends HalfminerModule implements Listener {
                 updateTablists();
             }
         }, 0, 100);
-
-        //TODO read config animations titles.yml
     }
 }

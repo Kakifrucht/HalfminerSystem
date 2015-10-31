@@ -25,12 +25,14 @@ public class TitleSender {
 
     /**
      * Sends a title to the given player, or broadcasts the title, if player is null.
+     * Title can be seperated with newlines, the third line will be displayed as actionbar message, the time
+     * cannot be set.
      *
      * @param player  to send the title to, or null to broadcast
      * @param title   message containing the title, color codes do not need to be translated
-     * @param fadeIn  time in milliseconds until message has fade in
-     * @param stay    time in milliseconds message stays
-     * @param fadeOut time in milliseconds until message faded out after it stay
+     * @param fadeIn  time in ticks until message has fade in
+     * @param stay    time in ticks message stays
+     * @param fadeOut time in ticks until message faded out after it stay
      */
     public static void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
 
@@ -52,6 +54,12 @@ public class TitleSender {
         }
     }
 
+    /**
+     * Sends a actionbar message to a specified player.
+     *
+     * @param player  to send the title to
+     * @param message message to send
+     */
     public static void sendActionBar(Player player, String message) {
 
         String send = ChatColor.translateAlternateColorCodes('&', message);
@@ -64,6 +72,12 @@ public class TitleSender {
         }
     }
 
+    /**
+     * Sets the footer and header for a specified player. Seperate header from footer with newline
+     *
+     * @param player   to send the title to
+     * @param messages message to send
+     */
     public static void setTablistHeaderFooter(Player player, String messages) {
 
         String[] messagesParsed = messages.replace("\\n", "\n").split("\n");
