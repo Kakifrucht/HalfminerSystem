@@ -57,7 +57,7 @@ public class Cmdvtapi extends BaseCommand {
 
                 Player sendTo = hms.getServer().getPlayer(args[1]);
                 if (sendTo != null) {
-                    TitleSender.sendTitle(sendTo, Language.arrayToString(args, 2, false));
+                    TitleSender.sendTitle(sendTo, Language.arrayToString(args, 2, false), 0, 50, 10);
                 }
 
             } else if (sender instanceof Player) {

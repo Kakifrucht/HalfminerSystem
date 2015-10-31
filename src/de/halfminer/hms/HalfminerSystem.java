@@ -33,7 +33,7 @@ public class HalfminerSystem extends JavaPlugin {
 
 
     private HalfminerStorage storage;
-    private Map<ModuleType, HalfminerModule> modules;
+    private final Map<ModuleType, HalfminerModule> modules = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -48,7 +48,6 @@ public class HalfminerSystem extends JavaPlugin {
         if (economyProvider != null) economy = economyProvider.getProvider();
 
         //load modules
-        modules = new HashMap<>();
         modules.put(ModuleType.AUTO_MESSAGE, new ModAutoMessage());
         modules.put(ModuleType.ANTI_KILLFARMING, new ModAntiKillfarming());
         modules.put(ModuleType.BEDROCK_PROTECTION, new ModBedrockProtection());

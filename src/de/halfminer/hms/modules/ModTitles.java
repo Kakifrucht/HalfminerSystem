@@ -37,20 +37,21 @@ public class ModTitles extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void joinTitles(PlayerJoinEvent e) {
 
-        playercount++;
-
         final Player joined = e.getPlayer();
+
+        final double balance;
+        if (econ != null) {
+            balance = Math.round(econ.getBalance(joined) * 100.0d) / 100.0d;
+        } else balance = 0.0d;
+        balances.put(joined, balance);
+        playercount++;
 
         if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
             TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modTitlesNewPlayerFormat", false,
                     "%PLAYER%", joined.getName()), 10, 200, 10);
         } else {
 
-            final double balance;
-            if (econ != null) {
-                balance = Math.round(econ.getBalance(joined) * 100.0d) / 100.0d;
-            }
-            else balance = 0.0d;
+
 
             hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
                 @Override
