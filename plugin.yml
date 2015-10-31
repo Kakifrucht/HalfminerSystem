@@ -5,6 +5,7 @@ author: Kakifrucht
 website: https://halfminer.de
 
 main: de.halfminer.hms.HalfminerSystem
+softdepend: [Vault]
 
 commands:
   ?:

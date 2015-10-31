@@ -1,23 +1,31 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ModTitles extends HalfminerModule implements Listener {
 
     private final Map<UUID, Integer> killStreaks = new HashMap<>();
     private final Map<UUID, Integer> deathStreaks = new HashMap<>();
+
+    private final Map<Player, Double> balances = new ConcurrentHashMap<>();
+    private int playercount = hms.getServer().getOnlinePlayers().size();
+
 
     public ModTitles() {
         reloadConfig();
@@ -26,6 +34,8 @@ public class ModTitles extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void joinTitles(PlayerJoinEvent e) {
+
+        playercount++;
 
         final Player joined = e.getPlayer();
         int timeOnline = storage.getStatsInt(joined, StatsType.TIME_ONLINE);
@@ -50,8 +60,14 @@ public class ModTitles extends HalfminerModule implements Listener {
                 }
             });
         }
+        updateTablists();
+    }
 
-        TitleSender.setTablistHeaderFooter(joined, "Test\nTest"); //TODO via config and placeholders
+    @EventHandler(priority = EventPriority.MONITOR)
+    @SuppressWarnings("unused")
+    public void leaveCountUpdate(PlayerQuitEvent e) {
+        playercount--;
+        updateTablists();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -91,8 +107,41 @@ public class ModTitles extends HalfminerModule implements Listener {
         }
     }
 
+    private void updateTablists() {
+        hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+            @Override
+            public void run() {
+                for (Map.Entry<Player, Double> entry : balances.entrySet()) {
+                    double balance = entry.getValue();
+                    balance = Math.round(balance * 100.0d) / 100.0d;
+
+                    TitleSender.setTablistHeaderFooter(entry.getKey(), Language.getMessagePlaceholderReplace("modTitlesTablist",
+                            false, "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)));
+                }
+            }
+        });
+    }
+
     @Override
     public void reloadConfig() {
-        //TODO dispatch thread to update balance (tab), vault hook
+        hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
+            @Override
+            public void run() {
+                Economy econ = HalfminerSystem.getEconomy();
+                balances.clear();
+                if (econ != null) {
+                    for (Player player : hms.getServer().getOnlinePlayers()) {
+                        balances.put(player, econ.getBalance(player));
+                    }
+                } else {
+                    for (Player player : hms.getServer().getOnlinePlayers()) {
+                        balances.put(player, 0.0d);
+                    }
+                }
+                updateTablists();
+            }
+        }, 0, 100);
+
+        //TODO read config animations titles.yml
     }
 }

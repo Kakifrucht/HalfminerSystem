@@ -4,9 +4,11 @@ import de.halfminer.hms.cmd.BaseCommand;
 import de.halfminer.hms.modules.*;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.ModuleType;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -20,12 +22,18 @@ import java.util.Map;
 public class HalfminerSystem extends JavaPlugin {
 
     private static HalfminerSystem instance;
-    private HalfminerStorage storage;
-    private Map<ModuleType, HalfminerModule> modules;
+    private static Economy economy = null;
 
     public static HalfminerSystem getInstance() {
         return instance;
     }
+    public static Economy getEconomy() {
+        return economy;
+    }
+
+
+    private HalfminerStorage storage;
+    private Map<ModuleType, HalfminerModule> modules;
 
     @Override
     public void onEnable() {
@@ -33,6 +41,13 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
+        //load vault
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().
+                getRegistration(net.milkbowl.vault.economy.Economy.class);
+
+        if (economyProvider != null) economy = economyProvider.getProvider();
+
+        //load modules
         modules = new HashMap<>();
         modules.put(ModuleType.AUTO_MESSAGE, new ModAutoMessage());
         modules.put(ModuleType.ANTI_KILLFARMING, new ModAntiKillfarming());
@@ -47,6 +62,7 @@ public class HalfminerSystem extends JavaPlugin {
         modules.put(ModuleType.STATIC_LISTENERS, new ModStaticListeners());
         modules.put(ModuleType.TITLES, new ModTitles());
 
+        //register modules
         for (HalfminerModule mod : modules.values())
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
 
