@@ -77,6 +77,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void leaveCountUpdate(PlayerQuitEvent e) {
         playercount--;
+        balances.remove(e.getPlayer());
         updateTablists();
     }
 

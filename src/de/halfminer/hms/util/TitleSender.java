@@ -14,7 +14,7 @@ public class TitleSender {
 
     /**
      * Sends a title to the given player, or broadcasts the title, if player is null.
-     * This will show the title with defaults for fadeIn/Out of 10 ms and 100 ms stay time.
+     * This will show the title with defaults for fadeIn/Out of 10 and 100 ticks stay time.
      *
      * @param player to send the title to, or null to broadcast
      * @param title  message containing the title, color codes do not need to be translated
@@ -80,6 +80,7 @@ public class TitleSender {
      */
     public static void setTablistHeaderFooter(Player player, String messages) {
 
+        if (!player.isOnline()) return;
         String[] messagesParsed = messages.replace("\\n", "\n").split("\n");
         String header = messagesParsed[0];
         String footer = "";

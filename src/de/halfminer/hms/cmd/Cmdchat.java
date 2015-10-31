@@ -108,7 +108,7 @@ public class Cmdchat extends BaseCommand {
                         storage.set("sys.news", message);
                         hms.getModule(ModuleType.MOTD).reloadConfig();
                         if (sender instanceof Player) {
-                            TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholderReplace("modStaticListenersNewsFormat",
+                            TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholderReplace("modTitlesNewsFormat",
                                     false, "%NEWS%", message), 40, 180, 40);
                         }
                         sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatNewsSetTo", true,
