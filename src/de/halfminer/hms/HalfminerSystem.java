@@ -46,6 +46,7 @@ public class HalfminerSystem extends JavaPlugin {
                 getRegistration(net.milkbowl.vault.economy.Economy.class);
 
         if (economyProvider != null) economy = economyProvider.getProvider();
+        else getLogger().warning("Vault not installed, economy support disabled");
 
         //load modules
         modules.put(ModuleType.AUTO_MESSAGE, new ModAutoMessage());
@@ -86,7 +87,7 @@ public class HalfminerSystem extends JavaPlugin {
         try {
             command = (BaseCommand) this.getClassLoader().loadClass("de.halfminer.hms.cmd.Cmd" + cmd.getName()).newInstance();
         } catch (Exception e) {
-            getLogger().warning("An error has occured executing " + cmd.getName() + ":");
+            getLogger().severe("An error has occured executing " + cmd.getName() + ":");
             e.printStackTrace();
             return true;
         }
