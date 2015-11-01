@@ -103,7 +103,7 @@ public class Cmdchat extends BaseCommand {
                         }
 
                         String sendToString;
-                        if (sendTo == null) sendToString = Language.getMessage("commandChatTitleAll");
+                        if (sendTo == null) sendToString = Language.getMessage("commandChatAll");
                         else sendToString = sendTo.getName();
 
                         sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatTitle", true, "%PREFIX%", "Chat",
@@ -124,19 +124,28 @@ public class Cmdchat extends BaseCommand {
 
                     } else if (args[0].equalsIgnoreCase("send")) {
 
+                        String sendToString;
+
                         if (args.length > 1) {
+
                             Player player = hms.getServer().getPlayer(args[1]);
                             if (player != null) {
+
                                 player.sendMessage(message);
-                                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatSendToPlayer", true, "%PREFIX%",
-                                        "Chat", "%PLAYER%", player.getName()));
+                                sendToString = player.getName();
                             } else {
-                                sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true, "%PREFIX%", "Chat"));
+
+                                sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true,
+                                        "%PREFIX%", "Chat"));
+                                return;
                             }
                         } else {
+
                             hms.getServer().broadcast(message, "hms.default");
-                            sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatSendToAll", true, "%PREFIX%", "Chat"));
+                            sendToString = Language.getMessage("commandChatAll");
                         }
+                        sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatSend", true, "%PREFIX%", "Chat",
+                                "%SENDTO%", sendToString));
 
                     }  else showUsage();
                 }
