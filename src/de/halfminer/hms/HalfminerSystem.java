@@ -42,11 +42,11 @@ public class HalfminerSystem extends JavaPlugin {
         loadConfig();
 
         //load vault
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().
-                getRegistration(net.milkbowl.vault.economy.Economy.class);
-
-        if (economyProvider != null) economy = economyProvider.getProvider();
-        else getLogger().warning("Vault not installed, economy support disabled");
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().
+                    getRegistration(net.milkbowl.vault.economy.Economy.class);
+            economy = economyProvider.getProvider();
+        } else getLogger().warning("Vault not installed, economy support disabled");
 
         //load modules
         modules.put(ModuleType.AUTO_MESSAGE, new ModAutoMessage());

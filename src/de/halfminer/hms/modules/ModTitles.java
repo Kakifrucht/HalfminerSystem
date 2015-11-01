@@ -20,8 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ModTitles extends HalfminerModule implements Listener {
 
-    private final Economy econ = HalfminerSystem.getEconomy();
-
     private final Map<UUID, Integer> killStreaks = new HashMap<>();
     private final Map<UUID, Integer> deathStreaks = new HashMap<>();
 
@@ -39,10 +37,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
         final Player joined = e.getPlayer();
 
-        final double balance;
-        if (econ != null) {
-            balance = Math.round(econ.getBalance(joined) * 100.0d) / 100.0d;
-        } else balance = 0.0d;
+        final double balance = getBalance(joined);
         balances.put(joined, balance);
 
         playercount++;
@@ -134,6 +129,15 @@ public class ModTitles extends HalfminerModule implements Listener {
         });
     }
 
+    private double getBalance(Player player) {
+        Economy econ = HalfminerSystem.getEconomy();
+        double balance;
+        if (econ != null) {
+            balance = Math.round(econ.getBalance(player) * 100.0d) / 100.0d;
+        } else balance = 0.0d;
+        return balance;
+    }
+
     @Override
     public void reloadConfig() {
 
@@ -141,14 +145,8 @@ public class ModTitles extends HalfminerModule implements Listener {
             @Override
             public void run() {
                 balances.clear();
-                if (econ != null) {
-                    for (Player player : hms.getServer().getOnlinePlayers()) {
-                        balances.put(player, econ.getBalance(player));
-                    }
-                } else {
-                    for (Player player : hms.getServer().getOnlinePlayers()) {
-                        balances.put(player, 0.0d);
-                    }
+                for (Player player : hms.getServer().getOnlinePlayers()) {
+                    balances.put(player, getBalance(player));
                 }
                 updateTablists();
             }
