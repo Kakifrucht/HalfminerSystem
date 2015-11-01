@@ -101,6 +101,14 @@ public class Cmdchat extends BaseCommand {
 
                             if (args.length > 2) sendTo = hms.getServer().getPlayer(args[2]);
                         }
+
+                        String sendToString;
+                        if (sendTo == null) sendToString = Language.getMessage("commandChatTitleAll");
+                        else sendToString = sendTo.getName();
+
+                        sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatTitle", true, "%PREFIX%", "Chat",
+                                "%SENDTO%", sendToString, "%MESSAGE%", message));
+
                         TitleSender.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
 
                     } else if (args[0].equalsIgnoreCase("news")) {

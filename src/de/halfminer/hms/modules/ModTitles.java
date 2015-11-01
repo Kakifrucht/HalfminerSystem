@@ -44,7 +44,9 @@ public class ModTitles extends HalfminerModule implements Listener {
             balance = Math.round(econ.getBalance(joined) * 100.0d) / 100.0d;
         } else balance = 0.0d;
         balances.put(joined, balance);
+
         playercount++;
+        updateTablists();
 
         if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
             TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modTitlesNewPlayerFormat", false,
@@ -70,7 +72,6 @@ public class ModTitles extends HalfminerModule implements Listener {
                 }
             });
         }
-        updateTablists();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
