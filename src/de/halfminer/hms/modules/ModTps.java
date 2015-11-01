@@ -67,7 +67,7 @@ public class ModTps extends HalfminerModule implements Listener {
 
                 //send message if server is unstable
                 if (lastAverageTps < alertStaff && tpsHistory.size() == historySize)
-                    hms.getServer().broadcast(Language.getMessagePlaceholderReplace("modTpsServerUnstable", true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(lastAverageTps)), "hms.lag.notify");
+                    hms.getServer().broadcast(Language.getMessagePlaceholders("modTpsServerUnstable", true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(lastAverageTps)), "hms.lag.notify");
             }
         }, ticksBetweenUpdate, ticksBetweenUpdate);
     }

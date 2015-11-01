@@ -31,7 +31,7 @@ public class Cmdneutp extends BaseCommand {
 
                 storage.setStats(player, StatsType.NEUTP_USED, true);
 
-                player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpCountdown", true, "%PREFIX%", "Neutp"));
+                player.sendMessage(Language.getMessagePlaceholders("commandNeutpCountdown", true, "%PREFIX%", "Neutp"));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));
 
@@ -68,16 +68,16 @@ public class Cmdneutp extends BaseCommand {
                         hms.getServer().dispatchCommand(player, "sethome neutp");
 
                         for (int i = 0; i < 100; i++) player.sendMessage("");
-                        player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpTpDone", true, "%PREFIX%", "Neutp",
+                        player.sendMessage(Language.getMessagePlaceholders("commandNeutpTpDone", true, "%PREFIX%", "Neutp",
                                 "%PLAYER%", player.getName()));
 
-                        hms.getLogger().info(Language.getMessagePlaceholderReplace("commandNeutpLog", false, "%PLAYER%", player.getName(),
+                        hms.getLogger().info(Language.getMessagePlaceholders("commandNeutpLog", false, "%PLAYER%", player.getName(),
                                 "%LOCATION%", Language.getStringFromLocation(loc)));
 
                         hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
                             @Override
                             public void run() {
-                                player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpDocumentation", true, "%PREFIX%", "Neutp"));
+                                player.sendMessage(Language.getMessagePlaceholders("commandNeutpDocumentation", true, "%PREFIX%", "Neutp"));
 
                             }
                         }, 60);
@@ -85,7 +85,7 @@ public class Cmdneutp extends BaseCommand {
                 }, 100);
 
             } else
-                player.sendMessage(Language.getMessagePlaceholderReplace("commandNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
+                player.sendMessage(Language.getMessagePlaceholders("commandNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
 
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
 

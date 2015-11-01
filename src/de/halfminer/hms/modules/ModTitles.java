@@ -44,7 +44,7 @@ public class ModTitles extends HalfminerModule implements Listener {
         updateTablists();
 
         if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
-            TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modTitlesNewPlayerFormat", false,
+            TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewPlayerFormat", false,
                     "%PLAYER%", joined.getName()), 10, 200, 10);
         } else {
 
@@ -53,7 +53,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
-                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modTitlesJoinFormat", false,
+                    TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesJoinFormat", false,
                             "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)), 10, 100, 10);
 
                     try {
@@ -62,7 +62,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                         e1.printStackTrace();
                     }
 
-                    TitleSender.sendTitle(joined, Language.getMessagePlaceholderReplace("modTitlesNewsFormat",
+                    TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewsFormat",
                             false, "%NEWS%", storage.getString("sys.news")), 40, 120, 40);
                 }
             });
@@ -71,7 +71,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
-    public void leaveCountUpdate(PlayerQuitEvent e) {
+    public void leaveTitles(PlayerQuitEvent e) {
         playercount--;
         balances.remove(e.getPlayer());
         updateTablists();
@@ -104,11 +104,11 @@ public class ModTitles extends HalfminerModule implements Listener {
             deathStreaks.put(victimUid, victimStreak);
 
             if (killerStreak > 4) {
-                TitleSender.sendActionBar(null, Language.getMessagePlaceholderReplace("modTitlesKillStreak", false,
+                TitleSender.sendActionBar(null, Language.getMessagePlaceholders("modTitlesKillStreak", false,
                         "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(killerStreak)));
             }
             if (victimStreak > 4) {
-                TitleSender.sendActionBar(null, Language.getMessagePlaceholderReplace("modTitlesDeathStreak", false,
+                TitleSender.sendActionBar(null, Language.getMessagePlaceholders("modTitlesDeathStreak", false,
                         "%PLAYER%", victim.getName(), "%STREAK%", String.valueOf(victimStreak)));
             }
         }
@@ -122,7 +122,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                     double balance = entry.getValue();
                     balance = Math.round(balance * 100.0d) / 100.0d;
 
-                    TitleSender.setTablistHeaderFooter(entry.getKey(), Language.getMessagePlaceholderReplace("modTitlesTablist",
+                    TitleSender.setTablistHeaderFooter(entry.getKey(), Language.getMessagePlaceholders("modTitlesTablist",
                             false, "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)));
                 }
             }

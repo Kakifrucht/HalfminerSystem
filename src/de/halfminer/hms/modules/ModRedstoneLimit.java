@@ -36,19 +36,19 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void pistonExtend(BlockPistonExtendEvent e) {
+    public void countPistonExtend(BlockPistonExtendEvent e) {
         e.setCancelled(increasePistonCount());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void pistonRetract(BlockPistonRetractEvent e) {
+    public void countPistonRetract(BlockPistonRetractEvent e) {
         e.setCancelled(increasePistonCount());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("unused")
-    public void onRedstone(BlockRedstoneEvent e) {
+    public void countRedstoneChange(BlockRedstoneEvent e) {
         Location redstoneLoc = e.getBlock().getLocation();
         if (lastStored.containsKey(redstoneLoc)) {
             int amount = lastStored.get(redstoneLoc);
@@ -59,7 +59,7 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onHopperPlace(BlockPlaceEvent e) {
+    public void checkHopperLimit(BlockPlaceEvent e) {
         if (e.getPlayer().hasPermission("hms.bypass.hopperlimit")) return;
         Block block = e.getBlock();
         if (block.getType() == Material.HOPPER) {
@@ -103,7 +103,7 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
         hopperLimitRadius = hms.getConfig().getInt("redstoneLimit.hopperLimitRadius", 7);
         logHopperLimit = hms.getConfig().getBoolean("redstoneLimit.hopperLimitLog", false);
 
-        hopperLimitMessage = Language.getMessagePlaceholderReplace("modHopperLimitReached", true, "%PREFIX%", "Info");
+        hopperLimitMessage = Language.getMessagePlaceholders("modHopperLimitReached", true, "%PREFIX%", "Info");
 
         if (taskId != 0) hms.getServer().getScheduler().cancelTask(taskId);
         taskId = hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {

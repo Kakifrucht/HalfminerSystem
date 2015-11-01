@@ -25,7 +25,7 @@ public class Cmdstats extends BaseCommand {
             try {
                 showStats(sender, hms.getServer().getOfflinePlayer(storage.getUUID(args[0])), compare);
             } catch (PlayerNotFoundException e) {
-                sender.sendMessage(Language.getMessagePlaceholderReplace("playerDoesNotExist", true, "%PREFIX%", "Stats"));
+                sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "Stats"));
             }
 
         } else {
@@ -46,7 +46,7 @@ public class Cmdstats extends BaseCommand {
 
         //build the message
         String message = Language.getMessage("commandStatsTop") + "\n";
-        message += Language.getMessagePlaceholderReplace("commandStatsShow", false,
+        message += Language.getMessagePlaceholders("commandStatsShow", false,
                 "%PLAYER%", player.getName(),
                 "%SKILLGROUP%", storage.getStatsString(player, StatsType.SKILL_GROUP),
                 "%SKILLLEVEL%", getIntAndCompare(player, StatsType.SKILL_LEVEL, compareWith),
@@ -62,7 +62,7 @@ public class Cmdstats extends BaseCommand {
                 "%OLDNAMES%", oldNames) + "\n";
 
         if (oldNames.length() > 0)
-            message += Language.getMessagePlaceholderReplace("commandStatsOldnames", false,
+            message += Language.getMessagePlaceholders("commandStatsOldnames", false,
                     "%OLDNAMES%", oldNames) + "\n";
 
         if (sendTo.equals(player))
@@ -70,7 +70,7 @@ public class Cmdstats extends BaseCommand {
         else if (compare) {
             message += Language.getMessage("commandStatsCompareLegend") + "\n";
         } else if (sendTo instanceof Player) {
-            message += Language.getMessagePlaceholderReplace("commandStatsCompareInfo", false,
+            message += Language.getMessagePlaceholders("commandStatsCompareInfo", false,
                     "%PLAYER%", player.getName()) + "\n";
         }
 

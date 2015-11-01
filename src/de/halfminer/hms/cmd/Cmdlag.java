@@ -25,7 +25,7 @@ public class Cmdlag extends BaseCommand {
         if (args.length > 0) { //get other player
 
             if (!sender.hasPermission("hms.lag.others")) {
-                sender.sendMessage(Language.getMessagePlaceholderReplace("noPermission", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Lag"));
                 return;
             }
 
@@ -34,7 +34,7 @@ public class Cmdlag extends BaseCommand {
             if (toGet != null) {
                 player = (CraftPlayer) toGet;
             } else {
-                sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", "Lag"));
                 return;
             }
 
@@ -76,18 +76,18 @@ public class Cmdlag extends BaseCommand {
         } else tpsString = ChatColor.GREEN + tpsString;
 
         //Send ping and tps information to player
-        sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagPlayerInfo", true, "%PREFIX%", "Lag", "%PLAYER%", player.getName(), "%LATENCY%", pingString));
-        sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagServerInfo", true, "%PREFIX%", "Lag", "%TPS%", tpsString));
+        sender.sendMessage(Language.getMessagePlaceholders("commandLagPlayerInfo", true, "%PREFIX%", "Lag", "%PLAYER%", player.getName(), "%LATENCY%", pingString));
+        sender.sendMessage(Language.getMessagePlaceholders("commandLagServerInfo", true, "%PREFIX%", "Lag", "%TPS%", tpsString));
 
         if (showSummary) { //determines the summary message, only shown when viewing own status
             if (summaryServerLag == 0 && !summaryPlayerLag)
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagStable", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("commandLagStable", true, "%PREFIX%", "Lag"));
             else if (summaryServerLag == 1)
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagServerUnstable", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("commandLagServerUnstable", true, "%PREFIX%", "Lag"));
             else if (summaryServerLag == 2)
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagServerLag", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("commandLagServerLag", true, "%PREFIX%", "Lag"));
             else
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandLagPlayerLag", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("commandLagPlayerLag", true, "%PREFIX%", "Lag"));
         }
     }
 }

@@ -35,7 +35,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
     @EventHandler
     @SuppressWarnings("unused")
-    public void onJoin(PlayerJoinEvent e) {
+    public void joinRecalculate(PlayerJoinEvent e) {
 
         Player player = e.getPlayer();
         if (player.hasPermission("hms.bypass.skilllevel")) return;
@@ -46,7 +46,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
             storage.setStats(player, StatsType.LASTKILL, System.currentTimeMillis() / 1000);
             updateSkill(player, derankLossAmount);
-            player.sendMessage(Language.getMessagePlaceholderReplace("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
+            player.sendMessage(Language.getMessagePlaceholders("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
 
         } else updateSkill(player, 0);
 
@@ -54,7 +54,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
     @EventHandler
     @SuppressWarnings("unused")
-    public void onKill(PlayerDeathEvent e) {
+    public void killUpdateSkill(PlayerDeathEvent e) {
 
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity().getPlayer();
@@ -131,14 +131,14 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
             String sendTitle;
             if (newLevel > level) {
-                sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelUprankTitle", false, "%SKILLLEVEL%",
+                sendTitle = Language.getMessagePlaceholders("modSkillLevelUprankTitle", false, "%SKILLLEVEL%",
                         String.valueOf(newLevel), "%SKILLGROUP%", teamName);
             } else {
-                sendTitle = Language.getMessagePlaceholderReplace("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
+                sendTitle = Language.getMessagePlaceholders("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
                         String.valueOf(newLevel), "%SKILLGROUP%", teamName);
             }
             TitleSender.sendTitle(player, sendTitle, 10, 50, 10);
-            hms.getLogger().info(Language.getMessagePlaceholderReplace("modSkillLevelLog", false, "%PLAYER%", player.getName(),
+            hms.getLogger().info(Language.getMessagePlaceholders("modSkillLevelLog", false, "%PLAYER%", player.getName(),
                     "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(elo)));
         }
     }

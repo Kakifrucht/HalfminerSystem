@@ -49,7 +49,7 @@ public class Cmdchat extends BaseCommand {
                         public void run() {
                             int count = countdown;
                             for (; count >= 0; count--) {
-                                TitleSender.sendTitle(null, Language.getMessagePlaceholderReplace("commandChatCountdown",
+                                TitleSender.sendTitle(null, Language.getMessagePlaceholders("commandChatCountdown",
                                         false, "%COUNT%", String.valueOf(count)), 0, 20, 5);
                                 try {
                                     Thread.sleep(1000l);
@@ -67,10 +67,10 @@ public class Cmdchat extends BaseCommand {
                 storage.set("sys.globalmute", !active);
 
                 if (active) {
-                    hms.getServer().broadcast(Language.getMessagePlaceholderReplace("commandChatGlobalmuteOff",
+                    hms.getServer().broadcast(Language.getMessagePlaceholders("commandChatGlobalmuteOff",
                             true, "%PREFIX%", "Globalmute"), "hms.default");
                 } else {
-                    hms.getServer().broadcast(Language.getMessagePlaceholderReplace("commandChatGlobalmuteOn",
+                    hms.getServer().broadcast(Language.getMessagePlaceholders("commandChatGlobalmuteOn",
                             true, "%PREFIX%", "Globalmute"), "hms.default");
                 }
 
@@ -79,7 +79,7 @@ public class Cmdchat extends BaseCommand {
                 String message = Language.arrayToString(args, 1, true);
                 storage.set("sys.chatmessage", message);
                 storage.set("sys.chatmessagetime", (System.currentTimeMillis() / 1000));
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatMessageSet", true, "%PREFIX%", "Chat",
+                sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageSet", true, "%PREFIX%", "Chat",
                         "%MESSAGE%", message));
 
             } else {
@@ -106,7 +106,7 @@ public class Cmdchat extends BaseCommand {
                         if (sendTo == null) sendToString = Language.getMessage("commandChatAll");
                         else sendToString = sendTo.getName();
 
-                        sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatTitle", true, "%PREFIX%", "Chat",
+                        sender.sendMessage(Language.getMessagePlaceholders("commandChatTitle", true, "%PREFIX%", "Chat",
                                 "%SENDTO%", sendToString, "%MESSAGE%", message));
 
                         TitleSender.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
@@ -116,10 +116,10 @@ public class Cmdchat extends BaseCommand {
                         storage.set("sys.news", message);
                         hms.getModule(ModuleType.MOTD).reloadConfig();
                         if (sender instanceof Player) {
-                            TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholderReplace("modTitlesNewsFormat",
+                            TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
                                     false, "%NEWS%", message), 40, 180, 40);
                         }
-                        sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatNewsSetTo", true,
+                        sender.sendMessage(Language.getMessagePlaceholders("commandChatNewsSetTo", true,
                                 "%PREFIX%", "Chat"));
 
                     } else if (args[0].equalsIgnoreCase("send")) {
@@ -135,7 +135,7 @@ public class Cmdchat extends BaseCommand {
                                 sendToString = player.getName();
                             } else {
 
-                                sender.sendMessage(Language.getMessagePlaceholderReplace("playerNotOnline", true,
+                                sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true,
                                         "%PREFIX%", "Chat"));
                                 return;
                             }
@@ -144,7 +144,7 @@ public class Cmdchat extends BaseCommand {
                             hms.getServer().broadcast(message, "hms.default");
                             sendToString = Language.getMessage("commandChatAll");
                         }
-                        sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatSend", true, "%PREFIX%", "Chat",
+                        sender.sendMessage(Language.getMessagePlaceholders("commandChatSend", true, "%PREFIX%", "Chat",
                                 "%SENDTO%", sendToString));
 
                     }  else showUsage();
@@ -164,7 +164,7 @@ public class Cmdchat extends BaseCommand {
 
         if (message.length() == 0) {
 
-            sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatMessageNotSet", true,
+            sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageNotSet", true,
                     "%PREFIX%", "Chat"));
             return false;
         } else {
@@ -176,7 +176,7 @@ public class Cmdchat extends BaseCommand {
                 message = "";
                 storage.set("sys.chatmessage", null);
 
-                sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatMessageNotSet", true,
+                sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageNotSet", true,
                         "%PREFIX%", "Chat"));
 
                 return false;
@@ -193,15 +193,15 @@ public class Cmdchat extends BaseCommand {
             if (!player.hasPermission("hms.chat.advanced")) {
                 for (int i = 0; i < 100; i++) player.sendMessage(ChatColor.RESET.toString());
             }
-            player.sendMessage(Language.getMessagePlaceholderReplace("commandChatCleared", true, "%PREFIX%", "Chat",
+            player.sendMessage(Language.getMessagePlaceholders("commandChatCleared", true, "%PREFIX%", "Chat",
                     "%PLAYER%", whoCleared));
         }
 
-        hms.getLogger().info(Language.getMessagePlaceholderReplace("commandChatClearedLog", false, "%PLAYER%", whoCleared));
+        hms.getLogger().info(Language.getMessagePlaceholders("commandChatClearedLog", false, "%PLAYER%", whoCleared));
     }
 
     private void showUsage() {
-        sender.sendMessage(Language.getMessagePlaceholderReplace("commandChatUsage", true, "%PREFIX%", "Chat"));
+        sender.sendMessage(Language.getMessagePlaceholders("commandChatUsage", true, "%PREFIX%", "Chat"));
     }
 
 }

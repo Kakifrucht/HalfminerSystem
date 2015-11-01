@@ -38,6 +38,6 @@ public class ModBedrockProtection extends HalfminerModule implements Listener {
 
     @Override
     public void reloadConfig() {
-        message = Language.getMessagePlaceholderReplace("modBedrockPlayerGlitching", true, "%PREFIX%", "Warnung");
+        message = Language.getMessagePlaceholders("modBedrockPlayerGlitching", true, "%PREFIX%", "Warnung");
     }
 }

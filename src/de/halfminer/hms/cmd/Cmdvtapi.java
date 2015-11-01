@@ -43,7 +43,7 @@ public class Cmdvtapi extends BaseCommand {
 
                 storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
                 storage.incrementStatsInt(hasVoted, StatsType.VOTES, 1);
-                hms.getServer().broadcast(Language.getMessagePlaceholderReplace("commandVtapiVoted", true, "%PREFIX%",
+                hms.getServer().broadcast(Language.getMessagePlaceholders("commandVtapiVoted", true, "%PREFIX%",
                         "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
 
                 if (hasVoted instanceof Player) {

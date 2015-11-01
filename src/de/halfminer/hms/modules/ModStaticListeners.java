@@ -19,12 +19,12 @@ import org.bukkit.potion.PotionEffectType;
 public class ModStaticListeners extends HalfminerModule implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
+    public void joinNoMessage(PlayerJoinEvent e) {
         e.setJoinMessage("");
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
+    public void quitNoMessage(PlayerQuitEvent e) {
         e.setQuitMessage("");
     }
 
@@ -80,7 +80,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
 
         Player p = e.getPlayer();
         if (storage.getBoolean("sys.globalmute") && !p.hasPermission("hms.chat.advanced")) {
-            p.sendMessage(Language.getMessagePlaceholderReplace("commandChatGlobalmuteDenied", true,
+            p.sendMessage(Language.getMessagePlaceholders("commandChatGlobalmuteDenied", true,
                     "%PREFIX%", "Globalmute"));
             e.setCancelled(true);
         } else {
@@ -102,7 +102,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         for (Character check : e.getMessage().toLowerCase().toCharArray()) {
             if (check.equals(' ')) return;
             if (check.equals(':')) {
-                e.getPlayer().sendMessage(Language.getMessagePlaceholderReplace("noPermission", true, "%PREFIX%", "Info"));
+                e.getPlayer().sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Info"));
                 e.setCancelled(true);
                 return;
             }

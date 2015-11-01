@@ -93,7 +93,7 @@ public class Language {
      * @param replacements array containing as even index the placeholder and odd index with what to replace it
      * @return String containing the finished message
      */
-    public static String getMessagePlaceholderReplace(String messageKey, boolean prefix, String... replacements) {
+    public static String getMessagePlaceholders(String messageKey, boolean prefix, String... replacements) {
         String toReturn = getMessage(messageKey);
 
         if (prefix)

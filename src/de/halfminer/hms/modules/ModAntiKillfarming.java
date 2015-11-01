@@ -45,7 +45,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
      */
     @EventHandler
     @SuppressWarnings("unused")
-    private void onDeath(PlayerDeathEvent e) {
+    private void onDeathCheckKillfarming(PlayerDeathEvent e) {
 
         if (e.getEntity().getKiller() != null) {
 
@@ -245,13 +245,13 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
         //Get language
         lang.clear();
-        lang.put("killfarmWarning", Language.getMessagePlaceholderReplace("modKillfarmingWarning", true, "%PREFIX%", "PvP"));
-        lang.put("noCommand", Language.getMessagePlaceholderReplace("modKillfarmingNoCommand", true, "%PREFIX%", "Info"));
-        lang.put("noPvPAttack", Language.getMessagePlaceholderReplace("modKillfarmingNoPvPAttack", true, "%PREFIX%", "PvP"));
-        lang.put("noPvPProtect", Language.getMessagePlaceholderReplace("modKillfarmingNoPvPProtect", true, "%PREFIX%", "PvP"));
-        lang.put("blockedBroadcast", Language.getMessagePlaceholderReplace("modKillfarmingBlockedBroadcast", true, "%PREFIX%", "PvP"));
-        lang.put("blockedKiller", Language.getMessagePlaceholderReplace("modKillfarmingBlockedKiller", true, "%PREFIX%", "PvP"));
-        lang.put("blockedVictim", Language.getMessagePlaceholderReplace("modKillfarmingBlockedVictim", true, "%PREFIX%", "PvP"));
+        lang.put("killfarmWarning", Language.getMessagePlaceholders("modKillfarmingWarning", true, "%PREFIX%", "PvP"));
+        lang.put("noCommand", Language.getMessagePlaceholders("modKillfarmingNoCommand", true, "%PREFIX%", "Info"));
+        lang.put("noPvPAttack", Language.getMessagePlaceholders("modKillfarmingNoPvPAttack", true, "%PREFIX%", "PvP"));
+        lang.put("noPvPProtect", Language.getMessagePlaceholders("modKillfarmingNoPvPProtect", true, "%PREFIX%", "PvP"));
+        lang.put("blockedBroadcast", Language.getMessagePlaceholders("modKillfarmingBlockedBroadcast", true, "%PREFIX%", "PvP"));
+        lang.put("blockedKiller", Language.getMessagePlaceholders("modKillfarmingBlockedKiller", true, "%PREFIX%", "PvP"));
+        lang.put("blockedVictim", Language.getMessagePlaceholders("modKillfarmingBlockedVictim", true, "%PREFIX%", "PvP"));
     }
 
     /**

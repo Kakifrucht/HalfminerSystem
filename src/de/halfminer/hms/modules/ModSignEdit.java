@@ -19,7 +19,7 @@ public class ModSignEdit extends HalfminerModule implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onInteract(PlayerInteractEvent e) {
+    public void onSignInteract(PlayerInteractEvent e) {
 
         if (edit.isEmpty() || !edit.containsKey(e.getPlayer())) return;
 
@@ -33,17 +33,17 @@ public class ModSignEdit extends HalfminerModule implements Listener {
             if (info.amountToCopy > 0 && info.copySign == null) {
 
                 info.copySign = sign.getLines();
-                player.sendMessage(Language.getMessagePlaceholderReplace("modSigneditSignCopied", true, "%PREFIX%", "Info"));
+                player.sendMessage(Language.getMessagePlaceholders("modSigneditSignCopied", true, "%PREFIX%", "Info"));
 
             } else {
 
                 if (info.amountToCopy > 0) {
                     for (int i = 0; i < 4; i++) sign.setLine(i, info.copySign[i]);
                     if (--info.amountToCopy == 0) edit.remove(player);
-                    player.sendMessage(Language.getMessagePlaceholderReplace("modSigneditSignPasted", true, "%PREFIX%", "Info", "%AMOUNT%", Integer.toString(info.amountToCopy)));
+                    player.sendMessage(Language.getMessagePlaceholders("modSigneditSignPasted", true, "%PREFIX%", "Info", "%AMOUNT%", Integer.toString(info.amountToCopy)));
                 } else {
                     sign.setLine(info.numberEdit, info.signText);
-                    player.sendMessage(Language.getMessagePlaceholderReplace("modSigneditLinePasted", true, "%PREFIX%", "Info"));
+                    player.sendMessage(Language.getMessagePlaceholders("modSigneditLinePasted", true, "%PREFIX%", "Info"));
                     edit.remove(player);
                 }
 

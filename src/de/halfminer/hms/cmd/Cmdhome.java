@@ -30,10 +30,10 @@ public class Cmdhome extends BaseCommand {
 
             } else {
 
-                player.sendMessage(Language.getMessagePlaceholderReplace("commandHomeDenied", true, "%PREFIX%", "Home",
+                player.sendMessage(Language.getMessagePlaceholders("commandHomeDenied", true, "%PREFIX%", "Home",
                         "%PLAYER%", player.getName()));
 
-                hms.getLogger().info(Language.getMessagePlaceholderReplace("commandHomeDeniedLog", false, "%PLAYER%", player.getName()));
+                hms.getLogger().info(Language.getMessagePlaceholders("commandHomeDeniedLog", false, "%PLAYER%", player.getName()));
             }
 
         }

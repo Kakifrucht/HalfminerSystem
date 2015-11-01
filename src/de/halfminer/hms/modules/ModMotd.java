@@ -19,14 +19,14 @@ public class ModMotd extends HalfminerModule implements Listener {
 
     @EventHandler
     @SuppressWarnings("unused")
-    public void serverPing(ServerListPingEvent e) {
+    public void serverPingMotd(ServerListPingEvent e) {
         e.setMotd(motd[rnd.nextInt(motd.length)]);
     }
 
     @Override
     public void reloadConfig() {
 
-        String setMotd = Language.getMessagePlaceholderReplace("modMotdLine", false, "%REPLACE%", storage.getString("sys.news"));
+        String setMotd = Language.getMessagePlaceholders("modMotdLine", false, "%REPLACE%", storage.getString("sys.news"));
 
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");
         motd = new String[strList.size()];
