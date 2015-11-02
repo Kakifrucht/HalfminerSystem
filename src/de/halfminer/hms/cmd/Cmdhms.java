@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -59,11 +61,49 @@ public class Cmdhms extends BaseCommand {
                 return;
             }
 
-            String newName = ChatColor.RESET.toString();
-            if (args.length > 1) newName = Language.arrayToString(args, 1, true);
-
             ItemMeta meta = item.getItemMeta();
+
+            //default parameters, clear item name if not specified but keep lore
+            String newName = ChatColor.RESET.toString();
+            List<String> lore = meta.getLore();
+
+            if (args.length > 1) {
+
+                //item name must start at argument 1 only if it is not the -lore flag
+                if (!args[1].equalsIgnoreCase("-lore")) {
+                    newName = Language.arrayToString(args, 1, true);
+                    //cut new string at -lore
+                    for (int i = 0; i < newName.length(); i++) {
+                        if (newName.substring(i).toLowerCase().startsWith("-lore")) {
+                            newName = newName.substring(0, i);
+                            break;
+                        }
+                    }
+                    //cut spaces at the end of the name
+                    while (newName.endsWith(" ")) {
+                        newName = newName.substring(0, newName.length() - 1);
+                    }
+                }
+
+                //iterate over args and check if lore flag is set
+                for (int i = 1; i < args.length; i++) {
+                    if (args[i].equalsIgnoreCase("-lore")) {
+                        //check if new lore was specified, else just clear it
+                        if (args.length > i + 1) {
+                            //split lines of lore at | character, set the lore list
+                            String[] loreToArray = Language.arrayToString(args, i + 1, true).split("[|]");
+                            lore = Arrays.asList(loreToArray);
+                            break;
+                        } else {
+                            if (lore != null) lore.clear();
+                        }
+                    }
+                }
+            }
+
+            //update item
             meta.setDisplayName(newName);
+            meta.setLore(lore);
             item.setItemMeta(meta);
             player.updateInventory();
 
