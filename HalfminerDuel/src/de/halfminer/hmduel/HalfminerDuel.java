@@ -47,9 +47,6 @@ public class HalfminerDuel extends JavaPlugin {
         if (cmd.getName().equalsIgnoreCase("duel")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                if (player.isSleeping()) {
-                    Util.sendMessage(player, "playerSleeping");
-                }
                 if (arenaManager.noArenaExists()) {
                     Util.sendMessage(player, "pluginDisabled");
                     return true;
