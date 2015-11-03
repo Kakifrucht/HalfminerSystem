@@ -94,17 +94,22 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void commandFilter(PlayerCommandPreprocessEvent e) {
 
-        if (e.getPlayer().hasPermission("hms.bypass.commandfilter")) return;
-
-        for (Character check : e.getMessage().toLowerCase().toCharArray()) {
-            if (check.equals(' ')) return;
-            if (check.equals(':')) {
-                e.getPlayer().sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Info"));
-                e.setCancelled(true);
-                return;
+        Player player = e.getPlayer();
+        if (player.hasPermission("hms.bypass.commandfilter")) return;
+        if (player.isSleeping()) {
+            player.sendMessage(Language.getMessagePlaceholders("modStaticListenersCommandSleep", true, "%PREFIX%", "Info"));
+            e.setCancelled(true);
+        } else {
+            for (Character check : e.getMessage().toLowerCase().toCharArray()) {
+                if (check.equals(' ')) return;
+                if (check.equals(':')) {
+                    e.getPlayer().sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Info"));
+                    e.setCancelled(true);
+                    return;
+                }
             }
         }
     }

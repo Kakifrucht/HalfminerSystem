@@ -48,7 +48,7 @@ Current features
   - Removes default join/leave/death messages
   - Capslock filter
   - Disables hitting self with bow
-  - Blocks usage of /pluginname:command
+  - Blocks usage of /pluginname:command, no commands while in bed
   - Heals player after kill and plays sound
   - Disable apple and book trading with villagers
   - Small features for VariableTriggers /vtapi

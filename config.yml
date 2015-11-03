@@ -61,6 +61,7 @@ localization:
   commandChatSend: '&7Deine Nachricht wurde an %SENDTO% versendet'
   commandChatMessageSet: '&aNachricht gesetzt zu:&r\n%MESSAGE%'
   commandChatTitle: '&7Titel versendet an %SENDTO%, Nachricht: &r%MESSAGE%'
+  modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
   modAutoMessagePlaceholder: '&e&m------------------------------------------------'
   modKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
   modKillfarmingNoCommand: '&cKommandos sind fuer dich weitere &a%TIME% &cSekunden deaktiviert, da du Killfarming betrieben hast'
