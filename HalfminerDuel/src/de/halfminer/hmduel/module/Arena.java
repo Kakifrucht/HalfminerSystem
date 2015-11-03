@@ -209,7 +209,7 @@ class Arena {
         data.armor = player.getInventory().getArmorContents();
 
         //Make sure that invs are closed and no mounts are taken into arena
-        if (player.isInsideVehicle()) player.leaveVehicle();
+        player.leaveVehicle();
         player.closeInventory();
 
         //Store and teleport

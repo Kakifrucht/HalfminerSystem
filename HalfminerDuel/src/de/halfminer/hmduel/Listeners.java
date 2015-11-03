@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
 @SuppressWarnings("unused")
@@ -19,21 +20,33 @@ class Listeners implements Listener {
     private final ArenaQueue aq = hmd.getArenaQueue();
 
     @EventHandler(ignoreCancelled = true)
-    public void onEatDecay(FoodLevelChangeEvent e) {
+    public void disableEatDecay(FoodLevelChangeEvent e) {
         if (hmd.getConfig().getBoolean("noHungerLossInDuel") && e.getEntity() instanceof Player && aq.isInDuel((Player) e.getEntity())) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPickup(PlayerPickupItemEvent e) {
+    public void disableInventoryClick(InventoryClickEvent e) {
+        if (e.getWhoClicked() instanceof Player && aq.isInDuel((Player) e.getWhoClicked())) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void disableItemDrop(PlayerDropItemEvent e) {
+        if (aq.isInDuel(e.getPlayer())) e.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void disableItemPickup(PlayerPickupItemEvent e) {
         if (aq.isInDuel(e.getPlayer())) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPlayerMove(PlayerMoveEvent e) {
+    public void disableMovementDuringCountdown(PlayerMoveEvent e) {
         if (aq.isInDuel(e.getPlayer()) && e.getPlayer().getWalkSpeed() == 1.0E-4F) {
             e.getPlayer().teleport(e.getFrom());
             e.setCancelled(true);
@@ -41,7 +54,7 @@ class Listeners implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPvPFactions(EntityDamageByEntityEvent e) {
+    public void enablePvPEvenIfBlocked(EntityDamageByEntityEvent e) {
         if (e.isCancelled() && e.getEntity() instanceof Player) { //make sure factions can fight
             Player gotHit = (Player) e.getEntity();
             if (aq.isInDuel(gotHit)) e.setCancelled(false);
@@ -49,7 +62,7 @@ class Listeners implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPvPQueueKick(EntityDamageByEntityEvent e) {
+    public void kickFromQueueOnPvP(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) { //kick from queue
             Player damager = (Player) e.getDamager();
             Player gotHit = (Player) e.getEntity();
@@ -59,7 +72,7 @@ class Listeners implements Listener {
     }
 
     @EventHandler
-    public void playerQuit(PlayerQuitEvent e) {
+    public void leaveRemoveQueueEndDuel(PlayerQuitEvent e) {
         Player didQuit = e.getPlayer();
         if (aq.isInQueue(didQuit)) {
             aq.removeFromQueue(didQuit);
@@ -69,7 +82,7 @@ class Listeners implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
+    public void onChatSelectArena(AsyncPlayerChatEvent e) {
         if (aq.isSelectingArena(e.getPlayer())) {
 
             e.setCancelled(true);
@@ -87,7 +100,7 @@ class Listeners implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onCommand(PlayerCommandPreprocessEvent e) {
+    public void disableCommandDuringFight(PlayerCommandPreprocessEvent e) {
         if (aq.isInDuel(e.getPlayer()) && !e.getPlayer().hasPermission("hmd.admin")) {
             Util.sendMessage(e.getPlayer(), "inGame");
             e.setCancelled(true);
@@ -95,7 +108,7 @@ class Listeners implements Listener {
     }
 
     @EventHandler
-    public void playerDeath(PlayerDeathEvent e) {
+    public void onDeathEndFight(PlayerDeathEvent e) {
         Player died = e.getEntity().getPlayer();
         if (aq.isInQueue(died)) aq.removeFromQueue(died);
         if (aq.isInDuel(died)) aq.gameHasFinished(died, true);
