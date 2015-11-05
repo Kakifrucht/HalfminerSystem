@@ -33,7 +33,6 @@ public class ModStats extends HalfminerModule implements Listener {
     public void joinInitializeStatsAndRename(PlayerJoinEvent e) {
 
         Player player = e.getPlayer();
-        storage.incrementStatsInt(player, StatsType.JOINS, 1);
         timeOnline.put(player, System.currentTimeMillis() / 1000);
 
         String lastName = storage.getStatsString(player, StatsType.LAST_NAME);

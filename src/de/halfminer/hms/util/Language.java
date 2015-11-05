@@ -3,6 +3,7 @@ package de.halfminer.hms.util;
 import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 public class Language {
 
@@ -128,6 +129,20 @@ public class Language {
         }
         if (translateColor) toReturn = ChatColor.translateAlternateColorCodes('&', toReturn);
         return toReturn.substring(0, toReturn.length() - 1);
+    }
+
+    /**
+     * Takes a material, lowercases it, exchanges the first character with its uppercase equivalent and transforms
+     * underscores to spaces. Material.SUGAR_CANE will be "Sugar cane".
+     *
+     * @param mat material that should be transformed
+     * @return transformed string
+     */
+    public static String makeMaterialStringFriendly(Material mat) {
+        if (mat == null) return "";
+        String toReturn = mat.toString().toLowerCase().replace('_', ' ');
+
+        return Character.toUpperCase(toReturn.charAt(0)) + toReturn.substring(1);
     }
 
 }

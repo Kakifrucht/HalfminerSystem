@@ -27,9 +27,9 @@ localization:
   commandLagStable: '&aDie Verbindung ist stabil'
   commandLagServerUnstable: '&eDer Server ist etwas instabil, das Team arbeitet daran'
   commandLagServerLag: '&cDer Server ist sehr instabil, das Team arbeitet daran'
-  commandLagPlayerLag: '&cDeine Verbindung ist instabil (Server ist stabil)'
+  commandLagPlayerLag: '&cDeine Verbindung ist instabil &a(Server ist stabil)'
   commandStatsTop: '&e&m-------------------&c&l Statistiken &e&m-------------------'
-  commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGejoined: &d%JOINS% &7mal\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e) | &rK/D: &d%KDRATIO%\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBloecke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
+  commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGeld: &d%REVENUE% &7HCs verdient\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e) | &rK/D: &d%KDRATIO%\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBloecke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
   commandStatsOldnames: '&fAlte Namen: &d%OLDNAMES%'
   commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &d/stats [Spieler]'
   commandStatsCompareLegend: '&7Dein Wert ist &ahoeher&7, Werte sind &egleich&7, dein Wert ist &cgeringer'
@@ -61,6 +61,11 @@ localization:
   commandChatSend: '&7Deine Nachricht wurde an %SENDTO% versendet'
   commandChatMessageSet: '&aNachricht gesetzt zu:&r\n%MESSAGE%'
   commandChatTitle: '&7Titel versendet an %SENDTO%, Nachricht: &r%MESSAGE%'
+  commandVerkaufUsage: '&cVerwendung: &f/verkauf <cactus|wheat|pumpkin|brownmushroom|redmushroom|melon|cocoa|potato|carrot|sugarcane|netherwart>'
+  commandVerkaufNoVault: '&cDieses Kommando ist aktuell deaktiviert, bitte wende dich an einen Admin'
+  commandVerkaufSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7fuer &a%MONEY% HCs &7verkauft'
+  commandVerkaufSuccessLog: 'Verkauf: %PLAYER% hat %AMOUNT% %MATERIAL% fuer %MONEY% HCs verkauft'
+  commandVerkaufNotInInv: '&cDu hast kein &e%MATERIAL% &cin deinem Inventar'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
   modAutoMessagePlaceholder: '&e&m------------------------------------------------'
   modKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
@@ -99,8 +104,8 @@ localization:
   modTitlesNewPlayerFormat: '&4Willkommen, %PLAYER%!\n&7Verwende &e&l/neutp &7zum starten!'
   modTitlesJoinFormat: '&7<<<< &6Halfminer&7 >>>>\n&7Kontostand: &a$%BALANCE%&f - &7Online: &a%PLAYERCOUNT% &7&oSpieler'
   modTitlesNewsFormat: '&7&l&nNeuigkeiten\n%NEWS%'
-  modTitlesKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK%&7 Kills in Folge'
-  modTitlesDeathStreak: '&c&l%PLAYER%&7 ist &c&l%STREAK%&7 in Folge gekillt worden'
+  modTitlesKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK% &7Kills in Folge'
+  modTitlesDeathStreak: '&c&l%PLAYER%&7 ist &c&l%STREAK% &7mal in Folge gekillt worden'
   modTitlesTablist: '&6&lTwo and a half Miner&7 | Konto: &a%BALANCE% &7&oHCs\n&7Teamspeak: &fts.halfminer.de &7| Online: &a%PLAYERCOUNT% &7&oSpieler'
 command:
   home:
@@ -110,6 +115,19 @@ command:
     #Bounds in which the generated position will lie in
     boundMin: 1000
     boundMax: 10000
+  verkauf:
+    #Base amount for 1 HalfCoin
+    cactus: 110
+    wheat: 25
+    pumpking: 40
+    brownmushroom: 20
+    redmushroom: 30
+    melon: 110
+    cocoa: 45
+    potato: 30
+    carrot: 30
+    sugarcane: 55
+    netherwart: 40
 autoMessage:
   intervalSeconds: 240
   messages:

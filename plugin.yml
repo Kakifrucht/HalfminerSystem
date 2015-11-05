@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.2
+version: 3.3
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -11,7 +11,7 @@ commands:
   ?:
     description: Bukkit override, protects from viewing all commands
   hms:
-    description: HalfminerSystem basecommand
+    description: HalfminerSystem Base command
   hmstore:
     description: Data storage manipulation
   chat:
@@ -29,6 +29,9 @@ commands:
     description: Teleports the player to a random location
   home:
     description: Teleports the player to his home
+  verkauf:
+    description: Earn money buy selling farm supplies
+    aliases: [vk]
   vtapi:
     description: VT Command API
     aliases: [hilfe, spenden, regeln, vote, rang, tools, kiste, deo]
@@ -46,6 +49,7 @@ permissions:
     hms.chat.advanced: true
     hms.neutp: true
     hms.home: true
+    hms.verkauf: true
     hms.signedit: true
     hms.admin: true
     hms.bypass.*: true
@@ -84,6 +88,9 @@ permissions:
   hms.home:
     default: true
     description: Access to home command
+  hms.verkauf:
+    default: true
+    description: Access to verkauf command
   hms.chat:
     description: Access to chat clearing command
   hms.chat.advanced:

@@ -33,6 +33,13 @@ public class HalfminerStorage {
         return value;
     }
 
+    public double incrementDouble(String path, double incrementBy) {
+        double value = fileConfig.getDouble(path, 0.0d) + incrementBy;
+        value = Math.round(value * 100) / 100.0d;
+        fileConfig.set(path, value);
+        return value;
+    }
+
     public void setUUID(OfflinePlayer player) {
         set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
     }
@@ -85,6 +92,10 @@ public class HalfminerStorage {
 
     public int incrementStatsInt(OfflinePlayer player, StatsType stats, int incrementBy) {
         return incrementInt(player.getUniqueId() + "." + stats, incrementBy);
+    }
+
+    public double incrementStatsDouble(OfflinePlayer player, StatsType stats, double incrementBy) {
+        return incrementDouble(player.getUniqueId() + "." + stats, incrementBy);
     }
 
     public void saveConfig() {
