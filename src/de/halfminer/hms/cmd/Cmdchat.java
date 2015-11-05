@@ -52,7 +52,7 @@ public class Cmdchat extends BaseCommand {
                                 TitleSender.sendTitle(null, Language.getMessagePlaceholders("commandChatCountdown",
                                         false, "%COUNT%", String.valueOf(count)), 0, 20, 5);
                                 try {
-                                    Thread.sleep(1000l);
+                                    Thread.sleep(1000L);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

@@ -202,7 +202,7 @@ public class Cmdhms extends BaseCommand {
                         else ringHeight += 0.5f;
 
                         try {
-                            Thread.sleep(110l);
+                            Thread.sleep(110L);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

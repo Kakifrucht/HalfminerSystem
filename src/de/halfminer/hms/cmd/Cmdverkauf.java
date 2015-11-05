@@ -16,6 +16,13 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class Cmdverkauf extends BaseCommand {
 
+    private Player player;
+    private Economy econ;
+    private String[] args;
+    private Material toBeSold;
+    private int loopCount = 0;
+    private int sellCountTotal = 0;
+
     public Cmdverkauf() {
         this.permission = "hms.verkauf";
     }
@@ -23,7 +30,8 @@ public class Cmdverkauf extends BaseCommand {
     @Override
     public void run(CommandSender sender, String label, String[] args) {
 
-        Economy econ = HalfminerSystem.getEconomy();
+        econ = HalfminerSystem.getEconomy();
+        this.args = args;
 
         if (econ == null) {
             sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufNoVault", true, "%PREFIX%", "Verkauf"));
@@ -35,102 +43,121 @@ public class Cmdverkauf extends BaseCommand {
             return;
         }
 
-        Player player = (Player) sender;
+        player = (Player) sender;
 
         if (args.length > 0) {
 
-            Material wanted;
-
             switch (args[0].toLowerCase()) {
                 case "cactus":
-                    wanted = Material.CACTUS;
+                    toBeSold = Material.CACTUS;
                     break;
                 case "wheat":
-                    wanted = Material.WHEAT;
+                    toBeSold = Material.WHEAT;
                     break;
                 case "pumpkin":
-                    wanted = Material.PUMPKIN;
+                    toBeSold = Material.PUMPKIN;
                     break;
                 case "brownmushroom":
-                    wanted = Material.BROWN_MUSHROOM;
+                    toBeSold = Material.BROWN_MUSHROOM;
                     break;
                 case "redmushroom":
-                    wanted = Material.RED_MUSHROOM;
+                    toBeSold = Material.RED_MUSHROOM;
                     break;
                 case "melon":
-                    wanted = Material.MELON;
+                    toBeSold = Material.MELON;
                     break;
                 case "cocoa":
-                    wanted = Material.COCOA;
+                    toBeSold = Material.COCOA;
                     break;
                 case "potato":
-                    wanted = Material.POTATO;
+                    toBeSold = Material.POTATO;
                     break;
                 case "carrot":
-                    wanted = Material.CARROT;
+                    toBeSold = Material.CARROT;
                     break;
                 case "sugarcane":
-                    wanted = Material.SUGAR_CANE;
+                    toBeSold = Material.SUGAR_CANE;
                     break;
                 case "netherwart":
-                    wanted = Material.NETHER_WARTS;
+                    toBeSold = Material.NETHER_STALK;
                     break;
                 default:
-                    wanted = null;
+                    toBeSold = null;
                     break;
             }
 
-            if (wanted != null) {
+            if (toBeSold != null) {
 
-                double multiplier = 1.0;
+                sellLoop();
+            } else {
 
+                sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));
+            }
+
+        } else {
+            sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));
+        }
+    }
+
+    private void sellLoop() {
+
+        Inventory playerInv =  player.getInventory();
+        HashMap<Integer, ? extends ItemStack> items = playerInv.all(toBeSold);
+
+        int sellCount = 0;
+
+        for (Map.Entry<Integer, ? extends ItemStack> entry : items.entrySet()) {
+            sellCount += entry.getValue().getAmount();
+            playerInv.setItem(entry.getKey(), null);
+        }
+
+        player.updateInventory();
+        sellCountTotal += sellCount;
+
+        if (++loopCount < 5 && sellCount > 0) {
+
+            hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+                @Override
+                public void run() {
+                    sellLoop();
+                }
+            }, 20L);
+
+        } else {
+
+            if (sellCountTotal > 0) {
+
+                //get rank multiplier
+                double multiplier = 1.0d;
                 if (player.hasPermission("hms.level.5")) multiplier = 2.5d;
                 else if (player.hasPermission("hms.level.4")) multiplier = 2.0d;
                 else if (player.hasPermission("hms.level.3")) multiplier = 1.75d;
                 else if (player.hasPermission("hms.level.2")) multiplier = 1.5d;
                 else if (player.hasPermission("hms.level.1")) multiplier = 1.25d;
 
-                int baseValue = hms.getConfig().getInt("command.verkauf." + args[0].toLowerCase(), 1);
-                Inventory playerInv = player.getInventory();
-                HashMap<Integer, ? extends ItemStack> items = playerInv.all(wanted);
+                //calculate revenue
+                int baseValue = hms.getConfig().getInt("command.verkauf." + args[0].toLowerCase(), 1000);
+                double revenue = (sellCountTotal / (double) baseValue) * multiplier;
 
-                int count = 0;
-                double paidOut;
+                //deposit and round
+                econ.depositPlayer(player, revenue);
+                storage.incrementStatsDouble(player, StatsType.REVENUE, revenue);
+                revenue = Math.round(revenue * 100) / 100.0d;
 
-                for (Map.Entry<Integer, ? extends ItemStack> entry : items.entrySet()) {
-                    count += entry.getValue().getAmount();
-                    player.getInventory().setItem(entry.getKey(), null);
-                }
+                //print message
+                String materialFriendly = Language.makeMaterialStringFriendly(toBeSold);
+                player.sendMessage(Language.getMessagePlaceholders("commandVerkaufSuccess", true, "%PREFIX%", "Verkauf",
+                        "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
+                        "%AMOUNT%", String.valueOf(sellCountTotal)));
 
-                player.updateInventory();
-                paidOut = (count / (double) baseValue) * multiplier;
-
-                if (paidOut > 0.0d) {
-
-                    paidOut = Math.round(paidOut * 100) / 100.0d;
-                    econ.depositPlayer(player, paidOut);
-                    storage.incrementStatsDouble(player, StatsType.REVENUE, paidOut);
-
-                    String materialFriendly = Language.makeMaterialStringFriendly(wanted);
-                    player.sendMessage(Language.getMessagePlaceholders("commandVerkaufSuccess", true, "%PREFIX%", "Verkauf",
-                            "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(paidOut),
-                            "%AMOUNT%", String.valueOf(count)));
-
-                    hms.getLogger().info(Language.getMessagePlaceholders("commandVerkaufSuccessLog", false, "%PLAYER%",
-                            player.getName(), "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(paidOut),
-                            "%AMOUNT%", String.valueOf(count)));
-                } else {
-
-                    player.sendMessage(Language.getMessagePlaceholders("commandVerkaufNotInInv", true, "%PREFIX%", "Verkauf",
-                            "%MATERIAL%", Language.makeMaterialStringFriendly(wanted)));
-                }
-
+                hms.getLogger().info(Language.getMessagePlaceholders("commandVerkaufSuccessLog", false, "%PLAYER%",
+                        player.getName(), "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
+                        "%AMOUNT%", String.valueOf(sellCountTotal)));
             } else {
-                sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));
-            }
 
-        } else {
-            sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));
+                player.sendMessage(Language.getMessagePlaceholders("commandVerkaufNotInInv", true, "%PREFIX%", "Verkauf",
+                        "%MATERIAL%", Language.makeMaterialStringFriendly(toBeSold)));
+            }
         }
     }
 }

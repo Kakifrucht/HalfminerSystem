@@ -57,7 +57,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                             "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)), 10, 100, 10);
 
                     try {
-                        Thread.sleep(6000l);
+                        Thread.sleep(6000L);
                     } catch (InterruptedException e1) {
                         e1.printStackTrace();
                     }

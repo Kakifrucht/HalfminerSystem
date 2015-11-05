@@ -29,11 +29,11 @@ localization:
   commandLagServerLag: '&cDer Server ist sehr instabil, das Team arbeitet daran'
   commandLagPlayerLag: '&cDeine Verbindung ist instabil &a(Server ist stabil)'
   commandStatsTop: '&e&m-------------------&c&l Statistiken &e&m-------------------'
-  commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &d%SKILLGROUP% &7| &rSkilllevel: &d%SKILLLEVEL%&7&o/22\n&rZeit Online: &d%ONLINETIME% &7Minuten | &rGeld: &d%REVENUE% &7HCs verdient\n&rKills: &d%KILLS% &7Mord(e) | &rDeaths: &d%DEATHS% &7Tod(e) | &rK/D: &d%KDRATIO%\n&rGevotet: &d%VOTES% &7mal | &rMobs:&d %MOBKILLS% &7Mobs getoetet\n&rBloecke: &d%BLOCKSPLACED% &7platziert | &d%BLOCKSBROKEN% &7gebrochen'
-  commandStatsOldnames: '&fAlte Namen: &d%OLDNAMES%'
-  commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &d/stats [Spieler]'
+  commandStatsShow: '&3Statistiken fuer %PLAYER% &e>>\n&rSkillgruppe: &e%SKILLGROUP% &7| &rSkilllevel: &e%SKILLLEVEL%&7&o/22\n&rZeit Online: &e%ONLINETIME% &7Minuten | &rGeld: &e%REVENUE% &7HCs verdient\n&rKills: &e%KILLS% &7Mord(e) | &rDeaths: &e%DEATHS% &7Tod(e) | &rK/D: &e%KDRATIO%\n&rGevotet: &e%VOTES% &7mal | &rMobs: &e%MOBKILLS% &7Mobs getoetet\n&rBloecke: &e%BLOCKSPLACED% &7platziert | &e%BLOCKSBROKEN% &7gebrochen'
+  commandStatsOldnames: '&fAlte Namen: &e%OLDNAMES%'
+  commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &e/stats [Spieler]'
   commandStatsCompareLegend: '&7Dein Wert ist &ahoeher&7, Werte sind &egleich&7, dein Wert ist &cgeringer'
-  commandStatsCompareInfo: '&7Verwende &d/stats %PLAYER% compare &7zum vergleichen'
+  commandStatsCompareInfo: '&7Verwende &e/stats %PLAYER% compare &7zum vergleichen'
   commandStatsBottom: '&e&m------------------------------------------------'
   commandHmstoreUsage: '&cVerwendung: &f/hmstore get/set/setint/setbool/remove/save <path> [value]'
   commandHmstoreSet: '&7Der Wert &o%PATH% &7wurde gesetzt zu &r%VALUE%'
@@ -119,7 +119,7 @@ command:
     #Base amount for 1 HalfCoin
     cactus: 110
     wheat: 25
-    pumpking: 40
+    pumpkin: 40
     brownmushroom: 20
     redmushroom: 30
     melon: 110
