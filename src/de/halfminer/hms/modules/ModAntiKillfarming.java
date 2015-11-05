@@ -245,13 +245,13 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
         //Get language
         lang.clear();
-        lang.put("killfarmWarning", Language.getMessagePlaceholders("modKillfarmingWarning", true, "%PREFIX%", "PvP"));
-        lang.put("noCommand", Language.getMessagePlaceholders("modKillfarmingNoCommand", true, "%PREFIX%", "Info"));
-        lang.put("noPvPAttack", Language.getMessagePlaceholders("modKillfarmingNoPvPAttack", true, "%PREFIX%", "PvP"));
-        lang.put("noPvPProtect", Language.getMessagePlaceholders("modKillfarmingNoPvPProtect", true, "%PREFIX%", "PvP"));
-        lang.put("blockedBroadcast", Language.getMessagePlaceholders("modKillfarmingBlockedBroadcast", true, "%PREFIX%", "PvP"));
-        lang.put("blockedKiller", Language.getMessagePlaceholders("modKillfarmingBlockedKiller", true, "%PREFIX%", "PvP"));
-        lang.put("blockedVictim", Language.getMessagePlaceholders("modKillfarmingBlockedVictim", true, "%PREFIX%", "PvP"));
+        lang.put("killfarmWarning", Language.getMessagePlaceholders("modAntiKillfarmingWarning", true, "%PREFIX%", "PvP"));
+        lang.put("noCommand", Language.getMessagePlaceholders("modAntiKillfarmingNoCommand", true, "%PREFIX%", "Info"));
+        lang.put("noPvPAttack", Language.getMessagePlaceholders("modAntiKillfarmingNoPvPAttack", true, "%PREFIX%", "PvP"));
+        lang.put("noPvPProtect", Language.getMessagePlaceholders("modAntiKillfarmingNoPvPProtect", true, "%PREFIX%", "PvP"));
+        lang.put("blockedBroadcast", Language.getMessagePlaceholders("modAntiKillfarmingBlockedBroadcast", true, "%PREFIX%", "PvP"));
+        lang.put("blockedKiller", Language.getMessagePlaceholders("modAntiKillfarmingBlockedKiller", true, "%PREFIX%", "PvP"));
+        lang.put("blockedVictim", Language.getMessagePlaceholders("modAntiKillfarmingBlockedVictim", true, "%PREFIX%", "PvP"));
     }
 
     /**

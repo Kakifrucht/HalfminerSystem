@@ -66,8 +66,11 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
             if (tooManyHoppers(block.getLocation())) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(hopperLimitMessage);
-                if (logHopperLimit)
-                    hms.getLogger().info(e.getPlayer().getName() + " reached Hopper limit (" + hopperLimit + ") at " + Language.getStringFromLocation(block.getLocation()));
+                if (logHopperLimit) {
+                    hms.getLogger().info(Language.getMessagePlaceholders("modRedstoneLimitReachedHopperLog", false,
+                            "%PLAYER%", e.getPlayer().getName(), "%LIMIT", String.valueOf(hopperLimit), "%LOCATION%",
+                            Language.getStringFromLocation(block.getLocation())));
+                }
             }
         }
     }
@@ -103,7 +106,7 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
         hopperLimitRadius = hms.getConfig().getInt("redstoneLimit.hopperLimitRadius", 7);
         logHopperLimit = hms.getConfig().getBoolean("redstoneLimit.hopperLimitLog", false);
 
-        hopperLimitMessage = Language.getMessagePlaceholders("modHopperLimitReached", true, "%PREFIX%", "Info");
+        hopperLimitMessage = Language.getMessagePlaceholders("modRedstoneLimitReachedHopper", true, "%PREFIX%", "Info");
 
         if (taskId != 0) hms.getServer().getScheduler().cancelTask(taskId);
         taskId = hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {

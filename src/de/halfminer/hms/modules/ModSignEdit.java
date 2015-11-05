@@ -33,17 +33,17 @@ public class ModSignEdit extends HalfminerModule implements Listener {
             if (info.amountToCopy > 0 && info.copySign == null) {
 
                 info.copySign = sign.getLines();
-                player.sendMessage(Language.getMessagePlaceholders("modSigneditSignCopied", true, "%PREFIX%", "Info"));
+                player.sendMessage(Language.getMessagePlaceholders("modSignEditSignCopied", true, "%PREFIX%", "Info"));
 
             } else {
 
                 if (info.amountToCopy > 0) {
                     for (int i = 0; i < 4; i++) sign.setLine(i, info.copySign[i]);
                     if (--info.amountToCopy == 0) edit.remove(player);
-                    player.sendMessage(Language.getMessagePlaceholders("modSigneditSignPasted", true, "%PREFIX%", "Info", "%AMOUNT%", Integer.toString(info.amountToCopy)));
+                    player.sendMessage(Language.getMessagePlaceholders("modSignEditSignPasted", true, "%PREFIX%", "Info", "%AMOUNT%", Integer.toString(info.amountToCopy)));
                 } else {
                     sign.setLine(info.numberEdit, info.signText);
-                    player.sendMessage(Language.getMessagePlaceholders("modSigneditLinePasted", true, "%PREFIX%", "Info"));
+                    player.sendMessage(Language.getMessagePlaceholders("modSignEditLinePasted", true, "%PREFIX%", "Info"));
                     edit.remove(player);
                 }
 
