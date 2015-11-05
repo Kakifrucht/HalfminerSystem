@@ -160,11 +160,10 @@ public class ModStats extends HalfminerModule implements Listener {
     }
 
     private void setOnlineTime(Player player) {
-        int time;
 
-        if (!timeOnline.containsKey(player)) return; //if reload occurred
+        if (!timeOnline.containsKey(player)) return;
 
-        time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
+        int time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
         storage.incrementStatsInt(player, StatsType.TIME_ONLINE, time);
         timeOnline.remove(player);
     }
@@ -172,6 +171,14 @@ public class ModStats extends HalfminerModule implements Listener {
     @Override
     public void reloadConfig() {
         timeUntilHomeBlockSeconds = hms.getConfig().getInt("command.home.timeUntilHomeBlockMinutes") * 60;
+
+        //if reload ocurred while the server ran, add players to list
+        if (timeOnline.size() == 0) {
+            long time = System.currentTimeMillis() / 1000;
+            for (Player player : hms.getServer().getOnlinePlayers()) {
+                timeOnline.put(player, time);
+            }
+        }
     }
 
     @Override
