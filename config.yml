@@ -130,6 +130,9 @@ command:
     carrot: 30
     sugarcane: 55
     netherwart: 40
+storage:
+  #Time in minutes the storage will be autosaving
+  autoSaveMinutes: 15
 autoMessage:
   intervalSeconds: 240
   messages:
@@ -181,9 +184,6 @@ tps:
   historySize: 6
   #If the tps falls under this tps, players with notify permission will be notified
   alertThreshold: 17.0
-storage:
-  #Time in minutes the storage will be autosaving
-  autoSaveMinutes: 15
 skillLevel:
   #Level that has to be reached for a derank to occur
   derankThreshold: 16

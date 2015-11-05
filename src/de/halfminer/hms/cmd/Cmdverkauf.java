@@ -10,9 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @SuppressWarnings("unused")
 public class Cmdverkauf extends BaseCommand {
 
@@ -20,7 +17,7 @@ public class Cmdverkauf extends BaseCommand {
     private Economy econ;
     private String[] args;
     private Material toBeSold;
-    private int loopCount = 0;
+    private int toBeSoldId = 0;
     private int sellCountTotal = 0;
 
     public Cmdverkauf() {
@@ -67,13 +64,14 @@ public class Cmdverkauf extends BaseCommand {
                     toBeSold = Material.MELON;
                     break;
                 case "cocoa":
-                    toBeSold = Material.COCOA;
+                    toBeSold = Material.INK_SACK;
+                    toBeSoldId = 3;
                     break;
                 case "potato":
-                    toBeSold = Material.POTATO;
+                    toBeSold = Material.POTATO_ITEM;
                     break;
                 case "carrot":
-                    toBeSold = Material.CARROT;
+                    toBeSold = Material.CARROT_ITEM;
                     break;
                 case "sugarcane":
                     toBeSold = Material.SUGAR_CANE;
@@ -101,20 +99,22 @@ public class Cmdverkauf extends BaseCommand {
 
     private void sellLoop() {
 
-        Inventory playerInv =  player.getInventory();
-        HashMap<Integer, ? extends ItemStack> items = playerInv.all(toBeSold);
+        Inventory playerInv = player.getInventory();
 
         int sellCount = 0;
 
-        for (Map.Entry<Integer, ? extends ItemStack> entry : items.entrySet()) {
-            sellCount += entry.getValue().getAmount();
-            playerInv.setItem(entry.getKey(), null);
+        for (int i = 0; i < playerInv.getContents().length; i++) {
+            ItemStack stack = playerInv.getItem(i);
+            if (stack != null && stack.getType() == toBeSold && stack.getDurability() == toBeSoldId) {
+                sellCount += stack.getAmount();
+                playerInv.setItem(i, null);
+            }
         }
 
         player.updateInventory();
         sellCountTotal += sellCount;
 
-        if (++loopCount < 5 && sellCount > 0) {
+        if (sellCount > 0) {
 
             hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
                 @Override
@@ -145,7 +145,7 @@ public class Cmdverkauf extends BaseCommand {
                 revenue = Math.round(revenue * 100) / 100.0d;
 
                 //print message
-                String materialFriendly = Language.makeMaterialStringFriendly(toBeSold);
+                String materialFriendly = Language.makeStringFriendly(args[0]);
                 player.sendMessage(Language.getMessagePlaceholders("commandVerkaufSuccess", true, "%PREFIX%", "Verkauf",
                         "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
                         "%AMOUNT%", String.valueOf(sellCountTotal)));
@@ -156,7 +156,7 @@ public class Cmdverkauf extends BaseCommand {
             } else {
 
                 player.sendMessage(Language.getMessagePlaceholders("commandVerkaufNotInInv", true, "%PREFIX%", "Verkauf",
-                        "%MATERIAL%", Language.makeMaterialStringFriendly(toBeSold)));
+                        "%MATERIAL%", Language.makeStringFriendly(args[0])));
             }
         }
     }

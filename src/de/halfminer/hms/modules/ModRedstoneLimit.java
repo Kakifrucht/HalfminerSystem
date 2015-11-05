@@ -68,7 +68,7 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
                 e.getPlayer().sendMessage(hopperLimitMessage);
                 if (logHopperLimit) {
                     hms.getLogger().info(Language.getMessagePlaceholders("modRedstoneLimitReachedHopperLog", false,
-                            "%PLAYER%", e.getPlayer().getName(), "%LIMIT", String.valueOf(hopperLimit), "%LOCATION%",
+                            "%PLAYER%", e.getPlayer().getName(), "%LIMIT%", String.valueOf(hopperLimit), "%LOCATION%",
                             Language.getStringFromLocation(block.getLocation())));
                 }
             }
