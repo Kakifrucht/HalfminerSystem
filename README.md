@@ -22,6 +22,7 @@ Current features
   - Bedrock glitching (alert and log)
   - Lag caused by Redstone/Pistons/Hoppers
 - Automessager
+- Sell farm items to earn currency /verkauf
 - Title Support
   - Send killstreaks via actionbar title
   - Send news via main title

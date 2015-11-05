@@ -6,7 +6,6 @@ import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.ModuleType;
 import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -64,24 +63,29 @@ public class Cmdhms extends BaseCommand {
             ItemMeta meta = item.getItemMeta();
 
             //default parameters, clear item name if not specified but keep lore
-            String newName = ChatColor.RESET.toString();
+            String newName = meta.getDisplayName();
             List<String> lore = meta.getLore();
 
             if (args.length > 1) {
 
                 //item name must start at argument 1 only if it is not the -lore flag
                 if (!args[1].equalsIgnoreCase("-lore")) {
-                    newName = Language.arrayToString(args, 1, true);
-                    //cut new string at -lore
-                    for (int i = 0; i < newName.length(); i++) {
-                        if (newName.substring(i).toLowerCase().startsWith("-lore")) {
-                            newName = newName.substring(0, i);
-                            break;
+
+                    if (args[1].equalsIgnoreCase("reset")) newName = "";
+                    else {
+
+                        newName = Language.arrayToString(args, 1, true);
+                        //cut new string at -lore
+                        for (int i = 0; i < newName.length(); i++) {
+                            if (newName.substring(i).toLowerCase().startsWith("-lore")) {
+                                newName = newName.substring(0, i);
+                                break;
+                            }
                         }
-                    }
-                    //cut spaces at the end of the name
-                    while (newName.endsWith(" ")) {
-                        newName = newName.substring(0, newName.length() - 1);
+                        //cut spaces at the end of the name
+                        while (newName.endsWith(" ")) {
+                            newName = newName.substring(0, newName.length() - 1);
+                        }
                     }
                 }
 
