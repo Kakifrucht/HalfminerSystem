@@ -44,6 +44,10 @@ public class Cmdchat extends BaseCommand {
                 }
                 if (countdown > 30) showUsage();
                 else {
+
+                    sender.sendMessage(Language.getMessagePlaceholders("commandChatCountdownStarted", true, "%PREFIX%",
+                            "Chat", "%COUNT%", String.valueOf(countdown)));
+
                     hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
                         @Override
                         public void run() {
@@ -107,7 +111,7 @@ public class Cmdchat extends BaseCommand {
                         else sendToString = sendTo.getName();
 
                         sender.sendMessage(Language.getMessagePlaceholders("commandChatTitle", true, "%PREFIX%", "Chat",
-                                "%SENDTO%", sendToString, "%MESSAGE%", message));
+                                "%SENDTO%", sendToString, "%TIME%", String.valueOf(time), "%MESSAGE%", message));
 
                         TitleSender.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
 
