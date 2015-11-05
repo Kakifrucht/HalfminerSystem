@@ -13,7 +13,7 @@ localization:
   commandHmsMotdUpdated: '&7Die MOTD wurde geaendert zu: &r&7%NEWMOTD%'
   commandHmsMotdFailed: '&cVerwendung: &f/hms setmotd <motd>'
   commandHmsRenameFailed: '&cHalte den Gegenstand, den du umbenennen willst in deiner Hand'
-  commandHmsRenameDone: '&aDer Gegenstand wurde umbenannt in &r%NAME%'
+  commandHmsRenameDone: '&aDer Gegenstand wurde umbenannt in &r"%NAME%&r"'
   commandHmsHomeblockRemove: '&a%PLAYER% &7kann jetzt /home benutzen'
   commandHmsRingMessage: '&e%PLAYER% &cklingelt dich an, bitte antworte ihm'
   commandHmsRingTitle: '&cDu wirst angeklingelt\nBitte antworte %PLAYER%'

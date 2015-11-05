@@ -111,6 +111,8 @@ public class Cmdhms extends BaseCommand {
             item.setItemMeta(meta);
             player.updateInventory();
 
+            if (newName == null) newName = "";
+
             player.sendMessage(Language.getMessagePlaceholders("commandHmsRenameDone", true, "%PREFIX%",
                     "Info", "%NAME%", newName));
 
