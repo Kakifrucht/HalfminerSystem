@@ -6,7 +6,7 @@ localization:
   playerNotOnline: '&cDieser Spieler ist nicht online'
   playerDoesNotExist: '&cDieser Spieler existiert nicht'
   consoleName: 'Konsole'
-  commandHmsUsage: '&cVerwendung: &f/hms reload, rename [name], updateskill <spieler>, rmhomeblock <spieler>, ring <spieler>'
+  commandHmsUsage: '&cVerwendung: &f/hms reload, rename <name> [-lore line1|line2|..], updateskill <spieler>, rmhomeblock <spieler>, ring <spieler>'
   commandHmsConfigReloaded: '&aKonfiguration neugeladen'
   commandHmsSkillUsage: '&cVerwendung: &f/hms updateskill <spieler> [modifier]'
   commandHmsSkillUpdated: '&7Das Skilllevel von &e%PLAYER% &7wurde auf Level &e%SKILLLEVEL% &7(&o%OLDELO% &7-> &o%NEWELO%&7) gesetzt'

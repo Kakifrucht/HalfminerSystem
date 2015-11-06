@@ -46,27 +46,29 @@ public class Cmdhms extends BaseCommand {
                     return;
             }
         }
-        sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "Info"));
+        sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
     }
 
     private void renameItem(CommandSender sender, String[] args) {
+
         if (sender instanceof Player) {
 
             Player player = (Player) sender;
-            ItemStack item = player.getItemInHand();
-
-            if (item == null || item.getType() == Material.AIR) {
-                player.sendMessage(Language.getMessagePlaceholders("commandHmsRenameFailed", true, "%PREFIX%", "Info"));
-                return;
-            }
-
-            ItemMeta meta = item.getItemMeta();
-
-            //default parameters, clear item name if not specified but keep lore
-            String newName = meta.getDisplayName();
-            List<String> lore = meta.getLore();
 
             if (args.length > 1) {
+
+                ItemStack item = player.getItemInHand();
+
+                if (item == null || item.getType() == Material.AIR) {
+                    player.sendMessage(Language.getMessagePlaceholders("commandHmsRenameFailed", true, "%PREFIX%", "HMS"));
+                    return;
+                }
+
+                ItemMeta meta = item.getItemMeta();
+
+                //default parameters, clear item name if not specified but keep lore
+                String newName = meta.getDisplayName();
+                List<String> lore = meta.getLore();
 
                 //item name must start at argument 1 only if it is not the -lore flag
                 if (!args[1].equalsIgnoreCase("-lore")) {
@@ -103,18 +105,20 @@ public class Cmdhms extends BaseCommand {
                         }
                     }
                 }
+
+                //update item
+                meta.setDisplayName(newName);
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+                player.updateInventory();
+
+                if (newName == null) newName = "";
+
+                player.sendMessage(Language.getMessagePlaceholders("commandHmsRenameDone", true, "%PREFIX%",
+                        "HMS", "%NAME%", newName));
+            } else {
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
             }
-
-            //update item
-            meta.setDisplayName(newName);
-            meta.setLore(lore);
-            item.setItemMeta(meta);
-            player.updateInventory();
-
-            if (newName == null) newName = "";
-
-            player.sendMessage(Language.getMessagePlaceholders("commandHmsRenameDone", true, "%PREFIX%",
-                    "Info", "%NAME%", newName));
 
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
@@ -125,14 +129,14 @@ public class Cmdhms extends BaseCommand {
             try {
                 UUID playerUid = storage.getUUID(args[1]);
                 storage.set("vote." + playerUid, Long.MAX_VALUE);
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "Info",
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "HMS",
                         "%PLAYER%", hms.getServer().getOfflinePlayer(playerUid).getName()));
             } catch (PlayerNotFoundException e) {
-                sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "Info"));
+                sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "HMS"));
             }
 
         } else
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "Info"));
+            sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
     }
 
     private void updateSkill(CommandSender sender, String[] args) {
@@ -171,7 +175,7 @@ public class Cmdhms extends BaseCommand {
     private void ringPlayer(CommandSender sender, String[] args) {
 
         if (args.length < 2) {
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "Info"));
+            sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
             return;
         }
 
@@ -181,15 +185,15 @@ public class Cmdhms extends BaseCommand {
 
         if (toRing == null) {
 
-            sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", "Info"));
+            sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", "HMS"));
 
         } else {
 
             TitleSender.sendTitle(toRing, Language.getMessagePlaceholders("commandHmsRingTitle", false, "%PLAYER%", senderName));
-            toRing.sendMessage(Language.getMessagePlaceholders("commandHmsRingMessage", true, "%PREFIX%", "Info",
+            toRing.sendMessage(Language.getMessagePlaceholders("commandHmsRingMessage", true, "%PREFIX%", "HMS",
                     "%PLAYER%", senderName));
 
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsRingSent", true, "%PREFIX%", "Info",
+            sender.sendMessage(Language.getMessagePlaceholders("commandHmsRingSent", true, "%PREFIX%", "HMS",
                     "%PLAYER%", toRing.getName()));
 
             hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
@@ -220,7 +224,7 @@ public class Cmdhms extends BaseCommand {
 
     private void reload(CommandSender sender) {
         hms.loadConfig();
-        sender.sendMessage(Language.getMessagePlaceholders("commandHmsConfigReloaded", true, "%PREFIX%", "Info"));
+        sender.sendMessage(Language.getMessagePlaceholders("commandHmsConfigReloaded", true, "%PREFIX%", "HMS"));
     }
 
 }
