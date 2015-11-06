@@ -32,9 +32,11 @@ commands:
   verkauf:
     description: Earn money buy selling farm supplies
     aliases: [vk]
+  vote:
+    description: Vote for the server
   vtapi:
     description: VT Command API
-    aliases: [hilfe, spenden, regeln, vote, rang, tools, kiste, deo]
+    aliases: [hilfe, spenden, regeln, rang, tools, kiste, deo]
 permissions:
   hms.*:
     description: Access to all permissions
@@ -50,6 +52,7 @@ permissions:
     hms.neutp: true
     hms.home: true
     hms.verkauf: true
+    hms.vote: true
     hms.signedit: true
     hms.admin: true
     hms.bypass.*: true
@@ -91,6 +94,9 @@ permissions:
   hms.verkauf:
     default: true
     description: Access to verkauf command
+  hms.vote:
+    default: true
+    description: Access to vote command
   hms.chat:
     description: Access to chat clearing command
   hms.chat.advanced:

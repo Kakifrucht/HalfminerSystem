@@ -6,6 +6,7 @@ localization:
   playerNotOnline: '&cDieser Spieler ist nicht online'
   playerDoesNotExist: '&cDieser Spieler existiert nicht'
   consoleName: 'Konsole'
+  lineSeperator: '&e&m------------------------------------------------\n'
   commandHmsUsage: '&cVerwendung: &f/hms reload, rename <name> [-lore line1|line2|..], updateskill <spieler>, rmhomeblock <spieler>, ring <spieler>'
   commandHmsConfigReloaded: '&aKonfiguration neugeladen'
   commandHmsSkillUsage: '&cVerwendung: &f/hms updateskill <spieler> [modifier]'
@@ -18,7 +19,6 @@ localization:
   commandHmsRingMessage: '&e%PLAYER% &cklingelt dich an, bitte antworte ihm'
   commandHmsRingTitle: '&cDu wirst angeklingelt\nBitte antworte %PLAYER%'
   commandHmsRingSent: '&a%PLAYER% wurde angeklingelt'
-  commandVtapiVoted: '&e%PLAYER% hat eben mit &a/vote &egevotet'
   commandSigneditUsage: '&cVerwendung: &f/signedit copy [anzahl], /signedit <zeile> [text]'
   commandSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu aendern'
   commandSigneditCopy: '&7Klicke das Schild, welches du kopieren moechtest, erstelle &e%AMOUNT% &7Kopien'
@@ -34,7 +34,6 @@ localization:
   commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &e/stats [Spieler]'
   commandStatsCompareLegend: '&7Dein Wert ist &ahoeher&7, Werte sind &egleich&7, dein Wert ist &cgeringer'
   commandStatsCompareInfo: '&7Verwende &e/stats %PLAYER% compare &7zum vergleichen'
-  commandStatsBottom: '&e&m------------------------------------------------'
   commandHmstoreUsage: '&cVerwendung: &f/hmstore get/set/setint/setbool/remove/save <path> [value]'
   commandHmstoreSet: '&7Der Wert &o%PATH% &7wurde gesetzt zu &r%VALUE%'
   commandHmstoreSetError: '&7Die Eingabe ist ungueltig, der Wert wurde nicht gesetzt'
@@ -67,8 +66,15 @@ localization:
   commandVerkaufSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7fuer &a%MONEY% HCs &7verkauft'
   commandVerkaufSuccessLog: 'Verkauf: %PLAYER% hat %AMOUNT% %MATERIAL% fuer %MONEY% HCs verkauft'
   commandVerkaufNotInInv: '&cDu hast kein &e%MATERIAL% &cin deinem Inventar'
+  commandVoteTop: '&e&m--------------------&c&l Voten &e&m--------------------'
+  commandVoteMessage: '&3Klicke folgenden Link zum Voten &e>>\n&6https://halfminer.de/voten.php?name=%PLAYER%'
+  commandVoteMessageNotPlayer: '&3Klicke folgenden Link zum Voten &e>>\n&6https://halfminer.de/voten.php'
+  commandVoteUntil: '&7Votes bis zum naechsten Event: &d%TOTALVOTES%&7&o/2000'
+  commandVoteReached: '&2&l%TOTALVOTESTHRESHOLD% Votes erreicht! &7Event wird angekuendigt'
+  commandVoteVoted: '&e%PLAYER% hat eben mit &a/vote &egevotet'
+  commandVoteGrabReward: '&7Hole dir deine Belohnung jetzt mit &e&o/vote getreward'
+  commandVoteRewardInvFull: '&cDein Inventar ist voll, bitte mache Platz und verwende das Kommando &e/vote getreward'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
-  modAutoMessagePlaceholder: '&e&m------------------------------------------------'
   modAntiKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
   modAntiKillfarmingNoCommand: '&cKommandos sind fuer dich weitere &a%TIME% &cSekunden deaktiviert, da du Killfarming betrieben hast'
   modAntiKillfarmingNoPvPAttack: '&cZum Schutz vor Killfarming darfst du weitere &a%TIME% &cSekunden kein PvP betreiben'
@@ -130,6 +136,13 @@ command:
     carrot: 30
     sugarcane: 55
     netherwart: 40
+  vote:
+    #Command to run when a player has voted
+    voteRewardCommand: vt run casino:dropcase %PLAYER%
+    #Amount of votes until command execution
+    threshold: 2000
+    #Command to execute when threshold has been met
+    commandToExecute: mail send Kakifrucht Event ankuendigen, votes erreicht
 storage:
   #Time in minutes the storage will be autosaving
   autoSaveMinutes: 15

@@ -5,8 +5,6 @@ import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -29,31 +27,7 @@ public class Cmdvtapi extends BaseCommand {
 
         if (args.length > 0) {
 
-            if (args[0].equalsIgnoreCase("vote")) {
-
-                if (args.length < 2) return;
-
-                OfflinePlayer hasVoted;
-                try {
-                    hasVoted = hms.getServer().getOfflinePlayer(storage.getUUID(args[1]));
-                } catch (PlayerNotFoundException e) {
-                    hasVoted = hms.getServer().getPlayer(args[1]);
-                    if (hasVoted == null) return;
-                }
-
-                storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
-                storage.incrementStatsInt(hasVoted, StatsType.VOTES, 1);
-                hms.getServer().broadcast(Language.getMessagePlaceholders("commandVtapiVoted", true, "%PREFIX%",
-                        "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
-
-                if (hasVoted instanceof Player) {
-                    Player playerHasVoted = (Player) hasVoted;
-                    playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.NOTE_PLING, 1.0f, 2.0f);
-                    String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
-                    storage.incrementInt("vote.ip" + address, 1);
-                }
-
-            } else if (args[0].equalsIgnoreCase("title") && args.length > 2) {
+            if (args[0].equalsIgnoreCase("title") && args.length > 2) {
 
                 Player sendTo = hms.getServer().getPlayer(args[1]);
                 if (sendTo != null) {

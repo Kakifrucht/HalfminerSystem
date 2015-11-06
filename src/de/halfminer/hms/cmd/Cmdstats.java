@@ -74,7 +74,7 @@ public class Cmdstats extends BaseCommand {
                     "%PLAYER%", player.getName()) + "\n";
         }
 
-        message += Language.getMessage("commandStatsBottom");
+        message += Language.getMessage("lineSeperator");
         sendTo.sendMessage(message);
 
     }
