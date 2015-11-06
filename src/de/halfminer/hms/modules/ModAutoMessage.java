@@ -14,7 +14,7 @@ public class ModAutoMessage extends HalfminerModule {
     private final Random rnd = new Random();
     private BukkitRunnable running;
     private List<String> messages;
-    private String seperator;
+    private String separator;
 
     public ModAutoMessage() {
         reloadConfig();
@@ -30,7 +30,7 @@ public class ModAutoMessage extends HalfminerModule {
         }
         messages = new ArrayList<>(messagesList.size());
         for (String str : messagesList) messages.add(ChatColor.translateAlternateColorCodes('&', str));
-        seperator = Language.getMessage("lineSeparator");
+        separator = Language.getMessage("lineSeparator");
 
         //Set task
         if (running != null) running.cancel();
@@ -42,9 +42,9 @@ public class ModAutoMessage extends HalfminerModule {
                 for (Player player : hms.getServer().getOnlinePlayers()) {
 
                     player.sendMessage(" \n"
-                            + seperator + ChatColor.RESET
+                            + separator + ChatColor.RESET
                             + message + ChatColor.RESET
-                            + "\n" + seperator + ChatColor.RESET
+                            + "\n" + separator + ChatColor.RESET
                             + " ");
                 }
             }
