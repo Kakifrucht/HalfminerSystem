@@ -193,10 +193,13 @@ public class Cmdchat extends BaseCommand {
         String whoCleared = sender.getName();
         if (whoCleared.equals("CONSOLE")) whoCleared = Language.getMessage("consoleName");
 
+        String clearMessage = "";
+        for (int i = 0; i < 100; i++) clearMessage += ChatColor.RESET + " \n";
+
         for (Player player : hms.getServer().getOnlinePlayers()) {
-            if (!player.hasPermission("hms.chat.advanced")) {
-                for (int i = 0; i < 100; i++) player.sendMessage(ChatColor.RESET.toString());
-            }
+
+            if (!player.hasPermission("hms.chat.advanced")) player.sendMessage(clearMessage);
+
             player.sendMessage(Language.getMessagePlaceholders("commandChatCleared", true, "%PREFIX%", "Chat",
                     "%PLAYER%", whoCleared));
         }
