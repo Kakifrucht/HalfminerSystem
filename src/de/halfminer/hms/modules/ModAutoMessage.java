@@ -30,7 +30,7 @@ public class ModAutoMessage extends HalfminerModule {
         }
         messages = new ArrayList<>(messagesList.size());
         for (String str : messagesList) messages.add(ChatColor.translateAlternateColorCodes('&', str));
-        seperator = Language.getMessage("lineSeperator");
+        seperator = Language.getMessage("lineSeparator");
 
         //Set task
         if (running != null) running.cancel();

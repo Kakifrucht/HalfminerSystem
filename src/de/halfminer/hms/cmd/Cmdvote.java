@@ -115,7 +115,7 @@ public class Cmdvote extends BaseCommand {
             message += Language.getMessage("commandVoteGrabReward") + "\n";
         }
 
-        message += Language.getMessage("lineSeperator");
+        message += Language.getMessage("lineSeparator");
 
         sender.sendMessage(message);
     }

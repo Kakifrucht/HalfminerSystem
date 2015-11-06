@@ -6,7 +6,7 @@ localization:
   playerNotOnline: '&cDieser Spieler ist nicht online'
   playerDoesNotExist: '&cDieser Spieler existiert nicht'
   consoleName: 'Konsole'
-  lineSeperator: '&e&m------------------------------------------------\n'
+  lineSeparator: '&e&m------------------------------------------------\n'
   commandHmsUsage: '&cVerwendung: &f/hms reload, rename <name> [-lore line1|line2|..], updateskill <spieler>, rmhomeblock <spieler>, ring <spieler>'
   commandHmsConfigReloaded: '&aKonfiguration neugeladen'
   commandHmsSkillUsage: '&cVerwendung: &f/hms updateskill <spieler> [modifier]'
