@@ -22,6 +22,11 @@ Current features
   - Bedrock glitching (alert and log)
   - Lag caused by Redstone/Pistons/Hoppers
 - Automessager
+- Vote command
+  - Execute command if certain votecount has been reached
+  - Custom command on vote
+  - Checks if inventory is full
+  - If offline or inventory full, stores reward for retrieval later
 - Sell farm items to earn currency /verkauf
 - Title Support
   - Send killstreaks via actionbar title
