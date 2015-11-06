@@ -121,7 +121,7 @@ public class Cmdverkauf extends BaseCommand {
                 public void run() {
                     sellLoop();
                 }
-            }, 20L);
+            }, 2L);
 
         } else {
 
