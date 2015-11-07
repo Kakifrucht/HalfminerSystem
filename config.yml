@@ -73,6 +73,7 @@ localization:
   commandVoteReached: '&2&l%TOTALVOTESTHRESHOLD% Votes erreicht! &7Event wird angekuendigt'
   commandVoteVoted: '&e%PLAYER% hat eben mit &a/vote &egevotet'
   commandVoteGrabReward: '&7Hole dir deine Belohnung jetzt mit &e&o/vote getreward'
+  commandVoteRewardDeny: '&cDu hast keine offene Belohnung'
   commandVoteRewardInvFull: '&cDein Inventar ist voll, bitte mache Platz und verwende das Kommando &e/vote getreward'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
   modAntiKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'

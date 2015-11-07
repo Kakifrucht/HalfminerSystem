@@ -68,13 +68,20 @@ public class Cmdvote extends BaseCommand {
             } else if (args[0].equalsIgnoreCase("getreward") && sender instanceof Player) {
 
                 Player player = (Player) sender;
-
                 int rewardAmount = storage.getInt("vote.reward." + player.getUniqueId());
-                while (rewardAmount > 0 && dropCase(player)) {
-                    rewardAmount--;
+
+                if (rewardAmount == 0) {
+                    sender.sendMessage(Language.getMessagePlaceholders("commandVoteRewardDeny", true, "%PREFIX%", "Vote"));
+                    return;
                 }
-                if (rewardAmount > 0)
-                    sender.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull", true, "%PREFIX%", "Vote"));
+
+                while (rewardAmount > 0 && dropCase(player)) rewardAmount--;
+
+                //Reward could not be paid due to full inventory, send message
+                if (rewardAmount > 0) {
+                    sender.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull",
+                            true, "%PREFIX%", "Vote"));
+                }
                 storage.set("vote.reward." + player.getUniqueId(), rewardAmount);
 
             } else showMessage(sender);
