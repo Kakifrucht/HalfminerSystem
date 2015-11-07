@@ -48,7 +48,7 @@ public class Cmdvote extends BaseCommand {
                     storage.incrementInt("vote.ip" + address, 1);
                     if (!dropCase((Player) hasVoted)) {
                         storage.incrementInt("vote.reward." + hasVoted.getUniqueId(), 1);
-                        sender.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull", true, "%PREFIX%", "Vote"));
+                        playerHasVoted.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull", true, "%PREFIX%", "Vote"));
                     }
                 } else {
                     //player not online, let him grab the reward later
@@ -71,7 +71,7 @@ public class Cmdvote extends BaseCommand {
                 int rewardAmount = storage.getInt("vote.reward." + player.getUniqueId());
 
                 if (rewardAmount == 0) {
-                    sender.sendMessage(Language.getMessagePlaceholders("commandVoteRewardDeny", true, "%PREFIX%", "Vote"));
+                    player.sendMessage(Language.getMessagePlaceholders("commandVoteRewardDeny", true, "%PREFIX%", "Vote"));
                     return;
                 }
 
@@ -79,7 +79,7 @@ public class Cmdvote extends BaseCommand {
 
                 //Reward could not be paid due to full inventory, send message
                 if (rewardAmount > 0) {
-                    sender.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull",
+                    player.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull",
                             true, "%PREFIX%", "Vote"));
                 }
                 storage.set("vote.reward." + player.getUniqueId(), rewardAmount);
