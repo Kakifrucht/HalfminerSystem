@@ -40,6 +40,7 @@ Current features
   - Set news and motd message
   - Show a countdown
 - Custom serverlist motd
+  - Sets the playerlimit after threshold to playercount + 1
 - Edit and copy signs /signedit
 - Increase servers votes by restricting /home
   - Wont be restricting for new players

@@ -167,6 +167,9 @@ killfarming:
   - 'tempban'
   - 'bminfo'
 motd:
+  #Minimum shown slot count
+  playerCountThreshold: 50
+  #Colors that will be replaced with
   randomColors:
   - 2
   - 3
