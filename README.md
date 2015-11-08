@@ -45,7 +45,7 @@ Current features
 - Increase servers votes by restricting /home
   - Wont be restricting for new players
   - Will not restrict first 15 Minutes after join
-  - Will also lift block for every member of household
+  - Will also lift block for every member with same IP
 - Teleport to a random location
   - It will make sure that you do not land in water/lava
 - Rename items /hms rename

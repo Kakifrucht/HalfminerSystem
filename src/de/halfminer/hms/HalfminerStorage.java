@@ -6,6 +6,7 @@ import de.halfminer.hms.util.StatsType;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,7 +72,12 @@ public class HalfminerStorage {
     public UUID getUUID(String playerName) throws PlayerNotFoundException {
         String uuidString = getString("uid." + playerName.toLowerCase());
         if (uuidString.length() > 0) return UUID.fromString(uuidString);
-        else throw new PlayerNotFoundException();
+        else {
+            Player p = hms.getServer().getPlayer(playerName);
+            if (p != null) {
+                return p.getUniqueId();
+            } else throw new PlayerNotFoundException();
+        }
     }
 
     public String getStatsString(OfflinePlayer player, StatsType stats) {
