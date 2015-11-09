@@ -93,6 +93,7 @@ localization:
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps betraegt lediglich &e%TPS%'
   modCombatLogTagged: '&cDu bist jetzt fuer &e%TIME% &cSekunden im Kampf, ausloggen fuehrt zum Tod'
   modCombatLogCountdown: '&cIm Kampf: &e%TIME% &7Sekunden | &r%PROGRESSBAR%'
+  modCombatLogProgressSymbols: '-'
   modCombatLogUntagged: '&aDu bist nicht mehr im Kampf'
   modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
   modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
@@ -170,9 +171,13 @@ killfarming:
 motd:
   #Minimum shown slot count
   playerCountThreshold: 50
-  #Amount of Slots the Server will show to be free
+  #Minimum amount of slots that will be free
+  #Example: Buffer is 5, threshold is 50, when 45 players
+  #are online, it will show 45/50. If 46 players are online
+  #the it will show 46/51, due to the buffer of 5 players.
+  #63 players online would show 63/68.
   playerCountBuffer: 5
-  #Colors that will be replaced with
+  #Colors that will be used to replace the placeholder %COLOR% with
   randomColors:
   - 2
   - 3

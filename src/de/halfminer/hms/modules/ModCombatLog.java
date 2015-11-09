@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.TitleSender;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -111,6 +112,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         int id = hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
 
+            String symbols = lang.get("symbols");
             int time = tagTime;
 
             @Override
@@ -118,14 +120,14 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
                 //build the progressbar
                 int timePercentage = (int) Math.round((time / (double) tagTime) * 10);
-                String progressBar = "§a§m";
+                String progressBar = "" + ChatColor.DARK_RED + ChatColor.STRIKETHROUGH;
                 boolean switchedColors = false;
                 for (int i = 0; i < 10; i++) {
                     if (timePercentage-- < 1 && !switchedColors) {
-                        progressBar += "§7§m";
+                        progressBar += "" + ChatColor.GRAY + ChatColor.STRIKETHROUGH;
                         switchedColors = true; //only append color code once
                     }
-                    progressBar += "-";
+                    progressBar += symbols;
                 }
 
                 String message = Language.placeholderReplace(lang.get("countdown"), "%TIME%", String.valueOf(time),
@@ -160,6 +162,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         lang.clear();
         lang.put("tagged", Language.getMessagePlaceholders("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
         lang.put("countdown", Language.getMessage("modCombatLogCountdown"));
+        lang.put("symbols", Language.getMessage("modCombatLogProgressSymbols"));
         lang.put("untagged", Language.getMessage("modCombatLogUntagged"));
         lang.put("loggedOut", Language.getMessagePlaceholders("modCombatLogLoggedOut", true, "%PREFIX%", "PvP"));
         lang.put("noCommand", Language.getMessagePlaceholders("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
