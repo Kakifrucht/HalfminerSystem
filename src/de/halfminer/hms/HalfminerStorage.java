@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 public class HalfminerStorage {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
