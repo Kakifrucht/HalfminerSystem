@@ -29,8 +29,7 @@ public class Cmdvote extends BaseCommand {
                 try {
                     hasVoted = hms.getServer().getOfflinePlayer(storage.getUUID(args[1]));
                 } catch (PlayerNotFoundException e) {
-                    hasVoted = hms.getServer().getPlayer(args[1]);
-                    if (hasVoted == null) return;
+                    return;
                 }
 
                 //increment stats, broadcast

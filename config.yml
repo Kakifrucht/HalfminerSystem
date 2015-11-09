@@ -92,6 +92,7 @@ localization:
   modMotdLine: '%COLOR%Server\n&7%REPLACE%&7! (mc.halfminer.de)'
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps betraegt lediglich &e%TPS%'
   modCombatLogTagged: '&cDu bist jetzt fuer &e%TIME% &cSekunden im Kampf, ausloggen fuehrt zum Tod'
+  modCombatLogCountdown: '&cIm Kampf: &e%TIME% &7Sekunden | &r%PROGRESSBAR%'
   modCombatLogUntagged: '&aDu bist nicht mehr im Kampf'
   modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
   modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
