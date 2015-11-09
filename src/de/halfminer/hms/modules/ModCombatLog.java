@@ -34,10 +34,12 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onDeathUntag(PlayerDeathEvent e) {
+
         if (tagged.containsKey(e.getEntity().getPlayer()))
             untagPlayer(e.getEntity().getPlayer());
-        if (tagged.containsKey(e.getEntity().getKiller()))
-            untagPlayer(e.getEntity().getKiller());
+
+        Player killer = e.getEntity().getKiller();
+        if (killer != null && tagged.containsKey(killer)) untagPlayer(killer);
     }
 
     @EventHandler
