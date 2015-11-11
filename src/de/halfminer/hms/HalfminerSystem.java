@@ -117,8 +117,7 @@ public class HalfminerSystem extends JavaPlugin {
         if (storage != null) storage.reloadConfig();
         else storage = new HalfminerStorage();
 
-        //Reload modules, Cmdhms accesses this method through reflection, so the IDE does not detect the sense of the statement
-        //noinspection ConstantConditions
+        //noinspection ConstantConditions (Cmdhms accesses this method through reflection, so the IDE does not detect the sense of the statement)
         if (modules != null) for (HalfminerModule mod : modules.values()) mod.reloadConfig();
     }
 

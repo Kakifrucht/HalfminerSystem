@@ -112,7 +112,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         int id = hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
 
-            String symbols = lang.get("symbols");
+            final String symbols = lang.get("symbols");
             int time = tagTime;
 
             @Override

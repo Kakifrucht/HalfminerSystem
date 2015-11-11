@@ -19,6 +19,7 @@ Current features
 - Inbuilt protections against:
   - Killfarming
   - CombatLogging
+    - With ActionBar support
   - Bedrock glitching (alert and log)
   - Lag caused by Redstone/Pistons/Hoppers
 - Automessager

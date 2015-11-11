@@ -25,8 +25,9 @@ public class TitleSender {
 
     /**
      * Sends a title to the given player, or broadcasts the title, if player is null.
-     * Title can be seperated with newlines, the third line will be displayed as actionbar message, the time
-     * cannot be set.
+     * Title can be seperated with newlines, the third line will be displayed as actionbar message.
+     * The fadeIn, stay and fadeOut determine the time the title stays, the ActionBar title won't be
+     * affected by this.
      *
      * @param player  to send the title to, or null to broadcast
      * @param title   message containing the title, color codes do not need to be translated
@@ -55,9 +56,9 @@ public class TitleSender {
     }
 
     /**
-     * Sends a actionbar message to a specified player.
+     * Sends a actionbar message to a specified player or broadcast, if player is null.
      *
-     * @param player  to send the title to
+     * @param player  to send the title to, or null to broadcast
      * @param message message to send
      */
     public static void sendActionBar(Player player, String message) {

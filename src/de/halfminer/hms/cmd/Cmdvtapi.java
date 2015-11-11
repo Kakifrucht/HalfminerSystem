@@ -16,10 +16,6 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 public class Cmdvtapi extends BaseCommand {
 
-    public Cmdvtapi() {
-        this.permission = "hms.default";
-    }
-
     @Override
     public void run(CommandSender sender, String label, String[] args) {
 
