@@ -144,18 +144,23 @@ public class ModTitles extends HalfminerModule implements Listener {
                 false, "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)));
     }
 
-    private double getBalance(Player player) {
+    private double getBalance(final Player player) {
 
         double balance;
         try {
             balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
             balance = Math.round(balance * 100.0d) / 100.0d;
         } catch (UserDoesNotExistException e) {
-            // Should never happen
+            // This occurs if player joins for the first time, update it with small delay
+            hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+                @Override
+                public void run() {
+                    balances.put(player, getBalance(player));
+                    updateTablist(player);
+                }
+            }, 2);
             balance = 0.0d;
-            e.printStackTrace();
         }
-
         return balance;
     }
 }
