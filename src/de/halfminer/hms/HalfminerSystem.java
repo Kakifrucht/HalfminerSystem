@@ -25,7 +25,6 @@ public class HalfminerSystem extends JavaPlugin {
         return instance;
     }
 
-
     private HalfminerStorage storage;
     private final Map<ModuleType, HalfminerModule> modules = new HashMap<>();
 

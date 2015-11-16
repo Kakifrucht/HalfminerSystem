@@ -65,6 +65,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void leaveTitles(PlayerQuitEvent e) {
+
         // Update tab titles
         playercount--;
         balances.remove(e.getPlayer());
@@ -122,6 +123,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     }
 
     private void updateTablist() {
+
         hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
@@ -136,22 +138,24 @@ public class ModTitles extends HalfminerModule implements Listener {
     }
 
     private void updateTablist(Player player) {
+
         double balance = balances.get(player);
         TitleSender.setTablistHeaderFooter(player, Language.getMessagePlaceholders("modTitlesTablist",
                 false, "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)));
-
     }
 
     private double getBalance(Player player) {
+
         double balance;
         try {
             balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
             balance = Math.round(balance * 100.0d) / 100.0d;
         } catch (UserDoesNotExistException e) {
-            // Should not happen
+            // Should never happen
             balance = 0.0d;
             e.printStackTrace();
         }
+
         return balance;
     }
 }
