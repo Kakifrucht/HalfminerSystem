@@ -1,10 +1,10 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.HalfminerSystem;
+import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
-import net.milkbowl.vault.economy.Economy;
+import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,20 +16,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ModTitles extends HalfminerModule implements Listener {
 
     private final Map<UUID, Integer> killStreaks = new HashMap<>();
     private final Map<UUID, Integer> deathStreaks = new HashMap<>();
 
-    private final Map<Player, Double> balances = new ConcurrentHashMap<>();
+    private final Map<Player, Double> balances = new HashMap<>();
     private int playercount = hms.getServer().getOnlinePlayers().size();
-
-
-    public ModTitles() {
-        reloadConfig();
-    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
@@ -37,19 +31,18 @@ public class ModTitles extends HalfminerModule implements Listener {
 
         final Player joined = e.getPlayer();
 
+        // Update tablist titles
         final double balance = getBalance(joined);
         balances.put(joined, balance);
-
         playercount++;
-        updateTablists();
+        updateTablist();
 
+        // Show join titles / News
         if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
             TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewPlayerFormat", false,
                     "%PLAYER%", joined.getName()), 10, 200, 10);
         } else {
-
-
-
+            
             hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
@@ -72,15 +65,17 @@ public class ModTitles extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void leaveTitles(PlayerQuitEvent e) {
+        // Update tab titles
         playercount--;
         balances.remove(e.getPlayer());
-        updateTablists();
+        updateTablist();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void deathActionbarSender(PlayerDeathEvent e) {
 
+        // Show killstreaks in actionbar
         Player victim = e.getEntity();
         Player killer = victim.getKiller();
         if (killer != null) {
@@ -114,13 +109,24 @@ public class ModTitles extends HalfminerModule implements Listener {
         }
     }
 
-    private void updateTablists() {
+    @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("unused")
+    public void onBalanceChange(UserBalanceUpdateEvent e) {
+
+        // Update balance
+        Player player = e.getPlayer();
+        double balance = e.getNewBalance().doubleValue();
+        balance = Math.round(balance * 100.0d) / 100.0d;
+        balances.put(player, balance);
+        updateTablist(player);
+    }
+
+    private void updateTablist() {
         hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
                 for (Map.Entry<Player, Double> entry : balances.entrySet()) {
                     double balance = entry.getValue();
-                    balance = Math.round(balance * 100.0d) / 100.0d;
 
                     TitleSender.setTablistHeaderFooter(entry.getKey(), Language.getMessagePlaceholders("modTitlesTablist",
                             false, "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)));
@@ -129,27 +135,23 @@ public class ModTitles extends HalfminerModule implements Listener {
         });
     }
 
-    private double getBalance(Player player) {
-        Economy econ = HalfminerSystem.getEconomy();
-        double balance;
-        if (econ != null) {
-            balance = Math.round(econ.getBalance(player) * 100.0d) / 100.0d;
-        } else balance = 0.0d;
-        return balance;
+    private void updateTablist(Player player) {
+        double balance = balances.get(player);
+        TitleSender.setTablistHeaderFooter(player, Language.getMessagePlaceholders("modTitlesTablist",
+                false, "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)));
+
     }
 
-    @Override
-    public void reloadConfig() {
-
-        hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
-            @Override
-            public void run() {
-                balances.clear();
-                for (Player player : hms.getServer().getOnlinePlayers()) {
-                    balances.put(player, getBalance(player));
-                }
-                updateTablists();
-            }
-        }, 0, 100);
+    private double getBalance(Player player) {
+        double balance;
+        try {
+            balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
+            balance = Math.round(balance * 100.0d) / 100.0d;
+        } catch (UserDoesNotExistException e) {
+            // Should not happen
+            balance = 0.0d;
+            e.printStackTrace();
+        }
+        return balance;
     }
 }

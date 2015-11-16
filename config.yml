@@ -62,7 +62,6 @@ localization:
   commandChatMessageSet: '&aNachricht gesetzt zu:&r\n%MESSAGE%'
   commandChatTitle: '&7Titel an &e%SENDTO% &7fuer &a%TIME% Sekunden &7versendet, Nachricht: &r%MESSAGE%'
   commandVerkaufUsage: '&cVerwendung: &f/verkauf <cactus|wheat|pumpkin|brownmushroom|redmushroom|melon|cocoa|potato|carrot|sugarcane|netherwart>'
-  commandVerkaufNoVault: '&cDieses Kommando ist aktuell deaktiviert, bitte wende dich an einen Admin'
   commandVerkaufSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7fuer &a%MONEY% HCs &7verkauft'
   commandVerkaufSuccessLog: 'Verkauf: %PLAYER% hat %AMOUNT% %MATERIAL% fuer %MONEY% HCs verkauft'
   commandVerkaufNotInInv: '&cDu hast kein &e%MATERIAL% &cin deinem Inventar'

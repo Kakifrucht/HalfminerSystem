@@ -1,20 +1,22 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.HalfminerSystem;
+import com.earth2me.essentials.api.NoLoanPermittedException;
+import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
-import net.milkbowl.vault.economy.Economy;
+import net.ess3.api.Economy;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
+
 @SuppressWarnings("unused")
 public class Cmdverkauf extends BaseCommand {
 
     private Player player;
-    private Economy econ;
     private String[] args;
     private Material toBeSold;
     private int toBeSoldId = 0;
@@ -27,13 +29,7 @@ public class Cmdverkauf extends BaseCommand {
     @Override
     public void run(CommandSender sender, String label, String[] args) {
 
-        econ = HalfminerSystem.getEconomy();
         this.args = args;
-
-        if (econ == null) {
-            sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufNoVault", true, "%PREFIX%", "Verkauf"));
-            return;
-        }
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(Language.getMessagePlaceholders("notAPlayer", true, "%PREFIX%", "Verkauf"));
@@ -139,8 +135,13 @@ public class Cmdverkauf extends BaseCommand {
                 int baseValue = hms.getConfig().getInt("command.verkauf." + args[0].toLowerCase(), 1000);
                 double revenue = (sellCountTotal / (double) baseValue) * multiplier;
 
-                //deposit and round
-                econ.depositPlayer(player, revenue);
+                try {
+                    Economy.add(player.getName(), BigDecimal.valueOf(revenue));
+                } catch (UserDoesNotExistException | NoLoanPermittedException e) {
+                    // This should not happen under normal circumstances, print stacktrace just in case
+                    e.printStackTrace();
+                }
+
                 storage.incrementStatsDouble(player, StatsType.REVENUE, revenue);
                 revenue = Math.round(revenue * 100) / 100.0d;
 

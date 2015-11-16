@@ -4,11 +4,9 @@ import de.halfminer.hms.cmd.BaseCommand;
 import de.halfminer.hms.modules.*;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.ModuleType;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -22,13 +20,9 @@ import java.util.Map;
 public class HalfminerSystem extends JavaPlugin {
 
     private static HalfminerSystem instance;
-    private static Economy economy = null;
 
     public static HalfminerSystem getInstance() {
         return instance;
-    }
-    public static Economy getEconomy() {
-        return economy;
     }
 
 
@@ -41,14 +35,7 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        //load vault
-        if (getServer().getPluginManager().getPlugin("Vault") != null) {
-            RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().
-                    getRegistration(net.milkbowl.vault.economy.Economy.class);
-            economy = economyProvider.getProvider();
-        } else getLogger().warning("Vault not installed, economy support disabled");
-
-        //load modules
+        // load modules
         modules.put(ModuleType.AUTO_MESSAGE, new ModAutoMessage());
         modules.put(ModuleType.ANTI_KILLFARMING, new ModAntiKillfarming());
         modules.put(ModuleType.BEDROCK_PROTECTION, new ModBedrockProtection());
@@ -62,7 +49,7 @@ public class HalfminerSystem extends JavaPlugin {
         modules.put(ModuleType.STATIC_LISTENERS, new ModStaticListeners());
         modules.put(ModuleType.TITLES, new ModTitles());
 
-        //register modules
+        // Register modules
         for (HalfminerModule mod : modules.values())
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
 
@@ -108,12 +95,12 @@ public class HalfminerSystem extends JavaPlugin {
 
     public void loadConfig() {
 
-        saveDefaultConfig(); //Save default config.yml if not yet done
-        reloadConfig(); //Make sure that if the file changed, it is reread
-        getConfig().options().copyDefaults(true); //if parameters are missing, add them
-        saveConfig(); //save config.yml to disk
+        saveDefaultConfig(); // Save default config.yml if not yet done
+        reloadConfig(); // Make sure that if the file changed, it is reread
+        getConfig().options().copyDefaults(true); // If parameters are missing, add them
+        saveConfig(); // Save config.yml to disk
 
-        //Load storage
+        // Load storage
         if (storage != null) storage.reloadConfig();
         else storage = new HalfminerStorage();
 
