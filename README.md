@@ -40,6 +40,9 @@ Current features
   - Send custom messages to player or broadcast
   - Set news and motd message
   - Show a countdown
+- Hooks into Essentials
+  - Economy support
+  - Command to search for homes in a given radius
 - Custom serverlist motd
   - Sets the playerlimit after threshold to playercount + 1
 - Edit and copy signs /signedit
