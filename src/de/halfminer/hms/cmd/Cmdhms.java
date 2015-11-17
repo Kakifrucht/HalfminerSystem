@@ -1,24 +1,32 @@
 package de.halfminer.hms.cmd;
 
+import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.User;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.ModuleType;
 import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class Cmdhms extends BaseCommand {
+
+    private CommandSender sender;
+    private String[] args;
 
     public Cmdhms() {
         this.permission = "hms.moderator";
@@ -27,29 +35,35 @@ public class Cmdhms extends BaseCommand {
     @Override
     public void run(CommandSender sender, String label, String[] args) {
 
+        this.sender = sender;
+        this.args = args;
+
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
                 case "rename":
-                    renameItem(sender, args);
+                    renameItem();
                     return;
                 case "rmhomeblock":
-                    rmHomeBlock(sender, args);
+                    rmHomeBlock();
                     return;
                 case "updateskill":
-                    updateSkill(sender, args);
+                    updateSkill();
                     return;
                 case "ring":
-                    ringPlayer(sender, args);
+                    ringPlayer();
+                    return;
+                case "searchhomes":
+                    searchHomes();
                     return;
                 case "reload":
-                    reload(sender);
+                    reload();
                     return;
             }
         }
         sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
     }
 
-    private void renameItem(CommandSender sender, String[] args) {
+    private void renameItem() {
 
         if (sender instanceof Player) {
 
@@ -123,7 +137,7 @@ public class Cmdhms extends BaseCommand {
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
 
-    private void rmHomeBlock(CommandSender sender, String[] args) {
+    private void rmHomeBlock() {
 
         if (args.length == 2) {
             try {
@@ -139,7 +153,7 @@ public class Cmdhms extends BaseCommand {
             sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
     }
 
-    private void updateSkill(CommandSender sender, String[] args) {
+    private void updateSkill() {
 
         if (args.length < 2) {
             sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
@@ -172,7 +186,7 @@ public class Cmdhms extends BaseCommand {
                 "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", String.valueOf(storage.getStatsInt(player, StatsType.SKILL_ELO))));
     }
 
-    private void ringPlayer(CommandSender sender, String[] args) {
+    private void ringPlayer() {
 
         if (args.length < 2) {
             sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
@@ -222,7 +236,70 @@ public class Cmdhms extends BaseCommand {
         }
     }
 
-    private void reload(CommandSender sender) {
+    private void searchHomes() {
+
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(Language.getMessage("notAPlayer"));
+            return;
+        }
+
+        final Player player = (Player) sender;
+
+        final Essentials ess = (Essentials) hms.getServer().getPluginManager().getPlugin("Essentials");
+        final ArrayList<String> homeMessages = new ArrayList<>();
+
+        final World world = player.getLocation().getWorld();
+        final int x = player.getLocation().getBlockX();
+        final int z = player.getLocation().getBlockZ();
+        final int checkRadius;
+
+        if (args.length > 1) {
+            int setTo;
+            try {
+                setTo = Integer.decode(args[1]);
+            } catch (NumberFormatException e) {
+                setTo = 5;
+            }
+            checkRadius = setTo;
+        } else checkRadius = 5;
+
+        hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+            @Override
+            public void run() {
+
+                player.sendMessage(Language.getMessagePlaceholders("commandHmsSearchhomesStarted", true, "%PREFIX%", "HMS",
+                        "%RADIUS%", String.valueOf(checkRadius)));
+
+                for (UUID uid : ess.getUserMap().getAllUniqueUsers()) {
+
+                    User user = ess.getUser(uid);
+                    for (String homeName : user.getHomes()) {
+
+                        try {
+                            Location loc = user.getHome(homeName);
+                            int xHome = loc.getBlockX();
+                            int zHome = loc.getBlockZ();
+                            if (loc.getWorld().equals(world)
+                                    && x - checkRadius < xHome && x + checkRadius > xHome
+                                    && z - checkRadius < zHome && z + checkRadius > zHome) {
+                                homeMessages.add(Language.getMessagePlaceholders("commandHmsSearchhomesResults", false,
+                                        "%PLAYER%", user.getName(), "%HOMENAME%", homeName));
+                            }
+                        } catch (Exception e) {
+                            // Should not happen, as we know the home will exist
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                if (homeMessages.size() == 0) player.sendMessage(
+                        Language.getMessagePlaceholders("commandHmsSearchhomesNoneFound", true, "%PREFIX%", "HMS"));
+                else for (String message : homeMessages) player.sendMessage(message);
+            }
+        });
+    }
+
+    private void reload() {
         hms.loadConfig();
         sender.sendMessage(Language.getMessagePlaceholders("commandHmsConfigReloaded", true, "%PREFIX%", "HMS"));
     }
