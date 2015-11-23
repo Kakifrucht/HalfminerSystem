@@ -28,6 +28,7 @@ public class Cmdhmstore extends BaseCommand {
                     // Get UUID of player
                     UUID playerUid = storage.getUUID(split[0]);
                     split[0] = playerUid.toString();
+                    path = "";
                     for (String str : split) path += str + ".";
                     path = path.substring(0, path.length() - 1);
                 } catch (PlayerNotFoundException e) {
@@ -84,7 +85,9 @@ public class Cmdhmstore extends BaseCommand {
 
             }
 
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("save")) {
+        }
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("save")) {
 
             hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
                 @Override
@@ -93,6 +96,7 @@ public class Cmdhmstore extends BaseCommand {
                     sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSave", true, "%PREFIX%", "Info"));
                 }
             });
+
         } else sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreUsage", true, "%PREFIX%", "Info"));
     }
 }

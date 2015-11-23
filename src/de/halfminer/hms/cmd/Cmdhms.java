@@ -142,7 +142,7 @@ public class Cmdhms extends BaseCommand {
         if (args.length == 2) {
             try {
                 UUID playerUid = storage.getUUID(args[1]);
-                storage.set("vote." + playerUid, Long.MAX_VALUE);
+                storage.set("sys.vote." + playerUid, Long.MAX_VALUE);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "HMS",
                         "%PLAYER%", hms.getServer().getOfflinePlayer(playerUid).getName()));
             } catch (PlayerNotFoundException e) {
