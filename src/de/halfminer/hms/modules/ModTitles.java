@@ -25,6 +25,10 @@ public class ModTitles extends HalfminerModule implements Listener {
     private final Map<Player, Double> balances = new HashMap<>();
     private int playercount = hms.getServer().getOnlinePlayers().size();
 
+    public ModTitles() {
+        reloadConfig();
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
     public void joinTitles(PlayerJoinEvent e) {
@@ -162,5 +166,13 @@ public class ModTitles extends HalfminerModule implements Listener {
             balance = 0.0d;
         }
         return balance;
+    }
+
+    @Override
+    public void reloadConfig() {
+
+        for (Player p : hms.getServer().getOnlinePlayers()) {
+            balances.put(p, getBalance(p));
+        }
     }
 }
