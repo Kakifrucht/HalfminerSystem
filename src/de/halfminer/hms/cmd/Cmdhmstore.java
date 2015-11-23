@@ -35,14 +35,12 @@ public class Cmdhmstore extends BaseCommand {
                     // Player not found, use lowercase path
                 }
             }
-
             if (args.length > 2 && args[0].equalsIgnoreCase("set")) {
 
                 String setTo = Language.arrayToString(args, 2, false);
                 storage.set(path, setTo);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", setTo));
-
             } else if (args[0].equalsIgnoreCase("setint")) {
 
                 int setTo;
@@ -56,35 +54,33 @@ public class Cmdhmstore extends BaseCommand {
                 storage.set(path, setTo);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
-
             } else if (args[0].equalsIgnoreCase("setbool")) {
 
                 boolean setTo = Boolean.parseBoolean(args[2]);
                 storage.set(path, setTo);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
-
             } else if (args[0].equalsIgnoreCase("setdouble")) {
 
                 double setTo = Double.parseDouble(args[2]);
                 storage.set(path, setTo);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
-
             } else if (args[0].equalsIgnoreCase("get")) {
 
                 String value = storage.getString(path);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreGet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", value));
-
             } else if (args[0].equalsIgnoreCase("remove")) {
 
                 storage.set(path, null);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreRemove", true, "%PREFIX%", "Info",
                         "%PATH%", path));
+            } else {
 
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreUsage", true, "%PREFIX%", "Info"));
             }
-
+            return;
         }
 
         if (args.length > 0 && args[0].equalsIgnoreCase("save")) {
@@ -96,7 +92,6 @@ public class Cmdhmstore extends BaseCommand {
                     sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSave", true, "%PREFIX%", "Info"));
                 }
             });
-
         } else sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreUsage", true, "%PREFIX%", "Info"));
     }
 }
