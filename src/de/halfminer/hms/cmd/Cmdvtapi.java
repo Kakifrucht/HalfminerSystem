@@ -71,8 +71,8 @@ public class Cmdvtapi extends BaseCommand {
 
                         int level;
                         try {
-                            UUID uid = storage.getUUID(skullOwner);
-                            level = storage.getStatsInt(hms.getServer().getOfflinePlayer(uid), StatsType.SKILL_LEVEL);
+                            UUID uuid = storage.getUUID(skullOwner);
+                            level = storage.getStatsInt(hms.getServer().getOfflinePlayer(uuid), StatsType.SKILL_LEVEL);
                         } catch (PlayerNotFoundException e) {
                             level = 1;
                         }

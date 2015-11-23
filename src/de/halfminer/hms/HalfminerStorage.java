@@ -43,7 +43,7 @@ public class HalfminerStorage {
     }
 
     public void setUUID(OfflinePlayer player) {
-        set("uid." + player.getName().toLowerCase(), player.getUniqueId().toString());
+        set("sys.uuid." + player.getName().toLowerCase(), player.getUniqueId().toString());
     }
 
     public void setStats(OfflinePlayer player, StatsType stats, Object value) {
@@ -71,7 +71,7 @@ public class HalfminerStorage {
     }
 
     public UUID getUUID(String playerName) throws PlayerNotFoundException {
-        String uuidString = getString("uid." + playerName.toLowerCase());
+        String uuidString = getString("sys.uuid." + playerName.toLowerCase());
         if (uuidString.length() > 0) return UUID.fromString(uuidString);
         else {
             Player p = hms.getServer().getPlayer(playerName);

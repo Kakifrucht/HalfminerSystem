@@ -270,9 +270,9 @@ public class Cmdhms extends BaseCommand {
                 player.sendMessage(Language.getMessagePlaceholders("commandHmsSearchhomesStarted", true, "%PREFIX%", "HMS",
                         "%RADIUS%", String.valueOf(checkRadius)));
 
-                for (UUID uid : ess.getUserMap().getAllUniqueUsers()) {
+                for (UUID uuid : ess.getUserMap().getAllUniqueUsers()) {
 
-                    User user = ess.getUser(uid);
+                    User user = ess.getUser(uuid);
                     for (String homeName : user.getHomes()) {
 
                         try {
