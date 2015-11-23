@@ -37,7 +37,7 @@ localization:
   commandStatsShowotherStats: '&7Statistiken zu anderen Spielern: &e/stats [Spieler]'
   commandStatsCompareLegend: '&7Dein Wert ist &ahoeher&7, Werte sind &egleich&7, dein Wert ist &cgeringer'
   commandStatsCompareInfo: '&7Verwende &e/stats %PLAYER% compare &7zum vergleichen'
-  commandHmstoreUsage: '&cVerwendung: &f/hmstore get/set/setint/setbool/remove/save <path> [value]'
+  commandHmstoreUsage: '&cVerwendung: &f/hmstore get/set/setint/setbool/setdouble/remove/save <path> [value]'
   commandHmstoreSet: '&7Der Wert &o%PATH% &7wurde gesetzt zu &r%VALUE%'
   commandHmstoreSetError: '&7Die Eingabe ist ungueltig, der Wert wurde nicht gesetzt'
   commandHmstoreGet: '&7Der Wert &o%PATH% &7lautet: &r%VALUE%'
