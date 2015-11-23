@@ -16,60 +16,76 @@ public class Cmdhmstore extends BaseCommand {
     @Override
     public void run(final CommandSender sender, String label, String[] args) {
 
-        if (args.length > 2 && args[0].equalsIgnoreCase("set")) {
+        if (args.length > 1) { // Set and get variables
 
-            String path = validatePlayer(args[1]);
-            String setTo = Language.arrayToString(args, 2, false);
-            storage.set(path, setTo);
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
-                    "%PATH%", path, "%VALUE%", setTo));
+            // Replace playername with UUID if found
+            String path = args[1].toLowerCase();
+            String[] split = path.split("[.]");
+            // Only replace if the path is longer than 1 and it is not sys, as this var is reserved
+            if (split.length > 1 && !split[0].equals("sys")) {
 
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("setint")) {
-
-            String path = validatePlayer(args[1]);
-            int setTo;
-            try {
-                setTo = Integer.decode(args[2]);
-            } catch (NumberFormatException e) {
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSetError", true, "%PREFIX%", "Info"));
-                return;
+                try {
+                    // Get UUID of player
+                    UUID playerUid = storage.getUUID(split[0]);
+                    split[0] = playerUid.toString();
+                    for (String str : split) path += str + ".";
+                    path = path.substring(0, path.length() - 1);
+                } catch (PlayerNotFoundException e) {
+                    // Player not found, use lowercase path
+                }
             }
 
-            storage.set(path, setTo);
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
-                    "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
+            if (args.length > 2 && args[0].equalsIgnoreCase("set")) {
 
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("setbool")) {
+                String setTo = Language.arrayToString(args, 2, false);
+                storage.set(path, setTo);
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
+                        "%PATH%", path, "%VALUE%", setTo));
 
-            String path = validatePlayer(args[1]);
-            boolean setTo = Boolean.parseBoolean(args[2]);
-            storage.set(path, setTo);
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
-                    "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
+            } else if (args[0].equalsIgnoreCase("setint")) {
 
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("setdouble")) {
+                int setTo;
+                try {
+                    setTo = Integer.decode(args[2]);
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSetError", true, "%PREFIX%", "Info"));
+                    return;
+                }
 
-            String path = validatePlayer(args[1]);
-            double setTo = Double.parseDouble(args[2]);
-            storage.set(path, setTo);
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
-                    "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
+                storage.set(path, setTo);
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
+                        "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
 
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("get")) {
+            } else if (args[0].equalsIgnoreCase("setbool")) {
 
-            String path = validatePlayer(args[1]);
-            String value = storage.getString(path);
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreGet", true, "%PREFIX%", "Info",
-                    "%PATH%", path, "%VALUE%", value));
+                boolean setTo = Boolean.parseBoolean(args[2]);
+                storage.set(path, setTo);
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
+                        "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
 
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
+            } else if (args[0].equalsIgnoreCase("setdouble")) {
 
-            String path = validatePlayer(args[1]);
-            storage.set(path, null);
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreRemove", true, "%PREFIX%", "Info",
-                    "%PATH%", path));
+                double setTo = Double.parseDouble(args[2]);
+                storage.set(path, setTo);
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
+                        "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
 
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("save")) {
+            } else if (args[0].equalsIgnoreCase("get")) {
+
+                String value = storage.getString(path);
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreGet", true, "%PREFIX%", "Info",
+                        "%PATH%", path, "%VALUE%", value));
+
+            } else if (args[0].equalsIgnoreCase("remove")) {
+
+                storage.set(path, null);
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreRemove", true, "%PREFIX%", "Info",
+                        "%PATH%", path));
+
+            }
+
+        } else if (args.length > 0 && args[0].equalsIgnoreCase("save")) {
+
             hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
@@ -77,34 +93,6 @@ public class Cmdhmstore extends BaseCommand {
                     sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSave", true, "%PREFIX%", "Info"));
                 }
             });
-        } else showUsage(sender);
+        } else sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreUsage", true, "%PREFIX%", "Info"));
     }
-
-    /**
-     * This will check if a path specification contains a player name, and if it does, replace it with the players
-     * uid. At the same time it will lowercase the input, since paths are always lowercase to prevent issues.
-     *
-     * @param path String containing the provided path
-     * @return String with the parsed path, containing uid, or at least, lowercased path
-     */
-    private String validatePlayer(String path) {
-
-        String toReturn = "";
-        String[] split = path.toLowerCase().split("[.]");
-
-        try {
-            UUID playerUid = storage.getUUID(split[0]);
-            split[0] = playerUid.toString();
-            for (String str : split) toReturn += str + ".";
-            return toReturn.substring(0, toReturn.length() - 1);
-        } catch (PlayerNotFoundException e) {
-            return path.toLowerCase();
-        }
-
-    }
-
-    private void showUsage(CommandSender sender) {
-        sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreUsage", true, "%PREFIX%", "Info"));
-    }
-
 }
