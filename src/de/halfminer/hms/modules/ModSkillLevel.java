@@ -40,7 +40,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         Player player = e.getPlayer();
         if (player.hasPermission("hms.bypass.skilllevel")) return;
 
-        //check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
+        // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
         if (storage.getStatsInt(player, StatsType.SKILL_LEVEL) >= derankThreshold
                 && storage.getStatsInt(player, StatsType.LASTKILL) + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
 
@@ -63,21 +63,22 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
             storage.setStats(killer, StatsType.LASTKILL, System.currentTimeMillis() / 1000);
 
-            //Check if last kill has passed a certain time, otherwise do not count towards skilllevel (prevent grinding)
+            // Check if last kill has passed a certain time, otherwise do not count towards skilllevel (prevent grinding)
             if (lastKill.containsKey(killer.getName() + victim.getName())) {
                 long lastKillLong = lastKill.get(killer.getName() + victim.getName());
                 if (lastKillLong + timeUntilKillCountAgainSeconds > System.currentTimeMillis() / 1000) return;
             }
 
-            //calculate skill modifier
+            // Calculate skill modifier
             int killerLevel = storage.getStatsInt(killer, StatsType.SKILL_LEVEL);
             int victimLevel = storage.getStatsInt(victim, StatsType.SKILL_LEVEL);
-            int modifier = (((killerLevel - victimLevel) * 3) - 65) * -1;
+            int killerVictimDifference = killerLevel - victimLevel;
+            int modifier = ((killerVictimDifference * 3) - 65) * -1;
+            if (killerVictimDifference >= 10 && modifier >= 4) modifier /= 4;
 
             updateSkill(killer, modifier);
             updateSkill(victim, -modifier);
             lastKill.put(killer.getName() + victim.getName(), System.currentTimeMillis() / 1000);
-
         }
     }
 
@@ -87,18 +88,19 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         int level = storage.getStatsInt(player, StatsType.SKILL_LEVEL);
         int kdRatio = storage.getStatsInt(player, StatsType.KD_RATIO);
 
-        //bounds for levels and elo
+        // Bounds for levels and elo
         if (elo < 0) elo = 0;
         else if (elo > 4200) elo = 4200;
         if (level < 1) level = 1;
         else if (level > 22) level = 22;
 
-        //function to determine new level based on elo (skillnumber)
+        // Equation to determine new level based on ELO (skillnumber)
         int newLevel = level;
         double calc = ((1.9d * elo - (0.0002d * (elo * elo))) / 212) + 1;
 
         int newLevelUp = (int) Math.ceil(calc);
         int newLevelDown = (int) Math.floor(calc);
+
         /*
            Example: Player is Level 4, calc is 3.4, you stay level 4 when calc is 3.0 - 4.9, rank down occurs when player
            is lower than 3.0 and rank up when player has reached 5.0. Only rank down when the ceiling of the calc value
@@ -109,12 +111,21 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         if (newLevelDown > level && modifier >= 0) newLevel = newLevelDown;     //rank up
         else if (newLevelUp < level && modifier <= 0) newLevel = newLevelUp;    //rank down
 
-        //make sure kdratio constraints are met
-        if (newLevel > 11 && kdRatio < 1.0d) newLevel = 11;
-        else if (newLevel > 16 && kdRatio < 3.0d) newLevel = 16;
-        else if (newLevel == 22 && kdRatio < 5.0d) newLevel = 21;
+        // Make sure kdratio constraints are met, lower ELO in all cases
+        if (newLevel > 11 && kdRatio < 1.0d) {
+            newLevel = 11;
+            elo -= 100;
+        }
+        else if (newLevel > 16 && kdRatio < 3.0d) {
+            newLevel = 16;
+            elo -= 200;
+        }
+        else if (newLevel == 22 && kdRatio < 5.0d) {
+            newLevel = 21;
+            elo -= 300;
+        }
 
-        //Set the new values
+        // Set the new values
         String teamName = teams[newLevel - 1];
 
         skillObjective.getScore(player.getName()).setScore(newLevel);
@@ -126,7 +137,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         storage.setStats(player, StatsType.SKILL_LEVEL, newLevel);
         storage.setStats(player, StatsType.SKILL_GROUP, teamName);
 
-        //Send title/log if necessary
+        // Send title/log if necessary
         if (newLevel != level) {
 
             String sendTitle;
@@ -153,10 +164,10 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 
-        //ensure that teams are being removed on reload
+        // Ensure that teams are being removed on reload
         if (teams != null) onDisable();
 
-        teams = new String[22]; //first character of String is colorcode, second and third sorting id, rest name
+        teams = new String[22]; // First character of String is colorcode, second and third sorting id, rest name
         int sortId = 1;
         for (String skillGroup : skillGroupConfig) {
 
@@ -180,7 +191,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
                 Team registered = scoreboard.registerNewTeam(teamName);
                 registered.setPrefix(ChatColor.COLOR_CHAR + colorCode);
             }
-            teams[i] = teamName; //Remove color code
+            teams[i] = teamName; // Remove color code
         }
 
         if (skillObjective == null) {
@@ -196,7 +207,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
 
     @Override
     public void onDisable() {
-        //unregister all registered teams
+        // Unregister all registered teams
         Team currentTeam;
         for (String team : teams) {
             if ((currentTeam = scoreboard.getTeam(team)) != null) {
