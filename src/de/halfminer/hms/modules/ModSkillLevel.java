@@ -111,7 +111,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
         if (newLevelDown > level && modifier >= 0) newLevel = newLevelDown;     //rank up
         else if (newLevelUp < level && modifier <= 0) newLevel = newLevelUp;    //rank down
 
-        // Make sure kdratio constraints are met, lower ELO in all cases
+        // Make sure kdratio constraints are met, lower ELO if they are not met
         if (newLevel > 11 && kdRatio < 1.0d) {
             newLevel = 11;
             elo -= 100;
