@@ -23,7 +23,6 @@ public class ModTitles extends HalfminerModule implements Listener {
     private final Map<UUID, Integer> deathStreaks = new HashMap<>();
 
     private final Map<Player, Double> balances = new HashMap<>();
-    private int playercount = hms.getServer().getOnlinePlayers().size();
 
     public ModTitles() {
         reloadConfig();
@@ -36,9 +35,7 @@ public class ModTitles extends HalfminerModule implements Listener {
         final Player joined = e.getPlayer();
 
         // Update tablist titles
-        final double balance = getBalance(joined);
-        balances.put(joined, balance);
-        playercount++;
+        final double balance = updateBalance(joined);
         updateTablist();
 
         // Show join titles / News
@@ -51,7 +48,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                 @Override
                 public void run() {
                     TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesJoinFormat", false,
-                            "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)), 10, 100, 10);
+                            "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
 
                     try {
                         Thread.sleep(6000L);
@@ -70,8 +67,6 @@ public class ModTitles extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void leaveTitles(PlayerQuitEvent e) {
 
-        // Update tab titles
-        playercount--;
         balances.remove(e.getPlayer());
         updateTablist();
     }
@@ -117,13 +112,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onBalanceChange(UserBalanceUpdateEvent e) {
-
-        // Update balance
-        Player player = e.getPlayer();
-        double balance = e.getNewBalance().doubleValue();
-        balance = Math.round(balance * 100.0d) / 100.0d;
-        balances.put(player, balance);
-        updateTablist(player);
+        updateBalance(e.getPlayer());
     }
 
     private void updateTablist() {
@@ -131,26 +120,26 @@ public class ModTitles extends HalfminerModule implements Listener {
         hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
-                for (Map.Entry<Player, Double> entry : balances.entrySet()) {
-                    double balance = entry.getValue();
-
-                    TitleSender.setTablistHeaderFooter(entry.getKey(), Language.getMessagePlaceholders("modTitlesTablist",
-                            false, "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)));
-                }
+                for (Player player : balances.keySet()) updateTablist(player);
             }
         });
     }
 
     private void updateTablist(Player player) {
 
-        double balance = balances.get(player);
         TitleSender.setTablistHeaderFooter(player, Language.getMessagePlaceholders("modTitlesTablist",
-                false, "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", String.valueOf(playercount)));
+                false, "%BALANCE%", String.valueOf(balances.get(player)), "%PLAYERCOUNT%", getPlayercountString()));
     }
 
-    private double getBalance(final Player player) {
+    private double updateBalance(final Player player) {
 
-        double balance;
+        double balance = 0.0d;
+
+        if (!player.isOnline()) {
+            balances.remove(player);
+            return balance;
+        }
+
         try {
             balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
             balance = Math.round(balance * 100.0d) / 100.0d;
@@ -159,20 +148,23 @@ public class ModTitles extends HalfminerModule implements Listener {
             hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
                 @Override
                 public void run() {
-                    balances.put(player, getBalance(player));
-                    updateTablist(player);
+                    updateBalance(player);
                 }
             }, 2);
-            balance = 0.0d;
         }
+
+        balances.put(player, balance);
+        updateTablist(player);
         return balance;
+    }
+
+    private String getPlayercountString() {
+        return String.valueOf(hms.getServer().getOnlinePlayers().size());
     }
 
     @Override
     public void reloadConfig() {
 
-        for (Player p : hms.getServer().getOnlinePlayers()) {
-            balances.put(p, getBalance(p));
-        }
+        for (Player p : hms.getServer().getOnlinePlayers()) updateBalance(p);
     }
 }
