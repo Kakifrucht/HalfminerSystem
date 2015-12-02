@@ -179,6 +179,17 @@ public class ModStats extends HalfminerModule implements Listener {
                 timeOnline.put(player, time);
             }
         }
+
+        hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
+            @Override
+            public void run() {
+                long currentTime = System.currentTimeMillis() / 1000;
+                for (Player p : hms.getServer().getOnlinePlayers()) {
+                    setOnlineTime(p);
+                    timeOnline.put(p, currentTime);
+                }
+            }
+        }, 1200L, 1200L);
     }
 
     @Override
