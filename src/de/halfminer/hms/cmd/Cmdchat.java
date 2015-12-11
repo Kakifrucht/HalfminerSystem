@@ -80,7 +80,7 @@ public class Cmdchat extends BaseCommand {
 
             } else if (args[0].equalsIgnoreCase("set") && args.length > 1){
 
-                String message = Language.arrayToString(args, 1, true);
+                String message = Language.arrayToString(args, 1, true).replace("\\n", "\n");
                 storage.set("sys.chatmessage", message);
                 storage.set("sys.chatmessagetime", (System.currentTimeMillis() / 1000));
                 sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageSet", true, "%PREFIX%", "Chat",
