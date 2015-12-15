@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.4.7
+version: 3.4.8
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -36,7 +36,7 @@ commands:
     description: Vote for the server
   vtapi:
     description: VT Command API
-    aliases: [hilfe, spenden, regeln, rang, tools, kiste, deo]
+    aliases: [hilfe, spenden, regeln, rang, tools, kiste, deo, forum]
 permissions:
   hms.*:
     description: Access to all permissions

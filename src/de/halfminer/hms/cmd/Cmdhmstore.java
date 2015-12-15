@@ -41,7 +41,7 @@ public class Cmdhmstore extends BaseCommand {
                 storage.set(path, setTo);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", setTo));
-            } else if (args[0].equalsIgnoreCase("setint")) {
+            } else if (args.length > 2 && args[0].equalsIgnoreCase("setint")) {
 
                 int setTo;
                 try {
@@ -54,13 +54,13 @@ public class Cmdhmstore extends BaseCommand {
                 storage.set(path, setTo);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
-            } else if (args[0].equalsIgnoreCase("setbool")) {
+            } else if (args.length > 2 && args[0].equalsIgnoreCase("setbool")) {
 
                 boolean setTo = Boolean.parseBoolean(args[2]);
                 storage.set(path, setTo);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
-            } else if (args[0].equalsIgnoreCase("setdouble")) {
+            } else if (args.length > 2 && args[0].equalsIgnoreCase("setdouble")) {
 
                 double setTo = Double.parseDouble(args[2]);
                 storage.set(path, setTo);
