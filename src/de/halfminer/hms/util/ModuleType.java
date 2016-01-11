@@ -13,6 +13,6 @@ public enum ModuleType {
     STATIC_LISTENERS,
     STATS,
     TPS,
-    TITLES
-
+    TITLES,
+    PVP
 }

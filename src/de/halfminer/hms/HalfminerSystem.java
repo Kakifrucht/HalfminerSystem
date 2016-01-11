@@ -47,6 +47,7 @@ public class HalfminerSystem extends JavaPlugin {
         modules.put(ModuleType.SKILL_LEVEL, new ModSkillLevel());
         modules.put(ModuleType.STATIC_LISTENERS, new ModStaticListeners());
         modules.put(ModuleType.TITLES, new ModTitles());
+        modules.put(ModuleType.PVP, new ModPvP());
 
         // Register modules
         for (HalfminerModule mod : modules.values())

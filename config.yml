@@ -120,6 +120,7 @@ localization:
   modTitlesKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK% &7Kills in Folge'
   modTitlesDeathStreak: '&c&l%PLAYER%&7 ist &c&l%STREAK% &7mal in Folge gekillt worden'
   modTitlesTablist: '&6&lTwo and a half Miner&7 | Konto: &a%BALANCE% &7&oHCs\n&7Teamspeak: &fts.halfminer.de &7| Online: &a%PLAYERCOUNT% &7&oSpieler'
+  modPvPDisabledStrength: '&cStaerke 2 Traenke sind deaktiviert'
 command:
   home:
     #Time until /home will be blocked

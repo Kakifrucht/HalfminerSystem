@@ -80,13 +80,8 @@ public class Cmdverkauf extends BaseCommand {
                     break;
             }
 
-            if (toBeSold != null) {
-
-                sellLoop();
-            } else {
-
-                sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));
-            }
+            if (toBeSold != null) sellLoop();
+            else sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));
 
         } else {
             sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));

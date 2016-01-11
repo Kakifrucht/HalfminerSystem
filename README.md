@@ -52,6 +52,10 @@ Current features
   - Will also lift block for every member with same IP
 - Teleport to a random location
   - It will make sure that you do not land in water/lava
+- Make PvP more balanced
+  - Disables bowspamming
+  - Removes Strength 2 effect
+  - Lowers effect of golden apples (OP apples)
 - Rename items /hms rename
 - Permission levels 0-6, restrict access to certain ranks
 - Functionality mostly and messages completely configurable
