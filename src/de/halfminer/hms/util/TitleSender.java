@@ -105,19 +105,23 @@ public class TitleSender {
 
     private static void sendTitlePackets(Player player, String topTitle, String subTitle, int fadeIn, int stay, int fadeOut) {
 
-        if (!player.isOnline()) return;
+        if (!player.isOnline() || (topTitle.length() == 0 && subTitle.length() == 0)) return;
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
 
         connection.sendPacket(new PacketPlayOutTitle(fadeIn, stay, fadeOut));
-        connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE,
-                IChatBaseComponent.ChatSerializer.a("{'text': '" + topTitle + "'}")));
-        connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE,
-                IChatBaseComponent.ChatSerializer.a("{'text': '" + subTitle + "'}")));
+
+        if (topTitle.length() > 0)
+            connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE,
+                    IChatBaseComponent.ChatSerializer.a("{'text': '" + topTitle + "'}")));
+
+        if (subTitle.length() > 0)
+            connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE,
+                    IChatBaseComponent.ChatSerializer.a("{'text': '" + subTitle + "'}")));
     }
 
     private static void sendActionBarPacket(Player player, String message) {
 
-        if (!player.isOnline()) return;
+        if (!player.isOnline() || message.length() == 0) return;
 
         PacketPlayOutChat actionbar = new PacketPlayOutChat(
                 IChatBaseComponent.ChatSerializer.a("{'text': '" + message + "'}"), (byte) 2);
