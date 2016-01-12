@@ -22,10 +22,12 @@ public class ModPvP extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEat(PlayerItemConsumeEvent e) {
+
+        final Player p = e.getPlayer();
+        if (p.hasPermission("hms.bypass.pvp")) return;
+
         ItemStack item = e.getItem();
         if (item.getType() == Material.GOLDEN_APPLE && item.getDurability() == 1) {
-
-            final Player p = e.getPlayer();
 
             hms.getServer().getScheduler().runTask(hms, new Runnable() {
                 @Override
@@ -34,9 +36,7 @@ public class ModPvP extends HalfminerModule implements Listener {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 300, 2));
                 }
             });
-        }
-
-        if (item.getType() == Material.POTION && item.getDurability() == 8233) {
+        } else if (item.getType() == Material.POTION && item.getDurability() == 8233) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(Language.getMessagePlaceholders("modPvPDisabledStrength", true, "%PREFIX%", "PvP"));
         }
@@ -44,12 +44,13 @@ public class ModPvP extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPotionSplash(PotionSplashEvent e) {
-        for (PotionEffect effect: e.getPotion().getEffects()) {
+        for (PotionEffect effect : e.getPotion().getEffects()) {
             if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE) && effect.getAmplifier() > 0) {
 
                 e.setCancelled(true);
                 if (e.getPotion().getShooter() instanceof Player) {
-                    ((Player) e.getPotion().getShooter()).sendMessage(Language.getMessagePlaceholders("modPvPDisabledStrength", true, "%PREFIX%", "PvP"));
+                    ((Player) e.getPotion().getShooter()).sendMessage(
+                            Language.getMessagePlaceholders("modPvPDisabledStrength", true, "%PREFIX%", "PvP"));
                 }
             }
         }
@@ -58,7 +59,7 @@ public class ModPvP extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void antiBowSpam(EntityShootBowEvent e) {
 
-        if (e.getEntity() instanceof Player) {
+        if (!e.getEntity().hasPermission("hms.bypass.pvp") && e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
             long currentTime = System.currentTimeMillis();
             if (lastShot.containsKey(p) && lastShot.get(p) + 750 > currentTime) {
