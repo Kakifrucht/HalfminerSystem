@@ -40,11 +40,10 @@ public class ModPvP extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onPotionSplash(PotionSplashEvent e) {
-        //TODO fix splash potions
+
         for (PotionEffect effect : e.getPotion().getEffects()) {
             if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
 
-                e.setCancelled(true);
                 for (LivingEntity entity : e.getAffectedEntities()) {
                     if (entity instanceof Player) {
                         Player p = (Player) entity;
