@@ -169,18 +169,21 @@ class Arena {
 
         Bukkit.getScheduler().cancelTask(taskId);
 
-        if (playerA.isDead()) afterFightDead(playerA);
-        else {
-            healPlayer(playerA);
-            restorePlayer(playerA);
+        // Reset both players
+        for (int i = 0; i < 2; i++) {
+
+            Player reset;
+            if (i == 0) reset = playerA;
+            else reset = playerB;
+
+            if (reset.isDead()) afterFightDead(reset);
+            else {
+                healPlayer(reset);
+                restorePlayer(reset);
+            }
         }
 
-        if (playerB.isDead()) afterFightDead(playerB);
-        else {
-            healPlayer(playerB);
-            restorePlayer(playerB);
-        }
-
+        // Messaging and broadcasting
         if (hasWinner) {
             Player winner = loser.equals(playerA) ? playerB : playerA;
             Util.sendMessage(winner, "gameWon", new String[]{"%PLAYER%", loser.getName()});
@@ -192,8 +195,13 @@ class Arena {
             Util.sendMessage(playerB, "gameTied", new String[]{"%PLAYER%", playerA.getName()});
         }
 
-        isFree = true;
-
+        // Free arena with delay, to ensure that resets are done
+        hmd.getServer().getScheduler().runTaskLater(hmd, new Runnable() {
+            @Override
+            public void run() {
+                isFree = true;
+            }
+        }, 5L);
     }
 
     /**
@@ -202,6 +210,7 @@ class Arena {
      * @param player player to heal/store/tp
      */
     private void beforeFight(Player player) {
+
         //Store data about user
         PlayerDataContainer data = new PlayerDataContainer();
         data.loc = player.getLocation();
@@ -242,7 +251,7 @@ class Arena {
     private void afterFightDead(final Player player) {
 
         try { //player is dead, restore him one tick later
-            Bukkit.getScheduler().scheduleSyncDelayedTask(hmd, new Runnable() {
+            Bukkit.getScheduler().runTask(hmd, new Runnable() {
                 @Override
                 public void run() {
                     player.spigot().respawn();
@@ -250,11 +259,10 @@ class Arena {
                     restorePlayer(player);
                 }
             });
-        } catch (IllegalPluginAccessException e) { //only happens during reload (onDisable call) and if a player died in the same moment
+        } catch (IllegalPluginAccessException e) { //only happens during reload (onDisable call) and if a player died in the same tick
             hmd.getLogger().info(player.getName() + " duel was cancelled while the player was dead already");
-            restorePlayer(player); //still restore
+            restorePlayer(player); // still restore, just dont heal
         }
-
     }
 
     /**
@@ -270,7 +278,6 @@ class Arena {
         player.setExhaustion(0F);
         player.setFireTicks(0);
         for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
-
     }
 
     /**
@@ -287,7 +294,6 @@ class Arena {
         player.getInventory().setArmorContents(data.armor);
         player.updateInventory();
         player.setWalkSpeed(0.2F);
-
     }
 
     /**
@@ -298,7 +304,6 @@ class Arena {
         public Location loc;
         public ItemStack[] inventory;
         public ItemStack[] armor;
-
     }
 
 }

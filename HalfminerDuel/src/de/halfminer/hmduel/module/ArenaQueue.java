@@ -344,20 +344,25 @@ public class ArenaQueue {
 
         Arena arena = inDuel.get(playerA);
 
-        //Get the duel partner
+        // Get the duel partner
         Player playerB = arena.getPlayerB().equals(playerA) ? arena.getPlayerA() : arena.getPlayerB();
 
         inDuel.remove(playerA);
         inDuel.remove(playerB);
-        arena.gameEnd(playerA, hasWinner); //reset arena and reset players
+        arena.gameEnd(playerA, hasWinner); // reset arena and reset players
 
-        if (!selectingArena.isEmpty()) { //refresh selectingArena for players in the selection
-            for (Player player : selectingArena.keySet()) showFreeArenaSelection(player, true);
-        }
+        // Run this later, since the arena reopens with delay
+        hmd.getServer().getScheduler().runTaskLater(hmd, new Runnable() {
+            @Override
+            public void run() {
 
-        if (!duelQueue.isEmpty()) { //start next game
-            initArenaSelection(duelQueue.pop(), duelQueue.pop()); //this will never show a selection, as only one arena is free
-        }
+                if (!selectingArena.isEmpty())
+                    for (Player player : selectingArena.keySet()) showFreeArenaSelection(player, true);
+
+                // start next game, without showing selection, since this is the only arena available
+                if (!duelQueue.isEmpty()) initArenaSelection(duelQueue.pop(), duelQueue.pop());
+            }
+        }, 10L);
     }
 
     /**
