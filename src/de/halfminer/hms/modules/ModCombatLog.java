@@ -36,11 +36,11 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void onDeathUntag(PlayerDeathEvent e) {
 
-        if (tagged.containsKey(e.getEntity().getPlayer()))
-            untagPlayer(e.getEntity().getPlayer());
-
+        Player victim = e.getEntity().getPlayer();
         Player killer = e.getEntity().getKiller();
-        if (killer != null && tagged.containsKey(killer)) untagPlayer(killer);
+
+        untagPlayer(victim);
+        if (killer != null) untagPlayer(killer);
     }
 
     @EventHandler
@@ -81,12 +81,12 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 tagPlayer(attacker);
             }
         }
-
     }
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onCommandCheckIfBlocked(PlayerCommandPreprocessEvent e) {
+
         if (tagged.containsKey(e.getPlayer())) {
             e.getPlayer().sendMessage(lang.get("noCommand"));
             e.setCancelled(true);
@@ -150,7 +150,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         p.playSound(p.getLocation(), Sound.NOTE_PLING, 1, 2f);
 
         tagged.remove(p);
-
     }
 
     @Override
@@ -167,6 +166,5 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         lang.put("loggedOut", Language.getMessagePlaceholders("modCombatLogLoggedOut", true, "%PREFIX%", "PvP"));
         lang.put("noCommand", Language.getMessagePlaceholders("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
         lang.put("noEnderpearl", Language.getMessagePlaceholders("modCombatLogNoEnderpearl", true, "%PREFIX%", "PvP"));
-
     }
 }

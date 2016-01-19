@@ -54,7 +54,7 @@ Current features
   - It will make sure that you do not land in water/lava
 - Make PvP more balanced
   - Disables bowspamming
-  - Removes Strength 2 effect
+  - Nerfs strength potions, by making them last much shorter
   - Lowers effect of golden apples (OP apples)
 - Rename items /hms rename
 - Permission levels 0-6, restrict access to certain ranks
