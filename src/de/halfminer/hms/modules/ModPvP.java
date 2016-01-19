@@ -1,13 +1,16 @@
 package de.halfminer.hms.modules;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -17,7 +20,11 @@ import java.util.Map;
 
 public class ModPvP extends HalfminerModule implements Listener {
 
-    private Map<Player, Long> lastShot = new HashMap<>();
+    private Map<Player, Long> lastShot;
+
+    public ModPvP() {
+        reloadConfig();
+    }
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
@@ -33,7 +40,7 @@ public class ModPvP extends HalfminerModule implements Listener {
         } else if (item.getType() == Material.POTION
                 && (item.getDurability() == 8201 || item.getDurability() == 8265 || item.getDurability() == 8233)) {
 
-            nerfEffect(p, PotionEffectType.INCREASE_DAMAGE);
+            nerfStrength(p);
         }
     }
 
@@ -48,7 +55,7 @@ public class ModPvP extends HalfminerModule implements Listener {
                     if (entity instanceof Player) {
                         Player p = (Player) entity;
                         if (!p.hasPermission("hms.bypass.pvp"))
-                            nerfEffect((Player) entity, PotionEffectType.INCREASE_DAMAGE);
+                            nerfStrength((Player) entity);
                     }
                 }
             }
@@ -68,6 +75,42 @@ public class ModPvP extends HalfminerModule implements Listener {
         }
     }
 
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void deathSounds(PlayerDeathEvent e) {
+
+        e.setDeathMessage("");
+
+        //Heal and play sound
+        final Player killer = e.getEntity().getKiller();
+        final Player died = e.getEntity();
+        if (killer != null && killer != e.getEntity()) {
+
+            killer.setHealth(killer.getMaxHealth());
+            hms.getServer().getScheduler().runTaskLaterAsynchronously(hms, new Runnable() {
+                @Override
+                public void run() {
+                    killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 2.0f);
+                    try {
+                        Thread.sleep(300L);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 0.5f);
+                }
+            }, 5);
+
+        } else {
+            died.playSound(e.getEntity().getLocation(), Sound.AMBIENCE_CAVE, 1.0f, 1.4f);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("unused")
+    public void teleportRemoveJump(PlayerTeleportEvent e) {
+        e.getPlayer().removePotionEffect(PotionEffectType.JUMP);
+    }
+
     private void updateEffect(final Player player, final PotionEffectType effect, final int time, final int amplifier) {
 
         hms.getServer().getScheduler().runTask(hms, new Runnable() {
@@ -79,15 +122,15 @@ public class ModPvP extends HalfminerModule implements Listener {
         });
     }
 
-    private void nerfEffect(final Player player, final PotionEffectType effect) {
+    private void nerfStrength(final Player player) {
 
-        final PotionEffect oldEffect = getEffectFromType(player, effect);
+        final PotionEffect oldEffect = getStrengthFromPlayer(player);
 
         hms.getServer().getScheduler().runTask(hms, new Runnable() {
             @Override
             public void run() {
 
-                PotionEffect newEffect = getEffectFromType(player, effect);
+                PotionEffect newEffect = getStrengthFromPlayer(player);
 
                 if (newEffect != null
                         && (oldEffect == null || !isSameEffect(oldEffect, newEffect))) {
@@ -96,7 +139,8 @@ public class ModPvP extends HalfminerModule implements Listener {
                     int amplifier = newEffect.getAmplifier();
                     if (amplifier > 0) nerfRatio *= 6;
 
-                    updateEffect(player, effect, newEffect.getDuration() / nerfRatio, amplifier);
+                    updateEffect(player, PotionEffectType.INCREASE_DAMAGE,
+                            newEffect.getDuration() / nerfRatio, amplifier);
                 }
             }
         });
@@ -113,12 +157,16 @@ public class ModPvP extends HalfminerModule implements Listener {
                 && oldEff.getType().equals(newEff.getType());
     }
 
-    private PotionEffect getEffectFromType(Player player, PotionEffectType type) {
+    private PotionEffect getStrengthFromPlayer(Player player) {
 
         for (PotionEffect effect : player.getActivePotionEffects()) {
-            if (effect.getType().equals(type)) return effect;
+            if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) return effect;
         }
 
         return null;
+    }
+
+    public void reloadConfig() {
+        lastShot = new HashMap<>();
     }
 }

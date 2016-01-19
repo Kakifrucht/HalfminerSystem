@@ -7,13 +7,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
 
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
@@ -39,40 +40,6 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                 e.setCancelled(true);
             }
         }
-    }
-
-    @EventHandler
-    public void deathSounds(PlayerDeathEvent e) {
-
-        e.setDeathMessage("");
-
-        //Heal and play sound
-        final Player killer = e.getEntity().getKiller();
-        final Player died = e.getEntity();
-        if (killer != null && killer != e.getEntity()) {
-
-            killer.setHealth(killer.getMaxHealth());
-            hms.getServer().getScheduler().runTaskLaterAsynchronously(hms, new Runnable() {
-                @Override
-                public void run() {
-                    killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 2.0f);
-                    try {
-                        Thread.sleep(300L);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                    killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 0.5f);
-                }
-            }, 5);
-
-        } else {
-            died.playSound(e.getEntity().getLocation(), Sound.AMBIENCE_CAVE, 1.0f, 1.4f);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void teleportRemoveJump(PlayerTeleportEvent e) {
-        e.getPlayer().removePotionEffect(PotionEffectType.JUMP);
     }
 
     @EventHandler

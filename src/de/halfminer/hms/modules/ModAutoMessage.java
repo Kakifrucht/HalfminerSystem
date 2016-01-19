@@ -14,7 +14,6 @@ public class ModAutoMessage extends HalfminerModule {
     private final Random rnd = new Random();
     private BukkitTask running;
     private List<String> messages;
-    private String separator;
 
     public ModAutoMessage() {
         reloadConfig();
@@ -31,7 +30,7 @@ public class ModAutoMessage extends HalfminerModule {
             return;
         }
         // Build messages
-        separator = Language.getMessage("lineSeparator");
+        String separator = Language.getMessage("lineSeparator");
         messages = new ArrayList<>(messagesList.size());
         for (String str : messagesList) {
             String toAdd = ChatColor.translateAlternateColorCodes('&', str.replace("\\n", "\n"));
