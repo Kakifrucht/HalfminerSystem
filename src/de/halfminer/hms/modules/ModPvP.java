@@ -108,7 +108,11 @@ public class ModPvP extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void teleportRemoveJump(PlayerTeleportEvent e) {
-        e.getPlayer().removePotionEffect(PotionEffectType.JUMP);
+
+        if (!e.getPlayer().hasPermission("hms.bypass.pvp")) {
+            e.getPlayer().removePotionEffect(PotionEffectType.JUMP);
+            e.getPlayer().removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+        }
     }
 
     private void updateEffect(final Player player, final PotionEffectType effect, final int time, final int amplifier) {

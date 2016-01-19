@@ -76,9 +76,15 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 Projectile projectile = (Projectile) e.getDamager();
                 if (projectile.getShooter() instanceof Player) attacker = (Player) projectile.getShooter();
             }
-            if (attacker != null && attacker != victim) {
-                tagPlayer(victim);
-                tagPlayer(attacker);
+
+            if (attacker != null && attacker != victim && victim.getHealth() > 0) {
+
+                double remainingHealth = victim.getHealth() - e.getFinalDamage();
+
+                if (remainingHealth > 0.0d) {
+                    tagPlayer(victim);
+                    tagPlayer(attacker);
+                }
             }
         }
     }
