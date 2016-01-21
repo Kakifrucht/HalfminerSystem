@@ -19,12 +19,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ModCombatLog extends HalfminerModule implements Listener {
 
     private final Map<String, String> lang = new HashMap<>();
-    private final Map<Player, Integer> tagged = new ConcurrentHashMap<>();
+    private final Map<Player, Integer> tagged = new HashMap<>();
     private boolean broadcastLog;
     private int tagTime;
 
@@ -46,6 +45,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     @EventHandler
     @SuppressWarnings("unused")
     public void logoutCheckIfInCombat(PlayerQuitEvent e) {
+
         if (tagged.containsKey(e.getPlayer())) {
             untagPlayer(e.getPlayer());
 
@@ -77,14 +77,9 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 if (projectile.getShooter() instanceof Player) attacker = (Player) projectile.getShooter();
             }
 
-            if (attacker != null && attacker != victim && victim.getHealth() > 0) {
-
-                double remainingHealth = victim.getHealth() - e.getFinalDamage();
-
-                if (remainingHealth > 0.0d) {
-                    tagPlayer(victim);
-                    tagPlayer(attacker);
-                }
+            if (attacker != null && attacker != victim) {
+                tagPlayer(victim, attacker.getName());
+                tagPlayer(attacker, "");
             }
         }
     }
@@ -109,14 +104,21 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         }
     }
 
-    private void tagPlayer(final Player p) {
+    private void tagPlayer(final Player p, String attacker) {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
 
         if (tagged.containsKey(p)) hms.getServer().getScheduler().cancelTask(tagged.get(p));
-        else p.sendMessage(lang.get("tagged"));
+        else {
 
-        int id = hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
+            if (attacker.length() > 0) {
+                p.sendMessage(Language.placeholderReplace(lang.get("taggedBy"), "%PLAYER%", attacker));
+            } else {
+                p.sendMessage(lang.get("tagged"));
+            }
+        }
+
+        int id = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
 
             final String symbols = lang.get("symbols");
             int time = tagTime;
@@ -166,6 +168,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         lang.clear();
         lang.put("tagged", Language.getMessagePlaceholders("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
+        lang.put("taggedBy",Language.getMessagePlaceholders("modCombatLogTaggedBy", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
         lang.put("countdown", Language.getMessage("modCombatLogCountdown"));
         lang.put("symbols", Language.getMessage("modCombatLogProgressSymbols"));
         lang.put("untagged", Language.getMessage("modCombatLogUntagged"));
