@@ -18,6 +18,16 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Records statistics about players in storage
+ * - Online time
+ * - Last names
+ * - Kill/death count
+ * - K/D ratio
+ * - Blocks placed/broken
+ * - Mobkills
+ * - View stats on rightclicking a player
+ */
 public class ModStats extends HalfminerModule implements Listener {
 
     private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();

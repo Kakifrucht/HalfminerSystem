@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Print periodic messages to chat
+ */
 public class ModAutoMessage extends HalfminerModule {
 
     private final Random rnd = new Random();

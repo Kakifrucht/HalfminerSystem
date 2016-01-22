@@ -16,6 +16,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Contains functions, that are static and have no fitting module
+ * - Disables join/leave messages
+ * - Blocks certain items from being traded with villagers/merchants
+ * - Denies chatting when globalmute is enabled
+ * - Capsfilter that automatically lowercases capitalised messages
+ * - Disables commands while in bed
+ * - Disables command in format '/pluginname:command'
+ */
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
 

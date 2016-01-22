@@ -18,6 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Adds a ELO based skilllevel system to the server
+ * - Stores skilllevel/elo/groupname in storage
+ * - Shows skilllevel in tablist
+ * - Colors players name, depending on skillgroup
+ * - Calculates new ELO after a kill
+ */
 public class ModSkillLevel extends HalfminerModule implements Listener {
 
     private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();

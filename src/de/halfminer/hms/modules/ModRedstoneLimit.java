@@ -15,6 +15,12 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Reduce server strain by limiting redstone, pistons and hoppers
+ * - Redstone can only be triggered a given amount locally
+ * - Pistons can only be triggered a given amount server wide
+ * - Hoppers placement is limited
+ */
 public class ModRedstoneLimit extends HalfminerModule implements Listener {
 
     //Storage for limitations

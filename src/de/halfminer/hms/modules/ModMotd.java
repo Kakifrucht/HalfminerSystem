@@ -8,6 +8,11 @@ import org.bukkit.event.server.ServerListPingEvent;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Set the motd and max playercount in the serverlist
+ * - Takes news from storage and adds it to motd
+ * - Maximum playercount dynamic, based on how many people are online
+ */
 public class ModMotd extends HalfminerModule implements Listener {
 
     private final Random rnd = new Random();

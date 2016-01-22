@@ -9,18 +9,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
+/**
+ * Add titles containing information to the game
+ * - Join titles to show basic information (playercount, currency, commands, news)
+ * - Tab titles containing playercount and currency of the player
+ */
 public class ModTitles extends HalfminerModule implements Listener {
-
-    private final Map<UUID, Integer> killStreaks = new HashMap<>();
-    private final Map<UUID, Integer> deathStreaks = new HashMap<>();
 
     private final Map<Player, Double> balances = new HashMap<>();
 
@@ -71,43 +71,7 @@ public class ModTitles extends HalfminerModule implements Listener {
         updateTablist();
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    @SuppressWarnings("unused")
-    public void deathActionbarSender(PlayerDeathEvent e) {
 
-        // Show killstreaks in actionbar
-        Player victim = e.getEntity();
-        Player killer = victim.getKiller();
-        if (killer != null) {
-
-            UUID killerUid = killer.getUniqueId();
-            UUID victimUid = victim.getUniqueId();
-
-            deathStreaks.remove(killerUid);
-            killStreaks.remove(victimUid);
-
-            int killerStreak;
-            int victimStreak;
-
-            if (killStreaks.containsKey(killerUid)) killerStreak = killStreaks.get(killerUid) + 1;
-            else killerStreak = 1;
-
-            if (deathStreaks.containsKey(victimUid)) victimStreak = deathStreaks.get(victimUid) + 1;
-            else victimStreak = 1;
-
-            killStreaks.put(killerUid, killerStreak);
-            deathStreaks.put(victimUid, victimStreak);
-
-            if (killerStreak > 4) {
-                TitleSender.sendActionBar(null, Language.getMessagePlaceholders("modTitlesKillStreak", false,
-                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(killerStreak)));
-            }
-            if (victimStreak > 4) {
-                TitleSender.sendActionBar(null, Language.getMessagePlaceholders("modTitlesDeathStreak", false,
-                        "%PLAYER%", victim.getName(), "%STREAK%", String.valueOf(victimStreak)));
-            }
-        }
-    }
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")

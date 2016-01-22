@@ -1,10 +1,13 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -17,10 +20,23 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+/**
+ * PvP modifications/additions
+ * - Golden apple nerfed
+ * - Strength potions nerfed
+ * - Bow spamming disabled
+ * - Kill/Deathstreaks via titles
+ * - Sounds on kill/death
+ * - Remove effects on teleport
+ */
 public class ModPvP extends HalfminerModule implements Listener {
 
-    private Map<Player, Long> lastShot;
+    private Map<Player, Long> lastBowShot;
+
+    private final Map<UUID, Integer> killStreaks = new HashMap<>();
+    private final Map<UUID, Integer> deathStreaks = new HashMap<>();
 
     public ModPvP() {
         reloadConfig();
@@ -40,7 +56,7 @@ public class ModPvP extends HalfminerModule implements Listener {
         } else if (item.getType() == Material.POTION
                 && (item.getDurability() == 8201 || item.getDurability() == 8265 || item.getDurability() == 8233)) {
 
-            nerfStrength(p);
+            reduceStrengthDuration(p);
         }
     }
 
@@ -55,7 +71,7 @@ public class ModPvP extends HalfminerModule implements Listener {
                     if (entity instanceof Player) {
                         Player p = (Player) entity;
                         if (!p.hasPermission("hms.bypass.pvp"))
-                            nerfStrength((Player) entity);
+                            reduceStrengthDuration((Player) entity);
                     }
                 }
             }
@@ -69,9 +85,9 @@ public class ModPvP extends HalfminerModule implements Listener {
         if (!e.getEntity().hasPermission("hms.bypass.pvp") && e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
             long currentTime = System.currentTimeMillis();
-            if (lastShot.containsKey(p) && lastShot.get(p) + 1000 > currentTime) {
+            if (lastBowShot.containsKey(p) && lastBowShot.get(p) + 1000 > currentTime) {
                 e.setCancelled(true);
-            } else lastShot.put(p, currentTime);
+            } else lastBowShot.put(p, currentTime);
         }
     }
 
@@ -105,6 +121,44 @@ public class ModPvP extends HalfminerModule implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    @SuppressWarnings("unused")
+    public void killstreakTitlesOnDeath(PlayerDeathEvent e) {
+
+        // Show killstreaks in actionbar
+        Player victim = e.getEntity();
+        Player killer = victim.getKiller();
+        if (killer != null) {
+
+            UUID killerUid = killer.getUniqueId();
+            UUID victimUid = victim.getUniqueId();
+
+            deathStreaks.remove(killerUid);
+            killStreaks.remove(victimUid);
+
+            int killerStreak;
+            int victimStreak;
+
+            if (killStreaks.containsKey(killerUid)) killerStreak = killStreaks.get(killerUid) + 1;
+            else killerStreak = 1;
+
+            if (deathStreaks.containsKey(victimUid)) victimStreak = deathStreaks.get(victimUid) + 1;
+            else victimStreak = 1;
+
+            killStreaks.put(killerUid, killerStreak);
+            deathStreaks.put(victimUid, victimStreak);
+
+            if (killerStreak > 4) {
+                TitleSender.sendActionBar(null, Language.getMessagePlaceholders("modTitlesKillStreak", false,
+                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(killerStreak)));
+            }
+            if (victimStreak > 4) {
+                TitleSender.sendActionBar(null, Language.getMessagePlaceholders("modTitlesDeathStreak", false,
+                        "%PLAYER%", victim.getName(), "%STREAK%", String.valueOf(victimStreak)));
+            }
+        }
+    }
+
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void teleportRemoveJump(PlayerTeleportEvent e) {
@@ -126,7 +180,7 @@ public class ModPvP extends HalfminerModule implements Listener {
         });
     }
 
-    private void nerfStrength(final Player player) {
+    private void reduceStrengthDuration(final Player player) {
 
         final PotionEffect oldEffect = getStrengthFromPlayer(player);
 
@@ -171,6 +225,6 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     public void reloadConfig() {
-        lastShot = new HashMap<>();
+        lastBowShot = new HashMap<>();
     }
 }

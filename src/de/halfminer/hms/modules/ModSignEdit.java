@@ -13,6 +13,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Sign editing driver for Cmdsignedit
+ * - Detects which sign to choose
+ * - Copies sign lines or changes a given one
+ */
 public class ModSignEdit extends HalfminerModule implements Listener {
 
     private final Map<Player, EditInfo> edit = new HashMap<>();

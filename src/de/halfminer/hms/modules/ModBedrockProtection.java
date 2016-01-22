@@ -12,6 +12,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Logs and notifies about possible Bedrock/Obsidian glitching
+ */
 public class ModBedrockProtection extends HalfminerModule implements Listener {
 
     private final Map<Player, Long> lastMessage = new HashMap<>();
