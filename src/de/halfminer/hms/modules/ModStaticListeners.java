@@ -46,7 +46,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     public void chatFilter(AsyncPlayerChatEvent e) {
 
         Player p = e.getPlayer();
-        if (storage.getBoolean("sys.globalmute") && !p.hasPermission("hms.chat.advanced")) {
+        if (storage.getBoolean("sys.globalmute") && !p.hasPermission("hms.bypass.globalmute")) {
             p.sendMessage(Language.getMessagePlaceholders("commandChatGlobalmuteDenied", true,
                     "%PREFIX%", "Globalmute"));
             e.setCancelled(true);
@@ -70,6 +70,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
             player.sendMessage(Language.getMessagePlaceholders("modStaticListenersCommandSleep", true, "%PREFIX%", "Info"));
             e.setCancelled(true);
         } else {
+            // Deny commands, that contain ':', which could be used to bypass certain filters via /pluginname:command
             for (Character check : e.getMessage().toLowerCase().toCharArray()) {
                 if (check.equals(' ')) return;
                 if (check.equals(':')) {
