@@ -51,10 +51,13 @@ public class ModStats extends HalfminerModule implements Listener {
             String lastNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
             if (lastNames.length() > 0) {
-                //Do not store old name if it was used already
-                if (!lastNames.toLowerCase().contains(lastName.toLowerCase())) {
-                    storage.setStats(player, StatsType.LAST_NAMES, lastNames + ' ' + lastName);
+                // Do not store old name if it was already used
+                boolean containsName = false;
+                String lastNamesLowercase = lastName.toLowerCase();
+                for (String str : lastNames.toLowerCase().split(" ")) {
+                    containsName = str.equals(lastNamesLowercase);
                 }
+                if (!containsName) storage.setStats(player, StatsType.LAST_NAMES, lastNames + ' ' + lastName);
 
             } else {
                 storage.setStats(player, StatsType.LAST_NAMES, lastName);
