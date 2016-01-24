@@ -16,6 +16,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ import java.util.Map;
 public class ModCombatLog extends HalfminerModule implements Listener {
 
     private final Map<String, String> lang = new HashMap<>();
-    private final Map<Player, Integer> tagged = new HashMap<>();
+    private final Map<Player, BukkitTask> tagged = new HashMap<>();
     private boolean broadcastLog;
     private int tagTime;
 
@@ -115,7 +116,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
 
-        if (tagged.containsKey(p)) hms.getServer().getScheduler().cancelTask(tagged.get(p));
+        if (tagged.containsKey(p)) tagged.get(p).cancel();
         else {
 
             if (attacker.length() > 0) {
@@ -125,7 +126,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             }
         }
 
-        int id = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
+        BukkitTask task = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
 
             final String symbols = lang.get("symbols");
             int time = tagTime;
@@ -151,16 +152,16 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 if (time-- > 0) TitleSender.sendActionBar(p, message);
                 else untagPlayer(p);
             }
-        }, 0L, 20L).getTaskId();
+        }, 0L, 20L);
 
-        tagged.put(p, id);
+        tagged.put(p, task);
     }
 
     private void untagPlayer(Player p) {
 
         if (!tagged.containsKey(p)) return;
 
-        hms.getServer().getScheduler().cancelTask(tagged.get(p));
+        tagged.get(p).cancel();
         TitleSender.sendActionBar(p, lang.get("untagged"));
         p.playSound(p.getLocation(), Sound.NOTE_PLING, 1, 2f);
 
