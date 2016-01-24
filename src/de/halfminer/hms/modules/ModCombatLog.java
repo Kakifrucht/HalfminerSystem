@@ -126,7 +126,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             }
         }
 
-        BukkitTask task = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
+        tagged.put(p, hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
 
             final String symbols = lang.get("symbols");
             int time = tagTime;
@@ -152,9 +152,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 if (time-- > 0) TitleSender.sendActionBar(p, message);
                 else untagPlayer(p);
             }
-        }, 0L, 20L);
-
-        tagged.put(p, task);
+        }, 0L, 20L));
     }
 
     private void untagPlayer(Player p) {
