@@ -22,7 +22,7 @@ public class HalfminerStorage {
     private int taskId;
 
     public HalfminerStorage() {
-        reloadConfig();
+        load();
     }
 
     public void set(String path, Object value) {
@@ -115,7 +115,7 @@ public class HalfminerStorage {
         }
     }
 
-    public void reloadConfig() {
+    public void load() {
         if (file == null) {
             file = new File(hms.getDataFolder(), "storage.yml");
             fileConfig = YamlConfiguration.loadConfiguration(file);

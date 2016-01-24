@@ -51,6 +51,7 @@ public class ModStats extends HalfminerModule implements Listener {
             String lastNames = storage.getStatsString(player, StatsType.LAST_NAMES);
 
             if (lastNames.length() > 0) {
+
                 // Do not store old name if it was already used
                 boolean containsName = false;
                 String lastNameLowercase = lastName.toLowerCase();
@@ -61,7 +62,6 @@ public class ModStats extends HalfminerModule implements Listener {
                     }
                 }
                 if (!containsName) storage.setStats(player, StatsType.LAST_NAMES, lastNames + ' ' + lastName);
-
             } else {
                 storage.setStats(player, StatsType.LAST_NAMES, lastName);
             }
@@ -72,9 +72,8 @@ public class ModStats extends HalfminerModule implements Listener {
 
         storage.setUUID(player);
         storage.setStats(player, StatsType.LAST_NAME, player.getName());
-        storage.setStats(player, StatsType.KD_RATIO, calculateKDRatio(player));
 
-        //Votebarrier setting
+        // Votebarrier setting
         if (storage.getInt("sys.vote." + player.getUniqueId().toString()) == 0) {
             storage.set("sys.vote." + player.getUniqueId().toString(), ((System.currentTimeMillis() / 1000) + timeUntilHomeBlockSeconds));
         }

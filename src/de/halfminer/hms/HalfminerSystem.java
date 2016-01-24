@@ -101,7 +101,7 @@ public class HalfminerSystem extends JavaPlugin {
         saveConfig(); // Save config.yml to disk
 
         // Load storage
-        if (storage != null) storage.reloadConfig();
+        if (storage != null) storage.load();
         else storage = new HalfminerStorage();
 
         //noinspection ConstantConditions (Cmdhms accesses this method through reflection, so the IDE does not detect the sense of the statement)
