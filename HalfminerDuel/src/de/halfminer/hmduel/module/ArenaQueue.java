@@ -362,7 +362,7 @@ public class ArenaQueue {
                 // start next game, without showing selection, since this is the only arena available
                 if (!duelQueue.isEmpty()) initArenaSelection(duelQueue.pop(), duelQueue.pop());
             }
-        }, 10L);
+        }, 4L);
     }
 
     /**

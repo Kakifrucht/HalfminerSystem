@@ -201,7 +201,7 @@ class Arena {
             public void run() {
                 isFree = true;
             }
-        }, 5L);
+        }, 3L);
     }
 
     /**
@@ -251,14 +251,14 @@ class Arena {
     private void afterFightDead(final Player player) {
 
         try { //player is dead, restore him one tick later
-            Bukkit.getScheduler().runTask(hmd, new Runnable() {
+            Bukkit.getScheduler().runTaskLater(hmd, new Runnable() {
                 @Override
                 public void run() {
                     player.spigot().respawn();
                     healPlayer(player);
                     restorePlayer(player);
                 }
-            });
+            }, 2L);
         } catch (IllegalPluginAccessException e) { //only happens during reload (onDisable call) and if a player died in the same tick
             hmd.getLogger().info(player.getName() + " duel was cancelled while the player was dead already");
             restorePlayer(player); // still restore, just dont heal
@@ -305,5 +305,4 @@ class Arena {
         public ItemStack[] inventory;
         public ItemStack[] armor;
     }
-
 }
