@@ -21,7 +21,11 @@ Current features
   - CombatLogging
     - With ActionBar support
   - Bedrock glitching (alert and log)
-  - Lag caused by Redstone/Pistons/Hoppers
+- Performance modifications
+  - Redstone limiter
+  - Piston limiter
+  - Hopper limiter
+  - Mobspawner limiter
 - Automessager
 - Vote command
   - Execute command if certain votecount has been reached

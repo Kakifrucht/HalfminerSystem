@@ -46,7 +46,7 @@ public class ModPvP extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void onEat(PlayerItemConsumeEvent e) {
 
-        final Player p = e.getPlayer();
+        Player p = e.getPlayer();
         if (p.hasPermission("hms.bypass.pvp")) return;
 
         ItemStack item = e.getItem();
@@ -97,7 +97,7 @@ public class ModPvP extends HalfminerModule implements Listener {
 
         e.setDeathMessage("");
 
-        //Heal and play sound
+        // Heal and play sound
         final Player killer = e.getEntity().getKiller();
         final Player died = e.getEntity();
         if (killer != null && killer != e.getEntity()) {
@@ -209,10 +209,10 @@ public class ModPvP extends HalfminerModule implements Listener {
         int oldDurationBounds = oldDuration - 20;
         int newDuration = newEff.getDuration();
 
-        return oldDuration > newDuration
-                && newDuration > oldDurationBounds
+        return oldEff.getType().equals(newEff.getType())
                 && oldEff.getAmplifier() == newEff.getAmplifier()
-                && oldEff.getType().equals(newEff.getType());
+                && newDuration > oldDurationBounds
+                && oldDuration > newDuration;
     }
 
     private PotionEffect getStrengthFromPlayer(Player player) {

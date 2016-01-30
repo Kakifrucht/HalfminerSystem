@@ -40,7 +40,7 @@ public class HalfminerSystem extends JavaPlugin {
         modules.put(ModuleType.BEDROCK_PROTECTION, new ModBedrockProtection());
         modules.put(ModuleType.MOTD, new ModMotd());
         modules.put(ModuleType.SIGN_EDIT, new ModSignEdit());
-        modules.put(ModuleType.REDSTONE_LIMIT, new ModRedstoneLimit());
+        modules.put(ModuleType.PERFORMANCE, new ModPerformance());
         modules.put(ModuleType.COMBAT_LOG, new ModCombatLog());
         modules.put(ModuleType.TPS, new ModTps());
         modules.put(ModuleType.STATS, new ModStats());

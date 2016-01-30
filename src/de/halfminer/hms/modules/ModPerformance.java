@@ -4,6 +4,7 @@ import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -11,32 +12,37 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Reduce server strain by limiting redstone, pistons and hoppers
+ * Reduce server strain by limiting redstone, pistons, hoppers and spawners
  * - Redstone can only be triggered a given amount locally
  * - Pistons can only be triggered a given amount server wide
  * - Hoppers placement is limited
+ * - Amount of mobspawns are limited
  */
-public class ModRedstoneLimit extends HalfminerModule implements Listener {
+public class ModPerformance extends HalfminerModule implements Listener {
 
-    //Storage for limitations
+    // Storage for limitations
     private final Map<Location, Integer> lastStored = new HashMap<>();
     private int pistonCount = 0;
     private int taskId = 0;
-    //Redstone and pistons config
+    // Redstone and pistons config
     private int howMuchRedstoneAllowed;
     private int howManyPistonsAllowed;
-    //Hopper limit config
+    // Hopper limit config
     private int hopperLimit;
     private int hopperLimitRadius;
     private boolean logHopperLimit;
     private String hopperLimitMessage;
+    // Entity limits
+    private int entityLimit;
 
-    public ModRedstoneLimit() {
+    public ModPerformance() {
         reloadConfig();
     }
 
@@ -73,11 +79,30 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(hopperLimitMessage);
                 if (logHopperLimit) {
-                    hms.getLogger().info(Language.getMessagePlaceholders("modRedstoneLimitReachedHopperLog", false,
+                    hms.getLogger().info(Language.getMessagePlaceholders("modPerformanceReachedHopperLog", false,
                             "%PLAYER%", e.getPlayer().getName(), "%LIMIT%", String.valueOf(hopperLimit), "%LOCATION%",
                             Language.getStringFromLocation(block.getLocation())));
                 }
             }
+        }
+    }
+
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void onMobSpawnerLimit(CreatureSpawnEvent e) {
+
+        if (!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) return;
+
+        Location loc = e.getEntity().getLocation();
+        int amount = 0;
+        Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, 16.0, 16.0, 16.0);
+        if (nearby.size() < entityLimit) return;
+        for (Entity entity : nearby) {
+            if (entity.getType().equals(e.getEntityType()))
+                if (++amount > entityLimit) {
+                    e.setCancelled(true);
+                    return;
+                }
         }
     }
 
@@ -105,14 +130,15 @@ public class ModRedstoneLimit extends HalfminerModule implements Listener {
     @Override
     public void reloadConfig() {
 
-        int ticksDelayUntilClear = hms.getConfig().getInt("redstoneLimit.ticksDelayUntilClear", 160);
-        howMuchRedstoneAllowed = hms.getConfig().getInt("redstoneLimit.howMuchRedstoneAllowed", 32);
-        howManyPistonsAllowed = hms.getConfig().getInt("redstoneLimit.howManyPistonsAllowed", 400);
-        hopperLimit = hms.getConfig().getInt("redstoneLimit.hopperLimit", 64);
-        hopperLimitRadius = hms.getConfig().getInt("redstoneLimit.hopperLimitRadius", 7);
-        logHopperLimit = hms.getConfig().getBoolean("redstoneLimit.hopperLimitLog", false);
+        int ticksDelayUntilClear = hms.getConfig().getInt("performance.ticksDelayUntilClear", 160);
+        howMuchRedstoneAllowed = hms.getConfig().getInt("performance.howMuchRedstoneAllowed", 32);
+        howManyPistonsAllowed = hms.getConfig().getInt("performance.howManyPistonsAllowed", 400);
+        hopperLimit = hms.getConfig().getInt("performance.hopperLimit", 64);
+        hopperLimitRadius = hms.getConfig().getInt("performance.hopperLimitRadius", 7);
+        logHopperLimit = hms.getConfig().getBoolean("performance.hopperLimitLog", false);
+        entityLimit = hms.getConfig().getInt("performance.entityLimit", 50);
 
-        hopperLimitMessage = Language.getMessagePlaceholders("modRedstoneLimitReachedHopper", true, "%PREFIX%", "Info");
+        hopperLimitMessage = Language.getMessagePlaceholders("modPerformanceReachedHopper", true, "%PREFIX%", "Info");
 
         if (taskId != 0) hms.getServer().getScheduler().cancelTask(taskId);
         taskId = hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {

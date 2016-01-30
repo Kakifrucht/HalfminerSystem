@@ -89,8 +89,8 @@ localization:
   modSignEditSignPasted: '&aText eingefuegt, es verbleiben &e%AMOUNT% &aKopien'
   modSignEditLinePasted: '&aSchild editiert'
   modBedrockProtectionGlitching: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION%'
-  modRedstoneLimitReachedHopper: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
-  modRedstoneLimitReachedHopperLog: '%PLAYER% hat das Limit (%LIMIT%) bei %LOCATION% erreicht'
+  modPerformanceReachedHopper: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
+  modPerformanceReachedHopperLog: '%PLAYER% hat das Limit (%LIMIT%) bei %LOCATION% erreicht'
   modMotdLine: '%COLOR%Server\n&7%REPLACE%&7! (mc.halfminer.de)'
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps betraegt lediglich &e%TPS%'
   modCombatLogTagged: '&cDu bist jetzt fuer &e%TIME% &cSekunden im Kampf, ausloggen fuehrt zum Tod'
@@ -187,7 +187,7 @@ motd:
   - 6
   - 9
   - b
-redstoneLimit:
+performance:
   #Delay in ticks until the blocks will be lifted
   ticksDelayUntilClear: 160
   #Number in events until redstone will be blocked, ticksDelayUntilClear clears this
@@ -200,6 +200,8 @@ redstoneLimit:
   hopperLimitRadius: 7
   #Log to console if a limit has been hit
   hopperLimitLog: false
+  #How many entities are allowed to be around a new spawned entity
+  entityLimit: 40
 combatLog:
   #Broadcast when a player logs out
   broadcastLog: true

@@ -39,7 +39,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         reloadConfig();
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     @SuppressWarnings("unused")
     public void onDeathUntag(PlayerDeathEvent e) {
 
@@ -134,7 +134,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             @Override
             public void run() {
 
-                //build the progressbar
+                // build the progressbar
                 int timePercentage = (int) Math.round((time / (double) tagTime) * 10);
                 String progressBar = "" + ChatColor.DARK_RED + ChatColor.STRIKETHROUGH;
                 boolean switchedColors = false;

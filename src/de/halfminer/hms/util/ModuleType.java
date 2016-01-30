@@ -7,7 +7,7 @@ public enum ModuleType {
     BEDROCK_PROTECTION,
     COMBAT_LOG,
     MOTD,
-    REDSTONE_LIMIT,
+    PERFORMANCE,
     SIGN_EDIT,
     SKILL_LEVEL,
     STATIC_LISTENERS,
