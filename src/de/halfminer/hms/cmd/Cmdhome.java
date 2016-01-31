@@ -20,7 +20,8 @@ public class Cmdhome extends BaseCommand {
             Player player = (Player) sender;
             String command = "ehome" + ' ' + Language.arrayToString(args, 0, false);
 
-            if (player.hasPermission("essentials.home")) hms.getServer().dispatchCommand(player, command);
+            if (player.hasPermission("hms.moderator") || player.hasPermission("essentials.home"))
+                hms.getServer().dispatchCommand(player, command);
             else if (storage.getLong("sys.vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
                     || storage.getStatsInt(player, StatsType.TIME_ONLINE) < 18000
                     || storage.getInt("sys.vote.ip" + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) > 1) {
