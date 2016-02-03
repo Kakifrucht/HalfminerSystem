@@ -1,11 +1,10 @@
 # Halfminer System
-Core plugin for Minecraft Server Two and a half Miner  
+Core plugin for Minecraft Server Two and a half Miner
+Dueling/PvP solution HalfminerBattle can be found [here](/Kakifrucht/HalfminerBattle)
 Website: https://halfminer.de
 
 Current features
 -------
-- **Complete dueling solution HalfminerDuel**
-  - More information below
 - Modular, lightweight, efficient
 - Statistics for every player with /stats
   - Rightclick player to view some stats
@@ -71,24 +70,3 @@ Current features
   - Heals player after kill and plays sound
   - Disable apple and book trading with villagers
   - Small features for VariableTriggers /vtapi
-
-HalfminerDuel
--------
-- Endless amount of arenas
-- Custom kits per arena
-- Tested and should be bug free
-- Recovers players completely after fight
-- Robust queue system
-  - Kicks player from queue when engaging in PvP outside of arena
-- Duelling per request (/duel playername) or via match (/duel match)
-- When waiting too long for match, will broadcast that a player is waiting
-- Dynamic arena selection system, only shows vacant arenas
-- Consists of a single queue (pipeline), not per arena queue, improving performance
-- Shows current arena status with /duel list
-- Countdown before game start
-- Set maximum game time
-- Disables while fighting:
-  - Hunger loss in duel (optional)
-  - Item pickup
-  - Command usage
-- Language completely customizable

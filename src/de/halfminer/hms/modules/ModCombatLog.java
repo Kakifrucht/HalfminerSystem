@@ -87,8 +87,8 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             }
 
             if (attacker != null && attacker != victim && !attacker.isDead() && !victim.isDead()) {
-                tagPlayer(victim, attacker.getName());
-                tagPlayer(attacker, "");
+                tagPlayer(victim, attacker);
+                tagPlayer(attacker, null);
             }
         }
     }
@@ -113,15 +113,14 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         }
     }
 
-    private void tagPlayer(final Player p, String attacker) {
+    private void tagPlayer(final Player p, Player attacker) {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
 
         if (tagged.containsKey(p)) tagged.get(p).cancel();
         else {
-
-            if (attacker.length() > 0) {
-                p.sendMessage(Language.placeholderReplace(lang.get("taggedBy"), "%PLAYER%", attacker));
+            if (attacker != null) {
+                p.sendMessage(Language.placeholderReplace(lang.get("taggedBy"), "%PLAYER%", attacker.getName()));
             } else {
                 p.sendMessage(lang.get("tagged"));
             }

@@ -1,6 +1,5 @@
 *.iml
 .idea/
-HalfminerDuel/.idea/
-/out/
-/EssentialsX.jar
+out/
+EssentialsX.jar
 spigot.jar
