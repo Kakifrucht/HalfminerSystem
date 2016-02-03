@@ -1,7 +1,7 @@
 # Halfminer System
-Core plugin for Minecraft Server Two and a half Miner
+Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de)
+
 Dueling/PvP solution HalfminerBattle can be found [here](/Kakifrucht/HalfminerBattle)
-Website: https://halfminer.de
 
 Current features
 -------
