@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ import java.util.Map;
 public class ModCombatLog extends HalfminerModule implements Listener {
 
     private final Map<String, String> lang = new HashMap<>();
-    private final Map<Player, BukkitTask> tagged = new HashMap<>();
+    private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<Player, BukkitTask>());
     private boolean broadcastLog;
     private int tagTime;
 
@@ -85,7 +86,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 if (projectile.getShooter() instanceof Player) attacker = (Player) projectile.getShooter();
             }
 
-            if (attacker != null && attacker != victim) {
+            if (attacker != null && attacker != victim && !attacker.isDead() && !victim.isDead()) {
                 tagPlayer(victim, attacker.getName());
                 tagPlayer(attacker, "");
             }
@@ -126,7 +127,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             }
         }
 
-        tagged.put(p, hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
+        tagged.put(p, hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
 
             final String symbols = lang.get("symbols");
             int time = tagTime;
