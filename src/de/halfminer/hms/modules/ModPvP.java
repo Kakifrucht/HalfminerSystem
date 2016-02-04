@@ -93,7 +93,7 @@ public class ModPvP extends HalfminerModule implements Listener {
 
     @EventHandler
     @SuppressWarnings("unused")
-    public void deathSounds(PlayerDeathEvent e) {
+    public void deathSoundsAndHeal(PlayerDeathEvent e) {
 
         e.setDeathMessage("");
 

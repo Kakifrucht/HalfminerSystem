@@ -1,7 +1,7 @@
 # Halfminer System
-Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de)
+Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de).
 
-Dueling/PvP solution HalfminerBattle can be found [here](/Kakifrucht/HalfminerBattle)
+Dueling/PvP solution HalfminerBattle can be found [here](/Kakifrucht/HalfminerBattle).
 
 Current features
 -------
@@ -9,18 +9,19 @@ Current features
 - Statistics for every player with /stats
   - Rightclick player to view some stats
   - Allows to compare statistics easily
-- PvP based Skilllevel System, ELO
-  - Adds level to scoreboard, colors name
+- PvP based skilllevel system / ELO
+  - Adds level to scoreboard
+  - Colors name depending on skillgroup
 - View latency and server status with /lag
   - Information if player or server lags
   - View other players latency/ping
-  - Notifies staff when tps is too low
+  - Notifies staff when servers TPS is too low
 - Inbuilt protections against:
   - Killfarming
   - CombatLogging
     - With ActionBar support
   - Bedrock glitching (alert and log)
-- Performance modifications
+- Performance optimizations
   - Redstone limiter
   - Piston limiter
   - Hopper limiter
@@ -47,26 +48,27 @@ Current features
   - Economy support
   - Command to search for homes in a given radius
 - Custom serverlist motd
-  - Sets the playerlimit after threshold to playercount + 1
+  - Dynamic playerlimit, configurable
 - Edit and copy signs /signedit
 - Increase servers votes by restricting /home
   - Wont be restricting for new players
-  - Will not restrict first 15 Minutes after join
-  - Will also lift block for every member with same IP
+  - Will not restrict first 15 minutes after join
+  - Will also lift block for every player with same IP
 - Teleport to a random location
   - It will make sure that you do not land in water/lava
 - Make PvP more balanced
   - Disables bowspamming
-  - Nerfs strength potions, by making them last much shorter
-  - Lowers effect of golden apples (OP apples)
-- Rename items /hms rename
-- Permission levels 0-6, restrict access to certain ranks
+  - Nerfs strength potions, by lowering effect time
+  - Weakens regenartion on golden apples (OP apples)
+- Rename items with /hms rename, lore support
+- Ring a player, to get his attention with /hms ring
 - Functionality mostly and messages completely configurable
 - Small extras:
   - Removes default join/leave/death messages
   - Capslock filter
+  - Permission levels 0-6, restrict access to certain ranks
   - Disables hitting self with bow
-  - Blocks usage of /pluginname:command, no commands while in bed
+  - Blocks usage of /pluginname:command, commands disabled while in bed
   - Heals player after kill and plays sound
   - Disable apple and book trading with villagers
-  - Small features for VariableTriggers /vtapi
+  - Small features for VariableTriggers integration /vtapi
