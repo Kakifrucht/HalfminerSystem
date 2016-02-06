@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.TitleSender;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
@@ -163,7 +164,9 @@ public class ModPvP extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void teleportRemoveJumpAndStrength(PlayerTeleportEvent e) {
 
-        if (!e.getPlayer().hasPermission("hms.bypass.pvp") && e.getFrom().distance(e.getTo()) > 100.0d) {
+        Location from = e.getFrom();
+        Location to = e.getTo();
+        if (!e.getPlayer().hasPermission("hms.bypass.pvp") && (!from.getWorld().equals(to.getWorld()) || from.distance(to) > 100.0d)) {
             e.getPlayer().removePotionEffect(PotionEffectType.JUMP);
             e.getPlayer().removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
         }
