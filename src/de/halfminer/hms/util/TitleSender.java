@@ -50,7 +50,6 @@ public class TitleSender {
             }
 
         } else {
-
             sendTitlePackets(player, topTitle, subTitle, fadeIn, stay, fadeOut);
         }
     }
@@ -109,7 +108,6 @@ public class TitleSender {
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
 
         connection.sendPacket(new PacketPlayOutTitle(fadeIn, stay, fadeOut));
-
         if (topTitle.length() > 0)
             connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE,
                     IChatBaseComponent.ChatSerializer.a("{'text': '" + topTitle + "'}")));
