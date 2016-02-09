@@ -95,7 +95,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
 
         Location loc = e.getEntity().getLocation();
         int amount = 0;
-        Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, 16.0, 16.0, 16.0);
+        Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, 32.0, 32.0, 32.0);
         if (nearby.size() < entityLimit) return;
         for (Entity entity : nearby) {
             if (entity.getType().equals(e.getEntityType()))
