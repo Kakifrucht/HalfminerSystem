@@ -41,6 +41,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
     private String hopperLimitMessage;
     // Entity limits
     private int entityLimit;
+    private int boxSize;
 
     public ModPerformance() {
         reloadConfig();
@@ -95,7 +96,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
 
         Location loc = e.getEntity().getLocation();
         int amount = 0;
-        Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, 32.0, 32.0, 32.0);
+        Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, boxSize, boxSize, boxSize);
         if (nearby.size() < entityLimit) return;
         for (Entity entity : nearby) {
             if (entity.getType().equals(e.getEntityType()))
@@ -137,6 +138,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
         hopperLimitRadius = hms.getConfig().getInt("performance.hopperLimitRadius", 7);
         logHopperLimit = hms.getConfig().getBoolean("performance.hopperLimitLog", false);
         entityLimit = hms.getConfig().getInt("performance.entityLimit", 50);
+        boxSize = hms.getConfig().getInt("performance.boxSize", 16);
 
         hopperLimitMessage = Language.getMessagePlaceholders("modPerformanceReachedHopper", true, "%PREFIX%", "Info");
 
