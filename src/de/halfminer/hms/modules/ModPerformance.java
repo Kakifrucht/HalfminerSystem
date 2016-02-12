@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -40,7 +41,8 @@ public class ModPerformance extends HalfminerModule implements Listener {
     private boolean logHopperLimit;
     private String hopperLimitMessage;
     // Entity limits
-    private int entityLimit;
+    private int entityLimitLiving;
+    private int entityLimitSame;
     private int boxSize;
 
     public ModPerformance() {
@@ -95,15 +97,19 @@ public class ModPerformance extends HalfminerModule implements Listener {
         if (!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) return;
 
         Location loc = e.getEntity().getLocation();
-        int amount = 0;
+        int amountLiving = 0;
+        int amountSame = 0;
         Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, boxSize, boxSize, boxSize);
-        if (nearby.size() < entityLimit) return;
+        if (nearby.size() < entityLimitLiving) return;
         for (Entity entity : nearby) {
-            if (entity.getType().equals(e.getEntityType()))
-                if (++amount > entityLimit) {
-                    e.setCancelled(true);
-                    return;
-                }
+
+            if (entity.getType().equals(e.getEntityType())) amountSame++;
+            else if (entity instanceof LivingEntity) amountLiving++;
+
+            if (amountLiving > entityLimitLiving || amountSame > entityLimitSame) {
+                e.setCancelled(true);
+                return;
+            }
         }
     }
 
@@ -137,7 +143,8 @@ public class ModPerformance extends HalfminerModule implements Listener {
         hopperLimit = hms.getConfig().getInt("performance.hopperLimit", 64);
         hopperLimitRadius = hms.getConfig().getInt("performance.hopperLimitRadius", 7);
         logHopperLimit = hms.getConfig().getBoolean("performance.hopperLimitLog", false);
-        entityLimit = hms.getConfig().getInt("performance.entityLimit", 50);
+        entityLimitLiving = hms.getConfig().getInt("performance.entitiyLimitLiving", 100);
+        entityLimitSame = hms.getConfig().getInt("performance.entityLimitSame", 25);
         boxSize = hms.getConfig().getInt("performance.boxSize", 16);
 
         hopperLimitMessage = Language.getMessagePlaceholders("modPerformanceReachedHopper", true, "%PREFIX%", "Info");
