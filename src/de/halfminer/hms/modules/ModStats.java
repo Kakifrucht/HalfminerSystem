@@ -85,9 +85,10 @@ public class ModStats extends HalfminerModule implements Listener {
         setOnlineTime(e.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     @SuppressWarnings("unused")
     public void deathStatsUpdateAndMessage(PlayerDeathEvent e) {
+
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity();
         if (killer != null && victim != killer) {
@@ -119,7 +120,6 @@ public class ModStats extends HalfminerModule implements Listener {
             hms.getLogger().info(Language.getMessagePlaceholders("modStatsDeathLog", false,
                     "%PLAYER%", victim.getName()));
         }
-
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
