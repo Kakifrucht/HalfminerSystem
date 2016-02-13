@@ -94,7 +94,12 @@ public class ModPerformance extends HalfminerModule implements Listener {
     @SuppressWarnings("unused")
     public void onMobSpawnerLimit(CreatureSpawnEvent e) {
 
-        if (!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) return;
+        CreatureSpawnEvent.SpawnReason reason = e.getSpawnReason();
+
+        if (reason.equals(CreatureSpawnEvent.SpawnReason.NATURAL)
+                || reason.equals(CreatureSpawnEvent.SpawnReason.SLIME_SPLIT)
+                || reason.equals(CreatureSpawnEvent.SpawnReason.MOUNT)
+                || reason.equals(CreatureSpawnEvent.SpawnReason.JOCKEY)) return;
 
         Location loc = e.getEntity().getLocation();
         int amountLiving = 0;
@@ -104,7 +109,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
         for (Entity entity : nearby) {
 
             if (entity.getType().equals(e.getEntityType())) amountSame++;
-            else if (entity instanceof LivingEntity) amountLiving++;
+            else if (entity instanceof LivingEntity && entity.isValid()) amountLiving++;
 
             if (amountLiving > entityLimitLiving || amountSame > entityLimitSame) {
                 e.setCancelled(true);
