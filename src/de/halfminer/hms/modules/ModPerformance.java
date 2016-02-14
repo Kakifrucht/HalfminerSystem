@@ -102,14 +102,19 @@ public class ModPerformance extends HalfminerModule implements Listener {
                 || reason.equals(CreatureSpawnEvent.SpawnReason.JOCKEY)) return;
 
         Location loc = e.getEntity().getLocation();
-        int amountLiving = 0;
-        int amountSame = 0;
         Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, boxSize, boxSize, boxSize);
         if (nearby.size() < entityLimitLiving) return;
+
+        int amountLiving = 0;
+        int amountSame = 0;
         for (Entity entity : nearby) {
 
-            if (entity.getType().equals(e.getEntityType())) amountSame++;
-            else if (entity instanceof LivingEntity && entity.isValid()) amountLiving++;
+            if (!entity.isValid()) continue;
+
+            if (entity.getType().equals(e.getEntityType())) {
+                amountSame++;
+                amountLiving++;
+            } else if (entity instanceof LivingEntity) amountLiving++;
 
             if (amountLiving > entityLimitLiving || amountSame > entityLimitSame) {
                 e.setCancelled(true);
