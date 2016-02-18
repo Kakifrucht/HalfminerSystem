@@ -81,7 +81,7 @@ public class TitleSender {
     public static void setTablistHeaderFooter(Player player, String messages) {
 
         if (!player.isOnline()) return;
-        String[] messagesParsed = messages.replace("\\n", "\n").split("\n");
+        String[] messagesParsed = messages.split("%BOTTOM%");
         String header = messagesParsed[0];
         String footer = "";
         if (messagesParsed.length > 1) footer = messagesParsed[1];
