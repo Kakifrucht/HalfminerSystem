@@ -21,6 +21,7 @@ Current features
   - CombatLogging
     - With ActionBar support
   - Bedrock glitching (alert and log)
+  - Netherroof glitching
 - Performance optimizations
   - Redstone limiter
   - Piston limiter

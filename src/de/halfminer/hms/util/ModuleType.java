@@ -4,7 +4,7 @@ public enum ModuleType {
 
     ANTI_KILLFARMING,
     AUTO_MESSAGE,
-    BEDROCK_PROTECTION,
+    GLITCH_PROTECTION,
     COMBAT_LOG,
     MOTD,
     PERFORMANCE,

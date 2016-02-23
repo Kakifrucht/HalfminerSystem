@@ -37,7 +37,7 @@ public class HalfminerSystem extends JavaPlugin {
         // load modules
         modules.put(ModuleType.AUTO_MESSAGE, new ModAutoMessage());
         modules.put(ModuleType.ANTI_KILLFARMING, new ModAntiKillfarming());
-        modules.put(ModuleType.BEDROCK_PROTECTION, new ModBedrockProtection());
+        modules.put(ModuleType.GLITCH_PROTECTION, new ModGlitchProtection());
         modules.put(ModuleType.MOTD, new ModMotd());
         modules.put(ModuleType.SIGN_EDIT, new ModSignEdit());
         modules.put(ModuleType.PERFORMANCE, new ModPerformance());

@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.5.8
+version: 3.5.9
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -66,6 +66,7 @@ permissions:
     hms.bypass.commandfilter: true
     hms.bypass.hopperlimit: true
     hms.bypass.bedrockcheck: true
+    hms.bypass.nethercheck: true
     hms.bypass.nokillfarming: true
     hms.bypass.skilllevel: true
     hms.bypass.statsrightclick: true
@@ -127,6 +128,8 @@ permissions:
     description: Bypass hopper placement limit
   hms.bypass.bedrockcheck:
     description: Bypass bedrock movement check
+  hms.bypass.nethercheck:
+    description: Bypass netherroof position check
   hms.bypass.nokillfarming:
     description: Bypass killfarming check
   hms.bypass.skilllevel:
