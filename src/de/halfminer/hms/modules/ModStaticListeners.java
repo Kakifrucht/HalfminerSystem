@@ -61,7 +61,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
             e.setCancelled(true);
         } else {
             String message = e.getMessage();
-            p.playSound(p.getLocation(), Sound.NOTE_STICKS, 1.0f, 1.9f);
+            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.9f); //TODO correct NOTE_STICKS
             if (p.hasPermission("hms.bypass.capsfilter") || message.length() < 4) return;
 
             int amountUppercase = 0;

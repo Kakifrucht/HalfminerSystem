@@ -2,8 +2,8 @@ package de.halfminer.hms.util;
 
 import de.halfminer.hms.HalfminerSystem;
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import net.minecraft.server.v1_9_R1.*;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;

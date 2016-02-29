@@ -107,18 +107,18 @@ public class ModPvP extends HalfminerModule implements Listener {
             hms.getServer().getScheduler().runTaskLaterAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
-                    killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 2.0f);
+                    killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
                     try {
                         Thread.sleep(300L);
                     } catch (InterruptedException e1) {
                         e1.printStackTrace();
                     }
-                    killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1.0f, 0.5f);
+                    killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
                 }
             }, 5);
 
         } else {
-            died.playSound(e.getEntity().getLocation(), Sound.AMBIENCE_CAVE, 1.0f, 1.4f);
+            died.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);
         }
     }
 
