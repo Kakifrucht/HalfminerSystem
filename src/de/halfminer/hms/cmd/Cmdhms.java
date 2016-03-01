@@ -71,7 +71,7 @@ public class Cmdhms extends BaseCommand {
 
             if (args.length > 1) {
 
-                ItemStack item = player.getItemInHand();
+                ItemStack item = player.getInventory().getItemInMainHand();
 
                 if (item == null || item.getType() == Material.AIR) {
                     player.sendMessage(Language.getMessagePlaceholders("commandHmsRenameFailed", true, "%PREFIX%", "HMS"));
@@ -217,7 +217,7 @@ public class Cmdhms extends BaseCommand {
                     boolean drop = true;
                     for (int i = 0; i < 19; i++) {
 
-                        toRing.playSound(toRing.getLocation(), Sound.ORB_PICKUP, 1.0f, ringHeight);
+                        toRing.playSound(toRing.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, ringHeight);
 
                         if (ringHeight == 2.0f) drop = true;
                         else if (ringHeight == 0.5f) drop = false;

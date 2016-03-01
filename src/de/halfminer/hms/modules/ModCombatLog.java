@@ -161,7 +161,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         tagged.get(p).cancel();
         TitleSender.sendActionBar(p, lang.get("untagged"));
-        p.playSound(p.getLocation(), Sound.NOTE_PLING, 1, 2f);
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 2f);
 
         tagged.remove(p);
     }

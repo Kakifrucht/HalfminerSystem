@@ -39,14 +39,14 @@ public class Cmdvtapi extends BaseCommand {
 
                     String playername = player.getName();
 
-                    if (player.getItemInHand().getItemMeta().hasDisplayName()) {
+                    if (player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
 
-                        ItemStack hand = player.getItemInHand();
+                        ItemStack hand = player.getInventory().getItemInMainHand();
 
                         hms.getServer().dispatchCommand(consoleInstance, "vt setstr temp casename_" + sender.getName() + " " + hand.getItemMeta().getDisplayName());
                         int amount = hand.getAmount();
                         if (amount > 1) hand.setAmount(hand.getAmount() - 1);
-                        else player.getInventory().setItemInHand(null);
+                        else player.getInventory().setItemInMainHand(null);
                         hms.getServer().dispatchCommand(consoleInstance, "vt run casino:caseopen " + playername);
 
                     } else {
@@ -57,7 +57,7 @@ public class Cmdvtapi extends BaseCommand {
 
                 } else if (args[0].equalsIgnoreCase("takehead")) {
 
-                    ItemStack item = player.getItemInHand();
+                    ItemStack item = player.getInventory().getItemInMainHand();
                     if ((item != null) && (item.getType() == Material.SKULL_ITEM)) {
 
                         SkullMeta skull = (SkullMeta) item.getItemMeta();
@@ -83,7 +83,7 @@ public class Cmdvtapi extends BaseCommand {
                         //Remove the skull
                         int amount = item.getAmount();
                         if (amount > 1) item.setAmount(amount - 1);
-                        else player.getInventory().setItemInHand(null);
+                        else player.getInventory().setItemInMainHand(null);
                         //proceed with next step
                         hms.getServer().dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
 

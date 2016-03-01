@@ -42,7 +42,7 @@ public class Cmdvote extends BaseCommand {
                 //can also bypass the block, also drop vote reward, or increment background reward counter
                 if (hasVoted instanceof Player) {
                     Player playerHasVoted = (Player) hasVoted;
-                    playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.NOTE_PLING, 1.0f, 2.0f);
+                    playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 2.0f);
                     String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
                     storage.incrementInt("sys.vote.ip" + address, 1);
                     if (!dropCase((Player) hasVoted)) {
