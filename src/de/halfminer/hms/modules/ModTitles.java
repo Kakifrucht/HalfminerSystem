@@ -20,6 +20,7 @@ import java.util.Map;
  * - Join titles to show basic information (playercount, currency, commands, news)
  * - Tab titles containing playercount and currency of the player
  */
+@SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
 
     private final Map<Player, Double> balances = new HashMap<>();
@@ -29,7 +30,6 @@ public class ModTitles extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    @SuppressWarnings("unused")
     public void joinTitles(PlayerJoinEvent e) {
 
         final Player joined = e.getPlayer();
@@ -64,7 +64,6 @@ public class ModTitles extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    @SuppressWarnings("unused")
     public void leaveTitles(PlayerQuitEvent e) {
 
         balances.remove(e.getPlayer());
@@ -74,7 +73,6 @@ public class ModTitles extends HalfminerModule implements Listener {
 
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onBalanceChange(UserBalanceUpdateEvent e) {
         updateBalance(e.getPlayer());
     }

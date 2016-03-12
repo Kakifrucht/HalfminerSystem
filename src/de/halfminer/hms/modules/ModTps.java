@@ -9,6 +9,7 @@ import java.util.LinkedList;
 /**
  * Calculates servers TPS and notifies staff when it falls under a given threshold
  */
+@SuppressWarnings("unused")
 public class ModTps extends HalfminerModule implements Listener {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();

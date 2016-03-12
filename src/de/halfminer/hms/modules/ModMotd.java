@@ -13,6 +13,7 @@ import java.util.Random;
  * - Takes news from storage and adds it to motd
  * - Maximum playercount dynamic, based on how many people are online
  */
+@SuppressWarnings("unused")
 public class ModMotd extends HalfminerModule implements Listener {
 
     private final Random rnd = new Random();
@@ -26,7 +27,6 @@ public class ModMotd extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void serverPingMotd(ServerListPingEvent e) {
 
         int fakeLimit = hms.getServer().getOnlinePlayers().size();

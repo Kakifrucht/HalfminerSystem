@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Mobkills
  * - View stats on rightclicking a player
  */
+@SuppressWarnings("unused")
 public class ModStats extends HalfminerModule implements Listener {
 
     private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
@@ -39,7 +40,6 @@ public class ModStats extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    @SuppressWarnings("unused")
     public void joinInitializeStatsAndRename(PlayerJoinEvent e) {
 
         Player player = e.getPlayer();
@@ -80,13 +80,11 @@ public class ModStats extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    @SuppressWarnings("unused")
     public void updatePlayerTimeLeave(PlayerQuitEvent e) {
         setOnlineTime(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    @SuppressWarnings("unused")
     public void deathStatsUpdateAndMessage(PlayerDeathEvent e) {
 
         Player killer = e.getEntity().getKiller();
@@ -123,7 +121,6 @@ public class ModStats extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void interactShowStats(PlayerInteractEntityEvent e) {
 
         if (e.getRightClicked() instanceof Player) {
@@ -148,20 +145,17 @@ public class ModStats extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    @SuppressWarnings("unused")
     public void mobkillStats(EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Player) && e.getEntity().getKiller() != null)
             storage.incrementStatsInt(e.getEntity().getKiller(), StatsType.MOB_KILLS, 1);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void blockPlaceStats(BlockPlaceEvent e) {
         storage.incrementStatsInt(e.getPlayer(), StatsType.BLOCKS_PLACED, 1);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void blockBreakStats(BlockBreakEvent e) {
         storage.incrementStatsInt(e.getPlayer(), StatsType.BLOCKS_BROKEN, 1);
     }

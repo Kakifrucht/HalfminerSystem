@@ -26,6 +26,7 @@ import java.util.Map;
  * - Hoppers placement is limited
  * - Amount of mobspawns are limited
  */
+@SuppressWarnings("unused")
 public class ModPerformance extends HalfminerModule implements Listener {
 
     // Storage for limitations
@@ -50,19 +51,16 @@ public class ModPerformance extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void countPistonExtend(BlockPistonExtendEvent e) {
         e.setCancelled(increasePistonCount());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void countPistonRetract(BlockPistonRetractEvent e) {
         e.setCancelled(increasePistonCount());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    @SuppressWarnings("unused")
     public void countRedstoneChange(BlockRedstoneEvent e) {
         Location redstoneLoc = e.getBlock().getLocation();
         if (lastStored.containsKey(redstoneLoc)) {
@@ -73,7 +71,6 @@ public class ModPerformance extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void checkHopperLimit(BlockPlaceEvent e) {
         if (e.getPlayer().hasPermission("hms.bypass.hopperlimit")) return;
         Block block = e.getBlock();
@@ -91,7 +88,6 @@ public class ModPerformance extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void onMobSpawnerLimit(CreatureSpawnEvent e) {
 
         CreatureSpawnEvent.SpawnReason reason = e.getSpawnReason();

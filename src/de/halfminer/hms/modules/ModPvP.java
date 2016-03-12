@@ -32,6 +32,7 @@ import java.util.UUID;
  * - Sounds on kill/death
  * - Remove effects on teleport
  */
+@SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener {
 
     private Map<Player, Long> lastBowShot;
@@ -44,7 +45,6 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onEat(PlayerItemConsumeEvent e) {
 
         Player p = e.getPlayer();
@@ -62,7 +62,6 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onPotionSplash(PotionSplashEvent e) {
 
         for (PotionEffect effect : e.getPotion().getEffects()) {
@@ -80,7 +79,6 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void antiBowSpam(EntityShootBowEvent e) {
 
         if (!e.getEntity().hasPermission("hms.bypass.pvp") && e.getEntity() instanceof Player) {
@@ -93,7 +91,6 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void deathSoundsAndHeal(PlayerDeathEvent e) {
 
         e.setDeathMessage("");
@@ -123,7 +120,6 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    @SuppressWarnings("unused")
     public void killstreakTitlesOnDeath(PlayerDeathEvent e) {
 
         // Show killstreaks in actionbar
@@ -161,7 +157,6 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void teleportRemoveJumpAndStrength(PlayerTeleportEvent e) {
 
         Location from = e.getFrom();

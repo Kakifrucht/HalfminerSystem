@@ -18,6 +18,7 @@ import java.util.Map;
  * - Logs and notifies about possible Bedrock/Obsidian glitching
  * - Kills players above the netherroof
  */
+@SuppressWarnings("unused")
 public class ModGlitchProtection extends HalfminerModule implements Listener {
 
     private final Map<Player, Long> lastMessage = new HashMap<>();
@@ -28,7 +29,6 @@ public class ModGlitchProtection extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onMoveBedrockObsidianCheck(PlayerMoveEvent e) {
 
         if ((e.getFrom().getBlock().getType() == Material.BEDROCK || e.getFrom().getBlock().getType() == Material.OBSIDIAN)

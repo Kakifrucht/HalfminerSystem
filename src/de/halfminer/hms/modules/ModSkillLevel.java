@@ -25,6 +25,7 @@ import java.util.Map;
  * - Colors players name, depending on skillgroup
  * - Calculates new ELO after a kill
  */
+@SuppressWarnings("unused")
 public class ModSkillLevel extends HalfminerModule implements Listener {
 
     private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();
@@ -41,7 +42,6 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void joinRecalculate(PlayerJoinEvent e) {
 
         Player player = e.getPlayer();
@@ -60,7 +60,6 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void killUpdateSkill(PlayerDeathEvent e) {
 
         Player killer = e.getEntity().getKiller();

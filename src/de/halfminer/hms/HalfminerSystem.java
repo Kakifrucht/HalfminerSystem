@@ -1,7 +1,7 @@
 package de.halfminer.hms;
 
 import de.halfminer.hms.cmd.BaseCommand;
-import de.halfminer.hms.modules.*;
+import de.halfminer.hms.modules.HalfminerModule;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.ModuleType;
 import org.bukkit.command.Command;
@@ -19,6 +19,7 @@ import java.util.Map;
  */
 public class HalfminerSystem extends JavaPlugin {
 
+    private final static String packagePath = "de.halfminer.hms";
     private static HalfminerSystem instance;
 
     public static HalfminerSystem getInstance() {
@@ -34,20 +35,22 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        // load modules
-        modules.put(ModuleType.AUTO_MESSAGE, new ModAutoMessage());
-        modules.put(ModuleType.ANTI_KILLFARMING, new ModAntiKillfarming());
-        modules.put(ModuleType.GLITCH_PROTECTION, new ModGlitchProtection());
-        modules.put(ModuleType.MOTD, new ModMotd());
-        modules.put(ModuleType.SIGN_EDIT, new ModSignEdit());
-        modules.put(ModuleType.PERFORMANCE, new ModPerformance());
-        modules.put(ModuleType.COMBAT_LOG, new ModCombatLog());
-        modules.put(ModuleType.TPS, new ModTps());
-        modules.put(ModuleType.STATS, new ModStats());
-        modules.put(ModuleType.SKILL_LEVEL, new ModSkillLevel());
-        modules.put(ModuleType.STATIC_LISTENERS, new ModStaticListeners());
-        modules.put(ModuleType.TITLES, new ModTitles());
-        modules.put(ModuleType.PVP, new ModPvP());
+
+        // Load modules
+        for (ModuleType module : ModuleType.values()) {
+
+            try {
+                HalfminerModule mod = (HalfminerModule) this.getClassLoader()
+                        .loadClass(packagePath + ".modules." + module.getClassName()).newInstance();
+
+                modules.put(module, mod);
+            } catch (Exception e) {
+                getLogger().severe("An error has occurred, see stacktrace for information");
+                e.printStackTrace();
+                setEnabled(false);
+                return;
+            }
+        }
 
         // Register modules
         for (HalfminerModule mod : modules.values())
@@ -72,7 +75,7 @@ public class HalfminerSystem extends JavaPlugin {
 
         BaseCommand command;
         try {
-            command = (BaseCommand) this.getClassLoader().loadClass("de.halfminer.hms.cmd.Cmd" + cmd.getName()).newInstance();
+            command = (BaseCommand) this.getClassLoader().loadClass(packagePath + ".cmd.Cmd" + cmd.getName()).newInstance();
         } catch (Exception e) {
             getLogger().severe("An error has occured executing " + cmd.getName() + ":");
             e.printStackTrace();

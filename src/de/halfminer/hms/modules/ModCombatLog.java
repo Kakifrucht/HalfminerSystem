@@ -29,6 +29,7 @@ import java.util.Map;
  * - Untags players after timer runs out, player logs out or a player is killed
  * - Disables commands and enderpearls from being used during fight
  */
+@SuppressWarnings("unused")
 public class ModCombatLog extends HalfminerModule implements Listener {
 
     private final Map<String, String> lang = new HashMap<>();
@@ -41,7 +42,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onDeathUntag(PlayerDeathEvent e) {
 
         Player victim = e.getEntity().getPlayer();
@@ -52,7 +52,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void logoutCheckIfInCombat(PlayerQuitEvent e) {
 
         if (tagged.containsKey(e.getPlayer())) {
@@ -72,7 +71,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onPvPTagPlayer(EntityDamageByEntityEvent e) {
 
         if (e.getEntity() instanceof Player) {
@@ -94,7 +92,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onCommandCheckIfBlocked(PlayerCommandPreprocessEvent e) {
 
         if (tagged.containsKey(e.getPlayer())) {
@@ -104,7 +101,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void onEnderpearlCheckIfBlocked(PlayerInteractEvent e) {
         if (e.hasItem() && e.getItem().getType() == Material.ENDER_PEARL && tagged.containsKey(e.getPlayer()) && ((e.getAction() == Action.RIGHT_CLICK_BLOCK) || (e.getAction() == Action.RIGHT_CLICK_AIR))) {
             e.getPlayer().sendMessage(lang.get("noEnderpearl"));

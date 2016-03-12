@@ -2,17 +2,27 @@ package de.halfminer.hms.util;
 
 public enum ModuleType {
 
-    ANTI_KILLFARMING,
-    AUTO_MESSAGE,
-    GLITCH_PROTECTION,
-    COMBAT_LOG,
-    MOTD,
-    PERFORMANCE,
-    SIGN_EDIT,
-    SKILL_LEVEL,
-    STATIC_LISTENERS,
-    STATS,
-    TPS,
-    TITLES,
-    PVP
+    ANTI_KILLFARMING ("AntiKillfarming"),
+    AUTO_MESSAGE ("AutoMessage"),
+    GLITCH_PROTECTION ("CombatLog"),
+    COMBAT_LOG ("GlitchProtection"),
+    MOTD ("Motd"),
+    PERFORMANCE ("Performance"),
+    PVP ("PvP"),
+    SIGN_EDIT ("SignEdit"),
+    SKILL_LEVEL ("SkillLevel"),
+    STATIC_LISTENERS ("StaticListeners"),
+    STATS ("Stats"),
+    TITLES ("Tps"),
+    TPS ("Titles");
+
+    private final String className;
+
+    ModuleType(String name) {
+        className = name;
+    }
+
+    public String getClassName() {
+        return "Mod" + className;
+    }
 }

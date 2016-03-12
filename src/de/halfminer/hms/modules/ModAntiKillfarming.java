@@ -19,6 +19,7 @@ import java.util.*;
  * - Blocks commands from both players that partook in the killfarming
  * - Doubles punishment
  */
+@SuppressWarnings("unused")
 public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
     /**
@@ -50,7 +51,6 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
      * @param e PlayerDeathEvent
      */
     @EventHandler
-    @SuppressWarnings("unused")
     private void onDeathCheckKillfarming(PlayerDeathEvent e) {
 
         if (e.getEntity().getKiller() != null) {
@@ -100,7 +100,6 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
      * @param e EntityDamageByEntityEvent that was fired
      */
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onPvPCheckIfAllowed(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
             short time = getBlockTime((Player) e.getDamager());
@@ -153,7 +152,6 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onCommandCheckIfAllowed(PlayerCommandPreprocessEvent e) {
         short time = getBlockTime(e.getPlayer());
         if (time > 0) {
@@ -166,7 +164,6 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unused")
     public void onPotionCheckIfAllowed(PotionSplashEvent e) {
         if (e.getEntity().getShooter() instanceof Player) {
             Player thrower = (Player) e.getEntity().getShooter();

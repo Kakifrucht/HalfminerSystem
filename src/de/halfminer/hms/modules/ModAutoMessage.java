@@ -12,6 +12,7 @@ import java.util.Random;
 /**
  * Print periodic messages to chat
  */
+@SuppressWarnings("unused")
 public class ModAutoMessage extends HalfminerModule {
 
     private final Random rnd = new Random();
