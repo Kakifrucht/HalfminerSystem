@@ -87,13 +87,13 @@ public class TitleSender {
         if (messagesParsed.length > 1) footer = messagesParsed[1];
 
         PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(
-                IChatBaseComponent.ChatSerializer.a("{'text': '" + header + "'}")
+                IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + header + "\"}")
         );
 
         try {
             Field footerField = packet.getClass().getDeclaredField("b");
             footerField.setAccessible(true);
-            footerField.set(packet, IChatBaseComponent.ChatSerializer.a("{'text': '" + footer + "'}"));
+            footerField.set(packet, IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + footer + "\"}"));
             footerField.setAccessible(false);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace(); //this should not happen
@@ -110,11 +110,11 @@ public class TitleSender {
         connection.sendPacket(new PacketPlayOutTitle(fadeIn, stay, fadeOut));
         if (topTitle.length() > 0)
             connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE,
-                    IChatBaseComponent.ChatSerializer.a("{'text': '" + topTitle + "'}")));
+                    IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + topTitle + "\"}")));
 
         if (subTitle.length() > 0)
             connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE,
-                    IChatBaseComponent.ChatSerializer.a("{'text': '" + subTitle + "'}")));
+                    IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + subTitle + "\"}")));
     }
 
     private static void sendActionBarPacket(Player player, String message) {
@@ -122,7 +122,7 @@ public class TitleSender {
         if (!player.isOnline() || message.length() == 0) return;
 
         PacketPlayOutChat actionbar = new PacketPlayOutChat(
-                IChatBaseComponent.ChatSerializer.a("{'text': '" + message + "'}"), (byte) 2);
+                IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + message + "\"}"), (byte) 2);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(actionbar);
     }
 
