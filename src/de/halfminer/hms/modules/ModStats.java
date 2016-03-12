@@ -138,10 +138,8 @@ public class ModStats extends HalfminerModule implements Listener {
             }
 
             e.getPlayer().sendMessage(message);
-            e.getPlayer().playSound(clicked.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.4f); //TODO correct NOTE_STICKS
-
+            e.getPlayer().playSound(clicked.getLocation(), Sound.BLOCK_SLIME_HIT, 1.0f, 2.0f);
         }
-
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
