@@ -35,7 +35,6 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-
         // Load modules
         for (ModuleType module : ModuleType.values()) {
 

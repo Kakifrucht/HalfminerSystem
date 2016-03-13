@@ -25,6 +25,7 @@ import java.util.Map;
 /**
  * Disables the possibility to logout during combat
  * - Tags players when hitting/being hit
+ * - Combatlogging causes instant death
  * - Shows titles containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
  * - Disables commands and enderpearls from being used during fight

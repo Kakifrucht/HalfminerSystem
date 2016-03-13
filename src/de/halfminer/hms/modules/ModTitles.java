@@ -18,6 +18,8 @@ import java.util.Map;
 /**
  * Add titles containing information to the game
  * - Join titles to show basic information (playercount, currency, commands, news)
+ * - Shows servernews
+ * - Display information for new players
  * - Tab titles containing playercount and currency of the player
  */
 @SuppressWarnings("unused")
@@ -38,7 +40,7 @@ public class ModTitles extends HalfminerModule implements Listener {
         final double balance = updateBalance(joined);
         updateTablist();
 
-        // Show join titles / News
+        // Show join titles / news
         if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
             TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewPlayerFormat", false,
                     "%PLAYER%", joined.getName()), 10, 200, 10);

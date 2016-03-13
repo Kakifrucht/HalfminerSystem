@@ -101,6 +101,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onPvPCheckIfAllowed(EntityDamageByEntityEvent e) {
+
         if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
             short time = getBlockTime((Player) e.getDamager());
             if (time >= 0) {
@@ -116,7 +117,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
             }
         }
 
-        //prevent death by tnt ignition
+        // prevent death by tnt ignition
         if (e.getDamager() instanceof TNTPrimed && e.getEntity() instanceof Player) {
             TNTPrimed tnt = (TNTPrimed) e.getDamager();
             if (tnt.getSource() instanceof Player) {
@@ -128,11 +129,13 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
                 }
             }
         }
+
         if (e.getEntity() instanceof Player && e.getDamager() instanceof Projectile && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
             Player attacker = (Player) ((Projectile) e.getDamager()).getShooter();
             Player victim = (Player) e.getEntity();
 
-            if (attacker.equals(victim)) { //Disallow hitting yourself with bow
+            // disallow hitting self with bow
+            if (attacker.equals(victim)) {
                 e.setCancelled(true);
                 return;
             }
