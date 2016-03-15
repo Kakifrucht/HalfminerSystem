@@ -15,8 +15,6 @@ Current features
 - Essentials hook
   - For economy support
   - To read players homes
-
-
 - AntiKillfarming Module
   - Blocks players, who repeatedly kill each other
   - Dynamic system, to determine block time
@@ -65,6 +63,7 @@ Current features
   - Colors name depending on skillgroup
 - StaticListeners Module
   - Disables join/quit message
+  - Adds a first time join message
   - Disables some deals in villager trades
   - Chatfilter
     - Checks for globalmute (set via command /c globalmute)
@@ -91,8 +90,6 @@ Current features
 - Tps Module
   - Calculates ticks per second
   - Notifies staff when servers Tps is too low
-
-
 - **Commands**
   - /chat
     - Chat manipulation tools

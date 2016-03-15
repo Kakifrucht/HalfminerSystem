@@ -77,6 +77,7 @@ localization:
   commandVoteGrabReward: '&7Hole dir deine Belohnung jetzt mit &e&o/vote getreward'
   commandVoteRewardDeny: '&cDu hast keine offene Belohnung'
   commandVoteRewardInvFull: '&cDein Inventar ist voll, bitte mache Platz und verwende das Kommando &e/vote getreward'
+  modStaticListenersFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
   modAntiKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
   modAntiKillfarmingNoCommand: '&cKommandos sind fuer dich weitere &a%TIME% &cSekunden deaktiviert, da du Killfarming betrieben hast'

@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Contains functions, that are static and have no fitting module
  * - Disables join/leave messages
+ * - First time join message
  * - Blocks certain items from being traded with villagers/merchants
  * - Denies chatting when globalmute is enabled
  * - Capsfilter that automatically lowercases capitalised messages
@@ -30,7 +31,12 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
 
     @EventHandler
     public void joinNoMessage(PlayerJoinEvent e) {
-        e.setJoinMessage("");
+
+        String message = "";
+        Player p = e.getPlayer();
+        if (!p.hasPlayedBefore())
+            message = Language.getMessagePlaceholders("modStaticListenersFirstJoin", false, "%PLAYER%", p.getName());
+        e.setJoinMessage(message);
     }
 
     @EventHandler
