@@ -25,6 +25,7 @@ import java.util.Map;
 /**
  * Disables the possibility to logout during combat
  * - Tags players when hitting/being hit
+ * - Shows health and name of attacker/victim via title
  * - Combatlogging causes instant death
  * - Shows titles containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
@@ -76,6 +77,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         if (e.getEntity() instanceof Player) {
 
+
             Player victim = (Player) e.getEntity();
             Player attacker = null;
 
@@ -86,8 +88,8 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             }
 
             if (attacker != null && attacker != victim && !attacker.isDead() && !victim.isDead()) {
-                tagPlayer(victim, attacker);
-                tagPlayer(attacker, null);
+                tagPlayer(victim, attacker, false);
+                tagPlayer(attacker, victim, true);
             }
         }
     }
@@ -110,18 +112,18 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         }
     }
 
-    private void tagPlayer(final Player p, Player attacker) {
+    private void tagPlayer(final Player p, final Player other, boolean isAttacker) {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
 
         if (tagged.containsKey(p)) tagged.get(p).cancel();
-        else {
-            if (attacker != null) {
-                p.sendMessage(Language.placeholderReplace(lang.get("taggedBy"), "%PLAYER%", attacker.getName()));
-            } else {
-                p.sendMessage(lang.get("tagged"));
-            }
-        }
+        else p.sendMessage(lang.get("tagged"));
+
+        final int healthDisplay = isAttacker
+                ? (int) (other.getHealth() - other.getLastDamageCause().getFinalDamage())
+                : (int) other.getHealth();
+
+        final int healthScale = (int) other.getHealthScale();
 
         tagged.put(p, hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
 
@@ -130,6 +132,16 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
             @Override
             public void run() {
+
+                if (time == tagTime) {
+
+                    TitleSender.sendActionBar(p, Language.placeholderReplace(lang.get("health"),
+                            "%PLAYER%", other.getName(), "%HEALTH%", String.valueOf(healthDisplay),
+                            "%MAXHEALTH%", String.valueOf(healthScale)));
+
+                    time--;
+                    return;
+                }
 
                 // build the progressbar
                 int timePercentage = (int) Math.round((time / (double) tagTime) * 10);
@@ -171,7 +183,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         lang.clear();
         lang.put("tagged", Language.getMessagePlaceholders("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
-        lang.put("taggedBy",Language.getMessagePlaceholders("modCombatLogTaggedBy", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
+        lang.put("health", Language.getMessage("modCombatLogHealth"));
         lang.put("countdown", Language.getMessage("modCombatLogCountdown"));
         lang.put("symbols", Language.getMessage("modCombatLogProgressSymbols"));
         lang.put("untagged", Language.getMessage("modCombatLogUntagged"));

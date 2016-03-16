@@ -74,7 +74,8 @@ public class HalfminerSystem extends JavaPlugin {
 
         HalfminerCommand command;
         try {
-            command = (HalfminerCommand) this.getClassLoader().loadClass(packagePath + ".cmd.Cmd" + cmd.getName()).newInstance();
+            command = (HalfminerCommand) this.getClassLoader()
+                    .loadClass(packagePath + ".cmd.Cmd" + cmd.getName()).newInstance();
         } catch (Exception e) {
             getLogger().severe("An error has occured executing " + cmd.getName() + ":");
             e.printStackTrace();

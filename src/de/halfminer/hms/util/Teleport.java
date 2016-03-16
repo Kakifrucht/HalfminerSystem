@@ -51,10 +51,7 @@ public class Teleport {
 
                     player.sendMessage(Language.getMessagePlaceholders("teleportMoved", true, "%PREFIX%", "Teleport"));
                     cancelTeleport();
-                    return;
-                }
-
-                if (--seconds == 0) teleport();
+                } else if (--seconds == 0) teleport();
             }
         }, 20L, 20L);
     }
