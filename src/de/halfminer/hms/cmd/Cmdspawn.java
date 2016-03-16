@@ -20,7 +20,7 @@ public class Cmdspawn extends HalfminerCommand {
     @Override
     public void run(CommandSender sender, String label, String[] args) {
 
-        if (args.length > 0) teleport(sender, false);
+        if (args.length == 0) teleport(sender, false);
         else {
 
             if ((sender instanceof Player) && args[0].equalsIgnoreCase("s") && sender.hasPermission("hms.spawn.set")) {
