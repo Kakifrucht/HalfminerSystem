@@ -27,7 +27,7 @@ public class Teleport {
         this.player = p;
         this.loc = l;
 
-        if (delay < 1) {
+        if (delay < 1 || player.hasPermission("hms.bypass.teleporttimer")) {
             teleport();
             return;
         }
@@ -35,11 +35,6 @@ public class Teleport {
         final int blockX = player.getLocation().getBlockX();
         final int blockY = player.getLocation().getBlockY();
         final int blockZ = player.getLocation().getBlockZ();
-
-        if (player.hasPermission("hms.bypass.teleporttimer")) {
-            teleport();
-            return;
-        }
 
         player.sendMessage(Language.getMessagePlaceholders("teleportStart", true,
                 "%PREFIX%", "Teleport", "%TIME%", String.valueOf(delay)));
