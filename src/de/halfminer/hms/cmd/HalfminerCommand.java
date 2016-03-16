@@ -4,7 +4,7 @@ import de.halfminer.hms.HalfminerStorage;
 import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.command.CommandSender;
 
-public abstract class BaseCommand {
+public abstract class HalfminerCommand {
 
     final HalfminerSystem hms = HalfminerSystem.getInstance();
     final HalfminerStorage storage = hms.getStorage();

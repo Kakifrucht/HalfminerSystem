@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
-public class Cmdstats extends BaseCommand {
+public class Cmdstats extends HalfminerCommand {
 
     public Cmdstats() {
         this.permission = "hms.stats";

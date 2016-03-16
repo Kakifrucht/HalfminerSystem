@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 
 @SuppressWarnings("unused")
-public class Cmdlag extends BaseCommand {
+public class Cmdlag extends HalfminerCommand {
 
     public Cmdlag() {
         this.permission = "hms.lag";
@@ -19,7 +19,7 @@ public class Cmdlag extends BaseCommand {
     @Override
     public void run(CommandSender sender, String label, String[] args) {
 
-        //determine latency
+        // determine latency
         CraftPlayer player;
         boolean showSummary = false;
         if (args.length > 0) { //get other player
@@ -46,16 +46,16 @@ public class Cmdlag extends BaseCommand {
             return;
         }
 
-        //get latency and tps
+        // get latency and tps
         int ping = player.getHandle().ping;
         double tps = ((ModTps) hms.getModule(ModuleType.TPS)).getTps();
 
-        //values for summary, determine who is lagging
+        // values for summary, determine who is lagging
         int summaryServerLag = 0;
-        boolean summaryPlayerLag = true; //set to false if player is not lagging
+        boolean summaryPlayerLag = true; // set to false if player is not lagging
 
         String pingString;
-        if (ping > 1000 || ping < 0) pingString = ChatColor.DARK_RED + "> 1000"; //ping not yet known
+        if (ping > 1000 || ping < 0) pingString = ChatColor.DARK_RED + "> 1000"; // ping not yet known
         else {
             pingString = String.valueOf(ping);
             if (ping > 200) pingString = ChatColor.RED + pingString;
@@ -75,11 +75,11 @@ public class Cmdlag extends BaseCommand {
             summaryServerLag = 1;
         } else tpsString = ChatColor.GREEN + tpsString;
 
-        //Send ping and tps information to player
+        // Send ping and tps information to player
         sender.sendMessage(Language.getMessagePlaceholders("commandLagPlayerInfo", true, "%PREFIX%", "Lag", "%PLAYER%", player.getName(), "%LATENCY%", pingString));
         sender.sendMessage(Language.getMessagePlaceholders("commandLagServerInfo", true, "%PREFIX%", "Lag", "%TPS%", tpsString));
 
-        if (showSummary) { //determines the summary message, only shown when viewing own status
+        if (showSummary) { // determines the summary message, only shown when viewing own status
             if (summaryServerLag == 0 && !summaryPlayerLag)
                 sender.sendMessage(Language.getMessagePlaceholders("commandLagStable", true, "%PREFIX%", "Lag"));
             else if (summaryServerLag == 1)

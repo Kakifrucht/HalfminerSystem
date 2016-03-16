@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
-public class Cmdchat extends BaseCommand {
+public class Cmdchat extends HalfminerCommand {
 
     private CommandSender sender;
     private String message;

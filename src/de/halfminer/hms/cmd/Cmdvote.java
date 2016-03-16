@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("unused")
-public class Cmdvote extends BaseCommand {
+public class Cmdvote extends HalfminerCommand {
 
     public Cmdvote() {
         this.permission = "hms.vote";

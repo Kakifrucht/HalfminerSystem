@@ -50,6 +50,10 @@ public class HalfminerStorage {
         set(player.getUniqueId().toString() + '.' + stats, value);
     }
 
+    public Object get(String path) {
+        return fileConfig.get(path);
+    }
+
     public String getString(String path) {
         return fileConfig.getString(path, "");
     }

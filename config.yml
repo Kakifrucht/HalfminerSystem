@@ -7,6 +7,9 @@ localization:
   playerDoesNotExist: '&cDieser Spieler existiert nicht'
   consoleName: 'Konsole'
   lineSeparator: '&e&m------------------------------------------------\n'
+  teleportStart: '&7Bewege dich nicht, der Teleport startet in &a%TIME% &7Sekunden'
+  teleportMoved: '&cTeleport abgebrochen, du hast dich bewegt'
+  teleportDone: '&7Teleportiere...'
   commandHmsUsage: '&cVerwendung: &f/hms reload, rename <name> [-lore line1|line2|..], updateskill <spieler>, rmhomeblock <spieler>, ring <spieler>, searchhomes [radius]'
   commandHmsConfigReloaded: '&aKonfiguration neugeladen'
   commandHmsSkillUsage: '&cVerwendung: &f/hms updateskill <spieler> [modifier]'
@@ -25,6 +28,7 @@ localization:
   commandSigneditUsage: '&cVerwendung: &f/signedit copy [anzahl], /signedit <zeile> [text]'
   commandSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu aendern'
   commandSigneditCopy: '&7Klicke das Schild, welches du kopieren moechtest, erstelle &e%AMOUNT% &7Kopien'
+  commandSpawnSet: '&aSpawnpunkt wurde gesetzt'
   commandLagPlayerInfo: '&7Latenz von %PLAYER%: %LATENCY% &7ms (niedriger ist besser)'
   commandLagServerInfo: '&7Server Zustand: %TPS%&7/20.0 TPS'
   commandLagStable: '&aDie Verbindung ist stabil'
@@ -155,6 +159,9 @@ command:
 storage:
   #Time in minutes the storage will be autosaving
   autoSaveMinutes: 15
+teleport:
+  #Time in seconds players cannot move before being teleported
+  cooldownSeconds: 3
 autoMessage:
   intervalSeconds: 240
   messages:

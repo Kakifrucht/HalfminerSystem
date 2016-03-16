@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
-public class Cmdsignedit extends BaseCommand {
+public class Cmdsignedit extends HalfminerCommand {
 
     public Cmdsignedit() {
         this.permission = "hms.signedit";

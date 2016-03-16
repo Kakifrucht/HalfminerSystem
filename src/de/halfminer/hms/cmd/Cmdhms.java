@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class Cmdhms extends BaseCommand {
+public class Cmdhms extends HalfminerCommand {
 
     private CommandSender sender;
     private String[] args;

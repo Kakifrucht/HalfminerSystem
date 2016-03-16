@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
-public class Cmdhome extends BaseCommand {
+public class Cmdhome extends HalfminerCommand {
 
     public Cmdhome() {
         this.permission = "hms.home";

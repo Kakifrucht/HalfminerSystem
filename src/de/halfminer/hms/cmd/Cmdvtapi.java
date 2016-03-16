@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class Cmdvtapi extends BaseCommand {
+public class Cmdvtapi extends HalfminerCommand {
 
     @Override
     public void run(CommandSender sender, String label, String[] args) {

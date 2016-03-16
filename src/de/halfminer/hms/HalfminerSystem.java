@@ -1,6 +1,6 @@
 package de.halfminer.hms;
 
-import de.halfminer.hms.cmd.BaseCommand;
+import de.halfminer.hms.cmd.HalfminerCommand;
 import de.halfminer.hms.modules.HalfminerModule;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.ModuleType;
@@ -72,9 +72,9 @@ public class HalfminerSystem extends JavaPlugin {
 
         if (cmd.getName().equals("?")) return true;
 
-        BaseCommand command;
+        HalfminerCommand command;
         try {
-            command = (BaseCommand) this.getClassLoader().loadClass(packagePath + ".cmd.Cmd" + cmd.getName()).newInstance();
+            command = (HalfminerCommand) this.getClassLoader().loadClass(packagePath + ".cmd.Cmd" + cmd.getName()).newInstance();
         } catch (Exception e) {
             getLogger().severe("An error has occured executing " + cmd.getName() + ":");
             e.printStackTrace();

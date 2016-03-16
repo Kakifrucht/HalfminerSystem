@@ -14,7 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Random;
 
 @SuppressWarnings("unused")
-public class Cmdneutp extends BaseCommand {
+public class Cmdneutp extends HalfminerCommand {
 
     public Cmdneutp() {
         this.permission = "hms.neutp";

@@ -8,6 +8,7 @@ Current features
 - Modular, lightweight, efficient
 - Messages completely configurable, functionality mostly
 - Own storage flatfile in YAML format
+- Teleport players with no movement cooldown
 - Own Title API
   - Main title/subtitle
   - Actionbar title
@@ -53,6 +54,8 @@ Current features
   - Shows kill/death streaks via titles
   - Adds sounds to kills/deaths
   - Remove some effects on teleport
+- Respawn Module
+  - Respawns player at custom location
 - SignEdit Module
   - Allows editing of signs
   - Use command /signedit
@@ -126,6 +129,10 @@ Current features
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number
+  - /spawn
+    - Teleport player to spawn
+    - Teleport other players to spawn with permission
+    - Use /spawn s to set the spawn with permission
   - /stats
     - View own / other players stats
     - Allows to compare statistics easily

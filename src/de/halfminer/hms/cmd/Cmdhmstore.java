@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class Cmdhmstore extends BaseCommand {
+public class Cmdhmstore extends HalfminerCommand {
 
     public Cmdhmstore() {
         this.permission = "hms.admin";

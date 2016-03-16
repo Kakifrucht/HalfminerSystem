@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.math.BigDecimal;
 
 @SuppressWarnings("unused")
-public class Cmdverkauf extends BaseCommand {
+public class Cmdverkauf extends HalfminerCommand {
 
     private Player player;
     private String[] args;

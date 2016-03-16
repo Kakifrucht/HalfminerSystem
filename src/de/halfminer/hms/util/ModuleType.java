@@ -9,6 +9,7 @@ public enum ModuleType {
     MOTD ("Motd"),
     PERFORMANCE ("Performance"),
     PVP ("PvP"),
+    RESPAWN ("Respawn"),
     SIGN_EDIT ("SignEdit"),
     SKILL_LEVEL ("SkillLevel"),
     STATIC_LISTENERS ("StaticListeners"),

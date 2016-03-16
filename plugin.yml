@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.6-SNAPSHOT
+version: 4.0-SNAPSHOT
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -10,25 +10,27 @@ depend: [Essentials]
 commands:
   ?:
     description: Bukkit override, protects from viewing all commands
+  chat:
+    description: Chat manipulation tools
+    aliases: [c]
   hms:
     description: HalfminerSystem Base command
   hmstore:
     description: Data storage manipulation
-  chat:
-    description: Chat manipulation tools
-    aliases: [c]
-  signedit:
-    description: Edit the contents of a sign or copy it
-    aliases: [se]
+  home:
+    description: Teleports the player to his home
   lag:
     description: View the connection info
     aliases: [ping]
-  stats:
-    description: View the statistics of a player
   neutp:
     description: Teleports the player to a random location
-  home:
-    description: Teleports the player to his home
+  signedit:
+    description: Edit the contents of a sign or copy it
+    aliases: [se]
+  spawn:
+    description: Teleport to the spawn
+  stats:
+    description: View the statistics of a player
   verkauf:
     description: Earn money buy selling farm supplies
     aliases: [vk]
@@ -54,6 +56,9 @@ permissions:
     hms.verkauf: true
     hms.vote: true
     hms.signedit: true
+    hms.spawn: true
+    hms.spawn.set: true
+    hms.spawn.others: true
     hms.admin: true
     hms.bypass.*: true
     hms.level.*: true
@@ -71,6 +76,7 @@ permissions:
     hms.bypass.skilllevel: true
     hms.bypass.statsrightclick: true
     hms.bypass.merchant: true
+    hms.bypass.teleporttimer: true
     hms.bypass.pvp: true
   hms.level.*:
     description: Access to all commands restricted by level
@@ -110,6 +116,13 @@ permissions:
     description: View the latency of other players
   hms.lag.notify:
       description: Sends lag notifications to admin
+  hms.spawn:
+    default: true
+    description: Access to spawn command
+  hms.spawn.set:
+    description: Access to spawn set command
+  hms.spawn.others:
+    description: Teleport other players to spawn
   hms.signedit:
     description: Access to sign editing
   hms.admin:
@@ -132,6 +145,8 @@ permissions:
     description: Bypass netherroof position check
   hms.bypass.nokillfarming:
     description: Bypass killfarming check
+  hms.bypass.teleporttimer:
+      description: Bypass teleport timer
   hms.bypass.skilllevel:
     description: Bypass setting of skilllevel
   hms.bypass.statsrightclick:
