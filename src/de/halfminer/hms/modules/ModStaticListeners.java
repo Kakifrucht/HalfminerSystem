@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -9,10 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
  * - Disables join/leave messages
  * - First time join message
  * - Blocks certain items from being traded with villagers/merchants
+ * - Override spigot teleport safety
  * - Denies chatting when globalmute is enabled
  * - Capsfilter that automatically lowercases capitalised messages
  * - Disables commands while in bed
@@ -54,6 +53,23 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
             if (item != null && (item.getType() == Material.WRITTEN_BOOK || item.getType() == Material.APPLE)) {
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void overrideTeleportSafety(PlayerTeleportEvent e) {
+
+        final Player p = e.getPlayer();
+        final Location to = e.getTo();
+
+        if (!e.getFrom().getWorld().equals(to.getWorld())) {
+
+            hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+                @Override
+                public void run() {
+                    if (p.getLocation().distance(to) > 1.0d) p.teleport(to);
+                }
+            }, 1L);
         }
     }
 

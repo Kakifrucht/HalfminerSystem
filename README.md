@@ -69,6 +69,7 @@ Current features
   - Disables join/quit message
   - Adds a first time join message
   - Disables some deals in villager trades
+  - Override spigot teleport safety
   - Chatfilter
     - Checks for globalmute (set via command /c globalmute)
     - Plays sound on chat
