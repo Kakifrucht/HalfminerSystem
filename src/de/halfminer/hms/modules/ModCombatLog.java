@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -29,7 +30,7 @@ import java.util.Map;
  * - Combatlogging causes instant death
  * - Shows titles containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
- * - Disables commands and enderpearls from being used during fight
+ * - Disables armor switching, commands and enderpearls from being used during fight
  */
 @SuppressWarnings("unused")
 public class ModCombatLog extends HalfminerModule implements Listener {
@@ -95,9 +96,19 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onClickDenyArmorChange(InventoryClickEvent e) {
+
+        if (isTagged((Player) e.getWhoClicked())
+                && e.getSlot() >= 36 && e.getSlot() <= 39) {
+            e.getWhoClicked().sendMessage(lang.get("noArmorChange"));
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onCommandCheckIfBlocked(PlayerCommandPreprocessEvent e) {
 
-        if (tagged.containsKey(e.getPlayer())) {
+        if (isTagged(e.getPlayer())) {
             e.getPlayer().sendMessage(lang.get("noCommand"));
             e.setCancelled(true);
         }
@@ -105,7 +116,9 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
     @EventHandler
     public void onEnderpearlCheckIfBlocked(PlayerInteractEvent e) {
-        if (e.hasItem() && e.getItem().getType() == Material.ENDER_PEARL && tagged.containsKey(e.getPlayer()) && ((e.getAction() == Action.RIGHT_CLICK_BLOCK) || (e.getAction() == Action.RIGHT_CLICK_AIR))) {
+
+        if (isTagged(e.getPlayer()) && e.hasItem() && e.getItem().getType() == Material.ENDER_PEARL
+                && ((e.getAction() == Action.RIGHT_CLICK_BLOCK) || (e.getAction() == Action.RIGHT_CLICK_AIR))) {
             e.getPlayer().sendMessage(lang.get("noEnderpearl"));
             e.getPlayer().updateInventory();
             e.setCancelled(true);
@@ -116,7 +129,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
 
-        if (tagged.containsKey(p)) tagged.get(p).cancel();
+        if (isTagged(p)) tagged.get(p).cancel();
         else p.sendMessage(lang.get("tagged"));
 
         final int healthDisplay = isAttacker
@@ -166,13 +179,17 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
     private void untagPlayer(Player p) {
 
-        if (!tagged.containsKey(p)) return;
+        if (!isTagged(p)) return;
 
         tagged.get(p).cancel();
         TitleSender.sendActionBar(p, lang.get("untagged"));
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 2f);
 
         tagged.remove(p);
+    }
+
+    private boolean isTagged(Player p) {
+        return tagged.containsKey(p);
     }
 
     @Override
@@ -188,6 +205,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         lang.put("symbols", Language.getMessage("modCombatLogProgressSymbols"));
         lang.put("untagged", Language.getMessage("modCombatLogUntagged"));
         lang.put("loggedOut", Language.getMessagePlaceholders("modCombatLogLoggedOut", true, "%PREFIX%", "PvP"));
+        lang.put("noArmorChange", Language.getMessagePlaceholders("modCombatLogNoArmorChange", true, "%PREFIX%", "PvP"));
         lang.put("noCommand", Language.getMessagePlaceholders("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
         lang.put("noEnderpearl", Language.getMessagePlaceholders("modCombatLogNoEnderpearl", true, "%PREFIX%", "PvP"));
     }

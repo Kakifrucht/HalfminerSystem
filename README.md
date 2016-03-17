@@ -28,7 +28,10 @@ Current features
   - Combatlogging causes instant death
   - Shows titles containing time left in fight
   - Untags players after timer runs out, player logs out or a player is killed
-  - Disables commands and enderpearls from being used during fight
+  - Disables during fight:
+    - Switching armor
+    - Commands
+    - Enderpearls
 - GlitchProtection Module
   - Notifies staff about potential bedrock/obsidian glitching
   - Kills players above netherroof / notifies staff

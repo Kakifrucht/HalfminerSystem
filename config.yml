@@ -106,6 +106,7 @@ localization:
   modCombatLogProgressSymbols: '-'
   modCombatLogUntagged: '&aDu bist nicht mehr im Kampf'
   modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
+  modCombatLogNoArmorChange: '&cDu kannst im Kampf nicht deine Rüstung anpassen'
   modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
   modStatsNameChange: '&e%OLDNAME% &bhat den Namen zu &a%NEWNAME% &bgewechselt'
