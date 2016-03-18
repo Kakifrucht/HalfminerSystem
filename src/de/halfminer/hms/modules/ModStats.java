@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.StatsType;
+import javafx.util.Pair;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ModStats extends HalfminerModule implements Listener {
 
     private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
+    private Map<Player, Pair<Player, Long>> lastInteract;
 
     private int timeUntilHomeBlockSeconds;
 
@@ -125,7 +128,15 @@ public class ModStats extends HalfminerModule implements Listener {
 
         if (e.getRightClicked() instanceof Player) {
 
+            Player clicker = e.getPlayer();
             Player clicked = (Player) e.getRightClicked();
+            long currentTime = System.currentTimeMillis() / 1000;
+
+            if (lastInteract.containsKey(clicker)) {
+                Pair<Player, Long> data = lastInteract.get(clicker);
+                if (data.getKey().equals(clicked) && currentTime < data.getValue()) return;
+            }
+
             String message = Language.getMessagePlaceholders("modStatsRightClickExempt", true,
                     "%PREFIX%", clicked.getName());
 
@@ -138,6 +149,8 @@ public class ModStats extends HalfminerModule implements Listener {
             }
 
             e.getPlayer().sendMessage(message);
+
+            lastInteract.put(clicker, new Pair<>(clicked, currentTime + 6));
             e.getPlayer().playSound(clicked.getLocation(), Sound.BLOCK_SLIME_HIT, 1.0f, 2.0f);
         }
     }
@@ -177,6 +190,8 @@ public class ModStats extends HalfminerModule implements Listener {
 
     @Override
     public void reloadConfig() {
+
+        lastInteract = new HashMap<>();
         timeUntilHomeBlockSeconds = hms.getConfig().getInt("command.home.timeUntilHomeBlockMinutes") * 60;
 
         //if reload ocurred while the server ran, add players to list
