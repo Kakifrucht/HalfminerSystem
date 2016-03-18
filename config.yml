@@ -221,7 +221,7 @@ combatLog:
   #Broadcast when a player logs out
   broadcastLog: true
   #Time in seconds until untag
-  tagTime: 30
+  tagTime: 15
 tps:
   #The higher, the more precise, however the tps will update slower
   ticksBetweenUpdate: 100
