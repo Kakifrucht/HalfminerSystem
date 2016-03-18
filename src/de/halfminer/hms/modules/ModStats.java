@@ -1,8 +1,8 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StatsType;
-import javafx.util.Pair;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -134,7 +134,7 @@ public class ModStats extends HalfminerModule implements Listener {
 
             if (lastInteract.containsKey(clicker)) {
                 Pair<Player, Long> data = lastInteract.get(clicker);
-                if (data.getKey().equals(clicked) && currentTime < data.getValue()) return;
+                if (data.getLeft().equals(clicked) && currentTime < data.getRight()) return;
             }
 
             String message = Language.getMessagePlaceholders("modStatsRightClickExempt", true,
