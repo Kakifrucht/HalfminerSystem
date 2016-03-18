@@ -3,8 +3,8 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,9 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -25,7 +23,6 @@ import java.util.UUID;
 
 /**
  * PvP modifications/additions
- * - Golden apple regeneration nerfed
  * - Strength potions damage nerfed
  * - Bow spamming disabled
  * - Kill/Deathstreaks via titles
@@ -45,37 +42,19 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onEatReduceRegeneration(PlayerItemConsumeEvent e) {
-
-        final Player p = e.getPlayer();
-        if (e.getPlayer().hasPermission("hms.bypass.pvp")) return;
-
-        ItemStack item = e.getItem();
-        if (item.getType() == Material.GOLDEN_APPLE && item.getDurability() == 1) {
-
-            hms.getServer().getScheduler().runTask(hms, new Runnable() {
-                @Override
-                public void run() {
-                    p.removePotionEffect(PotionEffectType.REGENERATION);
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 300, 3));
-                }
-            });
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
     public void onAttackReduceStrength(EntityDamageByEntityEvent e) {
 
-        if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
+        Entity damager = e.getDamager();
+        if (damager.hasPermission("hms.bypass.pvp")) return;
 
-            for (PotionEffect effect : ((Player) e.getDamager()).getActivePotionEffects()) {
+        if (damager instanceof Player && e.getEntity() instanceof Player) {
+
+            for (PotionEffect effect : ((Player) damager).getActivePotionEffects()) {
                 if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
 
-                    int level = effect.getAmplifier() + 1;
-
-                    double newDamage =
-                            e.getDamage(EntityDamageEvent.DamageModifier.BASE) / (level * 1.5d + 1.0d) + 3 * level;
+                    double newDamage = e.getDamage(EntityDamageEvent.DamageModifier.BASE) - 1.5d * (effect.getAmplifier() + 1);
                     double damageRatio = newDamage / e.getDamage(EntityDamageEvent.DamageModifier.BASE);
+
                     e.setDamage(EntityDamageEvent.DamageModifier.ARMOR,
                             e.getDamage(EntityDamageEvent.DamageModifier.ARMOR) * damageRatio);
                     e.setDamage(EntityDamageEvent.DamageModifier.MAGIC,
@@ -90,16 +69,6 @@ public class ModPvP extends HalfminerModule implements Listener {
                 }
             }
         }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void test(EntityDamageByEntityEvent e) {
-        e.getDamager().sendMessage(e.getFinalDamage() + " AFTER"); //TODO REMOVE
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void test2(EntityDamageByEntityEvent e) {
-        e.getDamager().sendMessage(e.getFinalDamage() + " BEFORE");
     }
 
     @EventHandler(ignoreCancelled = true)

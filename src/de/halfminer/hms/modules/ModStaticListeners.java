@@ -50,9 +50,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                 && clicked.getType() == InventoryType.MERCHANT
                 && !e.getWhoClicked().hasPermission("hms.bypass.merchant")) {
             ItemStack item = e.getCurrentItem();
-            if (item != null && (item.getType() == Material.WRITTEN_BOOK || item.getType() == Material.APPLE)) {
-                e.setCancelled(true);
-            }
+            if (item != null && item.getType() == Material.WRITTEN_BOOK) e.setCancelled(true);
         }
     }
 
