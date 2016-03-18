@@ -57,6 +57,8 @@ Current features
   - Remove some effects on teleport
 - Respawn Module
   - Respawns player at custom location
+  - Adds a first time join message or removes completely
+  - Execute custom command on first join
 - SignEdit Module
   - Allows editing of signs
   - Use command /signedit
@@ -66,8 +68,7 @@ Current features
   - Adds level to scoreboard
   - Colors name depending on skillgroup
 - StaticListeners Module
-  - Disables join/quit message
-  - Adds a first time join message
+  - Removes quit message
   - Disables some deals in villager trades
   - Override spigot teleport safety
   - Chatfilter

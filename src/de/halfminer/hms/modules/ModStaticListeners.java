@@ -10,14 +10,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Contains functions, that are static and have no fitting module
- * - Disables join/leave messages
- * - First time join message
+ * - Removes leave messages
  * - Blocks certain items from being traded with villagers/merchants
  * - Override spigot teleport safety
  * - Denies chatting when globalmute is enabled
@@ -27,16 +29,6 @@ import org.bukkit.inventory.ItemStack;
  */
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
-
-    @EventHandler
-    public void joinNoMessage(PlayerJoinEvent e) {
-
-        String message = "";
-        Player p = e.getPlayer();
-        if (!p.hasPlayedBefore())
-            message = Language.getMessagePlaceholders("modStaticListenersFirstJoin", false, "%PLAYER%", p.getName());
-        e.setJoinMessage(message);
-    }
 
     @EventHandler
     public void quitNoMessage(PlayerQuitEvent e) {

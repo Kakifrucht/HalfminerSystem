@@ -81,7 +81,6 @@ localization:
   commandVoteGrabReward: '&7Hole dir deine Belohnung jetzt mit &e&o/vote getreward'
   commandVoteRewardDeny: '&cDu hast keine offene Belohnung'
   commandVoteRewardInvFull: '&cDein Inventar ist voll, bitte mache Platz und verwende das Kommando &e/vote getreward'
-  modStaticListenersFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
   modAntiKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte toeten, bzw. toeten lassen desselben Spielers fuehrt zum Ausschluss vom PvP und dem verwenden von Kommandos'
   modAntiKillfarmingNoCommand: '&cKommandos sind fuer dich weitere &a%TIME% &cSekunden deaktiviert, da du Killfarming betrieben hast'
@@ -93,6 +92,7 @@ localization:
   modSignEditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
   modSignEditSignPasted: '&aText eingefuegt, es verbleiben &e%AMOUNT% &aKopien'
   modSignEditLinePasted: '&aSchild editiert'
+  modRespawnFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modGlitchProtectionBedrock: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION%'
   modGlitchProtectionNether: '&cDer Aufenthalt auf dem Netherdach ist verboten'
   modGlitchProtectionNetherNotify: '&c%PLAYER% war auf dem Netherdach bei &e%LOCATION%&c und wurde getoetet'
@@ -198,6 +198,9 @@ motd:
   - 6
   - 9
   - b
+respawn:
+  #Command to be run on first player join, supports %PLAYER% placeholder
+  firstJoinCommand: ''
 performance:
   #Delay in ticks until the blocks will be lifted
   ticksDelayUntilClear: 160
