@@ -89,8 +89,8 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             }
 
             if (attacker != null && attacker != victim && !attacker.isDead() && !victim.isDead()) {
-                tagPlayer(victim, attacker, false);
-                tagPlayer(attacker, victim, true);
+                tagPlayer(victim, attacker, (int) attacker.getHealth());
+                tagPlayer(attacker, victim, (int) Math.ceil(victim.getHealth() - e.getFinalDamage()));
             }
         }
     }
@@ -125,16 +125,12 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         }
     }
 
-    private void tagPlayer(final Player p, final Player other, boolean isAttacker) {
+    private void tagPlayer(final Player p, final Player other, final int otherHealth) {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
 
         if (isTagged(p)) tagged.get(p).cancel();
         else p.sendMessage(lang.get("tagged"));
-
-        final int healthDisplay = isAttacker
-                ? (int) (other.getHealth() - other.getLastDamageCause().getFinalDamage())
-                : (int) other.getHealth();
 
         final int healthScale = (int) other.getHealthScale();
 
@@ -149,7 +145,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 if (time == tagTime) {
 
                     TitleSender.sendActionBar(p, Language.placeholderReplace(lang.get("health"),
-                            "%PLAYER%", other.getName(), "%HEALTH%", String.valueOf(healthDisplay),
+                            "%PLAYER%", other.getName(), "%HEALTH%", String.valueOf(otherHealth),
                             "%MAXHEALTH%", String.valueOf(healthScale)));
 
                     time--;
