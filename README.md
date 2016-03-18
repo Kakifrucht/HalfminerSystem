@@ -49,10 +49,8 @@ Current features
   - Limits mobspawns (configurable)
     - Checks radius, if too many mobs stops the mobspawn
 - PvP Module
-  - Nerfs golden apples
-    - Lower effects and time
-  - Nerfs strength potions
-    - Lowers time
+  - Golden apple regeneration level reduced
+  - Strength potions damage nerfed
   - Nerfs bowspamming
     - Delay between each shot
   - Shows kill/death streaks via titles

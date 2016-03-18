@@ -5,14 +5,14 @@ import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
@@ -25,8 +25,8 @@ import java.util.UUID;
 
 /**
  * PvP modifications/additions
- * - Golden apple nerfed
- * - Strength potions nerfed
+ * - Golden apple regeneration nerfed
+ * - Strength potions damage nerfed
  * - Bow spamming disabled
  * - Kill/Deathstreaks via titles
  * - Sounds on kill/death
@@ -45,37 +45,61 @@ public class ModPvP extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onEat(PlayerItemConsumeEvent e) {
+    public void onEatReduceRegeneration(PlayerItemConsumeEvent e) {
 
-        Player p = e.getPlayer();
-        if (p.hasPermission("hms.bypass.pvp")) return;
+        final Player p = e.getPlayer();
+        if (e.getPlayer().hasPermission("hms.bypass.pvp")) return;
 
         ItemStack item = e.getItem();
         if (item.getType() == Material.GOLDEN_APPLE && item.getDurability() == 1) {
 
-            updateEffect(p, PotionEffectType.REGENERATION, 300, 3);
-        } else if (item.getType() == Material.POTION
-                && (item.getDurability() == 8201 || item.getDurability() == 8265 || item.getDurability() == 8233)) {
-
-            reduceStrengthDuration(p);
+            hms.getServer().getScheduler().runTask(hms, new Runnable() {
+                @Override
+                public void run() {
+                    p.removePotionEffect(PotionEffectType.REGENERATION);
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 300, 3));
+                }
+            });
         }
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPotionSplash(PotionSplashEvent e) {
+    public void onAttackReduceStrength(EntityDamageByEntityEvent e) {
 
-        for (PotionEffect effect : e.getPotion().getEffects()) {
-            if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
+        if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
 
-                for (LivingEntity entity : e.getAffectedEntities()) {
-                    if (entity instanceof Player) {
-                        Player p = (Player) entity;
-                        if (!p.hasPermission("hms.bypass.pvp"))
-                            reduceStrengthDuration((Player) entity);
-                    }
+            for (PotionEffect effect : ((Player) e.getDamager()).getActivePotionEffects()) {
+                if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
+
+                    int level = effect.getAmplifier() + 1;
+
+                    double newDamage =
+                            e.getDamage(EntityDamageEvent.DamageModifier.BASE) / (level * 1.5d + 1.0d) + 3 * level;
+                    double damageRatio = newDamage / e.getDamage(EntityDamageEvent.DamageModifier.BASE);
+                    e.setDamage(EntityDamageEvent.DamageModifier.ARMOR,
+                            e.getDamage(EntityDamageEvent.DamageModifier.ARMOR) * damageRatio);
+                    e.setDamage(EntityDamageEvent.DamageModifier.MAGIC,
+                            e.getDamage(EntityDamageEvent.DamageModifier.MAGIC) * damageRatio);
+                    e.setDamage(EntityDamageEvent.DamageModifier.RESISTANCE,
+                            e.getDamage(EntityDamageEvent.DamageModifier.RESISTANCE) * damageRatio);
+                    e.setDamage(EntityDamageEvent.DamageModifier.BLOCKING,
+                            e.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) * damageRatio);
+                    e.setDamage(EntityDamageEvent.DamageModifier.BASE, newDamage);
+
+                    return;
                 }
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void test(EntityDamageByEntityEvent e) {
+        e.getDamager().sendMessage(e.getFinalDamage() + " AFTER"); //TODO REMOVE
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void test2(EntityDamageByEntityEvent e) {
+        e.getDamager().sendMessage(e.getFinalDamage() + " BEFORE");
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -165,61 +189,6 @@ public class ModPvP extends HalfminerModule implements Listener {
             e.getPlayer().removePotionEffect(PotionEffectType.JUMP);
             e.getPlayer().removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
         }
-    }
-
-    private void updateEffect(final Player player, final PotionEffectType effect, final int time, final int amplifier) {
-
-        hms.getServer().getScheduler().runTask(hms, new Runnable() {
-            @Override
-            public void run() {
-                player.removePotionEffect(effect);
-                player.addPotionEffect(new PotionEffect(effect, time, amplifier));
-            }
-        });
-    }
-
-    private void reduceStrengthDuration(final Player player) {
-
-        final PotionEffect oldEffect = getStrengthFromPlayer(player);
-
-        hms.getServer().getScheduler().runTask(hms, new Runnable() {
-            @Override
-            public void run() {
-
-                PotionEffect newEffect = getStrengthFromPlayer(player);
-
-                if (newEffect != null
-                        && (oldEffect == null || !isSameEffect(oldEffect, newEffect))) {
-
-                    int nerfRatio = 3;
-                    int amplifier = newEffect.getAmplifier();
-                    if (amplifier > 0) nerfRatio *= 6;
-
-                    updateEffect(player, PotionEffectType.INCREASE_DAMAGE,
-                            newEffect.getDuration() / nerfRatio, amplifier);
-                }
-            }
-        });
-    }
-
-    private boolean isSameEffect(PotionEffect oldEff, PotionEffect newEff) {
-        int oldDuration = oldEff.getDuration();
-        int oldDurationBounds = oldDuration - 20;
-        int newDuration = newEff.getDuration();
-
-        return oldEff.getType().equals(newEff.getType())
-                && oldEff.getAmplifier() == newEff.getAmplifier()
-                && newDuration > oldDurationBounds
-                && oldDuration > newDuration;
-    }
-
-    private PotionEffect getStrengthFromPlayer(Player player) {
-
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) return effect;
-        }
-
-        return null;
     }
 
     public void reloadConfig() {
