@@ -2,17 +2,18 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.TitleSender;
+import net.minecraft.server.v1_9_R1.EntityFishingHook;
+import net.minecraft.server.v1_9_R1.EntityPlayer;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -80,6 +81,33 @@ public class ModPvP extends HalfminerModule implements Listener {
             if (lastBowShot.containsKey(p) && lastBowShot.get(p) + 1000 > currentTime) {
                 e.setCancelled(true);
             } else lastBowShot.put(p, currentTime);
+        }
+    }
+
+    /*
+     * Temporary fix for the rod, will be removed after WorldGuard implements safe
+     */
+    @EventHandler
+    public void disablePullEffect(ProjectileHitEvent e) {
+
+        if (!(e.getEntity() instanceof FishHook)) {
+            return;
+        }
+
+        Player shooter = (Player) e.getEntity().getShooter();
+        EntityPlayer entityPlayer = ((CraftPlayer) shooter).getHandle();
+        EntityFishingHook hook = entityPlayer.hookedFish;
+        for (Entity entity : e.getEntity().getNearbyEntities(0.35D, 0.35D, 0.35D)) {
+
+            if (((entity instanceof Player)) && (!entity.getName().equals(shooter.getName()))) {
+                Player hooked = (Player) entity;
+                if (hook != null) {
+                    hook.hooked = null;
+                    hook.die();
+                }
+                entityPlayer.hookedFish = null;
+                break;
+            }
         }
     }
 
