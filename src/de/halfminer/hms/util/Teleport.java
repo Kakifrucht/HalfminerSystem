@@ -51,10 +51,13 @@ public class Teleport {
             @Override
             public void run() {
 
+                EntityDamageEvent lastDamageNow = player.getLastDamageCause();
+
                 if (player.getLocation().getBlockX() != blockX
                         || player.getLocation().getBlockY() != blockY
                         || player.getLocation().getBlockZ() != blockZ
-                        || !player.getLastDamageCause().equals(lastDamage)) {
+                        || !player.isOnline() || player.isDead()
+                        || (lastDamageNow != null && !lastDamageNow.equals(lastDamage))) {
 
                     player.sendMessage(Language.getMessagePlaceholders("teleportMoved", true, "%PREFIX%", "Teleport"));
                     cancelTeleport();
@@ -70,6 +73,7 @@ public class Teleport {
     }
 
     private void teleport() {
+
         player.sendMessage(Language.getMessagePlaceholders("teleportDone", true, "%PREFIX%", "Teleport"));
         player.teleport(loc);
         cancelTeleport();
