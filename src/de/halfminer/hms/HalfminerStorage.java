@@ -1,8 +1,8 @@
 package de.halfminer.hms;
 
+import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.StatsType;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

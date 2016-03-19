@@ -1,8 +1,8 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModRespawn;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.ModuleType;
 import de.halfminer.hms.util.Teleport;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -42,10 +42,13 @@ public class Cmdspawn extends HalfminerCommand {
     private void teleport(CommandSender sender, boolean forced) {
 
         if (sender instanceof Player) {
+
             Player p = (Player) sender;
             Location loc = respawn.getSpawn();
+
             if (forced) new Teleport(p, loc, 0).startTeleport();
             else new Teleport(p, respawn.getSpawn()).startTeleport();
+
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
 }

@@ -1,8 +1,8 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModSignEdit;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.ModuleType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

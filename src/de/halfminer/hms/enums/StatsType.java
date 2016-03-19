@@ -1,4 +1,4 @@
-package de.halfminer.hms.util;
+package de.halfminer.hms.enums;
 
 public enum StatsType {
 

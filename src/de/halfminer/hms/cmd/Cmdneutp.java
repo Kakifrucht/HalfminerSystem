@@ -1,7 +1,7 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.Teleport;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,68 +24,79 @@ public class Cmdneutp extends HalfminerCommand {
     @Override
     public void run(CommandSender sender, String label, String[] args) {
 
-        if (sender instanceof Player) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(Language.getMessage("notAPlayer"));
+            return;
+        }
 
-            final Player player = (Player) sender;
+        final Player player = (Player) sender;
 
-            if (!storage.getStatsBoolean(player, StatsType.NEUTP_USED)) {
+        if (storage.getStatsBoolean(player, StatsType.NEUTP_USED)){
+            player.sendMessage(Language.getMessagePlaceholders("commandNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
+            return;
+        }
 
-                player.sendMessage(Language.getMessagePlaceholders("commandNeutpStart", true, "%PREFIX%", "Neutp"));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));
+        storage.setStats(player, StatsType.NEUTP_USED, true);
 
-                Random rnd = new Random();
+        player.sendMessage(Language.getMessagePlaceholders("commandNeutpStart", true, "%PREFIX%", "Neutp"));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));
 
-                int boundMin = hms.getConfig().getInt("command.neutp.boundMin", 1000);
-                int boundMax = hms.getConfig().getInt("command.neutp.boundMax", 10000) - boundMin;
-                int iterations = 10;
+        Random rnd = new Random();
 
-                World world = hms.getServer().getWorlds().get(0);
-                Block block;
+        int boundMin = hms.getConfig().getInt("command.neutp.boundMin", 1000);
+        int boundMax = hms.getConfig().getInt("command.neutp.boundMax", 10000) - boundMin;
+        int iterations = 10;
 
-                do {
-                    int x = rnd.nextInt(boundMax) + boundMin;
-                    int z = rnd.nextInt(boundMax) + boundMin;
-                    if (rnd.nextBoolean()) x = -x;
-                    if (rnd.nextBoolean()) z = -z;
-                    int y = world.getHighestBlockAt(x, z).getLocation().getBlockY();
-                    block = world.getBlockAt(x, y - 1, z);
-                }
-                while (--iterations > 0 && block.getType() == Material.WATER || block.getType() == Material.LAVA
-                        || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.STATIONARY_LAVA);
+        World world = hms.getServer().getWorlds().get(0);
+        Block block;
 
-                final Location loc = block.getLocation();
-                loc.setY(block.getLocation().getBlockY() + 1);
-                loc.setYaw(player.getLocation().getYaw());
-                loc.setPitch(player.getLocation().getPitch());
+        do {
+            int x = rnd.nextInt(boundMax) + boundMin;
+            int z = rnd.nextInt(boundMax) + boundMin;
+            if (rnd.nextBoolean()) x = -x;
+            if (rnd.nextBoolean()) z = -z;
+            int y = world.getHighestBlockAt(x, z).getLocation().getBlockY();
+            block = world.getBlockAt(x, y - 1, z);
+        }
+        while (--iterations > 0 && block.getType() == Material.WATER || block.getType() == Material.LAVA
+                || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.STATIONARY_LAVA);
 
-                new Teleport(player, loc, 5).startTeleportAndRun(new Runnable() {
+        final Location loc = block.getLocation();
+        loc.setY(block.getLocation().getBlockY() + 1);
+        loc.setYaw(player.getLocation().getYaw());
+        loc.setPitch(player.getLocation().getPitch());
+
+        new Teleport(player, loc, 5).startTeleportAndRun(new Runnable() {
+            @Override
+            public void run() {
+
+                hms.getServer().dispatchCommand(player, "sethome neutp");
+
+                for (int i = 0; i < 100; i++) player.sendMessage("");
+                player.sendMessage(Language.getMessagePlaceholders("commandNeutpTpDone", true, "%PREFIX%", "Neutp",
+                        "%PLAYER%", player.getName()));
+
+                hms.getLogger().info(Language.getMessagePlaceholders("commandNeutpLog", false, "%PLAYER%",
+                        player.getName(), "%LOCATION%", Language.getStringFromLocation(loc)));
+
+                hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
                     @Override
                     public void run() {
-
-                        storage.setStats(player, StatsType.NEUTP_USED, true);
-
-                        hms.getServer().dispatchCommand(player, "sethome neutp");
-
-                        for (int i = 0; i < 100; i++) player.sendMessage("");
-                        player.sendMessage(Language.getMessagePlaceholders("commandNeutpTpDone", true, "%PREFIX%", "Neutp",
-                                "%PLAYER%", player.getName()));
-
-                        hms.getLogger().info(Language.getMessagePlaceholders("commandNeutpLog", false, "%PLAYER%", player.getName(),
-                                "%LOCATION%", Language.getStringFromLocation(loc)));
-
-                        hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
-                            @Override
-                            public void run() {
-                                player.sendMessage(Language.getMessagePlaceholders("commandNeutpDocumentation",
-                                        true, "%PREFIX%", "Neutp"));
-                            }
-                        });
+                        player.sendMessage(Language.getMessagePlaceholders("commandNeutpDocumentation",
+                                true, "%PREFIX%", "Neutp"));
                     }
                 });
-            } else player.sendMessage(Language.getMessagePlaceholders("commandNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
+            }
+        }, new Runnable() {
+            @Override
+            public void run() {
 
-        } else sender.sendMessage(Language.getMessage("notAPlayer"));
+                storage.setStats(player, StatsType.NEUTP_USED, false);
 
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
+                player.removePotionEffect(PotionEffectType.CONFUSION);
+            }
+        });
     }
 }

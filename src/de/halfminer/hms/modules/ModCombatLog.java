@@ -192,7 +192,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     public void reloadConfig() {
 
         broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
-        tagTime = hms.getConfig().getInt("combatLog.tagTime", 30);
+        tagTime = hms.getConfig().getInt("combatLog.tagTime", 15);
 
         lang.clear();
         lang.put("tagged", Language.getMessagePlaceholders("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));

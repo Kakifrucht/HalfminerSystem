@@ -1,7 +1,7 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

@@ -2,8 +2,8 @@ package de.halfminer.hms.cmd;
 
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
+import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.StatsType;
 import net.ess3.api.Economy;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;

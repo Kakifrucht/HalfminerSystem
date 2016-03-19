@@ -1,8 +1,8 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModTps;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.ModuleType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;

@@ -2,11 +2,11 @@ package de.halfminer.hms.cmd;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
+import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.ModuleType;
-import de.halfminer.hms.util.StatsType;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Location;
 import org.bukkit.Material;

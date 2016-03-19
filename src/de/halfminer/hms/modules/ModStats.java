@@ -1,8 +1,8 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
-import de.halfminer.hms.util.StatsType;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -1,9 +1,9 @@
 package de.halfminer.hms;
 
 import de.halfminer.hms.cmd.HalfminerCommand;
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.HalfminerModule;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.ModuleType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;

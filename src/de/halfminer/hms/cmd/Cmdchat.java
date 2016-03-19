@@ -1,7 +1,7 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.ModuleType;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

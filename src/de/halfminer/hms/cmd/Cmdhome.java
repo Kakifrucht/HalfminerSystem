@@ -1,7 +1,7 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.StatsType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

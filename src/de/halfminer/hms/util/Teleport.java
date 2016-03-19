@@ -17,19 +17,36 @@ public class Teleport {
     private final int delay;
 
     private Runnable toRun = null;
+    private Runnable toRunIfCancelled = null;
 
+    /**
+     * Create a new teleport with in config specified delay.
+     * The Player may not move, logout, get damage during this time.
+     * @param player to teleport
+     * @param loc location to teleport to
+     */
     public Teleport(Player player, Location loc) {
         this.player = player;
         this.loc = loc;
         this.delay = hms.getConfig().getInt("teleport.cooldownSeconds", 3);
     }
 
+    /**
+     * Create a new teleport.
+     * The Player may not move, logout, get damage during this time.
+     * @param player to teleport
+     * @param loc location to teleport to
+     * @param delay time in seconds the player has to stand still
+     */
     public Teleport(Player player, Location loc, int delay) {
         this.player = player;
         this.loc = loc;
         this.delay = delay;
     }
 
+    /**
+     * Start the teleport. If delay lower than 0 or bypass permission granted, teleport will be done immediately.
+     */
     public void startTeleport() {
 
         if (delay < 1 || player.hasPermission("hms.bypass.teleporttimer")) {
@@ -60,15 +77,21 @@ public class Teleport {
                         || (lastDamageNow != null && !lastDamageNow.equals(lastDamage))) {
 
                     player.sendMessage(Language.getMessagePlaceholders("teleportMoved", true, "%PREFIX%", "Teleport"));
-                    cancelTeleport();
+                    cancelTeleport(true);
                 } else if (--seconds == 0) teleport();
             }
         }, 20L, 20L);
     }
 
-    public void startTeleportAndRun(Runnable toRun) {
+    /**
+     * Start the teleport while specifiying runnables that run if the teleport is successful or cancelled
+     * @param toRun Runnable that will be executed if teleport successful, may be null
+     * @param toRunIfCancelled Runnable that will be executed if teleport unsuccessful, may be null
+     */
+    public void startTeleportAndRun(Runnable toRun, Runnable toRunIfCancelled) {
 
         this.toRun = toRun;
+        this.toRunIfCancelled = toRunIfCancelled;
         startTeleport();
     }
 
@@ -76,12 +99,14 @@ public class Teleport {
 
         player.sendMessage(Language.getMessagePlaceholders("teleportDone", true, "%PREFIX%", "Teleport"));
         player.teleport(loc);
-        cancelTeleport();
+        cancelTeleport(false);
 
         if (toRun != null) hms.getServer().getScheduler().runTaskLater(hms, toRun, 1L);
     }
 
-    private void cancelTeleport() {
+    private void cancelTeleport(boolean cancelled) {
+
         if (task != null) task.cancel();
+        if (toRunIfCancelled != null && cancelled) hms.getServer().getScheduler().runTaskLater(hms, toRunIfCancelled, 1L);
     }
 }
