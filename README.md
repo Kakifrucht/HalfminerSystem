@@ -12,6 +12,7 @@ Current features
   - Disallows movement
   - Change default time in config
   - Stops when player taking damage
+  - Execute runnable after successful teleport
 - Own Title API
   - Main title/subtitle
   - Actionbar title

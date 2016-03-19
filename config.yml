@@ -48,7 +48,7 @@ localization:
   commandHmstoreRemove: '&7Der Wert &o%PATH% &7wurde entfernt'
   commandHmstoreSave: '&7Die Variablen wurden gespeichert'
   commandNeutpAlreadyUsed: '&cDu kannst diesen Befehl nur einmal verwenden'
-  commandNeutpCountdown: '&aDu wirst in 5 Sekunden an einen eigenen Ort geportet'
+  commandNeutpStart: '&aDu wirst an einen eigenen Ort teleportiert'
   commandNeutpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'
   commandNeutpLog: 'Neutp: %PLAYER% wurde zu %LOCATION% teleportiert'
   commandNeutpDocumentation: '&7Es wurde ein automatischer Homepunkt angelegt (&e/home&7). Du kannst einen neuen mit &e/sethome&7 setzen. Alle wichtigen Kommandos unter &e/hilfe&7. &lBitte lies das &e&oHalfminer Handbuch &7&lum mehr ueber den Server zu erfahren'

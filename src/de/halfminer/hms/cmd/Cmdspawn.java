@@ -44,8 +44,8 @@ public class Cmdspawn extends HalfminerCommand {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             Location loc = respawn.getSpawn();
-            if (forced) new Teleport(p, loc, 0);
-            else new Teleport(p, respawn.getSpawn());
+            if (forced) new Teleport(p, loc, 0).startTeleport();
+            else new Teleport(p, respawn.getSpawn()).startTeleport();
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
 }

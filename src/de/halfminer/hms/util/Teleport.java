@@ -12,21 +12,25 @@ public class Teleport {
 
     private BukkitTask task;
 
-    private Player player;
-    private Location loc;
+    private final Player player;
+    private final Location loc;
+    private final int delay;
+
+    private Runnable toRun = null;
 
     public Teleport(Player player, Location loc) {
-        startTeleport(player, loc, hms.getConfig().getInt("teleport.cooldownSeconds", 3));
+        this.player = player;
+        this.loc = loc;
+        this.delay = hms.getConfig().getInt("teleport.cooldownSeconds", 3);
     }
 
     public Teleport(Player player, Location loc, int delay) {
-        startTeleport(player, loc, delay);
+        this.player = player;
+        this.loc = loc;
+        this.delay = delay;
     }
 
-    private void startTeleport(Player p, Location l, final int delay) {
-
-        this.player = p;
-        this.loc = l;
+    public void startTeleport() {
 
         if (delay < 1 || player.hasPermission("hms.bypass.teleporttimer")) {
             teleport();
@@ -59,10 +63,18 @@ public class Teleport {
         }, 20L, 20L);
     }
 
+    public void startTeleportAndRun(Runnable toRun) {
+
+        this.toRun = toRun;
+        startTeleport();
+    }
+
     private void teleport() {
         player.sendMessage(Language.getMessagePlaceholders("teleportDone", true, "%PREFIX%", "Teleport"));
         player.teleport(loc);
         cancelTeleport();
+
+        if (toRun != null) hms.getServer().getScheduler().runTaskLater(hms, toRun, 1L);
     }
 
     private void cancelTeleport() {
