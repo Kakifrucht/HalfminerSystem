@@ -196,6 +196,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
             if (scoreboard.getTeam(teamName) == null) {
                 Team registered = scoreboard.registerNewTeam(teamName);
                 registered.setPrefix(ChatColor.COLOR_CHAR + colorCode);
+                registered.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             }
             teams[i] = teamName; // Remove color code
         }
