@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Pair;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
@@ -58,11 +59,12 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
             Player killer = e.getEntity().getKiller();
             Player victim = e.getEntity().getPlayer();
 
-            if (killer.equals(victim) || killer.hasPermission("hms.bypass.nokillfarming") || victim.hasPermission("hms.bypass.nokillfarming"))
-                return;
+            if (killer.equals(victim) || killer.hasPermission("hms.bypass.nokillfarming")
+                    || victim.hasPermission("hms.bypass.nokillfarming")) return;
 
-            //remove the killer from the victims map, to reset the killfarm counter
-            if (deathMap.containsKey(victim.getUniqueId()) && deathMap.get(victim.getUniqueId()).containsPlayer(killer)) {
+            // remove the killer from the victims map, to reset the killfarm counter
+            if (deathMap.containsKey(victim.getUniqueId())
+                    && deathMap.get(victim.getUniqueId()).containsPlayer(killer)) {
                 deathMap.get(victim.getUniqueId()).removePlayer(killer);
             }
 
@@ -70,28 +72,31 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
                 AntiKillfarmingContainer container = deathMap.get(killer.getUniqueId());
 
-                if (container.containsPlayer(victim)) { //if the victim is already in the killers list
+                // if the victim is already in the killers list
+                if (container.containsPlayer(victim)) {
 
-                    //check if time constraints are met, if they passed the THRESHOLD reset the victim
-                    if (container.getTimestamp(victim) + THRESHOLD_UNTIL_REMOVAL_SECONDS > System.currentTimeMillis() / 1000) {
+                    // check if time constraints are met, if they passed the THRESHOLD reset the victim
+                    if (container.getTimestamp(victim) + THRESHOLD_UNTIL_REMOVAL_SECONDS
+                            > System.currentTimeMillis() / 1000) {
 
-                        container.updatePlayer(victim);
-                        //if the kill threshold has already been met, block, else just update
+                        container.updatePlayer(victim, 0);
+                        // if the kill threshold has already been met, block, else just update
                         if (container.getAmount(victim) == THRESHOLD_UNTIL_BLOCK - 1) { //Warn player
-                            killer.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"), "%PREFIX%", "PvP"));
-                            victim.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"), "%PREFIX%", "PvP"));
+                            killer.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"),
+                                    "%PREFIX%", "PvP"));
+                            victim.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"),
+                                    "%PREFIX%", "PvP"));
                         } else if (container.getAmount(victim) >= THRESHOLD_UNTIL_BLOCK)
-                            blockPlayers(killer, victim); //block player
+                            blockPlayers(killer, victim);
 
                     } else {
                         container.resetPlayer(victim);
                     }
 
-                } else container.addPlayer(victim); //victim not in killers list, add him
+                } else container.addPlayer(victim);
 
             } else deathMap.put(killer.getUniqueId(), new AntiKillfarmingContainer(victim));
         }
-
     }
 
     /**
@@ -103,15 +108,17 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     public void onPvPCheckIfAllowed(EntityDamageByEntityEvent e) {
 
         if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-            short time = getBlockTime((Player) e.getDamager());
+            int time = getBlockTime((Player) e.getDamager());
             if (time >= 0) {
-                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"), "%TIME%", Short.toString(time)));
+                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"),
+                        "%TIME%", String.valueOf(time)));
                 e.setCancelled(true);
                 return;
             }
             time = getBlockTime((Player) e.getEntity());
             if (time >= 0) {
-                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"), "%PLAYER%", e.getEntity().getName(), "%TIME%", Short.toString(time)));
+                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"),
+                        "%PLAYER%", e.getEntity().getName(), "%TIME%", String.valueOf(time)));
                 e.setCancelled(true);
                 return;
             }
@@ -122,7 +129,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
             TNTPrimed tnt = (TNTPrimed) e.getDamager();
             if (tnt.getSource() instanceof Player) {
                 Player victim = (Player) e.getEntity();
-                short time = getBlockTime(victim);
+                int time = getBlockTime(victim);
                 if (time >= 0) {
                     e.setCancelled(true);
                     return;
@@ -130,7 +137,9 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
             }
         }
 
-        if (e.getEntity() instanceof Player && e.getDamager() instanceof Projectile && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
+        if (e.getEntity() instanceof Player
+                && e.getDamager() instanceof Projectile
+                && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
             Player attacker = (Player) ((Projectile) e.getDamager()).getShooter();
             Player victim = (Player) e.getEntity();
 
@@ -140,15 +149,17 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
                 return;
             }
 
-            short timeAttacker = getBlockTime(attacker);
-            short timeVictim = getBlockTime(victim);
+            int timeAttacker = getBlockTime(attacker);
+            int timeVictim = getBlockTime(victim);
             if (timeAttacker >= 0) {
-                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"), "%TIME%", Short.toString(timeAttacker)));
+                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"),
+                        "%TIME%", String.valueOf(timeAttacker)));
                 e.setCancelled(true);
                 return;
             }
             if (timeVictim >= 0) {
-                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"), "%PLAYER%", e.getEntity().getName(), "%TIME%", Short.toString(timeVictim)));
+                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"),
+                        "%PLAYER%", e.getEntity().getName(), "%TIME%", String.valueOf(timeVictim)));
                 e.setCancelled(true);
             }
         }
@@ -156,11 +167,13 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onCommandCheckIfAllowed(PlayerCommandPreprocessEvent e) {
-        short time = getBlockTime(e.getPlayer());
+
+        int time = getBlockTime(e.getPlayer());
         if (time > 0) {
             String command = e.getMessage().split(" ")[0].toLowerCase();
             if (!commandExemptList.contains(command.substring(1, command.length()))) {
-                e.getPlayer().sendMessage(Language.placeholderReplace(lang.get("noCommand"), "%TIME%", Short.toString(time)));
+                e.getPlayer().sendMessage(Language.placeholderReplace(lang.get("noCommand"),
+                        "%TIME%", String.valueOf(time)));
                 e.setCancelled(true);
             }
         }
@@ -168,11 +181,13 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPotionCheckIfAllowed(PotionSplashEvent e) {
+
         if (e.getEntity().getShooter() instanceof Player) {
             Player thrower = (Player) e.getEntity().getShooter();
-            short time = getBlockTime(thrower);
+            int time = getBlockTime(thrower);
             if (time >= 0) {
-                thrower.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"), "%TIME%", Short.toString(time)));
+                thrower.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"),
+                        "%TIME%", String.valueOf(time)));
                 e.setCancelled(true);
             }
         }
@@ -184,7 +199,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
      * @param player - player to check
      * @return -1 if not blocked, else short in seconds
      */
-    private short getBlockTime(Player player) {
+    private int getBlockTime(Player player) {
+
         if (blockList.containsKey(player.getUniqueId())) {
 
             long currentTime = System.currentTimeMillis() / 1000;
@@ -192,10 +208,11 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
             if (blockTime - currentTime > 0) return (short) (blockTime - currentTime);
             else {
-                blockList.remove(player.getUniqueId()); //time is up, remove and return that the player is not blocked
+                // time is up, remove and return that the player is not blocked
+                blockList.remove(player.getUniqueId());
                 return -1;
             }
-        } else return -1; //not blocked
+        } else return -1;
     }
 
     /**
@@ -215,7 +232,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
         killerVal.incrementAmountBlocked();
         victimVal.incrementAmountBlocked();
 
-        //Determine block time, since it doubles every time you get blocked
+        // Determine block time, since it doubles every time you get blocked
         long blockTimeKiller = BLOCK_TIME;
         long blockTimeVictim = BLOCK_TIME;
         long systemTime = (System.currentTimeMillis() / 1000);
@@ -223,41 +240,51 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
         for (int i = 1; i < killerVal.getAmountBlocked(); i++) blockTimeKiller *= 2;
         for (int i = 1; i < victimVal.getAmountBlocked(); i++) blockTimeVictim *= 2;
 
-        //update the player in the killers kill list, ensuring that once one of the blocks (either killer or victim)
-        //runs out, and the killer kills the victim again, it will still block them both
+        /* update the player in the killers kill list, ensuring that once one of the blocks (either killer or victim)
+        runs out, and the killer kills the victim again, it will still block them both */
         killerVal.updatePlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
 
-        //add to block list
+        // add to block list
         blockList.put(killer.getUniqueId(), systemTime + blockTimeKiller);
         blockList.put(victim.getUniqueId(), systemTime + blockTimeVictim);
 
-        //send messages
-        hms.getServer().broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"), "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
-        killer.sendMessage(Language.placeholderReplace(lang.get("blockedKiller"), "%TIME%", Long.toString(blockTimeKiller / 60), "%PLAYER%", victim.getName()));
-        victim.sendMessage(Language.placeholderReplace(lang.get("blockedVictim"), "%TIME%", Long.toString(blockTimeVictim / 60), "%PLAYER%", killer.getName()));
+        // send messages
+        hms.getServer().broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"),
+                "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
+        killer.sendMessage(Language.placeholderReplace(lang.get("blockedKiller"),
+                "%TIME%", Long.toString(blockTimeKiller / 60), "%PLAYER%", victim.getName()));
+        victim.sendMessage(Language.placeholderReplace(lang.get("blockedVictim"),
+                "%TIME%", Long.toString(blockTimeVictim / 60), "%PLAYER%", killer.getName()));
     }
 
     @Override
     public void reloadConfig() {
 
-        //Get constants
+        // Get constants
         BLOCK_TIME = hms.getConfig().getInt("killfarming.blockTime", 300);
         THRESHOLD_UNTIL_BLOCK = hms.getConfig().getInt("killfarming.thresholdUntilBlock", 5);
         THRESHOLD_UNTIL_REMOVAL_SECONDS = hms.getConfig().getInt("killfarming.thresholdUntilRemoval", 100);
 
-        //Get allowed commands
+        // Get allowed commands
         commandExemptList.clear();
         commandExemptList.addAll(hms.getConfig().getStringList("killfarming.killfarmingCommandExemptions"));
 
-        //Get language
+        // Get language
         lang.clear();
-        lang.put("killfarmWarning", Language.getMessagePlaceholders("modAntiKillfarmingWarning", true, "%PREFIX%", "PvP"));
-        lang.put("noCommand", Language.getMessagePlaceholders("modAntiKillfarmingNoCommand", true, "%PREFIX%", "Info"));
-        lang.put("noPvPAttack", Language.getMessagePlaceholders("modAntiKillfarmingNoPvPAttack", true, "%PREFIX%", "PvP"));
-        lang.put("noPvPProtect", Language.getMessagePlaceholders("modAntiKillfarmingNoPvPProtect", true, "%PREFIX%", "PvP"));
-        lang.put("blockedBroadcast", Language.getMessagePlaceholders("modAntiKillfarmingBlockedBroadcast", true, "%PREFIX%", "PvP"));
-        lang.put("blockedKiller", Language.getMessagePlaceholders("modAntiKillfarmingBlockedKiller", true, "%PREFIX%", "PvP"));
-        lang.put("blockedVictim", Language.getMessagePlaceholders("modAntiKillfarmingBlockedVictim", true, "%PREFIX%", "PvP"));
+        lang.put("killfarmWarning", Language.getMessagePlaceholders("modAntiKillfarmingWarning", true,
+                "%PREFIX%", "PvP"));
+        lang.put("noCommand", Language.getMessagePlaceholders("modAntiKillfarmingNoCommand",
+                true, "%PREFIX%", "Info"));
+        lang.put("noPvPAttack", Language.getMessagePlaceholders("modAntiKillfarmingNoPvPAttack",
+                true, "%PREFIX%", "PvP"));
+        lang.put("noPvPProtect", Language.getMessagePlaceholders("modAntiKillfarmingNoPvPProtect",
+                true, "%PREFIX%", "PvP"));
+        lang.put("blockedBroadcast", Language.getMessagePlaceholders("modAntiKillfarmingBlockedBroadcast",
+                true, "%PREFIX%", "PvP"));
+        lang.put("blockedKiller", Language.getMessagePlaceholders("modAntiKillfarmingBlockedKiller",
+                true, "%PREFIX%", "PvP"));
+        lang.put("blockedVictim", Language.getMessagePlaceholders("modAntiKillfarmingBlockedVictim",
+                true, "%PREFIX%", "PvP"));
     }
 
     /**
@@ -268,18 +295,20 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
         /**
          * Map containing the players that got killed by the containers owner
+         * Pair mapping: Left - Timestamp, Right - Counter (amount of kills)
          */
-        final HashMap<UUID, Values> players = new HashMap<>();
+        final HashMap<UUID, Pair<Long, Integer>> players = new HashMap<>();
+
         /**
          * Total amount player got blocked already, the higher it is, the longer the block
          */
-        byte amountBlocked = 0;
+        int amountBlocked = 0;
 
         AntiKillfarmingContainer() {
         }
 
         AntiKillfarmingContainer(Player victim) {
-            players.put(victim.getUniqueId(), new Values());
+            players.put(victim.getUniqueId(), getDefaultPair());
         }
 
         boolean containsPlayer(Player toCheck) {
@@ -287,20 +316,11 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
         }
 
         void addPlayer(Player toAdd) {
-            players.put(toAdd.getUniqueId(), new Values());
+            players.put(toAdd.getUniqueId(), getDefaultPair());
         }
 
         void removePlayer(Player toRemove) {
             players.remove(toRemove.getUniqueId());
-        }
-
-        /**
-         * Update a players last killed timestamp and amount he died
-         *
-         * @param toUpdate - Player that will be updated
-         */
-        void updatePlayer(Player toUpdate) {
-            updatePlayer(toUpdate, 0);
         }
 
         /**
@@ -311,9 +331,10 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
          *                 useful for making sure that after a block the players can't proceed with killfarming
          */
         void updatePlayer(Player toUpdate, long timeDiff) {
-            Values val = players.get(toUpdate.getUniqueId());
-            val.amount++;
-            val.timestamp = (System.currentTimeMillis() / 1000) + timeDiff;
+
+            Pair<Long, Integer> pair = players.get(toUpdate.getUniqueId());
+            pair.setLeft((System.currentTimeMillis() / 1000) + timeDiff);
+            pair.setRight(pair.getRight() + 1);
         }
 
         /**
@@ -322,9 +343,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
          * @param toReset player who will be reset
          */
         void resetPlayer(Player toReset) {
-            Values val = players.get(toReset.getUniqueId());
-            val.amount = 1;
-            val.timestamp = System.currentTimeMillis() / 1000;
+            players.put(toReset.getUniqueId(), getDefaultPair());
         }
 
         void incrementAmountBlocked() {
@@ -338,25 +357,19 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
          * @return the timestamp, when passed the player should be reset
          */
         long getTimestamp(Player toGet) {
-            return players.get(toGet.getUniqueId()).timestamp;
+            return players.get(toGet.getUniqueId()).getLeft();
         }
 
-        short getAmount(Player toGet) {
-            return players.get(toGet.getUniqueId()).amount;
+        int getAmount(Player toGet) {
+            return players.get(toGet.getUniqueId()).getRight();
         }
 
-        byte getAmountBlocked() {
+        int getAmountBlocked() {
             return amountBlocked;
         }
 
-        /**
-         * Wrapper for death amount of the containers victim and when the last kill happened
-         */
-        class Values {
-            long timestamp = System.currentTimeMillis() / 1000;
-            short amount = 1;
+        private Pair<Long, Integer> getDefaultPair() {
+            return new Pair<>(System.currentTimeMillis() / 1000, 1);
         }
-
     }
-
 }

@@ -79,16 +79,16 @@ public class Teleport {
         }, 20L, 20L);
     }
 
-    /**
+    /* Unused
      * Start the teleport with in config given default delay while
      * specifiying runnables that run if the teleport is successful or cancelled
      * @param toRun Runnable that will be executed if teleport successful, may be null
      * @param toRunIfCancelled Runnable that will be executed if teleport unsuccessful, may be null
      */
-    public void startTeleportAndRun(Runnable toRun, Runnable toRunIfCancelled) {
+    //public void startTeleportAndRun(Runnable toRun, Runnable toRunIfCancelled) {
 
-        startTeleportAndRun(defaultTime, toRun, toRunIfCancelled);
-    }
+      //  startTeleportAndRun(defaultTime, toRun, toRunIfCancelled);
+    //}
 
     /**
      * Start the teleport while specifiying runnables that run if the teleport is successful or cancelled

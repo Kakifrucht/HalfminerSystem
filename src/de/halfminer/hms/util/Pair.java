@@ -2,8 +2,8 @@ package de.halfminer.hms.util;
 
 public class Pair<L, R> {
 
-    private final L left;
-    private final R right;
+    private L left;
+    private R right;
 
     /**
      * Create a new pair
@@ -27,5 +27,21 @@ public class Pair<L, R> {
      */
     public R getRight() {
         return right;
+    }
+
+    /**
+     * Update value of left node
+     * @param setTo value to set
+     */
+    public void setLeft(L setTo) {
+        left = setTo;
+    }
+
+    /**
+     * Update value of right node
+     * @param setTo value to set
+     */
+    public void setRight(R setTo) {
+        right = setTo;
     }
 }
