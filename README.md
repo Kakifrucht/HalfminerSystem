@@ -8,7 +8,10 @@ Current features
 - Modular, lightweight, efficient
 - Messages completely configurable, functionality mostly
 - Own storage flatfile in YAML format
-- Teleport players with no movement cooldown
+- Teleport players with cooldown
+  - Disallows movement
+  - Change default time in config
+  - Stops when player taking damage
 - Own Title API
   - Main title/subtitle
   - Actionbar title

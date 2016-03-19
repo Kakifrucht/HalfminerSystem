@@ -29,6 +29,7 @@ public class ModRespawn extends HalfminerModule implements Listener {
         e.setRespawnLocation(respawnLoc);
     }
 
+    @EventHandler
     public void onFirstJoin(final PlayerJoinEvent e) {
 
         String message = "";
@@ -43,7 +44,7 @@ public class ModRespawn extends HalfminerModule implements Listener {
                 public void run() {
 
                     joined.teleport(respawnLoc);
-                    String command = hms.getConfig().getString("respawn.firstJoinCommand");
+                    String command = hms.getConfig().getString("respawn.firstJoinCommand", "");
                     if (command.length() > 0) {
                         hms.getServer().dispatchCommand(hms.getServer().getConsoleSender(),
                                 Language.placeholderReplace(command, "%PLAYER%", joined.getName()));

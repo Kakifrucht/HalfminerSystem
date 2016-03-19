@@ -3,6 +3,7 @@ package de.halfminer.hms.util;
 import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 public class Teleport {
@@ -35,6 +36,7 @@ public class Teleport {
         final int blockX = player.getLocation().getBlockX();
         final int blockY = player.getLocation().getBlockY();
         final int blockZ = player.getLocation().getBlockZ();
+        final EntityDamageEvent lastDamage = player.getLastDamageCause();
 
         player.sendMessage(Language.getMessagePlaceholders("teleportStart", true,
                 "%PREFIX%", "Teleport", "%TIME%", String.valueOf(delay)));
@@ -47,7 +49,8 @@ public class Teleport {
 
                 if (player.getLocation().getBlockX() != blockX
                         || player.getLocation().getBlockY() != blockY
-                        || player.getLocation().getBlockZ() != blockZ) {
+                        || player.getLocation().getBlockZ() != blockZ
+                        || !player.getLastDamageCause().equals(lastDamage)) {
 
                     player.sendMessage(Language.getMessagePlaceholders("teleportMoved", true, "%PREFIX%", "Teleport"));
                     cancelTeleport();
