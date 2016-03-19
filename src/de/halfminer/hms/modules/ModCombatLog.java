@@ -133,15 +133,13 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
 
-        if (isTagged(p)) tagged.get(p).cancel();
-        else p.sendMessage(lang.get("tagged"));
-
         final int healthScale = (int) other.getMaxHealth();
 
-        barHandler.showBar(p, Language.placeholderReplace(lang.get("health"), "%PLAYER%", other.getName(),
+        barHandler.showBar(p, Language.placeholderReplace(lang.get("bossbar"), "%PLAYER%", other.getName(),
                 "%HEALTH%", String.valueOf(otherHealth), "%MAXHEALTH%", String.valueOf(healthScale)),
-                BarColor.RED, BarStyle.SEGMENTED_20, 3, (double) otherHealth / healthScale);
+                BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) otherHealth / healthScale);
 
+        if (isTagged(p)) tagged.get(p).cancel();
         tagged.put(p, hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
 
             final String symbols = lang.get("symbols");
@@ -202,8 +200,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         }
 
         lang.clear();
-        lang.put("tagged", Language.getMessagePlaceholders("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
-        lang.put("health", Language.getMessage("modCombatLogHealth"));
+        lang.put("bossbar", Language.getMessage("modCombatLogBossBar"));
         lang.put("countdown", Language.getMessage("modCombatLogCountdown"));
         lang.put("symbols", Language.getMessage("modCombatLogProgressSymbols"));
         lang.put("untagged", Language.getMessage("modCombatLogUntagged"));
