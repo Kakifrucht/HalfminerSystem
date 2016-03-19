@@ -67,7 +67,7 @@ public class Cmdneutp extends HalfminerCommand {
         loc.setYaw(player.getLocation().getYaw());
         loc.setPitch(player.getLocation().getPitch());
 
-        new Teleport(player, loc, 5).startTeleportAndRun(new Runnable() {
+        new Teleport(player, loc).startTeleportAndRun(5, new Runnable() {
             @Override
             public void run() {
 
