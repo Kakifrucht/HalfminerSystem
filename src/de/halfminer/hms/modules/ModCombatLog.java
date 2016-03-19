@@ -1,10 +1,13 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -26,7 +29,7 @@ import java.util.Map;
 /**
  * Disables the possibility to logout during combat
  * - Tags players when hitting/being hit
- * - Shows health and name of attacker/victim via title
+ * - Shows health and name of attacker/victim via BossBar
  * - Combatlogging causes instant death
  * - Shows titles containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
@@ -37,6 +40,8 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
     private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<Player, BukkitTask>());
+    private ModBarHandler barHandler;
+
     private boolean broadcastLog;
     private int tagTime;
 
@@ -77,7 +82,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     public void onPvPTagPlayer(EntityDamageByEntityEvent e) {
 
         if (e.getEntity() instanceof Player) {
-
 
             Player victim = (Player) e.getEntity();
             Player attacker = null;
@@ -134,6 +138,10 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         final int healthScale = (int) other.getMaxHealth();
 
+        barHandler.showBar(p, Language.placeholderReplace(lang.get("health"), "%PLAYER%", other.getName(),
+                "%HEALTH%", String.valueOf(otherHealth), "%MAXHEALTH%", String.valueOf(healthScale)),
+                BarColor.RED, BarStyle.SEGMENTED_20, 3, (double) otherHealth / healthScale);
+
         tagged.put(p, hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
 
             final String symbols = lang.get("symbols");
@@ -141,16 +149,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
             @Override
             public void run() {
-
-                if (time == tagTime) {
-
-                    TitleSender.sendActionBar(p, Language.placeholderReplace(lang.get("health"),
-                            "%PLAYER%", other.getName(), "%HEALTH%", String.valueOf(otherHealth),
-                            "%MAXHEALTH%", String.valueOf(healthScale)));
-
-                    time--;
-                    return;
-                }
 
                 // build the progressbar
                 int timePercentage = (int) Math.round((time / (double) tagTime) * 10);
@@ -193,6 +191,15 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
         tagTime = hms.getConfig().getInt("combatLog.tagTime", 15);
+
+        if (barHandler == null) {
+            hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+                @Override
+                public void run() {
+                    barHandler = (ModBarHandler) hms.getModule(ModuleType.BAR_HANDLER);
+                }
+            }, 1L);
+        }
 
         lang.clear();
         lang.put("tagged", Language.getMessagePlaceholders("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));

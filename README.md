@@ -26,9 +26,12 @@ Current features
 - AutoMessage Module
   - Sends messages in a given interval
   - Messages configurable
+- BarHandler Module
+  - Set time until bar fades out
+  - Only show one bar at a time
 - CombatLog Module
   - Tags players when hitting/being hit
-  - Shows health and name of attacker/victim via title
+  - Shows health and name of attacker/victim via BossBar
   - Combatlogging causes instant death
   - Shows titles containing time left in fight
   - Untags players after timer runs out, player logs out or a player is killed
