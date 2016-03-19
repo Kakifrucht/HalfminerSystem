@@ -132,7 +132,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         if (isTagged(p)) tagged.get(p).cancel();
         else p.sendMessage(lang.get("tagged"));
 
-        final int healthScale = (int) other.getHealthScale();
+        final int healthScale = (int) other.getMaxHealth();
 
         tagged.put(p, hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
 
@@ -192,7 +192,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     public void reloadConfig() {
 
         broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
-        tagTime = hms.getConfig().getInt("combatLog.tagTime", 15);
+        tagTime = hms.getConfig().getInt("combatLog.tagTime", 30);
 
         lang.clear();
         lang.put("tagged", Language.getMessagePlaceholders("modCombatLogTagged", true, "%PREFIX%", "PvP", "%TIME%", "" + tagTime));
