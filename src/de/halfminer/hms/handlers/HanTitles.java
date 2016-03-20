@@ -1,16 +1,13 @@
-package de.halfminer.hms.util;
+package de.halfminer.hms.handlers;
 
-import de.halfminer.hms.HalfminerSystem;
-import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_9_R1.*;
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 
-public class TitleSender {
-
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
+public class HanTitles extends HalfminerHandler {
 
     /**
      * Sends a title to the given player, or broadcasts the title, if player is null.
@@ -19,7 +16,7 @@ public class TitleSender {
      * @param player to send the title to, or null to broadcast
      * @param title  message containing the title, color codes do not need to be translated
      */
-    public static void sendTitle(Player player, String title) {
+    public void sendTitle(Player player, String title) {
         sendTitle(player, title, 10, 100, 10);
     }
 
@@ -35,7 +32,7 @@ public class TitleSender {
      * @param stay    time in ticks message stays
      * @param fadeOut time in ticks until message faded out after it stay
      */
-    public static void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
+    public void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
 
         String[] split = ChatColor.translateAlternateColorCodes('&', title).replace("\\n", "\n").split("\n");
         String topTitle = split[0];
@@ -60,7 +57,7 @@ public class TitleSender {
      * @param player  to send the title to, or null to broadcast
      * @param message message to send
      */
-    public static void sendActionBar(Player player, String message) {
+    public void sendActionBar(Player player, String message) {
 
         String send = ChatColor.translateAlternateColorCodes('&', message);
         if (player == null) {
@@ -78,7 +75,7 @@ public class TitleSender {
      * @param player   to send the title to
      * @param messages message to send
      */
-    public static void setTablistHeaderFooter(Player player, String messages) {
+    public void setTablistHeaderFooter(Player player, String messages) {
 
         if (!player.isOnline()) return;
         String[] messagesParsed = messages.split("%BOTTOM%");
@@ -102,7 +99,7 @@ public class TitleSender {
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
-    private static void sendTitlePackets(Player player, String topTitle, String subTitle, int fadeIn, int stay, int fadeOut) {
+    private void sendTitlePackets(Player player, String topTitle, String subTitle, int fadeIn, int stay, int fadeOut) {
 
         if (!player.isOnline() || (topTitle.length() == 0 && subTitle.length() == 0)) return;
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
@@ -117,7 +114,7 @@ public class TitleSender {
                     IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + subTitle + "\"}")));
     }
 
-    private static void sendActionBarPacket(Player player, String message) {
+    private void sendActionBarPacket(Player player, String message) {
 
         if (!player.isOnline() || message.length() == 0) return;
 

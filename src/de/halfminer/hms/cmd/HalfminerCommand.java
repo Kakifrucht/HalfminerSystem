@@ -4,6 +4,9 @@ import de.halfminer.hms.HalfminerStorage;
 import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.command.CommandSender;
 
+/**
+ * HalfminerCommands are instantiated once a player executes the command.
+ */
 public abstract class HalfminerCommand {
 
     final HalfminerSystem hms = HalfminerSystem.getInstance();

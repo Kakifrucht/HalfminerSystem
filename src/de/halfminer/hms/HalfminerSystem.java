@@ -1,7 +1,9 @@
 package de.halfminer.hms;
 
 import de.halfminer.hms.cmd.HalfminerCommand;
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.handlers.HalfminerHandler;
 import de.halfminer.hms.modules.HalfminerModule;
 import de.halfminer.hms.util.Language;
 import org.bukkit.command.Command;
@@ -27,6 +29,7 @@ public class HalfminerSystem extends JavaPlugin {
     }
 
     private HalfminerStorage storage;
+    private final Map<HandlerType, HalfminerHandler> handlers = new HashMap<>();
     private final Map<ModuleType, HalfminerModule> modules = new HashMap<>();
 
     @Override
@@ -35,23 +38,29 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        // Load modules
-        for (ModuleType module : ModuleType.values()) {
+        // Load Handlers and modules
+        try {
 
-            try {
+            for (HandlerType handler : HandlerType.values()) {
+                HalfminerHandler han = (HalfminerHandler) this.getClassLoader()
+                        .loadClass(PACKAGE_PATH + ".handlers." + handler.getClassName()).newInstance();
+
+                handlers.put(handler, han);
+            }
+            for (ModuleType module : ModuleType.values()) {
                 HalfminerModule mod = (HalfminerModule) this.getClassLoader()
                         .loadClass(PACKAGE_PATH + ".modules." + module.getClassName()).newInstance();
 
                 modules.put(module, mod);
-            } catch (Exception e) {
-                getLogger().severe("An error has occurred, see stacktrace for information");
-                e.printStackTrace();
-                setEnabled(false);
-                return;
             }
+        } catch (Exception e) {
+            getLogger().severe("An error has occurred, see stacktrace for information");
+            e.printStackTrace();
+            setEnabled(false);
+            return;
         }
 
-        // Register modules
+        // Register listeners
         for (HalfminerModule mod : modules.values())
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
 
@@ -90,6 +99,10 @@ public class HalfminerSystem extends JavaPlugin {
 
     public HalfminerStorage getStorage() {
         return storage;
+    }
+
+    public HalfminerHandler getHandler(HandlerType type) {
+        return handlers.get(type);
     }
 
     public HalfminerModule getModule(ModuleType type) {

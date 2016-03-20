@@ -1,7 +1,8 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.TitleSender;
 import net.minecraft.server.v1_9_R1.EntityFishingHook;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
 import org.bukkit.Location;
@@ -32,6 +33,8 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener {
+
+    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private Map<Player, Long> lastBowShot;
 
@@ -167,11 +170,11 @@ public class ModPvP extends HalfminerModule implements Listener {
             deathStreaks.put(victimUid, victimStreak);
 
             if (killerStreak > 4) {
-                TitleSender.sendActionBar(null, Language.getMessagePlaceholders("modTitlesKillStreak", false,
+                titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modTitlesKillStreak", false,
                         "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(killerStreak)));
             }
             if (victimStreak > 4) {
-                TitleSender.sendActionBar(null, Language.getMessagePlaceholders("modTitlesDeathStreak", false,
+                titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modTitlesDeathStreak", false,
                         "%PLAYER%", victim.getName(), "%STREAK%", String.valueOf(victimStreak)));
             }
         }

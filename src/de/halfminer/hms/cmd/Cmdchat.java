@@ -1,8 +1,9 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("unused")
 public class Cmdchat extends HalfminerCommand {
 
+    private final HanTitles titles = (HanTitles) hms.getHandler(HandlerType.TITLES);
     private CommandSender sender;
     private String message;
 
@@ -53,7 +55,8 @@ public class Cmdchat extends HalfminerCommand {
                         public void run() {
                             int count = countdown;
                             for (; count >= 0; count--) {
-                                TitleSender.sendTitle(null, Language.getMessagePlaceholders("commandChatCountdown",
+                                HanTitles titles = (HanTitles) hms.getHandler(HandlerType.TITLES);
+                                titles.sendTitle(null, Language.getMessagePlaceholders("commandChatCountdown",
                                         false, "%COUNT%", String.valueOf(count)), 0, 20, 5);
                                 try {
                                     Thread.sleep(1000L);
@@ -113,14 +116,14 @@ public class Cmdchat extends HalfminerCommand {
                         sender.sendMessage(Language.getMessagePlaceholders("commandChatTitle", true, "%PREFIX%", "Chat",
                                 "%SENDTO%", sendToString, "%TIME%", String.valueOf(time), "%MESSAGE%", message));
 
-                        TitleSender.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
+                        titles.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
 
                     } else if (args[0].equalsIgnoreCase("news")) {
 
                         storage.set("sys.news", message);
                         hms.getModule(ModuleType.MOTD).reloadConfig();
                         if (sender instanceof Player) {
-                            TitleSender.sendTitle((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
+                            titles.sendTitle((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
                                     false, "%NEWS%", message), 40, 180, 40);
                         }
                         sender.sendMessage(Language.getMessagePlaceholders("commandChatNewsSetTo", true,

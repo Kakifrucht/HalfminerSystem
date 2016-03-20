@@ -1,8 +1,9 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.StatsType;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +28,8 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class ModSkillLevel extends HalfminerModule implements Listener {
+
+    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();
     private final Map<String, Long> lastKill = new HashMap<>();
@@ -154,7 +157,7 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
                 sendTitle = Language.getMessagePlaceholders("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
                         String.valueOf(newLevel), "%SKILLGROUP%", teamName);
             }
-            TitleSender.sendTitle(player, sendTitle, 10, 50, 10);
+            titleHandler.sendTitle(player, sendTitle, 10, 50, 10);
             hms.getLogger().info(Language.getMessagePlaceholders("modSkillLevelLog", false, "%PLAYER%", player.getName(),
                     "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(elo)));
         }

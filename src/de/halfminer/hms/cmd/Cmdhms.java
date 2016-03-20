@@ -2,12 +2,13 @@ package de.halfminer.hms.cmd;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -203,7 +204,8 @@ public class Cmdhms extends HalfminerCommand {
 
         } else {
 
-            TitleSender.sendTitle(toRing, Language.getMessagePlaceholders("commandHmsRingTitle", false, "%PLAYER%", senderName));
+            ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendTitle(toRing,
+                    Language.getMessagePlaceholders("commandHmsRingTitle", false, "%PLAYER%", senderName));
             toRing.sendMessage(Language.getMessagePlaceholders("commandHmsRingMessage", true, "%PREFIX%", "HMS",
                     "%PLAYER%", senderName));
 

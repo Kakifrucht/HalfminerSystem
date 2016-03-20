@@ -1,4 +1,4 @@
-package de.halfminer.hms.modules;
+package de.halfminer.hms.handlers;
 
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -14,11 +14,11 @@ import java.util.Map;
  * - Only show one bar at a time
  */
 @SuppressWarnings("unused")
-public class ModBarHandler extends HalfminerModule {
+public class HanBossBar extends HalfminerHandler {
 
     private Map<Player, BossBar> currentBar;
 
-    public ModBarHandler() {
+    public HanBossBar() {
         reloadConfig();
     }
 

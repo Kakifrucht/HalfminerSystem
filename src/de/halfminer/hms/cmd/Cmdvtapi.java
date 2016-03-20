@@ -1,9 +1,10 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.TitleSender;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -27,7 +28,8 @@ public class Cmdvtapi extends HalfminerCommand {
 
                 Player sendTo = hms.getServer().getPlayer(args[1]);
                 if (sendTo != null) {
-                    TitleSender.sendTitle(sendTo, Language.arrayToString(args, 2, false), 0, 50, 10);
+                    ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendTitle(sendTo,
+                            Language.arrayToString(args, 2, false), 0, 50, 10);
                 }
 
             } else if (sender instanceof Player) {

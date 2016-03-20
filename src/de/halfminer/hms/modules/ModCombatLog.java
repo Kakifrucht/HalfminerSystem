@@ -1,8 +1,9 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.handlers.HanBossBar;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.TitleSender;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -38,9 +39,11 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class ModCombatLog extends HalfminerModule implements Listener {
 
+    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
+    private final HanBossBar barHandler = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
+
     private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<Player, BukkitTask>());
-    private ModBarHandler barHandler;
 
     private boolean broadcastLog;
     private int tagTime;
@@ -163,7 +166,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 String message = Language.placeholderReplace(lang.get("countdown"), "%TIME%", String.valueOf(time),
                         "%PROGRESSBAR%", progressBar);
 
-                if (time-- > 0) TitleSender.sendActionBar(p, message);
+                if (time-- > 0) titleHandler.sendActionBar(p, message);
                 else untagPlayer(p);
             }
         }, 0L, 20L));
@@ -174,7 +177,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         if (!isTagged(p)) return;
 
         tagged.get(p).cancel();
-        TitleSender.sendActionBar(p, lang.get("untagged"));
+        titleHandler.sendActionBar(p, lang.get("untagged"));
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 2f);
 
         tagged.remove(p);
@@ -189,15 +192,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
         tagTime = hms.getConfig().getInt("combatLog.tagTime", 15);
-
-        if (barHandler == null) {
-            hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
-                @Override
-                public void run() {
-                    barHandler = (ModBarHandler) hms.getModule(ModuleType.BAR_HANDLER);
-                }
-            }, 1L);
-        }
 
         lang.clear();
         lang.put("bossbar", Language.getMessage("modCombatLogBossBar"));

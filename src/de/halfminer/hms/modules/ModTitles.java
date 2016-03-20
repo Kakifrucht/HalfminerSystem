@@ -1,9 +1,10 @@
 package de.halfminer.hms.modules;
 
 import com.earth2me.essentials.api.UserDoesNotExistException;
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.StatsType;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.TitleSender;
 import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,6 +26,8 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
 
+    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
+
     private final Map<Player, Double> balances = new HashMap<>();
 
     public ModTitles() {
@@ -42,14 +45,14 @@ public class ModTitles extends HalfminerModule implements Listener {
 
         // Show join titles / news
         if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
-            TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewPlayerFormat", false,
+            titleHandler.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewPlayerFormat", false,
                     "%PLAYER%", joined.getName()), 10, 200, 10);
         } else {
             
             hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
-                    TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesJoinFormat", false,
+                    titleHandler.sendTitle(joined, Language.getMessagePlaceholders("modTitlesJoinFormat", false,
                             "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
 
                     try {
@@ -58,7 +61,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                         e1.printStackTrace();
                     }
 
-                    TitleSender.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewsFormat",
+                    titleHandler.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewsFormat",
                             false, "%NEWS%", storage.getString("sys.news")), 40, 120, 40);
                 }
             });
@@ -91,7 +94,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private void updateTablist(Player player) {
 
-        TitleSender.setTablistHeaderFooter(player, Language.getMessagePlaceholders("modTitlesTablist",
+        titleHandler.setTablistHeaderFooter(player, Language.getMessagePlaceholders("modTitlesTablist",
                 false, "%BALANCE%", String.valueOf(balances.get(player)), "%PLAYERCOUNT%", getPlayercountString()));
     }
 
