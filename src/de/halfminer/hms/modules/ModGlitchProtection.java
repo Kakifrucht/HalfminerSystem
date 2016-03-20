@@ -27,7 +27,7 @@ import java.util.Set;
 public class ModGlitchProtection extends HalfminerModule implements Listener {
 
     private final Map<Player, Long> lastMessage = new HashMap<>();
-    private final Set<Player> chorusTask = new HashSet<>();
+    private final Set<Player> waitingForChorusTP = new HashSet<>();
     private BukkitTask checkIfOverNether;
 
     public ModGlitchProtection() {
@@ -58,6 +58,8 @@ public class ModGlitchProtection extends HalfminerModule implements Listener {
         final Player p = e.getPlayer();
         final Location to = e.getTo();
 
+        if (p.hasPermission("hms.bypass.teleportchecks")) return;
+
         if (!e.getFrom().getWorld().equals(to.getWorld())) {
 
             // Override Spigot default teleport safety
@@ -80,15 +82,15 @@ public class ModGlitchProtection extends HalfminerModule implements Listener {
             e.setCancelled(true);
             final Location newLoc = new Location(world, xValue, yValue + 1, zValue, current.getYaw(), current.getPitch());
 
-            if (!chorusTask.contains(p)) {
+            if (!waitingForChorusTP.contains(p)) {
 
-                chorusTask.add(p);
+                waitingForChorusTP.add(p);
                 hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
                     @Override
                     public void run() {
                         p.setFallDistance(0.0f);
                         p.teleport(newLoc);
-                        chorusTask.remove(p);
+                        waitingForChorusTP.remove(p);
                     }
                 }, 1L);
             }

@@ -77,6 +77,7 @@ permissions:
     hms.bypass.statsrightclick: true
     hms.bypass.merchant: true
     hms.bypass.teleporttimer: true
+    hms.bypass.teleportchecks: true
     hms.bypass.pvp: true
   hms.level.*:
     description: Access to all commands restricted by level
@@ -146,7 +147,9 @@ permissions:
   hms.bypass.nokillfarming:
     description: Bypass killfarming check
   hms.bypass.teleporttimer:
-      description: Bypass teleport timer
+    description: Bypass teleport timer
+  hms.bypass.teleportchecks:
+    description: Bypass glitch protection teleport checks
   hms.bypass.skilllevel:
     description: Bypass setting of skilllevel
   hms.bypass.statsrightclick:
