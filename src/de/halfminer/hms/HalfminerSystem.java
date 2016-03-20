@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class HalfminerSystem extends JavaPlugin {
 
-    private final static String packagePath = "de.halfminer.hms";
+    private final static String PACKAGE_PATH = "de.halfminer.hms";
     private static HalfminerSystem instance;
 
     public static HalfminerSystem getInstance() {
@@ -40,7 +40,7 @@ public class HalfminerSystem extends JavaPlugin {
 
             try {
                 HalfminerModule mod = (HalfminerModule) this.getClassLoader()
-                        .loadClass(packagePath + ".modules." + module.getClassName()).newInstance();
+                        .loadClass(PACKAGE_PATH + ".modules." + module.getClassName()).newInstance();
 
                 modules.put(module, mod);
             } catch (Exception e) {
@@ -75,7 +75,7 @@ public class HalfminerSystem extends JavaPlugin {
         HalfminerCommand command;
         try {
             command = (HalfminerCommand) this.getClassLoader()
-                    .loadClass(packagePath + ".cmd.Cmd" + cmd.getName()).newInstance();
+                    .loadClass(PACKAGE_PATH + ".cmd.Cmd" + cmd.getName()).newInstance();
         } catch (Exception e) {
             getLogger().severe("An error has occured executing " + cmd.getName() + ":");
             e.printStackTrace();

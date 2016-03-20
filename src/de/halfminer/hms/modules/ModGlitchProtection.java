@@ -9,19 +9,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * - Logs and notifies about possible Bedrock/Obsidian glitching
+ * - Override spigot teleport safety
+ * - Prevents glitching with chorus fruit, instead teleports down
  * - Kills players above the netherroof
  */
 @SuppressWarnings("unused")
 public class ModGlitchProtection extends HalfminerModule implements Listener {
 
     private final Map<Player, Long> lastMessage = new HashMap<>();
+    private final Set<Player> chorusTask = new HashSet<>();
     private BukkitTask checkIfOverNether;
 
     public ModGlitchProtection() {
@@ -42,6 +48,49 @@ public class ModGlitchProtection extends HalfminerModule implements Listener {
                         "%PLAYER%", e.getPlayer().getName(),
                         "%LOCATION%", Language.getStringFromLocation(e.getTo())), "hms.bypass.bedrockcheck");
                 lastMessage.put(e.getPlayer(), (System.currentTimeMillis() / 1000) + 4);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onTeleportPreventGlitch(PlayerTeleportEvent e) {
+
+        final Player p = e.getPlayer();
+        final Location to = e.getTo();
+
+        if (!e.getFrom().getWorld().equals(to.getWorld())) {
+
+            // Override Spigot default teleport safety
+            hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+                @Override
+                public void run() {
+                    if (p.getLocation().distance(to) > 1.0d) p.teleport(to);
+                }
+            }, 1L);
+        } else if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT)) {
+
+            Location current = p.getLocation();
+            World world = current.getWorld();
+            double xValue = current.getX();
+            double zValue = current.getZ();
+
+            int yValue = current.getBlockY();
+            while (world.getBlockAt((int) xValue, yValue, (int) zValue).getType().equals(Material.AIR)) yValue--;
+
+            e.setCancelled(true);
+            final Location newLoc = new Location(world, xValue, yValue + 1, zValue, current.getYaw(), current.getPitch());
+
+            if (!chorusTask.contains(p)) {
+
+                chorusTask.add(p);
+                hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+                    @Override
+                    public void run() {
+                        p.setFallDistance(0.0f);
+                        p.teleport(newLoc);
+                        chorusTask.remove(p);
+                    }
+                }, 1L);
             }
         }
     }

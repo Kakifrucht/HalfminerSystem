@@ -22,7 +22,7 @@ public class ModBarHandler extends HalfminerModule {
         reloadConfig();
     }
 
-    public void showBar(Player player, String text, BarColor color, BarStyle style, int time, double progression) {
+    public void showBar(final Player player, String text, BarColor color, BarStyle style, int time, double progression) {
 
         if (currentBar.containsKey(player)) currentBar.get(player).removePlayer(player);
 
@@ -36,6 +36,7 @@ public class ModBarHandler extends HalfminerModule {
             @Override
             public void run() {
                 bar.removeAll();
+                if (currentBar.get(player).equals(bar)) currentBar.remove(player);
             }
         }, time * 20);
     }

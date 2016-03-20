@@ -41,6 +41,8 @@ Current features
     - Enderpearls
 - GlitchProtection Module
   - Notifies staff about potential bedrock/obsidian glitching
+  - Override spigot teleport safety
+  - Prevents glitching with chorus fruit, instead teleports down
   - Kills players above netherroof / notifies staff
 - Motd Module
   - Configurable Serverlist Motd
@@ -77,7 +79,6 @@ Current features
 - StaticListeners Module
   - Removes quit message
   - Disables some deals in villager trades
-  - Override spigot teleport safety
   - Chatfilter
     - Checks for globalmute (set via command /c globalmute)
     - Plays sound on chat

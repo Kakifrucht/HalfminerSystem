@@ -1,7 +1,6 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,7 +12,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -43,23 +41,6 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                 && !e.getWhoClicked().hasPermission("hms.bypass.merchant")) {
             ItemStack item = e.getCurrentItem();
             if (item != null && item.getType() == Material.WRITTEN_BOOK) e.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void overrideTeleportSafety(PlayerTeleportEvent e) {
-
-        final Player p = e.getPlayer();
-        final Location to = e.getTo();
-
-        if (!e.getFrom().getWorld().equals(to.getWorld())) {
-
-            hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
-                @Override
-                public void run() {
-                    if (p.getLocation().distance(to) > 1.0d) p.teleport(to);
-                }
-            }, 1L);
         }
     }
 
