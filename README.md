@@ -13,97 +13,110 @@ Current features
   - Change default time in config
   - Stops when player taking damage
   - Execute runnable after successful teleport
-- Own Title API
-  - Main title/subtitle
-  - Actionbar title
-  - Tablist titles
 - Essentials hook
   - For economy support
   - To read players homes
-- AntiKillfarming Module
-  - Blocks players, who repeatedly kill each other
-  - Dynamic system, to determine block time
-- AutoMessage Module
-  - Sends messages in a given interval
-  - Messages configurable
-- BarHandler Module
-  - Set time until bar fades out
-  - Only show one bar at a time
-- CombatLog Module
-  - Tags players when hitting/being hit
-  - Shows health and name of attacker/victim via BossBar
-  - Combatlogging causes instant death
-  - Shows titles containing time left in fight
-  - Untags players after timer runs out, player logs out or a player is killed
-  - Disables during fight:
-    - Switching armor
-    - Commands
-    - Enderpearls
-- GlitchProtection Module
-  - Notifies staff about potential bedrock/obsidian glitching
-  - Override spigot teleport safety
-  - Prevents glitching with chorus fruit, instead teleports down
-  - Kills players above netherroof / notifies staff
-- Motd Module
-  - Configurable Serverlist Motd
-    - Can be set via command
-  - Dynamic playerlimit indicator, configurable with buffers and limits
-- Performance Module
-  - Limits redstone usage (configurable)
-    - Redstone will not work if triggered to often
-  - Limits piston usage
-    - Only a given amount of pistons can be triggered in a given time
-  - Limits hopper placement (configurable)
-    - Checks radius, if too many hoppers denies placement
-  - Limits mobspawns (configurable)
-    - Checks radius, if too many mobs stops the mobspawn
-- PvP Module
-  - Strength potions damage nerfed
-  - Nerfs bowspamming
-    - Delay between each shot
-  - Shows kill/death streaks via titles
-  - Adds sounds to kills/deaths
-  - Remove some effects on teleport
-- Respawn Module
-  - Respawns player at custom location
-  - Adds a first time join message or removes completely
-  - Execute custom command on first join
-- SignEdit Module
-  - Allows editing of signs
-  - Use command /signedit
-- SkillLevel Module
-  - PvP based skilllevel system / ELO
-  - Dynamic ELO determination
-  - Adds level to scoreboard
-  - Colors name depending on skillgroup
-- StaticListeners Module
-  - Removes quit message
-  - Disables some deals in villager trades
-  - Chatfilter
-    - Checks for globalmute (set via command /c globalmute)
-    - Plays sound on chat
-    - Filters capslock
-  - Commandfilter
-    - Disables commands in bed (teleport glitch)
-    - Disables /pluginname:command for users (to improve commandblocks)
-- Stats Module
-  - Records lots of statistics about a player
-    - Blocks broken / placed
-    - Kills / Deaths / KD Ratio
-    - Time Online
-    - Mobs killed
-    - Money earned
-  - Rightclick player for quick overview
-- Titles Module
-  - Shows join title
-    - Players online / mones
-    - Configurable message
-    - Shows news after delay
-  - Displays information for new players
-  - Tab titles containing amount of money and playercount
-- Tps Module
-  - Calculates ticks per second
-  - Notifies staff when servers Tps is too low
+- **Handlers**
+  - BossBar
+    - Set time until bar fades out
+    - Only show one bar at a time
+  - Storage
+    - Autosave
+    - Flatfile in .yml format
+    - Can easily be queried with YAML API
+    - Thread safe
+  - Teleport
+    - Disallows movement
+    - Change default time in config
+    - Stops when player taking damage
+    - Execute runnable after successful (or unsuccessful) teleport
+    - Only one teleport at a time
+  - Titles
+    - Main title/subtitle
+    - Actionbar title
+    - Tablist titles
+- **Modules**
+  - AntiKillfarming
+      - Blocks players, who repeatedly kill each other
+    - Dynamic system, to determine block time
+  - AutoMessage
+    - Sends messages in a given interval
+    - Messages configurable
+  - CombatLog
+    - Tags players when hitting/being hit
+    - Shows health and name of attacker/victim via BossBar
+    - Combatlogging causes instant death
+    - Shows titles containing time left in fight
+    - Untags players after timer runs out, player logs out or a player is killed
+    - Disables during fight:
+      - Switching armor
+      - Commands
+      - Enderpearls
+  - GlitchProtection
+    - Notifies staff about potential bedrock/obsidian glitching
+    - Override spigot teleport safety
+    - Prevents glitching with chorus fruit, instead teleports down
+    - Kills players above netherroof / notifies staff
+  - Motd
+    - Configurable Serverlist Motd
+      - Can be set via command
+    - Dynamic playerlimit indicator, configurable with buffers and limits
+  - Performance
+    - Limits redstone usage (configurable)
+      - Redstone will not work if triggered to often
+    - Limits piston usage
+      - Only a given amount of pistons can be triggered in a given time
+    - Limits hopper placement (configurable)
+      - Checks radius, if too many hoppers denies placement
+    - Limits mobspawns (configurable)
+      - Checks radius, if too many mobs stops the mobspawn
+  - PvP
+    - Strength potions damage nerfed
+    - Nerfs bowspamming
+      - Delay between each shot
+    - Shows kill/death streaks via titles
+    - Adds sounds to kills/deaths
+    - Remove some effects on teleport
+  - Respawn
+    - Respawns player at custom location
+    - Adds a first time join message or removes completely
+    - Execute custom command on first join
+  - SignEdit
+    - Allows editing of signs
+    - Use command /signedit
+  - SkillLevel
+    - PvP based skilllevel system / ELO
+    - Dynamic ELO determination
+    - Adds level to scoreboard
+    - Colors name depending on skillgroup
+  - StaticListeners
+    - Removes quit message
+    - Disables some deals in villager trades
+    - Chatfilter
+      - Checks for globalmute (set via command /c globalmute)
+      - Plays sound on chat
+      - Filters capslock
+    - Commandfilter
+      - Disables commands in bed (teleport glitch)
+      - Disables /pluginname:command for users (to improve commandblocks)
+  - Stats
+    - Records lots of statistics about a player
+      - Blocks broken / placed
+      - Kills / Deaths / KD Ratio
+      - Time Online
+      - Mobs killed
+      - Money earned
+    - Rightclick player for quick overview
+  - Titles
+    - Shows join title
+      - Players online / mones
+      - Configurable message
+      - Shows news after delay
+    - Displays information for new players
+    - Tab titles containing amount of money and playercount
+  - Tps
+    - Calculates ticks per second
+    - Notifies staff when servers Tps is too low
 - **Commands**
   - /chat
     - Chat manipulation tools

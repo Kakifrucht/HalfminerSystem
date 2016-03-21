@@ -4,7 +4,6 @@ public enum ModuleType {
 
     ANTI_KILLFARMING ("AntiKillfarming"),
     AUTO_MESSAGE ("AutoMessage"),
-    BAR_HANDLER ("BarHandler"),
     GLITCH_PROTECTION ("CombatLog"),
     COMBAT_LOG ("GlitchProtection"),
     MOTD ("Motd"),

@@ -9,15 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Handles the BossBar
+ * Handler to send bossbar messages
  * - Set time until fade out
  * - Only show one bar at a time
  */
-@SuppressWarnings("unused")
 public class HanBossBar extends HalfminerHandler {
 
     private Map<Player, BossBar> currentBar;
 
+    @SuppressWarnings("unused")
     public HanBossBar() {
         reloadConfig();
     }

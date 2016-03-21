@@ -4,6 +4,7 @@ import de.halfminer.hms.cmd.HalfminerCommand;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.handlers.HalfminerHandler;
+import de.halfminer.hms.handlers.HanStorage;
 import de.halfminer.hms.modules.HalfminerModule;
 import de.halfminer.hms.util.Language;
 import org.bukkit.command.Command;
@@ -28,7 +29,6 @@ public class HalfminerSystem extends JavaPlugin {
         return instance;
     }
 
-    private HalfminerStorage storage;
     private final Map<HandlerType, HalfminerHandler> handlers = new HashMap<>();
     private final Map<ModuleType, HalfminerModule> modules = new HashMap<>();
 
@@ -38,7 +38,7 @@ public class HalfminerSystem extends JavaPlugin {
         instance = this;
         loadConfig();
 
-        // Load Handlers and modules
+        // Load handlers and modules
         try {
 
             for (HandlerType handler : HandlerType.values()) {
@@ -71,7 +71,7 @@ public class HalfminerSystem extends JavaPlugin {
     public void onDisable() {
 
         for (HalfminerModule mod : modules.values()) mod.onDisable();
-        storage.saveConfig();
+        ((HanStorage) getHandler(HandlerType.STORAGE)).saveConfig();
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("HalfminerSystem disabled");
     }
@@ -94,11 +94,8 @@ public class HalfminerSystem extends JavaPlugin {
         if (command.hasPermission(sender)) {
             command.run(sender, label, args);
         } else sender.sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Info"));
-        return true;
-    }
 
-    public HalfminerStorage getStorage() {
-        return storage;
+        return true;
     }
 
     public HalfminerHandler getHandler(HandlerType type) {
@@ -116,11 +113,8 @@ public class HalfminerSystem extends JavaPlugin {
         getConfig().options().copyDefaults(true); // If parameters are missing, add them
         saveConfig(); // Save config.yml to disk
 
-        // Load storage
-        if (storage != null) storage.load();
-        else storage = new HalfminerStorage();
-
-        //noinspection ConstantConditions (Cmdhms accesses this method through reflection, so the IDE does not detect the sense of the statement)
+        //noinspection ConstantConditions (suppress warning due to java refelction)
+        if (handlers != null) for (HalfminerHandler han : handlers.values()) han.reloadConfig();
         if (modules != null) for (HalfminerModule mod : modules.values()) mod.reloadConfig();
     }
 

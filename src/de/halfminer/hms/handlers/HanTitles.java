@@ -7,6 +7,12 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 
+/**
+ * Handler to send titles
+ * - Main title/subtitle
+ * - Actionbar title
+ * - Tablist titles
+ */
 public class HanTitles extends HalfminerHandler {
 
     /**

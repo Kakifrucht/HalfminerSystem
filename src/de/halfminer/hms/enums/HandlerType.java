@@ -3,6 +3,8 @@ package de.halfminer.hms.enums;
 public enum HandlerType {
 
     BOSS_BAR ("BossBar"),
+    STORAGE ("Storage"),
+    TELEPORT ("Teleport"),
     TITLES ("Titles");
 
     private final String className;

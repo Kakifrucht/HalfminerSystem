@@ -1,5 +1,6 @@
-package de.halfminer.hms;
+package de.halfminer.hms.handlers;
 
+import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
@@ -12,8 +13,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * Stores all information into own flatfile
+ * - Autosave
+ * - Flatfile in .yml format
+ * - Can easily be queried with YAML API
+ * - Thread safe
+ */
 @SuppressWarnings("ALL")
-public class HalfminerStorage {
+public class HanStorage extends HalfminerHandler {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
 
@@ -21,7 +29,7 @@ public class HalfminerStorage {
     private FileConfiguration fileConfig;
     private int taskId;
 
-    public HalfminerStorage() {
+    public HanStorage() {
         load();
     }
 
@@ -110,11 +118,12 @@ public class HalfminerStorage {
     }
 
     public void saveConfig() {
+
         try {
             fileConfig.save(file);
-            hms.getLogger().info(Language.getMessage("modStorageSaveSuccessful"));
+            hms.getLogger().info(Language.getMessage("hanStorageSaveSuccessful"));
         } catch (IOException e) {
-            hms.getLogger().warning(Language.getMessage("modStorageSaveUnsuccessful"));
+            hms.getLogger().warning(Language.getMessage("hanStorageSaveUnsuccessful"));
             e.printStackTrace();
         }
     }

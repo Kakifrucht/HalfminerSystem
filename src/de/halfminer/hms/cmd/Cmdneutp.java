@@ -1,8 +1,9 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.StatsType;
+import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.Teleport;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -29,14 +30,15 @@ public class Cmdneutp extends HalfminerCommand {
             return;
         }
 
+        final HanTeleport tp = (HanTeleport) hms.getHandler(HandlerType.TELEPORT);
         final Player player = (Player) sender;
+
+        if (tp.hasPendingTeleport(player, true)) return;
 
         if (storage.getStatsBoolean(player, StatsType.NEUTP_USED)){
             player.sendMessage(Language.getMessagePlaceholders("commandNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
             return;
         }
-
-        storage.setStats(player, StatsType.NEUTP_USED, true);
 
         player.sendMessage(Language.getMessagePlaceholders("commandNeutpStart", true, "%PREFIX%", "Neutp"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
@@ -67,9 +69,11 @@ public class Cmdneutp extends HalfminerCommand {
         loc.setYaw(player.getLocation().getYaw());
         loc.setPitch(player.getLocation().getPitch());
 
-        new Teleport(player, loc).startTeleportAndRun(5, new Runnable() {
+        tp.startTeleport(player, loc, 5, new Runnable() {
             @Override
             public void run() {
+
+                storage.setStats(player, StatsType.NEUTP_USED, true);
 
                 hms.getServer().dispatchCommand(player, "sethome neutp");
 
@@ -91,8 +95,6 @@ public class Cmdneutp extends HalfminerCommand {
         }, new Runnable() {
             @Override
             public void run() {
-
-                storage.setStats(player, StatsType.NEUTP_USED, false);
 
                 player.removePotionEffect(PotionEffectType.BLINDNESS);
                 player.removePotionEffect(PotionEffectType.CONFUSION);

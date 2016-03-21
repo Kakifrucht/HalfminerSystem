@@ -103,13 +103,13 @@ public class ModPvP extends HalfminerModule implements Listener {
         for (Entity entity : e.getEntity().getNearbyEntities(0.35D, 0.35D, 0.35D)) {
 
             if (((entity instanceof Player)) && (!entity.getName().equals(shooter.getName()))) {
-                Player hooked = (Player) entity;
+
                 if (hook != null) {
                     hook.hooked = null;
                     hook.die();
                 }
                 entityPlayer.hookedFish = null;
-                break;
+                return;
             }
         }
     }
