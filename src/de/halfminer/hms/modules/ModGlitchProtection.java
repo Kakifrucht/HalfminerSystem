@@ -77,7 +77,11 @@ public class ModGlitchProtection extends HalfminerModule implements Listener {
             double zValue = current.getZ();
 
             int yValue = current.getBlockY();
-            while (world.getBlockAt((int) xValue, yValue, (int) zValue).getType().equals(Material.AIR)) yValue--;
+            if (yValue > 255) yValue = world.getHighestBlockYAt((int) xValue, (int) zValue);
+            else {
+                while (world.getBlockAt((int) xValue, yValue, (int) zValue).getType().equals(Material.AIR)
+                        && yValue > 0) yValue--;
+            }
 
             e.setCancelled(true);
             final Location newLoc = new Location(world, xValue, yValue + 1, zValue, current.getYaw(), current.getPitch());
