@@ -62,10 +62,15 @@ public class Cmdchat extends HalfminerCommand {
                         @Override
                         public void run() {
 
+                            if (count < 0) return;
                             bar.broadcastBar(Language.getMessagePlaceholders("commandChatCountdown", false, "%COUNT%",
                                     String.valueOf(count)),
-                                    BarColor.GREEN, BarStyle.SOLID, 30, (double) count / countdown);
-                            count--;
+                                    BarColor.GREEN, BarStyle.SOLID, 35, (double) count / countdown);
+                            if (count-- == 0) {
+                                for (Player p : hms.getServer().getOnlinePlayers()) {
+                                    p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
+                                }
+                            }
                         }
                     }, 0, 20L);
 
@@ -74,12 +79,9 @@ public class Cmdchat extends HalfminerCommand {
                         public void run() {
 
                             task.cancel();
-                            bar.removePublicBar();
-                            for (Player p : hms.getServer().getOnlinePlayers()) {
-                                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
-                            }
+                            bar.removeBroadcastBar();
                         }
-                    }, 20 * countdown);
+                    }, 20 * (countdown + 4));
                 }
 
             } else if (args[0].equalsIgnoreCase("globalmute")) {
