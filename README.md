@@ -14,6 +14,7 @@ Current features
   - BossBar
     - Set time until bar fades out
     - Only show one bar at a time
+    - Broadcast bar to all players (besides player specific one)
   - Storage
     - Autosave
     - Flatfile in .yml format
