@@ -18,14 +18,10 @@ public class ModTps extends HalfminerModule implements Listener {
     private double lastAverageTps;
     private long lastTaskTimestamp;
 
-    //config
+    // Config
     private int ticksBetweenUpdate;
     private int historySize;
     private double alertStaff;
-
-    public ModTps() {
-        reloadConfig();
-    }
 
     /**
      * Returns average TPS over last 10 polled values

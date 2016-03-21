@@ -19,10 +19,6 @@ public class ModAutoMessage extends HalfminerModule {
     private BukkitTask running;
     private List<String> messages;
 
-    public ModAutoMessage() {
-        reloadConfig();
-    }
-
     @Override
     public void reloadConfig() {
 

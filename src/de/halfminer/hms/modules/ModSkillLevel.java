@@ -3,6 +3,7 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.handlers.HanTitles;
+import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,7 +28,7 @@ import java.util.Map;
  * - Calculates new ELO after a kill
  */
 @SuppressWarnings("unused")
-public class ModSkillLevel extends HalfminerModule implements Listener {
+public class ModSkillLevel extends HalfminerModule implements Disableable, Listener {
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
@@ -39,10 +40,6 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
     private int timeUntilDerankSeconds;
     private int timeUntilKillCountAgainSeconds;
     private int derankLossAmount;
-
-    public ModSkillLevel() {
-        reloadConfig();
-    }
 
     @EventHandler
     public void joinRecalculate(PlayerJoinEvent e) {
@@ -225,5 +222,4 @@ public class ModSkillLevel extends HalfminerModule implements Listener {
             }
         }
     }
-
 }

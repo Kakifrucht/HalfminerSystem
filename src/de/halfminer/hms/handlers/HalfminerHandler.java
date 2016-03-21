@@ -9,9 +9,4 @@ import de.halfminer.hms.HalfminerSystem;
 public abstract class HalfminerHandler {
 
     final static HalfminerSystem hms = HalfminerSystem.getInstance();
-
-    public void reloadConfig() {
-        //does nothing on default, although we don't want submodules who
-        //do not use it either having to override an empty function
-    }
 }

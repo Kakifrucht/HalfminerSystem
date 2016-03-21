@@ -48,10 +48,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     private boolean broadcastLog;
     private int tagTime;
 
-    public ModCombatLog() {
-        reloadConfig();
-    }
-
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDeathUntag(PlayerDeathEvent e) {
 

@@ -1,6 +1,7 @@
 package de.halfminer.hms.handlers;
 
 import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ import java.util.Map;
  * - Execute runnable after successful (or unsuccessful) teleport
  * - Only one teleport at a time
  */
-public class HanTeleport extends HalfminerHandler {
+public class HanTeleport extends HalfminerHandler implements Reloadable {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
 
@@ -25,11 +26,6 @@ public class HanTeleport extends HalfminerHandler {
     private int defaultTime;
 
     private final Map<Player, Integer> currentTeleport = new HashMap<>();
-
-    @SuppressWarnings("unused")
-    public HanTeleport() {
-        reloadConfig();
-    }
 
     public void startTeleport(Player player, Location loc) {
         startTeleport(player, loc, defaultTime, null, null);

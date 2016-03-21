@@ -3,6 +3,7 @@ package de.halfminer.hms.handlers;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.util.Language;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,7 +22,7 @@ import java.util.UUID;
  * - Thread safe
  */
 @SuppressWarnings("ALL")
-public class HanStorage extends HalfminerHandler {
+public class HanStorage extends HalfminerHandler implements Disableable {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
 
@@ -129,6 +130,7 @@ public class HanStorage extends HalfminerHandler {
     }
 
     public void load() {
+
         if (file == null) {
             file = new File(hms.getDataFolder(), "storage.yml");
             fileConfig = YamlConfiguration.loadConfiguration(file);
@@ -142,5 +144,10 @@ public class HanStorage extends HalfminerHandler {
                 saveConfig();
             }
         }, saveInterval, saveInterval).getTaskId();
+    }
+
+    @Override
+    public void onDisable() {
+        saveConfig();
     }
 }

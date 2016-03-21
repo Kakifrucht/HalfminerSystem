@@ -30,10 +30,6 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private final Map<Player, Double> balances = new HashMap<>();
 
-    public ModTitles() {
-        reloadConfig();
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void joinTitles(PlayerJoinEvent e) {
 

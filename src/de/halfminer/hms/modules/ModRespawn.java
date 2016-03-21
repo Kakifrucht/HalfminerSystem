@@ -19,10 +19,6 @@ public class ModRespawn extends HalfminerModule implements Listener {
 
     private Location respawnLoc;
 
-    public ModRespawn() {
-        reloadConfig();
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawn(PlayerRespawnEvent e) {
 

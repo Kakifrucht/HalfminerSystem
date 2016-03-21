@@ -1,5 +1,6 @@
 package de.halfminer.hms.handlers;
 
+import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -15,15 +16,10 @@ import java.util.Map;
  * - Only show one bar at a time (player specific)
  * - Broadcast bar to all players (besides player specific one)
  */
-public class HanBossBar extends HalfminerHandler {
+public class HanBossBar extends HalfminerHandler implements Reloadable {
 
     private final BossBar currentBroadcast = hms.getServer().createBossBar("", BarColor.BLUE, BarStyle.SOLID);
     private Map<Player, Pair<BossBar, Long>> currentBar;
-
-    @SuppressWarnings("unused")
-    public HanBossBar() {
-        reloadConfig();
-    }
 
     public void broadcastBar(String text, BarColor color, BarStyle style, int timeout, double progression) {
 

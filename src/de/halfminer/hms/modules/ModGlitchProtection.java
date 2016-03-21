@@ -30,10 +30,6 @@ public class ModGlitchProtection extends HalfminerModule implements Listener {
     private final Set<Player> waitingForChorusTP = new HashSet<>();
     private BukkitTask checkIfOverNether;
 
-    public ModGlitchProtection() {
-        reloadConfig();
-    }
-
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMoveBedrockObsidianCheck(PlayerMoveEvent e) {
 

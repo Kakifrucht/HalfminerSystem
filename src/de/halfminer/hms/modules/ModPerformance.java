@@ -46,10 +46,6 @@ public class ModPerformance extends HalfminerModule implements Listener {
     private int entityLimitSame;
     private int boxSize;
 
-    public ModPerformance() {
-        reloadConfig();
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void countPistonExtend(BlockPistonExtendEvent e) {
         e.setCancelled(increasePistonCount());

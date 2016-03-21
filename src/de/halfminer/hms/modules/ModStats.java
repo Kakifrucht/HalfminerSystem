@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.StatsType;
+import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.Sound;
@@ -31,16 +32,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * - View stats on rightclicking a player
  */
 @SuppressWarnings("unused")
-public class ModStats extends HalfminerModule implements Listener {
+public class ModStats extends HalfminerModule implements Disableable, Listener {
 
     private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
     private Map<Player, Pair<Player, Long>> lastInteract;
 
     private int timeUntilHomeBlockSeconds;
-
-    public ModStats() {
-        reloadConfig();
-    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void joinInitializeStatsAndRename(PlayerJoinEvent e) {

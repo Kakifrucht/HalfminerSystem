@@ -41,10 +41,6 @@ public class ModPvP extends HalfminerModule implements Listener {
     private final Map<UUID, Integer> killStreaks = new HashMap<>();
     private final Map<UUID, Integer> deathStreaks = new HashMap<>();
 
-    public ModPvP() {
-        reloadConfig();
-    }
-
     @EventHandler(ignoreCancelled = true)
     public void onAttackReduceStrength(EntityDamageByEntityEvent e) {
 

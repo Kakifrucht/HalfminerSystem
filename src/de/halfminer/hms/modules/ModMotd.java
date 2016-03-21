@@ -22,10 +22,6 @@ public class ModMotd extends HalfminerModule implements Listener {
     private int playerCountBuffer;
     private int playerCountLimit;
 
-    public ModMotd() {
-        reloadConfig();
-    }
-
     @EventHandler
     public void serverPingMotd(ServerListPingEvent e) {
 

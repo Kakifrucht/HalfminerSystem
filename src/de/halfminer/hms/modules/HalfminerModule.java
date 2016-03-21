@@ -3,11 +3,12 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanStorage;
+import de.halfminer.hms.interfaces.Reloadable;
 
 /**
  * HalfminerModules are instantiated once. They may include Listeners.
  */
-public abstract class HalfminerModule {
+public abstract class HalfminerModule implements Reloadable {
 
     final static HalfminerSystem hms = HalfminerSystem.getInstance();
     final static HanStorage storage = (HanStorage) hms.getHandler(HandlerType.STORAGE);
@@ -19,13 +20,4 @@ public abstract class HalfminerModule {
         //does nothing on default, although we don't want submodules who
         //do not use it either having to override an empty function
     }
-
-    /**
-     * Called when server shuts down
-     */
-    public void onDisable() {
-        //does nothing on default, although we don't want submodules who
-        //do not use it either having to write an empty function
-    }
-
 }

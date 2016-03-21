@@ -4,7 +4,8 @@ import de.halfminer.hms.cmd.HalfminerCommand;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.handlers.HalfminerHandler;
-import de.halfminer.hms.handlers.HanStorage;
+import de.halfminer.hms.interfaces.Disableable;
+import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.modules.HalfminerModule;
 import de.halfminer.hms.util.Language;
 import org.bukkit.command.Command;
@@ -45,12 +46,14 @@ public class HalfminerSystem extends JavaPlugin {
                 HalfminerHandler han = (HalfminerHandler) this.getClassLoader()
                         .loadClass(PACKAGE_PATH + ".handlers." + handler.getClassName()).newInstance();
 
+                if (han instanceof Reloadable) ((Reloadable) han).reloadConfig();
                 handlers.put(handler, han);
             }
             for (ModuleType module : ModuleType.values()) {
                 HalfminerModule mod = (HalfminerModule) this.getClassLoader()
                         .loadClass(PACKAGE_PATH + ".modules." + module.getClassName()).newInstance();
 
+                mod.reloadConfig();
                 modules.put(module, mod);
             }
         } catch (Exception e) {
@@ -70,8 +73,8 @@ public class HalfminerSystem extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        for (HalfminerModule mod : modules.values()) mod.onDisable();
-        ((HanStorage) getHandler(HandlerType.STORAGE)).saveConfig();
+        for (HalfminerModule mod : modules.values()) if (mod instanceof Disableable) ((Disableable) mod).onDisable();
+        for (HalfminerHandler han : handlers.values()) if (han instanceof Disableable) ((Disableable) han).onDisable();
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("HalfminerSystem disabled");
     }
@@ -114,8 +117,13 @@ public class HalfminerSystem extends JavaPlugin {
         saveConfig(); // Save config.yml to disk
 
         //noinspection ConstantConditions (suppress warning due to java refelction)
-        if (handlers != null) for (HalfminerHandler han : handlers.values()) han.reloadConfig();
-        if (modules != null) for (HalfminerModule mod : modules.values()) mod.reloadConfig();
+        if (handlers != null && modules != null) {
+
+            for (HalfminerHandler han : handlers.values())
+                if (han instanceof Reloadable) ((Reloadable) han).reloadConfig();
+
+            for (HalfminerModule mod : modules.values()) mod.reloadConfig();
+        }
     }
 
 }
