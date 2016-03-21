@@ -62,7 +62,7 @@ localization:
   commandChatCleared: '&7Der Chat wurde von &e%PLAYER% &7geleert'
   commandChatClearedLog: '%PLAYER% hat den Chat geleert'
   commandChatCountdownStarted: '&7Countdown fuer &e%COUNT% &7Sekunden gestartet'
-  commandChatCountdown: '&4&l%COUNT%\n&aCountdown'
+  commandChatCountdown: 'Countdown: &2&l%COUNT%'
   commandChatGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
   commandChatGlobalmuteOff: '&eGlobale Stummschaltung deaktiviert'
   commandChatGlobalmuteDenied: '&cDer Chat ist aktuell deaktiviert'

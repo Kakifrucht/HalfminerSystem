@@ -2,11 +2,16 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 @SuppressWarnings("unused")
 public class Cmdchat extends HalfminerCommand {
@@ -50,22 +55,31 @@ public class Cmdchat extends HalfminerCommand {
                     sender.sendMessage(Language.getMessagePlaceholders("commandChatCountdownStarted", true, "%PREFIX%",
                             "Chat", "%COUNT%", String.valueOf(countdown)));
 
-                    hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+                    final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
+                    final BukkitTask task = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
+
+                        int count = countdown;
                         @Override
                         public void run() {
-                            int count = countdown;
-                            for (; count >= 0; count--) {
-                                HanTitles titles = (HanTitles) hms.getHandler(HandlerType.TITLES);
-                                titles.sendTitle(null, Language.getMessagePlaceholders("commandChatCountdown",
-                                        false, "%COUNT%", String.valueOf(count)), 0, 20, 5);
-                                try {
-                                    Thread.sleep(1000L);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+
+                            bar.broadcastBar(Language.getMessagePlaceholders("commandChatCountdown", false, "%COUNT%",
+                                    String.valueOf(count)),
+                                    BarColor.GREEN, BarStyle.SOLID, 30, (double) count / countdown);
+                            count--;
+                        }
+                    }, 0, 20L);
+
+                    hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+                        @Override
+                        public void run() {
+
+                            task.cancel();
+                            bar.removePublicBar();
+                            for (Player p : hms.getServer().getOnlinePlayers()) {
+                                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
                             }
                         }
-                    });
+                    }, 20 * countdown);
                 }
 
             } else if (args[0].equalsIgnoreCase("globalmute")) {
