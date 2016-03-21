@@ -6,13 +6,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](/Kakifrucht/HalfminerBa
 Current features
 -------
 - Modular, lightweight, efficient
-- Messages completely configurable, functionality mostly
-- Own storage flatfile in YAML format
-- Teleport players with cooldown
-  - Disallows movement
-  - Change default time in config
-  - Stops when player taking damage
-  - Execute runnable after successful teleport
+- Messages completely, functionality mostly configurable
 - Essentials hook
   - For economy support
   - To read players homes

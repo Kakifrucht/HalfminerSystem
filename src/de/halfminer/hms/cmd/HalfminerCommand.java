@@ -6,7 +6,7 @@ import de.halfminer.hms.handlers.HanStorage;
 import org.bukkit.command.CommandSender;
 
 /**
- * HalfminerCommands are instantiated once a player executes the command
+ * HalfminerCommands are instantiated once a player executes the command.
  */
 public abstract class HalfminerCommand {
 

@@ -5,7 +5,7 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanStorage;
 
 /**
- * HalfminerModules are Singletons instantiated once. They may include Listeners.
+ * HalfminerModules are instantiated once. They may include Listeners.
  */
 public abstract class HalfminerModule {
 
