@@ -128,15 +128,16 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         }
     }
 
-    private void tagPlayer(final Player p, final Player other, final int otherHealth) {
+    private void tagPlayer(final Player p, final Player other, int otherHealth) {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
 
+        final int health = otherHealth >= 0 ? otherHealth : 0;
         final int healthScale = (int) other.getMaxHealth();
 
         barHandler.showBar(p, Language.placeholderReplace(lang.get("bossbar"), "%PLAYER%", other.getName(),
-                "%HEALTH%", String.valueOf(otherHealth), "%MAXHEALTH%", String.valueOf(healthScale)),
-                BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) otherHealth / healthScale);
+                "%HEALTH%", String.valueOf(health), "%MAXHEALTH%", String.valueOf(healthScale)),
+                BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) health / healthScale);
 
         if (isTagged(p)) tagged.get(p).cancel();
         tagged.put(p, hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
