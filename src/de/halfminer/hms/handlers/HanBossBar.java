@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class HanBossBar extends HalfminerHandler {
 
-    private BossBar currentBroadcast = hms.getServer().createBossBar("", BarColor.BLUE, BarStyle.SOLID);
+    private final BossBar currentBroadcast = hms.getServer().createBossBar("", BarColor.BLUE, BarStyle.SOLID);
     private Map<Player, Pair<BossBar, Long>> currentBar;
 
     @SuppressWarnings("unused")
@@ -67,7 +67,7 @@ public class HanBossBar extends HalfminerHandler {
             @Override
             public void run() {
 
-                if (currentBar.get(player).getRight() == currentTime) {
+                if (currentBar.containsKey(player) && currentBar.get(player).getRight() == currentTime) {
 
                     bar.removeAll();
                     currentBar.remove(player);
