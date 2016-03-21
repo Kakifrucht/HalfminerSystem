@@ -117,13 +117,9 @@ public class HalfminerSystem extends JavaPlugin {
         saveConfig(); // Save config.yml to disk
 
         //noinspection ConstantConditions (suppress warning due to java refelction)
-        if (handlers != null && modules != null) {
-
-            for (HalfminerHandler han : handlers.values())
+        for (HalfminerHandler han : handlers.values())
                 if (han instanceof Reloadable) ((Reloadable) han).reloadConfig();
-
-            for (HalfminerModule mod : modules.values()) mod.reloadConfig();
-        }
+        for (HalfminerModule mod : modules.values()) mod.reloadConfig();
     }
 
 }
