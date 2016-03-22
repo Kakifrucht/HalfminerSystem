@@ -4,6 +4,7 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.interfaces.Disableable;
+import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -28,7 +29,7 @@ import java.util.Map;
  * - Calculates new ELO after a kill
  */
 @SuppressWarnings("unused")
-public class ModSkillLevel extends HalfminerModule implements Disableable, Listener {
+public class ModSkillLevel extends HalfminerModule implements Disableable, Listener, Sweepable {
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
@@ -69,11 +70,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             storage.setStats(killer, StatsType.LASTKILL, System.currentTimeMillis() / 1000);
 
-            // Check if last kill has passed a certain time, otherwise do not count towards skilllevel (prevent grinding)
-            if (lastKill.containsKey(killer.getName() + victim.getName())) {
-                long lastKillLong = lastKill.get(killer.getName() + victim.getName());
-                if (lastKillLong + timeUntilKillCountAgainSeconds > System.currentTimeMillis() / 1000) return;
-            }
+            // Prevent grinding
+            String uuidCat = killer.getUniqueId().toString() + victim.getUniqueId().toString();
+            if (!killDoesCount(uuidCat)) return;
 
             // Calculate skill modifier
             int killerLevel = storage.getStatsInt(killer, StatsType.SKILL_LEVEL);
@@ -84,7 +83,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             updateSkill(killer, modifier);
             updateSkill(victim, -modifier);
-            lastKill.put(killer.getName() + victim.getName(), System.currentTimeMillis() / 1000);
+            lastKill.put(uuidCat, System.currentTimeMillis() / 1000);
         }
     }
 
@@ -160,6 +159,13 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         }
     }
 
+    private boolean killDoesCount(String uuidCat) {
+
+        return !lastKill.containsKey(uuidCat)
+                || lastKill.get(uuidCat) + timeUntilKillCountAgainSeconds
+                < System.currentTimeMillis() / 1000;
+    }
+
     @Override
     public void reloadConfig() {
 
@@ -220,6 +226,13 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             if ((currentTeam = scoreboard.getTeam(team)) != null) {
                 currentTeam.unregister();
             }
+        }
+    }
+
+    @Override
+    public void sweep() {
+        for (String killerAndVictim : lastKill.keySet()) {
+            if (killDoesCount(killerAndVictim)) lastKill.remove(killerAndVictim);
         }
     }
 }

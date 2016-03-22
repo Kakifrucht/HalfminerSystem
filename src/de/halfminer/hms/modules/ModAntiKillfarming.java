@@ -39,8 +39,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     private final Map<String, String> lang = new HashMap<>();
     private final Set<String> commandExemptList = new HashSet<>();
 
-    private final HashMap<UUID, AntiKillfarmingContainer> deathMap = new HashMap<>();
-    private final HashMap<UUID, Long> blockList = new HashMap<>();
+    private final Map<UUID, AntiKillfarmingContainer> deathMap = new HashMap<>();
+    private final Map<UUID, Long> blockList = new HashMap<>();
 
     /**
      * Called when a player dies, check if PvP and update anti killfarming variables

@@ -17,6 +17,7 @@ import java.util.Map;
  * - Only show one bar at a time (player specific)
  * - Broadcast bar to all players (besides player specific one)
  */
+@SuppressWarnings("SameParameterValue")
 public class HanBossBar extends HalfminerHandler implements Reloadable {
 
     private final BossBar currentBroadcast = hms.getServer().createBossBar("", BarColor.BLUE, BarStyle.SOLID);

@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,9 +31,9 @@ import java.util.Map;
 public class ModPerformance extends HalfminerModule implements Listener {
 
     // Storage for limitations
-    private final Map<Location, Integer> lastStored = new HashMap<>();
+    private final Map<Location, Integer> firedAt = new HashMap<>();
     private int pistonCount = 0;
-    private int taskId = 0;
+    private BukkitTask clearTask;
     // Redstone and pistons config
     private int howMuchRedstoneAllowed;
     private int howManyPistonsAllowed;
@@ -59,11 +60,11 @@ public class ModPerformance extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void countRedstoneChange(BlockRedstoneEvent e) {
         Location redstoneLoc = e.getBlock().getLocation();
-        if (lastStored.containsKey(redstoneLoc)) {
-            int amount = lastStored.get(redstoneLoc);
+        if (firedAt.containsKey(redstoneLoc)) {
+            int amount = firedAt.get(redstoneLoc);
             if (amount > howMuchRedstoneAllowed) e.setNewCurrent(0);
-            else lastStored.put(redstoneLoc, amount + 1);
-        } else lastStored.put(redstoneLoc, 1);
+            else firedAt.put(redstoneLoc, amount + 1);
+        } else firedAt.put(redstoneLoc, 1);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -151,11 +152,11 @@ public class ModPerformance extends HalfminerModule implements Listener {
 
         hopperLimitMessage = Language.getMessagePlaceholders("modPerformanceReachedHopper", true, "%PREFIX%", "Info");
 
-        if (taskId != 0) hms.getServer().getScheduler().cancelTask(taskId);
-        taskId = hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
+        if (clearTask != null) clearTask.cancel();
+        clearTask = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
             @Override
             public void run() {
-                lastStored.clear();
+                firedAt.clear();
                 pistonCount = 0;
             }
         }, ticksDelayUntilClear, ticksDelayUntilClear);

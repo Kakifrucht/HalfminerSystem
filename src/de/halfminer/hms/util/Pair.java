@@ -44,4 +44,16 @@ public class Pair<L, R> {
     public void setRight(R setTo) {
         right = setTo;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) return true;
+
+        if (obj instanceof Pair) {
+            if (((Pair) obj).getLeft().equals(left)
+                    && ((Pair) obj).getRight().equals(right)) return true;
+        }
+        return false;
+    }
 }

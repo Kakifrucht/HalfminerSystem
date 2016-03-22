@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.interfaces.Disableable;
+import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.Sound;
@@ -32,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - View stats on rightclicking a player
  */
 @SuppressWarnings("unused")
-public class ModStats extends HalfminerModule implements Disableable, Listener {
+public class ModStats extends HalfminerModule implements Disableable, Listener, Sweepable {
 
     private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
     private Map<Player, Pair<Player, Long>> lastInteract;
@@ -216,4 +217,8 @@ public class ModStats extends HalfminerModule implements Disableable, Listener {
         for (Player p : timeOnline.keySet()) setOnlineTime(p);
     }
 
+    @Override
+    public void sweep() {
+        this.lastInteract = new HashMap<>();
+    }
 }

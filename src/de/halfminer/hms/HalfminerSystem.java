@@ -6,6 +6,7 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.handlers.HalfminerHandler;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Reloadable;
+import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.modules.HalfminerModule;
 import de.halfminer.hms.util.Language;
 import org.bukkit.command.Command;
@@ -66,6 +67,15 @@ public class HalfminerSystem extends JavaPlugin {
         // Register listeners
         for (HalfminerModule mod : modules.values())
             if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
+
+        // Start sweep task, every 10 minutes
+        getServer().getScheduler().runTaskTimer(this, new Runnable() {
+            @Override
+            public void run() {
+                for (HalfminerModule mod : modules.values())
+                    if (mod instanceof Sweepable) ((Sweepable) mod).sweep();
+            }
+        }, 12000L, 12000L);
 
         getLogger().info("HalfminerSystem enabled");
     }

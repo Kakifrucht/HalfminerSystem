@@ -1,5 +1,6 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,10 +25,11 @@ import java.util.Set;
  * - Kills players above the netherroof
  */
 @SuppressWarnings("unused")
-public class ModGlitchProtection extends HalfminerModule implements Listener {
+public class ModGlitchProtection extends HalfminerModule implements Listener, Sweepable {
 
-    private final Map<Player, Long> lastMessage = new HashMap<>();
     private final Set<Player> waitingForChorusTP = new HashSet<>();
+    private Map<Player, Long> lastGlitchAlert = new HashMap<>();
+
     private BukkitTask checkIfOverNether;
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -37,13 +39,13 @@ public class ModGlitchProtection extends HalfminerModule implements Listener {
                 && !e.getPlayer().hasPermission("hms.bypass.bedrockcheck")
                 && Math.round(e.getFrom().getY()) == e.getFrom().getBlockY()) {
 
-            if (lastMessage.get(e.getPlayer()) == null || lastMessage.get(e.getPlayer()) < System.currentTimeMillis() / 1000) {
+            if (lastGlitchAlert.get(e.getPlayer()) == null || lastGlitchAlert.get(e.getPlayer()) < System.currentTimeMillis() / 1000) {
 
                 hms.getServer().broadcast(Language.getMessagePlaceholders("modGlitchProtectionBedrock", true,
                         "%PREFIX%", "Warnung",
                         "%PLAYER%", e.getPlayer().getName(),
                         "%LOCATION%", Language.getStringFromLocation(e.getTo())), "hms.bypass.bedrockcheck");
-                lastMessage.put(e.getPlayer(), (System.currentTimeMillis() / 1000) + 4);
+                lastGlitchAlert.put(e.getPlayer(), (System.currentTimeMillis() / 1000) + 4);
             }
         }
     }
@@ -98,29 +100,34 @@ public class ModGlitchProtection extends HalfminerModule implements Listener {
     }
 
     @Override
+    public void sweep() {
+        lastGlitchAlert = new HashMap<>();
+    }
+
+    @Override
     public void reloadConfig() {
 
-        if (checkIfOverNether != null) return;
+        if (checkIfOverNether == null) {
 
-        checkIfOverNether = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
-            @Override
-            public void run() {
-                for (Player p : hms.getServer().getOnlinePlayers()) {
-                    Location loc = p.getLocation();
-                    if (!p.hasPermission("hms.bypass.nethercheck")
-                            && !p.isDead()
-                            && loc.getWorld().getEnvironment().equals(World.Environment.NETHER)
-                            && loc.getBlockY() > 127) {
-                        p.setHealth(0.0d);
-                        p.sendMessage(Language.getMessagePlaceholders("modGlitchProtectionNether", true,
-                                "%PREFIX%", "Warnung"));
-                        hms.getServer().broadcast(Language.getMessagePlaceholders("modGlitchProtectionNetherNotify", true,
-                                "%PREFIX%", "Warnung",
-                                "%PLAYER%", p.getName(),
-                                "%LOCATION%", Language.getStringFromLocation(loc)), "hms.bypass.nethercheck");
+            checkIfOverNether = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
+                @Override
+                public void run() {
+                    for (Player p : hms.getServer().getOnlinePlayers()) {
+                        Location loc = p.getLocation();
+                        if (!p.hasPermission("hms.bypass.nethercheck")
+                                && !p.isDead()
+                                && loc.getWorld().getEnvironment().equals(World.Environment.NETHER)
+                                && loc.getBlockY() > 127) {
+                            p.setHealth(0.0d);
+                            p.sendMessage(Language.getMessagePlaceholders("modGlitchProtectionNether", true,
+                                    "%PREFIX%", "Warnung"));
+                            hms.getServer().broadcast(Language.getMessagePlaceholders("modGlitchProtectionNetherNotify",
+                                    true, "%PREFIX%", "Warnung", "%PLAYER%", p.getName(),
+                                    "%LOCATION%", Language.getStringFromLocation(loc)), "hms.bypass.nethercheck");
+                        }
                     }
                 }
-            }
-        }, 100L, 100L);
+            }, 100L, 100L);
+        }
     }
 }

@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTitles;
+import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import net.minecraft.server.v1_9_R1.EntityFishingHook;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
@@ -32,11 +33,11 @@ import java.util.UUID;
  * - Remove effects on teleport
  */
 @SuppressWarnings("unused")
-public class ModPvP extends HalfminerModule implements Listener {
+public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
-    private Map<Player, Long> lastBowShot;
+    private Map<Player, Long> lastBowShot = new HashMap<>();
 
     private final Map<UUID, Integer> killStreaks = new HashMap<>();
     private final Map<UUID, Integer> deathStreaks = new HashMap<>();
@@ -52,9 +53,11 @@ public class ModPvP extends HalfminerModule implements Listener {
             for (PotionEffect effect : ((Player) damager).getActivePotionEffects()) {
                 if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
 
-                    double newDamage = e.getDamage(EntityDamageEvent.DamageModifier.BASE) - 1.5d * (effect.getAmplifier() + 1);
+                    double newDamage = e.getDamage(EntityDamageEvent.DamageModifier.BASE)
+                            - 1.5d * (effect.getAmplifier() + 1);
                     double damageRatio = newDamage / e.getDamage(EntityDamageEvent.DamageModifier.BASE);
 
+                    e.setDamage(EntityDamageEvent.DamageModifier.BASE, newDamage);
                     e.setDamage(EntityDamageEvent.DamageModifier.ARMOR,
                             e.getDamage(EntityDamageEvent.DamageModifier.ARMOR) * damageRatio);
                     e.setDamage(EntityDamageEvent.DamageModifier.MAGIC,
@@ -63,7 +66,6 @@ public class ModPvP extends HalfminerModule implements Listener {
                             e.getDamage(EntityDamageEvent.DamageModifier.RESISTANCE) * damageRatio);
                     e.setDamage(EntityDamageEvent.DamageModifier.BLOCKING,
                             e.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) * damageRatio);
-                    e.setDamage(EntityDamageEvent.DamageModifier.BASE, newDamage);
 
                     return;
                 }
@@ -189,7 +191,8 @@ public class ModPvP extends HalfminerModule implements Listener {
         }
     }
 
-    public void reloadConfig() {
+    @Override
+    public void sweep() {
         lastBowShot = new HashMap<>();
     }
 }

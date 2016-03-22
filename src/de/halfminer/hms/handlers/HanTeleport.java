@@ -18,6 +18,7 @@ import java.util.Map;
  * - Execute runnable after successful (or unsuccessful) teleport
  * - Only one teleport at a time
  */
+@SuppressWarnings("SameParameterValue")
 public class HanTeleport extends HalfminerHandler implements Reloadable {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
