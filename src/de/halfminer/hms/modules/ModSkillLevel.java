@@ -233,10 +233,10 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     @Override
     public void sweep() {
 
-        Iterator<String> it = lastKill.keySet().iterator();
+        Iterator<Map.Entry<String, Long>> it = lastKill.entrySet().iterator();
         while (it.hasNext()) {
-            String next = it.next();
-            if (killDoesCount(next)) it.remove();
+            Map.Entry<String, Long> next = it.next();
+            if (killDoesCount(next.getKey())) it.remove();
         }
     }
 }
