@@ -18,6 +18,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -231,8 +232,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
     @Override
     public void sweep() {
-        for (String killerAndVictim : lastKill.keySet()) {
-            if (killDoesCount(killerAndVictim)) lastKill.remove(killerAndVictim);
+
+        Iterator<String> it = lastKill.keySet().iterator();
+        while (it.hasNext()) {
+            String next = it.next();
+            if (killDoesCount(next)) it.remove();
         }
     }
 }
