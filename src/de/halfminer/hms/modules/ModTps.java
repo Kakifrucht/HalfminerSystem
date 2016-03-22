@@ -3,6 +3,7 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.LinkedList;
 
@@ -14,7 +15,7 @@ public class ModTps extends HalfminerModule implements Listener {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
     private final LinkedList<Double> tpsHistory = new LinkedList<>();
-    private int taskId;
+    private BukkitTask task;
     private double lastAverageTps;
     private long lastTaskTimestamp;
 
@@ -39,13 +40,13 @@ public class ModTps extends HalfminerModule implements Listener {
         historySize = hms.getConfig().getInt("tps.historySize", 6);
         alertStaff = hms.getConfig().getDouble("tps.alertThreshold", 17.0d);
 
-        if (taskId > 0) hms.getServer().getScheduler().cancelTask(taskId);
+        if (task != null) task.cancel();
 
         tpsHistory.clear();
         tpsHistory.add(20.0);
         lastAverageTps = 20.0;
         lastTaskTimestamp = System.currentTimeMillis();
-        taskId = hms.getServer().getScheduler().scheduleSyncRepeatingTask(hms, new Runnable() {
+        task = scheduler.runTaskTimer(hms, new Runnable() {
             @Override
             public void run() {
                 long now = System.currentTimeMillis();
@@ -59,15 +60,16 @@ public class ModTps extends HalfminerModule implements Listener {
                 if (tpsHistory.size() >= historySize) tpsHistory.removeFirst();
                 tpsHistory.add(currentTps);
 
-                //Get average value
+                // Get average value
                 lastAverageTps = 0.0;
                 for (Double val : tpsHistory) lastAverageTps += val;
                 lastAverageTps /= tpsHistory.size();
                 lastAverageTps = Math.round(lastAverageTps * 100.0) / 100.0; //round value to two decimals
 
-                //send message if server is unstable
+                // send message if server is unstable
                 if (lastAverageTps < alertStaff && tpsHistory.size() == historySize)
-                    hms.getServer().broadcast(Language.getMessagePlaceholders("modTpsServerUnstable", true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(lastAverageTps)), "hms.lag.notify");
+                    server.broadcast(Language.getMessagePlaceholders("modTpsServerUnstable",
+                            true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(lastAverageTps)), "hms.lag.notify");
             }
         }, ticksBetweenUpdate, ticksBetweenUpdate);
     }

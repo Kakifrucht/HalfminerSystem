@@ -35,14 +35,14 @@ public class ModRespawn extends HalfminerModule implements Listener {
 
             message = Language.getMessagePlaceholders("modRespawnFirstJoin", false, "%PLAYER%", joined.getName());
 
-            hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+            scheduler.runTaskLater(hms, new Runnable() {
                 @Override
                 public void run() {
 
                     joined.teleport(respawnLoc);
                     String command = hms.getConfig().getString("respawn.firstJoinCommand", "");
                     if (command.length() > 0) {
-                        hms.getServer().dispatchCommand(hms.getServer().getConsoleSender(),
+                        server.dispatchCommand(server.getConsoleSender(),
                                 Language.placeholderReplace(command, "%PLAYER%", joined.getName()));
                     }
                 }
@@ -69,6 +69,6 @@ public class ModRespawn extends HalfminerModule implements Listener {
         Object loc = storage.get("sys.spawnlocation");
 
         if (loc instanceof Location) respawnLoc = (Location) loc;
-        else respawnLoc = hms.getServer().getWorlds().get(0).getSpawnLocation();
+        else respawnLoc = server.getWorlds().get(0).getSpawnLocation();
     }
 }

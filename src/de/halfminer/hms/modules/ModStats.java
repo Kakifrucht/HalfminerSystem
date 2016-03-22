@@ -67,7 +67,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
                 storage.setStats(player, StatsType.LAST_NAMES, lastName);
             }
 
-            hms.getServer().broadcast(Language.getMessagePlaceholders("modStatsNameChange", true,
+            server.broadcast(Language.getMessagePlaceholders("modStatsNameChange", true,
                     "%PREFIX%", "Name", "%OLDNAME%", lastName, "%NEWNAME%", player.getName()), "hms.default");
         }
 
@@ -195,16 +195,16 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         //if reload ocurred while the server ran, add players to list
         if (timeOnline.size() == 0) {
             long time = System.currentTimeMillis() / 1000;
-            for (Player player : hms.getServer().getOnlinePlayers()) {
+            for (Player player : server.getOnlinePlayers()) {
                 timeOnline.put(player, time);
             }
         }
 
-        hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
+        scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
                 long currentTime = System.currentTimeMillis() / 1000;
-                for (Player p : hms.getServer().getOnlinePlayers()) {
+                for (Player p : server.getOnlinePlayers()) {
                     setOnlineTime(p);
                     timeOnline.put(p, currentTime);
                 }

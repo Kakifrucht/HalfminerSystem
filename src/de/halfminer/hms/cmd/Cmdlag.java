@@ -29,7 +29,7 @@ public class Cmdlag extends HalfminerCommand {
                 return;
             }
 
-            Player toGet = hms.getServer().getPlayer(args[0]);
+            Player toGet = server.getPlayer(args[0]);
 
             if (toGet != null) {
                 player = (CraftPlayer) toGet;

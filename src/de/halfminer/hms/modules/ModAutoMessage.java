@@ -45,11 +45,11 @@ public class ModAutoMessage extends HalfminerModule {
         if (running != null) running.cancel();
 
         int interval = hms.getConfig().getInt("autoMessage.intervalSeconds", 240) * 20;
-        running = hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
+        running = scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
                 String message = messages.get(rnd.nextInt(messages.size()));
-                for (Player player : hms.getServer().getOnlinePlayers()) player.sendMessage(message);
+                for (Player player : server.getOnlinePlayers()) player.sendMessage(message);
             }
         }, interval, interval);
     }

@@ -34,7 +34,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
-    private final Scoreboard scoreboard = hms.getServer().getScoreboardManager().getMainScoreboard();
+    private final Scoreboard scoreboard = server.getScoreboardManager().getMainScoreboard();
     private final Map<String, Long> lastKill = new HashMap<>();
     private Objective skillObjective = scoreboard.getObjective("skill");
     private String[] teams;
@@ -213,7 +213,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             skillObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         }
 
-        for (Player player : hms.getServer().getOnlinePlayers()) {
+        for (Player player : server.getOnlinePlayers()) {
             if (!player.hasPermission("hms.bypass.skilllevel")) updateSkill(player, 0);
         }
 

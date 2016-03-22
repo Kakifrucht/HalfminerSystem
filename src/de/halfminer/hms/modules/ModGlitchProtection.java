@@ -41,7 +41,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
             if (lastGlitchAlert.get(e.getPlayer()) == null || lastGlitchAlert.get(e.getPlayer()) < System.currentTimeMillis() / 1000) {
 
-                hms.getServer().broadcast(Language.getMessagePlaceholders("modGlitchProtectionBedrock", true,
+                server.broadcast(Language.getMessagePlaceholders("modGlitchProtectionBedrock", true,
                         "%PREFIX%", "Warnung",
                         "%PLAYER%", e.getPlayer().getName(),
                         "%LOCATION%", Language.getStringFromLocation(e.getTo())), "hms.bypass.bedrockcheck");
@@ -61,7 +61,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
         if (!e.getFrom().getWorld().equals(to.getWorld())) {
 
             // Override Spigot default teleport safety
-            hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+            scheduler.runTaskLater(hms, new Runnable() {
                 @Override
                 public void run() {
                     if (p.getLocation().distance(to) > 1.0d) p.teleport(to);
@@ -87,7 +87,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
             if (!waitingForChorusTP.contains(p)) {
 
                 waitingForChorusTP.add(p);
-                hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+                scheduler.runTaskLater(hms, new Runnable() {
                     @Override
                     public void run() {
                         p.setFallDistance(0.0f);
@@ -109,10 +109,10 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
         if (checkIfOverNether == null) {
 
-            checkIfOverNether = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
+            checkIfOverNether = scheduler.runTaskTimer(hms, new Runnable() {
                 @Override
                 public void run() {
-                    for (Player p : hms.getServer().getOnlinePlayers()) {
+                    for (Player p : server.getOnlinePlayers()) {
                         Location loc = p.getLocation();
                         if (!p.hasPermission("hms.bypass.nethercheck")
                                 && !p.isDead()
@@ -121,7 +121,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                             p.setHealth(0.0d);
                             p.sendMessage(Language.getMessagePlaceholders("modGlitchProtectionNether", true,
                                     "%PREFIX%", "Warnung"));
-                            hms.getServer().broadcast(Language.getMessagePlaceholders("modGlitchProtectionNetherNotify",
+                            server.broadcast(Language.getMessagePlaceholders("modGlitchProtectionNetherNotify",
                                     true, "%PREFIX%", "Warnung", "%PLAYER%", p.getName(),
                                     "%LOCATION%", Language.getStringFromLocation(loc)), "hms.bypass.nethercheck");
                         }

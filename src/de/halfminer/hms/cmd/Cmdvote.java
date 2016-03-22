@@ -27,7 +27,7 @@ public class Cmdvote extends HalfminerCommand {
                 //grab player
                 OfflinePlayer hasVoted;
                 try {
-                    hasVoted = hms.getServer().getOfflinePlayer(storage.getUUID(args[1]));
+                    hasVoted = server.getOfflinePlayer(storage.getUUID(args[1]));
                 } catch (PlayerNotFoundException e) {
                     return;
                 }
@@ -35,7 +35,7 @@ public class Cmdvote extends HalfminerCommand {
                 //increment stats, broadcast
                 storage.set("sys.vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
                 storage.incrementStatsInt(hasVoted, StatsType.VOTES, 1);
-                hms.getServer().broadcast(Language.getMessagePlaceholders("commandVoteVoted", true, "%PREFIX%",
+                server.broadcast(Language.getMessagePlaceholders("commandVoteVoted", true, "%PREFIX%",
                         "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
 
                 //if the player is currently online, save his ip so that other people with same ip who cannot vote
@@ -60,7 +60,7 @@ public class Cmdvote extends HalfminerCommand {
 
                     String command = hms.getConfig().getString("command.vote.commandToExecute");
                     if (command.length() > 0) {
-                        hms.getServer().dispatchCommand(hms.getServer().getConsoleSender(), command);
+                        server.dispatchCommand(server.getConsoleSender(), command);
                     }
                 }
 
@@ -140,7 +140,7 @@ public class Cmdvote extends HalfminerCommand {
 
         String command = hms.getConfig().getString("command.vote.voteRewardCommand");
         command = Language.placeholderReplace(command, "%PLAYER%", player.getName());
-        hms.getServer().dispatchCommand(hms.getServer().getConsoleSender(), command);
+        server.dispatchCommand(server.getConsoleSender(), command);
         return true;
     }
 }

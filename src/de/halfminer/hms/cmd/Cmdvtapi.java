@@ -26,7 +26,7 @@ public class Cmdvtapi extends HalfminerCommand {
 
             if (args[0].equalsIgnoreCase("title") && args.length > 2) {
 
-                Player sendTo = hms.getServer().getPlayer(args[1]);
+                Player sendTo = server.getPlayer(args[1]);
                 if (sendTo != null) {
                     ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendTitle(sendTo,
                             Language.arrayToString(args, 2, false), 0, 50, 10);
@@ -35,7 +35,7 @@ public class Cmdvtapi extends HalfminerCommand {
             } else if (sender instanceof Player) {
 
                 Player player = (Player) sender;
-                ConsoleCommandSender consoleInstance = hms.getServer().getConsoleSender();
+                ConsoleCommandSender consoleInstance = server.getConsoleSender();
 
                 if (args[0].equalsIgnoreCase("takecase")) {
 
@@ -45,16 +45,15 @@ public class Cmdvtapi extends HalfminerCommand {
 
                         ItemStack hand = player.getInventory().getItemInMainHand();
 
-                        hms.getServer().dispatchCommand(consoleInstance, "vt setstr temp casename_" + sender.getName() + " " + hand.getItemMeta().getDisplayName());
+                        server.dispatchCommand(consoleInstance, "vt setstr temp casename_" + sender.getName() + " " + hand.getItemMeta().getDisplayName());
                         int amount = hand.getAmount();
                         if (amount > 1) hand.setAmount(hand.getAmount() - 1);
                         else player.getInventory().setItemInMainHand(null);
-                        hms.getServer().dispatchCommand(consoleInstance, "vt run casino:caseopen " + playername);
+                        server.dispatchCommand(consoleInstance, "vt run casino:caseopen " + playername);
 
                     } else {
 
-                        hms.getServer().dispatchCommand(consoleInstance, "vt run casino:error " + playername);
-
+                        server.dispatchCommand(consoleInstance, "vt run casino:error " + playername);
                     }
 
                 } else if (args[0].equalsIgnoreCase("takehead")) {
@@ -64,7 +63,7 @@ public class Cmdvtapi extends HalfminerCommand {
 
                         SkullMeta skull = (SkullMeta) item.getItemMeta();
                         if (!skull.hasOwner()) {
-                            hms.getServer().dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
+                            server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
                             return;
                         }
 
@@ -74,22 +73,22 @@ public class Cmdvtapi extends HalfminerCommand {
                         int level;
                         try {
                             UUID uuid = storage.getUUID(skullOwner);
-                            level = storage.getStatsInt(hms.getServer().getOfflinePlayer(uuid), StatsType.SKILL_LEVEL);
+                            level = storage.getStatsInt(server.getOfflinePlayer(uuid), StatsType.SKILL_LEVEL);
                         } catch (PlayerNotFoundException e) {
                             level = 1;
                         }
 
-                        hms.getServer().dispatchCommand(consoleInstance, "vt setstr temp headname_" + player.getName() + " " + skullOwner);
-                        hms.getServer().dispatchCommand(consoleInstance, "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
+                        server.dispatchCommand(consoleInstance, "vt setstr temp headname_" + player.getName() + " " + skullOwner);
+                        server.dispatchCommand(consoleInstance, "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
 
-                        //Remove the skull
+                        // Remove the skull
                         int amount = item.getAmount();
                         if (amount > 1) item.setAmount(amount - 1);
                         else player.getInventory().setItemInMainHand(null);
-                        //proceed with next step
-                        hms.getServer().dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
+                        // proceed with next step
+                        server.dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
 
-                    } else hms.getServer().dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
+                    } else server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
                 }
             }
         }

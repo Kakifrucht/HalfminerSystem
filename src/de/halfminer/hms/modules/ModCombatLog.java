@@ -65,7 +65,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             untagPlayer(e.getPlayer());
 
             if (broadcastLog)
-                hms.getServer().broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), "hms.default");
+                server.broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), "hms.default");
 
             if (e.getPlayer().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) e.getPlayer().getLastDamageCause();
@@ -140,7 +140,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) health / healthScale);
 
         if (isTagged(p)) tagged.get(p).cancel();
-        tagged.put(p, hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
+        tagged.put(p, scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
 
             final String symbols = lang.get("symbols");
             int time = tagTime;

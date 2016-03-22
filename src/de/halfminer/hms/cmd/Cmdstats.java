@@ -23,7 +23,7 @@ public class Cmdstats extends HalfminerCommand {
             boolean compare = false;
             if (args.length > 1 && args[1].equalsIgnoreCase("compare") && sender instanceof Player) compare = true;
             try {
-                showStats(sender, hms.getServer().getOfflinePlayer(storage.getUUID(args[0])), compare);
+                showStats(sender, server.getOfflinePlayer(storage.getUUID(args[0])), compare);
             } catch (PlayerNotFoundException e) {
                 sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "Stats"));
             }

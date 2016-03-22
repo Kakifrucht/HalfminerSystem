@@ -145,7 +145,7 @@ public class Cmdhms extends HalfminerCommand {
                 UUID playerUid = storage.getUUID(args[1]);
                 storage.set("sys.vote." + playerUid, Long.MAX_VALUE);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "HMS",
-                        "%PLAYER%", hms.getServer().getOfflinePlayer(playerUid).getName()));
+                        "%PLAYER%", server.getOfflinePlayer(playerUid).getName()));
             } catch (PlayerNotFoundException e) {
                 sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "HMS"));
             }
@@ -161,7 +161,7 @@ public class Cmdhms extends HalfminerCommand {
             return;
         }
 
-        Player player = hms.getServer().getPlayer(args[1]);
+        Player player = server.getPlayer(args[1]);
 
         if (player == null) {
             sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
@@ -194,7 +194,7 @@ public class Cmdhms extends HalfminerCommand {
             return;
         }
 
-        final Player toRing = hms.getServer().getPlayer(args[1]);
+        final Player toRing = server.getPlayer(args[1]);
         String senderName = sender.getName();
         if (senderName.equals("CONSOLE")) senderName = Language.getMessage("consoleName");
 
@@ -212,7 +212,7 @@ public class Cmdhms extends HalfminerCommand {
             sender.sendMessage(Language.getMessagePlaceholders("commandHmsRingSent", true, "%PREFIX%", "HMS",
                     "%PLAYER%", toRing.getName()));
 
-            hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+            scheduler.runTaskAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
                     float ringHeight = 2.0f;
@@ -247,7 +247,7 @@ public class Cmdhms extends HalfminerCommand {
 
         final Player player = (Player) sender;
 
-        final Essentials ess = (Essentials) hms.getServer().getPluginManager().getPlugin("Essentials");
+        final Essentials ess = (Essentials) server.getPluginManager().getPlugin("Essentials");
         final ArrayList<String> homeMessages = new ArrayList<>();
 
         final World world = player.getLocation().getWorld();
@@ -265,7 +265,7 @@ public class Cmdhms extends HalfminerCommand {
             checkRadius = setTo;
         } else checkRadius = 5;
 
-        hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+        scheduler.runTaskAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
 

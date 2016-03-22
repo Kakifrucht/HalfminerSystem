@@ -45,7 +45,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                     "%PLAYER%", joined.getName()), 10, 200, 10);
         } else {
             
-            hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+            scheduler.runTaskAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
                     titleHandler.sendTitle(joined, Language.getMessagePlaceholders("modTitlesJoinFormat", false,
@@ -80,7 +80,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private void updateTablist() {
 
-        hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+        scheduler.runTaskAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
                 for (Player player : balances.keySet()) updateTablist(player);
@@ -108,7 +108,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             balance = Math.round(balance * 100.0d) / 100.0d;
         } catch (UserDoesNotExistException e) {
             // This occurs if player joins for the first time, update it with small delay
-            hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+            scheduler.scheduleSyncDelayedTask(hms, new Runnable() {
                 @Override
                 public void run() {
                     updateBalance(player);
@@ -122,12 +122,12 @@ public class ModTitles extends HalfminerModule implements Listener {
     }
 
     private String getPlayercountString() {
-        return String.valueOf(hms.getServer().getOnlinePlayers().size());
+        return String.valueOf(server.getOnlinePlayers().size());
     }
 
     @Override
     public void reloadConfig() {
 
-        for (Player p : hms.getServer().getOnlinePlayers()) updateBalance(p);
+        for (Player p : server.getOnlinePlayers()) updateBalance(p);
     }
 }

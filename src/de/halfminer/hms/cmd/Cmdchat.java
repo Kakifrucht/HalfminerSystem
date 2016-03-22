@@ -56,7 +56,7 @@ public class Cmdchat extends HalfminerCommand {
                             "Chat", "%COUNT%", String.valueOf(countdown)));
 
                     final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
-                    final BukkitTask task = hms.getServer().getScheduler().runTaskTimer(hms, new Runnable() {
+                    final BukkitTask task = scheduler.runTaskTimer(hms, new Runnable() {
 
                         int count = countdown;
                         @Override
@@ -74,7 +74,7 @@ public class Cmdchat extends HalfminerCommand {
                         }
                     }, 0, 20L);
 
-                    hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+                    scheduler.runTaskLater(hms, new Runnable() {
                         @Override
                         public void run() {
 
@@ -90,10 +90,10 @@ public class Cmdchat extends HalfminerCommand {
                 storage.set("sys.globalmute", !active);
 
                 if (active) {
-                    hms.getServer().broadcast(Language.getMessagePlaceholders("commandChatGlobalmuteOff",
+                    server.broadcast(Language.getMessagePlaceholders("commandChatGlobalmuteOff",
                             true, "%PREFIX%", "Globalmute"), "hms.default");
                 } else {
-                    hms.getServer().broadcast(Language.getMessagePlaceholders("commandChatGlobalmuteOn",
+                    server.broadcast(Language.getMessagePlaceholders("commandChatGlobalmuteOn",
                             true, "%PREFIX%", "Globalmute"), "hms.default");
                 }
 
@@ -122,7 +122,7 @@ public class Cmdchat extends HalfminerCommand {
                                 time = 1;
                             }
 
-                            if (args.length > 2) sendTo = hms.getServer().getPlayer(args[2]);
+                            if (args.length > 2) sendTo = server.getPlayer(args[2]);
                         }
 
                         String sendToString;
@@ -151,7 +151,7 @@ public class Cmdchat extends HalfminerCommand {
 
                         if (args.length > 1) {
 
-                            Player player = hms.getServer().getPlayer(args[1]);
+                            Player player = server.getPlayer(args[1]);
                             if (player != null) {
 
                                 player.sendMessage(message);
@@ -164,7 +164,7 @@ public class Cmdchat extends HalfminerCommand {
                             }
                         } else {
 
-                            hms.getServer().broadcast(message, "hms.default");
+                            server.broadcast(message, "hms.default");
                             sendToString = Language.getMessage("commandChatAll");
                         }
                         sender.sendMessage(Language.getMessagePlaceholders("commandChatSend", true, "%PREFIX%", "Chat",
@@ -215,7 +215,7 @@ public class Cmdchat extends HalfminerCommand {
         String clearMessage = "";
         for (int i = 0; i < 100; i++) clearMessage += ChatColor.RESET + " \n";
 
-        for (Player player : hms.getServer().getOnlinePlayers()) {
+        for (Player player : server.getOnlinePlayers()) {
 
             if (!player.hasPermission("hms.chat.advanced")) player.sendMessage(clearMessage);
 

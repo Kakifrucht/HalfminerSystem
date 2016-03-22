@@ -50,7 +50,7 @@ public class Cmdneutp extends HalfminerCommand {
         int boundMax = hms.getConfig().getInt("command.neutp.boundMax", 10000) - boundMin;
         int iterations = 10;
 
-        World world = hms.getServer().getWorlds().get(0);
+        World world = server.getWorlds().get(0);
         Block block;
 
         do {
@@ -75,7 +75,7 @@ public class Cmdneutp extends HalfminerCommand {
 
                 storage.setStats(player, StatsType.NEUTP_USED, true);
 
-                hms.getServer().dispatchCommand(player, "sethome neutp");
+                server.dispatchCommand(player, "sethome neutp");
 
                 for (int i = 0; i < 100; i++) player.sendMessage("");
                 player.sendMessage(Language.getMessagePlaceholders("commandNeutpTpDone", true, "%PREFIX%", "Neutp",
@@ -84,13 +84,13 @@ public class Cmdneutp extends HalfminerCommand {
                 hms.getLogger().info(Language.getMessagePlaceholders("commandNeutpLog", false, "%PLAYER%",
                         player.getName(), "%LOCATION%", Language.getStringFromLocation(loc)));
 
-                hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+                scheduler.runTaskLater(hms, new Runnable() {
                     @Override
                     public void run() {
                         player.sendMessage(Language.getMessagePlaceholders("commandNeutpDocumentation",
                                 true, "%PREFIX%", "Neutp"));
                     }
-                });
+                }, 120L);
             }
         }, new Runnable() {
             @Override

@@ -25,7 +25,7 @@ public class ModMotd extends HalfminerModule implements Listener {
     @EventHandler
     public void serverPingMotd(ServerListPingEvent e) {
 
-        int fakeLimit = hms.getServer().getOnlinePlayers().size();
+        int fakeLimit = server.getOnlinePlayers().size();
 
         if (fakeLimit > playerCountThreshold - playerCountBuffer) fakeLimit += playerCountBuffer;
         else fakeLimit = playerCountThreshold;
@@ -40,7 +40,7 @@ public class ModMotd extends HalfminerModule implements Listener {
 
         playerCountThreshold = hms.getConfig().getInt("motd.playerCountThreshold", 50);
         playerCountBuffer = hms.getConfig().getInt("motd.playerCountBuffer", 1);
-        playerCountLimit = hms.getServer().getMaxPlayers();
+        playerCountLimit = server.getMaxPlayers();
         String setMotd = Language.getMessagePlaceholders("modMotdLine", false, "%REPLACE%", storage.getString("sys.news"));
 
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");

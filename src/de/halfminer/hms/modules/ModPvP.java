@@ -123,7 +123,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         if (killer != null && killer != e.getEntity()) {
 
             killer.setHealth(killer.getMaxHealth());
-            hms.getServer().getScheduler().runTaskLaterAsynchronously(hms, new Runnable() {
+            scheduler.runTaskLaterAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
                     killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);

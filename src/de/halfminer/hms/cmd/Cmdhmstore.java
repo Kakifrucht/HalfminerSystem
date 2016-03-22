@@ -85,7 +85,7 @@ public class Cmdhmstore extends HalfminerCommand {
 
         if (args.length > 0 && args[0].equalsIgnoreCase("save")) {
 
-            hms.getServer().getScheduler().runTaskAsynchronously(hms, new Runnable() {
+            scheduler.runTaskAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
                     storage.saveConfig();

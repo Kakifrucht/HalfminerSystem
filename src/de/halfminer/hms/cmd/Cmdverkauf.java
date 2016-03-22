@@ -107,7 +107,7 @@ public class Cmdverkauf extends HalfminerCommand {
 
         if (sellCount > 0) {
 
-            hms.getServer().getScheduler().scheduleSyncDelayedTask(hms, new Runnable() {
+            scheduler.runTaskLater(hms, new Runnable() {
                 @Override
                 public void run() {
                     sellLoop();

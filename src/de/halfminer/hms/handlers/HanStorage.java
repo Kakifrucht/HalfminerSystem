@@ -87,7 +87,7 @@ public class HanStorage extends HalfminerHandler implements Disableable {
         String uuidString = getString("sys.uuid." + playerName.toLowerCase());
         if (uuidString.length() > 0) return UUID.fromString(uuidString);
         else {
-            Player p = hms.getServer().getPlayer(playerName);
+            Player p = server.getPlayer(playerName);
             if (p != null) {
                 return p.getUniqueId();
             } else throw new PlayerNotFoundException();
@@ -137,8 +137,8 @@ public class HanStorage extends HalfminerHandler implements Disableable {
         }
 
         int saveInterval = hms.getConfig().getInt("storage.autoSaveMinutes", 15) * 60 * 20;
-        if (taskId > 0) hms.getServer().getScheduler().cancelTask(taskId);
-        taskId = hms.getServer().getScheduler().runTaskTimerAsynchronously(hms, new Runnable() {
+        if (taskId > 0) scheduler.cancelTask(taskId);
+        taskId = scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
                 saveConfig();

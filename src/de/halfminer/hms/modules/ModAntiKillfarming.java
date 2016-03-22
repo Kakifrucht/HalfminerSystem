@@ -245,7 +245,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
         blockList.put(victim.getUniqueId(), systemTime + blockTimeVictim);
 
         // send messages
-        hms.getServer().broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"),
+        server.broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"),
                 "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
         killer.sendMessage(Language.placeholderReplace(lang.get("blockedKiller"),
                 "%TIME%", Long.toString(blockTimeKiller / 60), "%PLAYER%", victim.getName()));

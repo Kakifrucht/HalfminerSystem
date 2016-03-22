@@ -20,7 +20,7 @@ import java.util.Map;
 @SuppressWarnings("SameParameterValue")
 public class HanBossBar extends HalfminerHandler implements Reloadable {
 
-    private final BossBar currentBroadcast = hms.getServer().createBossBar("", BarColor.BLUE, BarStyle.SOLID);
+    private final BossBar currentBroadcast = server.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
     // ensure that only one instance is present
     private final Runnable timeoutRunnable = new Runnable() {
         @Override
@@ -49,10 +49,10 @@ public class HanBossBar extends HalfminerHandler implements Reloadable {
         currentBroadcast.setStyle(style);
         currentBroadcast.setProgress(progression);
 
-        for (Player online : hms.getServer().getOnlinePlayers()) currentBroadcast.addPlayer(online);
+        for (Player online : server.getOnlinePlayers()) currentBroadcast.addPlayer(online);
 
         if (timeoutCall != null) timeoutCall.cancel();
-        timeoutCall = hms.getServer().getScheduler().runTaskLater(hms, timeoutRunnable, timeout * 20);
+        timeoutCall = scheduler.runTaskLater(hms, timeoutRunnable, timeout * 20);
     }
 
     /**
@@ -86,7 +86,7 @@ public class HanBossBar extends HalfminerHandler implements Reloadable {
             bar.setTitle(text);
             bar.setColor(color);
             bar.setStyle(style);
-        } else bar = hms.getServer().createBossBar(text, color, style);
+        } else bar = server.createBossBar(text, color, style);
 
         bar.setProgress(progression);
         bar.addPlayer(player);
@@ -94,7 +94,7 @@ public class HanBossBar extends HalfminerHandler implements Reloadable {
         final long currentTime = System.currentTimeMillis();
         currentBar.put(player, new Pair<>(bar, currentTime));
 
-        hms.getServer().getScheduler().runTaskLater(hms, new Runnable() {
+        scheduler.runTaskLater(hms, new Runnable() {
 
             @Override
             public void run() {

@@ -48,7 +48,7 @@ public class HanTitles extends HalfminerHandler {
 
         if (player == null) {
 
-            for (Player sendTo : hms.getServer().getOnlinePlayers()) {
+            for (Player sendTo : server.getOnlinePlayers()) {
                 sendTitlePackets(sendTo, topTitle, subTitle, fadeIn, stay, fadeOut);
             }
 
@@ -68,7 +68,7 @@ public class HanTitles extends HalfminerHandler {
         String send = ChatColor.translateAlternateColorCodes('&', message);
         if (player == null) {
 
-            for (Player sendTo : hms.getServer().getOnlinePlayers()) sendActionBarPacket(sendTo, send);
+            for (Player sendTo : server.getOnlinePlayers()) sendActionBarPacket(sendTo, send);
         } else {
 
             sendActionBarPacket(player, send);

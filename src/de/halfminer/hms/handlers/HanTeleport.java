@@ -52,7 +52,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
         }
 
         player.sendMessage(Language.placeholderReplace(lang.get("start"), "%TIME%", String.valueOf(delay)) );
-        currentTeleport.put(player, hms.getServer().getScheduler().runTaskTimer(hms, tp, 20L, 20L).getTaskId());
+        currentTeleport.put(player, scheduler.runTaskTimer(hms, tp, 20L, 20L).getTaskId());
     }
 
     public boolean hasPendingTeleport(Player player, boolean tellPlayer) {
@@ -125,18 +125,18 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             boolean teleportSuccessful = player.teleport(location);
             cancelTask(teleportSuccessful);
 
-            if (toRun != null && teleportSuccessful) hms.getServer().getScheduler().runTaskLater(hms, toRun, 1L);
+            if (toRun != null && teleportSuccessful) scheduler.runTaskLater(hms, toRun, 1L);
         }
 
         private void cancelTask(boolean teleportSuccessful) {
 
             if (currentTeleport.containsKey(player)) {
-                hms.getServer().getScheduler().cancelTask(currentTeleport.get(player));
+                scheduler.cancelTask(currentTeleport.get(player));
                 currentTeleport.remove(player);
             }
 
             if (toRunIfCancelled != null && !teleportSuccessful)
-                hms.getServer().getScheduler().runTaskLater(hms, toRunIfCancelled, 1L);
+                scheduler.runTaskLater(hms, toRunIfCancelled, 1L);
         }
     }
 }
