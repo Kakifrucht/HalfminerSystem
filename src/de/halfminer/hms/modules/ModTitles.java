@@ -108,12 +108,12 @@ public class ModTitles extends HalfminerModule implements Listener {
             balance = Math.round(balance * 100.0d) / 100.0d;
         } catch (UserDoesNotExistException e) {
             // This occurs if player joins for the first time, update it with small delay
-            scheduler.scheduleSyncDelayedTask(hms, new Runnable() {
+            scheduler.runTaskLater(hms, new Runnable() {
                 @Override
                 public void run() {
                     updateBalance(player);
                 }
-            }, 2);
+            }, 2L);
         }
 
         balances.put(player, balance);
