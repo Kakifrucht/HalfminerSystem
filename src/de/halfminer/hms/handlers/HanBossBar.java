@@ -1,5 +1,6 @@
 package de.halfminer.hms.handlers;
 
+import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -17,7 +18,7 @@ import java.util.Map;
  * - Broadcast bar to all players (besides player specific one)
  */
 @SuppressWarnings("SameParameterValue")
-public class HanBossBar extends HalfminerHandler {
+public class HanBossBar extends HalfminerHandler implements Disableable {
 
     // ensure that only one instance of broadcast bar is present
     private final BossBar broadcastBar = server.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
@@ -172,5 +173,11 @@ public class HanBossBar extends HalfminerHandler {
 
         toReturn.addPlayer(player);
         return toReturn;
+    }
+
+    @Override
+    public void onDisable() {
+        broadcastBar.removeAll();
+        for (Pair<BossBar, BukkitTask> pair : currentBar.values()) pair.getLeft().removeAll();
     }
 }
