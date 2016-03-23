@@ -1,6 +1,5 @@
 package de.halfminer.hms.handlers;
 
-import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -18,54 +17,96 @@ import java.util.Map;
  * - Broadcast bar to all players (besides player specific one)
  */
 @SuppressWarnings("SameParameterValue")
-public class HanBossBar extends HalfminerHandler implements Reloadable {
+public class HanBossBar extends HalfminerHandler {
 
-    private final BossBar currentBroadcast = server.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
-    // ensure that only one instance is present
-    private final Runnable timeoutRunnable = new Runnable() {
+    // ensure that only one instance of broadcast bar is present
+    private final BossBar broadcastBar = server.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
+    private final Runnable removalRunnable = new Runnable() {
         @Override
         public void run() {
             removeBroadcastBar();
         }
     };
-    private BukkitTask timeoutCall;
-    private Map<Player, Pair<BossBar, Long>> currentBar;
+    private BukkitTask broadcastRemoveTask;
+
+    private Map<Player, Pair<BossBar, BukkitTask>> currentBar = new HashMap<>();
 
     /**
-     * Broadcast the bossbar to every player. There can only be one broadcast bossbar at a time, in order to ensure
-     * that it will be removed you can specify a timeout, which will ensure that after the last update and the timeout
-     * in seconds every player will be removed from the public broadcast. Caller should also call removeBroadcastBar()
-     * to remove the bar after it will no longer be used.
+     * Broadcast the bossbar to every player. There can only be one broadcast bossbar at a time.
+     * The progression is proportional to the time left.
      * @param text String that will be displayed
      * @param color Color that the bar will be in
      * @param style Style that the bar will be in
-     * @param timeout Int in seconds until the bar will be removed for sure
-     * @param progression double in percent, how filled should the bar be
+     * @param time Int in seconds until the bar will be removed
      */
-    public void broadcastBar(String text, BarColor color, BarStyle style, int timeout, double progression) {
+    public void broadcastBar(final String text, final BarColor color, final BarStyle style, final int time) {
 
-        currentBroadcast.setTitle(text);
-        currentBroadcast.setColor(color);
-        currentBroadcast.setStyle(style);
-        currentBroadcast.setProgress(progression);
+        setBroadcastBar(text, color, style, 1.0d);
 
-        for (Player online : server.getOnlinePlayers()) currentBroadcast.addPlayer(online);
+        if (broadcastRemoveTask != null) broadcastRemoveTask.cancel();
+        broadcastRemoveTask = scheduler.runTaskTimer(hms, new Runnable() {
 
-        if (timeoutCall != null) timeoutCall.cancel();
-        timeoutCall = scheduler.runTaskLater(hms, timeoutRunnable, timeout * 20);
+            int timeLeft = time;
+
+            @Override
+            public void run() {
+
+                broadcastBar.setProgress((double) timeLeft / time);
+                if (timeLeft-- < 0) removeBroadcastBar();
+            }
+        }, 0L, 20L);
     }
 
     /**
-     * Removes the broadcasted bar from display, also cancelling the timeout, if still active. Should be called
-     * manually after a bar has been broadcasted, will also be called after the specified timeout.
+     * Broadcast the bossbar to every player. There can only be one broadcast bossbar at a time.
+     * @param text String that will be displayed
+     * @param color Color that the bar will be in
+     * @param style Style that the bar will be in
+     * @param time Int in seconds until the bar will be removed
+     * @param progression amount of progress between 0.00 and 1.00
+     */
+    public void broadcastBar(final String text, final BarColor color, final BarStyle style, final int time, double progression) {
+
+        setBroadcastBar(text, color, style, progression);
+
+        if (broadcastRemoveTask != null) broadcastRemoveTask.cancel();
+        broadcastRemoveTask = scheduler.runTaskLater(hms, removalRunnable, 20 * time);
+    }
+
+    private void setBroadcastBar(String text, BarColor color, BarStyle style, double progression) {
+        broadcastBar.setTitle(text);
+        broadcastBar.setColor(color);
+        broadcastBar.setStyle(style);
+        broadcastBar.setProgress(progression);
+        for (Player online : server.getOnlinePlayers()) broadcastBar.addPlayer(online);
+    }
+
+    /**
+     * Removes the broadcasted bar immediately
      */
     public void removeBroadcastBar() {
 
-        currentBroadcast.removeAll();
-        if (timeoutCall != null) {
-            timeoutCall.cancel();
-            timeoutCall = null;
+        broadcastBar.removeAll();
+        if (broadcastRemoveTask != null) {
+            broadcastRemoveTask.cancel();
+            broadcastRemoveTask = null;
         }
+    }
+
+    public void sendBar(final Player player, String text, BarColor color, BarStyle style, final int time) {
+
+        final BossBar bar = getBar(player, text, color, style);
+
+        final BukkitTask cancel = scheduler.runTaskTimer(hms, new Runnable() {
+            int currentTime = time;
+            @Override
+            public void run() {
+
+                bar.setProgress((double) currentTime / time);
+                if (currentTime-- < 0) removeBar(player);
+            }
+        }, 0L, 20L);
+        currentBar.put(player, new Pair<>(bar, cancel));
     }
 
     /**
@@ -78,40 +119,45 @@ public class HanBossBar extends HalfminerHandler implements Reloadable {
      * @param time in seconds the bar will be shown
      * @param progression double in percent, how filled should the bar be
      */
-    public void showBar(final Player player, String text, BarColor color, BarStyle style, int time, final double progression) {
+    public void sendBar(final Player player, String text, BarColor color, BarStyle style, int time, final double progression) {
 
-        final BossBar bar;
-        if (currentBar.containsKey(player)) {
-            bar = currentBar.get(player).getLeft();
-            bar.setTitle(text);
-            bar.setColor(color);
-            bar.setStyle(style);
-        } else bar = server.createBossBar(text, color, style);
+        final BossBar bar = getBar(player, text, color, style);
 
         bar.setProgress(progression);
-        bar.addPlayer(player);
 
-        final long currentTime = System.currentTimeMillis();
-        currentBar.put(player, new Pair<>(bar, currentTime));
-
-        scheduler.runTaskLater(hms, new Runnable() {
+        BukkitTask remove = scheduler.runTaskLater(hms, new Runnable() {
 
             @Override
             public void run() {
-
-                if (currentBar.containsKey(player) && currentBar.get(player).getRight() == currentTime) {
-
-                    bar.removeAll();
-                    currentBar.remove(player);
-                }
+                    removeBar(player);
             }
         }, time * 20);
+        currentBar.put(player, new Pair<>(bar, remove));
     }
 
-    @Override
-    public void reloadConfig() {
+    private BossBar getBar(Player player, String text, BarColor color, BarStyle style) {
 
-        if (currentBar != null) for (Pair<BossBar, Long> barPair : currentBar.values()) barPair.getLeft().removeAll();
-        currentBar = new HashMap<>();
+        BossBar toReturn;
+        if (currentBar.containsKey(player)) {
+
+            toReturn = currentBar.get(player).getLeft();
+            toReturn.setTitle(text);
+            toReturn.setColor(color);
+            toReturn.setStyle(style);
+            currentBar.get(player).getRight().cancel();
+        } else toReturn = server.createBossBar(text, color, style);
+
+        toReturn.addPlayer(player);
+        return toReturn;
+    }
+
+    private void removeBar(Player player) {
+
+        if (currentBar.containsKey(player)) {
+            Pair<BossBar, BukkitTask> pair = currentBar.get(player);
+            pair.getLeft().removeAll();
+            pair.getRight().cancel();
+            currentBar.remove(player);
+        }
     }
 }

@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitTask;
 public class Cmdchat extends HalfminerCommand {
 
     private final HanTitles titles = (HanTitles) hms.getHandler(HandlerType.TITLES);
+    private final HanBossBar bossBar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
     private CommandSender sender;
     private String message;
 
@@ -109,7 +110,9 @@ public class Cmdchat extends HalfminerCommand {
 
                 if (verifyMessage()) {
 
-                    if (args[0].equalsIgnoreCase("title")) {
+                    if (args[0].equalsIgnoreCase("title") || (args[0].equalsIgnoreCase("bossbar"))) {
+
+                        boolean useBossbar = args[0].equalsIgnoreCase("bossbar");
 
                         int time = 1;
                         Player sendTo = null;
@@ -118,6 +121,7 @@ public class Cmdchat extends HalfminerCommand {
 
                             try {
                                 time = Integer.decode(args[1]);
+                                if (time < 1) time = 1;
                             } catch (NumberFormatException e) {
                                 time = 1;
                             }
@@ -125,14 +129,33 @@ public class Cmdchat extends HalfminerCommand {
                             if (args.length > 2) sendTo = server.getPlayer(args[2]);
                         }
 
-                        String sendToString;
-                        if (sendTo == null) sendToString = Language.getMessage("commandChatAll");
-                        else sendToString = sendTo.getName();
+                        String recipientName;
+                        if (sendTo == null) recipientName = Language.getMessage("commandChatAll");
+                        else recipientName = sendTo.getName();
 
-                        sender.sendMessage(Language.getMessagePlaceholders("commandChatTitle", true, "%PREFIX%", "Chat",
-                                "%SENDTO%", sendToString, "%TIME%", String.valueOf(time), "%MESSAGE%", message));
+                        String notifySender = useBossbar ? "commandChatBossbar" : "commandChatTitle";
 
-                        titles.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
+                        sender.sendMessage(Language.getMessagePlaceholders(notifySender, true, "%PREFIX%", "Chat",
+                                "%SENDTO%", recipientName, "%TIME%", String.valueOf(time), "%MESSAGE%", message));
+
+                        if (useBossbar) {
+
+                            BarColor color = BarColor.PURPLE;
+                            int potentialColor = 3;
+                            if (sendTo == null) potentialColor = 2;
+                            if (args.length > potentialColor) {
+                                for (BarColor colors : BarColor.values()) {
+                                    if (colors.toString().equalsIgnoreCase(args[potentialColor])) {
+                                        color = colors;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (sendTo != null) bossBar.sendBar(sendTo, message, color, BarStyle.SOLID, time);
+                            else bossBar.broadcastBar(message, color, BarStyle.SOLID, time);
+
+                        } else titles.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
 
                     } else if (args[0].equalsIgnoreCase("news")) {
 
@@ -229,5 +252,4 @@ public class Cmdchat extends HalfminerCommand {
     private void showUsage() {
         sender.sendMessage(Language.getMessagePlaceholders("commandChatUsage", true, "%PREFIX%", "Chat"));
     }
-
 }
