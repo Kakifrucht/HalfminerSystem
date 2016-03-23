@@ -54,14 +54,17 @@ public class ModTitles extends HalfminerModule implements Listener {
 
             titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("joinformat"),
                     "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
-            
-            scheduler.runTaskLater(hms, new Runnable() {
-                @Override
-                public void run() {
-                    bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
-                            "%NEWS%", storage.getString("sys.news")), BarColor.YELLOW, BarStyle.SOLID, 20);
-                }
-            }, 120);
+
+            final String news = storage.getString("sys.news");
+            if (news.length() > 0) {
+                scheduler.runTaskLater(hms, new Runnable() {
+                    @Override
+                    public void run() {
+                        bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
+                                "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 20);
+                    }
+                }, 120);
+            }
         }
     }
 

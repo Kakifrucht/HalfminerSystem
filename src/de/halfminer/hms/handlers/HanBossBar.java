@@ -13,9 +13,9 @@ import java.util.Map;
 
 /**
  * Handler to send bossbar messages
- * - Set time until fade out
- * - Only show one bar at a time (player specific)
- * - Broadcast bar to all players (besides player specific one)
+ * - Send bar to specific player or broadcast
+ * - Set time until bar fades out
+ * - Broadcast bar and player bar seperate, only one at a time of each
  */
 @SuppressWarnings("SameParameterValue")
 public class HanBossBar extends HalfminerHandler implements Disableable {
