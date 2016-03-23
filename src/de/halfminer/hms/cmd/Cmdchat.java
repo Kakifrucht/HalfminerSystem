@@ -79,7 +79,7 @@ public class Cmdchat extends HalfminerCommand {
                         public void run() {
 
                             task.cancel();
-                            bar.removeBroadcastBar();
+                            bar.removeBar();
                         }
                     }, 20 * (countdown + 4));
                 }

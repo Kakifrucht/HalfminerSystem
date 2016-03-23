@@ -24,7 +24,7 @@ public class HanBossBar extends HalfminerHandler {
     private final Runnable removalRunnable = new Runnable() {
         @Override
         public void run() {
-            removeBroadcastBar();
+            removeBar();
         }
     };
     private BukkitTask broadcastRemoveTask;
@@ -52,7 +52,7 @@ public class HanBossBar extends HalfminerHandler {
             public void run() {
 
                 broadcastBar.setProgress((double) timeLeft / time);
-                if (timeLeft-- < 0) removeBroadcastBar();
+                if (timeLeft-- < 0) removeBar();
             }
         }, 0L, 20L);
     }
@@ -82,9 +82,9 @@ public class HanBossBar extends HalfminerHandler {
     }
 
     /**
-     * Removes the broadcasted bar immediately
+     * Removes the broadcasted bar
      */
-    public void removeBroadcastBar() {
+    public void removeBar() {
 
         broadcastBar.removeAll();
         if (broadcastRemoveTask != null) {
@@ -93,6 +93,15 @@ public class HanBossBar extends HalfminerHandler {
         }
     }
 
+    /**
+     * Shows a bossbar to one player only. A player can only see one bar at a time. If a bar is still active, it will
+     * update the already shown one instead of creating a new one, to also show the bossbar animation.
+     * @param player to show the bar to
+     * @param text string that will be shown
+     * @param color Color that the bar will be in
+     * @param style Style that the bar will be in
+     * @param time in seconds the bar will be shown
+     */
     public void sendBar(final Player player, String text, BarColor color, BarStyle style, final int time) {
 
         final BossBar bar = getBar(player, text, color, style);
@@ -135,6 +144,20 @@ public class HanBossBar extends HalfminerHandler {
         currentBar.put(player, new Pair<>(bar, remove));
     }
 
+    /**
+     * Remove a players bar
+     * @param player player to remove private bossbar
+     */
+    public void removeBar(Player player) {
+
+        if (currentBar.containsKey(player)) {
+            Pair<BossBar, BukkitTask> pair = currentBar.get(player);
+            pair.getLeft().removeAll();
+            pair.getRight().cancel();
+            currentBar.remove(player);
+        }
+    }
+
     private BossBar getBar(Player player, String text, BarColor color, BarStyle style) {
 
         BossBar toReturn;
@@ -149,15 +172,5 @@ public class HanBossBar extends HalfminerHandler {
 
         toReturn.addPlayer(player);
         return toReturn;
-    }
-
-    private void removeBar(Player player) {
-
-        if (currentBar.containsKey(player)) {
-            Pair<BossBar, BukkitTask> pair = currentBar.get(player);
-            pair.getLeft().removeAll();
-            pair.getRight().cancel();
-            currentBar.remove(player);
-        }
     }
 }

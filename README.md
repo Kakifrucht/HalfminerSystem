@@ -23,6 +23,7 @@ Current features
   - Teleport
     - Disallows movement
     - Change default time in config
+    - Show bossbar during teleport
     - Stops when player taking damage
     - Execute runnable after successful (or unsuccessful) teleport
     - Only one teleport at a time
