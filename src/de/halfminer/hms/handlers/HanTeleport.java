@@ -9,6 +9,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
     private final Map<String, String> lang = new HashMap<>();
     private int defaultTime;
 
-    private final Map<Player, Integer> currentTeleport = new HashMap<>();
+    private final Map<Player, BukkitTask> currentTeleport = new HashMap<>();
 
     public void startTeleport(Player player, Location loc) {
         startTeleport(player, loc, defaultTime, null, null);
@@ -56,8 +57,8 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
         }
 
         player.sendMessage(Language.placeholderReplace(lang.get("start"), "%TIME%", String.valueOf(delay)));
-        currentTeleport.put(player, scheduler.runTaskTimer(hms, tp, 20L, 20L).getTaskId());
         bar.sendBar(player, lang.get("startbar"), BarColor.YELLOW, BarStyle.SOLID, delay);
+        currentTeleport.put(player, scheduler.runTaskTimer(hms, tp, 25L, 20L));
     }
 
     public boolean hasPendingTeleport(Player player, boolean tellPlayer) {
@@ -137,7 +138,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
         private void cancelTask(boolean teleportSuccessful) {
 
             if (currentTeleport.containsKey(player)) {
-                scheduler.cancelTask(currentTeleport.get(player));
+                currentTeleport.get(player).cancel();
                 currentTeleport.remove(player);
             }
 
