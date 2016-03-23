@@ -16,8 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
 @SuppressWarnings("unused")
 public class Cmdchat extends HalfminerCommand {
 
-    private final HanTitles titles = (HanTitles) hms.getHandler(HandlerType.TITLES);
-    private final HanBossBar bossBar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
+    private final HanBossBar bossBar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
     private CommandSender sender;
     private String message;
 
@@ -56,7 +55,7 @@ public class Cmdchat extends HalfminerCommand {
                     sender.sendMessage(Language.getMessagePlaceholders("commandChatCountdownStarted", true, "%PREFIX%",
                             "Chat", "%COUNT%", String.valueOf(countdown)));
 
-                    final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
+                    final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
                     final BukkitTask task = scheduler.runTaskTimer(hms, new Runnable() {
 
                         int count = countdown;
@@ -155,15 +154,16 @@ public class Cmdchat extends HalfminerCommand {
                             if (sendTo != null) bossBar.sendBar(sendTo, message, color, BarStyle.SOLID, time);
                             else bossBar.broadcastBar(message, color, BarStyle.SOLID, time);
 
-                        } else titles.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
+                        } else ((HanTitles) hms.getHandler(HandlerType.TITLES))
+                                .sendTitle(sendTo, message, 10, time * 20 - 20, 10);
 
                     } else if (args[0].equalsIgnoreCase("news")) {
 
                         storage.set("sys.news", message);
                         hms.getModule(ModuleType.MOTD).reloadConfig();
                         if (sender instanceof Player) {
-                            titles.sendTitle((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
-                                    false, "%NEWS%", message), 40, 180, 40);
+                            bossBar.sendBar((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
+                                    false, "%NEWS%", message), BarColor.YELLOW, BarStyle.SOLID, 5);
                         }
                         sender.sendMessage(Language.getMessagePlaceholders("commandChatNewsSetTo", true,
                                 "%PREFIX%", "Chat"));

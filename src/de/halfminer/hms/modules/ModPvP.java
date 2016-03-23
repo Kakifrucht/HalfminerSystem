@@ -168,11 +168,11 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             deathStreaks.put(victimUid, victimStreak);
 
             if (killerStreak > 4) {
-                titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modTitlesKillStreak", false,
+                titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPKillStreak", false,
                         "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(killerStreak)));
             }
             if (victimStreak > 4) {
-                titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modTitlesDeathStreak", false,
+                titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPDeathStreak", false,
                         "%PLAYER%", victim.getName(), "%STREAK%", String.valueOf(victimStreak)));
             }
         }

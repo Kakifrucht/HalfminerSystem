@@ -3,9 +3,12 @@ package de.halfminer.hms.modules;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.StatsType;
+import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import net.ess3.api.events.UserBalanceUpdateEvent;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,7 +30,9 @@ import java.util.Map;
 public class ModTitles extends HalfminerModule implements Listener {
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
+    private final HanBossBar bossbarHandler = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
 
+    private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, Double> balances = new HashMap<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -41,26 +46,22 @@ public class ModTitles extends HalfminerModule implements Listener {
 
         // Show join titles / news
         if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
-            titleHandler.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewPlayerFormat", false,
+            titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("newplayer"),
                     "%PLAYER%", joined.getName()), 10, 200, 10);
+            bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("newplayerbar"),
+                    "%PLAYER%", joined.getName()), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
         } else {
+
+            titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("joinformat"),
+                    "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
             
-            scheduler.runTaskAsynchronously(hms, new Runnable() {
+            scheduler.runTaskLater(hms, new Runnable() {
                 @Override
                 public void run() {
-                    titleHandler.sendTitle(joined, Language.getMessagePlaceholders("modTitlesJoinFormat", false,
-                            "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
-
-                    try {
-                        Thread.sleep(6000L);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-
-                    titleHandler.sendTitle(joined, Language.getMessagePlaceholders("modTitlesNewsFormat",
-                            false, "%NEWS%", storage.getString("sys.news")), 40, 120, 40);
+                    bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
+                            "%NEWS%", storage.getString("sys.news")), BarColor.YELLOW, BarStyle.SOLID, 20);
                 }
-            });
+            }, 120);
         }
     }
 
@@ -90,8 +91,8 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private void updateTablist(Player player) {
 
-        titleHandler.setTablistHeaderFooter(player, Language.getMessagePlaceholders("modTitlesTablist",
-                false, "%BALANCE%", String.valueOf(balances.get(player)), "%PLAYERCOUNT%", getPlayercountString()));
+        titleHandler.setTablistHeaderFooter(player, Language.placeholderReplace(lang.get("tablist"),
+                "%BALANCE%", String.valueOf(balances.get(player)), "%PLAYERCOUNT%", getPlayercountString()));
     }
 
     private double updateBalance(final Player player) {
@@ -128,6 +129,11 @@ public class ModTitles extends HalfminerModule implements Listener {
     @Override
     public void reloadConfig() {
 
+        lang.put("newplayer", Language.getMessage("modTitlesNewPlayerFormat"));
+        lang.put("newplayerbar", Language.getMessage("modTitlesNewPlayerFormatBar"));
+        lang.put("joinformat", Language.getMessage("modTitlesJoinFormat"));
+        lang.put("news", Language.getMessage("modTitlesNewsFormat"));
+        lang.put("tablist", Language.getMessage("modTitlesTablist"));
         for (Player p : server.getOnlinePlayers()) updateBalance(p);
     }
 }
