@@ -131,7 +131,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             boolean teleportSuccessful = player.teleport(location);
             cancelTask(teleportSuccessful);
 
-            if (toRun != null && teleportSuccessful) scheduler.runTaskLater(hms, toRun, 1L);
+            if (toRun != null && teleportSuccessful) scheduler.runTaskLater(hms, toRun, 0L);
         }
 
         private void cancelTask(boolean teleportSuccessful) {

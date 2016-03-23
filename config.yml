@@ -10,6 +10,7 @@ localization:
   hanStorageSaveSuccessful: 'Die Daten wurden gespeichert'
   hanStorageSaveUnsuccessful: 'Die Daten konnten nicht gespeichert werden'
   hanTeleportStart: '&7Bewege dich nicht, der Teleport startet in &a%TIME% &7Sekunden'
+  hanTeleportOthers: '&e%PLAYER% &7wurde teleportiert'
   hanTeleportBar: 'Teleport im Gange, bleibe still stehen...'
   hanTeleportPending: '&cDu hast bereits einen offenen Teleport, bitte warte'
   hanTeleportMoved: '&cTeleport abgebrochen, du hast dich bewegt'

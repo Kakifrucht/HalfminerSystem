@@ -33,7 +33,11 @@ public class Cmdspawn extends HalfminerCommand {
             } else if (sender.hasPermission("hms.spawn.others")) {
 
                 Player toTeleport = server.getPlayer(args[0]);
-                if (toTeleport != null) teleport(toTeleport, true);
+                if (toTeleport != null) {
+                    teleport(toTeleport, true);
+                    sender.sendMessage(Language.getMessagePlaceholders("hanTeleportOthers", true, "%PREFIX%", "Spawn",
+                            "%PLAYER%", toTeleport.getName()));
+                }
                 else sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", "Spawn"));
             } else teleport(sender, false);
         }
