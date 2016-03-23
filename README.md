@@ -12,9 +12,9 @@ Current features
   - To read players homes
 - **Handlers**
   - BossBar
-    - Set timeLeft until bar fades out
-    - Only show one bar at a timeLeft
-    - Broadcast bar to all players (besides player specific one)
+    - Send bar to specific player or broadcast
+    - Set time until bar fades out
+    - Broadcast bar and player bar seperate, only one at a time of each
   - Storage
     - Autosave
     - Flatfile in .yml format
@@ -22,10 +22,10 @@ Current features
     - Thread safe
   - Teleport
     - Disallows movement
-    - Change default timeLeft in config
+    - Change default time in config
     - Stops when player taking damage
     - Execute runnable after successful (or unsuccessful) teleport
-    - Only one teleport at a timeLeft
+    - Only one teleport at a time
   - Titles
     - Main title/subtitle
     - Actionbar title
@@ -33,7 +33,7 @@ Current features
 - **Modules**
   - AntiKillfarming
       - Blocks players, who repeatedly kill each other
-    - Dynamic system, to determine block timeLeft
+    - Dynamic system, to determine block time
   - AutoMessage
     - Sends messages in a given interval
     - Messages configurable
@@ -41,7 +41,7 @@ Current features
     - Tags players when hitting/being hit
     - Shows health and name of attacker/victim via BossBar
     - Combatlogging causes instant death
-    - Shows titles containing timeLeft left in fight
+    - Shows titles containing time left in fight
     - Untags players after timer runs out, player logs out or a player is killed
     - Disables during fight:
       - Switching armor
@@ -60,7 +60,7 @@ Current features
     - Limits redstone usage (configurable)
       - Redstone will not work if triggered to often
     - Limits piston usage
-      - Only a given amount of pistons can be triggered in a given timeLeft
+      - Only a given amount of pistons can be triggered in a given time
     - Limits hopper placement (configurable)
       - Checks radius, if too many hoppers denies placement
     - Limits mobspawns (configurable)
@@ -74,7 +74,7 @@ Current features
     - Remove some effects on teleport
   - Respawn
     - Respawns player at custom location
-    - Adds a first timeLeft join message or removes completely
+    - Adds a first time join message or removes completely
     - Execute custom command on first join
   - SignEdit
     - Allows editing of signs
