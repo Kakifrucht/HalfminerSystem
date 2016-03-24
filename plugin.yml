@@ -43,52 +43,55 @@ permissions:
   hms.*:
     description: Access to all permissions
     default: op
-    hms.default: true
-    hms.lag: true
-    hms.lag.others: true
-    hms.lag.notify: true
-    hms.moderator: true
-    hms.stats: true
-    hms.chat: true
-    hms.chat.advanced: true
-    hms.neutp: true
-    hms.home: true
-    hms.verkauf: true
-    hms.vote: true
-    hms.signedit: true
-    hms.spawn: true
-    hms.spawn.set: true
-    hms.spawn.others: true
-    hms.admin: true
-    hms.bypass.*: true
-    hms.level.*: true
+    children:
+      hms.default: true
+      hms.lag: true
+      hms.lag.others: true
+      hms.lag.notify: true
+      hms.moderator: true
+      hms.stats: true
+      hms.chat: true
+      hms.chat.advanced: true
+      hms.neutp: true
+      hms.home: true
+      hms.verkauf: true
+      hms.vote: true
+      hms.signedit: true
+      hms.spawn: true
+      hms.spawn.set: true
+      hms.spawn.others: true
+      hms.admin: true
+      hms.bypass.*: true
+      hms.level.*: true
   hms.bypass.*:
     description: Access to all bypass permission
     default: op
-    hms.bypass.combatlog: true
-    hms.bypass.capsfilter: true
-    hms.bypass.globalmute: true
-    hms.bypass.commandfilter: true
-    hms.bypass.hopperlimit: true
-    hms.bypass.bedrockcheck: true
-    hms.bypass.nethercheck: true
-    hms.bypass.nokillfarming: true
-    hms.bypass.skilllevel: true
-    hms.bypass.statsrightclick: true
-    hms.bypass.merchant: true
-    hms.bypass.teleporttimer: true
-    hms.bypass.teleportchecks: true
-    hms.bypass.pvp: true
+    children:
+      hms.bypass.combatlog: true
+      hms.bypass.capsfilter: true
+      hms.bypass.globalmute: true
+      hms.bypass.commandfilter: true
+      hms.bypass.hopperlimit: true
+      hms.bypass.bedrockcheck: true
+      hms.bypass.nethercheck: true
+      hms.bypass.nokillfarming: true
+      hms.bypass.skilllevel: true
+      hms.bypass.statsrightclick: true
+      hms.bypass.merchant: true
+      hms.bypass.teleporttimer: true
+      hms.bypass.teleportchecks: true
+      hms.bypass.pvp: true
   hms.level.*:
     description: Access to all commands restricted by level
     default: op
-    hms.level.0: true
-    hms.level.1: true
-    hms.level.2: true
-    hms.level.3: true
-    hms.level.4: true
-    hms.level.5: true
-    hms.level.6: true
+    children:
+      hms.level.0: true
+      hms.level.1: true
+      hms.level.2: true
+      hms.level.3: true
+      hms.level.4: true
+      hms.level.5: true
+      hms.level.6: true
   hms.default:
     default: true
     description: Default permission
