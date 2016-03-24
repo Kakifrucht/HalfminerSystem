@@ -1,5 +1,6 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
@@ -124,33 +125,36 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void interactShowStats(PlayerInteractEntityEvent e) {
 
-        if (e.getRightClicked() instanceof Player) {
-
-            Player clicker = e.getPlayer();
-            Player clicked = (Player) e.getRightClicked();
-            long currentTime = System.currentTimeMillis() / 1000;
-
-            if (lastInteract.containsKey(clicker)) {
-                Pair<Player, Long> data = lastInteract.get(clicker);
-                if (data.getLeft().equals(clicked) && currentTime < data.getRight()) return;
-            }
-
-            String message = Language.getMessagePlaceholders("modStatsRightClickExempt", true,
-                    "%PREFIX%", clicked.getName());
-
-            if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
-                String skillgroup = storage.getStatsString(clicked, StatsType.SKILL_GROUP);
-                String kills = String.valueOf(storage.getStatsInt(clicked, StatsType.KILLS));
-                String kdratio = String.valueOf(storage.getStatsDouble(clicked, StatsType.KD_RATIO));
-                message = Language.getMessagePlaceholders("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
-                        "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%KDRATIO%", kdratio);
-            }
-
-            e.getPlayer().sendMessage(message);
-
-            lastInteract.put(clicker, new Pair<>(clicked, currentTime + 6));
-            e.getPlayer().playSound(clicked.getLocation(), Sound.BLOCK_SLIME_HIT, 1.0f, 2.0f);
+        if (!(e.getRightClicked() instanceof Player)) {
+            return;
         }
+
+        Player clicker = e.getPlayer();
+        Player clicked = (Player) e.getRightClicked();
+        long currentTime = System.currentTimeMillis() / 1000;
+
+        if (((ModCombatLog) hms.getModule(ModuleType.COMBAT_LOG)).isTagged(clicker)) return;
+
+        if (lastInteract.containsKey(clicker)) {
+            Pair<Player, Long> data = lastInteract.get(clicker);
+            if (data.getLeft().equals(clicked) && currentTime < data.getRight()) return;
+        }
+
+        String message = Language.getMessagePlaceholders("modStatsRightClickExempt", true,
+                "%PREFIX%", clicked.getName());
+
+        if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
+            String skillgroup = storage.getStatsString(clicked, StatsType.SKILL_GROUP);
+            String kills = String.valueOf(storage.getStatsInt(clicked, StatsType.KILLS));
+            String kdratio = String.valueOf(storage.getStatsDouble(clicked, StatsType.KD_RATIO));
+            message = Language.getMessagePlaceholders("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
+                    "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%KDRATIO%", kdratio);
+        }
+
+        clicker.sendMessage(message);
+        clicker.playSound(clicked.getLocation(), Sound.BLOCK_SLIME_HIT, 1.0f, 2.0f);
+
+        lastInteract.put(clicker, new Pair<>(clicked, currentTime + 6));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

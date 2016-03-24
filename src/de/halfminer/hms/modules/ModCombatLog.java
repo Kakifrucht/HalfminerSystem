@@ -180,7 +180,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         tagged.remove(p);
     }
 
-    private boolean isTagged(Player p) {
+    public boolean isTagged(Player p) {
         return tagged.containsKey(p);
     }
 
