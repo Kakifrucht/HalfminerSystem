@@ -7,9 +7,6 @@ Current features
 -------
 - Modular, lightweight, efficient
 - Messages completely, functionality mostly configurable
-- Essentials hook
-  - For economy support
-  - To read players homes
 - **Handlers**
   - BossBar
     - Send bar to specific player or broadcast
@@ -38,6 +35,20 @@ Current features
   - AutoMessage
     - Sends messages in a given interval
     - Messages configurable
+  - ChatManager
+    - Hooks into Vault to get prefix and suffix
+    - Custom chatformats
+      - Default chatformat is bottom one
+      - Permissions can be assigned via custom permission node
+      - Permission to always get permission with highest priority
+    - Denies chatting if globalmute active
+    - Allows easy toggling of globalmute
+    - Plays sound on chat
+    - Disallow
+      - Using color codes
+      - Using formatting codes
+      - Posting links/IPs
+      - Writing capitalized
   - CombatLog
     - Tags players when hitting/being hit
     - Shows health and name of attacker/victim via BossBar
@@ -88,10 +99,6 @@ Current features
   - StaticListeners
     - Removes quit message
     - Disables some deals in villager trades
-    - Chatfilter
-      - Checks for globalmute (set via command /c globalmute)
-      - Plays sound on chat
-      - Filters capslock
     - Commandfilter
       - Disables commands in bed (teleport glitch)
       - Disables /pluginname:command for users (to improve commandblocks)
@@ -110,6 +117,7 @@ Current features
       - Shows news after delay
     - Displays information for new players
     - Tab titles containing amount of money and playercount
+    - Money through Essentials hook, automatic update
   - Tps
     - Calculates ticks per second
     - Notifies staff when servers Tps is too low
@@ -125,7 +133,7 @@ Current features
     - Set news and motd message
   - /hms
     - Reload config (reload)
-    - Search for homes in a given radius (searchhomes)
+    - Search for homes in a given radius, hooking into Essentials (searchhomes)
     - Rename items, supports lore (rename)
     - Ring players to get their attention (ring)
     - Edit skillelo of player (updateskill)

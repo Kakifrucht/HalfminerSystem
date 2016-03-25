@@ -65,9 +65,6 @@ localization:
   commandChatClearedLog: '%PLAYER% hat den Chat geleert'
   commandChatCountdownStarted: '&7Countdown fuer &e%COUNT% &7Sekunden gestartet'
   commandChatCountdown: 'Countdown: &2&l%COUNT%'
-  commandChatGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
-  commandChatGlobalmuteOff: '&eGlobale Stummschaltung deaktiviert'
-  commandChatGlobalmuteDenied: '&cDer Chat ist aktuell deaktiviert'
   commandChatMessageNotSet: '&cEs ist keine Nachricht gesetzt, verwende &f/c set [Nachricht]'
   commandChatNewsSetTo: '&aNachricht als News gesetzt'
   commandChatSend: '&7Deine Nachricht wurde an %SENDTO% versendet'
@@ -106,6 +103,9 @@ localization:
   modPerformanceReachedHopperLog: '%PLAYER% hat das Limit (%LIMIT%) bei %LOCATION% erreicht'
   modMotdLine: '%COLOR%Server\n&7%REPLACE%&7! (mc.halfminer.de)'
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps betraegt lediglich &e%TPS%'
+  modChatManGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
+  modChatManGlobalmuteOff: '&eGlobale Stummschaltung deaktiviert'
+  modChatManGlobalmuteDenied: '&cDer Chat ist aktuell deaktiviert'
   modCombatLogBossBar: '&7Kampf mit &a&l%PLAYER% &r- &4%HEALTH%&f/&7%MAXHEALTH% &oLeben'
   modCombatLogCountdown: '&cIm Kampf: &e%TIME% &7Sekunden | &r%PROGRESSBAR%&r &7| Ausloggen: Tod'
   modCombatLogProgressSymbols: '-'
@@ -171,6 +171,12 @@ autoMessage:
   intervalSeconds: 240
   messages:
   - 'Set messages here'
+chat:
+  #Add formats to the list, you need the permission node hms.chat.format.name
+  #hms.chat.topformat always grants top format (which has highest priority)
+  formats:
+  - 'owner:%PREFIX% &r- &l%PLAYER%%SUFFIX%: &7%MESSAGE%'
+  - 'default:%PREFIX% &r- %PLAYER%: &7%MESSAGE%'
 killfarming:
   #Time in seconds the primary block will be, this doubles every block
   blockTime: 300

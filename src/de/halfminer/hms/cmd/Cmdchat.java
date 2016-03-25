@@ -4,6 +4,7 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTitles;
+import de.halfminer.hms.modules.ModChatManager;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -86,16 +87,7 @@ public class Cmdchat extends HalfminerCommand {
 
             } else if (args[0].equalsIgnoreCase("globalmute")) {
 
-                boolean active = storage.getBoolean("sys.globalmute");
-                storage.set("sys.globalmute", !active);
-
-                if (active) {
-                    server.broadcast(Language.getMessagePlaceholders("commandChatGlobalmuteOff",
-                            true, "%PREFIX%", "Globalmute"), "hms.default");
-                } else {
-                    server.broadcast(Language.getMessagePlaceholders("commandChatGlobalmuteOn",
-                            true, "%PREFIX%", "Globalmute"), "hms.default");
-                }
+                ((ModChatManager) hms.getModule(ModuleType.CHAT_MANAGER)).toggleGlobalmute();
 
             } else if (args[0].equalsIgnoreCase("set") && args.length > 1){
 

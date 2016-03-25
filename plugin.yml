@@ -1,11 +1,11 @@
 name: HalfminerSystem
-version: 3.9.3
+version: 3.10.1
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
 
 main: de.halfminer.hms.HalfminerSystem
-depend: [Essentials]
+depend: [Essentials, Vault]
 
 commands:
   ?:
@@ -62,14 +62,13 @@ permissions:
       hms.spawn.others: true
       hms.admin: true
       hms.bypass.*: true
+      hms.chat.*: true
       hms.level.*: true
   hms.bypass.*:
     description: Access to all bypass permission
     default: op
     children:
       hms.bypass.combatlog: true
-      hms.bypass.capsfilter: true
-      hms.bypass.globalmute: true
       hms.bypass.commandfilter: true
       hms.bypass.hopperlimit: true
       hms.bypass.bedrockcheck: true
@@ -81,6 +80,16 @@ permissions:
       hms.bypass.teleporttimer: true
       hms.bypass.teleportchecks: true
       hms.bypass.pvp: true
+  hms.chat.*:
+    description: Access to all chat manager related permissions (not the command)
+    default: op
+    children:
+      hms.chat.allowcaps: true
+      hms.chat.allowcolor: true
+      hms.chat.allowformatcode: true
+      hms.chat.allowlinks: true
+      hms.chat.bypassglobalmute: true
+      hms.chat.topformat: true
   hms.level.*:
     description: Access to all commands restricted by level
     default: op
@@ -114,6 +123,16 @@ permissions:
     description: Access to chat clearing command
   hms.chat.advanced:
     description: Access to advanced chat manipulation
+  hms.chat.allowcaps:
+    description: Stops filtering capitalised messages
+  hms.chat.allowcolor:
+    description: Access to color codes in chat
+  hms.chat.allowformatcode:
+    description: Access to format codes in chat
+  hms.chat.allowlinks:
+    description: Allows posting links
+  hms.chat.topformat:
+    description: Gives user format with highest priority
   hms.lag:
     description: Access to lag command
   hms.lag.others:
@@ -135,10 +154,6 @@ permissions:
     description: Access to moderative commands
   hms.bypass.combatlog:
     description: Bypass combat logging
-  hms.bypass.capsfilter:
-    description: Bypass chat caps filter
-  hms.bypass.globalmute:
-    description: Bypass globalmute
   hms.bypass.commandfilter:
     description: Bypass chat command filter
   hms.bypass.hopperlimit:
