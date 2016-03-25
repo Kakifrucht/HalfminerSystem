@@ -41,43 +41,45 @@ public class Cmdverkauf extends HalfminerCommand {
         if (args.length > 0) {
 
             switch (args[0].toLowerCase()) {
-                case "cactus":
-                    toBeSold = Material.CACTUS;
-                    break;
-                case "wheat":
-                    toBeSold = Material.WHEAT;
-                    break;
-                case "pumpkin":
-                    toBeSold = Material.PUMPKIN;
+                case "beetroot":
+                    toBeSold = Material.BEETROOT;
                     break;
                 case "brownmushroom":
                     toBeSold = Material.BROWN_MUSHROOM;
                     break;
-                case "redmushroom":
-                    toBeSold = Material.RED_MUSHROOM;
+                case "cactus":
+                    toBeSold = Material.CACTUS;
                     break;
-                case "melon":
-                    toBeSold = Material.MELON;
+                case "carrot":
+                    toBeSold = Material.CARROT_ITEM;
                     break;
                 case "cocoa":
                     toBeSold = Material.INK_SACK;
                     toBeSoldId = 3;
                     break;
-                case "potato":
-                    toBeSold = Material.POTATO_ITEM;
-                    break;
-                case "carrot":
-                    toBeSold = Material.CARROT_ITEM;
-                    break;
-                case "sugarcane":
-                    toBeSold = Material.SUGAR_CANE;
+                case "melon":
+                    toBeSold = Material.MELON;
                     break;
                 case "netherwart":
                     toBeSold = Material.NETHER_STALK;
                     break;
+                case "potato":
+                    toBeSold = Material.POTATO_ITEM;
+                    break;
+                case "pumpkin":
+                    toBeSold = Material.PUMPKIN;
+                    break;
+                case "redmushroom":
+                    toBeSold = Material.RED_MUSHROOM;
+                    break;
+                case "sugarcane":
+                    toBeSold = Material.SUGAR_CANE;
+                    break;
+                case "wheat":
+                    toBeSold = Material.WHEAT;
+                    break;
                 default:
                     toBeSold = null;
-                    break;
             }
 
             if (toBeSold != null) sellLoop();

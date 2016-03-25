@@ -138,7 +138,7 @@ permissions:
   hms.lag.others:
     description: View the latency of other players
   hms.lag.notify:
-      description: Sends lag notifications to admin
+    description: Sends lag notifications to admin
   hms.spawn:
     default: true
     description: Access to spawn command

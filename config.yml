@@ -71,7 +71,7 @@ localization:
   commandChatMessageSet: '&aNachricht gesetzt zu:&r\n%MESSAGE%'
   commandChatTitle: '&7Titel an &e%SENDTO% &7fuer &a%TIME% Sekunden &7versendet, Nachricht: &r%MESSAGE%'
   commandChatBossbar: '&7Bossbar an &e%SENDTO% &7fuer &a%TIME% Sekunden &7versendet, Nachricht: &r%MESSAGE%'
-  commandVerkaufUsage: '&cVerwendung: &f/verkauf <cactus|wheat|pumpkin|brownmushroom|redmushroom|melon|cocoa|potato|carrot|sugarcane|netherwart>'
+  commandVerkaufUsage: '&cVerwendung: &f/verkauf <beetroot|brownmushroom|cactus|carrot|cocoa|melon|netherwart|potato|pumpkin|redmushroom|sugarcane|wheat>'
   commandVerkaufSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7fuer &a%MONEY% HCs &7verkauft'
   commandVerkaufSuccessLog: 'Verkauf: %PLAYER% hat %AMOUNT% %MATERIAL% fuer %MONEY% HCs verkauft'
   commandVerkaufNotInInv: '&cDu hast kein &e%MATERIAL% &cin deinem Inventar'
@@ -143,17 +143,18 @@ command:
     boundMax: 10000
   verkauf:
     #Base amount for 1 HalfCoin
-    cactus: 110
-    wheat: 25
-    pumpkin: 40
+    beetroot: 30
     brownmushroom: 20
-    redmushroom: 30
-    melon: 110
-    cocoa: 45
-    potato: 30
+    cactus: 110
     carrot: 30
-    sugarcane: 55
+    cocoa: 45
+    melon: 110
     netherwart: 40
+    potato: 30
+    pumpkin: 40
+    redmushroom: 30
+    sugarcane: 55
+    wheat: 25
   vote:
     #Command to run when a player has voted
     voteRewardCommand: vt run casino:dropcase %PLAYER%

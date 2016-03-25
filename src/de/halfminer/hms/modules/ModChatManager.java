@@ -33,14 +33,14 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ModChatManager extends HalfminerModule implements Listener {
 
-    private Chat chat;
+    private Chat vaultChat;
 
-    private List<Pair<String, String>> chatFormats = new ArrayList<>();
+    private final List<Pair<String, String>> chatFormats = new ArrayList<>();
     private String defaultFormat;
     private boolean isGlobalmuted = false;
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onChatPlaySound(AsyncPlayerChatEvent e) {
+    public void onChat(AsyncPlayerChatEvent e) {
 
         Player p = e.getPlayer();
         if (isGlobalmuted && !p.hasPermission("hms.chat.bypassglobalmute")) {
@@ -66,7 +66,7 @@ public class ModChatManager extends HalfminerModule implements Listener {
         }
 
         format = Language.placeholderReplace(format, "%PLAYER%", "%1$s",
-                "%PREFIX%", chat.getPlayerPrefix(p), "%SUFFIX%", chat.getPlayerSuffix(p), "%MESSAGE%", "%2$s");
+                "%PREFIX%", vaultChat.getPlayerPrefix(p), "%SUFFIX%", vaultChat.getPlayerSuffix(p), "%MESSAGE%", "%2$s");
         format = ChatColor.translateAlternateColorCodes('&', format);
 
         StringBuilder sb = new StringBuilder(message);
@@ -116,7 +116,8 @@ public class ModChatManager extends HalfminerModule implements Listener {
     @Override
     public void reloadConfig() {
 
-        chat = server.getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class).getProvider();
+        if (vaultChat == null)
+            vaultChat = server.getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class).getProvider();
 
         chatFormats.clear();
         for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {
