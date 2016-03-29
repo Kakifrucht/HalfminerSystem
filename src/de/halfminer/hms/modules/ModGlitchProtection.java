@@ -71,18 +71,19 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
             Location current = p.getLocation();
             World world = current.getWorld();
-            double xValue = current.getX();
-            double zValue = current.getZ();
+            int xValue = current.getBlockX();
+            int zValue = current.getBlockZ();
 
             int yValue = current.getBlockY();
-            if (yValue > 255) yValue = world.getHighestBlockYAt((int) xValue, (int) zValue);
+            if (yValue > 255) yValue = world.getHighestBlockYAt(xValue, zValue);
             else {
-                while (world.getBlockAt((int) xValue, yValue, (int) zValue).getType().equals(Material.AIR)
+                while (world.getBlockAt(xValue, yValue, zValue).getType().equals(Material.AIR)
                         && yValue > 0) yValue--;
             }
 
             e.setCancelled(true);
-            final Location newLoc = new Location(world, xValue, yValue + 1, zValue, current.getYaw(), current.getPitch());
+            final Location newLoc = new Location(world, current.getX(), yValue + 1, current.getZ()
+                    , current.getYaw(), current.getPitch());
 
             if (!waitingForChorusTP.contains(p)) {
 
