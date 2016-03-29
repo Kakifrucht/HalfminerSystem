@@ -64,7 +64,7 @@ public class ModRespawn extends HalfminerModule implements Listener {
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         Object loc = storage.get("sys.spawnlocation");
 

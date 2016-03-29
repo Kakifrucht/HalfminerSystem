@@ -6,7 +6,7 @@ package de.halfminer.hms.interfaces;
 public interface Reloadable {
 
     /**
-     * Reloads the modules config
+     * (Re)loads the modules config
      */
-    void reloadConfig();
+    void loadConfig();
 }

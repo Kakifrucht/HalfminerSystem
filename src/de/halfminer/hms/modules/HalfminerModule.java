@@ -13,7 +13,7 @@ public abstract class HalfminerModule extends HalfminerClass implements Reloadab
     final static HanStorage storage = (HanStorage) hms.getHandler(HandlerType.STORAGE);
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
         /* does nothing on default, although we don't want submodules who
            do not use it either having to override an empty function */
     }

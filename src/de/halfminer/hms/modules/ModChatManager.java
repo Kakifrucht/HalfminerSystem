@@ -122,7 +122,7 @@ public class ModChatManager extends HalfminerModule implements Listener {
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         if (vaultChat == null) {
             RegisteredServiceProvider<Chat> provider = server.getServicesManager()

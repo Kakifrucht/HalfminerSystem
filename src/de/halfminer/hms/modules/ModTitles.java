@@ -130,7 +130,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         lang.put("newplayer", Language.getMessage("modTitlesNewPlayerFormat"));
         lang.put("newplayerbar", Language.getMessage("modTitlesNewPlayerFormatBar"));

@@ -152,7 +152,7 @@ public class Cmdchat extends HalfminerCommand {
                     } else if (args[0].equalsIgnoreCase("news")) {
 
                         storage.set("sys.news", message);
-                        hms.getModule(ModuleType.MOTD).reloadConfig();
+                        hms.getModule(ModuleType.MOTD).loadConfig();
                         if (sender instanceof Player) {
                             bossBar.sendBar((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
                                     false, "%NEWS%", message), BarColor.YELLOW, BarStyle.SOLID, 5);

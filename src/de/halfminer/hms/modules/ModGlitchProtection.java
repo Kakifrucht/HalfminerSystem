@@ -107,7 +107,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         if (checkIfOverNether == null) {
 

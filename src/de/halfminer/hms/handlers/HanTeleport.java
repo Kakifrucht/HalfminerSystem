@@ -70,7 +70,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         defaultTime = hms.getConfig().getInt("teleport.cooldownSeconds", 3);
 

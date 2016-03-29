@@ -20,7 +20,7 @@ public class ModAutoMessage extends HalfminerModule {
     private List<String> messages;
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         // Load messages
         List<String> messagesList = hms.getConfig().getStringList("autoMessage.messages");

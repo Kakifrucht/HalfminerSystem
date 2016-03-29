@@ -191,7 +191,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         lastInteract = new HashMap<>();
         timeUntilHomeBlockSeconds = hms.getConfig().getInt("command.home.timeUntilHomeBlockMinutes") * 60;

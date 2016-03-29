@@ -36,7 +36,7 @@ public class ModMotd extends HalfminerModule implements Listener {
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         playerCountThreshold = hms.getConfig().getInt("motd.playerCountThreshold", 50);
         playerCountBuffer = hms.getConfig().getInt("motd.playerCountBuffer", 1);

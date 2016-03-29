@@ -168,7 +168,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         derankThreshold = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
         timeUntilDerankSeconds = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;

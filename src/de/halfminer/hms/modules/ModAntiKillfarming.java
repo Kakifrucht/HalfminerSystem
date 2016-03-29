@@ -254,7 +254,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         // Get constants
         BLOCK_TIME = hms.getConfig().getInt("killfarming.blockTime", 300);

@@ -185,7 +185,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     }
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
         tagTime = hms.getConfig().getInt("combatLog.tagTime", 15);

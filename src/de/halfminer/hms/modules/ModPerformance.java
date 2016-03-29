@@ -138,7 +138,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
 
 
     @Override
-    public void reloadConfig() {
+    public void loadConfig() {
 
         int ticksDelayUntilClear = hms.getConfig().getInt("performance.ticksDelayUntilClear", 160);
         howMuchRedstoneAllowed = hms.getConfig().getInt("performance.howMuchRedstoneAllowed", 32);

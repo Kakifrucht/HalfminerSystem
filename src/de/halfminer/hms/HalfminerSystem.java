@@ -47,14 +47,14 @@ public class HalfminerSystem extends JavaPlugin {
                 HalfminerHandler han = (HalfminerHandler) this.getClassLoader()
                         .loadClass(PACKAGE_PATH + ".handlers." + handler.getClassName()).newInstance();
 
-                if (han instanceof Reloadable) ((Reloadable) han).reloadConfig();
+                if (han instanceof Reloadable) ((Reloadable) han).loadConfig();
                 handlers.put(handler, han);
             }
             for (ModuleType module : ModuleType.values()) {
                 HalfminerModule mod = (HalfminerModule) this.getClassLoader()
                         .loadClass(PACKAGE_PATH + ".modules." + module.getClassName()).newInstance();
 
-                mod.reloadConfig();
+                mod.loadConfig();
                 modules.put(module, mod);
             }
         } catch (Exception e) {
@@ -128,8 +128,8 @@ public class HalfminerSystem extends JavaPlugin {
 
         //noinspection ConstantConditions (suppress warning due to java refelction)
         for (HalfminerHandler han : handlers.values())
-                if (han instanceof Reloadable) ((Reloadable) han).reloadConfig();
-        for (HalfminerModule mod : modules.values()) mod.reloadConfig();
+                if (han instanceof Reloadable) ((Reloadable) han).loadConfig();
+        for (HalfminerModule mod : modules.values()) mod.loadConfig();
     }
 
 }
