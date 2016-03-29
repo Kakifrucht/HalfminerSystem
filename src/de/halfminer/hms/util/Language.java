@@ -41,17 +41,17 @@ public class Language {
         StringBuilder placeholder = new StringBuilder();
         for (int i = 0; i < message.length(); i++) {
 
-            //Go into placeholder read mode
+            // Go into placeholder read mode
             if (message.charAt(i) == '%') {
 
-                //get the placeholder
+                // get the placeholder
                 placeholder.append('%');
                 for (int j = i + 1; j < message.length() && message.charAt(j) != '%'; j++) {
                     placeholder.append(message.charAt(j));
                 }
                 placeholder.append('%');
 
-                //get the string that will replace the placeholder
+                // get the string that will replace the placeholder
                 String replaceWith = null;
                 for (int j = 0; j < replacements.length; j += 2) {
                     if (replacements[j].equals(placeholder.toString())) {
@@ -60,12 +60,12 @@ public class Language {
                     }
                 }
 
-                //Do the replacement, add length of string to the outer loop index, since we do not want to iterate over
-                //it again, or if no replacement was found, add the length of the read placeholder to skip it
+                // Do the replacement, add length of string to the outer loop index, since we do not want to iterate over
+                // it again, or if no replacement was found, add the length of the read placeholder to skip it
                 if (replaceWith != null) {
                     message.replace(i, i + placeholder.length(), replaceWith);
-                    i += replaceWith.length();
-                } else i += placeholder.length();
+                    i += replaceWith.length() - 1;
+                } else i += placeholder.length() - 1;
 
                 placeholder.setLength(0);
             }

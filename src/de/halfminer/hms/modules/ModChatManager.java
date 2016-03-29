@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +66,15 @@ public class ModChatManager extends HalfminerModule implements Listener {
             }
         }
 
+        String prefix = "";
+        String suffix = "";
+        if (vaultChat != null) {
+            prefix = vaultChat.getPlayerPrefix(p);
+            suffix = vaultChat.getPlayerSuffix(p);
+        }
+
         format = Language.placeholderReplace(format, "%PLAYER%", "%1$s",
-                "%PREFIX%", vaultChat.getPlayerPrefix(p), "%SUFFIX%", vaultChat.getPlayerSuffix(p), "%MESSAGE%", "%2$s");
+                "%PREFIX%", prefix, "%SUFFIX%", suffix, "%MESSAGE%", "%2$s");
         format = ChatColor.translateAlternateColorCodes('&', format);
 
         StringBuilder sb = new StringBuilder(message);
@@ -116,8 +124,11 @@ public class ModChatManager extends HalfminerModule implements Listener {
     @Override
     public void reloadConfig() {
 
-        if (vaultChat == null)
-            vaultChat = server.getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class).getProvider();
+        if (vaultChat == null) {
+            RegisteredServiceProvider<Chat> provider = server.getServicesManager()
+                    .getRegistration(net.milkbowl.vault.chat.Chat.class);
+            if (provider != null) vaultChat = provider.getProvider();
+        }
 
         chatFormats.clear();
         for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {
