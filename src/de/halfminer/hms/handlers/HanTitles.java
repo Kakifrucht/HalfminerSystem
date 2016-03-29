@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
  * - Actionbar title
  * - Tablist titles
  */
+@SuppressWarnings("SameParameterValue")
 public class HanTitles extends HalfminerHandler {
 
     /**

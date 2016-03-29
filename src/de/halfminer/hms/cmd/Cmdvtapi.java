@@ -20,7 +20,7 @@ public class Cmdvtapi extends HalfminerCommand {
     @Override
     public void run(CommandSender sender, String label, String[] args) {
 
-        if (!label.equalsIgnoreCase("vtapi") || args.length == 0 || !sender.isOp()) return;
+        if (args.length == 0 || !sender.isOp()) return;
 
         if (args.length > 0) {
 

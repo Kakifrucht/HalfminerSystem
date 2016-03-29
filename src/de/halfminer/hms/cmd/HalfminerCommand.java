@@ -13,6 +13,7 @@ public abstract class HalfminerCommand extends HalfminerClass {
     final static HanStorage storage = (HanStorage) hms.getHandler(HandlerType.STORAGE);
     String permission = "hms.default";
 
+    @SuppressWarnings("UnusedParameters")
     public abstract void run(CommandSender sender, String label, String[] args);
 
     public boolean hasPermission(CommandSender sender) {

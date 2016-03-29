@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitScheduler;
  */
 public abstract class HalfminerClass {
 
-    public final static HalfminerSystem hms = HalfminerSystem.getInstance();
-    public final static Server server = hms.getServer();
-    public final static BukkitScheduler scheduler = server.getScheduler();
+    protected final static HalfminerSystem hms = HalfminerSystem.getInstance();
+    protected final static Server server = hms.getServer();
+    protected final static BukkitScheduler scheduler = server.getScheduler();
 }

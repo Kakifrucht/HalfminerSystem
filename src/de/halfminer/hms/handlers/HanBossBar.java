@@ -30,7 +30,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
     };
     private BukkitTask broadcastRemoveTask;
 
-    private Map<Player, Pair<BossBar, BukkitTask>> currentBar = new HashMap<>();
+    private final Map<Player, Pair<BossBar, BukkitTask>> currentBar = new HashMap<>();
 
     /**
      * Broadcast the bossbar to every player. There can only be one broadcast bossbar at a time.

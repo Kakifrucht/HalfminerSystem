@@ -10,6 +10,7 @@ depend: [Essentials, Vault]
 commands:
   ?:
     description: Bukkit override, protects from viewing all commands
+    aliases: [alias]
   chat:
     description: Chat manipulation tools
     aliases: [c]
@@ -38,7 +39,6 @@ commands:
     description: Vote for the server
   vtapi:
     description: VT Command API
-    aliases: [hilfe, spenden, regeln, rang, tools, kiste, deo, forum]
 permissions:
   hms.*:
     description: Access to all permissions
