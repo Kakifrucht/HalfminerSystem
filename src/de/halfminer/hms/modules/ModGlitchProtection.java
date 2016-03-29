@@ -84,6 +84,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
             e.setCancelled(true);
             final Location newLoc = new Location(world, current.getX(), yValue + 1, current.getZ()
                     , current.getYaw(), current.getPitch());
+            if (current.distance(newLoc) < 2.0d) return;
 
             if (!waitingForChorusTP.contains(p)) {
 
