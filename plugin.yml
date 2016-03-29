@@ -32,6 +32,7 @@ commands:
     description: Teleport to the spawn
   stats:
     description: View the statistics of a player
+    aliases: [st]
   verkauf:
     description: Earn money buy selling farm supplies
     aliases: [vk]
@@ -44,23 +45,23 @@ permissions:
     description: Access to all permissions
     default: op
     children:
+      hms.admin: true
+      hms.chat: true
+      hms.chat.advanced: true
       hms.default: true
+      hms.home: true
       hms.lag: true
       hms.lag.others: true
       hms.lag.notify: true
       hms.moderator: true
-      hms.stats: true
-      hms.chat: true
-      hms.chat.advanced: true
       hms.neutp: true
-      hms.home: true
-      hms.verkauf: true
-      hms.vote: true
+      hms.stats: true
       hms.signedit: true
       hms.spawn: true
-      hms.spawn.set: true
       hms.spawn.others: true
-      hms.admin: true
+      hms.spawn.set: true
+      hms.verkauf: true
+      hms.vote: true
       hms.bypass.*: true
       hms.chat.*: true
       hms.level.*: true
@@ -68,18 +69,18 @@ permissions:
     description: Access to all bypass permission
     default: op
     children:
+      hms.bypass.bedrockcheck: true
       hms.bypass.combatlog: true
       hms.bypass.commandfilter: true
       hms.bypass.hopperlimit: true
-      hms.bypass.bedrockcheck: true
+      hms.bypass.merchant: true
       hms.bypass.nethercheck: true
       hms.bypass.nokillfarming: true
+      hms.bypass.pvp: true
       hms.bypass.skilllevel: true
       hms.bypass.statsrightclick: true
-      hms.bypass.merchant: true
-      hms.bypass.teleporttimer: true
       hms.bypass.teleportchecks: true
-      hms.bypass.pvp: true
+      hms.bypass.teleporttimer: true
   hms.chat.*:
     description: Access to all chat manager related permissions (not the command)
     default: op
@@ -104,21 +105,50 @@ permissions:
   hms.default:
     default: true
     description: Default permission
-  hms.stats:
-    default: true
-    description: Access to stats command
-  hms.neutp:
-    default: true
-    description: Access to neutp command
   hms.home:
     default: true
     description: Access to home command
+  hms.level.0:
+    default: true
+    description: Access to commands restricted to level 0
+  hms.neutp:
+    default: true
+    description: Access to neutp command
+  hms.stats:
+    default: true
+    description: Access to stats command
   hms.verkauf:
     default: true
     description: Access to verkauf command
   hms.vote:
     default: true
     description: Access to vote command
+  hms.admin:
+    description: Access to administrative commands
+  hms.bypass.bedrockcheck:
+    description: Bypass bedrock movement check
+  hms.bypass.combatlog:
+    description: Bypass combat logging
+  hms.bypass.commandfilter:
+    description: Bypass chat command filter
+  hms.bypass.hopperlimit:
+    description: Bypass hopper placement limit
+  hms.bypass.merchant:
+    description: Bypass merchant restrictions
+  hms.bypass.nethercheck:
+    description: Bypass netherroof position check
+  hms.bypass.nokillfarming:
+    description: Bypass killfarming check
+  hms.bypass.pvp:
+    description: Bypass PvP changes
+  hms.bypass.skilllevel:
+    description: Bypass setting of skilllevel
+  hms.bypass.statsrightclick:
+    description: Bypass stats on rightclick
+  hms.bypass.teleportchecks:
+    description: Bypass glitch protection teleport checks
+  hms.bypass.teleporttimer:
+    description: Bypass teleport timer
   hms.chat:
     description: Access to chat clearing command
   hms.chat.advanced:
@@ -139,46 +169,6 @@ permissions:
     description: View the latency of other players
   hms.lag.notify:
     description: Sends lag notifications to admin
-  hms.spawn:
-    default: true
-    description: Access to spawn command
-  hms.spawn.set:
-    description: Access to spawn set command
-  hms.spawn.others:
-    description: Teleport other players to spawn
-  hms.signedit:
-    description: Access to sign editing
-  hms.admin:
-    description: Access to administrative commands
-  hms.moderator:
-    description: Access to moderative commands
-  hms.bypass.combatlog:
-    description: Bypass combat logging
-  hms.bypass.commandfilter:
-    description: Bypass chat command filter
-  hms.bypass.hopperlimit:
-    description: Bypass hopper placement limit
-  hms.bypass.bedrockcheck:
-    description: Bypass bedrock movement check
-  hms.bypass.nethercheck:
-    description: Bypass netherroof position check
-  hms.bypass.nokillfarming:
-    description: Bypass killfarming check
-  hms.bypass.teleporttimer:
-    description: Bypass teleport timer
-  hms.bypass.teleportchecks:
-    description: Bypass glitch protection teleport checks
-  hms.bypass.skilllevel:
-    description: Bypass setting of skilllevel
-  hms.bypass.statsrightclick:
-    description: Bypass stats on rightclick
-  hms.bypass.merchant:
-    description: Bypass merchant restrictions
-  hms.bypass.pvp:
-    description: Bypass PvP changes
-  hms.level.0:
-    default: true
-    description: Access to commands restricted to level 0
   hms.level.1:
     description: Access to commands restricted to level 1
   hms.level.2:
@@ -191,3 +181,14 @@ permissions:
     description: Access to commands restricted to level 5
   hms.level.6:
     description: Access to commands restricted to level 6
+  hms.moderator:
+    description: Access to moderative commands
+  hms.signedit:
+    description: Access to sign editing
+  hms.spawn:
+    default: true
+    description: Access to spawn command
+  hms.spawn.others:
+    description: Teleport other players to spawn
+  hms.spawn.set:
+    description: Access to spawn set command
