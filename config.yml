@@ -92,6 +92,7 @@ localization:
   modAntiKillfarmingBlockedKiller: '&cZum Schutz vor Killfarming wurdest du fuer &a%TIME% &cMinuten vom PvP und verwenden von Kommandos ausgeschlossen, weil du &e%PLAYER% &czu haeufig getoetet hast. Weitere Infos: &a/regeln Killfarming'
   modAntiKillfarmingBlockedVictim: '&cZum Schutz vor Killfarming wurdest du fuer &a%TIME% &cMinuten vom PvP und verwenden von Kommandos ausgeschlossen, weil &e%PLAYER% &cdich zu haeufig getoetet hat. Weitere Infos: &a/regeln Killfarming'
   modAntiKillfarmingBlockedBroadcast: '&e%KILLER% &cund &e%VICTIM% &cwurden wegen Killfarming temporaer vom PvP und verwenden von Kommandos ausgeschlossen'
+  modAntiXrayInvalidMaterialLog: 'Das Material %MATERIAL% existiert nicht'
   modSignEditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
   modSignEditSignPasted: '&aText eingefuegt, es verbleiben &e%AMOUNT% &aKopien'
   modSignEditLinePasted: '&aSchild editiert'
@@ -101,7 +102,7 @@ localization:
   modGlitchProtectionNetherNotify: '&c%PLAYER% war auf dem Netherdach bei &e%LOCATION%&c und wurde getoetet'
   modPerformanceReachedHopper: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
   modPerformanceReachedHopperLog: '%PLAYER% hat das Limit (%LIMIT%) bei %LOCATION% erreicht'
-  modMotdLine: '%COLOR%Server\n&7%REPLACE%&7! (mc.halfminer.de)'
+  modMotdLine: '&e&l<<<<<%COLOR%&l Two and a half Miner &e&l>>>>>\n&7%REPLACE%&7! (mc.halfminer.de)'
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps betraegt lediglich &e%TPS%'
   modChatManGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
   modChatManGlobalmuteOff: '&eGlobale Stummschaltung deaktiviert'
@@ -132,7 +133,7 @@ localization:
   modTitlesNewPlayerFormatBar: '&7Verwende &e&l/neutp &7zum starten!'
   modTitlesJoinFormat: '&7<<<< &6Halfminer&7 >>>>\n&7Kontostand: &a$%BALANCE%&f - &7Online: &a%PLAYERCOUNT% &7&oSpieler'
   modTitlesNewsFormat: '&lNeuigkeiten: &r%NEWS%'
-  modTitlesTablist: '&6&lTwo and a half Miner&7 | Konto: &a%BALANCE% &7&oHCs%BOTTOM%&7Teamspeak: &fts.halfminer.de &7| Online: &a%PLAYERCOUNT% &7&oSpieler'
+  modTitlesTablist: '&6&lTwo and a half Miner&7\nKonto: &a%BALANCE% &7&oHCs%BOTTOM%&7Teamspeak: &fts.halfminer.de &7| Online: &a%PLAYERCOUNT% &7&oSpieler'
 command:
   home:
     #Time until /home will be blocked
@@ -168,7 +169,21 @@ storage:
 teleport:
   #Time in seconds players cannot move before being teleported
   cooldownSeconds: 3
+antiXray:
+  #Time until a counted player won't be counter anymore
+  intervalUntilClearSeconds: 600
+  #Amount of protected blocks that have to be broken in given time frame until warning
+  protectedBlockThreshold: 10
+  #How many non protected blocks should be broken per protected block
+  protectedBlockRatioThreshold: 15
+  #Protected blocks / materials
+  protectedBlocks:
+  - DIAMOND_ORE
+  - EMERALD_ORE
+  - GOLD_ORE
+  - REDSTONE_ORE
 autoMessage:
+  #Time between each message
   intervalSeconds: 240
   messages:
   - 'Set messages here'
