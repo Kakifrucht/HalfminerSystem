@@ -140,6 +140,8 @@ public class ModChatManager extends HalfminerModule implements Listener {
             chatFormats.add(new Pair<>(key, format));
         }
 
+        if (chatFormats.size() == 0) chatFormats.add(new Pair<>("default", "<%PLAYER%> %MESSAGE%"));
+
         defaultFormat = chatFormats.get(chatFormats.size() - 1).getRight();
         chatFormats.remove(chatFormats.size() - 1);
     }
