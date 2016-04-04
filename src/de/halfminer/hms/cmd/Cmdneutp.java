@@ -2,12 +2,15 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.StatsType;
+import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -89,6 +92,8 @@ public class Cmdneutp extends HalfminerCommand {
                     public void run() {
                         player.sendMessage(Language.getMessagePlaceholders("commandNeutpDocumentation",
                                 true, "%PREFIX%", "Neutp"));
+                        ((HanBossBar) hms.getHandler(HandlerType.BOSSBAR)).sendBar(player,
+                                Language.getMessage("commandNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
                     }
                 }, 120L);
             }
