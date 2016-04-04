@@ -21,10 +21,13 @@ import java.util.Map;
 
 /**
  * Add titles containing information to the game
- * - Join titles to show basic information (playercount, currency, commands, news)
- * - Shows servernews
- * - Display information for new players
- * - Tab titles containing playercount and currency of the player
+ * - Shows join title
+ *   - Players online / money
+ *   - Configurable message
+ *   - Shows news after delay in bossbar and title
+ * - Displays information for new players
+ * - Tab titles containing amount of money and playercount
+ * - Money through Essentials hook, automatic update
  */
 @SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
@@ -61,7 +64,8 @@ public class ModTitles extends HalfminerModule implements Listener {
                     @Override
                     public void run() {
                         bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
-                                "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 20);
+                                "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 30);
+                        titleHandler.sendTitle(joined, " \n" + news, 10, 100, 10);
                     }
                 }, 120);
             }

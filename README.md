@@ -112,9 +112,9 @@ Current features
     - Rightclick player for quick overview
   - Titles
     - Shows join title
-      - Players online / mones
+      - Players online / money
       - Configurable message
-      - Shows news after delay
+      - Shows news after delay in bossbar and title
     - Displays information for new players
     - Tab titles containing amount of money and playercount
     - Money through Essentials hook, automatic update
