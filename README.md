@@ -51,7 +51,7 @@ Current features
       - Writing capitalized
   - CombatLog
     - Tags players when hitting/being hit
-    - Shows health and name of attacker/victim via BossBar
+    - Shows health, name of attacker/victim and level via BossBar
     - Combatlogging causes instant death
     - Shows titles containing time left in fight
     - Untags players after timer runs out, player logs out or a player is killed

@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
@@ -30,7 +31,7 @@ import java.util.Map;
 /**
  * Disables the possibility to logout during combat
  * - Tags players when hitting/being hit
- * - Shows health and name of attacker/victim via BossBar
+ * - Shows health, name of attacker/victim and level via BossBar
  * - Combatlogging causes instant death
  * - Shows titles containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
@@ -136,6 +137,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         final int healthScale = (int) other.getMaxHealth();
 
         barHandler.sendBar(p, Language.placeholderReplace(lang.get("bossbar"), "%PLAYER%", other.getName(),
+                "%LEVEL%", storage.getStatsString(p, StatsType.SKILL_LEVEL),
                 "%HEALTH%", String.valueOf(health), "%MAXHEALTH%", String.valueOf(healthScale)),
                 BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) health / healthScale);
 

@@ -107,7 +107,7 @@ localization:
   modChatManGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
   modChatManGlobalmuteOff: '&eGlobale Stummschaltung deaktiviert'
   modChatManGlobalmuteDenied: '&cDer Chat ist aktuell deaktiviert'
-  modCombatLogBossBar: '&7Kampf mit &a&l%PLAYER% &r- &4%HEALTH%&f/&7%MAXHEALTH% &oLeben'
+  modCombatLogBossBar: '&7Kampf mit &a&l%PLAYER% &7(Level: &a%LEVEL%&7) - &4%HEALTH%&f/&7%MAXHEALTH% &oLeben'
   modCombatLogCountdown: '&cIm Kampf: &e%TIME% &7Sekunden | &r%PROGRESSBAR%&r &7| Ausloggen: Tod'
   modCombatLogProgressSymbols: '-'
   modCombatLogUntagged: '&aDu bist nicht mehr im Kampf'
