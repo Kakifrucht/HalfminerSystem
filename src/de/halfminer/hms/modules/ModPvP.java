@@ -13,7 +13,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -113,16 +112,16 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     }
 
     @EventHandler
-    public void deathSoundsAndHeal(PlayerDeathEvent e) {
+    public void deathSoundsHealStreaks(PlayerDeathEvent e) {
 
         e.setDeathMessage("");
 
-        // Heal and play sound
         final Player killer = e.getEntity().getKiller();
-        final Player died = e.getEntity();
+        final Player victim = e.getEntity();
         if (killer != null && killer != e.getEntity()) {
 
-            killer.setHealth(killer.getMaxHealth());
+            // Heal and play sound
+            if (!killer.isDead()) killer.setHealth(killer.getMaxHealth());
             scheduler.runTaskLaterAsynchronously(hms, new Runnable() {
                 @Override
                 public void run() {
@@ -135,19 +134,6 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                     killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
                 }
             }, 5);
-
-        } else {
-            died.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void killstreakTitlesOnDeath(PlayerDeathEvent e) {
-
-        // Show killstreaks in actionbar
-        Player victim = e.getEntity();
-        Player killer = victim.getKiller();
-        if (killer != null) {
 
             UUID killerUid = killer.getUniqueId();
             UUID victimUid = victim.getUniqueId();
@@ -175,6 +161,9 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPDeathStreak", false,
                         "%PLAYER%", victim.getName(), "%STREAK%", String.valueOf(victimStreak)));
             }
+
+        } else {
+            victim.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);
         }
     }
 
