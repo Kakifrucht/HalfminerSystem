@@ -2,12 +2,16 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Respawn player at custom location
@@ -17,6 +21,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 @SuppressWarnings("unused")
 public class ModRespawn extends HalfminerModule implements Listener {
 
+    private final Set<OfflinePlayer> toTeleport = new HashSet<>();
     private Location respawnLoc;
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -47,6 +52,15 @@ public class ModRespawn extends HalfminerModule implements Listener {
                     }
                 }
             }, 1L);
+        } else if (toTeleport.contains(joined)) {
+            scheduler.runTaskLater(hms, new Runnable() {
+                @Override
+                public void run() {
+                    joined.teleport(respawnLoc);
+                    joined.sendMessage(Language.getMessagePlaceholders("modRespawnForced", true, "%PREFIX%", "Spawn"));
+                    toTeleport.remove(joined);
+                }
+            }, 1L);
         }
 
         e.setJoinMessage(message);
@@ -54,6 +68,10 @@ public class ModRespawn extends HalfminerModule implements Listener {
 
     public Location getSpawn() {
         return respawnLoc;
+    }
+
+    public void teleportToSpawnOnJoin(OfflinePlayer p) {
+        toTeleport.add(p);
     }
 
     public void setSpawn(Location loc) {

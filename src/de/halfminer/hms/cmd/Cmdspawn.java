@@ -2,9 +2,11 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.modules.ModRespawn;
 import de.halfminer.hms.util.Language;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -34,24 +36,42 @@ public class Cmdspawn extends HalfminerCommand {
 
                 Player toTeleport = server.getPlayer(args[0]);
                 if (toTeleport != null) {
-                    teleport(toTeleport, true);
-                    sender.sendMessage(Language.getMessagePlaceholders("hanTeleportOthers", true, "%PREFIX%", "Spawn",
-                            "%PLAYER%", toTeleport.getName()));
+
+                    if (toTeleport.equals(sender)) teleport(toTeleport, false);
+                    else {
+
+                        teleport(toTeleport, true);
+                        sender.sendMessage(Language.getMessagePlaceholders("commandSpawnOthers", true, "%PREFIX%", "Spawn",
+                                "%PLAYER%", toTeleport.getName()));
+                    }
                 }
-                else sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", "Spawn"));
+                else {
+                    try {
+                        OfflinePlayer p = server.getOfflinePlayer(storage.getUUID(args[0]));
+                        respawn.teleportToSpawnOnJoin(p);
+                        sender.sendMessage(Language.getMessagePlaceholders("commandSpawnOthersOffline",
+                                true, "%PREFIX%", "Spawn", "%PLAYER%", p.getName()));
+
+                    } catch (PlayerNotFoundException e) {
+                        sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "Spawn"));
+                    }
+                }
             } else teleport(sender, false);
         }
     }
 
-    private void teleport(CommandSender sender, boolean forced) {
+    private void teleport(CommandSender toTeleport, boolean forced) {
 
-        if (sender instanceof Player) {
+        if (toTeleport instanceof Player) {
 
             HanTeleport tp = (HanTeleport) hms.getHandler(HandlerType.TELEPORT);
 
-            if (forced) tp.startTeleport((Player) sender, respawn.getSpawn(), 0);
-            else tp.startTeleport((Player) sender, respawn.getSpawn());
+            if (forced) {
+                toTeleport.sendMessage(Language.getMessagePlaceholders("modRespawnForced", true, "%PREFIX%", "Spawn"));
+                tp.startTeleport((Player) toTeleport, respawn.getSpawn(), 0);
+            }
+            else tp.startTeleport((Player) toTeleport, respawn.getSpawn());
 
-        } else sender.sendMessage(Language.getMessage("notAPlayer"));
+        } else toTeleport.sendMessage(Language.getMessage("notAPlayer"));
     }
 }

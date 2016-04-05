@@ -155,12 +155,14 @@ Current features
       - Set min/max x/z values
     - Checks for safe teleport location
     - Sets home automatically
+    - Gives some information about the server via chat and bossbar
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number
   - /spawn
     - Teleport player to spawn
     - Teleport other players to spawn with permission
+    - Teleport offline players to spawn once they login
     - Use /spawn s to set the spawn with permission
   - /stats
     - View own / other players stats
