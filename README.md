@@ -55,6 +55,7 @@ Current features
     - Combatlogging causes instant death
     - Shows titles containing time left in fight
     - Untags players after timer runs out, player logs out or a player is killed
+    - Halves satiation health regeneration during combat
     - Disables during fight:
       - Switching armor
       - Commands

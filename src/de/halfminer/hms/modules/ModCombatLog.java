@@ -17,6 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -36,6 +37,7 @@ import java.util.Map;
  * - Shows titles containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
  * - Disables armor switching, commands and enderpearls from being used during fight
+ * - Halves satiation health regeneration during combat
  */
 @SuppressWarnings("unused")
 public class ModCombatLog extends HalfminerModule implements Listener {
@@ -126,6 +128,16 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             e.getPlayer().sendMessage(lang.get("noEnderpearl"));
             e.getPlayer().updateInventory();
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onRegeneration(EntityRegainHealthEvent e) {
+
+        if (e.getEntity() instanceof Player
+                && e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.SATIATED)
+                && isTagged((Player) e.getEntity())) {
+            e.setAmount(e.getAmount() / 2);
         }
     }
 
