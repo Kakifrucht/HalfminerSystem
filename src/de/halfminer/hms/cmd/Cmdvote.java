@@ -129,7 +129,7 @@ public class Cmdvote extends HalfminerCommand {
     private boolean dropCase(Player player) {
 
         boolean hasRoom = false;
-        for (ItemStack item : player.getInventory().getContents()) {
+        for (ItemStack item : player.getInventory().getStorageContents()) {
             if (item == null) {
                 hasRoom = true;
                 break;
