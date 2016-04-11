@@ -149,7 +149,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         final int healthScale = (int) other.getMaxHealth();
 
         barHandler.sendBar(p, Language.placeholderReplace(lang.get("bossbar"), "%PLAYER%", other.getName(),
-                "%LEVEL%", storage.getStatsString(p, StatsType.SKILL_LEVEL),
+                "%LEVEL%", storage.getStatsString(other, StatsType.SKILL_LEVEL),
                 "%HEALTH%", String.valueOf(health), "%MAXHEALTH%", String.valueOf(healthScale)),
                 BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) health / healthScale);
 
