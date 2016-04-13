@@ -1,6 +1,6 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.enums.StatsType;
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Language;
 import org.bukkit.OfflinePlayer;
@@ -24,7 +24,7 @@ public class Cmdvote extends HalfminerCommand {
             //will be executed by vote listener
             if (args[0].equalsIgnoreCase("voted") && sender.isOp() && args.length == 2) {
 
-                //grab player
+                // grab player
                 OfflinePlayer hasVoted;
                 try {
                     hasVoted = server.getOfflinePlayer(storage.getUUID(args[1]));
@@ -32,30 +32,30 @@ public class Cmdvote extends HalfminerCommand {
                     return;
                 }
 
-                //increment stats, broadcast
-                storage.set("sys.vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
-                storage.incrementStatsInt(hasVoted, StatsType.VOTES, 1);
+                // increment stats, broadcast
+                storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
+                storage.getPlayer(hasVoted).incrementInt(DataType.VOTES, 1);
                 server.broadcast(Language.getMessagePlaceholders("commandVoteVoted", true, "%PREFIX%",
                         "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
 
-                //if the player is currently online, save his ip so that other people with same ip who cannot vote
-                //can also bypass the block, also drop vote reward, or increment background reward counter
+                // if the player is currently online, save his ip so that other people with same ip who cannot vote
+                // can also bypass the block, also drop vote reward, or increment background reward counter
                 if (hasVoted instanceof Player) {
                     Player playerHasVoted = (Player) hasVoted;
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 2.0f);
                     String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
-                    storage.incrementInt("sys.vote.ip" + address, 1);
+                    storage.incrementInt("vote.ip" + address, 1);
                     if (!dropCase((Player) hasVoted)) {
-                        storage.incrementInt("sys.vote.reward." + hasVoted.getUniqueId(), 1);
+                        storage.incrementInt("vote.reward." + hasVoted.getUniqueId(), 1);
                         playerHasVoted.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull", true, "%PREFIX%", "Vote"));
                     }
                 } else {
-                    //player not online, let him grab the reward later
-                    storage.incrementInt("sys.vote.reward." + hasVoted.getUniqueId(), 1);
+                    // player not online, let him grab the reward later
+                    storage.incrementInt("vote.reward." + hasVoted.getUniqueId(), 1);
                 }
 
-                //check if threshold has been met to message admin
-                int totalvotes = storage.incrementInt("sys.totalvotes", 1);
+                // check if threshold has been met to message admin
+                int totalvotes = storage.incrementInt("totalvotes", 1);
                 if (totalvotes == hms.getConfig().getInt("command.vote.threshold", 2000)) {
 
                     String command = hms.getConfig().getString("command.vote.commandToExecute");
@@ -67,7 +67,7 @@ public class Cmdvote extends HalfminerCommand {
             } else if (args[0].equalsIgnoreCase("getreward") && sender instanceof Player) {
 
                 Player player = (Player) sender;
-                int rewardAmount = storage.getInt("sys.vote.reward." + player.getUniqueId());
+                int rewardAmount = storage.getInt("vote.reward." + player.getUniqueId());
 
                 if (rewardAmount == 0) {
                     player.sendMessage(Language.getMessagePlaceholders("commandVoteRewardDeny", true, "%PREFIX%", "Vote"));
@@ -81,7 +81,7 @@ public class Cmdvote extends HalfminerCommand {
                     player.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull",
                             true, "%PREFIX%", "Vote"));
                 }
-                storage.set("sys.vote.reward." + player.getUniqueId(), rewardAmount);
+                storage.set("vote.reward." + player.getUniqueId(), rewardAmount);
 
             } else showMessage(sender);
 
@@ -95,10 +95,10 @@ public class Cmdvote extends HalfminerCommand {
 
         if (sender instanceof Player) {
             playername = sender.getName();
-            rewardLeft = storage.getInt("sys.vote.reward." + ((Player) sender).getUniqueId());
+            rewardLeft = storage.getInt("vote.reward." + ((Player) sender).getUniqueId());
         }
 
-        int totalVotes = storage.getInt("sys.totalvotes");
+        int totalVotes = storage.getInt("totalvotes");
         int totalVotesThreshold = hms.getConfig().getInt("command.vote.threshold", 2000);
 
         String message = Language.getMessage("commandVoteTop") + "\n";

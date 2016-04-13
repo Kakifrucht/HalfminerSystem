@@ -2,12 +2,13 @@ package de.halfminer.hms.cmd;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
-import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.modules.ModSkillLevel;
+import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -143,7 +144,7 @@ public class Cmdhms extends HalfminerCommand {
         if (args.length == 2) {
             try {
                 UUID playerUid = storage.getUUID(args[1]);
-                storage.set("sys.vote." + playerUid, Long.MAX_VALUE);
+                storage.set("vote." + playerUid, Long.MAX_VALUE);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "HMS",
                         "%PLAYER%", server.getOfflinePlayer(playerUid).getName()));
             } catch (PlayerNotFoundException e) {
@@ -162,13 +163,14 @@ public class Cmdhms extends HalfminerCommand {
         }
 
         Player player = server.getPlayer(args[1]);
+        HalfminerPlayer hPlayer = storage.getPlayer(player);
 
         if (player == null) {
             sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
             return;
         }
 
-        int oldValue = storage.getStatsInt(player, StatsType.SKILL_ELO);
+        int oldValue = hPlayer.getInt(DataType.SKILL_ELO);
         int modifier = -oldValue;
 
         if (args.length > 2) {
@@ -183,8 +185,8 @@ public class Cmdhms extends HalfminerCommand {
         ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(player, modifier);
 
         sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
-                "%PLAYER%", player.getName(), "%SKILLLEVEL%", String.valueOf(storage.getStatsInt(player, StatsType.SKILL_LEVEL)),
-                "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", String.valueOf(storage.getStatsInt(player, StatsType.SKILL_ELO))));
+                "%PLAYER%", player.getName(), "%SKILLLEVEL%", String.valueOf(hPlayer.getInt(DataType.SKILL_LEVEL)),
+                "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", String.valueOf(hPlayer.getInt(DataType.SKILL_ELO))));
     }
 
     private void ringPlayer() {

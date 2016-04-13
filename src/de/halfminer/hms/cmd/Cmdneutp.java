@@ -1,9 +1,10 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTeleport;
+import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,10 +36,11 @@ public class Cmdneutp extends HalfminerCommand {
 
         final HanTeleport tp = (HanTeleport) hms.getHandler(HandlerType.TELEPORT);
         final Player player = (Player) sender;
+        final HalfminerPlayer hPlayer = storage.getPlayer(player);
 
         if (tp.hasPendingTeleport(player, true)) return;
 
-        if (storage.getStatsBoolean(player, StatsType.NEUTP_USED)){
+        if (hPlayer.getBoolean(DataType.NEUTP_USED)){
             player.sendMessage(Language.getMessagePlaceholders("commandNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
             return;
         }
@@ -76,7 +78,7 @@ public class Cmdneutp extends HalfminerCommand {
             @Override
             public void run() {
 
-                storage.setStats(player, StatsType.NEUTP_USED, true);
+                hPlayer.set(DataType.NEUTP_USED, true);
 
                 server.dispatchCommand(player, "sethome neutp");
 

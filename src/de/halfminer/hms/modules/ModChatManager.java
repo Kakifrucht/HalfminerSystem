@@ -37,6 +37,7 @@ public class ModChatManager extends HalfminerModule implements Listener {
     private Chat vaultChat;
 
     private final List<Pair<String, String>> chatFormats = new ArrayList<>();
+    private String topFormat;
     private String defaultFormat;
     private boolean isGlobalmuted = false;
 
@@ -55,7 +56,7 @@ public class ModChatManager extends HalfminerModule implements Listener {
         String message = e.getMessage();
 
         String format;
-        if (p.hasPermission("hms.chat.topformat") && chatFormats.size() > 0) format = chatFormats.get(0).getRight();
+        if (p.hasPermission("hms.chat.topformat") && chatFormats.size() > 0) format = topFormat;
         else {
             format = defaultFormat;
             for (Pair<String, String> pair : chatFormats) {
@@ -140,9 +141,18 @@ public class ModChatManager extends HalfminerModule implements Listener {
             chatFormats.add(new Pair<>(key, format));
         }
 
-        if (chatFormats.size() == 0) chatFormats.add(new Pair<>("default", "<%PLAYER%> %MESSAGE%"));
+        if (chatFormats.size() == 0) {
 
-        defaultFormat = chatFormats.get(chatFormats.size() - 1).getRight();
-        chatFormats.remove(chatFormats.size() - 1);
+            topFormat = "<%PLAYER%> %MESSAGE%";
+            defaultFormat = "<%PLAYER%> %MESSAGE%";
+        } else {
+
+            topFormat = chatFormats.get(0).getRight();
+
+            if (chatFormats.size() == 1) defaultFormat = chatFormats.get(0).getRight();
+            else defaultFormat = chatFormats.get(chatFormats.size() - 1).getRight();
+
+            chatFormats.remove(chatFormats.size() - 1);
+        }
     }
 }

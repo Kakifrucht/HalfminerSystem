@@ -52,7 +52,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
             @Override
             public void run() {
 
-                broadcastBar.setProgress((double) timeLeft / time);
+                setProgress(broadcastBar, (double) timeLeft / time);
                 if (timeLeft-- < 0) removeBar();
             }
         }, 0L, 20L);
@@ -78,7 +78,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
         broadcastBar.setTitle(text);
         broadcastBar.setColor(color);
         broadcastBar.setStyle(style);
-        broadcastBar.setProgress(progression);
+        setProgress(broadcastBar, progression);
         for (Player online : server.getOnlinePlayers()) broadcastBar.addPlayer(online);
     }
 
@@ -112,7 +112,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
             @Override
             public void run() {
 
-                bar.setProgress((double) currentTime / time);
+                setProgress(bar, (double) currentTime / time);
                 if (currentTime-- < 0) removeBar(player);
             }
         }, 0L, 20L);
@@ -133,7 +133,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
 
         final BossBar bar = getBar(player, text, color, style);
 
-        bar.setProgress(progression);
+        setProgress(bar, progression);
 
         BukkitTask remove = scheduler.runTaskLater(hms, new Runnable() {
 
@@ -173,6 +173,12 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
 
         toReturn.addPlayer(player);
         return toReturn;
+    }
+
+    private void setProgress(BossBar bar, double progress) {
+        if (progress < 0.0d) bar.setProgress(0.0d);
+        else if (progress > 1.0d) bar.setProgress(1.0d);
+        else bar.setProgress(progress);
     }
 
     @Override

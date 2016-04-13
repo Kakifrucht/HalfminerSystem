@@ -1,8 +1,8 @@
 package de.halfminer.hms.modules;
 
 import com.earth2me.essentials.api.UserDoesNotExistException;
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
@@ -48,7 +48,7 @@ public class ModTitles extends HalfminerModule implements Listener {
         updateTablist();
 
         // Show join titles / news
-        if (!storage.getStatsBoolean(joined, StatsType.NEUTP_USED)) {
+        if (!storage.getPlayer(joined).getBoolean(DataType.NEUTP_USED)) {
             titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("newplayer"),
                     "%PLAYER%", joined.getName()), 10, 200, 10);
             bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("newplayerbar"),
@@ -58,7 +58,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("joinformat"),
                     "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
 
-            final String news = storage.getString("sys.news");
+            final String news = storage.getString("news");
             if (news.length() > 0) {
                 scheduler.runTaskLater(hms, new Runnable() {
                     @Override

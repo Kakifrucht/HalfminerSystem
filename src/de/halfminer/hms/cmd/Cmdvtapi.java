@@ -1,7 +1,7 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
@@ -73,7 +73,7 @@ public class Cmdvtapi extends HalfminerCommand {
                         int level;
                         try {
                             UUID uuid = storage.getUUID(skullOwner);
-                            level = storage.getStatsInt(server.getOfflinePlayer(uuid), StatsType.SKILL_LEVEL);
+                            level = storage.getPlayer(skullOwner).getInt(DataType.SKILL_LEVEL);
                         } catch (PlayerNotFoundException e) {
                             level = 1;
                         }
