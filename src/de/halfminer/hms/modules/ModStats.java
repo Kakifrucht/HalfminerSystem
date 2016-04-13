@@ -92,10 +92,12 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity();
-        HalfminerPlayer hKiller = storage.getPlayer(killer);
+
         HalfminerPlayer hVictim = storage.getPlayer(victim);
 
         if (killer != null && victim != killer) {
+
+            HalfminerPlayer hKiller = storage.getPlayer(killer);
 
             int killsKiller = hKiller.incrementInt(DataType.KILLS, 1);
             int deathsVictim = hVictim.incrementInt(DataType.DEATHS, 1);

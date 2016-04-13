@@ -67,10 +67,10 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity().getPlayer();
-        HalfminerPlayer hKiller = storage.getPlayer(killer);
 
         if (killer != null && !killer.hasPermission("hms.bypass.skilllevel") && !victim.hasPermission("hms.bypass.skilllevel")) {
 
+            HalfminerPlayer hKiller = storage.getPlayer(killer);
             hKiller.set(DataType.LASTKILL, System.currentTimeMillis() / 1000);
 
             // Prevent grinding
