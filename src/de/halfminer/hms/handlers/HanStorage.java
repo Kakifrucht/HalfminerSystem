@@ -24,7 +24,6 @@ import java.util.UUID;
  * - Can easily be queried with YAML API
  * - Thread safe
  */
-@SuppressWarnings("ALL")
 public class HanStorage extends HalfminerHandler implements Disableable {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
@@ -53,13 +52,6 @@ public class HanStorage extends HalfminerHandler implements Disableable {
         return value;
     }
 
-    public double incrementDouble(String path, double incrementBy) {
-        double value = sysConfig.getDouble(path, 0.0d) + incrementBy;
-        value = Math.round(value * 100) / 100.0d;
-        sysConfig.set(path, value);
-        return value;
-    }
-
     public Object get(String path) {
         return sysConfig.get(path);
     }
@@ -74,14 +66,6 @@ public class HanStorage extends HalfminerHandler implements Disableable {
 
     public long getLong(String path) {
         return sysConfig.getLong(path);
-    }
-
-    public double getDouble(String path) {
-        return sysConfig.getDouble(path);
-    }
-
-    public boolean getBoolean(String path) {
-        return sysConfig.getBoolean(path);
     }
 
     public void setUUID(OfflinePlayer player) {
@@ -138,16 +122,6 @@ public class HanStorage extends HalfminerHandler implements Disableable {
             playerFile = new File(hms.getDataFolder(), "playerdata.yml");
             playerConfig = YamlConfiguration.loadConfiguration(playerFile);
         }
-
-        /*
-        FileConfiguration oldConfig = YamlConfiguration.loadConfiguration(new File(hms.getDataFolder(), "storage.yml"));
-        ConfigurationSection sec = oldConfig.getConfigurationSection("sys");
-        for (String key : sec.getConfigurationSection("uuid").getKeys(false)) uuidConfig.set(key, sec.get("uuid." + key));
-        sec.set("uuid", null);
-        for (String key : sec.getKeys(true)) sysConfig.set(key, sec.get(key));
-        oldConfig.set("sys", null);
-        for (String key : oldConfig.getKeys(true)) playerConfig.set(key, oldConfig.get(key));
-        */
 
         int saveInterval = hms.getConfig().getInt("storage.autoSaveMinutes", 15) * 60 * 20;
         if (task != null) task.cancel();

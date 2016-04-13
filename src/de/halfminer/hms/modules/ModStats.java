@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unused")
 public class ModStats extends HalfminerModule implements Disableable, Listener, Sweepable {
 
-    private final Map<HalfminerPlayer, Long> timeOnline = new ConcurrentHashMap<>();
+    private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
     private Map<Player, Pair<Player, Long>> lastInteract;
 
     private int timeUntilHomeBlockSeconds;
@@ -46,7 +46,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
         Player player = e.getPlayer();
         HalfminerPlayer hPlayer = storage.getPlayer(player);
-        timeOnline.put(hPlayer, System.currentTimeMillis() / 1000);
+        timeOnline.put(player, System.currentTimeMillis() / 1000);
 
         String lastName = hPlayer.getString(DataType.LAST_NAME);
         if (!(lastName.length() == 0) && !lastName.equalsIgnoreCase(player.getName())) {
@@ -84,7 +84,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void updatePlayerTimeLeave(PlayerQuitEvent e) {
-        setOnlineTime(storage.getPlayer(e.getPlayer()));
+        setOnlineTime(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -188,12 +188,12 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         return Math.round(calc * 100.0d) / 100.0d;
     }
 
-    private void setOnlineTime(HalfminerPlayer player) {
+    private void setOnlineTime(Player player) {
 
         if (!timeOnline.containsKey(player)) return;
 
         int time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
-        player.incrementInt(DataType.TIME_ONLINE, time);
+        storage.getPlayer(player).incrementInt(DataType.TIME_ONLINE, time);
         timeOnline.remove(player);
     }
 
@@ -207,7 +207,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         if (timeOnline.size() == 0) {
             long time = System.currentTimeMillis() / 1000;
             for (Player player : server.getOnlinePlayers()) {
-                timeOnline.put(storage.getPlayer(player), time);
+                timeOnline.put(player, time);
             }
         }
 
@@ -216,9 +216,8 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             public void run() {
                 long currentTime = System.currentTimeMillis() / 1000;
                 for (Player p : server.getOnlinePlayers()) {
-                    HalfminerPlayer hPlayer = storage.getPlayer(p);
-                    setOnlineTime(hPlayer);
-                    timeOnline.put(hPlayer, currentTime);
+                    setOnlineTime(p);
+                    timeOnline.put(p, currentTime);
                 }
             }
         }, 1200L, 1200L);
@@ -226,7 +225,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
     @Override
     public void onDisable() {
-        for (HalfminerPlayer p : timeOnline.keySet()) setOnlineTime(p);
+        for (Player p : timeOnline.keySet()) setOnlineTime(p);
     }
 
     @Override
