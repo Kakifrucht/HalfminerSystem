@@ -1,9 +1,10 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.ModuleType;
-import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
+import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.Sound;
@@ -36,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unused")
 public class ModStats extends HalfminerModule implements Disableable, Listener, Sweepable {
 
-    private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
+    private final Map<HalfminerPlayer, Long> timeOnline = new ConcurrentHashMap<>();
     private Map<Player, Pair<Player, Long>> lastInteract;
 
     private int timeUntilHomeBlockSeconds;
@@ -45,12 +46,13 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
     public void joinInitializeStatsAndRename(PlayerJoinEvent e) {
 
         Player player = e.getPlayer();
-        timeOnline.put(player, System.currentTimeMillis() / 1000);
+        HalfminerPlayer hPlayer = storage.getPlayer(player);
+        timeOnline.put(hPlayer, System.currentTimeMillis() / 1000);
 
-        String lastName = storage.getStatsString(player, StatsType.LAST_NAME);
+        String lastName = hPlayer.getString(DataType.LAST_NAME);
         if (!(lastName.length() == 0) && !lastName.equalsIgnoreCase(player.getName())) {
 
-            String lastNames = storage.getStatsString(player, StatsType.LAST_NAMES);
+            String lastNames = hPlayer.getString(DataType.LAST_NAMES);
 
             if (lastNames.length() > 0) {
 
@@ -63,9 +65,9 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
                         break;
                     }
                 }
-                if (!containsName) storage.setStats(player, StatsType.LAST_NAMES, lastNames + ' ' + lastName);
+                if (!containsName) hPlayer.set(DataType.LAST_NAMES, lastNames + ' ' + lastName);
             } else {
-                storage.setStats(player, StatsType.LAST_NAMES, lastName);
+                hPlayer.set(DataType.LAST_NAMES, lastName);
             }
 
             server.broadcast(Language.getMessagePlaceholders("modStatsNameChange", true,
@@ -73,7 +75,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         }
 
         storage.setUUID(player);
-        storage.setStats(player, StatsType.LAST_NAME, player.getName());
+        hPlayer.set(DataType.LAST_NAME, player.getName());
 
         // Votebarrier setting
         if (storage.getInt("sys.vote." + player.getUniqueId().toString()) == 0) {
@@ -83,7 +85,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void updatePlayerTimeLeave(PlayerQuitEvent e) {
-        setOnlineTime(e.getPlayer());
+        setOnlineTime(storage.getPlayer(e.getPlayer()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -91,13 +93,18 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity();
+        HalfminerPlayer hKiller = storage.getPlayer(killer);
+        HalfminerPlayer hVictim = storage.getPlayer(victim);
+
         if (killer != null && victim != killer) {
-            int killsKiller = storage.incrementStatsInt(killer, StatsType.KILLS, 1);
-            int deathsVictim = storage.incrementStatsInt(victim, StatsType.DEATHS, 1);
-            double kdRatioKiller = calculateKDRatio(killer);
-            double kdRatioVictim = calculateKDRatio(victim);
-            storage.setStats(killer, StatsType.KD_RATIO, kdRatioKiller);
-            storage.setStats(victim, StatsType.KD_RATIO, kdRatioVictim);
+
+            int killsKiller = hKiller.incrementInt(DataType.KILLS, 1);
+            int deathsVictim = hVictim.incrementInt(DataType.DEATHS, 1);
+
+            double kdRatioKiller = calculateKDRatio(hKiller);
+            double kdRatioVictim = calculateKDRatio(hVictim);
+            hKiller.set(DataType.KD_RATIO, kdRatioKiller);
+            hVictim.set(DataType.KD_RATIO, kdRatioVictim);
 
             killer.sendMessage(Language.getMessagePlaceholders("modStatsPvPKill", true, "%PREFIX%", "PvP",
                     "%VICTIM%", victim.getName(), "%KILLS%", String.valueOf(killsKiller),
@@ -111,11 +118,11 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
                     "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
         } else {
 
-            storage.incrementStatsInt(victim, StatsType.DEATHS, 1);
-            storage.setStats(victim, StatsType.KD_RATIO, calculateKDRatio(victim));
+            hVictim.incrementInt(DataType.DEATHS, 1);
+            hVictim.set(DataType.KD_RATIO, calculateKDRatio(hVictim));
 
             victim.sendMessage(Language.getMessagePlaceholders("modStatsDeath", true, "%PREFIX%", "PvP",
-                    "%DEATHS%", String.valueOf(storage.getStatsInt(victim, StatsType.DEATHS))));
+                    "%DEATHS%", String.valueOf(hVictim.getInt(DataType.DEATHS))));
 
             hms.getLogger().info(Language.getMessagePlaceholders("modStatsDeathLog", false,
                     "%PLAYER%", victim.getName()));
@@ -144,9 +151,10 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
                 "%PREFIX%", clicked.getName());
 
         if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
-            String skillgroup = storage.getStatsString(clicked, StatsType.SKILL_GROUP);
-            String kills = String.valueOf(storage.getStatsInt(clicked, StatsType.KILLS));
-            String kdratio = String.valueOf(storage.getStatsDouble(clicked, StatsType.KD_RATIO));
+            HalfminerPlayer hClicked = storage.getPlayer(clicked);
+            String skillgroup = hClicked.getString(DataType.SKILL_GROUP);
+            String kills = String.valueOf(hClicked.getInt(DataType.KILLS));
+            String kdratio = String.valueOf(hClicked.getDouble(DataType.KD_RATIO));
             message = Language.getMessagePlaceholders("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
                     "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%KDRATIO%", kdratio);
         }
@@ -160,33 +168,33 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
     @EventHandler(priority = EventPriority.MONITOR)
     public void mobkillStats(EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Player) && e.getEntity().getKiller() != null)
-            storage.incrementStatsInt(e.getEntity().getKiller(), StatsType.MOB_KILLS, 1);
+            storage.getPlayer(e.getEntity().getKiller()).incrementInt(DataType.MOB_KILLS, 1);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void blockPlaceStats(BlockPlaceEvent e) {
-        storage.incrementStatsInt(e.getPlayer(), StatsType.BLOCKS_PLACED, 1);
+        storage.getPlayer(e.getPlayer()).incrementInt(DataType.BLOCKS_PLACED, 1);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void blockBreakStats(BlockBreakEvent e) {
-        storage.incrementStatsInt(e.getPlayer(), StatsType.BLOCKS_BROKEN, 1);
+        storage.getPlayer(e.getPlayer()).incrementInt(DataType.BLOCKS_BROKEN, 1);
     }
 
-    private double calculateKDRatio(Player player) {
+    private double calculateKDRatio(HalfminerPlayer player) {
 
-        int deaths = storage.getStatsInt(player, StatsType.DEATHS);
+        int deaths = player.getInt(DataType.DEATHS);
         if (deaths == 0) return 999999.99d;
-        double calc = storage.getStatsInt(player, StatsType.KILLS) / (double) deaths;
+        double calc = player.getInt(DataType.KILLS) / (double) deaths;
         return Math.round(calc * 100.0d) / 100.0d;
     }
 
-    private void setOnlineTime(Player player) {
+    private void setOnlineTime(HalfminerPlayer player) {
 
         if (!timeOnline.containsKey(player)) return;
 
         int time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
-        storage.incrementStatsInt(player, StatsType.TIME_ONLINE, time);
+        player.incrementInt(DataType.TIME_ONLINE, time);
         timeOnline.remove(player);
     }
 
@@ -196,11 +204,11 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         lastInteract = new HashMap<>();
         timeUntilHomeBlockSeconds = hms.getConfig().getInt("command.home.timeUntilHomeBlockMinutes") * 60;
 
-        //if reload ocurred while the server ran, add players to list
+        // if reload ocurred while the server ran, add players to list
         if (timeOnline.size() == 0) {
             long time = System.currentTimeMillis() / 1000;
             for (Player player : server.getOnlinePlayers()) {
-                timeOnline.put(player, time);
+                timeOnline.put(storage.getPlayer(player), time);
             }
         }
 
@@ -209,8 +217,9 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             public void run() {
                 long currentTime = System.currentTimeMillis() / 1000;
                 for (Player p : server.getOnlinePlayers()) {
-                    setOnlineTime(p);
-                    timeOnline.put(p, currentTime);
+                    HalfminerPlayer hPlayer = storage.getPlayer(p);
+                    setOnlineTime(hPlayer);
+                    timeOnline.put(hPlayer, currentTime);
                 }
             }
         }, 1200L, 1200L);
@@ -218,7 +227,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
     @Override
     public void onDisable() {
-        for (Player p : timeOnline.keySet()) setOnlineTime(p);
+        for (HalfminerPlayer p : timeOnline.keySet()) setOnlineTime(p);
     }
 
     @Override

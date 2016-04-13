@@ -1,6 +1,6 @@
 package de.halfminer.hms.enums;
 
-public enum StatsType {
+public enum DataType {
 
     KILLS           ("kills"),
     DEATHS          ("deaths"),
@@ -21,12 +21,11 @@ public enum StatsType {
 
     private final String name;
 
-    StatsType(String type) {
+    DataType(String type) {
         name = type;
     }
 
     public String toString() {
         return name;
     }
-
 }

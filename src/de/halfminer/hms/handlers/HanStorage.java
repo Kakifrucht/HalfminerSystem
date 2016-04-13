@@ -1,14 +1,15 @@
 package de.halfminer.hms.handlers;
 
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.interfaces.Disableable;
+import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +18,10 @@ import java.util.UUID;
 /**
  * Stores all information into own flatfile
  * - Autosave
- * - Flatfile in .yml format
+ * - Flatfiles in .yml format
+ *   - Own UUID storage/cache
+ *   - Player data storage
+ *   - Storage for other types of data
  * - Can easily be queried with YAML API
  * - Thread safe
  */
@@ -26,65 +30,67 @@ public class HanStorage extends HalfminerHandler implements Disableable {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();
 
-    private File file;
-    private FileConfiguration fileConfig;
-    private int taskId;
+    private File sysFile;
+    private File uuidFile;
+    private File playerFile;
+
+    private FileConfiguration sysConfig;
+    private FileConfiguration uuidConfig;
+    private FileConfiguration playerConfig;
+
+    private BukkitTask task;
 
     public HanStorage() {
         load();
     }
 
     public void set(String path, Object value) {
-        fileConfig.set(path, value);
+        sysConfig.set(path, value);
     }
 
     public int incrementInt(String path, int incrementBy) {
-        int value = fileConfig.getInt(path, 0) + incrementBy;
-        fileConfig.set(path, value);
+        int value = sysConfig.getInt(path, 0) + incrementBy;
+        sysConfig.set(path, value);
         return value;
     }
 
     public double incrementDouble(String path, double incrementBy) {
-        double value = fileConfig.getDouble(path, 0.0d) + incrementBy;
+        double value = sysConfig.getDouble(path, 0.0d) + incrementBy;
         value = Math.round(value * 100) / 100.0d;
-        fileConfig.set(path, value);
+        sysConfig.set(path, value);
         return value;
     }
 
-    public void setUUID(OfflinePlayer player) {
-        set("sys.uuid." + player.getName().toLowerCase(), player.getUniqueId().toString());
-    }
-
-    public void setStats(OfflinePlayer player, StatsType stats, Object value) {
-        set(player.getUniqueId().toString() + '.' + stats, value);
-    }
-
     public Object get(String path) {
-        return fileConfig.get(path);
+        return sysConfig.get(path);
     }
 
     public String getString(String path) {
-        return fileConfig.getString(path, "");
+        return sysConfig.getString(path, "");
     }
 
     public int getInt(String path) {
-        return fileConfig.getInt(path);
+        return sysConfig.getInt(path);
     }
 
     public long getLong(String path) {
-        return fileConfig.getLong(path);
+        return sysConfig.getLong(path);
     }
 
     public double getDouble(String path) {
-        return fileConfig.getDouble(path);
+        return sysConfig.getDouble(path);
     }
 
     public boolean getBoolean(String path) {
-        return fileConfig.getBoolean(path);
+        return sysConfig.getBoolean(path);
+    }
+
+    public void setUUID(OfflinePlayer player) {
+        uuidConfig.set(player.getName().toLowerCase(), player.getUniqueId().toString());
     }
 
     public UUID getUUID(String playerName) throws PlayerNotFoundException {
-        String uuidString = getString("sys.uuid." + playerName.toLowerCase());
+        String uuidString = uuidConfig.getString(playerName.toLowerCase(), "");
         if (uuidString.length() > 0) return UUID.fromString(uuidString);
         else {
             Player p = server.getPlayer(playerName);
@@ -94,34 +100,22 @@ public class HanStorage extends HalfminerHandler implements Disableable {
         }
     }
 
-    public String getStatsString(OfflinePlayer player, StatsType stats) {
-        return getString(player.getUniqueId() + "." + stats);
+    public HalfminerPlayer getPlayer(String playerString) throws PlayerNotFoundException {
+
+        return getPlayer(server.getOfflinePlayer(getUUID(playerString)));
     }
 
-    public int getStatsInt(OfflinePlayer player, StatsType stats) {
-        return getInt(player.getUniqueId() + "." + stats);
-    }
+    public HalfminerPlayer getPlayer(OfflinePlayer p) {
 
-    public double getStatsDouble(OfflinePlayer player, StatsType stats) {
-        return getDouble(player.getUniqueId() + "." + stats);
-    }
-
-    public boolean getStatsBoolean(OfflinePlayer player, StatsType stats) {
-        return getBoolean(player.getUniqueId() + "." + stats);
-    }
-
-    public int incrementStatsInt(OfflinePlayer player, StatsType stats, int incrementBy) {
-        return incrementInt(player.getUniqueId() + "." + stats, incrementBy);
-    }
-
-    public double incrementStatsDouble(OfflinePlayer player, StatsType stats, double incrementBy) {
-        return incrementDouble(player.getUniqueId() + "." + stats, incrementBy);
+        return new HalfminerPlayer(playerConfig, p);
     }
 
     public void saveConfig() {
 
         try {
-            fileConfig.save(file);
+            sysConfig.save(sysFile);
+            uuidConfig.save(uuidFile);
+            playerConfig.save(playerFile);
             hms.getLogger().info(Language.getMessage("hanStorageSaveSuccessful"));
         } catch (IOException e) {
             hms.getLogger().warning(Language.getMessage("hanStorageSaveUnsuccessful"));
@@ -131,19 +125,29 @@ public class HanStorage extends HalfminerHandler implements Disableable {
 
     public void load() {
 
-        if (file == null) {
-            file = new File(hms.getDataFolder(), "storage.yml");
-            fileConfig = YamlConfiguration.loadConfiguration(file);
+        if (sysFile == null) {
+            sysFile = new File(hms.getDataFolder(), "sysdata.yml");
+            sysConfig = YamlConfiguration.loadConfiguration(sysFile);
+        }
+
+        if (uuidFile == null) {
+            uuidFile = new File(hms.getDataFolder(), "uuidcache.yml");
+            uuidConfig = YamlConfiguration.loadConfiguration(uuidFile);
+        }
+
+        if (playerFile == null) {
+            playerFile = new File(hms.getDataFolder(), "playerdata.yml");
+            playerConfig = YamlConfiguration.loadConfiguration(playerFile);
         }
 
         int saveInterval = hms.getConfig().getInt("storage.autoSaveMinutes", 15) * 60 * 20;
-        if (taskId > 0) scheduler.cancelTask(taskId);
-        taskId = scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
+        if (task != null) task.cancel();
+        task = scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
                 saveConfig();
             }
-        }, saveInterval, saveInterval).getTaskId();
+        }, saveInterval, saveInterval);
     }
 
     @Override

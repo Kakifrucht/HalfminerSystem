@@ -1,7 +1,7 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
@@ -149,7 +149,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         final int healthScale = (int) other.getMaxHealth();
 
         barHandler.sendBar(p, Language.placeholderReplace(lang.get("bossbar"), "%PLAYER%", other.getName(),
-                "%LEVEL%", storage.getStatsString(other, StatsType.SKILL_LEVEL),
+                "%LEVEL%", storage.getPlayer(other).getString(DataType.SKILL_LEVEL),
                 "%HEALTH%", String.valueOf(health), "%MAXHEALTH%", String.valueOf(healthScale)),
                 BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) health / healthScale);
 

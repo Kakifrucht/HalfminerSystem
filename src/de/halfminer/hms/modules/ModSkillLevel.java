@@ -1,10 +1,11 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.enums.StatsType;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
+import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -47,13 +48,14 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     public void joinRecalculate(PlayerJoinEvent e) {
 
         Player player = e.getPlayer();
+        HalfminerPlayer hPlayer = storage.getPlayer(player);
         if (player.hasPermission("hms.bypass.skilllevel")) return;
 
         // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
-        if (storage.getStatsInt(player, StatsType.SKILL_LEVEL) >= derankThreshold
-                && storage.getStatsInt(player, StatsType.LASTKILL) + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
+        if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankThreshold
+                && hPlayer.getInt(DataType.LASTKILL) + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
 
-            storage.setStats(player, StatsType.LASTKILL, System.currentTimeMillis() / 1000);
+            hPlayer.set(DataType.LASTKILL, System.currentTimeMillis() / 1000);
             updateSkill(player, derankLossAmount);
             player.sendMessage(Language.getMessagePlaceholders("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
 
@@ -66,18 +68,19 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity().getPlayer();
+        HalfminerPlayer hKiller = storage.getPlayer(killer);
 
         if (killer != null && !killer.hasPermission("hms.bypass.skilllevel") && !victim.hasPermission("hms.bypass.skilllevel")) {
 
-            storage.setStats(killer, StatsType.LASTKILL, System.currentTimeMillis() / 1000);
+            hKiller.set(DataType.LASTKILL, System.currentTimeMillis() / 1000);
 
             // Prevent grinding
             String uuidCat = killer.getUniqueId().toString() + victim.getUniqueId().toString();
             if (!killDoesCount(uuidCat)) return;
 
             // Calculate skill modifier
-            int killerLevel = storage.getStatsInt(killer, StatsType.SKILL_LEVEL);
-            int victimLevel = storage.getStatsInt(victim, StatsType.SKILL_LEVEL);
+            int killerLevel = hKiller.getInt(DataType.SKILL_LEVEL);
+            int victimLevel = storage.getPlayer(victim).getInt(DataType.SKILL_LEVEL);
             int killerVictimDifference = killerLevel - victimLevel;
             int modifier = ((killerVictimDifference * 3) - 65) * -1;
             if (killerVictimDifference >= 10 && modifier >= 4) modifier /= 4;
@@ -90,9 +93,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
     public void updateSkill(Player player, int modifier) {
 
-        int elo = storage.getStatsInt(player, StatsType.SKILL_ELO) + modifier;
-        int level = storage.getStatsInt(player, StatsType.SKILL_LEVEL);
-        int kdRatio = storage.getStatsInt(player, StatsType.KD_RATIO);
+        HalfminerPlayer hPlayer = storage.getPlayer(player);
+
+        int elo = hPlayer.getInt(DataType.SKILL_ELO) + modifier;
+        int level = hPlayer.getInt(DataType.SKILL_LEVEL);
+        int kdRatio = hPlayer.getInt(DataType.KD_RATIO);
 
         // Bounds for levels and elo
         if (elo < 0) elo = 0;
@@ -139,9 +144,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         teamName = teamName.substring(2); //remove sorting id
 
-        storage.setStats(player, StatsType.SKILL_ELO, elo);
-        storage.setStats(player, StatsType.SKILL_LEVEL, newLevel);
-        storage.setStats(player, StatsType.SKILL_GROUP, teamName);
+        hPlayer.set(DataType.SKILL_ELO, elo);
+        hPlayer.set(DataType.SKILL_LEVEL, newLevel);
+        hPlayer.set(DataType.SKILL_GROUP, teamName);
 
         // Send title/log if necessary
         if (newLevel != level) {

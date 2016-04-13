@@ -41,7 +41,7 @@ public class ModMotd extends HalfminerModule implements Listener {
         playerCountThreshold = hms.getConfig().getInt("motd.playerCountThreshold", 50);
         playerCountBuffer = hms.getConfig().getInt("motd.playerCountBuffer", 1);
         playerCountLimit = server.getMaxPlayers();
-        String setMotd = Language.getMessagePlaceholders("modMotdLine", false, "%REPLACE%", storage.getString("sys.news"));
+        String setMotd = Language.getMessagePlaceholders("modMotdLine", false, "%REPLACE%", storage.getString("news"));
 
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");
         motd = new String[strList.size()];

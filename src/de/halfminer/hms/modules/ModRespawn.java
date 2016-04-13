@@ -84,14 +84,14 @@ public class ModRespawn extends HalfminerModule implements Listener {
     public void setSpawn(Location loc) {
 
         respawnLoc = loc;
-        storage.set("sys.spawnlocation", loc);
+        storage.set("spawnlocation", loc);
         loc.getWorld().setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
     @Override
     public void loadConfig() {
 
-        Object loc = storage.get("sys.spawnlocation");
+        Object loc = storage.get("spawnlocation");
 
         if (loc instanceof Location) respawnLoc = (Location) loc;
         else respawnLoc = server.getWorlds().get(0).getSpawnLocation();

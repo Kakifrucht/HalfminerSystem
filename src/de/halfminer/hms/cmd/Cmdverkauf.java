@@ -2,7 +2,7 @@ package de.halfminer.hms.cmd;
 
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
-import de.halfminer.hms.enums.StatsType;
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.Language;
 import net.ess3.api.Economy;
 import org.bukkit.Material;
@@ -139,7 +139,7 @@ public class Cmdverkauf extends HalfminerCommand {
                     e.printStackTrace();
                 }
 
-                storage.incrementStatsDouble(player, StatsType.REVENUE, revenue);
+                storage.getPlayer(player).incrementDouble(DataType.REVENUE, revenue);
                 revenue = Math.round(revenue * 100) / 100.0d;
 
                 //print message

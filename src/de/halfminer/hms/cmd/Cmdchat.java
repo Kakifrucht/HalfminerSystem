@@ -92,8 +92,8 @@ public class Cmdchat extends HalfminerCommand {
             } else if (args[0].equalsIgnoreCase("set") && args.length > 1){
 
                 String message = Language.arrayToString(args, 1, true).replace("\\n", "\n");
-                storage.set("sys.chatmessage", message);
-                storage.set("sys.chatmessagetime", (System.currentTimeMillis() / 1000));
+                storage.set("chatmessage", message);
+                storage.set("chatmessagetime", (System.currentTimeMillis() / 1000));
                 sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageSet", true, "%PREFIX%", "Chat",
                         "%MESSAGE%", message));
 
@@ -151,7 +151,7 @@ public class Cmdchat extends HalfminerCommand {
 
                     } else if (args[0].equalsIgnoreCase("news")) {
 
-                        storage.set("sys.news", message);
+                        storage.set("news", message);
                         hms.getModule(ModuleType.MOTD).loadConfig();
                         if (sender instanceof Player) {
                             bossBar.sendBar((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
@@ -198,7 +198,7 @@ public class Cmdchat extends HalfminerCommand {
      */
     private boolean verifyMessage() {
 
-        message = storage.getString("sys.chatmessage");
+        message = storage.getString("chatmessage");
 
         if (message.length() == 0) {
 
@@ -208,11 +208,11 @@ public class Cmdchat extends HalfminerCommand {
         } else {
 
             //Clear message if it is old, only keep it for 10 minutes
-            long time = storage.getLong("sys.chatmessagetime");
+            long time = storage.getLong("chatmessagetime");
             if (time + 600 < (System.currentTimeMillis() / 1000)) {
 
                 message = "";
-                storage.set("sys.chatmessage", null);
+                storage.set("chatmessage", null);
 
                 sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageNotSet", true,
                         "%PREFIX%", "Chat"));
