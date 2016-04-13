@@ -78,8 +78,8 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         hPlayer.set(DataType.LAST_NAME, player.getName());
 
         // Votebarrier setting
-        if (storage.getInt("sys.vote." + player.getUniqueId().toString()) == 0) {
-            storage.set("sys.vote." + player.getUniqueId().toString(), ((System.currentTimeMillis() / 1000) + timeUntilHomeBlockSeconds));
+        if (storage.getInt("vote." + player.getUniqueId().toString()) == 0) {
+            storage.set("vote." + player.getUniqueId().toString(), ((System.currentTimeMillis() / 1000) + timeUntilHomeBlockSeconds));
         }
     }
 

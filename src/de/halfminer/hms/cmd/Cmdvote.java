@@ -55,7 +55,7 @@ public class Cmdvote extends HalfminerCommand {
                 }
 
                 // check if threshold has been met to message admin
-                int totalvotes = storage.incrementInt("sys.totalvotes", 1);
+                int totalvotes = storage.incrementInt("totalvotes", 1);
                 if (totalvotes == hms.getConfig().getInt("command.vote.threshold", 2000)) {
 
                     String command = hms.getConfig().getString("command.vote.commandToExecute");
