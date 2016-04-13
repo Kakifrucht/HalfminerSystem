@@ -10,8 +10,8 @@ import org.bukkit.command.CommandSender;
 @SuppressWarnings("unused")
 public class Cmdhmstore extends HalfminerCommand {
 
-    private HalfminerPlayer player;
-    private DataType type;
+    private HalfminerPlayer player = null;
+    private DataType type = null;
 
     public Cmdhmstore() {
         this.permission = "hms.admin";
@@ -20,18 +20,16 @@ public class Cmdhmstore extends HalfminerCommand {
     @Override
     public void run(final CommandSender sender, String label, String[] args) {
 
-        if (args.length > 1) { // Set and get variables
+        if (args.length > 1) {
 
-            player = null;
-            type = null;
-            // Replace playername with UUID if found
             String path = args[1].toLowerCase();
             String[] split = path.split("[.]");
-            // Only replace if the path is longer than 1 and it is not sys, as this var is reserved
+
+            // Check if we edit/view a player
             if (split.length > 1) {
 
                 try {
-                    // Get UUID of player
+
                     player = storage.getPlayer(split[0]);
                     for (DataType typeQuery : DataType.values()) {
                         if (typeQuery.toString().equalsIgnoreCase(split[1])) {
@@ -41,9 +39,11 @@ public class Cmdhmstore extends HalfminerCommand {
                     }
                     if (type == null) player = null;
                     else path = ChatColor.GOLD + split[0] + ChatColor.GRAY + ChatColor.ITALIC + '.' + split[1];
+
                 } catch (PlayerNotFoundException ignored) {
                 }
             }
+
             if (args.length > 2 && args[0].equalsIgnoreCase("set")) {
 
                 String setTo = Language.arrayToString(args, 2, false);
