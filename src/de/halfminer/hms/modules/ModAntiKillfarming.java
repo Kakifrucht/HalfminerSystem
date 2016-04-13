@@ -256,13 +256,13 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     public void loadConfig() {
 
         // Get constants
-        BLOCK_TIME = hms.getConfig().getInt("killfarming.blockTime", 300);
-        THRESHOLD_UNTIL_BLOCK = hms.getConfig().getInt("killfarming.thresholdUntilBlock", 5);
-        THRESHOLD_UNTIL_REMOVAL_SECONDS = hms.getConfig().getInt("killfarming.thresholdUntilRemoval", 100);
+        BLOCK_TIME = hms.getConfig().getInt("antiKillfarming.blockTime", 300);
+        THRESHOLD_UNTIL_BLOCK = hms.getConfig().getInt("antiKillfarming.thresholdUntilBlock", 5);
+        THRESHOLD_UNTIL_REMOVAL_SECONDS = hms.getConfig().getInt("antiKillfarming.thresholdUntilRemoval", 100);
 
         // Get allowed commands
         commandExemptList.clear();
-        commandExemptList.addAll(hms.getConfig().getStringList("killfarming.killfarmingCommandExemptions"));
+        commandExemptList.addAll(hms.getConfig().getStringList("antiKillfarming.killfarmingCommandExemptions"));
 
         // Get language
         lang.clear();

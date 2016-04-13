@@ -28,12 +28,28 @@ command:
     threshold: 2000
     #Command to execute when threshold has been met
     commandToExecute: mail send Kakifrucht Event ankuendigen, votes erreicht
-storage:
-  #Time in minutes the storage will be autosaving
-  autoSaveMinutes: 15
-teleport:
-  #Time in seconds players cannot move before being teleported
-  cooldownSeconds: 3
+handler:
+  storage:
+    #Time in minutes the storage will be autosaving
+    autoSaveMinutes: 15
+  teleport:
+    #Time in seconds players cannot move before being teleported
+    cooldownSeconds: 3
+antiKillfarming:
+  #Time in seconds the primary block will be, this doubles every block
+  blockTime: 300
+  #Length of killstreak until blocked
+  thresholdUntilBlock: 5
+  #Amount of seconds until the killstreak is reset
+  thresholdUntilRemoval: 100
+  #List of commands that are still allowed
+  killfarmingCommandExemptions:
+  - 'regeln'
+  - 'hilfe'
+  - 'warn'
+  - 'ban'
+  - 'tempban'
+  - 'bminfo'
 antiXray:
   #Time until a counted player won't be counter anymore
   intervalUntilClearSeconds: 600
@@ -58,21 +74,11 @@ chat:
   formats:
   - 'owner:%PREFIX% &r- &l%PLAYER%%SUFFIX%: &7%MESSAGE%'
   - 'default:%PREFIX% &r- %PLAYER%: &7%MESSAGE%'
-killfarming:
-  #Time in seconds the primary block will be, this doubles every block
-  blockTime: 300
-  #Length of killstreak until blocked
-  thresholdUntilBlock: 5
-  #Amount of seconds until the killstreak is reset
-  thresholdUntilRemoval: 100
-  #List of commands that are still allowed
-  killfarmingCommandExemptions:
-  - 'regeln'
-  - 'hilfe'
-  - 'warn'
-  - 'ban'
-  - 'tempban'
-  - 'bminfo'
+combatLog:
+  #Broadcast when a player logs out
+  broadcastLog: true
+  #Time in seconds until untag
+  tagTime: 15
 motd:
   #Minimum shown slot count
   playerCountThreshold: 50
@@ -89,9 +95,6 @@ motd:
   - 6
   - 9
   - b
-respawn:
-  #Command to be run on first player join, supports %PLAYER% placeholder
-  firstJoinCommand: ''
 performance:
   #Delay in ticks until the blocks will be lifted
   ticksDelayUntilClear: 160
@@ -111,18 +114,9 @@ performance:
   entityLimitSame: 25
   #Entity limit box radius, that will be checked on mobspawn from a spawner
   boxSize: 16
-combatLog:
-  #Broadcast when a player logs out
-  broadcastLog: true
-  #Time in seconds until untag
-  tagTime: 15
-tps:
-  #The higher, the more precise, however the tps will update slower
-  ticksBetweenUpdate: 100
-  #If set higher, the tps will update more slowly due to more values that are taken into consideration
-  historySize: 6
-  #If the tps falls under this tps, players with notify permission will be notified
-  alertThreshold: 17.0
+respawn:
+  #Command to be run on first player join, supports %PLAYER% placeholder
+  firstJoinCommand: ''
 skillLevel:
   #Level that has to be reached for a derank to occur
   derankThreshold: 16
@@ -141,6 +135,13 @@ skillLevel:
   - 6Gold
   - 8Eisen
   - 7Noob
+tps:
+  #The higher, the more precise, however the tps will update slower
+  ticksBetweenUpdate: 100
+  #If set higher, the tps will update more slowly due to more values that are taken into consideration
+  historySize: 6
+  #If the tps falls under this tps, players with notify permission will be notified
+  alertThreshold: 17.0
 localization:
   consoleName: 'Konsole'
   lineSeparator: '&e&m------------------------------------------------\n'
