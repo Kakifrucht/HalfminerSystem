@@ -14,6 +14,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+/**
+ * - Chat manipulation tools
+ * - Toggle Globalmute
+ * - Clear chat
+ * - Title broadcast
+ * - Bossbar broadcast
+ * - Countdown via bossbar
+ * - Send custom messages to player or broadcast
+ * - Set news and motd message
+ */
 @SuppressWarnings("unused")
 public class Cmdchat extends HalfminerCommand {
 

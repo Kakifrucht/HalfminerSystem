@@ -5,6 +5,12 @@ import de.halfminer.hms.util.Language;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * - Executes Essentials /home after unblock from vote
+ * - Allows usage up to 15 minutes after join
+ * - Doesn't block for new users (< 300 Minutes)
+ * - Doesn't block users ip has already voted twice
+ */
 @SuppressWarnings("unused")
 public class Cmdhome extends HalfminerCommand {
 

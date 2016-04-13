@@ -9,6 +9,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * - View own / other players stats
+ * - Allows to compare statistics easily
+ */
 @SuppressWarnings("unused")
 public class Cmdstats extends HalfminerCommand {
 

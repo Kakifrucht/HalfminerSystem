@@ -10,6 +10,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * - Teleport player to spawn
+ * - Teleport other players to spawn with permission
+ * - Teleport offline players to spawn once they login
+ * - Use /spawn s to set the spawn with permission
+ */
 @SuppressWarnings("unused")
 public class Cmdspawn extends HalfminerCommand {
 

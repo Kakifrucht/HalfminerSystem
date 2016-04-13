@@ -14,6 +14,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.UUID;
 
+/**
+ * - Small features for VariableTriggers
+ * - Remove head in casino
+ * - Remove case in casino
+ * - Set VariableTriggers vars accordingly
+ */
 @SuppressWarnings("unused")
 public class Cmdvtapi extends HalfminerCommand {
 

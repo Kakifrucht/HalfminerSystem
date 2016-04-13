@@ -7,6 +7,11 @@ import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+/**
+ * - Edit HalfminerSystem storage
+ * - Set and delete vars
+ * - Save to disk
+ */
 @SuppressWarnings("unused")
 public class Cmdhmstore extends HalfminerCommand {
 

@@ -24,6 +24,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * - Reload config (reload)
+ * - Search for homes in a given radius, hooking into Essentials (searchhomes)
+ * - Rename items, supports lore (rename)
+ * - Ring players to get their attention (ring)
+ * - Edit skillelo of player (updateskill)
+ * - Remove a players /home block (rmhomeblock)
+ */
 @SuppressWarnings("unused")
 public class Cmdhms extends HalfminerCommand {
 

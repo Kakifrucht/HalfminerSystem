@@ -8,7 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-
+/**
+ * - Information if player or server lags
+ * - View other players latency/ping
+ */
 @SuppressWarnings("unused")
 public class Cmdlag extends HalfminerCommand {
 

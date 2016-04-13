@@ -13,6 +13,12 @@ import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 
+/**
+ * - Sell farm items
+ * - Revenue configurable
+ * - Possibility to sell multiple inventories at once
+ * - Multipliers for ranks (via permissions)
+ */
 @SuppressWarnings("unused")
 public class Cmdverkauf extends HalfminerCommand {
 

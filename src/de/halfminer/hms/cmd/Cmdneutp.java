@@ -19,6 +19,13 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
 
+/**
+ * - Teleport to random location
+ * - Set min/max x/z values
+ * - Checks for safe teleport location
+ * - Sets home automatically
+ * - Gives some information about the server via chat and bossbar
+ */
 @SuppressWarnings("unused")
 public class Cmdneutp extends HalfminerCommand {
 

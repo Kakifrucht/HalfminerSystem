@@ -9,6 +9,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * - Shows vote links (custom per player) and current votecount
+ * - Execute custom command when vote is received (configure Votifier to "/vote voted %PLAYER%")
+ * - Execute command if certain votecount has been reached (event notifier for instance)
+ * - If offline or inventory full, stores reward for retrieval later (/vote getreward)
+ * - Counts votes for /stats
+ * - Unblocks access to /home
+ * - Will also unblock other users with same ip
+ */
 @SuppressWarnings("unused")
 public class Cmdvote extends HalfminerCommand {
 

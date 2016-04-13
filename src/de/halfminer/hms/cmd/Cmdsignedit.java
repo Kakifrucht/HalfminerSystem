@@ -6,6 +6,10 @@ import de.halfminer.hms.util.Language;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * - Copy signs, define copy amount
+ * - Edit signs, define line number
+ */
 @SuppressWarnings("unused")
 public class Cmdsignedit extends HalfminerCommand {
 
