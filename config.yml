@@ -174,6 +174,8 @@ localization:
   commandHmsSearchhomesNoneFound: '&cEs wurden keine Homes gefunden'
   commandHmsSearchhomesResults: '&7%PLAYER% &e>> &a%HOMENAME%'
   commandHmsSearchhomesStarted: '&7Die Suche nach Homes in einem Radius von &e%RADIUS% &7Bloecken wurde gestartet...'
+  commandHmsSkillUsage: '&cVerwendung: &f/hms updateskill <spieler> [modifier]'
+  commandHmsSkillUpdated: '&7Das Skilllevel von &e%PLAYER% &7wurde auf Level &e%SKILLLEVEL% &7(&o%OLDELO% &7-> &o%NEWELO%&7) gesetzt'
   commandHmsUsage: '&cVerwendung: &f/hms reload, rename <name> [-lore line1|line2|..], updateskill <spieler>, rmhomeblock <spieler>, ring <spieler>, searchhomes [radius]'
   commandHmstoreGet: '&7Der Wert &o%PATH% &7lautet: &r%VALUE%'
   commandHmstoreRemove: '&7Der Wert &o%PATH% &7wurde entfernt'
