@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Print periodic messages to chat
+ * - Sends messages in a given interval
+ * - Messages configurable
  */
 @SuppressWarnings("unused")
 public class ModAutoMessage extends HalfminerModule {

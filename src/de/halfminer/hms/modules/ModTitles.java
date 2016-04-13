@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Add titles containing information to the game
  * - Shows join title
  *   - Players online / money
  *   - Configurable message

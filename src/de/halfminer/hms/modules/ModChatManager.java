@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fully fledged chatmanager
  * - Hooks into Vault to get prefix and suffix
  * - Custom chatformats
  *   - Default chatformat is bottom one

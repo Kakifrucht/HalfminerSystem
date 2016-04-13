@@ -4,6 +4,9 @@ import de.halfminer.hms.enums.DataType;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
+/**
+ * Object to access stored player information
+ */
 public class HalfminerPlayer {
 
     final FileConfiguration storage;

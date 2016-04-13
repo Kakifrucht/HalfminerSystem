@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Records statistics about players in storage
  * - Online time
  * - Last names
  * - Kill/death count

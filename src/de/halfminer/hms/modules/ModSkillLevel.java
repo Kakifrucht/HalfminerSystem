@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Adds a ELO based skilllevel system to the server
  * - Stores skilllevel/elo/groupname in storage
  * - Shows skilllevel in tablist
  * - Colors players name, depending on skillgroup

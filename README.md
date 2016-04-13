@@ -14,7 +14,10 @@ Current features
     - Broadcast bar and player bar seperate, only one at a time of each
   - Storage
     - Autosave
-    - Flatfile in .yml format
+    - Flatfiles in .yml format
+      - Own UUID storage/cache
+      - Player data storage
+      - Storage for other types of data
     - Can easily be queried with YAML API
     - Thread safe
   - Teleport

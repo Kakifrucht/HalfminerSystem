@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Reduce server strain by limiting redstone, pistons, hoppers and spawners
  * - Redstone can only be triggered a given amount locally
  * - Pistons can only be triggered a given amount server wide
  * - Hoppers placement is limited

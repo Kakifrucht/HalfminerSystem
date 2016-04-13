@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Stores all information into own flatfile
  * - Autosave
  * - Flatfiles in .yml format
  *   - Own UUID storage/cache
@@ -139,6 +138,16 @@ public class HanStorage extends HalfminerHandler implements Disableable {
             playerFile = new File(hms.getDataFolder(), "playerdata.yml");
             playerConfig = YamlConfiguration.loadConfiguration(playerFile);
         }
+
+        /*
+        FileConfiguration oldConfig = YamlConfiguration.loadConfiguration(new File(hms.getDataFolder(), "storage.yml"));
+        ConfigurationSection sec = oldConfig.getConfigurationSection("sys");
+        for (String key : sec.getConfigurationSection("uuid").getKeys(false)) uuidConfig.set(key, sec.get("uuid." + key));
+        sec.set("uuid", null);
+        for (String key : sec.getKeys(true)) sysConfig.set(key, sec.get(key));
+        oldConfig.set("sys", null);
+        for (String key : oldConfig.getKeys(true)) playerConfig.set(key, oldConfig.get(key));
+        */
 
         int saveInterval = hms.getConfig().getInt("storage.autoSaveMinutes", 15) * 60 * 20;
         if (task != null) task.cancel();

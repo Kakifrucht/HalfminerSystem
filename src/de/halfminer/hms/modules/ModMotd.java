@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Set the motd and max playercount in the serverlist
- * - Takes news from storage and adds it to motd
- * - Maximum playercount dynamic, based on how many people are online
+ * - Configurable Serverlist Motd
+ *   - Can be set via command
+ * - Dynamic playerlimit indicator, configurable with buffers and limits
  */
 @SuppressWarnings("unused")
 public class ModMotd extends HalfminerModule implements Listener {

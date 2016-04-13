@@ -14,7 +14,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Contains functions, that are static and have no fitting module
  * - Removes leave messages
  * - Blocks certain items from being traded with villagers/merchants
  * - Override spigot teleport safety

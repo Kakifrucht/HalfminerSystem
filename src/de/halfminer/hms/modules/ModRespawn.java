@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Respawn player at custom location
  * - First time join message
  * - Execute custom command on first join
  */

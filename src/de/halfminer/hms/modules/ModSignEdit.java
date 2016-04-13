@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Sign editing driver for Cmdsignedit
  * - Detects which sign to choose
  * - Copies sign lines or changes a given one
  */

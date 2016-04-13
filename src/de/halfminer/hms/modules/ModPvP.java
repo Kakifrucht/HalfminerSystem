@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * PvP modifications/additions
  * - Strength potions damage nerfed
  * - Bow spamming disabled
  * - Kill/Deathstreaks via titles

@@ -8,7 +8,8 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.LinkedList;
 
 /**
- * Calculates servers TPS and notifies staff when it falls under a given threshold
+ * - Calculates ticks per second
+ * - Notifies staff when servers Tps is too low
  */
 @SuppressWarnings("unused")
 public class ModTps extends HalfminerModule implements Listener {

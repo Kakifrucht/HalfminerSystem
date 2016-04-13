@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import java.util.*;
 
 /**
- * Adds penalty for killing the same player repeatedly
  * - Counts amount of kills
  * - Blocks commands from both players that partook in the killfarming
  * - Doubles punishment

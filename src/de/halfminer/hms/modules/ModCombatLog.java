@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Disables the possibility to logout during combat
  * - Tags players when hitting/being hit
  * - Shows health, name of attacker/victim and level via BossBar
  * - Combatlogging causes instant death

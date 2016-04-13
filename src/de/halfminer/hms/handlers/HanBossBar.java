@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Handler to send bossbar messages
  * - Send bar to specific player or broadcast
  * - Set time until bar fades out
  * - Broadcast bar and player bar seperate, only one at a time of each
