@@ -48,6 +48,7 @@ Current features
     - Allows easy toggling of globalmute
     - Plays sound on chat
     - Notifies mentioned players via actionbar
+      - Rate limit (no mention spam)
     - Disallow
       - Using color codes
       - Using formatting codes

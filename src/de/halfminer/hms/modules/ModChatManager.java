@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTitles;
+import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
 import net.milkbowl.vault.chat.Chat;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * - Hooks into Vault to get prefix and suffix
@@ -26,6 +28,7 @@ import java.util.*;
  * - Allows easy toggling of globalmute
  * - Plays sound on chat
  * - Notifies mentioned players via actionbar
+ *   - Rate limit (no mention spam)
  * - Disallow
  *   - Using color codes
  *   - Using formatting codes
@@ -33,13 +36,15 @@ import java.util.*;
  *   - Writing capitalized
  */
 @SuppressWarnings("unused")
-public class ModChatManager extends HalfminerModule implements Listener {
+public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
     private Chat vaultChat;
 
     private final List<Pair<String, String>> chatFormats = new ArrayList<>();
     private String topFormat;
     private String defaultFormat;
+
+    private Map<Player, Long> lastMentioned = new ConcurrentHashMap<>();
     private boolean isGlobalmuted = false;
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -72,13 +77,21 @@ public class ModChatManager extends HalfminerModule implements Listener {
             if (!player.getName().equals(p.getName())) players.put(player.getName().toLowerCase(), player);
 
         Set<Player> mentioned = new HashSet<>();
-        for (String str : message.toLowerCase().split(" "))
-            if (players.containsKey(str)) mentioned.add(players.get(str));
+        long currentTime = System.currentTimeMillis() / 1000;
+        for (String str : message.split(" ")) {
+            String filteredName = charFilter(str);
+            if (players.containsKey(filteredName)) {
+                Player pMentioned = players.get(filteredName);
+                if (!lastMentioned.containsKey(pMentioned) || !(lastMentioned.get(pMentioned) > currentTime))
+                    mentioned.add(pMentioned);
+            }
+        }
 
         for (Player wasMentioned : mentioned) {
             ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendActionBar(wasMentioned,
                     Language.getMessagePlaceholders("modChatManMentioned", false, "%PLAYER%", p.getName()));
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_TOUCH, 0.2f, 1.8f);
+            lastMentioned.put(wasMentioned, currentTime + 10);
         }
 
         e.setMessage(message);
@@ -148,6 +161,24 @@ public class ModChatManager extends HalfminerModule implements Listener {
         return msg;
     }
 
+    private String charFilter(String toFilter) {
+
+        StringBuilder sb = new StringBuilder(toFilter.toLowerCase());
+
+        for (int i = 0; i < sb.length(); i++) {
+
+            char toCheck = sb.charAt(i);
+            if (!Character.isLetter(toCheck)
+                    && !Character.isDigit(toCheck)
+                    && toCheck != '_') {
+                sb.deleteCharAt(i);
+                i--;
+            }
+        }
+
+        return sb.toString();
+    }
+
     @Override
     public void loadConfig() {
 
@@ -180,5 +211,10 @@ public class ModChatManager extends HalfminerModule implements Listener {
 
             chatFormats.remove(chatFormats.size() - 1);
         }
+    }
+
+    @Override
+    public void sweep() {
+        this.lastMentioned = new ConcurrentHashMap<>();
     }
 }
