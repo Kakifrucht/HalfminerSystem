@@ -1,5 +1,7 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
 import net.milkbowl.vault.chat.Chat;
@@ -12,8 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * - Hooks into Vault to get prefix and suffix
@@ -24,6 +25,7 @@ import java.util.List;
  * - Denies chatting if globalmute active
  * - Allows easy toggling of globalmute
  * - Plays sound on chat
+ * - Notifies mentioned players via actionbar
  * - Disallow
  *   - Using color codes
  *   - Using formatting codes
@@ -50,21 +52,7 @@ public class ModChatManager extends HalfminerModule implements Listener {
             return;
         }
 
-        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
-
-        String message = e.getMessage();
-
-        String format;
-        if (p.hasPermission("hms.chat.topformat") && chatFormats.size() > 0) format = topFormat;
-        else {
-            format = defaultFormat;
-            for (Pair<String, String> pair : chatFormats) {
-                if (p.hasPermission("hms.chat.format." + pair.getLeft())) {
-                    format = pair.getRight();
-                    break;
-                }
-            }
-        }
+        String format = getFormat(p);
 
         String prefix = "";
         String suffix = "";
@@ -77,34 +65,25 @@ public class ModChatManager extends HalfminerModule implements Listener {
                 "%PREFIX%", prefix, "%SUFFIX%", suffix, "%MESSAGE%", "%2$s");
         format = ChatColor.translateAlternateColorCodes('&', format);
 
-        StringBuilder sb = new StringBuilder(message);
-        for (int i = 0; i < message.length() - 1; i++) {
+        String message = filterMessage(p, e.getMessage());
 
-            char at = sb.charAt(i);
-            char at2 = sb.charAt(i + 1);
-            if (at == '&') {
+        Map<String, Player> players = new HashMap<>();
+        for (Player player : e.getRecipients())
+            if (!player.getName().equals(p.getName())) players.put(player.getName().toLowerCase(), player);
 
-                int charAt = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(at2);
+        Set<Player> mentioned = new HashSet<>();
+        for (String str : message.toLowerCase().split(" "))
+            if (players.containsKey(str)) mentioned.add(players.get(str));
 
-                if ((charAt > 22 && p.hasPermission("hms.chat.allowformatcode"))
-                        || (charAt < 23 && charAt > -1 && p.hasPermission("hms.chat.allowcolor")))
-                    sb.setCharAt(i, ChatColor.COLOR_CHAR);
-            } else if (at == '.' && i > 0 && message.length() > 6 && !p.hasPermission("hms.chat.allowlinks")) {
-
-                if (at2 != ' ' && sb.charAt(i - 1) != ' ') sb.setCharAt(i, ' ');
-            }
-        }
-
-        message = sb.toString();
-
-        if (!p.hasPermission("hms.chat.allowcaps") && message.length() > 3) {
-            int amountUppercase = 0;
-            for (Character check : message.toCharArray()) if (Character.isUpperCase(check)) amountUppercase++;
-            if (amountUppercase > (message.length() / 2)) message = message.toLowerCase();
+        for (Player wasMentioned : mentioned) {
+            ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendActionBar(wasMentioned,
+                    Language.getMessagePlaceholders("modChatManMentioned", false, "%PLAYER%", p.getName()));
+            wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_TOUCH, 0.2f, 1.8f);
         }
 
         e.setMessage(message);
         e.setFormat(format);
+        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
     }
 
     public void toggleGlobalmute() {
@@ -119,6 +98,54 @@ public class ModChatManager extends HalfminerModule implements Listener {
             server.broadcast(Language.getMessagePlaceholders("modChatManGlobalmuteOff",
                     true, "%PREFIX%", "Chat"), "hms.default");
         }
+    }
+
+    private String getFormat(Player sender) {
+
+        if (sender.hasPermission("hms.chat.topformat") && chatFormats.size() > 0) return topFormat;
+        else {
+            String format;
+            format = defaultFormat;
+            for (Pair<String, String> pair : chatFormats) {
+                if (sender.hasPermission("hms.chat.format." + pair.getLeft())) {
+                    format = pair.getRight();
+                    break;
+                }
+            }
+            return format;
+        }
+    }
+
+    private String filterMessage(Player sender, String message) {
+
+        String msg = message;
+        StringBuilder sb = new StringBuilder(msg);
+        for (int i = 0; i < message.length() - 1; i++) {
+
+            char at = sb.charAt(i);
+            char at2 = sb.charAt(i + 1);
+            if (at == '&') {
+
+                int charAt = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(at2);
+
+                if ((charAt > 22 && sender.hasPermission("hms.chat.allowformatcode"))
+                        || (charAt < 23 && charAt > -1 && sender.hasPermission("hms.chat.allowcolor")))
+                    sb.setCharAt(i, ChatColor.COLOR_CHAR);
+            } else if (at == '.' && i > 0 && message.length() > 6 && !sender.hasPermission("hms.chat.allowlinks")) {
+
+                if (at2 != ' ' && sb.charAt(i - 1) != ' ') sb.setCharAt(i, ' ');
+            }
+        }
+
+        msg = sb.toString();
+
+        if (!sender.hasPermission("hms.chat.allowcaps") && msg.length() > 3) {
+            int amountUppercase = 0;
+            for (Character check : message.toCharArray()) if (Character.isUpperCase(check)) amountUppercase++;
+            if (amountUppercase > (message.length() / 2)) msg = message.toLowerCase();
+        }
+
+        return msg;
     }
 
     @Override

@@ -47,6 +47,7 @@ Current features
     - Denies chatting if globalmute active
     - Allows easy toggling of globalmute
     - Plays sound on chat
+    - Notifies mentioned players via actionbar
     - Disallow
       - Using color codes
       - Using formatting codes
