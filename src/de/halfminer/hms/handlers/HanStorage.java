@@ -24,6 +24,7 @@ import java.util.UUID;
  * - Can easily be queried with YAML API
  * - Thread safe
  */
+@SuppressWarnings("unused")
 public class HanStorage extends HalfminerHandler implements Disableable {
 
     private final static HalfminerSystem hms = HalfminerSystem.getInstance();

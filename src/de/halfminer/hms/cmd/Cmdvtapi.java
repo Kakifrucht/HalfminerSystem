@@ -12,8 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.UUID;
-
 /**
  * - Small features for VariableTriggers
  * - Remove head in casino
@@ -78,7 +76,6 @@ public class Cmdvtapi extends HalfminerCommand {
 
                         int level;
                         try {
-                            UUID uuid = storage.getUUID(skullOwner);
                             level = storage.getPlayer(skullOwner).getInt(DataType.SKILL_LEVEL);
                         } catch (PlayerNotFoundException e) {
                             level = 1;

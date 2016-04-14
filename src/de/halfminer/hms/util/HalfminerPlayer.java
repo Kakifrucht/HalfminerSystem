@@ -7,10 +7,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 /**
  * Object to access stored player information
  */
+@SuppressWarnings({"SameParameterValue", "UnusedReturnValue"})
 public class HalfminerPlayer {
 
-    final FileConfiguration storage;
-    final String path;
+    private final FileConfiguration storage;
+    private final String path;
 
     public HalfminerPlayer(FileConfiguration storage, OfflinePlayer p) {
         this.storage = storage;
