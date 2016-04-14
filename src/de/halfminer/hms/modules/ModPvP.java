@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * - Strength potions damage nerfed
  * - Bow spamming disabled
- * - Kill/Deathstreaks via titles
+ * - Killstreak via actionbar
  * - Sounds on kill/death
  * - Remove effects on teleport
  */
@@ -36,9 +36,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private Map<Player, Long> lastBowShot = new HashMap<>();
-
-    private final Map<UUID, Integer> killStreaks = new HashMap<>();
-    private final Map<UUID, Integer> deathStreaks = new HashMap<>();
+    private final Map<UUID, Integer> killStreak = new HashMap<>();
 
     @EventHandler(ignoreCancelled = true)
     public void onAttackReduceStrength(EntityDamageByEntityEvent e) {
@@ -135,31 +133,17 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             }, 5);
 
             UUID killerUid = killer.getUniqueId();
-            UUID victimUid = victim.getUniqueId();
+            killStreak.remove(victim.getUniqueId());
 
-            deathStreaks.remove(killerUid);
-            killStreaks.remove(victimUid);
+            int streak;
+            if (killStreak.containsKey(killerUid)) streak = this.killStreak.get(killerUid) + 1;
+            else streak = 1;
 
-            int killerStreak;
-            int victimStreak;
+            killStreak.put(killerUid, streak);
 
-            if (killStreaks.containsKey(killerUid)) killerStreak = killStreaks.get(killerUid) + 1;
-            else killerStreak = 1;
-
-            if (deathStreaks.containsKey(victimUid)) victimStreak = deathStreaks.get(victimUid) + 1;
-            else victimStreak = 1;
-
-            killStreaks.put(killerUid, killerStreak);
-            deathStreaks.put(victimUid, victimStreak);
-
-            if (killerStreak > 4) {
+            if (streak > 25 || streak % 5 == 0)
                 titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPKillStreak", false,
-                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(killerStreak)));
-            }
-            if (victimStreak > 4) {
-                titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPDeathStreak", false,
-                        "%PLAYER%", victim.getName(), "%STREAK%", String.valueOf(victimStreak)));
-            }
+                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(killStreak)));
 
         } else {
             victim.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);

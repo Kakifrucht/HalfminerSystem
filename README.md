@@ -84,11 +84,10 @@ Current features
       - Checks radius, if too many mobs stops the mobspawn
   - PvP
     - Strength potions damage nerfed
-    - Nerfs bowspamming
-      - Delay between each shot
-    - Shows kill/death streaks via titles
-    - Adds sounds to kills/deaths
-    - Remove some effects on teleport
+    - Bow spamming disabled
+    - Killstreak via actionbar
+    - Sounds on kill/death
+    - Remove effects on teleport
   - Respawn
     - Respawns player at custom location
     - Adds a first time join message or removes completely

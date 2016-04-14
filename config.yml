@@ -256,7 +256,6 @@ localization:
   modMotdLine: '&e&l<<<<<%COLOR%&l Two and a half Miner &e&l>>>>>\n&7%REPLACE%&7! (mc.halfminer.de)'
   modPerformanceReachedHopper: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
   modPerformanceReachedHopperLog: '%PLAYER% hat das Limit (%LIMIT%) bei %LOCATION% erreicht'
-  modPvPDeathStreak: '&c&l%PLAYER%&7 ist &c&l%STREAK% &7mal in Folge gekillt worden'
   modPvPKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK% &7Kills in Folge'
   modRespawnFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modRespawnForced: '&7Du wurdest von einem Serverteam-Mitglied zum Spawn teleportiert'
