@@ -156,8 +156,11 @@ public class Cmdchat extends HalfminerCommand {
                             if (sendTo != null) bossBar.sendBar(sendTo, message, color, BarStyle.SOLID, time);
                             else bossBar.broadcastBar(message, color, BarStyle.SOLID, time);
 
-                        } else ((HanTitles) hms.getHandler(HandlerType.TITLES))
-                                .sendTitle(sendTo, message, 10, time * 20 - 20, 10);
+                        } else {
+                            if (message.startsWith("\n")) message = " " + message;
+                            ((HanTitles) hms.getHandler(HandlerType.TITLES))
+                                    .sendTitle(sendTo, message, 10, time * 20 - 20, 10);
+                        }
 
                     } else if (args[0].equalsIgnoreCase("news")) {
 
