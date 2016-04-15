@@ -143,7 +143,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
             if (streak > 25 || streak % 5 == 0)
                 titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPKillStreak", false,
-                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(killStreak)));
+                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(streak)));
 
         } else {
             victim.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);

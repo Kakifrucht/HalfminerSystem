@@ -78,10 +78,10 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         Set<Player> mentioned = new HashSet<>();
         long currentTime = System.currentTimeMillis() / 1000;
-        for (String str : message.split(" ")) {
-            String filteredName = charFilter(str);
-            if (players.containsKey(filteredName)) {
-                Player pMentioned = players.get(filteredName);
+        for (String str : charFilter(message).split(" ")) {
+
+            if (players.containsKey(str)) {
+                Player pMentioned = players.get(str);
                 if (!lastMentioned.containsKey(pMentioned) || !(lastMentioned.get(pMentioned) > currentTime))
                     mentioned.add(pMentioned);
             }
@@ -170,7 +170,8 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             char toCheck = sb.charAt(i);
             if (!Character.isLetter(toCheck)
                     && !Character.isDigit(toCheck)
-                    && toCheck != '_') {
+                    && toCheck != '_'
+                    && toCheck != ' ') {
                 sb.deleteCharAt(i);
                 i--;
             }

@@ -1,7 +1,7 @@
 # Halfminer System
 Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de).
 
-Dueling/PvP solution HalfminerBattle can be found [here](/Kakifrucht/HalfminerBattle).
+Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kakifrucht/HalfminerBattle).
 
 Current features
 -------
@@ -145,7 +145,8 @@ Current features
     - Remove a players /home block (rmhomeblock)
   - /hmstore
     - Edit HalfminerSystem storage
-    - Set and delete vars
+    - Set, get and delete variables
+    - Check if playerdata is being edited
     - Save to disk
   - /home
     - Executes Essentials /home after unblock from vote

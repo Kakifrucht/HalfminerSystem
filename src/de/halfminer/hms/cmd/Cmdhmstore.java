@@ -9,7 +9,8 @@ import org.bukkit.command.CommandSender;
 
 /**
  * - Edit HalfminerSystem storage
- * - Set and delete vars
+ * - Set, get and delete variables
+ * - Check if playerdata is being edited
  * - Save to disk
  */
 @SuppressWarnings("unused")
