@@ -133,7 +133,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         String msg = message;
         StringBuilder sb = new StringBuilder(msg);
-        for (int i = 0; i < message.length() - 1; i++) {
+        for (int i = 0; i < sb.length() - 1; i++) {
 
             char at = sb.charAt(i);
             char at2 = sb.charAt(i + 1);
@@ -144,7 +144,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 if ((charAt > 22 && sender.hasPermission("hms.chat.allowformatcode"))
                         || (charAt < 23 && charAt > -1 && sender.hasPermission("hms.chat.allowcolor")))
                     sb.setCharAt(i, ChatColor.COLOR_CHAR);
-            } else if (at == '.' && i > 0 && message.length() > 6 && !sender.hasPermission("hms.chat.allowlinks")) {
+            } else if (at == '.' && i > 0 && sb.length() > 6 && !sender.hasPermission("hms.chat.allowlinks")) {
 
                 if (at2 != ' ' && sb.charAt(i - 1) != ' ') sb.setCharAt(i, ' ');
             }
@@ -155,7 +155,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         if (!sender.hasPermission("hms.chat.allowcaps") && msg.length() > 3) {
             int amountUppercase = 0;
             for (Character check : message.toCharArray()) if (Character.isUpperCase(check)) amountUppercase++;
-            if (amountUppercase > (message.length() / 2)) msg = message.toLowerCase();
+            if (amountUppercase > (message.length() / 2)) msg = msg.toLowerCase();
         }
 
         return msg;
