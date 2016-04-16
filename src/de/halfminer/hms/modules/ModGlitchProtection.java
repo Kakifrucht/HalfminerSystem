@@ -44,7 +44,8 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                 server.broadcast(Language.getMessagePlaceholders("modGlitchProtectionBedrock", true,
                         "%PREFIX%", "Warnung",
                         "%PLAYER%", e.getPlayer().getName(),
-                        "%LOCATION%", Language.getStringFromLocation(e.getTo())), "hms.bypass.bedrockcheck");
+                        "%LOCATION%", Language.getStringFromLocation(e.getTo()),
+                        "%WORLD%", e.getTo().getWorld().getName()), "hms.bypass.bedrockcheck");
                 lastGlitchAlert.put(e.getPlayer(), (System.currentTimeMillis() / 1000) + 4);
             }
         }

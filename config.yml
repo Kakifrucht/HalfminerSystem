@@ -250,7 +250,7 @@ localization:
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
   modCombatLogProgressSymbols: '-'
   modCombatLogUntagged: '&aDu bist nicht mehr im Kampf'
-  modGlitchProtectionBedrock: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION%'
+  modGlitchProtectionBedrock: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION% &c(&7%WORLD%&c)'
   modGlitchProtectionNether: '&cDer Aufenthalt auf dem Netherdach ist verboten'
   modGlitchProtectionNetherNotify: '&c%PLAYER% war auf dem Netherdach bei &e%LOCATION%&c und wurde getötet'
   modMotdLine: '&e&l<<<<<%COLOR%&l Two and a half Miner &e&l>>>>>\n&7%REPLACE%&7! (mc.halfminer.de)'

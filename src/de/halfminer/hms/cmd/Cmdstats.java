@@ -30,7 +30,7 @@ public class Cmdstats extends HalfminerCommand {
             try {
                 showStats(sender, server.getOfflinePlayer(storage.getUUID(args[0])), compare);
             } catch (PlayerNotFoundException e) {
-                sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "Stats"));
+                e.sendNotFoundMessage(sender, "Stats");
             }
 
         } else {

@@ -65,7 +65,7 @@ public class Cmdspawn extends HalfminerCommand {
 
 
                     } catch (PlayerNotFoundException e) {
-                        sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "Spawn"));
+                        e.sendNotFoundMessage(sender, "Spawn");
                     }
                 }
             } else teleport(sender, false);

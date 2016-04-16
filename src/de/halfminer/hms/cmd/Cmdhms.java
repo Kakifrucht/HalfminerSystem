@@ -156,7 +156,7 @@ public class Cmdhms extends HalfminerCommand {
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "HMS",
                         "%PLAYER%", server.getOfflinePlayer(playerUid).getName()));
             } catch (PlayerNotFoundException e) {
-                sender.sendMessage(Language.getMessagePlaceholders("playerDoesNotExist", true, "%PREFIX%", "HMS"));
+                e.sendNotFoundMessage(sender, "HMS");
             }
 
         } else

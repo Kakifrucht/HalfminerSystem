@@ -3,6 +3,7 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -32,12 +33,14 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         final UUID uuid = e.getPlayer().getUniqueId();
         BreakCounter counter = null;
 
+        if (e.getPlayer().hasPermission("hms.bypass.antixray")) return;
+
         if (playersChecked.containsKey(uuid)) {
             counter = playersChecked.get(uuid);
             counter.incrementBreakages();
         }
 
-        if (protectedMaterial.contains(e.getBlock().getType()) && !e.getPlayer().hasPermission("hms.bypass.antixray")) {
+        if (protectedMaterial.contains(e.getBlock().getType())) {
 
             int alreadyBroken = 1;
             int alreadyBrokenProtected = 1;
@@ -64,7 +67,13 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
     @EventHandler
     public void onLoginNotify(PlayerJoinEvent e) {
-        //TODO add notify (relevant location,
+        //TODO do properly, do not spam on rejoins
+        Player joined = e.getPlayer();
+        if (joined.hasPermission("hms.antixray.notify")) {
+            for (UUID checked : checkedPermanently) {
+                joined.sendMessage("Verdächtig: " + server.getOfflinePlayer(checked));
+            }
+        }
     }
 
     @Override
