@@ -126,10 +126,9 @@ public class HalfminerSystem extends JavaPlugin {
         getConfig().options().copyDefaults(true); // If parameters are missing, add them
         saveConfig(); // Save config.yml to disk
 
-        //noinspection ConstantConditions (suppress warning due to java refelction)
+        //noinspection ConstantConditions (suppress warning due to java reflection)
         for (HalfminerHandler han : handlers.values())
                 if (han instanceof Reloadable) ((Reloadable) han).loadConfig();
         for (HalfminerModule mod : modules.values()) mod.loadConfig();
     }
-
 }

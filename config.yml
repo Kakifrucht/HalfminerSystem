@@ -114,6 +114,9 @@ performance:
   entityLimitSame: 25
   #Entity limit box radius, that will be checked on mobspawn from a spawner
   boxSize: 16
+pvp:
+  #Amount of kills until every kill is shown in killstream
+  streakThreshold: 30
 respawn:
   #Command to be run on first player join, supports %PLAYER% placeholder
   firstJoinCommand: ''

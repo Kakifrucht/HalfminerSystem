@@ -44,7 +44,8 @@ public class Cmdhmstore extends HalfminerCommand {
                         }
                     }
                     if (type == null) player = null;
-                    else path = ChatColor.GOLD + split[0] + ChatColor.GRAY + ChatColor.ITALIC + '.' + split[1];
+                    else path = ChatColor.GOLD.toString()
+                            + ChatColor.ITALIC + split[0] + ChatColor.GRAY + ChatColor.ITALIC + '.' + split[1];
 
                 } catch (PlayerNotFoundException ignored) {
                 }

@@ -35,6 +35,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
+    private static int THRESHOLD_UNTIL_SHOWN;
+
     private Map<Player, Long> lastBowShot = new HashMap<>();
     private final Map<UUID, Integer> killStreak = new HashMap<>();
 
@@ -135,16 +137,21 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             UUID killerUid = killer.getUniqueId();
             killStreak.remove(victim.getUniqueId());
 
-            int streak;
+            final int streak;
             if (killStreak.containsKey(killerUid)) streak = this.killStreak.get(killerUid) + 1;
             else streak = 1;
 
             killStreak.put(killerUid, streak);
 
-            if (streak > 25 || streak % 5 == 0)
-                titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPKillStreak", false,
-                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(streak)));
-
+            if (streak > THRESHOLD_UNTIL_SHOWN || streak % 5 == 0) {
+                scheduler.runTaskLater(hms, new Runnable() {
+                    @Override
+                    public void run() {
+                        titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPKillStreak", false,
+                                "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(streak)));
+                    }
+                }, 0L);
+            }
         } else {
             victim.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);
         }
@@ -161,6 +168,12 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             p.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
             p.removePotionEffect(PotionEffectType.LEVITATION);
         }
+    }
+
+    @Override
+    public void loadConfig() {
+
+        THRESHOLD_UNTIL_SHOWN = hms.getConfig().getInt("pvp.streakThreshold", 30);
     }
 
     @Override
