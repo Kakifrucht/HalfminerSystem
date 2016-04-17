@@ -57,7 +57,10 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         Player killer = e.getEntity().getKiller();
 
         untagPlayer(victim);
-        if (killer != null) untagPlayer(killer);
+        if (killer != null) {
+            untagPlayer(killer);
+            barHandler.removeBar(killer);
+        }
     }
 
     @EventHandler
