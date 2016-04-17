@@ -38,12 +38,12 @@ public class ModMotd extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        playerCountThreshold = hms.getConfig().getInt("motd.playerCountThreshold", 50);
-        playerCountBuffer = hms.getConfig().getInt("motd.playerCountBuffer", 1);
+        playerCountThreshold = config.getInt("motd.playerCountThreshold", 50);
+        playerCountBuffer = config.getInt("motd.playerCountBuffer", 1);
         playerCountLimit = server.getMaxPlayers();
         String setMotd = Language.getMessagePlaceholders("modMotdLine", false, "%REPLACE%", storage.getString("news"));
 
-        List<String> strList = hms.getConfig().getStringList("motd.randomColors");
+        List<String> strList = config.getStringList("motd.randomColors");
         motd = new String[strList.size()];
         for (int i = 0; i < strList.size(); i++)
             motd[i] = Language.placeholderReplaceColor(setMotd, "%COLOR%", '&' + strList.get(i));

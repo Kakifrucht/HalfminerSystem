@@ -71,7 +71,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
     @Override
     public void loadConfig() {
 
-        defaultTime = hms.getConfig().getInt("handler.teleport.cooldownSeconds", 3);
+        defaultTime = config.getInt("handler.teleport.cooldownSeconds", 3);
 
         lang.put("start", Language.getMessagePlaceholders("hanTeleportStart", true, "%PREFIX%", "Teleport"));
         lang.put("startbar", Language.getMessage("hanTeleportBar"));

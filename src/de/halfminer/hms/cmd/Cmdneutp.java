@@ -58,8 +58,8 @@ public class Cmdneutp extends HalfminerCommand {
 
         Random rnd = new Random();
 
-        int boundMin = hms.getConfig().getInt("command.neutp.boundMin", 1000);
-        int boundMax = hms.getConfig().getInt("command.neutp.boundMax", 10000) - boundMin;
+        int boundMin = config.getInt("command.neutp.boundMin", 1000);
+        int boundMax = config.getInt("command.neutp.boundMax", 10000) - boundMin;
         int iterations = 10;
 
         World world = server.getWorlds().get(0);

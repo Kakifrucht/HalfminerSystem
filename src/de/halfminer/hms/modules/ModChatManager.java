@@ -190,7 +190,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         chatFormats.clear();
-        for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {
+        for (String formatUnparsed : config.getStringList("chat.formats")) {
 
             int indexSeparator = formatUnparsed.indexOf(":");
             if (indexSeparator < 0) continue;

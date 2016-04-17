@@ -79,12 +79,12 @@ public class ModAntiXray extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        CHECK_THRESHOLD_SECONDS = hms.getConfig().getInt("antiXray.intervalUntilClearSeconds", 600);
-        PROTECTED_BLOCK_THRESHOLD = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 10);
-        PROTECTED_BLOCK_RATIO = hms.getConfig().getInt("antiXray.protectedBlockRatioThreshold", 15);
+        CHECK_THRESHOLD_SECONDS = config.getInt("antiXray.intervalUntilClearSeconds", 600);
+        PROTECTED_BLOCK_THRESHOLD = config.getInt("antiXray.protectedBlockThreshold", 10);
+        PROTECTED_BLOCK_RATIO = config.getInt("antiXray.protectedBlockRatioThreshold", 15);
 
         protectedMaterial = new HashSet<>();
-        for (String str : hms.getConfig().getStringList("antiXray.protectedBlocks")) {
+        for (String str : config.getStringList("antiXray.protectedBlocks")) {
             try {
                 protectedMaterial.add(Material.valueOf(str.toUpperCase()));
             } catch(IllegalArgumentException e) {

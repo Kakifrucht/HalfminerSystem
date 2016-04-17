@@ -174,12 +174,12 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     @Override
     public void loadConfig() {
 
-        derankThreshold = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
-        timeUntilDerankSeconds = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
-        timeUntilKillCountAgainSeconds = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
-        derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
+        derankThreshold = config.getInt("skillLevel.derankThreshold", 16);
+        timeUntilDerankSeconds = config.getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
+        timeUntilKillCountAgainSeconds = config.getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
+        derankLossAmount = -config.getInt("skillLevel.derankLossAmount", 250);
 
-        List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
+        List<String> skillGroupConfig = config.getStringList("skillLevel.skillGroups");
 
         // Ensure that teams are being removed on reload
         if (teams != null) onDisable();

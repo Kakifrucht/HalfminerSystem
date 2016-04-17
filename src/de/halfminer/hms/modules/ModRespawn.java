@@ -44,7 +44,7 @@ public class ModRespawn extends HalfminerModule implements Listener {
                 public void run() {
 
                     joined.teleport(respawnLoc);
-                    String command = hms.getConfig().getString("respawn.firstJoinCommand", "");
+                    String command = config.getString("respawn.firstJoinCommand", "");
                     if (command.length() > 0) {
                         server.dispatchCommand(server.getConsoleSender(),
                                 Language.placeholderReplace(command, "%PLAYER%", joined.getName()));

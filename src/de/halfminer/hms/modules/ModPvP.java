@@ -173,7 +173,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     @Override
     public void loadConfig() {
 
-        THRESHOLD_UNTIL_SHOWN = hms.getConfig().getInt("pvp.streakThreshold", 30);
+        THRESHOLD_UNTIL_SHOWN = config.getInt("pvp.streakThreshold", 30);
     }
 
     @Override

@@ -65,9 +65,9 @@ public class Cmdvote extends HalfminerCommand {
 
                 // check if threshold has been met to message admin
                 int totalvotes = storage.incrementInt("totalvotes", 1);
-                if (totalvotes == hms.getConfig().getInt("command.vote.threshold", 2000)) {
+                if (totalvotes == config.getInt("command.vote.threshold", 2000)) {
 
-                    String command = hms.getConfig().getString("command.vote.commandToExecute");
+                    String command = config.getString("command.vote.commandToExecute");
                     if (command.length() > 0) {
                         server.dispatchCommand(server.getConsoleSender(), command);
                     }
@@ -108,7 +108,7 @@ public class Cmdvote extends HalfminerCommand {
         }
 
         int totalVotes = storage.getInt("totalvotes");
-        int totalVotesThreshold = hms.getConfig().getInt("command.vote.threshold", 2000);
+        int totalVotesThreshold = config.getInt("command.vote.threshold", 2000);
 
         String message = Language.getMessage("commandVoteTop") + "\n";
 
@@ -147,7 +147,7 @@ public class Cmdvote extends HalfminerCommand {
 
         if (!hasRoom) return false;
 
-        String command = hms.getConfig().getString("command.vote.voteRewardCommand");
+        String command = config.getString("command.vote.voteRewardCommand");
         command = Language.placeholderReplace(command, "%PLAYER%", player.getName());
         server.dispatchCommand(server.getConsoleSender(), command);
         return true;
