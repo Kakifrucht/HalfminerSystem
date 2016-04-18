@@ -78,7 +78,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         Set<Player> mentioned = new HashSet<>();
         long currentTime = System.currentTimeMillis() / 1000;
-        for (String str : charFilter(message).split(" ")) {
+        for (String str : filterNonUsernameChars(message).split(" ")) {
 
             if (players.containsKey(str)) {
                 Player pMentioned = players.get(str);
@@ -94,9 +94,9 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             lastMentioned.put(wasMentioned, currentTime + 10);
         }
 
+        p.playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
         e.setMessage(message);
         e.setFormat(format);
-        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
     }
 
     public void toggleGlobalmute() {
@@ -133,48 +133,51 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         String msg = message;
         StringBuilder sb = new StringBuilder(msg);
+        int amountUppercase = 0;
         for (int i = 0; i < sb.length() - 1; i++) {
 
-            char at = sb.charAt(i);
-            char at2 = sb.charAt(i + 1);
-            if (at == '&') {
+            char current = sb.charAt(i);
+            char next = sb.charAt(i + 1);
+            if (current == '&') {
 
-                int charAt = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(at2);
+                int charAt = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(next);
 
                 if ((charAt > 22 && sender.hasPermission("hms.chat.allowformatcode"))
-                        || (charAt < 23 && charAt > -1 && sender.hasPermission("hms.chat.allowcolor")))
+                        || (charAt < 23 && charAt > -1 && sender.hasPermission("hms.chat.allowcolor"))) {
                     sb.setCharAt(i, ChatColor.COLOR_CHAR);
-            } else if (at == '.' && i > 0 && sb.length() > 6 && !sender.hasPermission("hms.chat.allowlinks")) {
+                    i++;
+                }
+            } else if (current == '.'
+                    && i != 0
+                    && sb.length() > 6
+                    && next != ' '
+                    && sb.charAt(i - 1) != ' '
+                    && !sender.hasPermission("hms.chat.allowlinks")) {
 
-                if (at2 != ' ' && sb.charAt(i - 1) != ' ') sb.setCharAt(i, ' ');
-            }
+                sb.setCharAt(i, ' ');
+            } else if (Character.isUpperCase(current)) amountUppercase++;
         }
 
         msg = sb.toString();
 
         if (!sender.hasPermission("hms.chat.allowcaps") && msg.length() > 3) {
-            int amountUppercase = 0;
-            for (Character check : message.toCharArray()) if (Character.isUpperCase(check)) amountUppercase++;
             if (amountUppercase > (message.length() / 2)) msg = msg.toLowerCase();
         }
 
         return msg;
     }
 
-    private String charFilter(String toFilter) {
+    private String filterNonUsernameChars(String toFilter) {
 
         StringBuilder sb = new StringBuilder(toFilter.toLowerCase());
 
         for (int i = 0; i < sb.length(); i++) {
 
             char toCheck = sb.charAt(i);
-            if (!Character.isLetter(toCheck)
-                    && !Character.isDigit(toCheck)
-                    && toCheck != '_'
-                    && toCheck != ' ') {
-                sb.deleteCharAt(i);
-                i--;
-            }
+            if (Character.isLetter(toCheck) || Character.isDigit(toCheck) || toCheck == '_' || toCheck == ' ') continue;
+
+            sb.deleteCharAt(i);
+            i--;
         }
 
         return sb.toString();

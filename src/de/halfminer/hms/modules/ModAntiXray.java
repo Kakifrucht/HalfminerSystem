@@ -71,7 +71,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         Player joined = e.getPlayer();
         if (joined.hasPermission("hms.antixray.notify")) {
             for (UUID checked : checkedPermanently) {
-                joined.sendMessage("Verdächtig: " + server.getOfflinePlayer(checked));
+                joined.sendMessage("Verdächtig: " + server.getOfflinePlayer(checked).getName());
             }
         }
     }
