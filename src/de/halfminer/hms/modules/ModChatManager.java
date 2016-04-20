@@ -160,9 +160,9 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         msg = sb.toString();
 
-        if (!sender.hasPermission("hms.chat.allowcaps") && msg.length() > 3) {
-            if (amountUppercase > (message.length() / 2)) msg = msg.toLowerCase();
-        }
+        if (!sender.hasPermission("hms.chat.allowcaps")
+                && msg.length() > 3
+                && amountUppercase > (message.length() / 2)) msg = msg.toLowerCase();
 
         return msg;
     }
@@ -193,7 +193,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         chatFormats.clear();
-        for (String formatUnparsed : config.getStringList("chat.formats")) {
+        for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {
 
             int indexSeparator = formatUnparsed.indexOf(":");
             if (indexSeparator < 0) continue;

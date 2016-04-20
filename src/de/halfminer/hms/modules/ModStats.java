@@ -203,7 +203,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
     public void loadConfig() {
 
         lastInteract = new HashMap<>();
-        timeUntilHomeBlockSeconds = config.getInt("command.home.timeUntilHomeBlockMinutes") * 60;
+        timeUntilHomeBlockSeconds = hms.getConfig().getInt("command.home.timeUntilHomeBlockMinutes") * 60;
 
         // if reload ocurred while the server ran, add players to list
         if (timeOnline.size() == 0) {

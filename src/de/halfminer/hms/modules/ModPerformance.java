@@ -139,15 +139,15 @@ public class ModPerformance extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        int ticksDelayUntilClear = config.getInt("performance.ticksDelayUntilClear", 160);
-        howMuchRedstoneAllowed = config.getInt("performance.howMuchRedstoneAllowed", 32);
-        howManyPistonsAllowed = config.getInt("performance.howManyPistonsAllowed", 400);
-        hopperLimit = config.getInt("performance.hopperLimit", 64);
-        hopperLimitRadius = config.getInt("performance.hopperLimitRadius", 7);
-        logHopperLimit = config.getBoolean("performance.hopperLimitLog", false);
-        entityLimitLiving = config.getInt("performance.entitiyLimitLiving", 100);
-        entityLimitSame = config.getInt("performance.entityLimitSame", 25);
-        boxSize = config.getInt("performance.boxSize", 16);
+        int ticksDelayUntilClear = hms.getConfig().getInt("performance.ticksDelayUntilClear", 160);
+        howMuchRedstoneAllowed = hms.getConfig().getInt("performance.howMuchRedstoneAllowed", 32);
+        howManyPistonsAllowed = hms.getConfig().getInt("performance.howManyPistonsAllowed", 400);
+        hopperLimit = hms.getConfig().getInt("performance.hopperLimit", 64);
+        hopperLimitRadius = hms.getConfig().getInt("performance.hopperLimitRadius", 7);
+        logHopperLimit = hms.getConfig().getBoolean("performance.hopperLimitLog", false);
+        entityLimitLiving = hms.getConfig().getInt("performance.entitiyLimitLiving", 100);
+        entityLimitSame = hms.getConfig().getInt("performance.entityLimitSame", 25);
+        boxSize = hms.getConfig().getInt("performance.boxSize", 16);
 
         hopperLimitMessage = Language.getMessagePlaceholders("modPerformanceReachedHopper", true, "%PREFIX%", "Info");
 

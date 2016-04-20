@@ -122,7 +122,7 @@ public class HanStorage extends HalfminerHandler implements Disableable {
             playerConfig = YamlConfiguration.loadConfiguration(playerFile);
         }
 
-        int saveInterval = config.getInt("handler.storage.autoSaveMinutes", 15) * 60 * 20;
+        int saveInterval = hms.getConfig().getInt("handler.storage.autoSaveMinutes", 15) * 60 * 20;
         if (task != null) task.cancel();
         task = scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
             @Override

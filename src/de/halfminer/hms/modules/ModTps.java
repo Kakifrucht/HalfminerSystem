@@ -37,9 +37,9 @@ public class ModTps extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        ticksBetweenUpdate = config.getInt("tps.ticksBetweenUpdate", 100);
-        historySize = config.getInt("tps.historySize", 6);
-        alertStaff = config.getDouble("tps.alertThreshold", 17.0d);
+        ticksBetweenUpdate = hms.getConfig().getInt("tps.ticksBetweenUpdate", 100);
+        historySize = hms.getConfig().getInt("tps.historySize", 6);
+        alertStaff = hms.getConfig().getDouble("tps.alertThreshold", 17.0d);
 
         if (task != null) task.cancel();
 

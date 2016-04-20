@@ -135,7 +135,7 @@ public class Cmdverkauf extends HalfminerCommand {
                 else if (player.hasPermission("hms.level.1")) multiplier = 1.25d;
 
                 //calculate revenue
-                int baseValue = config.getInt("command.verkauf." + args[0].toLowerCase(), 1000);
+                int baseValue = hms.getConfig().getInt("command.verkauf." + args[0].toLowerCase(), 1000);
                 double revenue = (sellCountTotal / (double) baseValue) * multiplier;
 
                 try {

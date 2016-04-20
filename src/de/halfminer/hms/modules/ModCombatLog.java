@@ -203,8 +203,8 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        broadcastLog = config.getBoolean("combatLog.broadcastLog", true);
-        tagTime = config.getInt("combatLog.tagTime", 15);
+        broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
+        tagTime = hms.getConfig().getInt("combatLog.tagTime", 15);
 
         lang.put("bossbar", Language.getMessage("modCombatLogBossBar"));
         lang.put("countdown", Language.getMessage("modCombatLogCountdown"));

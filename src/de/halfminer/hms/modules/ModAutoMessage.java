@@ -24,7 +24,7 @@ public class ModAutoMessage extends HalfminerModule {
     public void loadConfig() {
 
         // Load messages
-        List<String> messagesList = config.getStringList("autoMessage.messages");
+        List<String> messagesList = hms.getConfig().getStringList("autoMessage.messages");
         if (messagesList.size() == 0) {
             // If no messages are set disable
             if (running != null) running.cancel();
@@ -45,7 +45,7 @@ public class ModAutoMessage extends HalfminerModule {
         // Set task
         if (running != null) running.cancel();
 
-        int interval = config.getInt("autoMessage.intervalSeconds", 240) * 20;
+        int interval = hms.getConfig().getInt("autoMessage.intervalSeconds", 240) * 20;
         running = scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
             @Override
             public void run() {
