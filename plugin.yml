@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.11.3
+version: 3.11.4
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -70,7 +70,7 @@ permissions:
     default: op
     children:
       hms.bypass.antixray: true
-      hms.bypass.bedrockcheck: true
+      hms.bypass.glitchcheck: true
       hms.bypass.combatlog: true
       hms.bypass.commandfilter: true
       hms.bypass.hopperlimit: true
@@ -128,8 +128,8 @@ permissions:
     description: Access to administrative commands
   hms.bypass.antixray:
     description: Bypass antixray functionality
-  hms.bypass.bedrockcheck:
-    description: Bypass bedrock movement check
+  hms.bypass.glitchcheck:
+    description: Bypass glitch movement check
   hms.bypass.combatlog:
     description: Bypass combat logging
   hms.bypass.commandfilter:
@@ -148,7 +148,7 @@ permissions:
     description: Bypass setting of skilllevel
   hms.bypass.statsrightclick:
     description: Bypass stats on rightclick
-  hms.bypass.teleportchecks:
+  hms.bypass.teleportcheck:
     description: Bypass glitch protection teleport checks
   hms.bypass.teleporttimer:
     description: Bypass teleport timer

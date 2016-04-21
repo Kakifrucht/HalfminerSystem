@@ -79,6 +79,11 @@ combatLog:
   broadcastLog: true
   #Time in seconds until untag
   tagTime: 15
+glitchProtection:
+  #Material that will be checked
+  protectedMaterial:
+  - BEDROCK
+  - OBSIDIAN
 motd:
   #Minimum shown slot count
   playerCountThreshold: 50
@@ -240,7 +245,7 @@ localization:
   modAntiKillfarmingNoPvPAttack: '&cZum Schutz vor Killfarming darfst du weitere &a%TIME% &cSekunden kein PvP betreiben'
   modAntiKillfarmingNoPvPProtect: '&6%PLAYER% ist zum Schutz vor Killfarming weitere &a%TIME% &cvom PvP ausgeschlossen'
   modAntiKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte töten, bzw. töten lassen desselben Spielers führt zum Ausschluss vom PvP und dem verwenden von Kommandos'
-  modAntiXrayInvalidMaterialLog: 'Das Material %MATERIAL% existiert nicht'
+  modAntiXrayDetected: '%PLAYER% %BROKENTOTAL% %BROKENPROTECTED%' #todo
   modChatManGlobalmuteDenied: '&cDer Chat ist aktuell deaktiviert'
   modChatManGlobalmuteOff: '&eGlobale Stummschaltung deaktiviert'
   modChatManGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
@@ -253,7 +258,9 @@ localization:
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
   modCombatLogProgressSymbols: '-'
   modCombatLogUntagged: '&aDu bist nicht mehr im Kampf'
-  modGlitchProtectionBedrock: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION% &c(&7%WORLD%&c)'
+  modGlitchProtectionDismountTped: '&cDu wurdest zum Spawn teleportiert, um potentielles Glitching zu unterbinden, das Team wurde informiert'
+  modGlitchProtectionDismountTpedNotify: '&e%PLAYER%&c wurde zum Spawn teleportiert, da er bei &e%LOCATION% &c(&7%WORLD%&c) versucht hat ein Fahrzeug zu verlassen'
+  modGlitchProtectionMove: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION% &c(&7%WORLD%&c)'
   modGlitchProtectionNether: '&cDer Aufenthalt auf dem Netherdach ist verboten'
   modGlitchProtectionNetherNotify: '&c%PLAYER% war auf dem Netherdach bei &e%LOCATION%&c und wurde getötet'
   modMotdLine: '&e&l<<<<<%COLOR%&l Two and a half Miner &e&l>>>>>\n&7%REPLACE%&7! (mc.halfminer.de)'
@@ -284,3 +291,4 @@ localization:
   modTitlesNewsFormat: '&lNeuigkeiten: &r%NEWS%'
   modTitlesTablist: '&6&lTwo and a half Miner&7\nKonto: &a%BALANCE% &7&oHCs%BOTTOM%&7Teamspeak: &fts.halfminer.de &7| Online: &a%PLAYERCOUNT% &7&oSpieler'
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps beträgt lediglich &e%TPS%'
+  utilInvalidMaterial: 'Das Material %MATERIAL% existiert nicht'

@@ -66,7 +66,8 @@ Current features
       - Commands
       - Enderpearls
   - GlitchProtection
-    - Notifies staff about potential bedrock/obsidian glitching
+    - Notifies staff about potential wall glitching
+    - Detects dismount glitches, forces player to spawn
     - Override spigot teleport safety
     - Prevents glitching with chorus fruit, instead teleports down
     - Kills players above netherroof / notifies staff

@@ -69,6 +69,10 @@ public class ModRespawn extends HalfminerModule implements Listener {
         return respawnLoc;
     }
 
+    public boolean tpToSpawn(Player p) {
+        return p.teleport(respawnLoc);
+    }
+
     public boolean teleportToSpawnOnJoin(OfflinePlayer p) {
 
         if (toTeleport.contains(p)) {

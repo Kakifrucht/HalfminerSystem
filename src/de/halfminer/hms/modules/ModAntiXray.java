@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -88,15 +89,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         PROTECTED_BLOCK_THRESHOLD = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 10);
         PROTECTED_BLOCK_RATIO = hms.getConfig().getInt("antiXray.protectedBlockRatioThreshold", 15);
 
-        protectedMaterial = new HashSet<>();
-        for (String str : hms.getConfig().getStringList("antiXray.protectedBlocks")) {
-            try {
-                protectedMaterial.add(Material.valueOf(str.toUpperCase()));
-            } catch(IllegalArgumentException e) {
-                hms.getLogger().warning(Language.getMessagePlaceholders("modAntiXrayInvalidMaterialLog", false,
-                        "%MATERIAL%", str));
-            }
-        }
+        protectedMaterial = Utils.stringListToMaterialSet(hms.getConfig().getStringList("antiXray.protectedBlocks"));
     }
 
     private class BreakCounter {
