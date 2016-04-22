@@ -33,7 +33,7 @@ import java.util.Map;
  * - Tags players when hitting/being hit
  * - Shows health, name of attacker/victim and level via BossBar
  * - Combatlogging causes instant death
- * - Shows titles containing time left in fight
+ * - Shows actionbar message containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
  * - Disables armor switching, commands and enderpearls from being used during fight
  * - Halves satiation health regeneration during combat

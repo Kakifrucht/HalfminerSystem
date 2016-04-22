@@ -21,10 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * - Redstone can only be triggered a given amount locally
- * - Pistons can only be triggered a given amount server wide
- * - Hoppers placement is limited
- * - Amount of mobspawns are limited
+ * - Limits redstone usage
+ *   - Redstone will not work if triggered to often
+ * - Limits piston usage
+ *   - Only a given amount of pistons can be triggered in a given time
+ * - Limits hopper placement
+ *   - Checks radius, if too many hoppers denies placement
+ * - Limits mobspawns
+ *   - Checks radius, if too many mobs stops the mobspawn
  */
 @SuppressWarnings("unused")
 public class ModPerformance extends HalfminerModule implements Listener {

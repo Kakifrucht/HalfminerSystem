@@ -23,13 +23,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Custom chatformats
  *   - Default chatformat is bottom one
  *   - Permissions can be assigned via custom permission node
- *   - Permission to always get permission with highest priority
+ *   - Permission to always get format with highest priority
+ *   - No format limit
  * - Denies chatting if globalmute active
- * - Allows easy toggling of globalmute
+ *   - Allows easy toggling of globalmute
  * - Plays sound on chat
  * - Notifies mentioned players via actionbar
  *   - Rate limit (no mention spam)
- * - Disallow
+ * - Disallow (or allow via permission)
  *   - Using color codes
  *   - Using formatting codes
  *   - Posting links/IPs

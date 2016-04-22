@@ -25,12 +25,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * - Online time
- * - Last names
- * - Kill/death count
- * - K/D ratio
- * - Blocks placed/broken
- * - Mobkills
+ * - Records lots of statistics about a player
+ *   - Online time
+ *   - Last names
+ *   - Kill/death count
+ *   - K/D ratio
+ *   - Blocks placed/broken
+ *   - Mobkills
+ *   - Money earned
  * - View stats on rightclicking a player
  */
 @SuppressWarnings("unused")

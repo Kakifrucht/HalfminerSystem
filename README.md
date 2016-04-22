@@ -11,7 +11,7 @@ Current features
   - BossBar
     - Send bar to specific player or broadcast
     - Set time until bar fades out
-    - Broadcast bar and player bar seperate, only one at a time of each
+    - Broadcast bar and player bar separate, only one at a time of each
   - Storage
     - Autosave
     - Flatfiles in .yml format
@@ -43,13 +43,14 @@ Current features
     - Custom chatformats
       - Default chatformat is bottom one
       - Permissions can be assigned via custom permission node
-      - Permission to always get permission with highest priority
+      - Permission to always get format with highest priority
+      - No format limit
     - Denies chatting if globalmute active
-    - Allows easy toggling of globalmute
+      - Allows easy toggling of globalmute
     - Plays sound on chat
     - Notifies mentioned players via actionbar
       - Rate limit (no mention spam)
-    - Disallow
+    - Disallow (or allow via permission)
       - Using color codes
       - Using formatting codes
       - Posting links/IPs
@@ -58,7 +59,7 @@ Current features
     - Tags players when hitting/being hit
     - Shows health, name of attacker/victim and level via BossBar
     - Combatlogging causes instant death
-    - Shows titles containing time left in fight
+    - Shows actionbar message containing time left in fight
     - Untags players after timer runs out, player logs out or a player is killed
     - Halves satiation health regeneration during combat
     - Disables during fight:
@@ -76,13 +77,13 @@ Current features
       - Can be set via command
     - Dynamic playerlimit indicator, configurable with buffers and limits
   - Performance
-    - Limits redstone usage (configurable)
+    - Limits redstone usage
       - Redstone will not work if triggered to often
     - Limits piston usage
       - Only a given amount of pistons can be triggered in a given time
-    - Limits hopper placement (configurable)
+    - Limits hopper placement
       - Checks radius, if too many hoppers denies placement
-    - Limits mobspawns (configurable)
+    - Limits mobspawns
       - Checks radius, if too many mobs stops the mobspawn
   - PvP
     - Strength potions damage nerfed
@@ -92,16 +93,20 @@ Current features
     - Remove effects on teleport
   - Respawn
     - Respawns player at custom location
-    - Adds a first time join message or removes completely
-    - Execute custom command on first join
+    - Adds a first time join
+      - Else, removes join message
+      - Execute custom command on first join
   - SignEdit
     - Allows editing of signs
     - Use command /signedit
   - SkillLevel
     - PvP based skilllevel system / ELO
     - Dynamic ELO determination
+      - Auto derank on inactivity (when rank threshold is met)
+      - Doesn't count farmed kills
     - Adds level to scoreboard
     - Colors name depending on skillgroup
+    - Sorts tablist in descending order
   - StaticListeners
     - Removes quit message
     - Disables some deals in villager trades
@@ -110,12 +115,14 @@ Current features
       - Disables /pluginname:command for users (to improve commandblocks)
   - Stats
     - Records lots of statistics about a player
-      - Blocks broken / placed
-      - Kills / Deaths / KD Ratio
-      - Time Online
-      - Mobs killed
+      - Online time
+      - Last names
+      - Kill/death count
+      - K/D ratio
+      - Blocks placed/broken
+      - Mobkills
       - Money earned
-    - Rightclick player for quick overview
+    - View stats on rightclicking a player
   - Titles
     - Shows join title
       - Players online / money
@@ -153,7 +160,7 @@ Current features
     - Executes Essentials /home after unblock from vote
     - Allows usage up to 15 minutes after join
     - Doesn't block for new users (< 300 Minutes)
-    - Doesn't block users ip has already voted twice
+    - Doesn't block users whose ip has already voted twice
   - /lag
     - Information if player or server lags
     - View other players latency/ping
@@ -170,7 +177,7 @@ Current features
     - Teleport player to spawn
     - Teleport other players to spawn with permission
     - Teleport offline players to spawn once they login
-    - Use /spawn s to set the spawn with permission
+    - Use /spawn s to set the spawn (only with permission)
   - /stats
     - View own / other players stats
     - Allows to compare statistics easily

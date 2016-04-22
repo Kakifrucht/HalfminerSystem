@@ -24,13 +24,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * - Stores skilllevel/elo/groupname in storage
- * - Shows skilllevel in tablist
- * - Colors players name, depending on skillgroup
- * - Calculates new ELO after a kill
+ * - PvP based skilllevel system / ELO
+ * - Dynamic ELO determination
+ *   - Auto derank on inactivity (when rank threshold is met)
+ *   - Doesn't count farmed kills
+ * - Adds level to scoreboard
+ * - Colors name depending on skillgroup
+ * - Sorts tablist in descending order
  */
 @SuppressWarnings("unused")
 public class ModSkillLevel extends HalfminerModule implements Disableable, Listener, Sweepable {
+
+    private static int DERANK_LEVEL_THRESHOLD;
+    private static int TIME_UNTIL_DERANK_THRESHOLD;
+    private static int DERANK_LOSS_AMOUNT;
+    private static int TIME_UNTIL_KILL_COUNT_AGAIN;
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
@@ -38,10 +46,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private final Map<String, Long> lastKill = new HashMap<>();
     private Objective skillObjective = scoreboard.getObjective("skill");
     private String[] teams;
-    private int derankThreshold;
-    private int timeUntilDerankSeconds;
-    private int timeUntilKillCountAgainSeconds;
-    private int derankLossAmount;
+
 
     @EventHandler
     public void joinRecalculate(PlayerJoinEvent e) {
@@ -51,11 +56,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         if (player.hasPermission("hms.bypass.skilllevel")) return;
 
         // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
-        if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankThreshold
-                && hPlayer.getInt(DataType.LASTKILL) + timeUntilDerankSeconds < (System.currentTimeMillis() / 1000)) {
+        if (hPlayer.getInt(DataType.SKILL_LEVEL) >= DERANK_LEVEL_THRESHOLD
+                && hPlayer.getInt(DataType.LASTKILL) + TIME_UNTIL_DERANK_THRESHOLD < (System.currentTimeMillis() / 1000)) {
 
             hPlayer.set(DataType.LASTKILL, System.currentTimeMillis() / 1000);
-            updateSkill(player, derankLossAmount);
+            updateSkill(player, DERANK_LOSS_AMOUNT);
             player.sendMessage(Language.getMessagePlaceholders("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
 
         } else updateSkill(player, 0);
@@ -68,7 +73,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         Player killer = e.getEntity().getKiller();
         Player victim = e.getEntity().getPlayer();
 
-        if (killer != null && !killer.hasPermission("hms.bypass.skilllevel") && !victim.hasPermission("hms.bypass.skilllevel")) {
+        if (killer != null
+                && !killer.hasPermission("hms.bypass.skilllevel")
+                && !victim.hasPermission("hms.bypass.skilllevel")) {
 
             HalfminerPlayer hKiller = storage.getPlayer(killer);
             hKiller.set(DataType.LASTKILL, System.currentTimeMillis() / 1000);
@@ -115,7 +122,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
            Example: Player is Level 4, calc is 3.4, you stay level 4 when calc is 3.0 - 4.9, rank down occurs when player
            is lower than 3.0 and rank up when player has reached 5.0. Only rank down when the ceiling of the calc value
            is actually lower than the players level and only rank up when the flooring of the calc is already higher
-           than the new level. If modifier is 0, allow both upranking and downranking, otherwise do not rank down on kill
+           than the new level. If modifier is 0, allow both upranking and deranking, otherwise do not rank down on kill
            and do not rank up on death
         */
         if (newLevelDown > level && modifier >= 0) newLevel = newLevelDown;     //rank up
@@ -167,17 +174,17 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private boolean killDoesCount(String uuidCat) {
 
         return !lastKill.containsKey(uuidCat)
-                || lastKill.get(uuidCat) + timeUntilKillCountAgainSeconds
+                || lastKill.get(uuidCat) + TIME_UNTIL_KILL_COUNT_AGAIN
                 < System.currentTimeMillis() / 1000;
     }
 
     @Override
     public void loadConfig() {
 
-        derankThreshold = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
-        timeUntilDerankSeconds = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
-        timeUntilKillCountAgainSeconds = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
-        derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
+        DERANK_LEVEL_THRESHOLD = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
+        TIME_UNTIL_DERANK_THRESHOLD = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
+        TIME_UNTIL_KILL_COUNT_AGAIN = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
+        DERANK_LOSS_AMOUNT = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 

@@ -1,10 +1,10 @@
 #HalfminerSystem Config
 command:
   home:
-    #Time until /home will be blocked
+    #Time in minutes until /home will be blocked
     timeUntilHomeBlockMinutes: 15
   neutp:
-    #Bounds in which the generated position will lie in
+    #Bounds in which the random position will lie in
     boundMin: 1000
     boundMax: 10000
   verkauf:
@@ -27,7 +27,7 @@ command:
     #Amount of votes until command execution
     threshold: 2000
     #Command to execute when threshold has been met
-    commandToExecute: mail send Kakifrucht Event ankündigen, votes erreicht
+    commandToExecute: mail send Kakifrucht Event ankündigen, Votes erreicht
 handler:
   storage:
     #Time in minutes the storage will be autosaving
@@ -36,13 +36,13 @@ handler:
     #Time in seconds players cannot move before being teleported
     cooldownSeconds: 3
 antiKillfarming:
-  #Time in seconds the primary block will be, this doubles every block
+  #Time in seconds the primary block will be, this doubles for every block
   blockTime: 300
   #Length of killstreak until blocked
   thresholdUntilBlock: 5
   #Amount of seconds until the killstreak is reset
   thresholdUntilRemoval: 100
-  #List of commands that are still allowed
+  #List of commands that are still allowed during killfarming command block
   killfarmingCommandExemptions:
   - 'regeln'
   - 'hilfe'
@@ -87,11 +87,7 @@ glitchProtection:
 motd:
   #Minimum shown slot count
   playerCountThreshold: 50
-  #Minimum amount of slots that will be free
-  #Example: Buffer is 5, threshold is 50, when 45 players
-  #are online, it will show 45/50. If 46 players are online
-  #the it will show 46/51, due to the buffer of 5 players.
-  #63 players online would show 63/68.
+  #Minimum amount of slots that will be free (until slot limit is reached)
   playerCountBuffer: 5
   #Colors that will be used to replace the placeholder %COLOR% with
   randomColors:
@@ -120,11 +116,11 @@ performance:
   #Entity limit box radius, that will be checked on mobspawn from a spawner
   boxSize: 16
 pvp:
-  #Amount of kills until every kill is shown in killstream
+  #Amount of kills until every kill is shown in actionbar
   streakThreshold: 30
 respawn:
   #Command to be run on first player join, supports %PLAYER% placeholder
-  firstJoinCommand: ''
+  firstJoinCommand: 'give %PLAYER% dirt 1'
 skillLevel:
   #Level that has to be reached for a derank to occur
   derankThreshold: 16
@@ -134,8 +130,7 @@ skillLevel:
   derankLossAmount: 250
   #Time in minutes until a kill will be counted again towards elo after a kill
   timeUntilKillCountAgainMinutes: 10
-  #Six skillgroups need to be set, first character is the color code
-  #Upper level in the list are the top levels
+  #Six skillgroups need to be set, first character is the color code, bottom skillgroup is default
   skillGroups:
   - 0Pro
   - aEmerald
@@ -148,7 +143,7 @@ tps:
   ticksBetweenUpdate: 100
   #If set higher, the tps will update more slowly due to more values that are taken into consideration
   historySize: 6
-  #If the tps falls under this tps, players with notify permission will be notified
+  #If the tps falls under this value, players with notify permission will be notified
   alertThreshold: 17.0
 localization:
   consoleName: 'Konsole'

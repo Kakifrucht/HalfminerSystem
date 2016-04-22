@@ -22,17 +22,8 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
-    /**
-     * Time in seconds the player is blocked from teleporting and PvPing
-     */
     private static int BLOCK_TIME;
-    /**
-     * Amount of deaths in short time until block
-     */
     private static int THRESHOLD_UNTIL_BLOCK;
-    /**
-     * Time in seconds until the counter will reset
-     */
     private static int THRESHOLD_UNTIL_REMOVAL_SECONDS;
 
     private final Map<String, String> lang = new HashMap<>();

@@ -10,7 +10,9 @@ import java.util.Set;
 /**
  * Static methods that are shared between Modules/handlers/commands
  */
-public class Utils {
+public final class Utils {
+
+    private Utils() {}
 
     public static Set<Material> stringListToMaterialSet(List<String> list) {
         Set<Material> toReturn = new HashSet<>();

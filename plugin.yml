@@ -15,7 +15,7 @@ commands:
     description: Chat manipulation tools
     aliases: [c]
   hms:
-    description: HalfminerSystem Base command
+    description: HalfminerSystem base command
   hmstore:
     description: Data storage manipulation
   home:
@@ -34,7 +34,7 @@ commands:
     description: View the statistics of a player
     aliases: [st]
   verkauf:
-    description: Earn money buy selling farm supplies
+    description: Earn money by selling farm supplies
     aliases: [vk]
   vote:
     description: Vote for the server
@@ -111,7 +111,7 @@ permissions:
     description: Access to home command
   hms.level.0:
     default: true
-    description: Access to commands restricted to level 0
+    description: Access to features restricted to level 0
   hms.neutp:
     default: true
     description: Access to neutp command
@@ -143,13 +143,13 @@ permissions:
   hms.bypass.nokillfarming:
     description: Bypass killfarming check
   hms.bypass.pvp:
-    description: Bypass PvP changes
+    description: Bypass pvp modifications
   hms.bypass.skilllevel:
     description: Bypass setting of skilllevel
   hms.bypass.statsrightclick:
     description: Bypass stats on rightclick
   hms.bypass.teleportcheck:
-    description: Bypass glitch protection teleport checks
+    description: Bypass glitch protection teleport check
   hms.bypass.teleporttimer:
     description: Bypass teleport timer
   hms.chat:

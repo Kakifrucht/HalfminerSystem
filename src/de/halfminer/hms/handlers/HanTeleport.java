@@ -1,6 +1,5 @@
 package de.halfminer.hms.handlers;
 
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.util.Language;
@@ -25,8 +24,7 @@ import java.util.Map;
 @SuppressWarnings("SameParameterValue")
 public class HanTeleport extends HalfminerHandler implements Reloadable {
 
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
-    private final static HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
+    private final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
 
     private final Map<String, String> lang = new HashMap<>();
     private int defaultTime;

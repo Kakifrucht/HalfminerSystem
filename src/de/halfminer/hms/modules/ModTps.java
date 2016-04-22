@@ -1,6 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.util.Language;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
@@ -14,7 +13,6 @@ import java.util.LinkedList;
 @SuppressWarnings("unused")
 public class ModTps extends HalfminerModule implements Listener {
 
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
     private final LinkedList<Double> tpsHistory = new LinkedList<>();
     private BukkitTask task;
     private double lastAverageTps;

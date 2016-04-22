@@ -14,8 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * - First time join message
- * - Execute custom command on first join
+ * - Respawns player at custom location
+ * - Adds a first time join
+ *   - Else, removes join message
+ *   - Execute custom command on first join
  */
 @SuppressWarnings("unused")
 public class ModRespawn extends HalfminerModule implements Listener {

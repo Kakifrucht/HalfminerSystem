@@ -1,6 +1,5 @@
 package de.halfminer.hms.handlers;
 
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.util.HalfminerPlayer;
@@ -26,8 +25,6 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public class HanStorage extends HalfminerHandler implements Disableable {
-
-    private final static HalfminerSystem hms = HalfminerSystem.getInstance();
 
     private File sysFile;
     private File uuidFile;
