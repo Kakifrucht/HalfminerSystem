@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.11.4
+version: 3.12.0
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -45,6 +45,7 @@ permissions:
     description: Access to all permissions
     default: op
     children:
+      hms.antixray.notify: true
       hms.admin: true
       hms.chat: true
       hms.chat.advanced: true
@@ -126,6 +127,8 @@ permissions:
     description: Access to vote command
   hms.admin:
     description: Access to administrative commands
+  hms.antixray.notify:
+    description: Get notified on join if a player moved past the AntiXRay treshold
   hms.bypass.antixray:
     description: Bypass antixray functionality
   hms.bypass.glitchcheck:

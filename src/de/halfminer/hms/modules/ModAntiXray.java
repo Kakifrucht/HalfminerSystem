@@ -15,7 +15,13 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.*;
 
 /**
- * Non proactive anti xray solution
+ * - Counts players block breaks
+ *   - Clears after no protected blocks were broken
+ * - Set protected blocks via config
+ * - Threshold ratio between broken blocks and broken protected blocks
+ * - Notifies staff if threshold was passed
+ *   - Shows last location
+ *   - Notifies on join, if staff was offline
  */
 @SuppressWarnings("unused")
 public class ModAntiXray extends HalfminerModule implements Listener {
@@ -52,7 +58,6 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 playersChecked.put(uuid, counter);
             }
             else {
-
                 broken = counter.getBreakages();
                 brokenProtected = counter.incrementProtectedBlocksBroken(e.getBlock().getLocation());
             }
@@ -61,23 +66,31 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 if (broken / brokenProtected > PROTECTED_BLOCK_RATIO) {
                     counter.setBypassScheduler();
                     checkedPermanently.add(uuid);
-                    server.broadcast(Language.getMessagePlaceholders("mod", true,
-                            "%PREFIX%", "XRay", "%PLAYER%", p.getName(),
+                    server.broadcast(Language.getMessagePlaceholders("modAntiXrayDetected", true,
+                            "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName(),
                             "%BROKENTOTAL%", String.valueOf(broken),
                             "%BROKENPROTECTED%", String.valueOf(brokenProtected)), "hms.antixray.notify");
-                    System.out.println("threshold passed, broken total " + broken);
-                } else System.out.println("mining seems legit"); //TODO messages and logging
+                }
             }
         }
     }
 
     @EventHandler
     public void onLoginNotify(PlayerJoinEvent e) {
-        //TODO do properly, do not spam on rejoins
+
         Player joined = e.getPlayer();
         if (joined.hasPermission("hms.antixray.notify")) {
             for (UUID checked : checkedPermanently) {
-                joined.sendMessage("Verdächtig: " + server.getOfflinePlayer(checked).getName());
+
+                BreakCounter counter = playersChecked.get(checked);
+                if (counter.isAlreadyInformed(joined)) continue;
+                joined.sendMessage(Language.getMessagePlaceholders("modAntiXrayJoinDetected", true,
+                        "%PREFIX%", "AntiXRay", "%PLAYER%", server.getPlayer(checked).getName(),
+                        "%BROKENTOTAL%", String.valueOf(counter.getBreakages()),
+                        "%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()),
+                        "%LASTLOCATION%", Language.getStringFromLocation(counter.getLastProtectedLocation()),
+                        "%WORLD%", counter.getLastProtectedLocation().getWorld().getName()));
+                counter.setInformed(joined);
             }
         }
     }
@@ -96,6 +109,8 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
         final UUID uuid;
 
+        final Set<UUID> alreadyInformed = new HashSet<>();
+
         int blocksBroken = 1;
         int protectedBlocksBroken = 1;
         Location lastProtectedLocation;
@@ -106,7 +121,6 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         BukkitTask task;
 
         BreakCounter(final UUID uuid) {
-
             this.uuid = uuid;
             scheduleTask();
         }
@@ -119,6 +133,10 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             return protectedBlocksBroken;
         }
 
+        Location getLastProtectedLocation() {
+            return lastProtectedLocation;
+        }
+
         void incrementBreakages() {
             lastBreakTime = System.currentTimeMillis() / 1000;
             blocksBroken++;
@@ -127,6 +145,14 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         int incrementProtectedBlocksBroken(Location loc) {
             lastProtectedLocation = loc;
             return protectedBlocksBroken++;
+        }
+
+        boolean isAlreadyInformed(Player p) {
+            return alreadyInformed.contains(p.getUniqueId());
+        }
+
+        void setInformed(Player p) {
+            alreadyInformed.add(p.getUniqueId());
         }
 
         void setBypassScheduler() {

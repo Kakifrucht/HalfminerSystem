@@ -35,6 +35,14 @@ Current features
   - AntiKillfarming
       - Blocks players, who repeatedly kill each other
     - Dynamic system, to determine block time
+  - AntiXray
+    - Counts players block breaks
+      - Clears after no protected blocks were broken
+    - Set protected blocks via config
+    - Threshold ratio between broken blocks and broken protected blocks
+    - Notifies staff if threshold was passed
+      - Shows last location
+      - Notifies on join, if staff was offline
   - AutoMessage
     - Sends messages in a given interval
     - Messages configurable

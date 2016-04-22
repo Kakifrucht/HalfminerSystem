@@ -240,7 +240,8 @@ localization:
   modAntiKillfarmingNoPvPAttack: '&cZum Schutz vor Killfarming darfst du weitere &a%TIME% &cSekunden kein PvP betreiben'
   modAntiKillfarmingNoPvPProtect: '&6%PLAYER% ist zum Schutz vor Killfarming weitere &a%TIME% &cvom PvP ausgeschlossen'
   modAntiKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte töten, bzw. töten lassen desselben Spielers führt zum Ausschluss vom PvP und dem verwenden von Kommandos'
-  modAntiXrayDetected: '%PLAYER% %BROKENTOTAL% %BROKENPROTECTED%' #todo
+  modAntiXrayDetected: '&e%PLAYER% &chat von &a%BROKENTOTAL% &cgebrochenen Blöcken &a%BROKENPROTECTED% geschützte Blöcke gebrochen'
+  modAntiXrayJoinDetected: '&e%PLAYER% &chat von &a%BROKENTOTAL% &cgebrochenen Blöcken &a%BROKENPROTECTED% geschützte Blöcke gebrochen, der letzte Ort war bei &e%LASTLOCATION% &c(&7&o%WORLD%&c)'
   modChatManGlobalmuteDenied: '&cDer Chat ist aktuell deaktiviert'
   modChatManGlobalmuteOff: '&eGlobale Stummschaltung deaktiviert'
   modChatManGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
