@@ -53,10 +53,10 @@ antiKillfarming:
 antiXray:
   #Time until a counted player won't be counter anymore
   intervalUntilClearSeconds: 600
-  #Amount of protected blocks that have to be broken in given time frame until warning
+  #Amount of protected blocks that have to be broken in given time frame at least until warning
   protectedBlockThreshold: 10
-  #How many non protected blocks should be broken per protected block
-  protectedBlockRatioThreshold: 15
+  #How many non protected blocks should be broken per protected block to not trigger a warning
+  protectedBlockRatioThreshold: 0.15
   #Protected blocks / materials
   protectedBlocks:
   - DIAMOND_ORE
@@ -240,8 +240,8 @@ localization:
   modAntiKillfarmingNoPvPAttack: '&cZum Schutz vor Killfarming darfst du weitere &a%TIME% &cSekunden kein PvP betreiben'
   modAntiKillfarmingNoPvPProtect: '&6%PLAYER% ist zum Schutz vor Killfarming weitere &a%TIME% &cvom PvP ausgeschlossen'
   modAntiKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte töten, bzw. töten lassen desselben Spielers führt zum Ausschluss vom PvP und dem verwenden von Kommandos'
-  modAntiXrayDetected: '&e%PLAYER% &chat von &a%BROKENTOTAL% &cgebrochenen Blöcken &a%BROKENPROTECTED% geschützte Blöcke gebrochen'
-  modAntiXrayJoinDetected: '&e%PLAYER% &chat von &a%BROKENTOTAL% &cgebrochenen Blöcken &a%BROKENPROTECTED% geschützte Blöcke gebrochen, der letzte Ort war bei &e%LASTLOCATION% &c(&7&o%WORLD%&c)'
+  modAntiXrayDetected: '&e%PLAYER% &chat von &a%BROKENTOTAL% &cgebrochenen Blöcken &a%BROKENPROTECTED% &cgeschützte Blöcke gebrochen'
+  modAntiXrayJoinDetected: '&e%PLAYER% &chat von &a%BROKENTOTAL% &cgebrochenen Blöcken &a%BROKENPROTECTED% &cgeschützte Blöcke gebrochen, der letzte Ort war bei &e%LASTLOCATION% &c(&7&o%WORLD%&c)'
   modChatManGlobalmuteDenied: '&cDer Chat ist aktuell deaktiviert'
   modChatManGlobalmuteOff: '&eGlobale Stummschaltung deaktiviert'
   modChatManGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
