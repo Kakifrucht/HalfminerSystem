@@ -69,11 +69,11 @@ public class Cmdstats extends HalfminerCommand {
             message += Language.getMessagePlaceholders("commandStatsOldnames", false,
                     "%OLDNAMES%", oldNames) + "\n";
 
-        if (sendTo.equals(player))
+        if (sendTo.equals(player.getBase()))
             message += Language.getMessage("commandStatsShowotherStats") + "\n";
-        else if (compare) {
+        else if (compare)
             message += Language.getMessage("commandStatsCompareLegend") + "\n";
-        } else if (sendTo instanceof Player) {
+        else if (sendTo instanceof Player) {
             message += Language.getMessagePlaceholders("commandStatsCompareInfo", false,
                     "%PLAYER%", player.getString(DataType.LAST_NAME)) + "\n";
         }

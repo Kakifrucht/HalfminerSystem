@@ -316,7 +316,7 @@ public class Cmdhms extends HalfminerCommand {
 
     private void xrayBypass() {
 
-        if (args.length >= 1) {
+        if (args.length > 1) {
 
             OfflinePlayer p;
             try {
