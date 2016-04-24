@@ -53,7 +53,7 @@ public class Cmdspawn extends HalfminerCommand {
                 }
                 else {
                     try {
-                        OfflinePlayer p = server.getOfflinePlayer(storage.getUUID(args[0]));
+                        OfflinePlayer p = storage.getPlayer(args[0]).getBase();
 
                         if (respawn.teleportToSpawnOnJoin(p)) {
                             sender.sendMessage(Language.getMessagePlaceholders("commandSpawnOthersOfflineAdd",
@@ -62,8 +62,6 @@ public class Cmdspawn extends HalfminerCommand {
                             sender.sendMessage(Language.getMessagePlaceholders("commandSpawnOthersOfflineRemove",
                                     true, "%PREFIX%", "Spawn", "%PLAYER%", p.getName()));
                         }
-
-
                     } catch (PlayerNotFoundException e) {
                         e.sendNotFoundMessage(sender, "Spawn");
                     }

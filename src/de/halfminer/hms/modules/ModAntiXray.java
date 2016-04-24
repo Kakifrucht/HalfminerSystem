@@ -4,6 +4,7 @@ import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,13 +39,14 @@ public class ModAntiXray extends HalfminerModule implements Listener {
     public void onBlockBreak(BlockBreakEvent e) {
 
         Player p = e.getPlayer();
+        if (p.hasPermission("hms.bypass.antixray")) return;
+
         final UUID uuid = p.getUniqueId();
         BreakCounter counter = null;
 
-        if (p.hasPermission("hms.bypass.antixray")) return;
-
         if (playersChecked.containsKey(uuid)) {
             counter = playersChecked.get(uuid);
+            if (counter.isBypassed()) return;
             counter.incrementBreakages();
         }
 
@@ -61,18 +63,21 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 broken = counter.getBreakages();
                 brokenProtected = counter.incrementProtectedBlocksBroken(e.getBlock().getLocation());
             }
-            //Put player into permanent check mode
-            if (brokenProtected >= PROTECTED_BLOCK_THRESHOLD && brokenProtected / (double) broken > PROTECTED_BLOCK_RATIO) {
 
-                counter.setBypassScheduler();
+            // Put player into permanent check mode
+            if (brokenProtected >= PROTECTED_BLOCK_THRESHOLD
+                    && brokenProtected / (double) broken > PROTECTED_BLOCK_RATIO) {
+
                 checkedPermanently.add(uuid);
 
-                String message = Language.getMessagePlaceholders("modAntiXrayDetected", true,
-                        "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName(),
-                        "%BROKENTOTAL%", String.valueOf(broken),
-                        "%BROKENPROTECTED%", String.valueOf(brokenProtected));
+                // Notify
+                if (!counter.setBypassScheduler() || counter.isSameOre()) {
 
-                if (counter.getLastProtectedLocation().distance(p.getLocation()) < 3.0d) {
+                    String message = Language.getMessagePlaceholders("modAntiXrayDetected", true,
+                            "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName(),
+                            "%BROKENTOTAL%", String.valueOf(broken),
+                            "%BROKENPROTECTED%", String.valueOf(brokenProtected));
+
                     server.getConsoleSender().sendMessage(message);
                     for (Player toNotify : server.getOnlinePlayers())
                         if (toNotify.hasPermission("hms.antixray.notify")) {
@@ -105,6 +110,18 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         }
     }
 
+    public boolean setBypassed(OfflinePlayer p) {
+
+        BreakCounter counter = playersChecked.get(p.getUniqueId());
+
+        if (counter == null) {
+            counter = new BreakCounter(p.getUniqueId());
+            playersChecked.put(p.getUniqueId(), counter);
+        }
+
+        return counter.toggleBypass();
+    }
+
     @Override
     public void loadConfig() {
 
@@ -123,9 +140,11 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
         int blocksBroken = 1;
         int protectedBlocksBroken = 1;
+        Location pastProtectedLocation;
         Location lastProtectedLocation;
 
         long lastBreakTime = System.currentTimeMillis() / 1000;
+        boolean bypass = false;
         boolean bypassScheduler = false;
 
         BukkitTask task;
@@ -147,12 +166,17 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             return lastProtectedLocation;
         }
 
+        boolean isSameOre() {
+            return pastProtectedLocation.distance(lastProtectedLocation) > 3.0d;
+        }
+
         void incrementBreakages() {
             lastBreakTime = System.currentTimeMillis() / 1000;
             blocksBroken++;
         }
 
         int incrementProtectedBlocksBroken(Location loc) {
+            pastProtectedLocation = lastProtectedLocation;
             lastProtectedLocation = loc;
             return ++protectedBlocksBroken;
         }
@@ -165,8 +189,18 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             alreadyInformed.add(p.getUniqueId());
         }
 
-        void setBypassScheduler() {
+        boolean toggleBypass() {
+            return bypass = !bypass;
+        }
+
+        boolean isBypassed() {
+            return bypass;
+        }
+
+        boolean setBypassScheduler() {
+            boolean currentValue = bypassScheduler;
             bypassScheduler = true;
+            return currentValue;
         }
 
         void scheduleTask() {

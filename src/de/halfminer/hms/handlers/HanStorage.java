@@ -70,19 +70,18 @@ public class HanStorage extends HalfminerHandler implements Disableable {
         uuidConfig.set(player.getName().toLowerCase(), player.getUniqueId().toString());
     }
 
-    public UUID getUUID(String playerName) throws PlayerNotFoundException {
-        String uuidString = uuidConfig.getString(playerName.toLowerCase(), "");
-        if (uuidString.length() > 0) return UUID.fromString(uuidString);
+    public HalfminerPlayer getPlayer(String playerString) throws PlayerNotFoundException {
+
+        UUID uuid;
+        String uuidString = uuidConfig.getString(playerString.toLowerCase(), "");
+        if (uuidString.length() > 0) uuid = UUID.fromString(uuidString);
         else {
-            Player p = server.getPlayer(playerName);
+            Player p = server.getPlayer(playerString);
             if (p != null) {
-                return p.getUniqueId();
+                uuid = p.getUniqueId();
             } else throw new PlayerNotFoundException();
         }
-    }
-
-    public HalfminerPlayer getPlayer(String playerString) throws PlayerNotFoundException {
-        return getPlayer(server.getOfflinePlayer(getUUID(playerString)));
+        return getPlayer(server.getOfflinePlayer(uuid));
     }
 
     public HalfminerPlayer getPlayer(OfflinePlayer p) {

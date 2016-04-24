@@ -2,8 +2,8 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,28 +34,28 @@ public class Cmdvote extends HalfminerCommand {
             if (args[0].equalsIgnoreCase("voted") && sender.isOp() && args.length == 2) {
 
                 // grab player
-                OfflinePlayer hasVoted;
+                HalfminerPlayer hasVoted;
                 try {
-                    hasVoted = server.getOfflinePlayer(storage.getUUID(args[1]));
+                    hasVoted = storage.getPlayer(args[1]);
                 } catch (PlayerNotFoundException e) {
                     return;
                 }
 
                 // increment stats, broadcast
                 storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
-                storage.getPlayer(hasVoted).incrementInt(DataType.VOTES, 1);
+                hasVoted.incrementInt(DataType.VOTES, 1);
                 server.broadcast(Language.getMessagePlaceholders("commandVoteVoted", true, "%PREFIX%",
-                        "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
+                        "Vote", "%PLAYER%", hasVoted.getString(DataType.LAST_NAME)), "hms.default");
 
                 // if the player is currently online, save his ip so that other people with same ip who cannot vote
                 // can also bypass the block, also drop vote reward, or increment background reward counter
-                if (hasVoted instanceof Player) {
-                    Player playerHasVoted = (Player) hasVoted;
+                if (hasVoted.getBase() instanceof Player) {
+                    Player playerHasVoted = (Player) hasVoted.getBase();
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 2.0f);
                     String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
                     storage.incrementInt("vote.ip" + address, 1);
-                    if (!dropCase((Player) hasVoted)) {
-                        storage.incrementInt("vote.reward." + hasVoted.getUniqueId(), 1);
+                    if (!dropCase(playerHasVoted)) {
+                        storage.incrementInt("vote.reward." + playerHasVoted.getUniqueId(), 1);
                         playerHasVoted.sendMessage(Language.getMessagePlaceholders("commandVoteRewardInvFull", true, "%PREFIX%", "Vote"));
                     }
                 } else {

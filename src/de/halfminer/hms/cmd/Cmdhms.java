@@ -7,13 +7,11 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanTitles;
+import de.halfminer.hms.modules.ModAntiXray;
 import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -64,6 +62,9 @@ public class Cmdhms extends HalfminerCommand {
                     return;
                 case "searchhomes":
                     searchHomes();
+                    return;
+                case "xraybypass":
+                    xrayBypass();
                     return;
                 case "reload":
                     reload();
@@ -151,10 +152,11 @@ public class Cmdhms extends HalfminerCommand {
 
         if (args.length == 2) {
             try {
-                UUID playerUid = storage.getUUID(args[1]);
+                HalfminerPlayer p = storage.getPlayer(args[1]);
+                UUID playerUid = p.getUniqueId();
                 storage.set("vote." + playerUid, Long.MAX_VALUE);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "HMS",
-                        "%PLAYER%", server.getOfflinePlayer(playerUid).getName()));
+                        "%PLAYER%", p.getString(DataType.LAST_NAME)));
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "HMS");
             }
@@ -170,6 +172,7 @@ public class Cmdhms extends HalfminerCommand {
             return;
         }
 
+        //TODO fix usage with offline players
         Player player = server.getPlayer(args[1]);
         HalfminerPlayer hPlayer = storage.getPlayer(player);
 
@@ -309,6 +312,28 @@ public class Cmdhms extends HalfminerCommand {
                 else for (String message : homeMessages) player.sendMessage(message);
             }
         });
+    }
+
+    private void xrayBypass() {
+
+        if (args.length >= 1) {
+
+            OfflinePlayer p;
+            try {
+                p = storage.getPlayer(args[1]).getBase();
+                boolean hasBypass = ((ModAntiXray) hms.getModule(ModuleType.ANTI_XRAY)).setBypassed(p);
+                if (hasBypass) {
+                    sender.sendMessage(Language.getMessagePlaceholders("commandHmsXrayBypassSet",
+                            true, "%PREFIX%", "HMS", "%PLAYER%", p.getName()));
+                } else {
+                    sender.sendMessage(Language.getMessagePlaceholders("commandHmsXrayBypassUnset",
+                            true, "%PREFIX%", "HMS", "%PLAYER%", p.getName()));
+                }
+
+            } catch (PlayerNotFoundException e) {
+                e.sendNotFoundMessage(sender, "HMS");
+            }
+        } else sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
     }
 
     private void reload() {

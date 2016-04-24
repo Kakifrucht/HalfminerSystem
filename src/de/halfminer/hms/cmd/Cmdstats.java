@@ -5,7 +5,6 @@ import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -28,43 +27,42 @@ public class Cmdstats extends HalfminerCommand {
             boolean compare = false;
             if (args.length > 1 && args[1].equalsIgnoreCase("compare") && sender instanceof Player) compare = true;
             try {
-                showStats(sender, server.getOfflinePlayer(storage.getUUID(args[0])), compare);
+                showStats(sender, storage.getPlayer(args[0]), compare);
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "Stats");
             }
 
         } else {
 
-            if (sender instanceof Player) showStats(sender, (Player) sender, false);
+            if (sender instanceof Player) showStats(sender, storage.getPlayer((Player) sender), false);
             else sender.sendMessage(Language.getMessage("notAPlayer"));
 
         }
 
     }
 
-    private void showStats(final CommandSender sendTo, final OfflinePlayer player, boolean compare) {
+    private void showStats(final CommandSender sendTo, final HalfminerPlayer player, boolean compare) {
 
-        HalfminerPlayer hPlayer = storage.getPlayer(player);
         HalfminerPlayer compareWith = null;
         if (compare && !sendTo.equals(player)) compareWith = storage.getPlayer((Player) sendTo);
 
-        final String oldNames = hPlayer.getString(DataType.LAST_NAMES);
+        final String oldNames = player.getString(DataType.LAST_NAMES);
 
         // build the message
         String message = Language.getMessage("commandStatsTop") + "\n";
         message += Language.getMessagePlaceholders("commandStatsShow", false,
-                "%PLAYER%", player.getName(),
-                "%SKILLGROUP%", hPlayer.getString(DataType.SKILL_GROUP),
-                "%SKILLLEVEL%", getIntAndCompare(hPlayer, DataType.SKILL_LEVEL, compareWith),
-                "%ONLINETIME%", getIntAndCompare(hPlayer, DataType.TIME_ONLINE, compareWith),
-                "%KILLS%", getIntAndCompare(hPlayer, DataType.KILLS, compareWith),
-                "%DEATHS%", getIntAndCompare(hPlayer, DataType.DEATHS, compareWith),
-                "%KDRATIO%", getDoubleAndCompare(hPlayer, DataType.KD_RATIO, compareWith),
-                "%VOTES%", getIntAndCompare(hPlayer, DataType.VOTES, compareWith),
-                "%REVENUE%", getDoubleAndCompare(hPlayer, DataType.REVENUE, compareWith),
-                "%MOBKILLS%", getIntAndCompare(hPlayer, DataType.MOB_KILLS, compareWith),
-                "%BLOCKSPLACED%", getIntAndCompare(hPlayer, DataType.BLOCKS_PLACED, compareWith),
-                "%BLOCKSBROKEN%", getIntAndCompare(hPlayer, DataType.BLOCKS_BROKEN, compareWith),
+                "%PLAYER%", player.getString(DataType.LAST_NAME),
+                "%SKILLGROUP%", player.getString(DataType.SKILL_GROUP),
+                "%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith),
+                "%ONLINETIME%", getIntAndCompare(player, DataType.TIME_ONLINE, compareWith),
+                "%KILLS%", getIntAndCompare(player, DataType.KILLS, compareWith),
+                "%DEATHS%", getIntAndCompare(player, DataType.DEATHS, compareWith),
+                "%KDRATIO%", getDoubleAndCompare(player, DataType.KD_RATIO, compareWith),
+                "%VOTES%", getIntAndCompare(player, DataType.VOTES, compareWith),
+                "%REVENUE%", getDoubleAndCompare(player, DataType.REVENUE, compareWith),
+                "%MOBKILLS%", getIntAndCompare(player, DataType.MOB_KILLS, compareWith),
+                "%BLOCKSPLACED%", getIntAndCompare(player, DataType.BLOCKS_PLACED, compareWith),
+                "%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith),
                 "%OLDNAMES%", oldNames) + "\n";
 
         if (oldNames.length() > 0)
@@ -77,7 +75,7 @@ public class Cmdstats extends HalfminerCommand {
             message += Language.getMessage("commandStatsCompareLegend") + "\n";
         } else if (sendTo instanceof Player) {
             message += Language.getMessagePlaceholders("commandStatsCompareInfo", false,
-                    "%PLAYER%", player.getName()) + "\n";
+                    "%PLAYER%", player.getString(DataType.LAST_NAME)) + "\n";
         }
 
         message += Language.getMessage("lineSeparator");
