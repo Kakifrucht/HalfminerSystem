@@ -29,6 +29,7 @@ import java.util.UUID;
  * - Ring players to get their attention (ring)
  * - Edit skillelo of player (updateskill)
  * - Remove a players /home block (rmhomeblock)
+ * - Exempt a player from AntiXRay (xraybypass)
  */
 @SuppressWarnings("unused")
 public class Cmdhms extends HalfminerCommand {
@@ -156,7 +157,7 @@ public class Cmdhms extends HalfminerCommand {
                 UUID playerUid = p.getUniqueId();
                 storage.set("vote." + playerUid, Long.MAX_VALUE);
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "HMS",
-                        "%PLAYER%", p.getString(DataType.LAST_NAME)));
+                        "%PLAYER%", p.getName()));
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "HMS");
             }
@@ -172,32 +173,32 @@ public class Cmdhms extends HalfminerCommand {
             return;
         }
 
-        //TODO fix usage with offline players
-        Player player = server.getPlayer(args[1]);
-        HalfminerPlayer hPlayer = storage.getPlayer(player);
-
-        if (player == null) {
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
+        HalfminerPlayer p;
+        try {
+            p = storage.getPlayer(args[1]);
+        } catch (PlayerNotFoundException e) {
+            e.sendNotFoundMessage(sender, "Skilllevel");
             return;
         }
 
-        int oldValue = hPlayer.getInt(DataType.SKILL_ELO);
-        int modifier = -oldValue;
+        int oldValue = p.getInt(DataType.SKILL_ELO);
 
         if (args.length > 2) {
             try {
-                modifier += Integer.decode(args[2]);
+                int modifier = Integer.decode(args[2]);
+                ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(p.getBase(), modifier);
+
+                sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
+                        "%PLAYER%", p.getName(), "%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL),
+                        "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", p.getString(DataType.SKILL_ELO)));
             } catch (NumberFormatException e) {
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
-                return;
             }
+        } else {
+            sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillShow", true, "%PREFIX%", "Skilllevel",
+                    "%PLAYER%", p.getName(), "%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL),
+                    "%ELO%", String.valueOf(oldValue)));
         }
-
-        ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(player, modifier);
-
-        sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
-                "%PLAYER%", player.getName(), "%SKILLLEVEL%", String.valueOf(hPlayer.getInt(DataType.SKILL_LEVEL)),
-                "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", String.valueOf(hPlayer.getInt(DataType.SKILL_ELO))));
     }
 
     private void ringPlayer() {
@@ -320,15 +321,15 @@ public class Cmdhms extends HalfminerCommand {
 
             OfflinePlayer p;
             try {
+
                 p = storage.getPlayer(args[1]).getBase();
-                boolean hasBypass = ((ModAntiXray) hms.getModule(ModuleType.ANTI_XRAY)).setBypassed(p);
-                if (hasBypass) {
+
+                if (((ModAntiXray) hms.getModule(ModuleType.ANTI_XRAY)).setBypassed(p))
                     sender.sendMessage(Language.getMessagePlaceholders("commandHmsXrayBypassSet",
                             true, "%PREFIX%", "HMS", "%PLAYER%", p.getName()));
-                } else {
-                    sender.sendMessage(Language.getMessagePlaceholders("commandHmsXrayBypassUnset",
+                else sender.sendMessage(Language.getMessagePlaceholders("commandHmsXrayBypassUnset",
                             true, "%PREFIX%", "HMS", "%PLAYER%", p.getName()));
-                }
+
 
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "HMS");

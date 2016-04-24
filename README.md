@@ -159,6 +159,7 @@ Current features
     - Ring players to get their attention (ring)
     - Edit skillelo of player (updateskill)
     - Remove a players /home block (rmhomeblock)
+    - Exempt a player from AntiXRay (xraybypass)
   - /hmstore
     - Edit HalfminerSystem storage
     - Set, get and delete variables

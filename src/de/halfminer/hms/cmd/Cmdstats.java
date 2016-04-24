@@ -51,7 +51,7 @@ public class Cmdstats extends HalfminerCommand {
         // build the message
         String message = Language.getMessage("commandStatsTop") + "\n";
         message += Language.getMessagePlaceholders("commandStatsShow", false,
-                "%PLAYER%", player.getString(DataType.LAST_NAME),
+                "%PLAYER%", player.getName(),
                 "%SKILLGROUP%", player.getString(DataType.SKILL_GROUP),
                 "%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith),
                 "%ONLINETIME%", getIntAndCompare(player, DataType.TIME_ONLINE, compareWith),
@@ -75,7 +75,7 @@ public class Cmdstats extends HalfminerCommand {
             message += Language.getMessage("commandStatsCompareLegend") + "\n";
         else if (sendTo instanceof Player) {
             message += Language.getMessagePlaceholders("commandStatsCompareInfo", false,
-                    "%PLAYER%", player.getString(DataType.LAST_NAME)) + "\n";
+                    "%PLAYER%", player.getName()) + "\n";
         }
 
         message += Language.getMessage("lineSeparator");

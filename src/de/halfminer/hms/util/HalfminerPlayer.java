@@ -1,5 +1,6 @@
 package de.halfminer.hms.util;
 
+import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.DataType;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,23 +13,43 @@ import java.util.UUID;
 @SuppressWarnings({"SameParameterValue", "UnusedReturnValue"})
 public class HalfminerPlayer {
 
-    private final OfflinePlayer player;
+    private final UUID uuid;
+    private OfflinePlayer player = null;
 
     private final FileConfiguration storage;
     private final String path;
 
     public HalfminerPlayer(FileConfiguration storage, OfflinePlayer p) {
-        this.player = p;
+
         this.storage = storage;
-        this.path = p.getUniqueId() + ".";
+
+        this.uuid = p.getUniqueId();
+        this.player = p;
+        this.path = uuid + ".";
+    }
+
+    public HalfminerPlayer(FileConfiguration storage, UUID uuid) {
+
+        this.storage = storage;
+
+        this.uuid = uuid;
+        this.path = uuid + ".";
     }
 
     public OfflinePlayer getBase() {
+
+        if (player == null) {
+            player = HalfminerSystem.getInstance().getServer().getOfflinePlayer(uuid);
+        }
         return player;
     }
 
     public UUID getUniqueId() {
-        return player.getUniqueId();
+        return uuid;
+    }
+
+    public String getName() {
+        return getString(DataType.LAST_NAME);
     }
 
     public void set(DataType type, Object setTo) {

@@ -45,7 +45,7 @@ public class Cmdvote extends HalfminerCommand {
                 storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
                 hasVoted.incrementInt(DataType.VOTES, 1);
                 server.broadcast(Language.getMessagePlaceholders("commandVoteVoted", true, "%PREFIX%",
-                        "Vote", "%PLAYER%", hasVoted.getString(DataType.LAST_NAME)), "hms.default");
+                        "Vote", "%PLAYER%", hasVoted.getName()), "hms.default");
 
                 // if the player is currently online, save his ip so that other people with same ip who cannot vote
                 // can also bypass the block, also drop vote reward, or increment background reward counter

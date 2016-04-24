@@ -8,6 +8,7 @@ import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -97,7 +98,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         }
     }
 
-    public void updateSkill(Player player, int modifier) {
+    public void updateSkill(OfflinePlayer player, int modifier) {
 
         HalfminerPlayer hPlayer = storage.getPlayer(player);
 
@@ -155,7 +156,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         hPlayer.set(DataType.SKILL_GROUP, teamName);
 
         // Send title/log if necessary
-        if (newLevel != level) {
+        if (newLevel != level && player instanceof Player) {
 
             String sendTitle;
             if (newLevel > level) {
@@ -165,7 +166,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 sendTitle = Language.getMessagePlaceholders("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
                         String.valueOf(newLevel), "%SKILLGROUP%", teamName);
             }
-            titleHandler.sendTitle(player, sendTitle, 10, 50, 10);
+            titleHandler.sendTitle((Player) player, sendTitle, 10, 50, 10);
             hms.getLogger().info(Language.getMessagePlaceholders("modSkillLevelLog", false, "%PLAYER%", player.getName(),
                     "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(elo)));
         }

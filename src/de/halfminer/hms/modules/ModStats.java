@@ -50,7 +50,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         HalfminerPlayer hPlayer = storage.getPlayer(player);
         timeOnline.put(player, System.currentTimeMillis() / 1000);
 
-        String lastName = hPlayer.getString(DataType.LAST_NAME);
+        String lastName = hPlayer.getName();
         if (!(lastName.length() == 0) && !lastName.equalsIgnoreCase(player.getName())) {
 
             String lastNames = hPlayer.getString(DataType.LAST_NAMES);

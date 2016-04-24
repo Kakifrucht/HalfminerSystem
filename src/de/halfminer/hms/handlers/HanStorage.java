@@ -81,11 +81,15 @@ public class HanStorage extends HalfminerHandler implements Disableable {
                 uuid = p.getUniqueId();
             } else throw new PlayerNotFoundException();
         }
-        return getPlayer(server.getOfflinePlayer(uuid));
+        return getPlayer(uuid);
     }
 
     public HalfminerPlayer getPlayer(OfflinePlayer p) {
         return new HalfminerPlayer(playerConfig, p);
+    }
+
+    public HalfminerPlayer getPlayer(UUID uuid) {
+        return new HalfminerPlayer(playerConfig, uuid);
     }
 
     public void saveConfig() {
