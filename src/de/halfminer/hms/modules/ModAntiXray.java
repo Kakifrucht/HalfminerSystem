@@ -5,6 +5,7 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -73,18 +74,9 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 // Notify if the bypass has only been set now or if the distance between the last ore is high enough
                 if (!counter.setBypassScheduler() || counter.notifyAgain()) {
 
-                    String message = Language.getMessagePlaceholders("modAntiXrayDetected", true,
-                            "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName(),
-                            "%BROKENTOTAL%", String.valueOf(broken),
-                            "%BROKENPROTECTED%", String.valueOf(brokenProtected));
-
-                    server.getConsoleSender().sendMessage(message);
+                    notify(server.getConsoleSender(), counter, false);
                     for (Player toNotify : server.getOnlinePlayers())
-                        if (toNotify.hasPermission("hms.antixray.notify")) {
-
-                            toNotify.sendMessage(message);
-                            counter.setInformed(toNotify);
-                        }
+                        if (toNotify.hasPermission("hms.antixray.notify")) notify(toNotify, counter, false);
                 }
             }
         }
@@ -94,20 +86,8 @@ public class ModAntiXray extends HalfminerModule implements Listener {
     public void onLoginNotify(PlayerJoinEvent e) {
 
         Player joined = e.getPlayer();
-        if (joined.hasPermission("hms.antixray.notify")) {
-            for (UUID checked : checkedPermanently) {
-
-                BreakCounter counter = playersChecked.get(checked);
-                if (counter.isAlreadyInformed(joined)) continue;
-                joined.sendMessage(Language.getMessagePlaceholders("modAntiXrayJoinDetected", true,
-                        "%PREFIX%", "AntiXRay", "%PLAYER%", server.getPlayer(checked).getName(),
-                        "%BROKENTOTAL%", String.valueOf(counter.getBreakages()),
-                        "%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()),
-                        "%LASTLOCATION%", Language.getStringFromLocation(counter.getLastProtectedLocation()),
-                        "%WORLD%", counter.getLastProtectedLocation().getWorld().getName()));
-                counter.setInformed(joined);
-            }
-        }
+        if (joined.hasPermission("hms.antixray.notify"))
+            for (UUID checked : checkedPermanently) notify(joined, playersChecked.get(checked), true);
     }
 
     public boolean setBypassed(OfflinePlayer p) {
@@ -122,12 +102,27 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         return counter.toggleBypass();
     }
 
+    private void notify(CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotifed) {
+
+        if (toNotify instanceof Player) {
+            if (checkIfAlreadyNotifed && counter.isAlreadyInformed((Player) toNotify)) return;
+            else counter.setInformed((Player) toNotify);
+        }
+
+        toNotify.sendMessage(Language.getMessagePlaceholders("modAntiXrayJoinDetected", true,
+                "%PREFIX%", "AntiXRay", "%PLAYER%", storage.getPlayer(counter.getUuid()).getName(),
+                "%BROKENTOTAL%", String.valueOf(counter.getBreakages()),
+                "%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()),
+                "%LASTLOCATION%", Language.getStringFromLocation(counter.getLastProtectedLocation()),
+                "%WORLD%", counter.getLastProtectedLocation().getWorld().getName()));
+    }
+
     @Override
     public void loadConfig() {
 
         CHECK_THRESHOLD_SECONDS = hms.getConfig().getInt("antiXray.intervalUntilClearSeconds", 300);
         PROTECTED_BLOCK_THRESHOLD = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 20);
-        PROTECTED_BLOCK_RATIO = hms.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.15);
+        PROTECTED_BLOCK_RATIO = hms.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.01);
 
         protectedMaterial = Utils.stringListToMaterialSet(hms.getConfig().getStringList("antiXray.protectedBlocks"));
     }
@@ -152,6 +147,10 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         BreakCounter(final UUID uuid) {
             this.uuid = uuid;
             scheduleTask();
+        }
+
+        UUID getUuid() {
+            return uuid;
         }
 
         int getBreakages() {
