@@ -23,7 +23,7 @@ command:
     wheat: 25
   vote:
     #Command to run when a player has voted
-    voteRewardCommand: vt run casino:dropcase %PLAYER%
+    voteRewardCommand: give %PLAYER% diamond 4
     #Amount of votes until command execution
     threshold: 2000
     #Command to execute when threshold has been met
@@ -51,11 +51,12 @@ antiKillfarming:
   - 'tempban'
   - 'bminfo'
 antiXray:
-  #Time until a counted player won't be counter anymore
-  intervalUntilClearSeconds: 600
-  #Amount of protected blocks that have to be broken in given time frame at least until warning
-  protectedBlockThreshold: 10
-  #How many non protected blocks should be broken per protected block to not trigger a warning
+  #Time until a counted player won't be counter anymore since last protected break
+  intervalUntilClearSeconds: 300
+  #Amount of protected blocks that have to be broken at least in given time frame
+  protectedBlockThreshold: 20
+  #Amount of protected blocks in percent which will place a player into permanent checking mode, if
+  #he also passed the protectedBlockThreshold
   protectedBlockRatioThreshold: 0.15
   #Protected blocks / materials
   protectedBlocks:
@@ -67,7 +68,8 @@ autoMessage:
   #Time between each message
   intervalSeconds: 240
   messages:
-  - 'Set messages here'
+  - 'One message'
+  - 'Another message'
 chat:
   #Add formats to the list, you need the permission node hms.chat.format.name
   #hms.chat.topformat always grants top format (which has highest priority)
@@ -120,7 +122,7 @@ pvp:
   streakThreshold: 30
 respawn:
   #Command to be run on first player join, supports %PLAYER% placeholder
-  firstJoinCommand: 'give %PLAYER% dirt 1'
+  firstJoinCommand: 'kit starter %PLAYER%'
 skillLevel:
   #Level that has to be reached for a derank to occur
   derankThreshold: 16

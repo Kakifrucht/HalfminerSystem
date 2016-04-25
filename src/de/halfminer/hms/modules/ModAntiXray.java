@@ -41,7 +41,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         Player p = e.getPlayer();
         if (p.hasPermission("hms.bypass.antixray")) return;
 
-        final UUID uuid = p.getUniqueId();
+        UUID uuid = p.getUniqueId();
         BreakCounter counter = null;
 
         if (playersChecked.containsKey(uuid)) {
@@ -70,8 +70,8 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
                 checkedPermanently.add(uuid);
 
-                // Notify
-                if (!counter.setBypassScheduler() || counter.isSameOre()) {
+                // Notify if the bypass has only been set now or if the distance between the last ore is high enough
+                if (!counter.setBypassScheduler() || counter.notifyAgain()) {
 
                     String message = Language.getMessagePlaceholders("modAntiXrayDetected", true,
                             "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName(),
@@ -125,8 +125,8 @@ public class ModAntiXray extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        CHECK_THRESHOLD_SECONDS = hms.getConfig().getInt("antiXray.intervalUntilClearSeconds", 600);
-        PROTECTED_BLOCK_THRESHOLD = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 10);
+        CHECK_THRESHOLD_SECONDS = hms.getConfig().getInt("antiXray.intervalUntilClearSeconds", 300);
+        PROTECTED_BLOCK_THRESHOLD = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 20);
         PROTECTED_BLOCK_RATIO = hms.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.15);
 
         protectedMaterial = Utils.stringListToMaterialSet(hms.getConfig().getStringList("antiXray.protectedBlocks"));
@@ -143,7 +143,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         Location pastProtectedLocation;
         Location lastProtectedLocation;
 
-        long lastBreakTime = System.currentTimeMillis() / 1000;
+        long lastProtectedBreakTime = System.currentTimeMillis() / 1000;
         boolean bypass = false;
         boolean bypassScheduler = false;
 
@@ -166,16 +166,17 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             return lastProtectedLocation;
         }
 
-        boolean isSameOre() {
+        boolean notifyAgain() {
             return pastProtectedLocation.distance(lastProtectedLocation) > 3.0d;
         }
 
         void incrementBreakages() {
-            lastBreakTime = System.currentTimeMillis() / 1000;
             blocksBroken++;
         }
 
         int incrementProtectedBlocksBroken(Location loc) {
+
+            lastProtectedBreakTime = System.currentTimeMillis() / 1000;
             pastProtectedLocation = lastProtectedLocation;
             lastProtectedLocation = loc;
             return ++protectedBlocksBroken;
@@ -210,15 +211,16 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             int schedulerTime = CHECK_THRESHOLD_SECONDS;
 
             long currentTime = System.currentTimeMillis() / 1000;
-            if (lastBreakTime != currentTime) schedulerTime = schedulerTime - (int) (currentTime - lastBreakTime);
+            if (lastProtectedBreakTime != currentTime)
+                schedulerTime = schedulerTime - (int) (currentTime - lastProtectedBreakTime);
 
             if (task != null) task.cancel();
             task = scheduler.runTaskLater(hms, new Runnable() {
                 @Override
                 public void run() {
 
-                    if (!bypassScheduler && lastBreakTime + CHECK_THRESHOLD_SECONDS <= System.currentTimeMillis() / 1000)
-                        playersChecked.remove(uuid);
+                    if (lastProtectedBreakTime + CHECK_THRESHOLD_SECONDS <= System.currentTimeMillis() / 1000)
+                        if (!bypassScheduler) playersChecked.remove(uuid);
                     else scheduleTask();
                 }
             }, schedulerTime * 20);
