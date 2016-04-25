@@ -2,22 +2,22 @@ package de.halfminer.hms.enums;
 
 public enum DataType {
 
-    KILLS           ("kills"),
+    BLOCKS_BROKEN   ("blocksbroken"),
+    BLOCKS_PLACED   ("blocksplaced"),
     DEATHS          ("deaths"),
     KD_RATIO        ("kdratio"),
-    TIME_ONLINE     ("timeonline"),
-    BLOCKS_PLACED   ("blocksplaced"),
-    BLOCKS_BROKEN   ("blocksbroken"),
-    VOTES           ("votes"),
-    SKILL_LEVEL     ("skilllevel"),
-    SKILL_ELO       ("skillelo"),
-    SKILL_GROUP     ("skillgroup"),
-    MOB_KILLS       ("mobkills"),
-    REVENUE         ("revenue"),
+    KILLS           ("kills"),
     LASTKILL        ("lastkill"),
     LAST_NAME       ("lastname"),
     LAST_NAMES      ("lastnames"),
-    NEUTP_USED      ("neutp");
+    MOB_KILLS       ("mobkills"),
+    NEUTP_USED      ("neutp"),
+    REVENUE         ("revenue"),
+    SKILL_ELO       ("skillelo"),
+    SKILL_GROUP     ("skillgroup"),
+    SKILL_LEVEL     ("skilllevel"),
+    TIME_ONLINE     ("timeonline"),
+    VOTES           ("votes");
 
     private final String name;
 
