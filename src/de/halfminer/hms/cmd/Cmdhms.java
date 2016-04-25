@@ -185,7 +185,7 @@ public class Cmdhms extends HalfminerCommand {
 
         if (args.length > 2) {
             try {
-                int modifier = Integer.decode(args[2]);
+                int modifier = Integer.decode(args[2]) - oldValue;
                 ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(p.getBase(), modifier);
 
                 sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
