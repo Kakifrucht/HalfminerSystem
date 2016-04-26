@@ -22,9 +22,9 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
-    private static int BLOCK_TIME;
-    private static int THRESHOLD_UNTIL_BLOCK;
-    private static int THRESHOLD_UNTIL_REMOVAL_SECONDS;
+    private int BLOCK_TIME;
+    private int THRESHOLD_UNTIL_BLOCK;
+    private int THRESHOLD_UNTIL_REMOVAL_SECONDS;
 
     private final Map<String, String> lang = new HashMap<>();
     private final Set<String> commandExemptList = new HashSet<>();

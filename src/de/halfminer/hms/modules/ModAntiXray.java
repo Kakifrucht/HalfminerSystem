@@ -28,9 +28,9 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class ModAntiXray extends HalfminerModule implements Listener {
 
-    private static int CHECK_THRESHOLD_SECONDS;
-    private static int PROTECTED_BLOCK_THRESHOLD;
-    private static double PROTECTED_BLOCK_RATIO;
+    private int checkThresholdSeconds;
+    private int protectedBlockThreshold;
+    private double protectedBlockRatio;
 
     private Map<UUID, BreakCounter> playersChecked = new HashMap<>();
     private Set<UUID> checkedPermanently = new HashSet<>();
@@ -66,8 +66,8 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             }
 
             // Put player into permanent check mode
-            if (brokenProtected >= PROTECTED_BLOCK_THRESHOLD
-                    && brokenProtected / (double) broken > PROTECTED_BLOCK_RATIO) {
+            if (brokenProtected >= protectedBlockThreshold
+                    && brokenProtected / (double) broken > protectedBlockRatio) {
 
                 checkedPermanently.add(uuid);
 
@@ -120,9 +120,9 @@ public class ModAntiXray extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        CHECK_THRESHOLD_SECONDS = hms.getConfig().getInt("antiXray.intervalUntilClearSeconds", 300);
-        PROTECTED_BLOCK_THRESHOLD = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 20);
-        PROTECTED_BLOCK_RATIO = hms.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.01);
+        checkThresholdSeconds = hms.getConfig().getInt("antiXray.intervalUntilClearSeconds", 300);
+        protectedBlockThreshold = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 20);
+        protectedBlockRatio = hms.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.01);
 
         protectedMaterial = Utils.stringListToMaterialSet(hms.getConfig().getStringList("antiXray.protectedBlocks"));
     }
@@ -207,7 +207,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
             if (bypassScheduler) return;
 
-            int schedulerTime = CHECK_THRESHOLD_SECONDS;
+            int schedulerTime = checkThresholdSeconds;
 
             long currentTime = System.currentTimeMillis() / 1000;
             if (lastProtectedBreakTime != currentTime)
@@ -218,7 +218,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 @Override
                 public void run() {
 
-                    if (lastProtectedBreakTime + CHECK_THRESHOLD_SECONDS <= System.currentTimeMillis() / 1000)
+                    if (lastProtectedBreakTime + checkThresholdSeconds <= System.currentTimeMillis() / 1000)
                         if (!bypassScheduler) playersChecked.remove(uuid);
                     else scheduleTask();
                 }

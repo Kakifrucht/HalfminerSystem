@@ -89,10 +89,10 @@ public class Cmdverkauf extends HalfminerCommand {
             }
 
             if (toBeSold != null) sellLoop();
-            else sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));
+            else sender.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
 
         } else {
-            sender.sendMessage(Language.getMessagePlaceholders("commandVerkaufUsage", true, "%PREFIX%", "Verkauf"));
+            sender.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
         }
     }
 

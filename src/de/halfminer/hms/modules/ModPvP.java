@@ -35,7 +35,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
-    private static int THRESHOLD_UNTIL_SHOWN;
+    private int thresholdUntilShown;
 
     private Map<Player, Long> lastBowShot = new HashMap<>();
     private final Map<UUID, Integer> killStreak = new HashMap<>();
@@ -143,7 +143,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
             killStreak.put(killerUid, streak);
 
-            if (streak > THRESHOLD_UNTIL_SHOWN || streak % 5 == 0) {
+            if (streak > thresholdUntilShown || streak % 5 == 0) {
                 scheduler.runTaskLater(hms, new Runnable() {
                     @Override
                     public void run() {
@@ -173,7 +173,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     @Override
     public void loadConfig() {
 
-        THRESHOLD_UNTIL_SHOWN = hms.getConfig().getInt("pvp.streakThreshold", 30);
+        thresholdUntilShown = hms.getConfig().getInt("pvp.streakThreshold", 30);
     }
 
     @Override

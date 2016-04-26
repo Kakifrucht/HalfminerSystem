@@ -36,10 +36,10 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class ModSkillLevel extends HalfminerModule implements Disableable, Listener, Sweepable {
 
-    private static int DERANK_LEVEL_THRESHOLD;
-    private static int TIME_UNTIL_DERANK_THRESHOLD;
-    private static int DERANK_LOSS_AMOUNT;
-    private static int TIME_UNTIL_KILL_COUNT_AGAIN;
+    private int derankLevelThreshold;
+    private int timeUntilDerankThreshold;
+    private int derankLossAmount;
+    private int timeUntilKillCountAgain;
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
@@ -57,11 +57,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         if (player.hasPermission("hms.bypass.skilllevel")) return;
 
         // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
-        if (hPlayer.getInt(DataType.SKILL_LEVEL) >= DERANK_LEVEL_THRESHOLD
-                && hPlayer.getInt(DataType.LASTKILL) + TIME_UNTIL_DERANK_THRESHOLD < (System.currentTimeMillis() / 1000)) {
+        if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankLevelThreshold
+                && hPlayer.getInt(DataType.LASTKILL) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
 
             hPlayer.set(DataType.LASTKILL, System.currentTimeMillis() / 1000);
-            updateSkill(player, DERANK_LOSS_AMOUNT);
+            updateSkill(player, derankLossAmount);
             player.sendMessage(Language.getMessagePlaceholders("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
 
         } else updateSkill(player, 0);
@@ -175,17 +175,17 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private boolean killDoesCount(String uuidCat) {
 
         return !lastKill.containsKey(uuidCat)
-                || lastKill.get(uuidCat) + TIME_UNTIL_KILL_COUNT_AGAIN
+                || lastKill.get(uuidCat) + timeUntilKillCountAgain
                 < System.currentTimeMillis() / 1000;
     }
 
     @Override
     public void loadConfig() {
 
-        DERANK_LEVEL_THRESHOLD = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
-        TIME_UNTIL_DERANK_THRESHOLD = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
-        TIME_UNTIL_KILL_COUNT_AGAIN = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
-        DERANK_LOSS_AMOUNT = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
+        derankLevelThreshold = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
+        timeUntilDerankThreshold = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
+        timeUntilKillCountAgain = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
+        derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 
