@@ -93,7 +93,10 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
         Player joined = e.getPlayer();
         if (joined.hasPermission("hms.antixray.notify"))
-            for (UUID checked : checkedPermanently) notify(joined, playersChecked.get(checked), true);
+            for (UUID checked : checkedPermanently) {
+                BreakCounter counter = playersChecked.get(checked);
+                if (!counter.isBypassed()) notify(joined, counter, true);
+            }
     }
 
     public boolean setBypassed(OfflinePlayer p) {
