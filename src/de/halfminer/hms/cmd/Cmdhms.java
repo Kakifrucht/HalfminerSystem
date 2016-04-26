@@ -72,7 +72,7 @@ public class Cmdhms extends HalfminerCommand {
                     return;
             }
         }
-        sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
+        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
     }
 
     private void renameItem() {
@@ -86,7 +86,7 @@ public class Cmdhms extends HalfminerCommand {
                 ItemStack item = player.getInventory().getItemInMainHand();
 
                 if (item == null || item.getType() == Material.AIR) {
-                    player.sendMessage(Language.getMessagePlaceholders("commandHmsRenameFailed", true, "%PREFIX%", "HMS"));
+                    player.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameFailed", true, "%PREFIX%", "HMS"));
                     return;
                 }
 
@@ -140,10 +140,10 @@ public class Cmdhms extends HalfminerCommand {
 
                 if (newName == null) newName = "";
 
-                player.sendMessage(Language.getMessagePlaceholders("commandHmsRenameDone", true, "%PREFIX%",
+                player.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameDone", true, "%PREFIX%",
                         "HMS", "%NAME%", newName));
             } else {
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
             }
 
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
@@ -156,20 +156,20 @@ public class Cmdhms extends HalfminerCommand {
                 HalfminerPlayer p = storage.getPlayer(args[1]);
                 UUID playerUid = p.getUniqueId();
                 storage.set("vote." + playerUid, Long.MAX_VALUE);
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmsHomeblockRemove", true, "%PREFIX%", "HMS",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsHomeblockRemove", true, "%PREFIX%", "HMS",
                         "%PLAYER%", p.getName()));
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "HMS");
             }
 
         } else
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
     }
 
     private void updateSkill() {
 
         if (args.length < 2) {
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
             return;
         }
 
@@ -188,14 +188,14 @@ public class Cmdhms extends HalfminerCommand {
                 int modifier = Integer.decode(args[2]) - oldValue;
                 ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(p.getBase(), modifier);
 
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
                         "%PLAYER%", p.getName(), "%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL),
                         "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", p.getString(DataType.SKILL_ELO)));
             } catch (NumberFormatException e) {
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
             }
         } else {
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsSkillShow", true, "%PREFIX%", "Skilllevel",
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillShow", true, "%PREFIX%", "Skilllevel",
                     "%PLAYER%", p.getName(), "%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL),
                     "%ELO%", String.valueOf(oldValue)));
         }
@@ -204,7 +204,7 @@ public class Cmdhms extends HalfminerCommand {
     private void ringPlayer() {
 
         if (args.length < 2) {
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
             return;
         }
 
@@ -219,11 +219,11 @@ public class Cmdhms extends HalfminerCommand {
         } else {
 
             ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendTitle(toRing,
-                    Language.getMessagePlaceholders("commandHmsRingTitle", false, "%PLAYER%", senderName));
-            toRing.sendMessage(Language.getMessagePlaceholders("commandHmsRingMessage", true, "%PREFIX%", "HMS",
+                    Language.getMessagePlaceholders("cmdHmsRingTitle", false, "%PLAYER%", senderName));
+            toRing.sendMessage(Language.getMessagePlaceholders("cmdHmsRingMessage", true, "%PREFIX%", "HMS",
                     "%PLAYER%", senderName));
 
-            sender.sendMessage(Language.getMessagePlaceholders("commandHmsRingSent", true, "%PREFIX%", "HMS",
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsRingSent", true, "%PREFIX%", "HMS",
                     "%PLAYER%", toRing.getName()));
 
             scheduler.runTaskAsynchronously(hms, new Runnable() {
@@ -283,7 +283,7 @@ public class Cmdhms extends HalfminerCommand {
             @Override
             public void run() {
 
-                player.sendMessage(Language.getMessagePlaceholders("commandHmsSearchhomesStarted", true, "%PREFIX%", "HMS",
+                player.sendMessage(Language.getMessagePlaceholders("cmdHmsSearchhomesStarted", true, "%PREFIX%", "HMS",
                         "%RADIUS%", String.valueOf(checkRadius)));
 
                 for (UUID uuid : ess.getUserMap().getAllUniqueUsers()) {
@@ -298,7 +298,7 @@ public class Cmdhms extends HalfminerCommand {
                             if (loc.getWorld().equals(world)
                                     && x - checkRadius < xHome && x + checkRadius > xHome
                                     && z - checkRadius < zHome && z + checkRadius > zHome) {
-                                homeMessages.add(Language.getMessagePlaceholders("commandHmsSearchhomesResults", false,
+                                homeMessages.add(Language.getMessagePlaceholders("cmdHmsSearchhomesResults", false,
                                         "%PLAYER%", user.getName(), "%HOMENAME%", homeName));
                             }
                         } catch (Exception e) {
@@ -309,7 +309,7 @@ public class Cmdhms extends HalfminerCommand {
                 }
 
                 if (homeMessages.size() == 0) player.sendMessage(
-                        Language.getMessagePlaceholders("commandHmsSearchhomesNoneFound", true, "%PREFIX%", "HMS"));
+                        Language.getMessagePlaceholders("cmdHmsSearchhomesNoneFound", true, "%PREFIX%", "HMS"));
                 else for (String message : homeMessages) player.sendMessage(message);
             }
         });
@@ -325,21 +325,21 @@ public class Cmdhms extends HalfminerCommand {
                 p = storage.getPlayer(args[1]).getBase();
 
                 if (((ModAntiXray) hms.getModule(ModuleType.ANTI_XRAY)).setBypassed(p))
-                    sender.sendMessage(Language.getMessagePlaceholders("commandHmsXrayBypassSet",
+                    sender.sendMessage(Language.getMessagePlaceholders("cmdHmsXrayBypassSet",
                             true, "%PREFIX%", "HMS", "%PLAYER%", p.getName()));
-                else sender.sendMessage(Language.getMessagePlaceholders("commandHmsXrayBypassUnset",
+                else sender.sendMessage(Language.getMessagePlaceholders("cmdHmsXrayBypassUnset",
                             true, "%PREFIX%", "HMS", "%PLAYER%", p.getName()));
 
 
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "HMS");
             }
-        } else sender.sendMessage(Language.getMessagePlaceholders("commandHmsUsage", true, "%PREFIX%", "HMS"));
+        } else sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
     }
 
     private void reload() {
         hms.loadConfig();
-        sender.sendMessage(Language.getMessagePlaceholders("commandHmsConfigReloaded", true, "%PREFIX%", "HMS"));
+        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsConfigReloaded", true, "%PREFIX%", "HMS"));
     }
 
 }

@@ -79,18 +79,18 @@ public class Cmdlag extends HalfminerCommand {
         } else tpsString = ChatColor.GREEN + tpsString;
 
         // Send ping and tps information to player
-        sender.sendMessage(Language.getMessagePlaceholders("commandLagPlayerInfo", true, "%PREFIX%", "Lag", "%PLAYER%", player.getName(), "%LATENCY%", pingString));
-        sender.sendMessage(Language.getMessagePlaceholders("commandLagServerInfo", true, "%PREFIX%", "Lag", "%TPS%", tpsString));
+        sender.sendMessage(Language.getMessagePlaceholders("cmdLagPlayerInfo", true, "%PREFIX%", "Lag", "%PLAYER%", player.getName(), "%LATENCY%", pingString));
+        sender.sendMessage(Language.getMessagePlaceholders("cmdLagServerInfo", true, "%PREFIX%", "Lag", "%TPS%", tpsString));
 
         if (showSummary) { // determines the summary message, only shown when viewing own status
             if (summaryServerLag == 0 && !summaryPlayerLag)
-                sender.sendMessage(Language.getMessagePlaceholders("commandLagStable", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("cmdLagStable", true, "%PREFIX%", "Lag"));
             else if (summaryServerLag == 1)
-                sender.sendMessage(Language.getMessagePlaceholders("commandLagServerUnstable", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("cmdLagServerUnstable", true, "%PREFIX%", "Lag"));
             else if (summaryServerLag == 2)
-                sender.sendMessage(Language.getMessagePlaceholders("commandLagServerLag", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("cmdLagServerLag", true, "%PREFIX%", "Lag"));
             else
-                sender.sendMessage(Language.getMessagePlaceholders("commandLagPlayerLag", true, "%PREFIX%", "Lag"));
+                sender.sendMessage(Language.getMessagePlaceholders("cmdLagPlayerLag", true, "%PREFIX%", "Lag"));
         }
     }
 }

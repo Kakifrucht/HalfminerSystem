@@ -41,7 +41,7 @@ public class Cmdsignedit extends HalfminerCommand {
                     }
 
                     signEdit.makeCopies(player, amountToCopy);
-                    player.sendMessage(Language.getMessagePlaceholders("commandSigneditCopy", true, "%PREFIX%", "Info", "%AMOUNT%", Byte.toString(amountToCopy)));
+                    player.sendMessage(Language.getMessagePlaceholders("cmdSigneditCopy", true, "%PREFIX%", "Info", "%AMOUNT%", Byte.toString(amountToCopy)));
                     return;
 
                 } else {
@@ -55,7 +55,7 @@ public class Cmdsignedit extends HalfminerCommand {
                                 if (setTo.length() > 15) setTo = setTo.substring(0, 15); //truncate if necessary
                                 signEdit.setLine(player, line, setTo);
                             } else signEdit.setLine(player, line, ""); //empty line
-                            player.sendMessage(Language.getMessagePlaceholders("commandSigneditSet", true, "%PREFIX%", "Info", "%LINE%", Byte.toString(line), "%TEXT%", setTo));
+                            player.sendMessage(Language.getMessagePlaceholders("cmdSigneditSet", true, "%PREFIX%", "Info", "%LINE%", Byte.toString(line), "%TEXT%", setTo));
                             return;
                         } else {
                             usageMessage(player);
@@ -73,7 +73,7 @@ public class Cmdsignedit extends HalfminerCommand {
     }
 
     private void usageMessage(Player player) {
-        player.sendMessage(Language.getMessagePlaceholders("commandSigneditUsage", true, "%PREFIX%", "Info"));
+        player.sendMessage(Language.getMessagePlaceholders("cmdSigneditUsage", true, "%PREFIX%", "Info"));
     }
 
 }

@@ -30,20 +30,20 @@ public class Cmdhome extends HalfminerCommand {
                 server.dispatchCommand(player, command);
             else if (storage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
                     || storage.getPlayer(player).getInt(DataType.TIME_ONLINE) < 18000
-                    || storage.getInt("vote.ip" + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) > 1) {
+                    || storage.getInt("vote.ip"
+                    + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) > 1) {
 
                 player.addAttachment(hms, "essentials.home", true, 0);
                 server.dispatchCommand(player, command);
 
             } else {
 
-                player.sendMessage(Language.getMessagePlaceholders("commandHomeDenied", true, "%PREFIX%", "Home",
+                player.sendMessage(Language.getMessagePlaceholders("cmdHomeDenied", true, "%PREFIX%", "Home",
                         "%PLAYER%", player.getName()));
 
-                hms.getLogger().info(Language.getMessagePlaceholders("commandHomeDeniedLog", false, "%PLAYER%", player.getName()));
+                hms.getLogger().info(Language.getMessagePlaceholders("cmdHomeDeniedLog", false,
+                        "%PLAYER%", player.getName()));
             }
-
         }
-
     }
 }

@@ -35,7 +35,7 @@ public class Cmdspawn extends HalfminerCommand {
 
                 Player p = (Player) sender;
 
-                p.sendMessage(Language.getMessagePlaceholders("commandSpawnSet", true, "%PREFIX%", "Spawn"));
+                p.sendMessage(Language.getMessagePlaceholders("cmdSpawnSet", true, "%PREFIX%", "Spawn"));
                 respawn.setSpawn(p.getLocation());
 
             } else if (sender.hasPermission("hms.spawn.others")) {
@@ -47,7 +47,7 @@ public class Cmdspawn extends HalfminerCommand {
                     else {
 
                         teleport(toTeleport, true);
-                        sender.sendMessage(Language.getMessagePlaceholders("commandSpawnOthers", true, "%PREFIX%", "Spawn",
+                        sender.sendMessage(Language.getMessagePlaceholders("cmdSpawnOthers", true, "%PREFIX%", "Spawn",
                                 "%PLAYER%", toTeleport.getName()));
                     }
                 }
@@ -56,10 +56,10 @@ public class Cmdspawn extends HalfminerCommand {
                         OfflinePlayer p = storage.getPlayer(args[0]).getBase();
 
                         if (respawn.teleportToSpawnOnJoin(p)) {
-                            sender.sendMessage(Language.getMessagePlaceholders("commandSpawnOthersOfflineAdd",
+                            sender.sendMessage(Language.getMessagePlaceholders("cmdSpawnOthersOfflineAdd",
                                     true, "%PREFIX%", "Spawn", "%PLAYER%", p.getName()));
                         } else {
-                            sender.sendMessage(Language.getMessagePlaceholders("commandSpawnOthersOfflineRemove",
+                            sender.sendMessage(Language.getMessagePlaceholders("cmdSpawnOthersOfflineRemove",
                                     true, "%PREFIX%", "Spawn", "%PLAYER%", p.getName()));
                         }
                     } catch (PlayerNotFoundException e) {

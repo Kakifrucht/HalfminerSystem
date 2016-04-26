@@ -150,16 +150,16 @@ public class Cmdverkauf extends HalfminerCommand {
 
                 //print message
                 String materialFriendly = Language.makeStringFriendly(args[0]);
-                player.sendMessage(Language.getMessagePlaceholders("commandVerkaufSuccess", true, "%PREFIX%", "Verkauf",
+                player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufSuccess", true, "%PREFIX%", "Verkauf",
                         "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
                         "%AMOUNT%", String.valueOf(sellCountTotal)));
 
-                hms.getLogger().info(Language.getMessagePlaceholders("commandVerkaufSuccessLog", false, "%PLAYER%",
+                hms.getLogger().info(Language.getMessagePlaceholders("cmdVerkaufSuccessLog", false, "%PLAYER%",
                         player.getName(), "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
                         "%AMOUNT%", String.valueOf(sellCountTotal)));
             } else {
 
-                player.sendMessage(Language.getMessagePlaceholders("commandVerkaufNotInInv", true, "%PREFIX%", "Verkauf",
+                player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufNotInInv", true, "%PREFIX%", "Verkauf",
                         "%MATERIAL%", Language.makeStringFriendly(args[0])));
             }
         }

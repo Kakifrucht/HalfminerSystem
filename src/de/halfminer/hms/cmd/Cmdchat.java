@@ -63,7 +63,7 @@ public class Cmdchat extends HalfminerCommand {
                 if (countdown > 30) showUsage();
                 else {
 
-                    sender.sendMessage(Language.getMessagePlaceholders("commandChatCountdownStarted", true, "%PREFIX%",
+                    sender.sendMessage(Language.getMessagePlaceholders("cmdChatCountdownStarted", true, "%PREFIX%",
                             "Chat", "%COUNT%", String.valueOf(countdown)));
 
                     final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
@@ -74,7 +74,7 @@ public class Cmdchat extends HalfminerCommand {
                         public void run() {
 
                             if (count < 0) return;
-                            bar.broadcastBar(Language.getMessagePlaceholders("commandChatCountdown", false, "%COUNT%",
+                            bar.broadcastBar(Language.getMessagePlaceholders("cmdChatCountdown", false, "%COUNT%",
                                     String.valueOf(count)),
                                     BarColor.GREEN, BarStyle.SOLID, 35, (double) count / countdown);
                             if (count-- == 0) {
@@ -104,7 +104,7 @@ public class Cmdchat extends HalfminerCommand {
                 String message = Language.arrayToString(args, 1, true).replace("\\n", "\n");
                 storage.set("chatmessage", message);
                 storage.set("chatmessagetime", (System.currentTimeMillis() / 1000));
-                sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageSet", true, "%PREFIX%", "Chat",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdChatMessageSet", true, "%PREFIX%", "Chat",
                         "%MESSAGE%", message));
 
             } else {
@@ -131,10 +131,10 @@ public class Cmdchat extends HalfminerCommand {
                         }
 
                         String recipientName;
-                        if (sendTo == null) recipientName = Language.getMessage("commandChatAll");
+                        if (sendTo == null) recipientName = Language.getMessage("cmdChatAll");
                         else recipientName = sendTo.getName();
 
-                        String notifySender = useBossbar ? "commandChatBossbar" : "commandChatTitle";
+                        String notifySender = useBossbar ? "cmdChatBossbar" : "cmdChatTitle";
 
                         sender.sendMessage(Language.getMessagePlaceholders(notifySender, true, "%PREFIX%", "Chat",
                                 "%SENDTO%", recipientName, "%TIME%", String.valueOf(time), "%MESSAGE%", message));
@@ -170,7 +170,7 @@ public class Cmdchat extends HalfminerCommand {
                             bossBar.sendBar((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
                                     false, "%NEWS%", message), BarColor.YELLOW, BarStyle.SOLID, 5);
                         }
-                        sender.sendMessage(Language.getMessagePlaceholders("commandChatNewsSetTo", true,
+                        sender.sendMessage(Language.getMessagePlaceholders("cmdChatNewsSetTo", true,
                                 "%PREFIX%", "Chat"));
 
                     } else if (args[0].equalsIgnoreCase("send")) {
@@ -193,9 +193,9 @@ public class Cmdchat extends HalfminerCommand {
                         } else {
 
                             server.broadcast(message, "hms.default");
-                            sendToString = Language.getMessage("commandChatAll");
+                            sendToString = Language.getMessage("cmdChatAll");
                         }
-                        sender.sendMessage(Language.getMessagePlaceholders("commandChatSend", true, "%PREFIX%", "Chat",
+                        sender.sendMessage(Language.getMessagePlaceholders("cmdChatSend", true, "%PREFIX%", "Chat",
                                 "%SENDTO%", sendToString));
 
                     }  else showUsage();
@@ -215,7 +215,7 @@ public class Cmdchat extends HalfminerCommand {
 
         if (message.length() == 0) {
 
-            sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageNotSet", true,
+            sender.sendMessage(Language.getMessagePlaceholders("cmdChatMessageNotSet", true,
                     "%PREFIX%", "Chat"));
             return false;
         } else {
@@ -227,7 +227,7 @@ public class Cmdchat extends HalfminerCommand {
                 message = "";
                 storage.set("chatmessage", null);
 
-                sender.sendMessage(Language.getMessagePlaceholders("commandChatMessageNotSet", true,
+                sender.sendMessage(Language.getMessagePlaceholders("cmdChatMessageNotSet", true,
                         "%PREFIX%", "Chat"));
 
                 return false;
@@ -247,14 +247,14 @@ public class Cmdchat extends HalfminerCommand {
 
             if (!player.hasPermission("hms.chat.advanced")) player.sendMessage(clearMessage);
 
-            player.sendMessage(Language.getMessagePlaceholders("commandChatCleared", true, "%PREFIX%", "Chat",
+            player.sendMessage(Language.getMessagePlaceholders("cmdChatCleared", true, "%PREFIX%", "Chat",
                     "%PLAYER%", whoCleared));
         }
 
-        hms.getLogger().info(Language.getMessagePlaceholders("commandChatClearedLog", false, "%PLAYER%", whoCleared));
+        hms.getLogger().info(Language.getMessagePlaceholders("cmdChatClearedLog", false, "%PLAYER%", whoCleared));
     }
 
     private void showUsage() {
-        sender.sendMessage(Language.getMessagePlaceholders("commandChatUsage", true, "%PREFIX%", "Chat"));
+        sender.sendMessage(Language.getMessagePlaceholders("cmdChatUsage", true, "%PREFIX%", "Chat"));
     }
 }

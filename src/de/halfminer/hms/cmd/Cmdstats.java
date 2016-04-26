@@ -49,8 +49,8 @@ public class Cmdstats extends HalfminerCommand {
         final String oldNames = player.getString(DataType.LAST_NAMES);
 
         // build the message
-        String message = Language.getMessage("commandStatsTop") + "\n";
-        message += Language.getMessagePlaceholders("commandStatsShow", false,
+        String message = Language.getMessage("cmdStatsTop") + "\n";
+        message += Language.getMessagePlaceholders("cmdStatsShow", false,
                 "%PLAYER%", player.getName(),
                 "%SKILLGROUP%", player.getString(DataType.SKILL_GROUP),
                 "%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith),
@@ -66,15 +66,15 @@ public class Cmdstats extends HalfminerCommand {
                 "%OLDNAMES%", oldNames) + "\n";
 
         if (oldNames.length() > 0)
-            message += Language.getMessagePlaceholders("commandStatsOldnames", false,
+            message += Language.getMessagePlaceholders("cmdStatsOldnames", false,
                     "%OLDNAMES%", oldNames) + "\n";
 
         if (sendTo.equals(player.getBase()))
-            message += Language.getMessage("commandStatsShowotherStats") + "\n";
+            message += Language.getMessage("cmdStatsShowotherStats") + "\n";
         else if (compare)
-            message += Language.getMessage("commandStatsCompareLegend") + "\n";
+            message += Language.getMessage("cmdStatsCompareLegend") + "\n";
         else if (sendTo instanceof Player) {
-            message += Language.getMessagePlaceholders("commandStatsCompareInfo", false,
+            message += Language.getMessagePlaceholders("cmdStatsCompareInfo", false,
                     "%PLAYER%", player.getName()) + "\n";
         }
 

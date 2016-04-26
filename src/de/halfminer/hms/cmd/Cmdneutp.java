@@ -48,11 +48,11 @@ public class Cmdneutp extends HalfminerCommand {
         if (tp.hasPendingTeleport(player, true)) return;
 
         if (hPlayer.getBoolean(DataType.NEUTP_USED)){
-            player.sendMessage(Language.getMessagePlaceholders("commandNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
+            player.sendMessage(Language.getMessagePlaceholders("cmdNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
             return;
         }
 
-        player.sendMessage(Language.getMessagePlaceholders("commandNeutpStart", true, "%PREFIX%", "Neutp"));
+        player.sendMessage(Language.getMessagePlaceholders("cmdNeutpStart", true, "%PREFIX%", "Neutp"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));
 
@@ -90,19 +90,19 @@ public class Cmdneutp extends HalfminerCommand {
                 server.dispatchCommand(player, "sethome neutp");
 
                 for (int i = 0; i < 100; i++) player.sendMessage("");
-                player.sendMessage(Language.getMessagePlaceholders("commandNeutpTpDone", true, "%PREFIX%", "Neutp",
+                player.sendMessage(Language.getMessagePlaceholders("cmdNeutpTpDone", true, "%PREFIX%", "Neutp",
                         "%PLAYER%", player.getName()));
 
-                hms.getLogger().info(Language.getMessagePlaceholders("commandNeutpLog", false, "%PLAYER%",
+                hms.getLogger().info(Language.getMessagePlaceholders("cmdNeutpLog", false, "%PLAYER%",
                         player.getName(), "%LOCATION%", Language.getStringFromLocation(loc)));
 
                 scheduler.runTaskLater(hms, new Runnable() {
                     @Override
                     public void run() {
-                        player.sendMessage(Language.getMessagePlaceholders("commandNeutpDocumentation",
+                        player.sendMessage(Language.getMessagePlaceholders("cmdNeutpDocumentation",
                                 true, "%PREFIX%", "Neutp"));
                         ((HanBossBar) hms.getHandler(HandlerType.BOSSBAR)).sendBar(player,
-                                Language.getMessage("commandNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
+                                Language.getMessage("cmdNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
                     }
                 }, 120L);
             }

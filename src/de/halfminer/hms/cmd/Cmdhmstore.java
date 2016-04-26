@@ -55,7 +55,7 @@ public class Cmdhmstore extends HalfminerCommand {
 
                 String setTo = Language.arrayToString(args, 2, false);
                 set(path, setTo);
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", setTo));
             } else if (args.length > 2 && args[0].equalsIgnoreCase("setint")) {
 
@@ -63,40 +63,40 @@ public class Cmdhmstore extends HalfminerCommand {
                 try {
                     setTo = Integer.decode(args[2]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSetError", true, "%PREFIX%", "Info"));
+                    sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSetError", true, "%PREFIX%", "Info"));
                     return;
                 }
 
                 set(path, setTo);
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
             } else if (args.length > 2 && args[0].equalsIgnoreCase("setbool")) {
 
                 boolean setTo = Boolean.parseBoolean(args[2]);
                 set(path, setTo);
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
             } else if (args.length > 2 && args[0].equalsIgnoreCase("setdouble")) {
 
                 double setTo = Double.parseDouble(args[2]);
                 set(path, setTo);
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSet", true, "%PREFIX%", "Info",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
             } else if (args[0].equalsIgnoreCase("get")) {
 
                 String value;
                 if (player == null) value = storage.getString(path);
                 else value = player.getString(type);
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreGet", true, "%PREFIX%", "Info",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreGet", true, "%PREFIX%", "Info",
                         "%PATH%", path, "%VALUE%", value));
             } else if (args[0].equalsIgnoreCase("remove")) {
 
                 set(path, null);
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreRemove", true, "%PREFIX%", "Info",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreRemove", true, "%PREFIX%", "Info",
                         "%PATH%", path));
             } else {
 
-                sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreUsage", true, "%PREFIX%", "Info"));
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreUsage", true, "%PREFIX%", "Info"));
             }
             return;
         }
@@ -107,10 +107,10 @@ public class Cmdhmstore extends HalfminerCommand {
                 @Override
                 public void run() {
                     storage.saveConfig();
-                    sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreSave", true, "%PREFIX%", "Info"));
+                    sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSave", true, "%PREFIX%", "Info"));
                 }
             });
-        } else sender.sendMessage(Language.getMessagePlaceholders("commandHmstoreUsage", true, "%PREFIX%", "Info"));
+        } else sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreUsage", true, "%PREFIX%", "Info"));
     }
 
     private void set(String path, Object setTo) {
