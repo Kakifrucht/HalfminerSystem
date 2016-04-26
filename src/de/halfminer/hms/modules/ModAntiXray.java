@@ -5,6 +5,7 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,7 @@ import java.util.*;
  *   - Clears after no protected blocks were broken
  * - Set protected blocks via config
  * - Threshold ratio between broken blocks and broken protected blocks
+ * - Threshold Y level until counted
  * - Notifies staff if threshold was passed
  *   - Shows last location
  *   - Notifies on join, if staff was offline
@@ -30,6 +32,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
     private int checkThresholdSeconds;
     private int protectedBlockThreshold;
+    private int yLevelThreshold;
     private double protectedBlockRatio;
 
     private Map<UUID, BreakCounter> playersChecked = new HashMap<>();
@@ -42,6 +45,9 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         Player p = e.getPlayer();
         if (p.hasPermission("hms.bypass.antixray")) return;
 
+        Block brokenBlock = e.getBlock();
+        if (brokenBlock.getLocation().getBlockY() > yLevelThreshold) return;
+
         UUID uuid = p.getUniqueId();
         BreakCounter counter = null;
 
@@ -51,7 +57,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             counter.incrementBreakages();
         }
 
-        if (protectedMaterial.contains(e.getBlock().getType())) {
+        if (protectedMaterial.contains(brokenBlock.getType())) {
 
             int broken = 1;
             int brokenProtected = 1;
@@ -62,7 +68,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             }
             else {
                 broken = counter.getBreakages();
-                brokenProtected = counter.incrementProtectedBlocksBroken(e.getBlock().getLocation());
+                brokenProtected = counter.incrementProtectedBlocksBroken(brokenBlock.getLocation());
             }
 
             // Put player into permanent check mode
@@ -122,6 +128,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
         checkThresholdSeconds = hms.getConfig().getInt("antiXray.intervalUntilClearSeconds", 300);
         protectedBlockThreshold = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 20);
+        yLevelThreshold = hms.getConfig().getInt("antiXray.yLevelThreshold", 30);
         protectedBlockRatio = hms.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.01);
 
         protectedMaterial = Utils.stringListToMaterialSet(hms.getConfig().getStringList("antiXray.protectedBlocks"));

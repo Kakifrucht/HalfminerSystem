@@ -40,6 +40,7 @@ Current features
       - Clears after no protected blocks were broken
     - Set protected blocks via config
     - Threshold ratio between broken blocks and broken protected blocks
+    - Threshold Y level until counted
     - Notifies staff if threshold was passed
       - Shows last location
       - Notifies on join, if staff was offline

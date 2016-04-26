@@ -55,6 +55,8 @@ antiXray:
   intervalUntilClearSeconds: 300
   #Amount of protected blocks that have to be broken at least in given time frame
   protectedBlockThreshold: 20
+  #Maximum Y level until breaks are no longer counted
+  yLevelThreshold: 30
   #Amount of protected blocks in percent which will place a player into permanent checking mode, if
   #he also passed the protectedBlockThreshold
   protectedBlockRatioThreshold: 0.01
