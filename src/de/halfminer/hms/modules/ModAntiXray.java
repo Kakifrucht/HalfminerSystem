@@ -72,7 +72,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                     && brokenProtected / (double) blocksBroken > protectedBlockRatio) {
 
                 boolean firstDetection = false;
-                if (checkedPermanently.contains(uuid)) firstDetection = true;
+                if (!counter.isCheckedPermanently()) firstDetection = true;
                 else checkedPermanently.add(uuid);
 
                 // Notify if the bypass has only been set now or if the distance between the last ore is high enough
@@ -122,7 +122,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
             ChatColor color = ChatColor.GRAY;
             if (counter.isBypassed()) color = ChatColor.YELLOW;
-            else if (checkedPermanently.contains(uuid)) color = ChatColor.RED;
+            else if (counter.isCheckedPermanently()) color = ChatColor.RED;
 
             toReturn += Language.getMessagePlaceholders("modAntiXrayShowFormat", false, "%PLAYER%",
                     color + counter.getOwnerName(), "%LOCATION%", Language.getStringFromLocation(last), "%WORLD%",
@@ -229,9 +229,13 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             return bypass;
         }
 
+        boolean isCheckedPermanently() {
+            return checkedPermanently.contains(uuid);
+        }
+
         void scheduleTask() {
 
-            if (checkedPermanently.contains(uuid)) return;
+            if (isCheckedPermanently()) return;
 
             int schedulerTime = timeUntilClear;
 
@@ -245,7 +249,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 public void run() {
 
                     if (lastProtectedBreakTime + timeUntilClear <= System.currentTimeMillis() / 1000)
-                        if (!checkedPermanently.contains(uuid)) playersChecked.remove(uuid);
+                        if (!isCheckedPermanently()) playersChecked.remove(uuid);
                     else scheduleTask();
                 }
             }, schedulerTime * 20);

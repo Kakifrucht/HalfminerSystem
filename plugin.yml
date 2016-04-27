@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.12.3
+version: 3.13.0
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -16,20 +16,24 @@ commands:
     aliases: [c]
   hms:
     description: HalfminerSystem base command
+    aliases: [halfminer, halfminersystem, hsystem, hmsystem]
   hmstore:
     description: Data storage manipulation
   home:
     description: Teleports the player to his home
+    aliases: [h]
   lag:
     description: View the connection info
     aliases: [ping]
   neutp:
     description: Teleports the player to a random location
+    aliases: [tpneu]
   signedit:
     description: Edit the contents of a sign or copy it
     aliases: [se]
   spawn:
     description: Teleport to the spawn
+    aliases: [sa]
   stats:
     description: View the statistics of a player
     aliases: [st]

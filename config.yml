@@ -236,6 +236,7 @@ localization:
   cmdVoteTop: '&e&m--------------------&c&l Voten &e&m--------------------'
   cmdVoteUntil: '&7Votes bis zum nächsten Event: &d%TOTALVOTES%&7&o/2000'
   cmdVoteVoted: '&e%PLAYER% hat eben mit &a/vote &egevotet'
+  hanHooksLoadChatFailed: 'Vault Chat konnte nicht gefunden werden'
   hanStorageSaveSuccessful: 'Die Daten wurden gespeichert'
   hanStorageSaveUnsuccessful: 'Die Daten konnten nicht gespeichert werden'
   hanTeleportBar: 'Teleport im Gange, bleibe still stehen...'

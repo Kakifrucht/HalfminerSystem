@@ -6,6 +6,7 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.modules.ModAntiXray;
 import de.halfminer.hms.modules.ModSkillLevel;
@@ -262,7 +263,7 @@ public class Cmdhms extends HalfminerCommand {
 
         final Player player = (Player) sender;
 
-        final Essentials ess = (Essentials) server.getPluginManager().getPlugin("Essentials");
+        final Essentials ess = ((HanHooks) hms.getHandler(HandlerType.HOOKS)).getEssentialsHook();
         final ArrayList<String> homeMessages = new ArrayList<>();
 
         final World world = player.getLocation().getWorld();

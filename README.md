@@ -12,6 +12,10 @@ Current features
     - Send bar to specific player or broadcast
     - Set time until bar fades out
     - Broadcast bar and player bar separate, only one at a time of each
+  - Hooks
+    - Hooks external plugins
+    - Checks if plugins are loaded
+    - Shortcuts to external api
   - Storage
     - Autosave
     - Flatfiles in .yml format

@@ -127,10 +127,11 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
 
             player.sendMessage(lang.get("done"));
             player.setFallDistance(0);
+            ((HanHooks) hms.getHandler(HandlerType.HOOKS)).setLastTpLocation(player);
             boolean teleportSuccessful = player.teleport(location);
             cancelTask(teleportSuccessful);
 
-            if (toRun != null && teleportSuccessful) scheduler.runTaskLater(hms, toRun, 0L);
+            if (teleportSuccessful && toRun != null) scheduler.runTaskLater(hms, toRun, 0L);
         }
 
         private void cancelTask(boolean teleportSuccessful) {

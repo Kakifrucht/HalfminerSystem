@@ -1,9 +1,10 @@
 package de.halfminer.hms.modules;
 
-import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.handlers.HanBossBar;
+import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import net.ess3.api.events.UserBalanceUpdateEvent;
@@ -31,8 +32,9 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
 
-    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
     private final HanBossBar bossbarHandler = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
+    private final HanHooks hooksHandler = (HanHooks) hms.getHandler(HandlerType.HOOKS);
+    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, Double> balances = new HashMap<>();
@@ -111,9 +113,8 @@ public class ModTitles extends HalfminerModule implements Listener {
         }
 
         try {
-            balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
-            balance = Math.round(balance * 100.0d) / 100.0d;
-        } catch (UserDoesNotExistException e) {
+            balance = hooksHandler.getMoney(player);
+        } catch (HookException e) {
             // This occurs if player joins for the first time, update it with small delay
             scheduler.runTaskLater(hms, new Runnable() {
                 @Override

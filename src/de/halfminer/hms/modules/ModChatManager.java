@@ -1,11 +1,12 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.exception.HookException;
+import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,7 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
-    private Chat vaultChat;
+    private final HanHooks hooks = (HanHooks) hms.getHandler(HandlerType.HOOKS);
 
     private final List<Pair<String, String>> chatFormats = new ArrayList<>();
     private String topFormat;
@@ -59,11 +59,15 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         String format = getFormat(p);
 
-        String prefix = "";
-        String suffix = "";
-        if (vaultChat != null) {
-            prefix = vaultChat.getPlayerPrefix(p);
-            suffix = vaultChat.getPlayerSuffix(p);
+        String prefix;
+        String suffix;
+
+        try {
+            prefix = hooks.getPrefix(p);
+            suffix = hooks.getSuffix(p);
+        } catch (HookException ex) {
+            prefix = "";
+            suffix = "";
         }
 
         format = Language.placeholderReplace(format, "%PLAYER%", "%1$s",
@@ -185,12 +189,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
     @Override
     public void loadConfig() {
-
-        if (vaultChat == null) {
-            RegisteredServiceProvider<Chat> provider = server.getServicesManager()
-                    .getRegistration(net.milkbowl.vault.chat.Chat.class);
-            if (provider != null) vaultChat = provider.getProvider();
-        }
 
         chatFormats.clear();
         for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {
