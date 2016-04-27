@@ -38,7 +38,6 @@ import java.util.Map;
  * - Disables armor switching, commands and enderpearls from being used during fight
  * - Halves satiation health regeneration during combat
  */
-@SuppressWarnings("unused")
 public class ModCombatLog extends HalfminerModule implements Listener {
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);

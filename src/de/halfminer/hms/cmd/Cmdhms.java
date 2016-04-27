@@ -338,7 +338,7 @@ public class Cmdhms extends HalfminerCommand {
             }
         } else {
 
-            String toSend = Language.getMessage("modAntiXrayShowEmpty");
+            String toSend = Language.getMessagePlaceholders("cmdHmsXrayShowEmpty", true, "%PREFIX%", "AntiXRay");
             String information = antiXray.getInformationString();
 
             if (information.length() > 0)
@@ -354,5 +354,4 @@ public class Cmdhms extends HalfminerCommand {
         hms.loadConfig();
         sender.sendMessage(Language.getMessagePlaceholders("cmdHmsConfigReloaded", true, "%PREFIX%", "HMS"));
     }
-
 }

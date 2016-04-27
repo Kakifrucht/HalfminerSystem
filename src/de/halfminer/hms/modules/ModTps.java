@@ -10,7 +10,6 @@ import java.util.LinkedList;
  * - Calculates ticks per second
  * - Notifies staff when servers Tps is too low
  */
-@SuppressWarnings("unused")
 public class ModTps extends HalfminerModule implements Listener {
 
     private final LinkedList<Double> tpsHistory = new LinkedList<>();

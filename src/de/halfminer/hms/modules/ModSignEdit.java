@@ -17,7 +17,6 @@ import java.util.Map;
  * - Detects which sign to choose
  * - Copies sign lines or changes a given one
  */
-@SuppressWarnings("unused")
 public class ModSignEdit extends HalfminerModule implements Listener {
 
     private final Map<Player, EditInfo> edit = new HashMap<>();

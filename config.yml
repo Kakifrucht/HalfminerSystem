@@ -188,7 +188,7 @@ localization:
   cmdHmsUsage: '&cVerwendung: &f/hms reload, rename <name> [-lore line1|line2|..], updateskill <spieler> [elo], rmhomeblock <spieler>, ring <spieler>, searchhomes [radius], xraybypass [spieler]'
   cmdHmsXrayBypassSet: '&e%PLAYER% &awird vom AntiXRay ignoriert'
   cmdHmsXrayBypassUnset: '&e%PLAYER% &awird vom AntiXRay nicht mehr ignoriert'
-  cmdHmsXrayLegend: '&7Spielerfarbe Legende: &aUnverdächtig&7, &eignoriert&7, &cverdächtig'
+  cmdHmsXrayLegend: '&7Spielerfarbe Legende: &eIgnoriert &7| Unverdächtig | &cVerdächtig'
   cmdHmsXrayShow: '&7Folgende Spieler werden vom AntiXRay beobachtet'
   cmdHmsXrayShowEmpty: '&aAktuell sind keine Spieler unter Beobachtung'
   cmdHmstoreGet: '&7Der Wert &o%PATH% &7lautet: &r%VALUE%'

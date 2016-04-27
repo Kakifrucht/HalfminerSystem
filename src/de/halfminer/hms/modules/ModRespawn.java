@@ -19,7 +19,6 @@ import java.util.Set;
  *   - Else, removes join message
  *   - Execute custom command on first join
  */
-@SuppressWarnings("unused")
 public class ModRespawn extends HalfminerModule implements Listener {
 
     private final Set<OfflinePlayer> toTeleport = new HashSet<>();
@@ -71,8 +70,8 @@ public class ModRespawn extends HalfminerModule implements Listener {
         return respawnLoc;
     }
 
-    public boolean tpToSpawn(Player p) {
-        return p.teleport(respawnLoc);
+    public void tpToSpawn(Player p) {
+        p.teleport(respawnLoc);
     }
 
     public boolean teleportToSpawnOnJoin(OfflinePlayer p) {

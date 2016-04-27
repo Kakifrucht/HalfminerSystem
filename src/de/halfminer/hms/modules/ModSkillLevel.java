@@ -33,7 +33,6 @@ import java.util.Map;
  * - Colors name depending on skillgroup
  * - Sorts tablist in descending order
  */
-@SuppressWarnings("unused")
 public class ModSkillLevel extends HalfminerModule implements Disableable, Listener, Sweepable {
 
     private int derankLevelThreshold;

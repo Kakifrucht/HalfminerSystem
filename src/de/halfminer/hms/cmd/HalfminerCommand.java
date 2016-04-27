@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 /**
  * HalfminerCommands are instantiated once a player executes the command.
  */
+@SuppressWarnings("unused")
 public abstract class HalfminerCommand extends HalfminerClass {
 
     final static HanStorage storage = (HanStorage) hms.getHandler(HandlerType.STORAGE);

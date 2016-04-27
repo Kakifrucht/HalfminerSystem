@@ -36,7 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *   - Posting links/IPs
  *   - Writing capitalized
  */
-@SuppressWarnings("unused")
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
     private Chat vaultChat;
