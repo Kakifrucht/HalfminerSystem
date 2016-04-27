@@ -59,7 +59,7 @@ antiXray:
   yLevelThreshold: 30
   #Amount of protected blocks in percent which will place a player into permanent checking mode, if
   #he also passed the protectedBlockThreshold
-  protectedBlockRatioThreshold: 0.01
+  protectedBlockRatioThreshold: 0.04
   #Protected blocks / materials
   protectedBlocks:
   - DIAMOND_ORE

@@ -157,7 +157,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         checkThresholdSeconds = hms.getConfig().getInt("antiXray.intervalUntilClearSeconds", 300);
         protectedBlockThreshold = hms.getConfig().getInt("antiXray.protectedBlockThreshold", 20);
         yLevelThreshold = hms.getConfig().getInt("antiXray.yLevelThreshold", 30);
-        protectedBlockRatio = hms.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.01);
+        protectedBlockRatio = hms.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.04);
 
         protectedMaterial = Utils.stringListToMaterialSet(hms.getConfig().getStringList("antiXray.protectedBlocks"));
     }

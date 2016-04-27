@@ -331,8 +331,7 @@ public class Cmdhms extends HalfminerCommand {
                     sender.sendMessage(Language.getMessagePlaceholders("cmdHmsXrayBypassSet",
                             true, "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName()));
                 else sender.sendMessage(Language.getMessagePlaceholders("cmdHmsXrayBypassUnset",
-                            true, "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName()));
-
+                        true, "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName()));
 
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "HMS");
