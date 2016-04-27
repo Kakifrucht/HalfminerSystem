@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -50,30 +51,28 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
         UUID uuid = p.getUniqueId();
         BreakCounter counter = null;
+        int blocksBroken = 1;
 
         if (playersChecked.containsKey(uuid)) {
             counter = playersChecked.get(uuid);
             if (counter.isBypassed()) return;
-            counter.incrementBreakages();
+            blocksBroken = counter.incrementBreakages();
         }
 
         if (protectedMaterial.contains(brokenBlock.getType())) {
 
-            int broken = 1;
-            int brokenProtected = 1;
+            int brokenProtected;
 
             if (counter == null) {
                 counter = new BreakCounter(uuid);
                 playersChecked.put(uuid, counter);
             }
-            else {
-                broken = counter.getBreakages();
-                brokenProtected = counter.incrementProtectedBlocksBroken(brokenBlock.getLocation());
-            }
+
+            brokenProtected = counter.incrementProtectedBlocksBroken(brokenBlock.getLocation());
 
             // Put player into permanent check mode
             if (brokenProtected >= protectedBlockThreshold
-                    && brokenProtected / (double) broken > protectedBlockRatio) {
+                    && brokenProtected / (double) blocksBroken > protectedBlockRatio) {
 
                 checkedPermanently.add(uuid);
 
@@ -111,15 +110,41 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         return counter.toggleBypass();
     }
 
-    private void notify(CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotifed) {
+    public String getInformationString() {
+
+        String toReturn = "";
+
+        for (UUID uuid : playersChecked.keySet()) {
+
+            BreakCounter counter = playersChecked.get(uuid);
+            Location last = counter.getLastProtectedLocation();
+
+            if (last == null) continue;
+
+            ChatColor color;
+            if (counter.isBypassed()) color = ChatColor.YELLOW;
+            else if (checkedPermanently.contains(uuid)) color = ChatColor.RED;
+            else color = ChatColor.GREEN;
+
+            toReturn += Language.getMessagePlaceholders("modAntiXrayShowFormat", false, "%PLAYER%",
+                    color + counter.getOwnerName(), "%LOCATION%", Language.getStringFromLocation(last), "%WORLD%",
+                    last.getWorld().getName(), "%PROTECTED%", String.valueOf(counter.getProtectedBreakages()),
+                    "%BROKEN%", String.valueOf(counter.getBreakages())) + "\n";
+        }
+
+        if (toReturn.length() > 0) toReturn = toReturn.substring(0, toReturn.length() - 1);
+        return toReturn;
+    }
+
+    private void notify(CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotified) {
 
         if (toNotify instanceof Player) {
-            if (checkIfAlreadyNotifed && counter.isAlreadyInformed((Player) toNotify)) return;
+            if (checkIfAlreadyNotified && counter.isAlreadyInformed((Player) toNotify)) return;
             else counter.setInformed((Player) toNotify);
         }
 
         toNotify.sendMessage(Language.getMessagePlaceholders("modAntiXrayJoinDetected", true,
-                "%PREFIX%", "AntiXRay", "%PLAYER%", storage.getPlayer(counter.getUuid()).getName(),
+                "%PREFIX%", "AntiXRay", "%PLAYER%", counter.getOwnerName(),
                 "%BROKENTOTAL%", String.valueOf(counter.getBreakages()),
                 "%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()),
                 "%LASTLOCATION%", Language.getStringFromLocation(counter.getLastProtectedLocation()),
@@ -144,7 +169,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         final Set<UUID> alreadyInformed = new HashSet<>();
 
         int blocksBroken = 1;
-        int protectedBlocksBroken = 1;
+        int protectedBlocksBroken = 0;
         Location pastProtectedLocation;
         Location lastProtectedLocation;
 
@@ -159,8 +184,8 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             scheduleTask();
         }
 
-        UUID getUuid() {
-            return uuid;
+        String getOwnerName() {
+            return storage.getPlayer(uuid).getName();
         }
 
         int getBreakages() {
@@ -176,11 +201,11 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         }
 
         boolean notifyAgain() {
-            return pastProtectedLocation.distance(lastProtectedLocation) > 3.0d;
+            return pastProtectedLocation == null || pastProtectedLocation.distance(lastProtectedLocation) > 3.0d;
         }
 
-        void incrementBreakages() {
-            blocksBroken++;
+        int incrementBreakages() {
+            return ++blocksBroken;
         }
 
         int incrementProtectedBlocksBroken(Location loc) {

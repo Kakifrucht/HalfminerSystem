@@ -29,7 +29,8 @@ import java.util.UUID;
  * - Ring players to get their attention (ring)
  * - Edit skillelo of player (updateskill)
  * - Remove a players /home block (rmhomeblock)
- * - Exempt a player from AntiXRay (xraybypass)
+ * - List all currently by antixray watched players (xraybypass)
+ *   - Exempt a player from AntiXRay
  */
 @SuppressWarnings("unused")
 public class Cmdhms extends HalfminerCommand {
@@ -317,6 +318,8 @@ public class Cmdhms extends HalfminerCommand {
 
     private void xrayBypass() {
 
+        ModAntiXray antiXray = (ModAntiXray) hms.getModule(ModuleType.ANTI_XRAY);
+
         if (args.length > 1) {
 
             OfflinePlayer p;
@@ -324,17 +327,28 @@ public class Cmdhms extends HalfminerCommand {
 
                 p = storage.getPlayer(args[1]).getBase();
 
-                if (((ModAntiXray) hms.getModule(ModuleType.ANTI_XRAY)).setBypassed(p))
+                if (antiXray.setBypassed(p))
                     sender.sendMessage(Language.getMessagePlaceholders("cmdHmsXrayBypassSet",
-                            true, "%PREFIX%", "HMS", "%PLAYER%", p.getName()));
+                            true, "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName()));
                 else sender.sendMessage(Language.getMessagePlaceholders("cmdHmsXrayBypassUnset",
-                            true, "%PREFIX%", "HMS", "%PLAYER%", p.getName()));
+                            true, "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName()));
 
 
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "HMS");
             }
-        } else sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
+        } else {
+
+            String toSend = Language.getMessage("modAntiXrayShowEmpty");
+            String information = antiXray.getInformationString();
+
+            if (information.length() > 0)
+                toSend = Language.getMessagePlaceholders("cmdHmsXrayShow", true, "%PREFIX%", "AntiXRay")
+                        + "\n" + ChatColor.RESET + information + "\n" + ChatColor.RESET
+                        + Language.getMessage("cmdHmsXrayLegend");
+
+            sender.sendMessage(toSend);
+        }
     }
 
     private void reload() {
