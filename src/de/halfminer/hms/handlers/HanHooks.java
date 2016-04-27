@@ -22,13 +22,14 @@ public class HanHooks extends HalfminerHandler {
     public HanHooks() {
         essentialsHook = (Essentials) server.getPluginManager().getPlugin("Essentials");
 
-        RegisteredServiceProvider<Chat> provider = server.getServicesManager()
-                .getRegistration(net.milkbowl.vault.chat.Chat.class);
-        if (provider != null) vaultChatHook = provider.getProvider();
+        if (server.getPluginManager().getPlugin("Vault") != null) {
 
-        if (vaultChatHook == null) {
-            hms.getLogger().warning(Language.getMessage("hanHooksLoadChatFailed"));
-        }
+            RegisteredServiceProvider<Chat> provider = server.getServicesManager()
+                    .getRegistration(net.milkbowl.vault.chat.Chat.class);
+            if (provider != null) vaultChatHook = provider.getProvider();
+            else hms.getLogger().warning(Language.getMessage("hanHooksLoadChatFailed"));
+
+        } else hms.getLogger().warning(Language.getMessage("hanHooksLoadChatFailed"));
     }
 
     public Essentials getEssentialsHook() {

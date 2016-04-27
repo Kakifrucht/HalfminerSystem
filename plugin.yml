@@ -5,7 +5,8 @@ author: Kakifrucht
 website: https://halfminer.de
 
 main: de.halfminer.hms.HalfminerSystem
-depend: [Essentials, Vault]
+depend: [Essentials]
+softdepend: [Vault]
 
 commands:
   ?:
