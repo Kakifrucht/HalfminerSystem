@@ -20,6 +20,7 @@ public class HanHooks extends HalfminerHandler {
     private Chat vaultChatHook;
 
     public HanHooks() {
+        // Essentials is a harddepend, so we won't even check if it is properly hooked
         essentialsHook = (Essentials) server.getPluginManager().getPlugin("Essentials");
 
         if (server.getPluginManager().getPlugin("Vault") != null) {
@@ -46,7 +47,7 @@ public class HanHooks extends HalfminerHandler {
             balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
             return Math.round(balance * 100.0d) / 100.0d;
         } catch (UserDoesNotExistException e) {
-            throw new HookException();
+            throw new HookException(e);
         }
     }
 

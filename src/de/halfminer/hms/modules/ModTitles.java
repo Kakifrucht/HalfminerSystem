@@ -7,6 +7,7 @@ import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
+import net.ess3.api.UserDoesNotExistException;
 import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -115,13 +116,15 @@ public class ModTitles extends HalfminerModule implements Listener {
         try {
             balance = hooksHandler.getMoney(player);
         } catch (HookException e) {
-            // This occurs if player joins for the first time, update it with small delay
-            scheduler.runTaskLater(hms, new Runnable() {
-                @Override
-                public void run() {
-                    updateBalance(player);
-                }
-            }, 2L);
+            if (e.hasParentException() && e.getParentException() instanceof UserDoesNotExistException) {
+                // This occurs if player joins for the first time, update it with small delay
+                scheduler.runTaskLater(hms, new Runnable() {
+                    @Override
+                    public void run() {
+                        updateBalance(player);
+                    }
+                }, 2L);
+            }
         }
 
         balances.put(player, balance);
