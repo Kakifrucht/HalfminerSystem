@@ -248,8 +248,9 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 @Override
                 public void run() {
 
-                    if (lastProtectedBreakTime + timeUntilClear <= System.currentTimeMillis() / 1000)
+                    if (lastProtectedBreakTime + timeUntilClear <= System.currentTimeMillis() / 1000) {
                         if (!isCheckedPermanently()) playersChecked.remove(uuid);
+                    }
                     else scheduleTask();
                 }
             }, schedulerTime * 20);
