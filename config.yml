@@ -74,6 +74,8 @@ autoMessage:
   - 'A message'
   - 'Another message'
 chat:
+  #Time in seconds until a player can get a mention notification again
+  mentionDelay: 10
   #Add formats to the list, you need the permission node hms.chat.format.name
   #hms.chat.topformat always grants top format (which has highest priority)
   formats:

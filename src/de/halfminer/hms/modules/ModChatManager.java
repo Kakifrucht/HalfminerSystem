@@ -43,6 +43,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     private final List<Pair<String, String>> chatFormats = new ArrayList<>();
     private String topFormat;
     private String defaultFormat;
+    private int mentionDelay;
 
     private Map<Player, Long> lastMentioned = new ConcurrentHashMap<>();
     private boolean isGlobalmuted = false;
@@ -95,7 +96,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendActionBar(wasMentioned,
                     Language.getMessagePlaceholders("modChatManMentioned", false, "%PLAYER%", p.getName()));
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_TOUCH, 0.2f, 1.8f);
-            lastMentioned.put(wasMentioned, currentTime + 10);
+            lastMentioned.put(wasMentioned, currentTime + mentionDelay);
         }
 
         p.playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
@@ -190,6 +191,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     @Override
     public void loadConfig() {
 
+        mentionDelay = hms.getConfig().getInt("chat.mentionDelay", 10);
         chatFormats.clear();
         for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {
 
