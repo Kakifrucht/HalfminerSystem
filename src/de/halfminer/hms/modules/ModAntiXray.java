@@ -72,8 +72,10 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                     && brokenProtected / (double) blocksBroken > protectedBlockRatio) {
 
                 boolean firstDetection = false;
-                if (!counter.isCheckedPermanently()) firstDetection = true;
-                else checkedPermanently.add(uuid);
+                if (!counter.isCheckedPermanently()) {
+                    firstDetection = true;
+                    checkedPermanently.add(uuid);
+                }
 
                 // Notify if the bypass has only been set now or if the distance between the last ore is high enough
                 if (firstDetection || counter.notifyAgain()) {
