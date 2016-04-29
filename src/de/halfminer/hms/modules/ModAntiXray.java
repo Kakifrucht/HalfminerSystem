@@ -54,7 +54,6 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
         if (playersChecked.containsKey(uuid)) {
             counter = playersChecked.get(uuid);
-            if (counter.isBypassed()) return;
             blocksBroken = counter.incrementBreakages();
         }
 
@@ -95,7 +94,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         if (joined.hasPermission("hms.antixray.notify"))
             for (UUID checked : checkedPermanently) {
                 BreakCounter counter = playersChecked.get(checked);
-                if (!counter.isBypassed()) notify(joined, counter, true);
+                notify(joined, counter, true);
             }
     }
 
@@ -137,6 +136,8 @@ public class ModAntiXray extends HalfminerModule implements Listener {
     }
 
     private void notify(CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotified) {
+
+        if (counter.isBypassed()) return;
 
         if (toNotify instanceof Player) {
             if (checkIfAlreadyNotified && counter.isAlreadyInformed((Player) toNotify)) return;

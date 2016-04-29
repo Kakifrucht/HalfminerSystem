@@ -191,7 +191,9 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     @Override
     public void loadConfig() {
 
+        sweep();
         mentionDelay = hms.getConfig().getInt("chat.mentionDelay", 10);
+
         chatFormats.clear();
         for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {
 

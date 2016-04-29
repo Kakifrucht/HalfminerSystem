@@ -65,6 +65,7 @@ antiXray:
   - DIAMOND_ORE
   - EMERALD_ORE
   - GOLD_ORE
+  - LAPIS_ORE
   - REDSTONE_ORE
   - GLOWING_REDSTONE_ORE
 autoMessage:
