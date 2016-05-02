@@ -335,7 +335,7 @@ public class Cmdhms extends HalfminerCommand {
                         true, "%PREFIX%", "AntiXRay", "%PLAYER%", p.getName()));
 
             } catch (PlayerNotFoundException e) {
-                e.sendNotFoundMessage(sender, "HMS");
+                e.sendNotFoundMessage(sender, "AntiXRay");
             }
         } else {
 
