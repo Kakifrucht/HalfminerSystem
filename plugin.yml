@@ -18,6 +18,8 @@ commands:
   hms:
     description: HalfminerSystem base command
     aliases: [halfminer, halfminersystem, hsystem, hmsystem]
+  hmsapi:
+    description: Command script API
   hmstore:
     description: Data storage manipulation
   home:
@@ -43,8 +45,6 @@ commands:
     aliases: [vk]
   vote:
     description: Vote for the server
-  vtapi:
-    description: VT Command API
 permissions:
   hms.*:
     description: Access to all permissions

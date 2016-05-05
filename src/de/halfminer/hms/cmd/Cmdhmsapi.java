@@ -13,13 +13,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 /**
- * - Small features for VariableTriggers
- * - Remove head in casino
- * - Remove case in casino
- * - Set VariableTriggers vars accordingly
+ * - Small features for script integration
+ *   - Show titles
+ *   - Remove head in casino
+ *   - Remove case in casino
+ *   - Set script vars accordingly
  */
 @SuppressWarnings("unused")
-public class Cmdvtapi extends HalfminerCommand {
+public class Cmdhmsapi extends HalfminerCommand {
 
     @Override
     public void run(CommandSender sender, String label, String[] args) {

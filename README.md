@@ -166,6 +166,12 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Remove a players /home block (rmhomeblock)
     - List all currently by antixray watched players (xraybypass)
       - Exempt a player from AntiXRay
+  - /hmsapi
+    - Small features for script integration
+      - Show titles
+      - Remove head in casino
+      - Remove case in casino
+      - Set script vars accordingly
   - /hmstore
     - Edit HalfminerSystem storage
     - Set, get and delete variables
@@ -209,8 +215,3 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Counts votes for /stats
     - Unblocks access to /home
       - Will also unblock other users with same ip
-  - /vtapi
-    - Small features for VariableTriggers
-      - Remove head in casino
-      - Remove case in casino
-      - Set VariableTriggers vars accordingly
