@@ -28,6 +28,7 @@ import org.bukkit.scheduler.BukkitTask;
 public class Cmdchat extends HalfminerCommand {
 
     private final HanBossBar bossBar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
+    private final HanTitles titles = (HanTitles) hms.getHandler(HandlerType.TITLES);
     private CommandSender sender;
     private String message;
 
@@ -158,8 +159,7 @@ public class Cmdchat extends HalfminerCommand {
 
                         } else {
                             if (message.startsWith("\n")) message = " " + message;
-                            ((HanTitles) hms.getHandler(HandlerType.TITLES))
-                                    .sendTitle(sendTo, message, 10, time * 20 - 20, 10);
+                            titles.sendTitle(sendTo, message, 10, time * 20 - 20, 10);
                         }
 
                     } else if (args[0].equalsIgnoreCase("news")) {
@@ -169,6 +169,7 @@ public class Cmdchat extends HalfminerCommand {
                         if (sender instanceof Player) {
                             bossBar.sendBar((Player) sender, Language.getMessagePlaceholders("modTitlesNewsFormat",
                                     false, "%NEWS%", message), BarColor.YELLOW, BarStyle.SOLID, 5);
+                            titles.sendTitle((Player) sender, " \n" + message, 10, 100, 10);
                         }
                         sender.sendMessage(Language.getMessagePlaceholders("cmdChatNewsSetTo", true,
                                 "%PREFIX%", "Chat"));
