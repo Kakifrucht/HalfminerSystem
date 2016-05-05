@@ -61,6 +61,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Allows easy toggling of globalmute
     - Plays sound on chat
     - Notifies mentioned players via actionbar
+      - Shows if mentioned player is afk
       - Rate limit (no mention spam)
     - Disallow (or allow via permission)
       - Using color codes

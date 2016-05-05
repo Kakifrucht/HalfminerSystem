@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *   - Allows easy toggling of globalmute
  * - Plays sound on chat
  * - Notifies mentioned players via actionbar
+ *   - Shows if mentioned player is afk
  *   - Rate limit (no mention spam)
  * - Disallow (or allow via permission)
  *   - Using color codes
@@ -39,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
     private final HanHooks hooks = (HanHooks) hms.getHandler(HandlerType.HOOKS);
+    private final HanTitles title = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private final List<Pair<String, String>> chatFormats = new ArrayList<>();
     private String topFormat;
@@ -93,8 +95,11 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         for (Player wasMentioned : mentioned) {
-            ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendActionBar(wasMentioned,
-                    Language.getMessagePlaceholders("modChatManMentioned", false, "%PLAYER%", p.getName()));
+            if (hooks.getEssentialsHook().getUser(wasMentioned.getUniqueId()).isAfk())
+                title.sendActionBar(p, Language.getMessagePlaceholders("modChatManIsAfk", false,
+                        "%PLAYER%", wasMentioned.getName()));
+            title.sendActionBar(wasMentioned, Language.getMessagePlaceholders("modChatManMentioned", false,
+                    "%PLAYER%", p.getName()));
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_TOUCH, 0.2f, 1.8f);
             lastMentioned.put(wasMentioned, currentTime + mentionDelay);
         }
