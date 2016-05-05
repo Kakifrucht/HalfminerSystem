@@ -3,8 +3,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de).
 
 Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kakifrucht/HalfminerBattle).
 
-Current features
--------
+## Current features
 - Modular, lightweight, efficient
 - Messages completely, functionality mostly configurable
 - **Handlers**

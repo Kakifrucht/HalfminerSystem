@@ -24,8 +24,7 @@ public class Cmdstats extends HalfminerCommand {
 
         if (args.length > 0) {
 
-            boolean compare = false;
-            if (args.length > 1 && args[1].equalsIgnoreCase("compare") && sender instanceof Player) compare = true;
+            boolean compare = args.length > 1 && args[1].equalsIgnoreCase("compare") && sender instanceof Player;
             try {
                 showStats(sender, storage.getPlayer(args[0]), compare);
             } catch (PlayerNotFoundException e) {
@@ -36,15 +35,13 @@ public class Cmdstats extends HalfminerCommand {
 
             if (sender instanceof Player) showStats(sender, storage.getPlayer((Player) sender), false);
             else sender.sendMessage(Language.getMessage("notAPlayer"));
-
         }
-
     }
 
     private void showStats(final CommandSender sendTo, final HalfminerPlayer player, boolean compare) {
 
         HalfminerPlayer compareWith = null;
-        if (compare && !sendTo.equals(player)) compareWith = storage.getPlayer((Player) sendTo);
+        if (compare && !sendTo.equals(player.getBase())) compareWith = storage.getPlayer((Player) sendTo);
 
         final String oldNames = player.getString(DataType.LAST_NAMES);
 

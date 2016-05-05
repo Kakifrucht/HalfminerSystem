@@ -23,9 +23,9 @@ import java.util.Map;
 
 /**
  * - Shows join title
- *   - Players online / money
- *   - Configurable message
- *   - Shows news after delay in bossbar and title
+ * - Players online / money
+ * - Configurable message
+ * - Shows news after delay in bossbar and title
  * - Displays information for new players
  * - Tab titles containing amount of money and playercount
  * - Money through Essentials hook, automatic update
@@ -57,20 +57,31 @@ public class ModTitles extends HalfminerModule implements Listener {
                     "%PLAYER%", joined.getName()), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
         } else {
 
-            titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("joinformat"),
-                    "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
+            if (balance == Double.MIN_VALUE) scheduler.runTaskLater(hms, new Runnable() {
+                @Override
+                public void run() {
+                    showLoginTitles(joined, balances.get(joined));
+                }
+            }, 3L);
+            else showLoginTitles(joined, balance);
+        }
+    }
 
-            final String news = storage.getString("news");
-            if (news.length() > 0) {
-                scheduler.runTaskLater(hms, new Runnable() {
-                    @Override
-                    public void run() {
-                        bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
-                                "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 30);
-                        titleHandler.sendTitle(joined, " \n" + news, 10, 100, 10);
-                    }
-                }, 120);
-            }
+    private void showLoginTitles(final Player toShow, double balance) {
+
+        titleHandler.sendTitle(toShow, Language.placeholderReplace(lang.get("joinformat"),
+                "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
+
+        final String news = storage.getString("news");
+        if (news.length() > 0) {
+            scheduler.runTaskLater(hms, new Runnable() {
+                @Override
+                public void run() {
+                    bossbarHandler.sendBar(toShow, Language.placeholderReplace(lang.get("news"),
+                            "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 30);
+                    titleHandler.sendTitle(toShow, " \n" + news, 10, 100, 10);
+                }
+            }, 120);
         }
     }
 
@@ -80,8 +91,6 @@ public class ModTitles extends HalfminerModule implements Listener {
         balances.remove(e.getPlayer());
         updateTablist();
     }
-
-
 
     @EventHandler(ignoreCancelled = true)
     public void onBalanceChange(UserBalanceUpdateEvent e) {
@@ -106,7 +115,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private double updateBalance(final Player player) {
 
-        double balance = 0.0d;
+        double balance = Double.MIN_VALUE;
 
         if (!player.isOnline()) {
             balances.remove(player);
@@ -117,7 +126,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             balance = hooksHandler.getMoney(player);
         } catch (HookException e) {
             if (e.hasParentException() && e.getParentException() instanceof UserDoesNotExistException) {
-                // This occurs if player joins for the first time, update it with small delay
+                // This occurs if player joins for the first time or changes his name, update it with delay
                 scheduler.runTaskLater(hms, new Runnable() {
                     @Override
                     public void run() {
