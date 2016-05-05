@@ -1,5 +1,6 @@
 package de.halfminer.hms.modules;
 
+import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.HookException;
@@ -7,7 +8,6 @@ import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
-import net.ess3.api.UserDoesNotExistException;
 import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -134,6 +134,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                     }
                 }, 2L);
             }
+            return balance;
         }
 
         balances.put(player, balance);
