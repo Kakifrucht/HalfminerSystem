@@ -191,6 +191,12 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Checks for safe teleport location
     - Sets home automatically
     - Gives some information about the server via chat and bossbar
+  - /repair
+    - Repair the held item or whole inventory
+      - Permissions for access restriction
+    - Adds configurable variable cooldown per level
+      - Will only apply cooldown if item was actually repaired
+    - If repairing single item, checks if it is a stack (permission required)
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number

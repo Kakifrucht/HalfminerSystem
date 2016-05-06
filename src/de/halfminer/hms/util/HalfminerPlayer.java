@@ -73,6 +73,10 @@ public class HalfminerPlayer {
         return storage.getInt(path + type, 0);
     }
 
+    public long getLong(DataType type) {
+        return storage.getLong(path + type, 0L);
+    }
+
     public double getDouble(DataType type) {
         return storage.getDouble(path + type, 0.0d);
     }

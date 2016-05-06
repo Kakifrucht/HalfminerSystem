@@ -7,6 +7,11 @@ command:
     #Bounds in which the random position will lie in
     boundMin: 1000
     boundMax: 10000
+  repair:
+    #Base cooldown, which will be doubled per hms.level
+    cooldownBase: 1800
+    #Longest cooldown if no level has been met
+    maxCooldown: 28800
   verkauf:
     #Base amount for 1 HalfCoin
     beetroot: 30
@@ -214,6 +219,10 @@ localization:
   cmdNeutpLog: 'Neutp: %PLAYER% wurde zu %LOCATION% teleportiert'
   cmdNeutpStart: '&aDu wirst an einen eigenen Ort teleportiert'
   cmdNeutpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'
+  cmdRepairCooldown: '&cDu kannst erst wieder in &e%MINUTES% &cMinuten reparieren'
+  cmdRepairDone: '&aGegenstand &e%NAME% &aerfolgreich repariert'
+  cmdRepairDoneAll: '&7Es wurden &e%AMOUNT% &7Gegenstände repariert'
+  cmdRepairError: '&cDieser Gegenstand kann nicht repariert werden'
   cmdSigneditCopy: '&7Klicke das Schild, welches du kopieren möchtest, erstelle &e%AMOUNT% &7Kopien'
   cmdSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu ändern'
   cmdSigneditUsage: '&cVerwendung: &f/signedit copy [anzahl], /signedit <zeile> [text]'

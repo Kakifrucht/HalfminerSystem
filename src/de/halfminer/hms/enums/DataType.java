@@ -10,6 +10,7 @@ public enum DataType {
     LASTKILL        ("lastkill"),
     LAST_NAME       ("lastname"),
     LAST_NAMES      ("lastnames"),
+    LAST_REPAIR     ("lastrepair"),
     MOB_KILLS       ("mobkills"),
     NEUTP_USED      ("neutp"),
     REVENUE         ("revenue"),

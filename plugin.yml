@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.13.3
+version: 3.13.4
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -31,6 +31,9 @@ commands:
   neutp:
     description: Teleports the player to a random location
     aliases: [tpneu]
+  repair:
+    description: Repair the currently held item
+    aliases: [fix]
   signedit:
     description: Edit the contents of a sign or copy it
     aliases: [se]
@@ -71,14 +74,15 @@ permissions:
       hms.bypass.*: true
       hms.chat.*: true
       hms.level.*: true
+      hms.repair.*: true
   hms.bypass.*:
     description: Access to all bypass permission
     default: op
     children:
       hms.bypass.antixray: true
-      hms.bypass.glitchcheck: true
       hms.bypass.combatlog: true
       hms.bypass.commandfilter: true
+      hms.bypass.glitchcheck: true
       hms.bypass.hopperlimit: true
       hms.bypass.merchant: true
       hms.bypass.nethercheck: true
@@ -109,6 +113,14 @@ permissions:
       hms.level.4: true
       hms.level.5: true
       hms.level.6: true
+  hms.repair.*:
+    description: Full access to repair command
+    default: op
+    children:
+      hms.repair: true
+      hms.repair.all: true
+      hms.repair.nocooldown: true
+      hms.repair.stacks: true
   hms.default:
     default: true
     description: Default permission
@@ -136,12 +148,12 @@ permissions:
     description: Get notified on join if a player moved past the AntiXRay treshold
   hms.bypass.antixray:
     description: Bypass antixray functionality
-  hms.bypass.glitchcheck:
-    description: Bypass glitch movement check
   hms.bypass.combatlog:
     description: Bypass combat logging
   hms.bypass.commandfilter:
     description: Bypass chat command filter
+  hms.bypass.glitchcheck:
+    description: Bypass glitch movement check
   hms.bypass.hopperlimit:
     description: Bypass hopper placement limit
   hms.bypass.merchant:
@@ -194,6 +206,14 @@ permissions:
     description: Access to commands restricted to level 6
   hms.moderator:
     description: Access to moderative commands
+  hms.repair:
+    description: Access to repair command
+  hms.repair.all:
+    description: Access to repair all command
+  hms.repair.nocooldown:
+    description: No repair cooldown
+  hms.repair.stacks:
+    description: Allows single stacks to be repaired
   hms.signedit:
     description: Access to sign editing
   hms.spawn:
