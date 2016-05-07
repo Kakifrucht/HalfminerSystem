@@ -61,7 +61,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
             if (counter == null) playersChecked.put(uuid, counter = new BreakCounter(uuid));
 
-            int brokenProtected = counter.incrementProtectedBlocksBroken(brokenBlock.getLocation());
+            int brokenProtected = counter.incrementProtectedBlocksBroken(brokenBlock);
 
             // Put player into permanent check mode
             if (brokenProtected >= protectedBlockThreshold
@@ -144,7 +144,8 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 "%BROKENTOTAL%", String.valueOf(counter.getBreakages()),
                 "%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()),
                 "%LASTLOCATION%", Language.getStringFromLocation(counter.getLastProtectedLocation()),
-                "%WORLD%", counter.getLastProtectedLocation().getWorld().getName()));
+                "%WORLD%", counter.getLastProtectedLocation().getWorld().getName(),
+                "%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString())));
     }
 
     @Override
@@ -168,6 +169,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         int protectedBlocksBroken = 0;
         Location pastProtectedLocation;
         Location lastProtectedLocation;
+        Material lastProtectedBlock;
 
         long lastProtectedBreakTime = System.currentTimeMillis() / 1000;
         boolean bypass = false;
@@ -203,11 +205,12 @@ public class ModAntiXray extends HalfminerModule implements Listener {
             return ++blocksBroken;
         }
 
-        int incrementProtectedBlocksBroken(Location loc) {
+        int incrementProtectedBlocksBroken(Block block) {
 
             lastProtectedBreakTime = System.currentTimeMillis() / 1000;
             pastProtectedLocation = lastProtectedLocation;
-            lastProtectedLocation = loc;
+            lastProtectedLocation = block.getLocation();
+            lastProtectedBlock = block.getType();
             return ++protectedBlocksBroken;
         }
 
@@ -229,6 +232,10 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
         boolean isCheckedPermanently() {
             return checkedPermanently.contains(uuid);
+        }
+
+        Material getLastMaterial() {
+            return lastProtectedBlock;
         }
 
         void scheduleTask() {
