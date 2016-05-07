@@ -50,7 +50,9 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                         "%PREFIX%", "Warnung",
                         "%PLAYER%", e.getPlayer().getName(),
                         "%LOCATION%", Language.getStringFromLocation(e.getTo()),
-                        "%WORLD%", e.getTo().getWorld().getName()), "hms.bypass.glitchcheck");
+                        "%WORLD%", e.getTo().getWorld().getName(),
+                        "%MATERIAL%", Language.makeStringFriendly(e.getFrom().getBlock().getType().toString())),
+                        "hms.bypass.glitchcheck");
                 lastGlitchAlert.put(e.getPlayer(), (System.currentTimeMillis() / 1000) + 4);
             }
         }

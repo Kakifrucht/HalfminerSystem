@@ -280,7 +280,7 @@ localization:
   modCombatLogUntagged: '&aDu bist nicht mehr im Kampf'
   modGlitchProtectionDismountTped: '&cDu wurdest zum Spawn teleportiert, um potentielles Glitching zu unterbinden, das Team wurde informiert'
   modGlitchProtectionDismountTpedNotify: '&e%PLAYER%&c wurde zum Spawn teleportiert, da er bei &e%LOCATION% &c(&7%WORLD%&c) versucht hat ein Fahrzeug zu verlassen'
-  modGlitchProtectionMove: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION% &c(&7%WORLD%&c)'
+  modGlitchProtectionMove: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION% &c(&e%WORLD%&c, &e%MATERIAL%&c)'
   modGlitchProtectionNether: '&cDer Aufenthalt auf dem Netherdach ist verboten'
   modGlitchProtectionNetherNotify: '&c%PLAYER% war auf dem Netherdach bei &e%LOCATION%&c und wurde getötet'
   modMotdLine: '&e&l<<<<<%COLOR%&l Two and a half Miner &e&l>>>>>\n&7%REPLACE%&7! (mc.halfminer.de)'
