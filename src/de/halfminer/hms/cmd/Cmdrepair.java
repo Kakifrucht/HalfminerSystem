@@ -43,12 +43,11 @@ public class Cmdrepair extends HalfminerCommand {
         } else {
 
             HalfminerPlayer hPlayer = storage.getPlayer(player);
-            long lastRepair = hPlayer.getLong(DataType.LAST_REPAIR);
 
             int secondsUntil = Integer.MAX_VALUE;
             if (player.hasPermission("hms.repair.nocooldown")) secondsUntil = 0;
             else {
-                int lowestMultiplier = hms.getConfig().getInt("command.repair.cooldownBase", 1800);
+                int lowestMultiplier = hms.getConfig().getInt("command.repair.cooldownBase", 900);
                 for (int i = 6; i > 0; i--) {
                     if (player.hasPermission("hms.level." + i)) {
                         secondsUntil = lowestMultiplier;

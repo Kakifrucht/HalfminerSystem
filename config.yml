@@ -9,7 +9,7 @@ command:
     boundMax: 10000
   repair:
     #Base cooldown, which will be doubled per hms.level
-    cooldownBase: 1800
+    cooldownBase: 900
     #Longest cooldown if no level has been met
     maxCooldown: 28800
   verkauf:

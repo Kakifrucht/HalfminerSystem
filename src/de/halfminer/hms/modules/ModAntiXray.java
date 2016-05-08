@@ -1,5 +1,6 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
@@ -14,7 +15,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -28,15 +28,15 @@ import java.util.*;
  *   - Shows last location
  *   - Notifies on join, if staff was offline
  */
-public class ModAntiXray extends HalfminerModule implements Listener {
+public class ModAntiXray extends HalfminerModule implements Listener, Sweepable {
 
     private int timeUntilClear;
     private int protectedBlockThreshold;
     private int yLevelThreshold;
     private double protectedBlockRatio;
 
-    private final Map<UUID, BreakCounter> playersChecked = new HashMap<>();
-    private final Set<UUID> checkedPermanently = new HashSet<>();
+    private final Map<UUID, BreakCounter> observedPlayers = new HashMap<>();
+    private final Set<UUID> observedPermanently = new HashSet<>();
     private Set<Material> protectedMaterial;
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -52,14 +52,14 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         BreakCounter counter = null;
         int blocksBroken = 1;
 
-        if (playersChecked.containsKey(uuid)) {
-            counter = playersChecked.get(uuid);
+        if (counterExists(uuid)) {
+            counter = observedPlayers.get(uuid);
             blocksBroken = counter.incrementBreakages();
         }
 
         if (protectedMaterial.contains(brokenBlock.getType())) {
 
-            if (counter == null) playersChecked.put(uuid, counter = new BreakCounter(uuid));
+            if (counter == null) observedPlayers.put(uuid, counter = new BreakCounter(uuid));
 
             int brokenProtected = counter.incrementProtectedBlocksBroken(brokenBlock);
 
@@ -70,7 +70,7 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 boolean firstDetection = false;
                 if (!counter.isCheckedPermanently()) {
                     firstDetection = true;
-                    checkedPermanently.add(uuid);
+                    observedPermanently.add(uuid);
                 }
 
                 // Notify if the bypass has only been set now or if the distance between the last ore is high enough
@@ -89,29 +89,32 @@ public class ModAntiXray extends HalfminerModule implements Listener {
 
         Player joined = e.getPlayer();
         if (joined.hasPermission("hms.antixray.notify"))
-            for (UUID checked : checkedPermanently)
-                notify(joined, playersChecked.get(checked), true);
+            for (UUID checked : observedPermanently)
+                notify(joined, observedPlayers.get(checked), true);
     }
 
     public boolean setBypassed(OfflinePlayer p) {
 
-        BreakCounter counter = playersChecked.get(p.getUniqueId());
+        UUID uuid = p.getUniqueId();
 
-        if (counter == null) {
-            counter = new BreakCounter(p.getUniqueId());
-            playersChecked.put(p.getUniqueId(), counter);
+        if (counterExists(uuid)) {
+            return observedPlayers.get(uuid).toggleBypass();
+        } else {
+            BreakCounter counter = new BreakCounter(uuid);
+            observedPlayers.put(p.getUniqueId(), counter);
+            return counter.toggleBypass();
         }
-
-        return counter.toggleBypass();
     }
 
     public String getInformationString() {
 
         String toReturn = "";
 
-        for (UUID uuid : playersChecked.keySet()) {
+        for (UUID uuid : observedPlayers.keySet()) {
 
-            BreakCounter counter = playersChecked.get(uuid);
+            if (!counterExists(uuid)) continue;
+
+            BreakCounter counter = observedPlayers.get(uuid);
             Location last = counter.getLastProtectedLocation();
 
             if (last == null) continue;
@@ -148,6 +151,15 @@ public class ModAntiXray extends HalfminerModule implements Listener {
                 "%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString())));
     }
 
+    private boolean counterExists(UUID player) {
+
+        if (observedPlayers.containsKey(player)) {
+            if (observedPlayers.get(player).hasExpired()) observedPlayers.remove(player);
+        }
+
+        return observedPlayers.containsKey(player);
+    }
+
     @Override
     public void loadConfig() {
 
@@ -159,26 +171,28 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         protectedMaterial = Utils.stringListToMaterialSet(hms.getConfig().getStringList("antiXray.protectedBlocks"));
     }
 
+    @Override
+    public void sweep() {
+        Iterator<BreakCounter> it = observedPlayers.values().iterator();
+        while (it.hasNext()) if (it.next().hasExpired()) it.remove();
+    }
+
     private class BreakCounter {
 
         final UUID uuid;
-
         final Set<UUID> alreadyInformed = new HashSet<>();
 
         int blocksBroken = 1;
         int protectedBlocksBroken = 0;
+        boolean bypass = false;
         Location pastProtectedLocation;
         Location lastProtectedLocation;
+
         Material lastProtectedBlock;
-
         long lastProtectedBreakTime = System.currentTimeMillis() / 1000;
-        boolean bypass = false;
-
-        BukkitTask task;
 
         BreakCounter(final UUID uuid) {
             this.uuid = uuid;
-            scheduleTask();
         }
 
         String getOwnerName() {
@@ -206,7 +220,6 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         }
 
         int incrementProtectedBlocksBroken(Block block) {
-
             lastProtectedBreakTime = System.currentTimeMillis() / 1000;
             pastProtectedLocation = lastProtectedLocation;
             lastProtectedLocation = block.getLocation();
@@ -231,34 +244,17 @@ public class ModAntiXray extends HalfminerModule implements Listener {
         }
 
         boolean isCheckedPermanently() {
-            return checkedPermanently.contains(uuid);
+            return observedPermanently.contains(uuid);
         }
 
         Material getLastMaterial() {
             return lastProtectedBlock;
         }
 
-        void scheduleTask() {
-
-            if (isCheckedPermanently()) return;
-
-            int schedulerTime = timeUntilClear;
-
-            long currentTime = System.currentTimeMillis() / 1000;
-            if (lastProtectedBreakTime != currentTime)
-                schedulerTime = schedulerTime - (int) (currentTime - lastProtectedBreakTime);
-
-            if (task != null) task.cancel();
-            task = scheduler.runTaskLater(hms, new Runnable() {
-                @Override
-                public void run() {
-
-                    if (lastProtectedBreakTime + timeUntilClear <= System.currentTimeMillis() / 1000) {
-                        if (!isCheckedPermanently()) playersChecked.remove(uuid);
-                    }
-                    else scheduleTask();
-                }
-            }, schedulerTime * 20);
+        boolean hasExpired() {
+            return !isBypassed()
+                    && !isCheckedPermanently()
+                    && lastProtectedBreakTime + timeUntilClear < System.currentTimeMillis() / 1000;
         }
     }
 }
