@@ -110,9 +110,9 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
 
         String toReturn = "";
 
+        // cleanup junk
+        sweep();
         for (UUID uuid : observedPlayers.keySet()) {
-
-            if (!counterExists(uuid)) continue;
 
             BreakCounter counter = observedPlayers.get(uuid);
             Location last = counter.getLastProtectedLocation();
@@ -123,9 +123,12 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             if (counter.isBypassed()) color = ChatColor.YELLOW;
             else if (counter.isCheckedPermanently()) color = ChatColor.RED;
 
-            toReturn += Language.getMessagePlaceholders("modAntiXrayShowFormat", false, "%PLAYER%",
-                    color + counter.getOwnerName(), "%LOCATION%", Language.getStringFromLocation(last), "%WORLD%",
-                    last.getWorld().getName(), "%PROTECTED%", String.valueOf(counter.getProtectedBreakages()),
+            toReturn += Language.getMessagePlaceholders("modAntiXrayShowFormat", false,
+                    "%PLAYER%", color + counter.getOwnerName(),
+                    "%LOCATION%", Language.getStringFromLocation(last),
+                    "%WORLD%", last.getWorld().getName(),
+                    "%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString()),
+                    "%PROTECTED%", String.valueOf(counter.getProtectedBreakages()),
                     "%BROKEN%", String.valueOf(counter.getBreakages())) + "\n";
         }
 
@@ -142,7 +145,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             else counter.setInformed((Player) toNotify);
         }
 
-        toNotify.sendMessage(Language.getMessagePlaceholders("modAntiXrayJoinDetected", true,
+        toNotify.sendMessage(Language.getMessagePlaceholders("modAntiXrayDetected", true,
                 "%PREFIX%", "AntiXRay", "%PLAYER%", counter.getOwnerName(),
                 "%BROKENTOTAL%", String.valueOf(counter.getBreakages()),
                 "%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()),

@@ -61,7 +61,7 @@ public class Cmdrepair extends HalfminerCommand {
             long currentTime = System.currentTimeMillis() / 1000;
             if (currentTime < repairTime) {
                 sender.sendMessage(Language.getMessagePlaceholders("cmdRepairCooldown", true, "%PREFIX%", "Repair",
-                        "%MINUTES%", String.valueOf((repairTime - currentTime) / 60)));
+                        "%MINUTES%", String.valueOf(((repairTime - currentTime) / 60) + 1)));
                 return;
             }
 
