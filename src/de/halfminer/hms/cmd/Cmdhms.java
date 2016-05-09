@@ -74,7 +74,7 @@ public class Cmdhms extends HalfminerCommand {
                     return;
             }
         }
-        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
+        showUsage();
     }
 
     private void renameItem() {
@@ -144,9 +144,7 @@ public class Cmdhms extends HalfminerCommand {
 
                 player.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameDone", true, "%PREFIX%",
                         "HMS", "%NAME%", newName));
-            } else {
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
-            }
+            } else showUsage();
 
         } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
@@ -164,8 +162,7 @@ public class Cmdhms extends HalfminerCommand {
                 e.sendNotFoundMessage(sender, "HMS");
             }
 
-        } else
-            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
+        } else showUsage();
     }
 
     private void updateSkill() {
@@ -206,7 +203,7 @@ public class Cmdhms extends HalfminerCommand {
     private void ringPlayer() {
 
         if (args.length < 2) {
-            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS"));
+            showUsage();
             return;
         }
 
@@ -354,5 +351,10 @@ public class Cmdhms extends HalfminerCommand {
     private void reload() {
         hms.loadConfig();
         sender.sendMessage(Language.getMessagePlaceholders("cmdHmsConfigReloaded", true, "%PREFIX%", "HMS"));
+    }
+
+    private void showUsage() {
+        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS",
+                "%VERSION%", hms.getDescription().getVersion()));
     }
 }
