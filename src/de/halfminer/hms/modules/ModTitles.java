@@ -45,11 +45,6 @@ public class ModTitles extends HalfminerModule implements Listener {
 
         final Player joined = e.getPlayer();
 
-        // Update tablist titles
-        final double balance = updateBalance(joined);
-        updateTablist();
-
-        // Show join titles / news
         if (!storage.getPlayer(joined).getBoolean(DataType.NEUTP_USED)) {
             titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("newplayer"),
                     "%PLAYER%", joined.getName()), 10, 200, 10);
@@ -57,14 +52,16 @@ public class ModTitles extends HalfminerModule implements Listener {
                     "%PLAYER%", joined.getName()), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
         } else {
 
-            if (balance == Double.MIN_VALUE) scheduler.runTaskLater(hms, new Runnable() {
+            scheduler.runTaskLater(hms, new Runnable() {
                 @Override
                 public void run() {
-                    showLoginTitles(joined, balances.get(joined));
+                    showLoginTitles(joined, updateBalance(joined));
+                    updateTablist(joined);
                 }
             }, 3L);
-            else showLoginTitles(joined, balance);
         }
+
+        updateTablist();
     }
 
     private void showLoginTitles(final Player toShow, double balance) {
@@ -126,7 +123,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             balance = hooksHandler.getMoney(player);
         } catch (HookException e) {
             if (e.hasParentException() && e.getParentException() instanceof UserDoesNotExistException) {
-                // This occurs if player joins for the first time or changes his name, update it with delay
+                // Try again two ticks later
                 scheduler.runTaskLater(hms, new Runnable() {
                     @Override
                     public void run() {
