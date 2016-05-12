@@ -6,6 +6,7 @@ import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * - Small features for script integration
  *   - Show titles
+ *   - Check if player has room in inv
  *   - Remove head in casino
  *   - Remove case in casino
  *   - Set script vars accordingly
@@ -36,6 +38,35 @@ public class Cmdhmsapi extends HalfminerCommand {
                     ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendTitle(sendTo,
                             Language.arrayToString(args, 2, false), 0, 50, 10);
                 }
+
+            } else if (args[0].equalsIgnoreCase("hasroom") && args.length > 2) {
+
+                Player player;
+                try {
+                    OfflinePlayer playerOffline = storage.getPlayer(args[1]).getBase();
+                    if (!(playerOffline instanceof Player)) {
+                        setHasRoomBoolean(playerOffline, false);
+                        return;
+                    }
+                    player = (Player) playerOffline;
+                } catch (PlayerNotFoundException e) {
+                    // shouldn't happen
+                    return;
+                }
+
+                int freeSlotsRequired;
+                try {
+                    freeSlotsRequired = Integer.decode(args[2]);
+                } catch (NumberFormatException e) {
+                    freeSlotsRequired = 1;
+                }
+
+                int freeSlotsCount = 0;
+
+                for (ItemStack stack : player.getInventory().getStorageContents())
+                    if (stack == null) freeSlotsCount++;
+
+                setHasRoomBoolean(player, freeSlotsCount >= freeSlotsRequired);
 
             } else if (sender instanceof Player) {
 
@@ -82,8 +113,10 @@ public class Cmdhmsapi extends HalfminerCommand {
                             level = 1;
                         }
 
-                        server.dispatchCommand(consoleInstance, "vt setstr temp headname_" + player.getName() + " " + skullOwner);
-                        server.dispatchCommand(consoleInstance, "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
+                        server.dispatchCommand(consoleInstance,
+                                "vt setstr temp headname_" + player.getName() + " " + skullOwner);
+                        server.dispatchCommand(consoleInstance,
+                                "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
 
                         // Remove the skull
                         int amount = item.getAmount();
@@ -96,5 +129,10 @@ public class Cmdhmsapi extends HalfminerCommand {
                 }
             }
         }
+    }
+
+    private void setHasRoomBoolean(OfflinePlayer player, boolean value) {
+        hms.getServer().dispatchCommand(hms.getServer().getConsoleSender(), "vt setbool temp hasroom_"
+                        + player.getName() + " " + String.valueOf(value));
     }
 }

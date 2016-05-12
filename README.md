@@ -169,6 +169,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - /hmsapi
     - Small features for script integration
       - Show titles
+      - Check if player has room in inv
       - Remove head in casino
       - Remove case in casino
       - Set script vars accordingly
