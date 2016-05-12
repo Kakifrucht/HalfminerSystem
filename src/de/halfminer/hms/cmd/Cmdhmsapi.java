@@ -6,7 +6,6 @@ import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -39,32 +38,24 @@ public class Cmdhmsapi extends HalfminerCommand {
 
         } else if (args[0].equalsIgnoreCase("hasroom") && args.length > 2) {
 
-            Player player;
-            try {
-                OfflinePlayer playerOffline = storage.getPlayer(args[1]).getBase();
-                if (!(playerOffline instanceof Player)) {
-                    setHasRoomBoolean(playerOffline, false);
-                    return;
+            Player player = server.getPlayer(args[1]);
+            if (player != null) {
+
+                int freeSlotsRequired;
+                try {
+                    freeSlotsRequired = Integer.decode(args[2]);
+                } catch (NumberFormatException e) {
+                    freeSlotsRequired = 1;
                 }
-                player = (Player) playerOffline;
-            } catch (PlayerNotFoundException e) {
-                // shouldn't happen
-                return;
-            }
 
-            int freeSlotsRequired;
-            try {
-                freeSlotsRequired = Integer.decode(args[2]);
-            } catch (NumberFormatException e) {
-                freeSlotsRequired = 1;
-            }
+                int freeSlotsCount = 0;
 
-            int freeSlotsCount = 0;
+                for (ItemStack stack : player.getInventory().getStorageContents())
+                    if (stack == null) freeSlotsCount++;
 
-            for (ItemStack stack : player.getInventory().getStorageContents())
-                if (stack == null) freeSlotsCount++;
+                setHasRoomBoolean(player.getName(), freeSlotsCount >= freeSlotsRequired);
 
-            setHasRoomBoolean(player, freeSlotsCount >= freeSlotsRequired);
+            } else setHasRoomBoolean(args[1], false);
 
         } else if (sender instanceof Player) {
 
@@ -129,8 +120,8 @@ public class Cmdhmsapi extends HalfminerCommand {
         }
     }
 
-    private void setHasRoomBoolean(OfflinePlayer player, boolean value) {
+    private void setHasRoomBoolean(String playerName, boolean value) {
         hms.getServer().dispatchCommand(hms.getServer().getConsoleSender(), "vt setbool temp hasroom_"
-                        + player.getName() + " " + String.valueOf(value));
+                        + playerName + " " + String.valueOf(value));
     }
 }
