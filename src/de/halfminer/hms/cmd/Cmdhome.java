@@ -44,6 +44,6 @@ public class Cmdhome extends HalfminerCommand {
                 hms.getLogger().info(Language.getMessagePlaceholders("cmdHomeDeniedLog", false,
                         "%PLAYER%", player.getName()));
             }
-        }
+        } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
 }

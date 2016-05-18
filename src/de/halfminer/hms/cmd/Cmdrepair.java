@@ -27,7 +27,7 @@ public class Cmdrepair extends HalfminerCommand {
     public void run(CommandSender sender, String label, String[] args) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Language.getMessagePlaceholders("notAPlayer", true, "%PREFIX%", "Repair"));
+            sender.sendMessage(Language.getMessage("notAPlayer"));
             return;
         }
 

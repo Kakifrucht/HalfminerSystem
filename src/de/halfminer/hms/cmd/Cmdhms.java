@@ -37,7 +37,10 @@ import java.util.UUID;
 public class Cmdhms extends HalfminerCommand {
 
     private CommandSender sender;
+    private Player p;
     private String[] args;
+
+    private static final String prefix = "HMS";
 
     public Cmdhms() {
         this.permission = "hms.moderator";
@@ -47,6 +50,7 @@ public class Cmdhms extends HalfminerCommand {
     public void run(CommandSender sender, String label, String[] args) {
 
         this.sender = sender;
+        if (sender instanceof Player) p = (Player) sender;
         this.args = args;
 
         if (args.length != 0) {
@@ -79,74 +83,73 @@ public class Cmdhms extends HalfminerCommand {
 
     private void renameItem() {
 
-        if (sender instanceof Player) {
+        if (p == null) {
+            sender.sendMessage(Language.getMessage("notAPlayer"));
+            return;
+        }
 
-            Player player = (Player) sender;
+        if (args.length > 1) {
 
-            if (args.length > 1) {
+            ItemStack item = p.getInventory().getItemInMainHand();
 
-                ItemStack item = player.getInventory().getItemInMainHand();
+            if (item == null || item.getType() == Material.AIR) {
+                p.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameFailed", true, "%PREFIX%", prefix));
+                return;
+            }
 
-                if (item == null || item.getType() == Material.AIR) {
-                    player.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameFailed", true, "%PREFIX%", "HMS"));
-                    return;
-                }
+            ItemMeta meta = item.getItemMeta();
 
-                ItemMeta meta = item.getItemMeta();
+            //default parameters, clear item name if not specified but keep lore
+            String newName = meta.getDisplayName();
+            List<String> lore = meta.getLore();
 
-                //default parameters, clear item name if not specified but keep lore
-                String newName = meta.getDisplayName();
-                List<String> lore = meta.getLore();
+            //item name must start at argument 1 only if it is not the -lore flag
+            if (!args[1].equalsIgnoreCase("-lore")) {
 
-                //item name must start at argument 1 only if it is not the -lore flag
-                if (!args[1].equalsIgnoreCase("-lore")) {
+                if (args[1].equalsIgnoreCase("reset")) newName = "";
+                else {
 
-                    if (args[1].equalsIgnoreCase("reset")) newName = "";
-                    else {
-
-                        newName = Language.arrayToString(args, 1, true);
-                        //cut new string at -lore
-                        for (int i = 0; i < newName.length(); i++) {
-                            if (newName.substring(i).toLowerCase().startsWith("-lore")) {
-                                newName = newName.substring(0, i);
-                                break;
-                            }
-                        }
-                        //cut spaces at the end of the name
-                        while (newName.endsWith(" ")) {
-                            newName = newName.substring(0, newName.length() - 1);
-                        }
-                    }
-                }
-
-                //iterate over args and check if lore flag is set
-                for (int i = 1; i < args.length; i++) {
-                    if (args[i].equalsIgnoreCase("-lore")) {
-                        //check if new lore was specified, else just clear it
-                        if (args.length > i + 1) {
-                            //split lines of lore at | character, set the lore list
-                            String[] loreToArray = Language.arrayToString(args, i + 1, true).split("[|]");
-                            lore = Arrays.asList(loreToArray);
+                    newName = Language.arrayToString(args, 1, true);
+                    //cut new string at -lore
+                    for (int i = 0; i < newName.length(); i++) {
+                        if (newName.substring(i).toLowerCase().startsWith("-lore")) {
+                            newName = newName.substring(0, i);
                             break;
-                        } else {
-                            if (lore != null) lore.clear();
                         }
                     }
+                    //cut spaces at the end of the name
+                    while (newName.endsWith(" ")) {
+                        newName = newName.substring(0, newName.length() - 1);
+                    }
                 }
+            }
 
-                //update item
-                meta.setDisplayName(newName);
-                meta.setLore(lore);
-                item.setItemMeta(meta);
-                player.updateInventory();
+            //iterate over args and check if lore flag is set
+            for (int i = 1; i < args.length; i++) {
+                if (args[i].equalsIgnoreCase("-lore")) {
+                    //check if new lore was specified, else just clear it
+                    if (args.length > i + 1) {
+                        //split lines of lore at | character, set the lore list
+                        String[] loreToArray = Language.arrayToString(args, i + 1, true).split("[|]");
+                        lore = Arrays.asList(loreToArray);
+                        break;
+                    } else {
+                        if (lore != null) lore.clear();
+                    }
+                }
+            }
 
-                if (newName == null) newName = "";
+            //update item
+            meta.setDisplayName(newName);
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+            p.updateInventory();
 
-                player.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameDone", true, "%PREFIX%",
-                        "HMS", "%NAME%", newName));
-            } else showUsage();
+            if (newName == null) newName = "";
 
-        } else sender.sendMessage(Language.getMessage("notAPlayer"));
+            p.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameDone", true, "%PREFIX%",
+                    prefix, "%NAME%", newName));
+        } else showUsage();
     }
 
     private void rmHomeBlock() {
@@ -156,10 +159,10 @@ public class Cmdhms extends HalfminerCommand {
                 HalfminerPlayer p = storage.getPlayer(args[1]);
                 UUID playerUid = p.getUniqueId();
                 storage.set("vote." + playerUid, Long.MAX_VALUE);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsHomeblockRemove", true, "%PREFIX%", "HMS",
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsHomeblockRemove", true, "%PREFIX%", prefix,
                         "%PLAYER%", p.getName()));
             } catch (PlayerNotFoundException e) {
-                e.sendNotFoundMessage(sender, "HMS");
+                e.sendNotFoundMessage(sender, prefix);
             }
 
         } else showUsage();
@@ -213,16 +216,16 @@ public class Cmdhms extends HalfminerCommand {
 
         if (toRing == null) {
 
-            sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", "HMS"));
+            sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", prefix));
 
         } else {
 
             ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendTitle(toRing,
                     Language.getMessagePlaceholders("cmdHmsRingTitle", false, "%PLAYER%", senderName));
-            toRing.sendMessage(Language.getMessagePlaceholders("cmdHmsRingMessage", true, "%PREFIX%", "HMS",
+            toRing.sendMessage(Language.getMessagePlaceholders("cmdHmsRingMessage", true, "%PREFIX%", prefix,
                     "%PLAYER%", senderName));
 
-            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsRingSent", true, "%PREFIX%", "HMS",
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsRingSent", true, "%PREFIX%", prefix,
                     "%PLAYER%", toRing.getName()));
 
             scheduler.runTaskAsynchronously(hms, new Runnable() {
@@ -253,7 +256,7 @@ public class Cmdhms extends HalfminerCommand {
 
     private void searchHomes() {
 
-        if (!(sender instanceof Player)) {
+        if (p == null) {
             sender.sendMessage(Language.getMessage("notAPlayer"));
             return;
         }
@@ -282,7 +285,7 @@ public class Cmdhms extends HalfminerCommand {
             @Override
             public void run() {
 
-                player.sendMessage(Language.getMessagePlaceholders("cmdHmsSearchhomesStarted", true, "%PREFIX%", "HMS",
+                player.sendMessage(Language.getMessagePlaceholders("cmdHmsSearchhomesStarted", true, "%PREFIX%", prefix,
                         "%RADIUS%", String.valueOf(checkRadius)));
 
                 for (UUID uuid : ess.getUserMap().getAllUniqueUsers()) {
@@ -308,7 +311,7 @@ public class Cmdhms extends HalfminerCommand {
                 }
 
                 if (homeMessages.size() == 0) player.sendMessage(
-                        Language.getMessagePlaceholders("cmdHmsSearchhomesNoneFound", true, "%PREFIX%", "HMS"));
+                        Language.getMessagePlaceholders("cmdHmsSearchhomesNoneFound", true, "%PREFIX%", prefix));
                 else for (String message : homeMessages) player.sendMessage(message);
             }
         });
@@ -350,11 +353,11 @@ public class Cmdhms extends HalfminerCommand {
 
     private void reload() {
         hms.loadConfig();
-        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsConfigReloaded", true, "%PREFIX%", "HMS"));
+        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsConfigReloaded", true, "%PREFIX%", prefix));
     }
 
     private void showUsage() {
-        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", "HMS",
+        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsUsage", true, "%PREFIX%", prefix,
                 "%VERSION%", hms.getDescription().getVersion()));
     }
 }
