@@ -178,6 +178,7 @@ localization:
   cmdChatSend: '&7Deine Nachricht wurde an %SENDTO% versendet'
   cmdChatUsage: '&cVerwendung:\n&f/c clear --> Chat leeren\n/c countdown <Zeit> --> Countdown starten\n/c globalmute --> Globalmute umschalten\n/c set [Nachricht] --> Definiere deine Nachricht\n/c title [Zeit] [Spieler] --> Zeige die Nachricht als Titel\n/c bossbar [Zeit] [Spieler] [Farbe] --> Nachricht in BossBar\n/c news --> Setze Nachricht als Servernews\n/c send [Spieler] --> Schicke deine Nachricht'
   cmdChatTitle: '&7Titel an &e%SENDTO% &7für &a%TIME% Sekunden &7versendet, Nachricht: &r%MESSAGE%'
+  cmdDisposalTitle: 'Mülleimer'
   cmdHmsConfigReloaded: '&aKonfiguration neugeladen'
   cmdHmsHomeblockRemove: '&a%PLAYER% &7kann jetzt /home benutzen'
   cmdHmsMotdFailed: '&cVerwendung: &f/hms setmotd <motd>'

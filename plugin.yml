@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.14.4
+version: 3.15.0
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -15,6 +15,9 @@ commands:
   chat:
     description: Chat manipulation tools
     aliases: [c]
+  disposal:
+    description: Open portable disposal
+    aliases: [bin]
   hms:
     description: HalfminerSystem base command
     aliases: [halfminer, halfminersystem, hsystem, hmsystem]
@@ -58,6 +61,7 @@ permissions:
       hms.chat: true
       hms.chat.advanced: true
       hms.default: true
+      hms.disposal: true
       hms.home: true
       hms.lag: true
       hms.lag.others: true
@@ -186,6 +190,8 @@ permissions:
     description: Allows posting links
   hms.chat.topformat:
     description: Gives user format with highest priority
+  hms.disposal:
+    description: Access to disposal command
   hms.lag:
     description: Access to lag command
   hms.lag.others:

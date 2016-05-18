@@ -157,6 +157,8 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Countdown via bossbar
     - Send custom messages to player or broadcast
     - Set news and motd message
+  - /disposal
+    - Opens portable disposal
   - /hms
     - Reload config (reload)
     - Search for homes in a given radius, hooking into Essentials (searchhomes)
