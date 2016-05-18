@@ -108,5 +108,4 @@ public class Cmdstats extends HalfminerCommand {
 
         return returnString + String.valueOf(playerVar);
     }
-
 }
