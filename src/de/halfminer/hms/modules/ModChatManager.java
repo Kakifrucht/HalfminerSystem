@@ -190,6 +190,8 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             i--;
         }
 
+        if (sb.length() > 16) sb.setLength(16);
+
         return sb.toString();
     }
 
