@@ -298,6 +298,7 @@ localization:
   modSkillLevelLog: 'Skilllevel: %PLAYER% Level %SKILLOLD% -> %SKILLNEW% (%SKILLNO%)'
   modSkillLevelUprankTitle: ' \n&aDu wurdest befördert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
+  modStaticListenersTabHelp: '&cVerwende &e/hilfe &cfür eine Übersicht über alle Kommandos'
   modStatsDeath: '&cDu bist gestorben! &7Tode: &f%DEATHS%'
   modStatsDeathLog: 'Survival: %PLAYER% ist gestorben'
   modStatsNameChange: '&e%OLDNAME% &bhat den Namen zu &a%NEWNAME% &bgewechselt'

@@ -10,15 +10,19 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
+
 /**
- * - Removes leave messages
- * - Blocks certain items from being traded with villagers/merchants
- * - Override spigot teleport safety
- * - Disables commands while in bed
- * - Disables command in format '/pluginname:command'
+ * - Removes quit message
+ * - Disables some deals in villager trades
+ * - Commandfilter
+ *   - Disables commands in bed (teleport glitch)
+ *   - Disables /pluginname:command for users (to improve commandblocks)
+ * - Disables tab completes that are too long, defaults to help instead
  */
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
@@ -57,6 +61,16 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                     return;
                 }
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void tabCompleteFilter(TabCompleteEvent e) {
+
+        if (e.getCompletions().size() > 10 && !e.getSender().hasPermission("hms.bypass.tabcomplete")) {
+            e.getSender().sendMessage(Language.getMessagePlaceholders("modStaticListenersTabHelp", true,
+                    "%PREFIX%", "Info"));
+            e.setCompletions(Collections.singletonList("/hilfe"));
         }
     }
 }

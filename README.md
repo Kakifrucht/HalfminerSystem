@@ -126,6 +126,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Commandfilter
       - Disables commands in bed (teleport glitch)
       - Disables /pluginname:command for users (to improve commandblocks)
+    - Disables tab completes that are too long, defaults to help instead
   - Stats
     - Records lots of statistics about a player
       - Online time

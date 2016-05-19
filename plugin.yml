@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.15.0
+version: 3.15.1
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -94,6 +94,7 @@ permissions:
       hms.bypass.pvp: true
       hms.bypass.skilllevel: true
       hms.bypass.statsrightclick: true
+      hms.bypass.tabcomplete: true
       hms.bypass.teleportchecks: true
       hms.bypass.teleporttimer: true
   hms.chat.*:
@@ -172,6 +173,8 @@ permissions:
     description: Bypass setting of skilllevel
   hms.bypass.statsrightclick:
     description: Bypass stats on rightclick
+  hms.bypass.tabcomplete:
+    description: Bypass tabcomplete
   hms.bypass.teleportcheck:
     description: Bypass glitch protection teleport check
   hms.bypass.teleporttimer:
