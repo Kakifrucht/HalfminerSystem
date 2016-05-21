@@ -125,7 +125,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Disables some deals in villager trades
     - Commandfilter
       - Disables commands in bed (teleport glitch)
-      - Disables /pluginname:command for users (to improve commandblocks)
+      - Rewrites /pluginname:command to just /command
     - Disables tab completes that are too long, defaults to help instead
   - Stats
     - Records lots of statistics about a player

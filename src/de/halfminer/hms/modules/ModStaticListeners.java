@@ -21,7 +21,7 @@ import java.util.Collections;
  * - Disables some deals in villager trades
  * - Commandfilter
  *   - Disables commands in bed (teleport glitch)
- *   - Disables /pluginname:command for users (to improve commandblocks)
+ *   - Rewrites /pluginname:command to just /command
  * - Disables tab completes that are too long, defaults to help instead
  */
 @SuppressWarnings("unused")
@@ -52,11 +52,13 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
             player.sendMessage(Language.getMessagePlaceholders("modStaticListenersCommandSleep", true, "%PREFIX%", "Info"));
             e.setCancelled(true);
         } else {
-            // Deny commands, that contain ':', which could be used to bypass certain filters via /pluginname:command
-            for (Character check : e.getMessage().toLowerCase().toCharArray()) {
+
+            String cmd = e.getMessage();
+            // Rewrite commands that contain ':', which could be used to bypass certain filters via /pluginname:command
+            for (Character check : cmd.toCharArray()) {
                 if (check.equals(' ')) return;
                 if (check.equals(':')) {
-                    e.getPlayer().sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Info"));
+                    player.chat("/" + cmd.substring(cmd.indexOf(':') + 1));
                     e.setCancelled(true);
                     return;
                 }
@@ -67,9 +69,8 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void tabCompleteFilter(TabCompleteEvent e) {
 
-        if (e.getCompletions().size() > 10
-                && e.getBuffer().startsWith("/")
-                && !e.getSender().hasPermission("hms.bypass.tabcomplete")) {
+        if (e.getBuffer().startsWith("/") && !e.getSender().hasPermission("hms.bypass.tabcomplete")
+                && (e.getCompletions().size() > 10 || e.getCompletions().size() == 0)) {
             e.getSender().sendMessage(Language.getMessagePlaceholders("modStaticListenersTabHelp", true,
                     "%PREFIX%", "Info"));
             e.setCompletions(Collections.singletonList("/hilfe"));
