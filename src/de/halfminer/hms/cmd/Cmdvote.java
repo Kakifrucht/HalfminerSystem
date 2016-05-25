@@ -4,10 +4,10 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * - Shows vote links (custom per player) and current votecount
@@ -132,15 +132,7 @@ public class Cmdvote extends HalfminerCommand {
 
     private boolean dropCase(Player player) {
 
-        boolean hasRoom = false;
-        for (ItemStack item : player.getInventory().getStorageContents()) {
-            if (item == null) {
-                hasRoom = true;
-                break;
-            }
-        }
-
-        if (!hasRoom) return false;
+        if (!Utils.hasRoom(player, 1)) return false;
 
         String command = hms.getConfig().getString("command.vote.voteRewardCommand");
         command = Language.placeholderReplace(command, "%PLAYER%", player.getName());

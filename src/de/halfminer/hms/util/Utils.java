@@ -2,6 +2,8 @@ package de.halfminer.hms.util;
 
 import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.List;
@@ -26,5 +28,16 @@ public final class Utils {
             }
         }
         return toReturn;
+    }
+
+    public static boolean hasRoom(Player player, int freeSlots) {
+
+        int freeSlotsCurrent = 0;
+
+        for (ItemStack stack : player.getInventory().getStorageContents())
+            if (stack != null)
+                freeSlotsCurrent++;
+
+        return freeSlotsCurrent >= freeSlots;
     }
 }

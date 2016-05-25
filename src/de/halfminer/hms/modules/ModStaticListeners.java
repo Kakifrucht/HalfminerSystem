@@ -69,8 +69,11 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void tabCompleteFilter(TabCompleteEvent e) {
 
-        if (e.getBuffer().startsWith("/") && !e.getSender().hasPermission("hms.bypass.tabcomplete")
-                && (e.getCompletions().size() > 10 || e.getCompletions().size() == 0)) {
+        if (e.getBuffer().startsWith("/")
+                && !e.getSender().hasPermission("hms.bypass.tabcomplete")
+                && (e.getCompletions().size() > 10
+                || (e.getCompletions().size() == 0 && !e.getBuffer().contains(" ")))) {
+
             e.getSender().sendMessage(Language.getMessagePlaceholders("modStaticListenersTabHelp", true,
                     "%PREFIX%", "Info"));
             e.setCompletions(Collections.singletonList("/hilfe"));

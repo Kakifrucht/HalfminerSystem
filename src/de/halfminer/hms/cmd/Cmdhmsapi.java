@@ -5,6 +5,7 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -48,12 +49,7 @@ public class Cmdhmsapi extends HalfminerCommand {
                     freeSlotsRequired = 1;
                 }
 
-                int freeSlotsCount = 0;
-
-                for (ItemStack stack : player.getInventory().getStorageContents())
-                    if (stack == null) freeSlotsCount++;
-
-                setHasRoomBoolean(player.getName(), freeSlotsCount >= freeSlotsRequired);
+                setHasRoomBoolean(player.getName(), Utils.hasRoom(player, freeSlotsRequired));
 
             } else setHasRoomBoolean(args[1], false);
 
