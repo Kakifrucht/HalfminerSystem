@@ -35,7 +35,7 @@ public final class Utils {
         int freeSlotsCurrent = 0;
 
         for (ItemStack stack : player.getInventory().getStorageContents())
-            if (stack != null)
+            if (stack == null)
                 freeSlotsCurrent++;
 
         return freeSlotsCurrent >= freeSlots;

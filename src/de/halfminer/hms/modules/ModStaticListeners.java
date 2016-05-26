@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * - Removes quit message
@@ -69,10 +70,22 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void tabCompleteFilter(TabCompleteEvent e) {
 
-        if (e.getBuffer().startsWith("/")
+        String buffer = e.getBuffer();
+        List<String> complete = e.getCompletions();
+
+        /*
+          Conditions breakdown (replace tab complete with /hilfe, if...):
+            - Buffer is a command
+            - The sender doesn't have bypass permission
+            - Either..
+              - There are more than 10 completions and they are commands
+              - When there are 0 completions the buffer must not contain a space
+                (not root command, so no need to overwrite buffer)
+         */
+        if (buffer.startsWith("/")
                 && !e.getSender().hasPermission("hms.bypass.tabcomplete")
-                && (e.getCompletions().size() > 10
-                || (e.getCompletions().size() == 0 && !e.getBuffer().contains(" ")))) {
+                && (complete.size() > 10 && complete.get(0).startsWith("/"))
+                || (complete.size() == 0 && !buffer.contains(" "))) {
 
             e.getSender().sendMessage(Language.getMessagePlaceholders("modStaticListenersTabHelp", true,
                     "%PREFIX%", "Info"));
