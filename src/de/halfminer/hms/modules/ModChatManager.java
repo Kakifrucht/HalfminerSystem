@@ -80,8 +80,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         String message = filterMessage(p, e.getMessage());
 
         Map<String, Player> players = new HashMap<>();
-        for (Player player : e.getRecipients())
-            if (!player.getName().equals(p.getName())) players.put(player.getName().toLowerCase(), player);
+        e.getRecipients().stream().filter(player -> !player.getName().equals(p.getName())).forEach(player -> players.put(player.getName().toLowerCase(), player));
 
         Set<Player> mentioned = new HashSet<>();
         long currentTime = System.currentTimeMillis() / 1000;

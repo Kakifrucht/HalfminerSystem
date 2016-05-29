@@ -44,7 +44,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     private final HanBossBar barHandler = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
 
     private final Map<String, String> lang = new HashMap<>();
-    private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<Player, BukkitTask>());
+    private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<>());
 
     private boolean broadcastLog;
     private int tagTime;
@@ -65,7 +65,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     @EventHandler
     public void logoutCheckIfInCombat(PlayerQuitEvent e) {
 
-        if (tagged.containsKey(e.getPlayer())) {
+        if (isTagged(e.getPlayer())) {
             untagPlayer(e.getPlayer());
 
             if (broadcastLog)

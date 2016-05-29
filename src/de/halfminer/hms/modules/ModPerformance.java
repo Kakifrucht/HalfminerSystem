@@ -156,12 +156,9 @@ public class ModPerformance extends HalfminerModule implements Listener {
         hopperLimitMessage = Language.getMessagePlaceholders("modPerformanceReachedHopper", true, "%PREFIX%", "Info");
 
         if (clearTask != null) clearTask.cancel();
-        clearTask = scheduler.runTaskTimer(hms, new Runnable() {
-            @Override
-            public void run() {
-                firedAt.clear();
-                pistonCount = 0;
-            }
+        clearTask = scheduler.runTaskTimer(hms, () -> {
+            firedAt.clear();
+            pistonCount = 0;
         }, ticksDelayUntilClear, ticksDelayUntilClear);
     }
 }

@@ -86,13 +86,10 @@ public class Cmdchat extends HalfminerCommand {
                         }
                     }, 0, 20L);
 
-                    scheduler.runTaskLater(hms, new Runnable() {
-                        @Override
-                        public void run() {
+                    scheduler.runTaskLater(hms, () -> {
 
-                            task.cancel();
-                            bar.removeBar();
-                        }
+                        task.cancel();
+                        bar.removeBar();
                     }, 20 * (countdown + 4));
                 }
 

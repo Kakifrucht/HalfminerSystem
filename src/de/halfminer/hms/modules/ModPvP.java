@@ -93,17 +93,14 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
             // Heal and play sound
             if (!killer.isDead()) killer.setHealth(killer.getMaxHealth());
-            scheduler.runTaskLaterAsynchronously(hms, new Runnable() {
-                @Override
-                public void run() {
-                    killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
-                    try {
-                        Thread.sleep(300L);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                    killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
+            scheduler.runTaskLaterAsynchronously(hms, () -> {
+                killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
+                try {
+                    Thread.sleep(300L);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
                 }
+                killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
             }, 5);
 
             UUID killerUid = killer.getUniqueId();
@@ -116,13 +113,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             killStreak.put(killerUid, streak);
 
             if (streak > thresholdUntilShown || streak % 5 == 0) {
-                scheduler.runTaskLater(hms, new Runnable() {
-                    @Override
-                    public void run() {
-                        titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPKillStreak", false,
-                                "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(streak)));
-                    }
-                }, 0L);
+                scheduler.runTaskLater(hms, () -> titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPKillStreak", false,
+                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(streak))), 0L);
             }
         } else {
             victim.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);

@@ -40,26 +40,20 @@ public class ModRespawn extends HalfminerModule implements Listener {
 
             message = Language.getMessagePlaceholders("modRespawnFirstJoin", false, "%PLAYER%", joined.getName());
 
-            scheduler.runTaskLater(hms, new Runnable() {
-                @Override
-                public void run() {
+            scheduler.runTaskLater(hms, () -> {
 
-                    joined.teleport(respawnLoc);
-                    String command = hms.getConfig().getString("respawn.firstJoinCommand", "");
-                    if (command.length() > 0) {
-                        server.dispatchCommand(server.getConsoleSender(),
-                                Language.placeholderReplace(command, "%PLAYER%", joined.getName()));
-                    }
+                joined.teleport(respawnLoc);
+                String command = hms.getConfig().getString("respawn.firstJoinCommand", "");
+                if (command.length() > 0) {
+                    server.dispatchCommand(server.getConsoleSender(),
+                            Language.placeholderReplace(command, "%PLAYER%", joined.getName()));
                 }
             }, 1L);
         } else if (toTeleport.contains(joined)) {
-            scheduler.runTaskLater(hms, new Runnable() {
-                @Override
-                public void run() {
-                    joined.teleport(respawnLoc);
-                    joined.sendMessage(Language.getMessagePlaceholders("modRespawnForced", true, "%PREFIX%", "Spawn"));
-                    toTeleport.remove(joined);
-                }
+            scheduler.runTaskLater(hms, () -> {
+                joined.teleport(respawnLoc);
+                joined.sendMessage(Language.getMessagePlaceholders("modRespawnForced", true, "%PREFIX%", "Spawn"));
+                toTeleport.remove(joined);
             }, 1L);
         }
 

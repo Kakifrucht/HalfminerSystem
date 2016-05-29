@@ -215,21 +215,18 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             }
         }
 
-        scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
-            @Override
-            public void run() {
-                long currentTime = System.currentTimeMillis() / 1000;
-                for (Player p : server.getOnlinePlayers()) {
-                    setOnlineTime(p);
-                    timeOnline.put(p, currentTime);
-                }
+        scheduler.runTaskTimerAsynchronously(hms, () -> {
+            long currentTime = System.currentTimeMillis() / 1000;
+            for (Player p : server.getOnlinePlayers()) {
+                setOnlineTime(p);
+                timeOnline.put(p, currentTime);
             }
         }, 1200L, 1200L);
     }
 
     @Override
     public void onDisable() {
-        for (Player p : timeOnline.keySet()) setOnlineTime(p);
+        timeOnline.keySet().forEach(this::setOnlineTime);
     }
 
     @Override

@@ -21,12 +21,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
 
     // ensure that only one instance of broadcast bar is present
     private final BossBar broadcastBar = server.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
-    private final Runnable removalRunnable = new Runnable() {
-        @Override
-        public void run() {
-            removeBar();
-        }
-    };
+    private final Runnable removalRunnable = this::removeBar;
     private BukkitTask broadcastRemoveTask;
 
     private final Map<Player, Pair<BossBar, BukkitTask>> currentBar = new HashMap<>();
@@ -78,7 +73,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
         broadcastBar.setColor(color);
         broadcastBar.setStyle(style);
         setProgress(broadcastBar, progression);
-        for (Player online : server.getOnlinePlayers()) broadcastBar.addPlayer(online);
+        server.getOnlinePlayers().forEach(broadcastBar::addPlayer);
     }
 
     /**
@@ -134,13 +129,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
 
         setProgress(bar, progression);
 
-        BukkitTask remove = scheduler.runTaskLater(hms, new Runnable() {
-
-            @Override
-            public void run() {
-                    removeBar(player);
-            }
-        }, time * 20);
+        BukkitTask remove = scheduler.runTaskLater(hms, () -> removeBar(player), time * 20);
         currentBar.put(player, new Pair<>(bar, remove));
     }
 

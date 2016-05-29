@@ -228,26 +228,23 @@ public class Cmdhms extends HalfminerCommand {
             sender.sendMessage(Language.getMessagePlaceholders("cmdHmsRingSent", true, "%PREFIX%", prefix,
                     "%PLAYER%", toRing.getName()));
 
-            scheduler.runTaskAsynchronously(hms, new Runnable() {
-                @Override
-                public void run() {
-                    float ringHeight = 2.0f;
-                    boolean drop = true;
-                    for (int i = 0; i < 19; i++) {
+            scheduler.runTaskAsynchronously(hms, () -> {
+                float ringHeight = 2.0f;
+                boolean drop = true;
+                for (int i = 0; i < 19; i++) {
 
-                        toRing.playSound(toRing.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, ringHeight);
+                    toRing.playSound(toRing.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, ringHeight);
 
-                        if (ringHeight == 2.0f) drop = true;
-                        else if (ringHeight == 0.5f) drop = false;
+                    if (ringHeight == 2.0f) drop = true;
+                    else if (ringHeight == 0.5f) drop = false;
 
-                        if (drop) ringHeight -= 0.5f;
-                        else ringHeight += 0.5f;
+                    if (drop) ringHeight -= 0.5f;
+                    else ringHeight += 0.5f;
 
-                        try {
-                            Thread.sleep(110L);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        Thread.sleep(110L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -281,39 +278,36 @@ public class Cmdhms extends HalfminerCommand {
             checkRadius = setTo;
         } else checkRadius = 5;
 
-        scheduler.runTaskAsynchronously(hms, new Runnable() {
-            @Override
-            public void run() {
+        scheduler.runTaskAsynchronously(hms, () -> {
 
-                player.sendMessage(Language.getMessagePlaceholders("cmdHmsSearchhomesStarted", true, "%PREFIX%", prefix,
-                        "%RADIUS%", String.valueOf(checkRadius)));
+            player.sendMessage(Language.getMessagePlaceholders("cmdHmsSearchhomesStarted", true, "%PREFIX%", prefix,
+                    "%RADIUS%", String.valueOf(checkRadius)));
 
-                for (UUID uuid : ess.getUserMap().getAllUniqueUsers()) {
+            for (UUID uuid : ess.getUserMap().getAllUniqueUsers()) {
 
-                    User user = ess.getUser(uuid);
-                    for (String homeName : user.getHomes()) {
+                User user = ess.getUser(uuid);
+                for (String homeName : user.getHomes()) {
 
-                        try {
-                            Location loc = user.getHome(homeName);
-                            int xHome = loc.getBlockX();
-                            int zHome = loc.getBlockZ();
-                            if (loc.getWorld().equals(world)
-                                    && x - checkRadius < xHome && x + checkRadius > xHome
-                                    && z - checkRadius < zHome && z + checkRadius > zHome) {
-                                homeMessages.add(Language.getMessagePlaceholders("cmdHmsSearchhomesResults", false,
-                                        "%PLAYER%", user.getName(), "%HOMENAME%", homeName));
-                            }
-                        } catch (Exception e) {
-                            // Should not happen, as we know the home will exist
-                            e.printStackTrace();
+                    try {
+                        Location loc = user.getHome(homeName);
+                        int xHome = loc.getBlockX();
+                        int zHome = loc.getBlockZ();
+                        if (loc.getWorld().equals(world)
+                                && x - checkRadius < xHome && x + checkRadius > xHome
+                                && z - checkRadius < zHome && z + checkRadius > zHome) {
+                            homeMessages.add(Language.getMessagePlaceholders("cmdHmsSearchhomesResults", false,
+                                    "%PLAYER%", user.getName(), "%HOMENAME%", homeName));
                         }
+                    } catch (Exception e) {
+                        // Should not happen, as we know the home will exist
+                        e.printStackTrace();
                     }
                 }
-
-                if (homeMessages.size() == 0) player.sendMessage(
-                        Language.getMessagePlaceholders("cmdHmsSearchhomesNoneFound", true, "%PREFIX%", prefix));
-                else for (String message : homeMessages) player.sendMessage(message);
             }
+
+            if (homeMessages.size() == 0) player.sendMessage(
+                    Language.getMessagePlaceholders("cmdHmsSearchhomesNoneFound", true, "%PREFIX%", prefix));
+            else homeMessages.forEach(player::sendMessage);
         });
     }
 

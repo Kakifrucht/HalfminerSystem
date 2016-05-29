@@ -44,31 +44,28 @@ public class ModTps extends HalfminerModule implements Listener {
         tpsHistory.add(20.0);
         lastAverageTps = 20.0;
         lastTaskTimestamp = System.currentTimeMillis();
-        task = scheduler.runTaskTimer(hms, new Runnable() {
-            @Override
-            public void run() {
-                long now = System.currentTimeMillis();
-                long lastUpdate = now - lastTaskTimestamp; //time in milliseconds since last check
-                lastTaskTimestamp = now;
+        task = scheduler.runTaskTimer(hms, () -> {
+            long now = System.currentTimeMillis();
+            long lastUpdate = now - lastTaskTimestamp; //time in milliseconds since last check
+            lastTaskTimestamp = now;
 
-                double currentTps = ticksBetweenUpdate * 1000.0 / lastUpdate;
+            double currentTps = ticksBetweenUpdate * 1000.0 / lastUpdate;
 
-                if (currentTps > 21.0d) return; //disregard peaks due to fluctuations
+            if (currentTps > 21.0d) return; //disregard peaks due to fluctuations
 
-                if (tpsHistory.size() >= historySize) tpsHistory.removeFirst();
-                tpsHistory.add(currentTps);
+            if (tpsHistory.size() >= historySize) tpsHistory.removeFirst();
+            tpsHistory.add(currentTps);
 
-                // Get average value
-                lastAverageTps = 0.0;
-                for (Double val : tpsHistory) lastAverageTps += val;
-                lastAverageTps /= tpsHistory.size();
-                lastAverageTps = Math.round(lastAverageTps * 100.0) / 100.0; //round value to two decimals
+            // Get average value
+            lastAverageTps = 0.0;
+            for (Double val : tpsHistory) lastAverageTps += val;
+            lastAverageTps /= tpsHistory.size();
+            lastAverageTps = Math.round(lastAverageTps * 100.0) / 100.0; // round value to two decimals
 
-                // send message if server is unstable
-                if (lastAverageTps < alertStaff && tpsHistory.size() == historySize)
-                    server.broadcast(Language.getMessagePlaceholders("modTpsServerUnstable",
-                            true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(lastAverageTps)), "hms.lag.notify");
-            }
+            // send message if server is unstable
+            if (lastAverageTps < alertStaff && tpsHistory.size() == historySize)
+                server.broadcast(Language.getMessagePlaceholders("modTpsServerUnstable",
+                        true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(lastAverageTps)), "hms.lag.notify");
         }, ticksBetweenUpdate, ticksBetweenUpdate);
     }
 }

@@ -81,38 +81,29 @@ public class Cmdneutp extends HalfminerCommand {
         loc.setYaw(player.getLocation().getYaw());
         loc.setPitch(player.getLocation().getPitch());
 
-        tp.startTeleport(player, loc, 5, new Runnable() {
-            @Override
-            public void run() {
+        tp.startTeleport(player, loc, 5, () -> {
 
-                hPlayer.set(DataType.NEUTP_USED, true);
+            hPlayer.set(DataType.NEUTP_USED, true);
 
-                server.dispatchCommand(player, "sethome neutp");
+            server.dispatchCommand(player, "sethome neutp");
 
-                for (int i = 0; i < 100; i++) player.sendMessage("");
-                player.sendMessage(Language.getMessagePlaceholders("cmdNeutpTpDone", true, "%PREFIX%", "Neutp",
-                        "%PLAYER%", player.getName()));
+            for (int i = 0; i < 100; i++) player.sendMessage("");
+            player.sendMessage(Language.getMessagePlaceholders("cmdNeutpTpDone", true, "%PREFIX%", "Neutp",
+                    "%PLAYER%", player.getName()));
 
-                hms.getLogger().info(Language.getMessagePlaceholders("cmdNeutpLog", false, "%PLAYER%",
-                        player.getName(), "%LOCATION%", Language.getStringFromLocation(loc)));
+            hms.getLogger().info(Language.getMessagePlaceholders("cmdNeutpLog", false, "%PLAYER%",
+                    player.getName(), "%LOCATION%", Language.getStringFromLocation(loc)));
 
-                scheduler.runTaskLater(hms, new Runnable() {
-                    @Override
-                    public void run() {
-                        player.sendMessage(Language.getMessagePlaceholders("cmdNeutpDocumentation",
-                                true, "%PREFIX%", "Neutp"));
-                        ((HanBossBar) hms.getHandler(HandlerType.BOSSBAR)).sendBar(player,
-                                Language.getMessage("cmdNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
-                    }
-                }, 120L);
-            }
-        }, new Runnable() {
-            @Override
-            public void run() {
+            scheduler.runTaskLater(hms, () -> {
+                player.sendMessage(Language.getMessagePlaceholders("cmdNeutpDocumentation",
+                        true, "%PREFIX%", "Neutp"));
+                ((HanBossBar) hms.getHandler(HandlerType.BOSSBAR)).sendBar(player,
+                        Language.getMessage("cmdNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
+            }, 120L);
+        }, () -> {
 
-                player.removePotionEffect(PotionEffectType.BLINDNESS);
-                player.removePotionEffect(PotionEffectType.CONFUSION);
-            }
+            player.removePotionEffect(PotionEffectType.BLINDNESS);
+            player.removePotionEffect(PotionEffectType.CONFUSION);
         });
     }
 }

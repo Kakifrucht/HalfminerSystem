@@ -6,7 +6,7 @@ package de.halfminer.hms.interfaces;
 public interface Disableable {
 
     /**
-     * Called when server shuts down
+     * Called when plugin gets disabled
      */
     void onDisable();
 }

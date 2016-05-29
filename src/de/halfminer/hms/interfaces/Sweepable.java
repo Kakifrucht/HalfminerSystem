@@ -6,7 +6,7 @@ package de.halfminer.hms.interfaces;
 public interface Sweepable {
 
     /**
-     * Remove no longer necessary data
+     * Remove no longer necessary data, this method is called on average every 10 minutes
      */
     void sweep();
 }

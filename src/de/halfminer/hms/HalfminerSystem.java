@@ -65,17 +65,15 @@ public class HalfminerSystem extends JavaPlugin {
         }
 
         // Register listeners
-        for (HalfminerModule mod : modules.values())
-            if (mod instanceof Listener) getServer().getPluginManager().registerEvents((Listener) mod, this);
+        modules.values().stream()
+                .filter(mod -> mod instanceof Listener)
+                .forEach(mod -> getServer().getPluginManager().registerEvents((Listener) mod, this));
 
         // Start sweep task, every 10 minutes
-        getServer().getScheduler().runTaskTimer(this, new Runnable() {
-            @Override
-            public void run() {
-                for (HalfminerModule mod : modules.values())
-                    if (mod instanceof Sweepable) ((Sweepable) mod).sweep();
-            }
-        }, 12000L, 12000L);
+        getServer().getScheduler().runTaskTimer(this,
+                () -> modules.values().stream()
+                        .filter(mod -> mod instanceof Sweepable)
+                        .forEach(mod -> ((Sweepable) mod).sweep()), 12000L, 12000L);
 
         getLogger().info("HalfminerSystem enabled");
     }
@@ -83,8 +81,12 @@ public class HalfminerSystem extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        for (HalfminerModule mod : modules.values()) if (mod instanceof Disableable) ((Disableable) mod).onDisable();
-        for (HalfminerHandler han : handlers.values()) if (han instanceof Disableable) ((Disableable) han).onDisable();
+        modules.values().stream()
+                .filter(mod -> mod instanceof Disableable).forEach(mod -> ((Disableable) mod).onDisable());
+
+        handlers.values().stream()
+                .filter(han -> han instanceof Disableable).forEach(han -> ((Disableable) han).onDisable());
+
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("HalfminerSystem disabled");
     }
@@ -127,8 +129,7 @@ public class HalfminerSystem extends JavaPlugin {
         saveConfig(); // Save config.yml to disk
 
         //noinspection ConstantConditions (suppress warning due to java reflection)
-        for (HalfminerHandler han : handlers.values())
-                if (han instanceof Reloadable) ((Reloadable) han).loadConfig();
-        for (HalfminerModule mod : modules.values()) mod.loadConfig();
+        handlers.values().stream().filter(han -> han instanceof Reloadable).forEach(han -> ((Reloadable) han).loadConfig());
+        modules.values().forEach(HalfminerModule::loadConfig);
     }
 }

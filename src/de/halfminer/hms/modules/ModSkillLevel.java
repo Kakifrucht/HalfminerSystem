@@ -224,10 +224,8 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             skillObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         }
 
-        for (Player player : server.getOnlinePlayers()) {
-            if (!player.hasPermission("hms.bypass.skilllevel")) updateSkill(player, 0);
-        }
-
+        server.getOnlinePlayers().stream()
+                .filter(p -> !p.hasPermission("hms.bypass.skilllevel")).forEach(p -> updateSkill(p, 0));
     }
 
     @Override

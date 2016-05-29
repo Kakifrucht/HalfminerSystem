@@ -1,7 +1,7 @@
 package de.halfminer.hms.interfaces;
 
 /**
- * Implementing class can and should be reloaded on config reload
+ * Implementing class must be reloaded on global (re)load
  */
 public interface Reloadable {
 

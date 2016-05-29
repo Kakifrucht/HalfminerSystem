@@ -115,12 +115,7 @@ public class Cmdverkauf extends HalfminerCommand {
 
         if (sellCount > 0) {
 
-            scheduler.runTaskLater(hms, new Runnable() {
-                @Override
-                public void run() {
-                    sellLoop();
-                }
-            }, 2L);
+            scheduler.runTaskLater(hms, this::sellLoop, 2L);
 
         } else {
 

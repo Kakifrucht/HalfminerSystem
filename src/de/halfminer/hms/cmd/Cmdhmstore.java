@@ -103,12 +103,9 @@ public class Cmdhmstore extends HalfminerCommand {
 
         if (args.length > 0 && args[0].equalsIgnoreCase("save")) {
 
-            scheduler.runTaskAsynchronously(hms, new Runnable() {
-                @Override
-                public void run() {
-                    storage.saveConfig();
-                    sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSave", true, "%PREFIX%", "Info"));
-                }
+            scheduler.runTaskAsynchronously(hms, () -> {
+                storage.saveConfig();
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSave", true, "%PREFIX%", "Info"));
             });
         } else sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreUsage", true, "%PREFIX%", "Info"));
     }
