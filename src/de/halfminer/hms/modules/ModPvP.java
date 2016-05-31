@@ -8,12 +8,10 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -25,6 +23,7 @@ import java.util.UUID;
 /**
  * - Strength potions damage nerfed
  * - Bow spamming disabled
+ * - Disable hitting self with bow
  * - Killstreak via actionbar
  * - Sounds on kill/death
  * - Remove effects on teleport
@@ -43,9 +42,9 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     public void onAttackReduceStrength(EntityDamageByEntityEvent e) {
 
         Entity damager = e.getDamager();
-        if (damager.hasPermission("hms.bypass.pvp")) return;
+        if (damager.hasPermission("hms.bypass.pvp") || !(e.getEntity() instanceof Player)) return;
 
-        if (damager instanceof Player && e.getEntity() instanceof Player) {
+        if (damager instanceof Player) {
 
             for (PotionEffect effect : ((Player) damager).getActivePotionEffects()) {
                 if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
@@ -67,7 +66,16 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                     return;
                 }
             }
-        }
+
+        } else if (e.getDamager() instanceof Projectile) // prevent self hit with bow
+            e.setCancelled(e.getEntity().equals(((Projectile) e.getDamager()).getShooter()));
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void preventSelfHitWithBowCombust(EntityCombustByEntityEvent e) {
+
+        if (e.getEntity() instanceof Player && e.getCombuster() instanceof Projectile)
+            e.setCancelled(e.getEntity().equals(((Projectile) e.getCombuster()).getShooter()));
     }
 
     @EventHandler(ignoreCancelled = true)

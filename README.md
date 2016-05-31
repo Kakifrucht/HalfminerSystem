@@ -101,6 +101,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - PvP
     - Strength potions damage nerfed
     - Bow spamming disabled
+    - Disable hitting self with bow
     - Killstreak via actionbar
     - Sounds on kill/death
     - Remove effects on teleport
