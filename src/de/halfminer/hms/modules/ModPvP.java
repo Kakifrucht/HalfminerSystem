@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -38,7 +39,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     private Map<Player, Long> lastBowShot = new HashMap<>();
     private final Map<UUID, Integer> killStreak = new HashMap<>();
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onAttackReduceStrength(EntityDamageByEntityEvent e) {
 
         Entity damager = e.getDamager();

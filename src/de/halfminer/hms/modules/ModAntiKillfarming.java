@@ -2,29 +2,41 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.*;
 
 /**
- * - Counts amount of kills
- * - Blocks commands from both players that partook in the killfarming
+ * - Counts amount of kills between two players
+ * - After set amount of kills has been passed, blocks players for a set amount of time
+ *   - Checks time between kills, resets if kills passed time
+ *   - Broadcasts block to all players
+ *     - Warns players one kill before block
+ *     - Also prints informational message that it is allowed
+ *   - Blocks further PvP
+ *     - Hitting
+ *     - TnT killing
+ *     - Arrow shooting
+ *     - Splash potion throwing
+ *   - Blocks commands
+ *   - Prints message with remaining block time
+ * - Punishment will double if players do not stop killfarming immediately
  * - Doubles punishment
  */
 @SuppressWarnings("unused")
 public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
-    private int BLOCK_TIME;
-    private int THRESHOLD_UNTIL_BLOCK;
-    private int THRESHOLD_UNTIL_REMOVAL_SECONDS;
+    private int blockTime;
+    private int thresholdUntilBlock;
+    private int thresholdUntilRemovalSeconds;
 
     private final Map<String, String> lang = new HashMap<>();
     private final Set<String> commandExemptList = new HashSet<>();
@@ -62,17 +74,17 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
                 if (container.containsPlayer(victim)) {
 
                     // check if time constraints are met, if they passed the THRESHOLD reset the victim
-                    if (container.getTimestamp(victim) + THRESHOLD_UNTIL_REMOVAL_SECONDS
+                    if (container.getTimestamp(victim) + thresholdUntilRemovalSeconds
                             > System.currentTimeMillis() / 1000) {
 
                         container.updatePlayer(victim, 0);
                         // if the kill threshold has already been met, block, else just update
-                        if (container.getAmount(victim) == THRESHOLD_UNTIL_BLOCK - 1) { //Warn player
+                        if (container.getAmount(victim) == thresholdUntilBlock - 1) { //Warn player
                             killer.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"),
                                     "%PREFIX%", "PvP"));
                             victim.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"),
                                     "%PREFIX%", "PvP"));
-                        } else if (container.getAmount(victim) >= THRESHOLD_UNTIL_BLOCK)
+                        } else if (container.getAmount(victim) >= thresholdUntilBlock)
                             blockPlayers(killer, victim);
 
                     } else {
@@ -90,9 +102,10 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
      *
      * @param e EntityDamageByEntityEvent that was fired
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPvPCheckIfAllowed(EntityDamageByEntityEvent e) {
 
+        // direct PvP check
         if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
             int time = getBlockTime((Player) e.getDamager());
             if (time >= 0) {
@@ -123,17 +136,13 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
             }
         }
 
+        // arrow hit check
         if (e.getEntity() instanceof Player
                 && e.getDamager() instanceof Projectile
                 && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
+
             Player attacker = (Player) ((Projectile) e.getDamager()).getShooter();
             Player victim = (Player) e.getEntity();
-
-            // disallow hitting self with bow
-            if (attacker.equals(victim)) {
-                e.setCancelled(true);
-                return;
-            }
 
             int timeAttacker = getBlockTime(attacker);
             int timeVictim = getBlockTime(victim);
@@ -148,6 +157,19 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
                         "%PLAYER%", e.getEntity().getName(), "%TIME%", String.valueOf(timeVictim)));
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onCombustCheckIfAllowed(EntityCombustByEntityEvent e) {
+
+        if (e.getEntity() instanceof Player
+                && e.getCombuster() instanceof Projectile
+                && ((Projectile) e.getCombuster()).getShooter() instanceof Player) {
+
+            if (getBlockTime((Player) ((Arrow) e.getCombuster()).getShooter()) > 0
+                    || getBlockTime((Player) e.getEntity()) > 0)
+                e.setCancelled(true);
         }
     }
 
@@ -167,6 +189,15 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPotionCheckIfAllowed(PotionSplashEvent e) {
+        e.setCancelled(splashPotionCheck(e));
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onLingeringPotionCheckIfAllowed(LingeringPotionSplashEvent e) {
+        e.setCancelled(splashPotionCheck(e));
+    }
+
+    private boolean splashPotionCheck(ProjectileHitEvent e) {
 
         if (e.getEntity().getShooter() instanceof Player) {
             Player thrower = (Player) e.getEntity().getShooter();
@@ -174,9 +205,10 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
             if (time >= 0) {
                 thrower.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"),
                         "%TIME%", String.valueOf(time)));
-                e.setCancelled(true);
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -219,8 +251,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
         victimVal.incrementAmountBlocked();
 
         // Determine block time, since it doubles every time you get blocked
-        long blockTimeKiller = BLOCK_TIME;
-        long blockTimeVictim = BLOCK_TIME;
+        long blockTimeKiller = blockTime;
+        long blockTimeVictim = blockTime;
         long systemTime = (System.currentTimeMillis() / 1000);
 
         for (int i = 1; i < killerVal.getAmountBlocked(); i++) blockTimeKiller *= 2;
@@ -247,9 +279,9 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
     public void loadConfig() {
 
         // Get constants
-        BLOCK_TIME = hms.getConfig().getInt("antiKillfarming.blockTime", 300);
-        THRESHOLD_UNTIL_BLOCK = hms.getConfig().getInt("antiKillfarming.thresholdUntilBlock", 5);
-        THRESHOLD_UNTIL_REMOVAL_SECONDS = hms.getConfig().getInt("antiKillfarming.thresholdUntilRemoval", 100);
+        blockTime = hms.getConfig().getInt("antiKillfarming.blockTime", 300);
+        thresholdUntilBlock = hms.getConfig().getInt("antiKillfarming.thresholdUntilBlock", 5);
+        thresholdUntilRemovalSeconds = hms.getConfig().getInt("antiKillfarming.thresholdUntilRemoval", 100);
 
         // Get allowed commands
         commandExemptList.clear();
