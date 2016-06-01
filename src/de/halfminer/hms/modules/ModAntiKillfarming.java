@@ -17,20 +17,19 @@ import java.util.*;
 
 /**
  * - Counts amount of kills between two players
- * - After set amount of kills has been passed, blocks players for a set amount of time
- *   - Checks time between kills, resets if kills passed time
+ * - After set amount of kills has been reached, blocks players for a set amount of time
+ *   - Checks interval between kills, resets if interval exceeds given amount
  *   - Broadcasts block to all players
- *     - Warns players one kill before block
- *     - Also prints informational message that it is allowed
- *   - Blocks further PvP
- *     - Hitting
+ *     - Warns players one kill before they get blocked
+ *     - Also prints informational message that killfarming is not allowed
+ *   - Blocks further PvP (both denies for blocked players and prevent other players from hitting aswell)
+ *     - Direct hitting
  *     - TnT killing
  *     - Arrow shooting
- *     - Splash potion throwing
+ *     - Splash/Lingering potion throwing
  *   - Blocks commands
  *   - Prints message with remaining block time
- * - Punishment will double if players do not stop killfarming immediately
- * - Doubles punishment
+ * - Punishment doubles for every additional block
  */
 @SuppressWarnings("unused")
 public class ModAntiKillfarming extends HalfminerModule implements Listener, Sweepable {
@@ -207,10 +206,9 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         int blockTimeKiller = killerCon.blockOwner();
         int blockTimeVictim = victimCon.blockOwner();
 
-        // ensure that once both blocks run out they get reblocked when trying to kill again
+        // ensure that once both blocks run out they get reblocked when trying to kill directly again
         killerCon.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
 
-        // send messages
         server.broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"),
                 "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
         killer.sendMessage(Language.placeholderReplace(lang.get("blockedKiller"),
@@ -255,8 +253,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     }
 
     /**
-     * Class containing the information about which players
-     * were killed, how often, when, and how many blocks a player already had
+     * Class bundling all information about who got killed, how often, when,
+     * how often the owner was blocked already and if he is blocked right now
      */
     private class AntiKillfarmingContainer {
 
@@ -274,8 +272,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         /**
          * Update a players timestamp and amount
          *
-         * @param toUpdate - Player that will be updated
-         * @param timeDiff - additional time that will be added to the threshold,
+         * @param toUpdate player that will be updated
+         * @param timeDiff additional time that will be added to the threshold,
          *                 useful for making sure that after a block the players can't proceed with killfarming
          */
         void incrementPlayer(Player toUpdate, long timeDiff) {

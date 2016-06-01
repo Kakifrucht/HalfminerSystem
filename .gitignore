@@ -1,6 +1,4 @@
-Vault.jar
-EssentialsX.jar
-spigot.jar
+*.jar
 *.iml
 .idea/
 out/

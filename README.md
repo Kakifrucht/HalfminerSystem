@@ -37,20 +37,19 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
 - **Modules**
   - AntiKillfarming
     - Counts amount of kills between two players
-    - After set amount of kills has been passed, blocks players for a set amount of time
-      - Checks time between kills, resets if kills passed time
+    - After set amount of kills has been reached, blocks players for a set amount of time
+      - Checks interval between kills, resets if interval exceeds given amount
       - Broadcasts block to all players
-        - Warns players one kill before block
-        - Also prints informational message that it is allowed
-      - Blocks further PvP
-        - Hitting
+        - Warns players one kill before they get blocked
+        - Also prints informational message that killfarming is not allowed
+      - Blocks further PvP (both denies for blocked players and prevent other players from hitting aswell)
+        - Direct hitting
         - TnT killing
         - Arrow shooting
-        - Splash potion throwing
+        - Splash/Lingering potion throwing
       - Blocks commands
       - Prints message with remaining block time
-    - Punishment will double if players do not stop killfarming immediately
-    - Doubles punishment
+    - Punishment doubles for every additional block
   - AntiXray
     - Counts players block breaks
       - Clears after no protected blocks were broken
