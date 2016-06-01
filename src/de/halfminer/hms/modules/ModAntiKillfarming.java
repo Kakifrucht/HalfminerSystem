@@ -1,5 +1,6 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.entity.Arrow;
@@ -32,17 +33,16 @@ import java.util.*;
  * - Doubles punishment
  */
 @SuppressWarnings("unused")
-public class ModAntiKillfarming extends HalfminerModule implements Listener {
+public class ModAntiKillfarming extends HalfminerModule implements Listener, Sweepable {
 
     private int blockTime;
     private int thresholdUntilBlock;
     private int thresholdUntilRemovalSeconds;
 
     private final Map<String, String> lang = new HashMap<>();
-    private final Set<String> commandExemptList = new HashSet<>();
+    private final Set<String> exemptCommands = new HashSet<>();
 
-    private final Map<UUID, AntiKillfarmingContainer> deathMap = new HashMap<>();
-    private final Map<UUID, Long> blockList = new HashMap<>();
+    private final Map<UUID, AntiKillfarmingContainer> containerMap = new HashMap<>();
 
     /**
      * Called when a player dies, check if PvP and update anti killfarming variables
@@ -57,43 +57,30 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
             Player killer = e.getEntity().getKiller();
             Player victim = e.getEntity().getPlayer();
 
-            if (killer.equals(victim) || killer.hasPermission("hms.bypass.nokillfarming")
-                    || victim.hasPermission("hms.bypass.nokillfarming")) return;
+            if (killer.equals(victim)
+                    || killer.hasPermission("hms.bypass.nokillfarming")
+                    || victim.hasPermission("hms.bypass.nokillfarming"))
+                return;
 
             // remove the killer from the victims map, to reset the killfarm counter
-            if (deathMap.containsKey(victim.getUniqueId())
-                    && deathMap.get(victim.getUniqueId()).containsPlayer(killer)) {
-                deathMap.get(victim.getUniqueId()).removePlayer(killer);
+            if (containerMap.containsKey(victim.getUniqueId())) {
+                containerMap.get(victim.getUniqueId()).removePlayer(killer);
             }
 
-            if (deathMap.containsKey(killer.getUniqueId())) {
+            AntiKillfarmingContainer container;
+            if (!containerMap.containsKey(killer.getUniqueId())) {
 
-                AntiKillfarmingContainer container = deathMap.get(killer.getUniqueId());
+                container = new AntiKillfarmingContainer();
+                containerMap.put(killer.getUniqueId(), container);
+            } else container = containerMap.get(killer.getUniqueId());
 
-                // if the victim is already in the killers list
-                if (container.containsPlayer(victim)) {
+            container.incrementPlayer(victim, 0);
 
-                    // check if time constraints are met, if they passed the THRESHOLD reset the victim
-                    if (container.getTimestamp(victim) + thresholdUntilRemovalSeconds
-                            > System.currentTimeMillis() / 1000) {
-
-                        container.updatePlayer(victim, 0);
-                        // if the kill threshold has already been met, block, else just update
-                        if (container.getAmount(victim) == thresholdUntilBlock - 1) { //Warn player
-                            killer.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"),
-                                    "%PREFIX%", "PvP"));
-                            victim.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"),
-                                    "%PREFIX%", "PvP"));
-                        } else if (container.getAmount(victim) >= thresholdUntilBlock)
-                            blockPlayers(killer, victim);
-
-                    } else {
-                        container.resetPlayer(victim);
-                    }
-
-                } else container.addPlayer(victim);
-
-            } else deathMap.put(killer.getUniqueId(), new AntiKillfarmingContainer(victim));
+            if (container.getAmountKilled(victim) == thresholdUntilBlock - 1) {
+                // warn players
+                killer.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"), "%PREFIX%", "PvP"));
+                victim.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"), "%PREFIX%", "PvP"));
+            } else if (container.getAmountKilled(victim) >= thresholdUntilBlock) blockPlayers(killer, victim);
         }
     }
 
@@ -179,7 +166,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
         int time = getBlockTime(e.getPlayer());
         if (time > 0) {
             String command = e.getMessage().split(" ")[0].toLowerCase();
-            if (!commandExemptList.contains(command.substring(1, command.length()))) {
+            if (!exemptCommands.contains(command.substring(1, command.length()))) {
                 e.getPlayer().sendMessage(Language.placeholderReplace(lang.get("noCommand"),
                         "%TIME%", String.valueOf(time)));
                 e.setCancelled(true);
@@ -219,17 +206,9 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
      */
     private int getBlockTime(Player player) {
 
-        if (blockList.containsKey(player.getUniqueId())) {
+        if (containerMap.containsKey(player.getUniqueId())) {
 
-            long currentTime = System.currentTimeMillis() / 1000;
-            long blockTime = blockList.get(player.getUniqueId());
-
-            if (blockTime - currentTime > 0) return (short) (blockTime - currentTime);
-            else {
-                // time is up, remove and return that the player is not blocked
-                blockList.remove(player.getUniqueId());
-                return -1;
-            }
+            return (int) containerMap.get(player.getUniqueId()).getBlockTime();
         } else return -1;
     }
 
@@ -241,38 +220,37 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
      */
     private void blockPlayers(Player killer, Player victim) {
 
-        //Get containers
-        AntiKillfarmingContainer killerVal = deathMap.get(killer.getUniqueId());
-        if (!deathMap.containsKey(victim.getUniqueId()))
-            deathMap.put(victim.getUniqueId(), new AntiKillfarmingContainer());
-        AntiKillfarmingContainer victimVal = deathMap.get(victim.getUniqueId());
-
-        killerVal.incrementAmountBlocked();
-        victimVal.incrementAmountBlocked();
+        // Get containers
+        AntiKillfarmingContainer killerVal = containerMap.get(killer.getUniqueId());
+        AntiKillfarmingContainer victimVal;
+        if (!containerMap.containsKey(victim.getUniqueId())) {
+            victimVal = new AntiKillfarmingContainer();
+            containerMap.put(victim.getUniqueId(), victimVal);
+        } else victimVal = containerMap.get(victim.getUniqueId());
 
         // Determine block time, since it doubles every time you get blocked
-        long blockTimeKiller = blockTime;
-        long blockTimeVictim = blockTime;
-        long systemTime = (System.currentTimeMillis() / 1000);
+        long blockTimeKiller, blockTimeVictim;
+        blockTimeKiller = blockTimeVictim = blockTime;
 
-        for (int i = 1; i < killerVal.getAmountBlocked(); i++) blockTimeKiller *= 2;
-        for (int i = 1; i < victimVal.getAmountBlocked(); i++) blockTimeVictim *= 2;
+        for (int i = 1; i < killerVal.amountBlocked + 1; i++) blockTimeKiller *= 2;
+        for (int i = 1; i < victimVal.amountBlocked + 1; i++) blockTimeVictim *= 2;
 
-        /* update the player in the killers kill list, ensuring that once one of the blocks (either killer or victim)
-        runs out, and the killer kills the victim again, it will still block them both */
-        killerVal.updatePlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
+        /*
+           Update the player in the killers kill list, ensuring that once both blocks
+           run out, and the killer kills the victim again, they will both be blocked again
+        */
+        killerVal.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
 
-        // add to block list
-        blockList.put(killer.getUniqueId(), systemTime + blockTimeKiller);
-        blockList.put(victim.getUniqueId(), systemTime + blockTimeVictim);
+        killerVal.blockOwner(blockTimeKiller);
+        victimVal.blockOwner(blockTimeVictim);
 
         // send messages
         server.broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"),
                 "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
         killer.sendMessage(Language.placeholderReplace(lang.get("blockedKiller"),
-                "%TIME%", Long.toString(blockTimeKiller / 60), "%PLAYER%", victim.getName()));
+                "%TIME%", String.valueOf(blockTimeKiller / 60), "%PLAYER%", victim.getName()));
         victim.sendMessage(Language.placeholderReplace(lang.get("blockedVictim"),
-                "%TIME%", Long.toString(blockTimeVictim / 60), "%PLAYER%", killer.getName()));
+                "%TIME%", String.valueOf(blockTimeVictim / 60), "%PLAYER%", killer.getName()));
     }
 
     @Override
@@ -284,8 +262,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
         thresholdUntilRemovalSeconds = hms.getConfig().getInt("antiKillfarming.thresholdUntilRemoval", 100);
 
         // Get allowed commands
-        commandExemptList.clear();
-        commandExemptList.addAll(hms.getConfig().getStringList("antiKillfarming.killfarmingCommandExemptions"));
+        exemptCommands.clear();
+        exemptCommands.addAll(hms.getConfig().getStringList("antiKillfarming.killfarmingCommandExemptions"));
 
         // Get language
         lang.clear();
@@ -305,6 +283,11 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
                 true, "%PREFIX%", "PvP"));
     }
 
+    @Override
+    public void sweep() {
+        containerMap.values().removeIf(AntiKillfarmingContainer::sweep);
+    }
+
     /**
      * Class containing the information about which players
      * were killed, how often, when, and how many blocks a player already had
@@ -315,31 +298,12 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
          * Map containing the players that got killed by the containers owner
          * Pair mapping: Left - Timestamp, Right - Counter (amount of kills)
          */
-        final HashMap<UUID, Pair<Long, Integer>> players = new HashMap<>();
+        final Map<UUID, Pair<Long, Integer>> players = new HashMap<>();
 
-        /**
-         * Total amount player got blocked already, the higher it is, the longer the block
-         */
         int amountBlocked = 0;
+        long blockedUntil = -1;
 
-        AntiKillfarmingContainer() {
-        }
-
-        AntiKillfarmingContainer(Player victim) {
-            players.put(victim.getUniqueId(), getDefaultPair());
-        }
-
-        boolean containsPlayer(Player toCheck) {
-            return players.containsKey(toCheck.getUniqueId());
-        }
-
-        void addPlayer(Player toAdd) {
-            players.put(toAdd.getUniqueId(), getDefaultPair());
-        }
-
-        void removePlayer(Player toRemove) {
-            players.remove(toRemove.getUniqueId());
-        }
+        AntiKillfarmingContainer() {}
 
         /**
          * Update a players timestamp and amount
@@ -348,42 +312,56 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener {
          * @param timeDiff - additional time that will be added to the threshold,
          *                 useful for making sure that after a block the players can't proceed with killfarming
          */
-        void updatePlayer(Player toUpdate, long timeDiff) {
+        void incrementPlayer(Player toUpdate, long timeDiff) {
 
-            Pair<Long, Integer> pair = players.get(toUpdate.getUniqueId());
-            pair.setLeft((System.currentTimeMillis() / 1000) + timeDiff);
-            pair.setRight(pair.getRight() + 1);
+            if (isStillValid(toUpdate.getUniqueId())) {
+
+                Pair<Long, Integer> pair = players.get(toUpdate.getUniqueId());
+                pair.setLeft((System.currentTimeMillis() / 1000) + timeDiff);
+                pair.setRight(pair.getRight() + 1);
+
+            } else players.put(toUpdate.getUniqueId(), getDefaultPair());
         }
 
-        /**
-         * Reset a players killcount back to 1
-         *
-         * @param toReset player who will be reset
-         */
-        void resetPlayer(Player toReset) {
-            players.put(toReset.getUniqueId(), getDefaultPair());
+        void removePlayer(Player toRemove) {
+            players.remove(toRemove.getUniqueId());
         }
 
-        void incrementAmountBlocked() {
-            this.amountBlocked++;
-        }
-
-        /**
-         * Get the time until the player that died should be reset
-         *
-         * @param toGet player whose last killed timestamp to get
-         * @return the timestamp, when passed the player should be reset
-         */
-        long getTimestamp(Player toGet) {
-            return players.get(toGet.getUniqueId()).getLeft();
-        }
-
-        int getAmount(Player toGet) {
+        int getAmountKilled(Player toGet) {
             return players.get(toGet.getUniqueId()).getRight();
         }
 
-        int getAmountBlocked() {
-            return amountBlocked;
+        void blockOwner(long time) {
+            this.amountBlocked++;
+            this.blockedUntil = System.currentTimeMillis() / 1000 + time;
+        }
+
+        void unblockOwner() {
+            this.blockedUntil = -1;
+        }
+
+        long getBlockTime() {
+
+            if (blockedUntil < 0) return -1;
+            else {
+                long diff = blockedUntil - (System.currentTimeMillis() / 1000);
+
+                if (diff < 0) {
+                    unblockOwner();
+                    return -1;
+                } else return diff;
+            }
+        }
+
+        boolean sweep() {
+
+            players.keySet().removeIf(uuid -> !isStillValid(uuid));
+            return amountBlocked == 0 && players.size() == 0;
+        }
+
+        private boolean isStillValid(UUID uuid) {
+            return players.containsKey(uuid)
+                    && players.get(uuid).getLeft() + thresholdUntilRemovalSeconds > System.currentTimeMillis() / 1000;
         }
 
         private Pair<Long, Integer> getDefaultPair() {

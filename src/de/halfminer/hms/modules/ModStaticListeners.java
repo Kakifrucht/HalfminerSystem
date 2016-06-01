@@ -84,8 +84,8 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
          */
         if (buffer.startsWith("/")
                 && !e.getSender().hasPermission("hms.bypass.tabcomplete")
-                && (complete.size() > 10 && complete.get(0).startsWith("/"))
-                || (complete.size() == 0 && !buffer.contains(" "))) {
+                && ((complete.size() > 10 && complete.get(0).startsWith("/"))
+                || (complete.size() == 0 && !buffer.contains(" ")))) {
 
             e.getSender().sendMessage(Language.getMessagePlaceholders("modStaticListenersTabHelp", true,
                     "%PREFIX%", "Info"));
