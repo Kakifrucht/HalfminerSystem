@@ -262,7 +262,7 @@ localization:
   modAntiKillfarmingBlockedVictim: '&cZum Schutz vor Killfarming wurdest du für &a%TIME% &cMinuten vom PvP und verwenden von Kommandos ausgeschlossen, weil &e%PLAYER% &cdich zu häufig getötet hat. Weitere Infos: &a/regeln Killfarming'
   modAntiKillfarmingNoCommand: '&cKommandos sind für dich weitere &a%TIME% &cSekunden deaktiviert, da du Killfarming betrieben hast'
   modAntiKillfarmingNoPvPAttack: '&cZum Schutz vor Killfarming darfst du weitere &a%TIME% &cSekunden kein PvP betreiben'
-  modAntiKillfarmingNoPvPProtect: '&6%PLAYER% ist zum Schutz vor Killfarming weitere &a%TIME% &cvom PvP ausgeschlossen'
+  modAntiKillfarmingNoPvPProtect: '&e%PLAYER% &cist zum Schutz vor Killfarming weitere &a%TIME% &cSekunden vom PvP ausgeschlossen'
   modAntiKillfarmingWarning: '&cAchtung! Killfarming ist gegen die Regeln. Das wiederholte töten, bzw. töten lassen desselben Spielers führt zum Ausschluss vom PvP und dem verwenden von Kommandos'
   modAntiXrayDetected: '&e%PLAYER% &chat von &a%BROKENTOTAL% &cgebrochenen Blöcken &a%BROKENPROTECTED% &cgeschützte Blöcke gebrochen, der letzte Ort war bei &e%LASTLOCATION% &c(&e%WORLD%&c, &e%MATERIAL%&c)'
   modAntiXrayShowFormat: '&r%PLAYER% &e>> &7Zuletzt: &a%LOCATION% &7(&e%WORLD%&7, &e%MATERIAL%&7) | Geschützt: &e%PROTECTED%&7/&7&o%BROKEN%'

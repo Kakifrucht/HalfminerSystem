@@ -92,59 +92,43 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPvPCheckIfAllowed(EntityDamageByEntityEvent e) {
 
+        if (!(e.getEntity() instanceof Player)) return;
+        Player victim = (Player) e.getEntity();
+
         // direct PvP check
-        if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-            int time = getBlockTime((Player) e.getDamager());
-            if (time >= 0) {
-                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"),
-                        "%TIME%", String.valueOf(time)));
-                e.setCancelled(true);
-                return;
-            }
-            time = getBlockTime((Player) e.getEntity());
-            if (time >= 0) {
-                e.getDamager().sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"),
-                        "%PLAYER%", e.getEntity().getName(), "%TIME%", String.valueOf(time)));
-                e.setCancelled(true);
-                return;
-            }
-        }
+        if (e.getDamager() instanceof Player)
+            e.setCancelled(checkTimeAndMessage((Player) e.getDamager(), "noPvPAttack")
+                    || checkTimeAndMessage(victim, "noPvPProtect", (Player) e.getDamager()));
 
         // prevent death by tnt ignition
-        if (e.getDamager() instanceof TNTPrimed && e.getEntity() instanceof Player) {
-            TNTPrimed tnt = (TNTPrimed) e.getDamager();
-            if (tnt.getSource() instanceof Player) {
-                Player victim = (Player) e.getEntity();
-                int time = getBlockTime(victim);
-                if (time >= 0) {
-                    e.setCancelled(true);
-                    return;
-                }
-            }
-        }
+        if (e.getDamager() instanceof TNTPrimed
+                && ((TNTPrimed) e.getDamager()).getSource() instanceof Player)
+            e.setCancelled(checkTimeAndMessage(victim, ""));
 
         // arrow hit check
-        if (e.getEntity() instanceof Player
-                && e.getDamager() instanceof Projectile
+        if (e.getDamager() instanceof Projectile
                 && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
 
-            Player attacker = (Player) ((Projectile) e.getDamager()).getShooter();
-            Player victim = (Player) e.getEntity();
+            Player shooter = (Player) ((Projectile) e.getDamager()).getShooter();
 
-            int timeAttacker = getBlockTime(attacker);
-            int timeVictim = getBlockTime(victim);
-            if (timeAttacker >= 0) {
-                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"),
-                        "%TIME%", String.valueOf(timeAttacker)));
-                e.setCancelled(true);
-                return;
-            }
-            if (timeVictim >= 0) {
-                attacker.sendMessage(Language.placeholderReplace(lang.get("noPvPProtect"),
-                        "%PLAYER%", e.getEntity().getName(), "%TIME%", String.valueOf(timeVictim)));
-                e.setCancelled(true);
-            }
+            e.setCancelled(checkTimeAndMessage(shooter, "noPvPAttack")
+                    || checkTimeAndMessage(victim, "noPvPProtect", shooter));
         }
+    }
+
+    private boolean checkTimeAndMessage(Player toCheck, String messageKey) {
+        return checkTimeAndMessage(toCheck, messageKey, toCheck);
+    }
+
+    private boolean checkTimeAndMessage(Player toCheck, String messageKey, Player toMessage) {
+        int blockTime = getBlockTime(toCheck);
+        if (blockTime >= 0) {
+            if (messageKey.length() > 0)
+                toMessage.sendMessage(Language.placeholderReplace(lang.get(messageKey),
+                        "%PLAYER%", toCheck.getName(), "%TIME%", String.valueOf(blockTime)));
+            return true;
+        }
+        return false;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -186,16 +170,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
     private boolean splashPotionCheck(ProjectileHitEvent e) {
 
-        if (e.getEntity().getShooter() instanceof Player) {
-            Player thrower = (Player) e.getEntity().getShooter();
-            int time = getBlockTime(thrower);
-            if (time >= 0) {
-                thrower.sendMessage(Language.placeholderReplace(lang.get("noPvPAttack"),
-                        "%TIME%", String.valueOf(time)));
-                return true;
-            }
-        }
-        return false;
+        return e.getEntity().getShooter() instanceof Player
+                && checkTimeAndMessage((Player) e.getEntity().getShooter(), "noPvPAttack");
     }
 
     /**
@@ -221,28 +197,18 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     private void blockPlayers(Player killer, Player victim) {
 
         // Get containers
-        AntiKillfarmingContainer killerVal = containerMap.get(killer.getUniqueId());
-        AntiKillfarmingContainer victimVal;
+        AntiKillfarmingContainer killerCon = containerMap.get(killer.getUniqueId());
+        AntiKillfarmingContainer victimCon;
         if (!containerMap.containsKey(victim.getUniqueId())) {
-            victimVal = new AntiKillfarmingContainer();
-            containerMap.put(victim.getUniqueId(), victimVal);
-        } else victimVal = containerMap.get(victim.getUniqueId());
+            victimCon = new AntiKillfarmingContainer();
+            containerMap.put(victim.getUniqueId(), victimCon);
+        } else victimCon = containerMap.get(victim.getUniqueId());
 
-        // Determine block time, since it doubles every time you get blocked
-        long blockTimeKiller, blockTimeVictim;
-        blockTimeKiller = blockTimeVictim = blockTime;
+        int blockTimeKiller = killerCon.blockOwner();
+        int blockTimeVictim = victimCon.blockOwner();
 
-        for (int i = 1; i < killerVal.amountBlocked + 1; i++) blockTimeKiller *= 2;
-        for (int i = 1; i < victimVal.amountBlocked + 1; i++) blockTimeVictim *= 2;
-
-        /*
-           Update the player in the killers kill list, ensuring that once both blocks
-           run out, and the killer kills the victim again, they will both be blocked again
-        */
-        killerVal.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
-
-        killerVal.blockOwner(blockTimeKiller);
-        victimVal.blockOwner(blockTimeVictim);
+        // ensure that once both blocks run out they get reblocked when trying to kill again
+        killerCon.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
 
         // send messages
         server.broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"),
@@ -320,7 +286,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
                 pair.setLeft((System.currentTimeMillis() / 1000) + timeDiff);
                 pair.setRight(pair.getRight() + 1);
 
-            } else players.put(toUpdate.getUniqueId(), getDefaultPair());
+            } else players.put(toUpdate.getUniqueId(), new Pair<>(System.currentTimeMillis() / 1000, 1));
         }
 
         void removePlayer(Player toRemove) {
@@ -331,9 +297,15 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
             return players.get(toGet.getUniqueId()).getRight();
         }
 
-        void blockOwner(long time) {
-            this.amountBlocked++;
-            this.blockedUntil = System.currentTimeMillis() / 1000 + time;
+        int blockOwner() {
+
+            amountBlocked++;
+
+            int blockTimeNow = blockTime;
+            for (int i = 1; i < amountBlocked; i++) blockTimeNow *= 2;
+            this.blockedUntil = System.currentTimeMillis() / 1000 + blockTimeNow;
+
+            return blockTimeNow;
         }
 
         void unblockOwner() {
@@ -362,10 +334,6 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         private boolean isStillValid(UUID uuid) {
             return players.containsKey(uuid)
                     && players.get(uuid).getLeft() + thresholdUntilRemovalSeconds > System.currentTimeMillis() / 1000;
-        }
-
-        private Pair<Long, Integer> getDefaultPair() {
-            return new Pair<>(System.currentTimeMillis() / 1000, 1);
         }
     }
 }
