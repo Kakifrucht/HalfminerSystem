@@ -176,8 +176,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
 
     @Override
     public void sweep() {
-        Iterator<BreakCounter> it = observedPlayers.values().iterator();
-        while (it.hasNext()) if (it.next().hasExpired()) it.remove();
+        observedPlayers.values().removeIf(BreakCounter::hasExpired);
     }
 
     private class BreakCounter {
