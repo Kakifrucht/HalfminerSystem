@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
+ * - Doubles base damage modifier
  * - Strength potions damage nerfed
  * - Bow spamming disabled
  * - Disable hitting self with bow
@@ -68,8 +69,13 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 }
             }
 
-        } else if (e.getDamager() instanceof Projectile) // prevent self hit with bow
+        } else if (e.getDamager() instanceof Projectile) {
+            // prevent self hit with bow
             e.setCancelled(e.getEntity().equals(((Projectile) e.getDamager()).getShooter()));
+            return;
+        }
+
+        e.setDamage(e.getDamage(EntityDamageEvent.DamageModifier.BASE) * 2);
     }
 
     @EventHandler(ignoreCancelled = true)
