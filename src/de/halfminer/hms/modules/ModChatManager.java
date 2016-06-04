@@ -32,6 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *   - Shows if mentioned player is afk
  *   - Rate limit (no mention spam)
  * - Disallow (or allow via permission)
+ *   - Sending empty/one character messages
+ *   - Repeating the same (or similar) message
  *   - Using color codes
  *   - Using formatting codes
  *   - Posting links/IPs
@@ -48,6 +50,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     private int mentionDelay;
 
     private Map<Player, Long> lastMentioned = new ConcurrentHashMap<>();
+    private Map<Player, Pair<String, Long>> lastMessage = new ConcurrentHashMap<>();
     private boolean isGlobalmuted = false;
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -60,6 +63,47 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             return;
         }
 
+        String message = filterMessage(p, e.getMessage());
+
+        // spam filter
+        if (!p.hasPermission("hms.chat.spam")) {
+
+            // check length of message without color codes
+            int colorCount = 0;
+            for (char c : message.toCharArray())
+                if (c == ChatColor.COLOR_CHAR)
+                    colorCount += 2;
+
+            if ((message.length() - colorCount) < 2) {
+
+                p.sendMessage(Language.getMessagePlaceholders("modChatManTooShort", true, "%PREFIX%", "Chat"));
+                e.setCancelled(true);
+                return;
+            }
+
+            // check if last message is basically the same
+            if (hasLastMessage(p)) {
+
+                String last = lastMessage.get(p).getLeft();
+                boolean cancel = false;
+
+                if (message.startsWith(last)) {
+
+                    if (last.length() < 15) {
+                        if (Math.abs(last.length() - message.length()) < 4)
+                            cancel = true;
+                    } else cancel = true;
+                }
+
+                if (cancel) {
+                    p.sendMessage(Language.getMessagePlaceholders("modChatManRepeat", true, "%PREFIX%", "Chat"));
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
+
+        // determine format and fill prefix and suffix
         String format = getFormat(p);
 
         String prefix;
@@ -77,10 +121,11 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 "%PREFIX%", prefix, "%SUFFIX%", suffix, "%MESSAGE%", "%2$s");
         format = ChatColor.translateAlternateColorCodes('&', format);
 
-        String message = filterMessage(p, e.getMessage());
-
+        // mention check
         Map<String, Player> players = new HashMap<>();
-        e.getRecipients().stream().filter(player -> !player.getName().equals(p.getName())).forEach(player -> players.put(player.getName().toLowerCase(), player));
+        e.getRecipients().stream()
+                .filter(player -> !player.getName().equals(p.getName()))
+                .forEach(player -> players.put(player.getName().toLowerCase(), player));
 
         Set<Player> mentioned = new HashSet<>();
         long currentTime = System.currentTimeMillis() / 1000;
@@ -103,7 +148,10 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             lastMentioned.put(wasMentioned, currentTime + mentionDelay);
         }
 
-        p.playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
+        // play sound, set message and format, store for spam protection
+        lastMessage.put(p,
+                new Pair<>(message.length() > 15 ? message.substring(0, 15) : message, System.currentTimeMillis()));
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
         e.setMessage(message);
         e.setFormat(format);
     }
@@ -194,6 +242,20 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         return sb.toString();
     }
 
+    private boolean hasLastMessage(Player p) {
+
+        if (lastMessage.containsKey(p)) {
+
+            Pair<String, Long> pair = lastMessage.get(p);
+            if (pair.getRight() + 60000 < System.currentTimeMillis()) {
+                lastMessage.remove(p);
+                return false;
+            } else return true;
+        }
+
+        return false;
+    }
+
     @Override
     public void loadConfig() {
 
@@ -228,5 +290,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     @Override
     public void sweep() {
         this.lastMentioned = new ConcurrentHashMap<>();
+        lastMessage.keySet().forEach(this::hasLastMessage);
     }
 }

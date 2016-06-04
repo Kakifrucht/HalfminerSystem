@@ -271,6 +271,8 @@ localization:
   modChatManGlobalmuteOn: '&eGlobale Stummschaltung aktiv - Chat deaktiviert'
   modChatManIsAfk: '&a&l%PLAYER% &cist als abwesend markiert'
   modChatManMentioned: '&7Du wurdest von &a&l%PLAYER% &7im Chat erwähnt'
+  modChatManRepeat: '&cBitte wiederhole dich nicht'
+  modChatManTooShort: '&cDie Nachricht ist zu kurz'
   modCombatLogBossBar: '&7Kampf mit &a&l%PLAYER% &7(Level: &a%LEVEL%&7) - &4%HEALTH%&f/&7%MAXHEALTH% &oLeben'
   modCombatLogCountdown: '&cIm Kampf: &e%TIME% &7Sekunden | &r%PROGRESSBAR%&r &7| Ausloggen: Tod'
   modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'

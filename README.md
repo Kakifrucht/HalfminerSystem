@@ -76,6 +76,8 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Shows if mentioned player is afk
       - Rate limit (no mention spam)
     - Disallow (or allow via permission)
+      - Sending empty/one character messages
+      - Repeating the same (or similar) message
       - Using color codes
       - Using formatting codes
       - Posting links/IPs
@@ -111,6 +113,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Limits mobspawns
       - Checks radius, if too many mobs stops the mobspawn
   - PvP
+    - Doubles base damage modifier
     - Strength potions damage nerfed
     - Bow spamming disabled
     - Disable hitting self with bow

@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.16.1
+version: 3.16.2
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -106,6 +106,7 @@ permissions:
       hms.chat.allowformatcode: true
       hms.chat.allowlinks: true
       hms.chat.bypassglobalmute: true
+      hms.chat.spam: true
       hms.chat.topformat: true
   hms.level.*:
     description: Access to all commands restricted by level
@@ -191,6 +192,8 @@ permissions:
     description: Access to format codes in chat
   hms.chat.allowlinks:
     description: Allows posting links
+  hms.chat.spam:
+    description: Bypass spam check protection
   hms.chat.topformat:
     description: Gives user format with highest priority
   hms.disposal:
