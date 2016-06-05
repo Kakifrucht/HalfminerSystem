@@ -81,15 +81,21 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 return;
             }
 
-            // check if last message is basically the same
+            // check if last message is the same
             if (hasLastMessage(p)) {
 
-                String last = lastMessage.get(p).getLeft();
                 boolean cancel = false;
+                String last = lastMessage.get(p).getLeft();
 
+                /*
+                  Message must start the same as last message, if message is shorter than 20 characters, check
+                  if the length difference is smaller than 4. Example: Player sends "hello im a ver" and then finishes
+                  his sentence by resending it's beginning "hello im a very nice person", the length check ensures
+                  that the message won't be blocked.
+                 */
                 if (message.startsWith(last)) {
 
-                    if (last.length() < 15) {
+                    if (last.length() < 20) {
                         if (Math.abs(last.length() - message.length()) < 4)
                             cancel = true;
                     } else cancel = true;
@@ -150,7 +156,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         // play sound, set message and format, store for spam protection
         lastMessage.put(p,
-                new Pair<>(message.length() > 15 ? message.substring(0, 15) : message, System.currentTimeMillis()));
+                new Pair<>(message.length() > 20 ? message.substring(0, 20) : message, System.currentTimeMillis()));
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
         e.setMessage(message);
         e.setFormat(format);
