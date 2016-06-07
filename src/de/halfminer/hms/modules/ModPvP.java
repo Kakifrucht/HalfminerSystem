@@ -6,6 +6,7 @@ import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -13,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,7 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * - Doubles base damage modifier
+ * - Halves PvP cooldown
  * - Strength potions damage nerfed
  * - Bow spamming disabled
  * - Disable hitting self with bow
@@ -39,6 +42,16 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     private Map<Player, Long> lastBowShot = new HashMap<>();
     private final Map<UUID, Integer> killStreak = new HashMap<>();
+
+    @EventHandler
+    public void onJoinReduceCooldown(PlayerJoinEvent e) {
+        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(5.0d);
+    }
+
+    @EventHandler
+    public void onQuitResetCooldown(PlayerQuitEvent e) {
+        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0d);
+    }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onAttackReduceStrength(EntityDamageByEntityEvent e) {
@@ -69,13 +82,9 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 }
             }
 
-        } else if (e.getDamager() instanceof Projectile) {
+        } else if (e.getDamager() instanceof Projectile)
             // prevent self hit with bow
             e.setCancelled(e.getEntity().equals(((Projectile) e.getDamager()).getShooter()));
-            return;
-        }
-
-        e.setDamage(e.getDamage(EntityDamageEvent.DamageModifier.BASE) * 2);
     }
 
     @EventHandler(ignoreCancelled = true)
