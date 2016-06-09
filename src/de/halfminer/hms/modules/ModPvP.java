@@ -3,6 +3,7 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.interfaces.Sweepable;
+import de.halfminer.hms.util.AttackSpeed;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -14,9 +15,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -43,14 +43,33 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     private Map<Player, Long> lastBowShot = new HashMap<>();
     private final Map<UUID, Integer> killStreak = new HashMap<>();
 
-    @EventHandler
-    public void onJoinReduceCooldown(PlayerJoinEvent e) {
-        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(5.0d);
+    @EventHandler(ignoreCancelled = true)
+    public void onItemSwitchAttackSpeed(PlayerItemHeldEvent e) {
+        setAttackSpeed(e.getPlayer(), e.getPlayer().getInventory().getItem(e.getNewSlot()));
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onHandChangeAttackSpeed(PlayerSwapHandItemsEvent e) {
+        setAttackSpeed(e.getPlayer(), e.getMainHandItem());
     }
 
     @EventHandler
-    public void onQuitResetCooldown(PlayerQuitEvent e) {
-        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0d);
+    public void onJoinSetAttackSpeed(PlayerJoinEvent e) {
+        setAttackSpeed(e.getPlayer(), e.getPlayer().getInventory().getItemInMainHand());
+    }
+
+    @EventHandler
+    public void onLeaveResetAttackSpeed(PlayerQuitEvent e) {
+        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(AttackSpeed.getDefaultSpeed());
+    }
+
+    private void setAttackSpeed(Player p, ItemStack stack) {
+
+        double setTo;
+        if (stack != null) setTo = 4.0d + AttackSpeed.getSpeed(stack.getType());
+        else setTo = AttackSpeed.getDefaultSpeed() * 2;
+
+        p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(setTo);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
