@@ -15,7 +15,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -43,44 +44,25 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     private Map<Player, Long> lastBowShot = new HashMap<>();
     private final Map<UUID, Integer> killStreak = new HashMap<>();
 
-    @EventHandler(ignoreCancelled = true)
-    public void onItemSwitchAttackSpeed(PlayerItemHeldEvent e) {
-        setAttackSpeed(e.getPlayer(), e.getPlayer().getInventory().getItem(e.getNewSlot()));
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onHandChangeAttackSpeed(PlayerSwapHandItemsEvent e) {
-        setAttackSpeed(e.getPlayer(), e.getMainHandItem());
-    }
-
-    @EventHandler
-    public void onJoinSetAttackSpeed(PlayerJoinEvent e) {
-        setAttackSpeed(e.getPlayer(), e.getPlayer().getInventory().getItemInMainHand());
-    }
-
-    @EventHandler
-    public void onLeaveResetAttackSpeed(PlayerQuitEvent e) {
-        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(AttackSpeed.getDefaultSpeed());
-    }
-
-    private void setAttackSpeed(Player p, ItemStack stack) {
-
-        double setTo;
-        if (stack != null) setTo = 4.0d + AttackSpeed.getSpeed(stack.getType());
-        else setTo = AttackSpeed.getDefaultSpeed() * 2;
-
-        p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(setTo);
-    }
-
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onAttackReduceStrength(EntityDamageByEntityEvent e) {
+    public void onAttackSetAttackSpeedAndReduceStrength(EntityDamageByEntityEvent e) {
 
         Entity damager = e.getDamager();
         if (damager.hasPermission("hms.bypass.pvp") || !(e.getEntity() instanceof Player)) return;
 
         if (damager instanceof Player) {
 
-            for (PotionEffect effect : ((Player) damager).getActivePotionEffects()) {
+            Player attacker = (Player) damager;
+
+            // set attack speed
+            ItemStack stack = attacker.getInventory().getItemInMainHand();
+            double setTo;
+
+            if (stack != null) setTo = 4.0d + AttackSpeed.getSpeed(stack.getType());
+            else setTo = AttackSpeed.getDefaultSpeed() * 2;
+            attacker.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(setTo);
+
+            for (PotionEffect effect : attacker.getActivePotionEffects()) {
                 if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
 
                     double newDamage = e.getDamage(EntityDamageEvent.DamageModifier.BASE)
@@ -104,6 +86,11 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         } else if (e.getDamager() instanceof Projectile)
             // prevent self hit with bow
             e.setCancelled(e.getEntity().equals(((Projectile) e.getDamager()).getShooter()));
+    }
+
+    @EventHandler
+    public void onLeaveResetAttackSpeed(PlayerQuitEvent e) {
+        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(AttackSpeed.getDefaultSpeed());
     }
 
     @EventHandler(ignoreCancelled = true)
