@@ -8,7 +8,6 @@ import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -47,22 +46,36 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onAttackSetAttackSpeedAndReduceStrength(EntityDamageByEntityEvent e) {
 
-        Entity damager = e.getDamager();
-        if (damager.hasPermission("hms.bypass.pvp") || !(e.getEntity() instanceof Player)) return;
+        Player damager = e.getDamager() instanceof Player ? (Player) e.getDamager() : null;
+        final Player damagee = e.getEntity() instanceof Player ? (Player) e.getEntity() : null;
 
-        if (damager instanceof Player) {
-
-            Player attacker = (Player) damager;
+        // also regard PvE
+        if (damager != null) {
 
             // set attack speed
-            ItemStack stack = attacker.getInventory().getItemInMainHand();
+            ItemStack stack = damager.getInventory().getItemInMainHand();
             double setTo;
 
             if (stack != null) setTo = 4.0d + AttackSpeed.getSpeed(stack.getType());
             else setTo = AttackSpeed.getDefaultSpeed() * 2;
-            attacker.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(setTo);
+            damager.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(setTo);
+        }
 
-            for (PotionEffect effect : attacker.getActivePotionEffects()) {
+        if ((damager != null && damager.hasPermission("hms.bypass.pvp"))
+                || damagee == null
+                || damagee.hasPermission("hms.bypass.pvp")) return;
+
+        // reduce damage immunity
+        scheduler.runTaskLater(hms, () -> {
+            if (!e.isCancelled())
+                // damage immunity only passes until 10/20 has been reached
+                damagee.setNoDamageTicks(16);
+        }, 0L);
+
+        if (damager != null) {
+
+            // nerf strength potions
+            for (PotionEffect effect : damager.getActivePotionEffects()) {
                 if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
 
                     double newDamage = e.getDamage(EntityDamageEvent.DamageModifier.BASE)
