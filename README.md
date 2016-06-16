@@ -114,6 +114,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Checks radius, if too many mobs stops the mobspawn
   - PvP
     - Halves PvP cooldown
+      - Reduces damage immunity
     - Strength potions damage nerfed
     - Bow spamming disabled
     - Disable hitting self with bow
