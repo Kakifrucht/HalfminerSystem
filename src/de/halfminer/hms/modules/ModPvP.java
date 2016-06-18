@@ -58,6 +58,11 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         setAttackSpeed(e.getPlayer(), e.getPlayer().getInventory().getItem(e.getNewSlot()));
     }
 
+    @EventHandler
+    public void onLeaveResetAttackSpeed(PlayerQuitEvent e) {
+        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(AttackSpeed.getDefaultSpeed());
+    }
+
     private void setAttackSpeed(Player p, ItemStack stack) {
 
         double setTo;
@@ -114,11 +119,6 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             // prevent self hit with bow
             e.setCancelled(e.getEntity().equals(((Projectile) e.getDamager()).getShooter()));
         }
-    }
-
-    @EventHandler
-    public void onLeaveResetAttackSpeed(PlayerQuitEvent e) {
-        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(AttackSpeed.getDefaultSpeed());
     }
 
     @EventHandler(ignoreCancelled = true)

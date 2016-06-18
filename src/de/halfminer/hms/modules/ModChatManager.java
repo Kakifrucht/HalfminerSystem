@@ -196,11 +196,19 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         String msg = message;
         StringBuilder sb = new StringBuilder(msg);
+
         int amountUppercase = 0;
+        int notSpaceCount = 0;
+        int linkThreshold = sb.length() > 10 ? 5 : 2;
+
         for (int i = 0; i < sb.length() - 1; i++) {
 
             char current = sb.charAt(i);
             char next = sb.charAt(i + 1);
+
+            if (current == ' ') notSpaceCount = 0;
+            else notSpaceCount++;
+
             if (current == '&') {
 
                 int charAt = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(next);
@@ -211,10 +219,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                     i++;
                 }
             } else if (current == '.'
-                    && i != 0
-                    && sb.length() > 6
-                    && next != ' '
-                    && sb.charAt(i - 1) != ' '
+                    && notSpaceCount > linkThreshold
                     && !sender.hasPermission("hms.chat.allowlinks")) {
 
                 sb.setCharAt(i, ' ');

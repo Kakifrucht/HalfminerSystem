@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * - Limits redstone usage
- *   - Redstone will not work if triggered to often
+ *   - Redstone will not work if triggered too often
  * - Limits piston usage
  *   - Only a given amount of pistons can be triggered in a given time
  * - Limits hopper placement
@@ -34,9 +34,9 @@ import java.util.Map;
 public class ModPerformance extends HalfminerModule implements Listener {
 
     // Storage for limitations
+    private BukkitTask clearTask;
     private final Map<Location, Integer> firedAt = new HashMap<>();
     private int pistonCount = 0;
-    private BukkitTask clearTask;
     // Redstone and pistons config
     private int howMuchRedstoneAllowed;
     private int howManyPistonsAllowed;

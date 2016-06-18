@@ -106,7 +106,10 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     public void onClickDenyArmorChange(InventoryClickEvent e) {
 
         if (isTagged((Player) e.getWhoClicked())
-                && e.getSlot() >= 36 && e.getSlot() <= 39) {
+                && e.getSlot() >= 36
+                && e.getSlot() <= 39
+                && e.getCurrentItem() != null
+                && !e.getCurrentItem().getType().equals(Material.AIR)) {
             e.getWhoClicked().sendMessage(lang.get("noArmorChange"));
             e.setCancelled(true);
         }
