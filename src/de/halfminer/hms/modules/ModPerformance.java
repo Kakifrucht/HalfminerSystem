@@ -4,6 +4,7 @@ import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -88,14 +89,15 @@ public class ModPerformance extends HalfminerModule implements Listener {
     }
 
     @EventHandler
-    public void onMobSpawnerLimit(CreatureSpawnEvent e) {
+    public void onMobSpawnLimit(CreatureSpawnEvent e) {
 
         CreatureSpawnEvent.SpawnReason reason = e.getSpawnReason();
 
         if (reason.equals(CreatureSpawnEvent.SpawnReason.NATURAL)
                 || reason.equals(CreatureSpawnEvent.SpawnReason.SLIME_SPLIT)
                 || reason.equals(CreatureSpawnEvent.SpawnReason.MOUNT)
-                || reason.equals(CreatureSpawnEvent.SpawnReason.JOCKEY)) return;
+                || reason.equals(CreatureSpawnEvent.SpawnReason.JOCKEY)
+                || reason.equals(CreatureSpawnEvent.SpawnReason.DEFAULT)) return;
 
         Location loc = e.getEntity().getLocation();
         Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, boxSize, boxSize, boxSize);
@@ -105,7 +107,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
         int amountSame = 0;
         for (Entity entity : nearby) {
 
-            if (!entity.isValid()) continue;
+            if (!entity.isValid() || entity instanceof ArmorStand) continue;
 
             if (entity.getType().equals(e.getEntityType())) {
                 amountSame++;
