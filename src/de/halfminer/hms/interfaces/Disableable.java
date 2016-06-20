@@ -1,7 +1,7 @@
 package de.halfminer.hms.interfaces;
 
 /**
- * Class must be called before plugin disable in order to shut down properly
+ * Implementing class must be called before plugin disables in order to shut down properly
  */
 public interface Disableable {
 

@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * - Logs and notifies about possible wall glitching
  * - Detects dismount glitches, forces player to spawn
- * - Override spigot teleport safety
+ * - Override Spigot teleport safety between worlds
  * - Prevents glitching with chorus fruit, instead teleports down
  * - Kills players above the netherroof
  */

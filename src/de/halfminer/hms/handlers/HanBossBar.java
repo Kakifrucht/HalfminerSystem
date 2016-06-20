@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * - Send bar to specific player or broadcast
  * - Set time until bar fades out
- * - Broadcast bar and player bar separate, only one at a time of each
+ * - Broadcast bar and player bar separate, only one bar at a time for each
  */
 @SuppressWarnings("SameParameterValue")
 public class HanBossBar extends HalfminerHandler implements Disableable {

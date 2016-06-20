@@ -7,6 +7,7 @@ import de.halfminer.hms.interfaces.Reloadable;
 
 /**
  * HalfminerModules are instantiated once. They may include Listeners.
+ * They provide the plugins main functionality.
  */
 public abstract class HalfminerModule extends HalfminerClass implements Reloadable {
 
@@ -14,7 +15,7 @@ public abstract class HalfminerModule extends HalfminerClass implements Reloadab
 
     @Override
     public void loadConfig() {
-        /* does nothing on default, although we don't want submodules who
-           do not use it either having to override an empty function */
+        /* does nothing on default, although we don't want to force
+           submodules which do not use it either to override it */
     }
 }

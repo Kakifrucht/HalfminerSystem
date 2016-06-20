@@ -3,7 +3,7 @@ package de.halfminer.hms.util;
 import org.bukkit.Material;
 
 /**
- * Helper class containing attackspeed values
+ * Helper class containing Minecraft attackspeed values
  */
 public enum AttackSpeed {
 

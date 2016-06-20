@@ -18,9 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * HalfminerSystem Main class
+ * HalfminerSystem main class
+ * - Loads handlers and modules
+ * - Starts sweep task
+ * - Dispatches commands
  *
- * @author Fabian Prieto Wunderlich / Kakifrucht
+ * @author Fabian Prieto Wunderlich - Kakifrucht
  */
 public class HalfminerSystem extends JavaPlugin {
 

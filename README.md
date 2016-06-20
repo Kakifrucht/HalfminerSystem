@@ -10,7 +10,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - BossBar
     - Send bar to specific player or broadcast
     - Set time until bar fades out
-    - Broadcast bar and player bar separate, only one at a time of each
+    - Broadcast bar and player bar separate, only one bar at a time for each
   - Hooks
     - Hooks external plugins
     - Checks if plugins are loaded
@@ -40,7 +40,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - After set amount of kills has been reached, blocks players for a set amount of time
       - Checks interval between kills, resets if interval exceeds given amount
       - Broadcasts block to all players
-        - Warns players one kill before they get blocked
+        - Pre warns players one kill before they get blocked
         - Also prints informational message that killfarming is not allowed
       - Blocks further PvP (both denies for blocked players and prevent other players from hitting aswell)
         - Direct hitting
@@ -66,7 +66,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Hooks into Vault to get prefix and suffix
     - Custom chatformats
       - Default chatformat is bottom one
-      - Permissions can be assigned via custom permission node
+      - Format can be assigned via custom permission node
       - Permission to always get format with highest priority
       - No format limit
     - Denies chatting if globalmute active
@@ -90,13 +90,13 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Untags players after timer runs out, player logs out or a player is killed
     - Halves satiation health regeneration during combat
     - Disables during fight:
-      - Switching armor
+      - Taking off armor
       - Commands
       - Enderpearls
   - GlitchProtection
     - Notifies staff about potential wall glitching
     - Detects dismount glitches, forces player to spawn
-    - Override spigot teleport safety
+    - Override Spigot teleport safety between worlds
     - Prevents glitching with chorus fruit, instead teleports down
     - Kills players above netherroof / notifies staff
   - Motd
@@ -164,11 +164,11 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Money through Essentials hook, automatic update
   - Tps
     - Calculates ticks per second
-    - Notifies staff when servers Tps is too low
+    - Notifies staff when servers ticks TPS is too low
 - **Commands**
   - /chat
     - Chat manipulation tools
-    - Toggle Globalmute
+    - Toggle globalmute
     - Clear chat
     - Title broadcast
     - Bossbar broadcast
@@ -179,11 +179,11 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Opens portable disposal
   - /hms
     - Reload config (reload)
-    - Search for homes in a given radius, hooking into Essentials (searchhomes)
     - Rename items, supports lore (rename)
     - Ring players to get their attention (ring)
-    - Edit skillelo of player (updateskill)
     - Remove a players /home block (rmhomeblock)
+    - Search for homes in a given radius, hooking into Essentials (searchhomes)
+    - Edit skillelo of player (updateskill)
     - List all currently by antixray watched players (xraybypass)
       - Exempt a player from AntiXRay
   - /hmsapi
@@ -225,7 +225,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Teleport player to spawn
     - Teleport other players to spawn with permission
     - Teleport offline players to spawn once they login
-    - Use /spawn s to set the spawn (only with permission)
+    - Set the spawnpoint (Command /spawn s, only with permission)
   - /stats
     - View own / other players stats
     - Allows to compare statistics easily

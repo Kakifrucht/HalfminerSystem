@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 /**
  * - Chat manipulation tools
- * - Toggle Globalmute
+ * - Toggle globalmute
  * - Clear chat
  * - Title broadcast
  * - Bossbar broadcast

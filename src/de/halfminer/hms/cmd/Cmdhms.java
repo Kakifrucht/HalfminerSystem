@@ -25,11 +25,11 @@ import java.util.UUID;
 
 /**
  * - Reload config (reload)
- * - Search for homes in a given radius, hooking into Essentials (searchhomes)
  * - Rename items, supports lore (rename)
  * - Ring players to get their attention (ring)
- * - Edit skillelo of player (updateskill)
  * - Remove a players /home block (rmhomeblock)
+ * - Search for homes in a given radius, hooking into Essentials (searchhomes)
+ * - Edit skillelo of player (updateskill)
  * - List all currently by antixray watched players (xraybypass)
  *   - Exempt a player from AntiXRay
  */
@@ -55,30 +55,35 @@ public class Cmdhms extends HalfminerCommand {
 
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
+                case "reload":
+                    reload();
+                    return;
                 case "rename":
                     renameItem();
-                    return;
-                case "rmhomeblock":
-                    rmHomeBlock();
-                    return;
-                case "updateskill":
-                    updateSkill();
                     return;
                 case "ring":
                     ringPlayer();
                     return;
+                case "rmhomeblock":
+                    rmHomeBlock();
+                    return;
                 case "searchhomes":
                     searchHomes();
+                    return;
+                case "updateskill":
+                    updateSkill();
                     return;
                 case "xraybypass":
                     xrayBypass();
                     return;
-                case "reload":
-                    reload();
-                    return;
             }
         }
         showUsage();
+    }
+
+    private void reload() {
+        hms.loadConfig();
+        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsConfigReloaded", true, "%PREFIX%", prefix));
     }
 
     private void renameItem() {
@@ -99,37 +104,37 @@ public class Cmdhms extends HalfminerCommand {
 
             ItemMeta meta = item.getItemMeta();
 
-            //default parameters, clear item name if not specified but keep lore
+            // Default parameters, clear item name if not specified but keep lore
             String newName = meta.getDisplayName();
             List<String> lore = meta.getLore();
 
-            //item name must start at argument 1 only if it is not the -lore flag
+            // Item name must start at argument 1 only if it is not the -lore flag
             if (!args[1].equalsIgnoreCase("-lore")) {
 
                 if (args[1].equalsIgnoreCase("reset")) newName = "";
                 else {
 
                     newName = Language.arrayToString(args, 1, true);
-                    //cut new string at -lore
+                    // Cut new string at -lore
                     for (int i = 0; i < newName.length(); i++) {
                         if (newName.substring(i).toLowerCase().startsWith("-lore")) {
                             newName = newName.substring(0, i);
                             break;
                         }
                     }
-                    //cut spaces at the end of the name
+                    // Cut spaces at the end of the name
                     while (newName.endsWith(" ")) {
                         newName = newName.substring(0, newName.length() - 1);
                     }
                 }
             }
 
-            //iterate over args and check if lore flag is set
+            // Iterate over args and check if lore flag is set
             for (int i = 1; i < args.length; i++) {
                 if (args[i].equalsIgnoreCase("-lore")) {
-                    //check if new lore was specified, else just clear it
+                    // Check if new lore was specified, else just clear it
                     if (args.length > i + 1) {
-                        //split lines of lore at | character, set the lore list
+                        // Split lines of lore at | character, set the lore list
                         String[] loreToArray = Language.arrayToString(args, i + 1, true).split("[|]");
                         lore = Arrays.asList(loreToArray);
                         break;
@@ -139,7 +144,7 @@ public class Cmdhms extends HalfminerCommand {
                 }
             }
 
-            //update item
+            // Update item
             meta.setDisplayName(newName);
             meta.setLore(lore);
             item.setItemMeta(meta);
@@ -150,57 +155,6 @@ public class Cmdhms extends HalfminerCommand {
             p.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameDone", true, "%PREFIX%",
                     prefix, "%NAME%", newName));
         } else showUsage();
-    }
-
-    private void rmHomeBlock() {
-
-        if (args.length == 2) {
-            try {
-                HalfminerPlayer p = storage.getPlayer(args[1]);
-                UUID playerUid = p.getUniqueId();
-                storage.set("vote." + playerUid, Long.MAX_VALUE);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsHomeblockRemove", true, "%PREFIX%", prefix,
-                        "%PLAYER%", p.getName()));
-            } catch (PlayerNotFoundException e) {
-                e.sendNotFoundMessage(sender, prefix);
-            }
-
-        } else showUsage();
-    }
-
-    private void updateSkill() {
-
-        if (args.length < 2) {
-            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
-            return;
-        }
-
-        HalfminerPlayer p;
-        try {
-            p = storage.getPlayer(args[1]);
-        } catch (PlayerNotFoundException e) {
-            e.sendNotFoundMessage(sender, "Skilllevel");
-            return;
-        }
-
-        int oldValue = p.getInt(DataType.SKILL_ELO);
-
-        if (args.length > 2) {
-            try {
-                int modifier = Integer.decode(args[2]) - oldValue;
-                ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(p.getBase(), modifier);
-
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
-                        "%PLAYER%", p.getName(), "%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL),
-                        "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", p.getString(DataType.SKILL_ELO)));
-            } catch (NumberFormatException e) {
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
-            }
-        } else {
-            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillShow", true, "%PREFIX%", "Skilllevel",
-                    "%PLAYER%", p.getName(), "%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL),
-                    "%ELO%", String.valueOf(oldValue)));
-        }
     }
 
     private void ringPlayer() {
@@ -249,6 +203,22 @@ public class Cmdhms extends HalfminerCommand {
                 }
             });
         }
+    }
+
+    private void rmHomeBlock() {
+
+        if (args.length == 2) {
+            try {
+                HalfminerPlayer p = storage.getPlayer(args[1]);
+                UUID playerUid = p.getUniqueId();
+                storage.set("vote." + playerUid, Long.MAX_VALUE);
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsHomeblockRemove", true, "%PREFIX%", prefix,
+                        "%PLAYER%", p.getName()));
+            } catch (PlayerNotFoundException e) {
+                e.sendNotFoundMessage(sender, prefix);
+            }
+
+        } else showUsage();
     }
 
     private void searchHomes() {
@@ -311,6 +281,41 @@ public class Cmdhms extends HalfminerCommand {
         });
     }
 
+    private void updateSkill() {
+
+        if (args.length < 2) {
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
+            return;
+        }
+
+        HalfminerPlayer p;
+        try {
+            p = storage.getPlayer(args[1]);
+        } catch (PlayerNotFoundException e) {
+            e.sendNotFoundMessage(sender, "Skilllevel");
+            return;
+        }
+
+        int oldValue = p.getInt(DataType.SKILL_ELO);
+
+        if (args.length > 2) {
+            try {
+                int modifier = Integer.decode(args[2]) - oldValue;
+                ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(p.getBase(), modifier);
+
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUpdated", true, "%PREFIX%", "Skilllevel",
+                        "%PLAYER%", p.getName(), "%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL),
+                        "%OLDELO%", String.valueOf(oldValue), "%NEWELO%", p.getString(DataType.SKILL_ELO)));
+            } catch (NumberFormatException e) {
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillUsage", true, "%PREFIX%", "Skilllevel"));
+            }
+        } else {
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsSkillShow", true, "%PREFIX%", "Skilllevel",
+                    "%PLAYER%", p.getName(), "%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL),
+                    "%ELO%", String.valueOf(oldValue)));
+        }
+    }
+
     private void xrayBypass() {
 
         ModAntiXray antiXray = (ModAntiXray) hms.getModule(ModuleType.ANTI_XRAY);
@@ -343,11 +348,6 @@ public class Cmdhms extends HalfminerCommand {
 
             sender.sendMessage(toSend);
         }
-    }
-
-    private void reload() {
-        hms.loadConfig();
-        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsConfigReloaded", true, "%PREFIX%", prefix));
     }
 
     private void showUsage() {

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Static methods that are shared between Modules/handlers/commands
+ * Static methods that are shared between other classes
  */
 public final class Utils {
 

@@ -4,7 +4,7 @@ import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitScheduler;
 
 /**
- * Implemented by commands, handlers and modules, to provide shortcuts to common objects
+ * Implemented by commands, handlers and modules, to provide shortcuts to commonly used references.
  */
 public abstract class HalfminerClass {
 

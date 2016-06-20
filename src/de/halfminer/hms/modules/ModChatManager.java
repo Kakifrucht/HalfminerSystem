@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Hooks into Vault to get prefix and suffix
  * - Custom chatformats
  *   - Default chatformat is bottom one
- *   - Permissions can be assigned via custom permission node
+ *   - Format can be assigned via custom permission node
  *   - Permission to always get format with highest priority
  *   - No format limit
  * - Denies chatting if globalmute active

@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 /**
  * - Calculates ticks per second
- * - Notifies staff when servers Tps is too low
+ * - Notifies staff when servers ticks TPS is too low
  */
 public class ModTps extends HalfminerModule implements Listener {
 

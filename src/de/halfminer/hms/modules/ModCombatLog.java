@@ -35,8 +35,11 @@ import java.util.Map;
  * - Combatlogging causes instant death
  * - Shows actionbar message containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
- * - Disables armor switching, commands and enderpearls from being used during fight
  * - Halves satiation health regeneration during combat
+ * - Disables during fight:
+ *   - Taking off armor
+ *   - Commands
+ *   - Enderpearls
  */
 public class ModCombatLog extends HalfminerModule implements Listener {
 

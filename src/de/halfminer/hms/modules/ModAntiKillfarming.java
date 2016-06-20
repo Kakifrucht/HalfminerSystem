@@ -20,7 +20,7 @@ import java.util.*;
  * - After set amount of kills has been reached, blocks players for a set amount of time
  *   - Checks interval between kills, resets if interval exceeds given amount
  *   - Broadcasts block to all players
- *     - Warns players one kill before they get blocked
+ *     - Pre warns players one kill before they get blocked
  *     - Also prints informational message that killfarming is not allowed
  *   - Blocks further PvP (both denies for blocked players and prevent other players from hitting aswell)
  *     - Direct hitting
