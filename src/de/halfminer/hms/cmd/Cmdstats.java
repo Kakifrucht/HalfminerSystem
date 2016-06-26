@@ -1,7 +1,9 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
@@ -49,7 +51,7 @@ public class Cmdstats extends HalfminerCommand {
         String message = Language.getMessage("cmdStatsTop") + "\n";
         message += Language.getMessagePlaceholders("cmdStatsShow", false,
                 "%PLAYER%", player.getName(),
-                "%SKILLGROUP%", player.getString(DataType.SKILL_GROUP),
+                "%SKILLGROUP%", ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(player.getBase()),
                 "%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith),
                 "%ONLINETIME%", getIntAndCompare(player, DataType.TIME_ONLINE, compareWith),
                 "%KILLS%", getIntAndCompare(player, DataType.KILLS, compareWith),

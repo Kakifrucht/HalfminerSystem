@@ -15,7 +15,6 @@ public enum DataType {
     NEUTP_USED      ("neutp"),
     REVENUE         ("revenue"),
     SKILL_ELO       ("skillelo"),
-    SKILL_GROUP     ("skillgroup"),
     SKILL_LEVEL     ("skilllevel"),
     TIME_ONLINE     ("timeonline"),
     VOTES           ("votes");

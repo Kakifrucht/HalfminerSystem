@@ -151,7 +151,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         hPlayer.set(DataType.SKILL_ELO, elo);
         hPlayer.set(DataType.SKILL_LEVEL, newLevel);
-        hPlayer.set(DataType.SKILL_GROUP, teamName);
 
         // Send title/log if necessary
         if (newLevel != level && player instanceof Player) {
@@ -168,6 +167,14 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             hms.getLogger().info(Language.getMessagePlaceholders("modSkillLevelLog", false, "%PLAYER%", player.getName(),
                     "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(elo)));
         }
+    }
+
+    public String getSkillgroup(OfflinePlayer player) {
+
+        int skillLevel = storage.getPlayer(player).getInt(DataType.SKILL_LEVEL);
+
+        if (skillLevel <= 22 && skillLevel > 0) return teams[skillLevel - 1].substring(2);
+        else return "Serverteam";
     }
 
     private boolean killDoesCount(String uuidCat) {

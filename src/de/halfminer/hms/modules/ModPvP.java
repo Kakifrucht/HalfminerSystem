@@ -65,10 +65,10 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     private void setAttackSpeed(Player p, ItemStack stack) {
 
-        double setTo;
+        double setTo = AttackSpeed.getDefaultSpeed();
 
-        if (stack != null) setTo = 4.0d + AttackSpeed.getSpeed(stack.getType());
-        else setTo = AttackSpeed.getDefaultSpeed() * 2;
+        if (stack != null) setTo += AttackSpeed.getSpeed(stack.getType());
+        else setTo *= 2;
 
         p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(setTo);
     }

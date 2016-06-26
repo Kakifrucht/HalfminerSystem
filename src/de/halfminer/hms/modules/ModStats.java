@@ -155,7 +155,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
         if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
             HalfminerPlayer hClicked = storage.getPlayer(clicked);
-            String skillgroup = hClicked.getString(DataType.SKILL_GROUP);
+            String skillgroup = ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);
             String kills = String.valueOf(hClicked.getInt(DataType.KILLS));
             String kdratio = String.valueOf(hClicked.getDouble(DataType.KD_RATIO));
             message = Language.getMessagePlaceholders("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
