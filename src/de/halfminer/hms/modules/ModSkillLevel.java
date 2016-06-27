@@ -38,6 +38,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private int timeUntilDerankThreshold;
     private int derankLossAmount;
     private int timeUntilKillCountAgain;
+    private String skillgroupNameAdmin;
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
@@ -174,7 +175,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         int skillLevel = storage.getPlayer(player).getInt(DataType.SKILL_LEVEL);
 
         if (skillLevel <= 22 && skillLevel > 0) return teams[skillLevel - 1].substring(2);
-        else return "Serverteam";
+        else return skillgroupNameAdmin;
     }
 
     private boolean killDoesCount(String uuidCat) {
@@ -191,6 +192,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         timeUntilDerankThreshold = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
         timeUntilKillCountAgain = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
+        skillgroupNameAdmin = Language.getMessage("modSkillLevelAdmingroupName");
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 
