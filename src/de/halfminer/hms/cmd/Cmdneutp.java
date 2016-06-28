@@ -97,7 +97,7 @@ public class Cmdneutp extends HalfminerCommand {
             scheduler.runTaskLater(hms, () -> {
                 player.sendMessage(Language.getMessagePlaceholders("cmdNeutpDocumentation",
                         true, "%PREFIX%", "Neutp"));
-                ((HanBossBar) hms.getHandler(HandlerType.BOSSBAR)).sendBar(player,
+                ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR)).sendBar(player,
                         Language.getMessage("cmdNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
             }, 120L);
         }, () -> {

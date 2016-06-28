@@ -2,7 +2,7 @@ package de.halfminer.hms.enums;
 
 public enum HandlerType {
 
-    BOSSBAR     ("BossBar"),
+    BOSS_BAR    ("BossBar"),
     HOOKS       ("Hooks"),
     STORAGE     ("Storage"),
     TELEPORT    ("Teleport"),

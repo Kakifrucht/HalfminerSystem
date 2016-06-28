@@ -27,7 +27,7 @@ import org.bukkit.scheduler.BukkitTask;
 @SuppressWarnings("unused")
 public class Cmdchat extends HalfminerCommand {
 
-    private final HanBossBar bossBar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
+    private final HanBossBar bossBar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
     private final HanTitles titles = (HanTitles) hms.getHandler(HandlerType.TITLES);
     private CommandSender sender;
     private String message;
@@ -67,7 +67,7 @@ public class Cmdchat extends HalfminerCommand {
                     sender.sendMessage(Language.getMessagePlaceholders("cmdChatCountdownStarted", true, "%PREFIX%",
                             "Chat", "%COUNT%", String.valueOf(countdown)));
 
-                    final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
+                    final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
                     final BukkitTask task = scheduler.runTaskTimer(hms, new Runnable() {
 
                         int count = countdown;

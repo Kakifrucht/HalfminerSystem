@@ -295,7 +295,7 @@ localization:
   modSignEditLinePasted: '&aSchild editiert'
   modSignEditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
   modSignEditSignPasted: '&aText eingefügt, es verbleiben &e%AMOUNT% &aKopien'
-  modSkillLevelAdmingroupName: 'Serverteam'
+  modSkillLevelAdmingroupName: '&lServerteam'
   modSkillLevelDerank: '&cDein Skilllevel wurde reduziert, weil du seit 4 Tagen kein PvP mehr betrieben hast'
   modSkillLevelDerankTitle: ' \n&cDu wurdest degradiert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modSkillLevelLog: 'Skilllevel: %PLAYER% Level %SKILLOLD% -> %SKILLNEW% (%SKILLNO%)'

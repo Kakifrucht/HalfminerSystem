@@ -24,7 +24,7 @@ import java.util.Map;
 @SuppressWarnings("SameParameterValue")
 public class HanTeleport extends HalfminerHandler implements Reloadable {
 
-    private final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
+    private final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
 
     private final Map<String, String> lang = new HashMap<>();
     private int defaultTime;

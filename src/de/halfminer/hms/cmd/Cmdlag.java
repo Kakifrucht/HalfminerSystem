@@ -5,7 +5,7 @@ import de.halfminer.hms.modules.ModTps;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**

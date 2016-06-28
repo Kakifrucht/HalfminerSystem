@@ -33,7 +33,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
 
-    private final HanBossBar bossbarHandler = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
+    private final HanBossBar bossbarHandler = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
     private final HanHooks hooksHandler = (HanHooks) hms.getHandler(HandlerType.HOOKS);
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 

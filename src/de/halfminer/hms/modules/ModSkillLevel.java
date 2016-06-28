@@ -57,9 +57,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
         if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankLevelThreshold
-                && hPlayer.getInt(DataType.LASTKILL) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
+                && hPlayer.getInt(DataType.LAST_KILL) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
 
-            hPlayer.set(DataType.LASTKILL, System.currentTimeMillis() / 1000);
+            hPlayer.set(DataType.LAST_KILL, System.currentTimeMillis() / 1000);
             updateSkill(player, derankLossAmount);
             player.sendMessage(Language.getMessagePlaceholders("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
 
@@ -78,7 +78,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 && !victim.hasPermission("hms.bypass.skilllevel")) {
 
             HalfminerPlayer hKiller = storage.getPlayer(killer);
-            hKiller.set(DataType.LASTKILL, System.currentTimeMillis() / 1000);
+            hKiller.set(DataType.LAST_KILL, System.currentTimeMillis() / 1000);
 
             // Prevent grinding
             String uuidCat = killer.getUniqueId().toString() + victim.getUniqueId().toString();

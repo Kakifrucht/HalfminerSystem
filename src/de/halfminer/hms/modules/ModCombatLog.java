@@ -44,7 +44,7 @@ import java.util.Map;
 public class ModCombatLog extends HalfminerModule implements Listener {
 
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
-    private final HanBossBar barHandler = (HanBossBar) hms.getHandler(HandlerType.BOSSBAR);
+    private final HanBossBar barHandler = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
 
     private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<>());
