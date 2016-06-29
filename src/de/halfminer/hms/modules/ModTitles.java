@@ -46,34 +46,34 @@ public class ModTitles extends HalfminerModule implements Listener {
         final Player joined = e.getPlayer();
 
         if (!storage.getPlayer(joined).getBoolean(DataType.NEUTP_USED)) {
+
             titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("newplayer"),
                     "%PLAYER%", joined.getName()), 10, 200, 10);
             bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("newplayerbar"),
                     "%PLAYER%", joined.getName()), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
+
+            scheduler.runTaskLater(hms, () -> updateBalanceAndTablist(joined), 3L);
         } else {
 
+            // delay due to potential Essentials issues
             scheduler.runTaskLater(hms, () -> {
-                showLoginTitles(joined, updateBalance(joined));
-                updateTablist(joined);
+
+                titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("joinformat"),
+                        "%BALANCE%", String.valueOf(updateBalanceAndTablist(joined)),
+                        "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
+
+                final String news = storage.getString("news");
+                if (news.length() > 0) {
+                    scheduler.runTaskLater(hms, () -> {
+                        bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
+                                "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 30);
+                        titleHandler.sendTitle(joined, " \n" + news, 10, 100, 10);
+                    }, 120);
+                }
             }, 3L);
         }
 
         updateTablist();
-    }
-
-    private void showLoginTitles(final Player toShow, double balance) {
-
-        titleHandler.sendTitle(toShow, Language.placeholderReplace(lang.get("joinformat"),
-                "%BALANCE%", String.valueOf(balance), "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
-
-        final String news = storage.getString("news");
-        if (news.length() > 0) {
-            scheduler.runTaskLater(hms, () -> {
-                bossbarHandler.sendBar(toShow, Language.placeholderReplace(lang.get("news"),
-                        "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 30);
-                titleHandler.sendTitle(toShow, " \n" + news, 10, 100, 10);
-            }, 120);
-        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -85,21 +85,10 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBalanceChange(UserBalanceUpdateEvent e) {
-        updateBalance(e.getPlayer());
+        updateBalanceAndTablist(e.getPlayer());
     }
 
-    private void updateTablist() {
-
-        scheduler.runTaskAsynchronously(hms, () -> balances.keySet().forEach(this::updateTablist));
-    }
-
-    private void updateTablist(Player player) {
-
-        titleHandler.setTablistHeaderFooter(player, Language.placeholderReplace(lang.get("tablist"),
-                "%BALANCE%", String.valueOf(balances.get(player)), "%PLAYERCOUNT%", getPlayercountString()));
-    }
-
-    private double updateBalance(final Player player) {
+    private double updateBalanceAndTablist(final Player player) {
 
         double balance = Double.MIN_VALUE;
 
@@ -113,7 +102,7 @@ public class ModTitles extends HalfminerModule implements Listener {
         } catch (HookException e) {
             if (e.hasParentException() && e.getParentException() instanceof UserDoesNotExistException) {
                 // Try again two ticks later
-                scheduler.runTaskLater(hms, () -> updateBalance(player), 2L);
+                scheduler.runTaskLater(hms, () -> updateBalanceAndTablist(player), 2L);
             }
             return balance;
         }
@@ -121,6 +110,16 @@ public class ModTitles extends HalfminerModule implements Listener {
         balances.put(player, balance);
         updateTablist(player);
         return balance;
+    }
+
+    private void updateTablist() {
+        scheduler.runTaskAsynchronously(hms, () -> balances.keySet().forEach(this::updateTablist));
+    }
+
+    private void updateTablist(Player player) {
+
+        titleHandler.setTablistHeaderFooter(player, Language.placeholderReplace(lang.get("tablist"),
+                "%BALANCE%", String.valueOf(balances.get(player)), "%PLAYERCOUNT%", getPlayercountString()));
     }
 
     private String getPlayercountString() {
@@ -135,6 +134,6 @@ public class ModTitles extends HalfminerModule implements Listener {
         lang.put("joinformat", Language.getMessage("modTitlesJoinFormat"));
         lang.put("news", Language.getMessage("modTitlesNewsFormat"));
         lang.put("tablist", Language.getMessage("modTitlesTablist"));
-        server.getOnlinePlayers().forEach(this::updateBalance);
+        server.getOnlinePlayers().forEach(this::updateBalanceAndTablist);
     }
 }
