@@ -8,6 +8,7 @@ import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -85,7 +86,10 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBalanceChange(UserBalanceUpdateEvent e) {
-        updateBalanceAndTablist(e.getPlayer());
+
+        if (!e.getPlayer().isOnline()) return;
+        balances.put(e.getPlayer(), Utils.roundDouble(e.getNewBalance().doubleValue()));
+        updateTablist(e.getPlayer());
     }
 
     private double updateBalanceAndTablist(final Player player) {

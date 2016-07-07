@@ -4,6 +4,7 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 import net.ess3.api.Economy;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -141,7 +142,7 @@ public class Cmdverkauf extends HalfminerCommand {
                 }
 
                 storage.getPlayer(player).incrementDouble(DataType.REVENUE, revenue);
-                revenue = Math.round(revenue * 100) / 100.0d;
+                revenue = Utils.roundDouble(revenue);
 
                 //print message
                 String materialFriendly = Language.makeStringFriendly(args[0]);

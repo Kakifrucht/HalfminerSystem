@@ -64,7 +64,7 @@ public class HalfminerPlayer {
 
     public double incrementDouble(DataType type, double amount) {
         double newValue = getDouble(type) + amount;
-        newValue = Math.round(newValue * 100) / 100.0d;
+        newValue = Utils.roundDouble(newValue);
         storage.set(path + type, newValue);
         return newValue;
     }

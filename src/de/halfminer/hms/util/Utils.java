@@ -40,4 +40,8 @@ public final class Utils {
 
         return freeSlotsCurrent >= freeSlots;
     }
+
+    public static double roundDouble(double toRound) {
+        return Math.round(toRound * 100.0d) / 100.0d;
+    }
 }

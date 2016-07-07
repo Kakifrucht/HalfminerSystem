@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -60,7 +61,7 @@ public class ModTps extends HalfminerModule implements Listener {
             lastAverageTps = 0.0;
             for (Double val : tpsHistory) lastAverageTps += val;
             lastAverageTps /= tpsHistory.size();
-            lastAverageTps = Math.round(lastAverageTps * 100.0) / 100.0; // round value to two decimals
+            lastAverageTps = Utils.roundDouble(lastAverageTps); // round value to two decimals
 
             // send message if server is unstable
             if (lastAverageTps < alertStaff && tpsHistory.size() == historySize)

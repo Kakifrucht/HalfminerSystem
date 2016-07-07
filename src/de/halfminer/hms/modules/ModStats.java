@@ -7,6 +7,7 @@ import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -189,7 +190,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         int deaths = player.getInt(DataType.DEATHS);
         if (deaths == 0) return 999999.99d;
         double calc = player.getInt(DataType.KILLS) / (double) deaths;
-        return Math.round(calc * 100.0d) / 100.0d;
+        return Utils.roundDouble(calc);
     }
 
     private void setOnlineTime(Player player) {
