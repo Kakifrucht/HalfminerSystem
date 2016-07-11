@@ -60,35 +60,30 @@ public class Cmdhmsapi extends HalfminerCommand {
 
             if (args[0].equalsIgnoreCase("takecase")) {
 
-                String playername = player.getName();
+                ItemStack hand = player.getInventory().getItemInMainHand();
 
-                if (player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
-
-                    ItemStack hand = player.getInventory().getItemInMainHand();
+                if (hand != null && hand.getType().equals(Material.DRAGON_EGG) && hand.getItemMeta().hasDisplayName()) {
 
                     server.dispatchCommand(consoleInstance, "vt setstr temp casename_"
                             + sender.getName() + " " + hand.getItemMeta().getDisplayName());
                     int amount = hand.getAmount();
                     if (amount > 1) hand.setAmount(hand.getAmount() - 1);
                     else player.getInventory().setItemInMainHand(null);
-                    server.dispatchCommand(consoleInstance, "vt run casino:caseopen " + playername);
+                    server.dispatchCommand(consoleInstance, "vt run casino:caseopen " + player.getName());
 
-                } else {
-
-                    server.dispatchCommand(consoleInstance, "vt run casino:error " + playername);
-                }
+                } else server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
 
             } else if (args[0].equalsIgnoreCase("takehead")) {
 
-                ItemStack item = player.getInventory().getItemInMainHand();
-                if ((item != null) && (item.getType() == Material.SKULL_ITEM)) {
+                ItemStack hand = player.getInventory().getItemInMainHand();
+                if (hand != null && hand.getType().equals(Material.SKULL_ITEM)) {
 
-                    SkullMeta skull = (SkullMeta) item.getItemMeta();
+                    SkullMeta skull = (SkullMeta) hand.getItemMeta();
+
                     if (!skull.hasOwner()) {
                         server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
                         return;
                     }
-
 
                     String skullOwner = skull.getOwner();
 
@@ -105,8 +100,8 @@ public class Cmdhmsapi extends HalfminerCommand {
                             "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
 
                     // Remove the skull
-                    int amount = item.getAmount();
-                    if (amount > 1) item.setAmount(amount - 1);
+                    int amount = hand.getAmount();
+                    if (amount > 1) hand.setAmount(amount - 1);
                     else player.getInventory().setItemInMainHand(null);
                     // proceed with next step
                     server.dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
