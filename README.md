@@ -154,6 +154,8 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Mobkills
       - Money earned
     - View stats on rightclicking a player
+      - Exempt permission
+      - Show if player is AFK
   - Titles
     - Shows join title
       - Players online / money

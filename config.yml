@@ -309,6 +309,7 @@ localization:
   modStatsPvPKill: '&7Du hast &e%VICTIM% &7eliminiert! Kills: &e%KILLS% &7| K/D: &e%KDRATIO%'
   modStatsPvPLog: 'PvP: %KILLER% hat %VICTIM% eliminiert'
   modStatsRightClick: '&fSkillgruppe: &6%SKILLGROUP% &7| &fKills: &6%KILLS% &7| &fK/D: &6%KDRATIO%'
+  modStatsRightClickAFKAppend: '&7(&cAbwesend&7)'
   modStatsRightClickExempt: '&fist ein Serverteammitglied und nimmt am Spiel nicht teil'
   modTitlesJoinFormat: '&7<<<< &6Halfminer&7 >>>>\n&7Kontostand: &a$%BALANCE%&f - &7Online: &a%PLAYERCOUNT% &7&oSpieler'
   modTitlesNewPlayerFormat: '&4Willkommen, %PLAYER%!\n&7Verwende &e&l/neutp &7zum starten!'

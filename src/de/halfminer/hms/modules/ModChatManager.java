@@ -145,7 +145,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         for (Player wasMentioned : mentioned) {
-            if (hooks.getEssentialsHook().getUser(wasMentioned.getUniqueId()).isAfk())
+            if (hooks.isAfk(wasMentioned))
                 title.sendActionBar(p, Language.getMessagePlaceholders("modChatManIsAfk", false,
                         "%PLAYER%", wasMentioned.getName()));
             title.sendActionBar(wasMentioned, Language.getMessagePlaceholders("modChatManMentioned", false,

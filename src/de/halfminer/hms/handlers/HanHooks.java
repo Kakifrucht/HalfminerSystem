@@ -42,6 +42,10 @@ public class HanHooks extends HalfminerHandler {
         essentialsHook.getUser(player).setLastLocation();
     }
 
+    public boolean isAfk(Player player) {
+        return essentialsHook.getUser(player.getUniqueId()).isAfk();
+    }
+
     public double getMoney(Player player) throws HookException {
         double balance;
         try {
