@@ -7,7 +7,7 @@ public enum DataType {
     DEATHS          ("deaths"),
     KD_RATIO        ("kdratio"),
     KILLS           ("kills"),
-    LAST_KILL       ("lastkill"),
+    LAST_PVP        ("lastpvp"),
     LAST_NAME       ("lastname"),
     LAST_NAMES      ("lastnames"),
     LAST_REPAIR     ("lastrepair"),

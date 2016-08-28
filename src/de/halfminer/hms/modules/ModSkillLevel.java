@@ -57,9 +57,10 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
         if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankLevelThreshold
-                && hPlayer.getInt(DataType.LAST_KILL) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
+                && hPlayer.getInt(DataType.LAST_PVP) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
 
-            hPlayer.set(DataType.LAST_KILL, System.currentTimeMillis() / 1000);
+            // set last pvp time to 30 days in the future, to prevent additional inactivity deranks
+            hPlayer.set(DataType.LAST_PVP, (System.currentTimeMillis() / 1000) + 2592000);
             updateSkill(player, derankLossAmount);
             player.sendMessage(Language.getMessagePlaceholders("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
 
@@ -78,7 +79,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 && !victim.hasPermission("hms.bypass.skilllevel")) {
 
             HalfminerPlayer hKiller = storage.getPlayer(killer);
-            hKiller.set(DataType.LAST_KILL, System.currentTimeMillis() / 1000);
+            HalfminerPlayer hVictim = storage.getPlayer(victim);
+
+            long currentTime = System.currentTimeMillis() / 1000;
+            hKiller.set(DataType.LAST_PVP, currentTime);
+            hVictim.set(DataType.LAST_PVP, currentTime);
 
             // Prevent grinding
             String uuidCat = killer.getUniqueId().toString() + victim.getUniqueId().toString();
@@ -86,7 +91,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             // Calculate skill modifier
             int killerLevel = hKiller.getInt(DataType.SKILL_LEVEL);
-            int victimLevel = storage.getPlayer(victim).getInt(DataType.SKILL_LEVEL);
+            int victimLevel = hVictim.getInt(DataType.SKILL_LEVEL);
             int killerVictimDifference = killerLevel - victimLevel;
             int modifier = ((killerVictimDifference * 3) - 65) * -1;
             if (killerVictimDifference >= 10 && modifier >= 4) modifier /= 4;
@@ -103,7 +108,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         int elo = hPlayer.getInt(DataType.SKILL_ELO) + modifier;
         int level = hPlayer.getInt(DataType.SKILL_LEVEL);
-        int kdRatio = hPlayer.getInt(DataType.KD_RATIO);
 
         // Bounds for levels and elo
         if (elo < 0) elo = 0;
@@ -127,20 +131,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         */
         if (newLevelDown > level && modifier >= 0) newLevel = newLevelDown;     //rank up
         else if (newLevelUp < level && modifier <= 0) newLevel = newLevelUp;    //rank down
-
-        // Make sure kdratio constraints are met, lower ELO if they are not met
-        if (newLevel > 11 && kdRatio < 1.0d) {
-            newLevel = 11;
-            elo -= 100;
-        }
-        else if (newLevel > 16 && kdRatio < 3.0d) {
-            newLevel = 16;
-            elo -= 200;
-        }
-        else if (newLevel == 22 && kdRatio < 5.0d) {
-            newLevel = 21;
-            elo -= 300;
-        }
 
         // Set the new values
         String teamName = teams[newLevel - 1];
