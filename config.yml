@@ -114,8 +114,8 @@ performance:
   ticksDelayUntilClear: 160
   #Number in events until redstone will be blocked, ticksDelayUntilClear clears this
   howMuchRedstoneAllowed: 32
-  #How many pistons are allowed to extend or retract, ticksDelayUntilClear clears this
-  howManyPistonsAllowed: 400
+  #How many pistons are allowed to extend, ticksDelayUntilClear clears this
+  howManyPistonsAllowed: 200
   #How many hoppers are allowed
   hopperLimit: 64
   #Radius around hopper that will be checked, changing this value may introduce lag
@@ -288,7 +288,7 @@ localization:
   modGlitchProtectionNetherNotify: '&c%PLAYER% war auf dem Netherdach bei &e%LOCATION%&c und wurde getötet'
   modMotdLine: '&e&l<<<<<%COLOR%&l Two and a half Miner &e&l>>>>>\n&7%REPLACE%&7! (mc.halfminer.de)'
   modPerformanceReachedHopper: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
-  modPerformanceReachedHopperLog: '%PLAYER% hat das Limit (%LIMIT%) bei %LOCATION% erreicht'
+  modPerformanceReachedHopperLog: '%PLAYER% hat das Hopperlimit (%LIMIT%) bei %LOCATION% erreicht'
   modPvPKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK% &7Kills in Folge'
   modRespawnFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modRespawnForced: '&7Du wurdest von einem Serverteam-Mitglied zum Spawn teleportiert'

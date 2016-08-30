@@ -107,7 +107,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Limits redstone usage
       - Redstone will not work if triggered to often
     - Limits piston usage
-      - Only a given amount of pistons can be triggered in a given time
+      - Only a given amount of pistons can be extended in a given time
     - Limits hopper placement
       - Checks radius, if too many hoppers denies placement
     - Limits mobspawns

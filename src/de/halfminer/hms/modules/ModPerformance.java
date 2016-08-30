@@ -11,7 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -25,7 +24,7 @@ import java.util.Map;
  * - Limits redstone usage
  *   - Redstone will not work if triggered too often
  * - Limits piston usage
- *   - Only a given amount of pistons can be triggered in a given time
+ *   - Only a given amount of pistons can be extended in a given time
  * - Limits hopper placement
  *   - Checks radius, if too many hoppers denies placement
  * - Limits mobspawns
@@ -53,12 +52,9 @@ public class ModPerformance extends HalfminerModule implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void countPistonExtend(BlockPistonExtendEvent e) {
-        e.setCancelled(increasePistonCount());
-    }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void countPistonRetract(BlockPistonRetractEvent e) {
-        e.setCancelled(increasePistonCount());
+        if (pistonCount > howManyPistonsAllowed) e.setCancelled(true);
+        else pistonCount++;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -121,14 +117,6 @@ public class ModPerformance extends HalfminerModule implements Listener {
         }
     }
 
-    private boolean increasePistonCount() {
-        if (pistonCount > howManyPistonsAllowed) return true;
-        else {
-            pistonCount++;
-            return false;
-        }
-    }
-
     private boolean tooManyHoppers(Location loc) {
         int hopperCount = 0;
         for (int x = loc.getBlockX() - hopperLimitRadius; x <= loc.getBlockX() + hopperLimitRadius; x++) {
@@ -147,7 +135,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
 
         int ticksDelayUntilClear = hms.getConfig().getInt("performance.ticksDelayUntilClear", 160);
         howMuchRedstoneAllowed = hms.getConfig().getInt("performance.howMuchRedstoneAllowed", 32);
-        howManyPistonsAllowed = hms.getConfig().getInt("performance.howManyPistonsAllowed", 400);
+        howManyPistonsAllowed = hms.getConfig().getInt("performance.howManyPistonsAllowed", 200);
         hopperLimit = hms.getConfig().getInt("performance.hopperLimit", 64);
         hopperLimitRadius = hms.getConfig().getInt("performance.hopperLimitRadius", 7);
         logHopperLimit = hms.getConfig().getBoolean("performance.hopperLimitLog", false);
