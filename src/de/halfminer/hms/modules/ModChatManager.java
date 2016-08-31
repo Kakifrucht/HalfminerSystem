@@ -50,7 +50,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     private int mentionDelay;
 
     private Map<Player, Long> lastMentioned = new ConcurrentHashMap<>();
-    private Map<Player, Pair<String, Long>> lastMessage = new ConcurrentHashMap<>();
+    private final Map<Player, Pair<String, Long>> lastMessage = new ConcurrentHashMap<>();
     private boolean isGlobalmuted = false;
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

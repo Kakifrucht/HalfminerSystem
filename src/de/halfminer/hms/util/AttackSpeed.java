@@ -5,6 +5,7 @@ import org.bukkit.Material;
 /**
  * Helper class containing Minecraft attackspeed values
  */
+@SuppressWarnings("unused")
 public enum AttackSpeed {
 
     WOOD_SWORD      (1.6d),
@@ -34,7 +35,7 @@ public enum AttackSpeed {
     GOLD_AXE        (1.0d);
 
     final static double defaultSpeed = 4.0d;
-    double speed;
+    final double speed;
 
     AttackSpeed(double speed) {
         this.speed = speed;

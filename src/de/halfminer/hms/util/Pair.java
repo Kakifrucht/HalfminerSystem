@@ -1,5 +1,7 @@
 package de.halfminer.hms.util;
 
+import java.util.Objects;
+
 public class Pair<L, R> {
 
     private L left;
@@ -43,6 +45,11 @@ public class Pair<L, R> {
      */
     public void setRight(R setTo) {
         right = setTo;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(left, right);
     }
 
     @Override

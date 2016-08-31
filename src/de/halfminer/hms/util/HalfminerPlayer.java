@@ -88,4 +88,14 @@ public class HalfminerPlayer {
     public String getString(DataType type) {
         return storage.getString(path + type, "");
     }
+
+    @Override
+    public int hashCode() {
+        return this.uuid.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof HalfminerPlayer && this.uuid.equals(((HalfminerPlayer) o).uuid);
+    }
 }

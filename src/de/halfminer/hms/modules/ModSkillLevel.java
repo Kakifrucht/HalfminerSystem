@@ -7,6 +7,7 @@ import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -22,6 +23,7 @@ import org.bukkit.scoreboard.Team;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * - PvP based skilllevel system / ELO
@@ -43,7 +45,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private final Scoreboard scoreboard = server.getScoreboardManager().getMainScoreboard();
-    private final Map<String, Long> lastKill = new HashMap<>();
+    private final Map<Pair<UUID, UUID>, Long> lastKill = new HashMap<>();
     private Objective skillObjective = scoreboard.getObjective("skill");
     private String[] teams;
 
@@ -86,8 +88,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             hVictim.set(DataType.LAST_PVP, currentTime);
 
             // Prevent grinding
-            String uuidCat = killer.getUniqueId().toString() + victim.getUniqueId().toString();
-            if (!killDoesCount(uuidCat)) return;
+            Pair<UUID, UUID> bothPlayers = new Pair<>(killer.getUniqueId(), victim.getUniqueId());
+            if (!killDoesCount(bothPlayers)) return;
+            lastKill.put(bothPlayers, System.currentTimeMillis() / 1000);
 
             // Calculate skill modifier
             int killerLevel = hKiller.getInt(DataType.SKILL_LEVEL);
@@ -98,7 +101,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             updateSkill(killer, modifier);
             updateSkill(victim, -modifier);
-            lastKill.put(uuidCat, System.currentTimeMillis() / 1000);
         }
     }
 
@@ -168,10 +170,10 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         else return skillgroupNameAdmin;
     }
 
-    private boolean killDoesCount(String uuidCat) {
+    private boolean killDoesCount(Pair<UUID, UUID> uuidPair) {
 
-        return !lastKill.containsKey(uuidCat)
-                || lastKill.get(uuidCat) + timeUntilKillCountAgain
+        return !lastKill.containsKey(uuidPair)
+                || lastKill.get(uuidPair) + timeUntilKillCountAgain
                 < System.currentTimeMillis() / 1000;
     }
 
