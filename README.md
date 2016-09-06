@@ -140,6 +140,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - StaticListeners
     - Removes quit message
     - Disables some deals in villager trades
+    - Keeps itemname of colored items in anvil
     - Commandfilter
       - Disables commands in bed (teleport glitch)
       - Rewrites /pluginname:command to just /command

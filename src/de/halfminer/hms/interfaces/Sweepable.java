@@ -1,7 +1,7 @@
 package de.halfminer.hms.interfaces;
 
 /**
- * Implementing classes have maps/lists that can and should be sweeped to prevent memory leaks
+ * Implementing classes have collections that should be sweeped to prevent memory leaks
  */
 public interface Sweepable {
 

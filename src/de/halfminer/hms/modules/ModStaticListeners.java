@@ -1,6 +1,8 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +15,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.List;
 /**
  * - Removes quit message
  * - Disables some deals in villager trades
+ * - Keeps itemname of colored items in anvil
  * - Commandfilter
  *   - Disables commands in bed (teleport glitch)
  *   - Rewrites /pluginname:command to just /command
@@ -34,13 +38,33 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void merchantBlock(InventoryClickEvent e) {
-        Inventory clicked = e.getInventory();
-        if (clicked != null
-                && clicked.getType() == InventoryType.MERCHANT
-                && !e.getWhoClicked().hasPermission("hms.bypass.merchant")) {
-            ItemStack item = e.getCurrentItem();
-            if (item != null && item.getType() == Material.WRITTEN_BOOK) e.setCancelled(true);
+    public void merchantBlockAndAnvilNameKeep(InventoryClickEvent e) {
+
+        Inventory clickedInv = e.getInventory();
+        if (clickedInv == null || !(e.getWhoClicked() instanceof Player)) return;
+        Player player = (Player) e.getWhoClicked();
+
+        ItemStack clickedItem = e.getCurrentItem();
+        if (clickedItem != null && !clickedItem.getType().equals(Material.AIR)) {
+
+            // deny book trading
+            if (clickedInv.getType() == InventoryType.MERCHANT
+                    && !e.getWhoClicked().hasPermission("hms.bypass.merchant")
+                    && clickedItem.getType().equals(Material.WRITTEN_BOOK)) {
+
+                e.setCancelled(true);
+
+            // keep colored names
+            } else if (clickedInv.getType() == InventoryType.ANVIL && e.getRawSlot() == 2) {
+
+                ItemMeta originalMeta = clickedInv.getItem(0).getItemMeta();
+
+                if (originalMeta.hasDisplayName()
+                        && originalMeta.getDisplayName().contains("" + ChatColor.COLOR_CHAR)) {
+
+                    Utils.setDisplayName(clickedItem, originalMeta.getDisplayName());
+                }
+            }
         }
     }
 

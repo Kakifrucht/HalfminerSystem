@@ -4,6 +4,7 @@ import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashSet;
 import java.util.List;
@@ -43,5 +44,11 @@ public final class Utils {
 
     public static double roundDouble(double toRound) {
         return Math.round(toRound * 100.0d) / 100.0d;
+    }
+
+    public static void setDisplayName(ItemStack item, String displayName) {
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(displayName);
+        item.setItemMeta(meta);
     }
 }

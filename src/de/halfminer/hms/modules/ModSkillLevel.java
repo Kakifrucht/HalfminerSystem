@@ -67,7 +67,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             player.sendMessage(Language.getMessagePlaceholders("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
 
         } else updateSkill(player, 0);
-
     }
 
     @EventHandler
@@ -89,18 +88,20 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             // Prevent grinding
             Pair<UUID, UUID> bothPlayers = new Pair<>(killer.getUniqueId(), victim.getUniqueId());
-            if (!killDoesCount(bothPlayers)) return;
-            lastKill.put(bothPlayers, System.currentTimeMillis() / 1000);
+            if (killDoesCount(bothPlayers)) {
 
-            // Calculate skill modifier
-            int killerLevel = hKiller.getInt(DataType.SKILL_LEVEL);
-            int victimLevel = hVictim.getInt(DataType.SKILL_LEVEL);
-            int killerVictimDifference = killerLevel - victimLevel;
-            int modifier = ((killerVictimDifference * 3) - 65) * -1;
-            if (killerVictimDifference >= 10 && modifier >= 4) modifier /= 4;
+                lastKill.put(bothPlayers, System.currentTimeMillis() / 1000);
 
-            updateSkill(killer, modifier);
-            updateSkill(victim, -modifier);
+                // Calculate skill modifier
+                int killerLevel = hKiller.getInt(DataType.SKILL_LEVEL);
+                int victimLevel = hVictim.getInt(DataType.SKILL_LEVEL);
+                int killerVictimDifference = killerLevel - victimLevel;
+                int modifier = ((killerVictimDifference * 3) - 65) * -1;
+                if (killerVictimDifference >= 10 && modifier >= 4) modifier /= 4;
+
+                updateSkill(killer, modifier);
+                updateSkill(victim, -modifier);
+            }
         }
     }
 
@@ -205,7 +206,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 teams[22 - sortId] = skillGroup.substring(0, 1) + sortString + skillGroup.substring(1);
                 sortId++;
             }
-
         }
 
         for (int i = 0; i < teams.length; i++) {
