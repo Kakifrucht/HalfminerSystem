@@ -1,7 +1,9 @@
 package de.halfminer.hms.handlers;
 
+import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.interfaces.Disableable;
+import de.halfminer.hms.util.CustomtextCache;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.OfflinePlayer;
@@ -12,6 +14,8 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -21,6 +25,11 @@ import java.util.UUID;
  *   - Player data storage
  *   - Storage for other types of data
  * - Can easily be queried with YAML API
+ * - Caches customtext files
+ *   - To mark a chapter, use "#chaptername argument" (argument optional and not limited)
+ *     - Supports aliases via "#chaptername argument|alias argument"
+ *   - Automatic replacement of '&' with Bukkit color code
+ *   - If line ends with space char, add next line to current line
  * - Thread safe
  */
 @SuppressWarnings("unused")
@@ -33,6 +42,8 @@ public class HanStorage extends HalfminerHandler implements Disableable {
     private FileConfiguration sysConfig;
     private FileConfiguration uuidConfig;
     private FileConfiguration playerConfig;
+
+    private final Map<File, CustomtextCache> textCaches = new HashMap<>();
 
     private BukkitTask task;
 
@@ -90,6 +101,30 @@ public class HanStorage extends HalfminerHandler implements Disableable {
 
     public HalfminerPlayer getPlayer(UUID uuid) {
         return new HalfminerPlayer(playerConfig, uuid);
+    }
+
+    public CustomtextCache getCache(String fileName) throws CachingException {
+
+        File cacheFile = new File(hms.getDataFolder(), fileName);
+
+        if (!cacheFile.exists()) {
+            try {
+                if (cacheFile.createNewFile()) {
+                    hms.getLogger().info(Language.getMessagePlaceholders("hanStorageCacheCreate", false,
+                            "%DATEINAME%", cacheFile.getName()));
+                }
+            } catch (IOException e) {
+                hms.getLogger().severe(Language.getMessage("hanStorageCacheCouldNotCreate"));
+                throw new CachingException(CachingException.Reason.CANNOT_WRITE);
+            }
+        }
+
+        if (textCaches.containsKey(cacheFile))
+            return textCaches.get(cacheFile);
+
+        CustomtextCache cache = new CustomtextCache(cacheFile);
+        textCaches.put(cacheFile, cache);
+        return cache;
     }
 
     public void saveConfig() {

@@ -4,6 +4,9 @@ import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
+/**
+ * Class containing language related static methods
+ */
 public class Language {
 
     private static final HalfminerSystem hms = HalfminerSystem.getInstance();

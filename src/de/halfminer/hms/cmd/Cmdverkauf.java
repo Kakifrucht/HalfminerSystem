@@ -85,11 +85,18 @@ public class Cmdverkauf extends HalfminerCommand {
                 case "wheat":
                     toBeSold = Material.WHEAT;
                     break;
+                /*case "auto":
+                    toBeSold = Material.CHEST;
+                    break;*/
                 default:
                     toBeSold = null;
             }
 
-            if (toBeSold != null) sellLoop();
+            //ModVerkauf verkauf = (ModVerkauf) hms.getModule()
+
+            /*if (toBeSold.equals(Material.CHEST)) {
+
+            } else */if (toBeSold != null) sellLoop();
             else sender.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
 
         } else {

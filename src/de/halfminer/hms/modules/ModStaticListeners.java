@@ -49,7 +49,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
 
             // deny book trading
             if (clickedInv.getType() == InventoryType.MERCHANT
-                    && !e.getWhoClicked().hasPermission("hms.bypass.merchant")
+                    && !player.hasPermission("hms.bypass.merchant")
                     && clickedItem.getType().equals(Material.WRITTEN_BOOK)) {
 
                 e.setCancelled(true);

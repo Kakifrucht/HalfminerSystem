@@ -1,5 +1,5 @@
 # Halfminer System
-Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de).
+Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.com/drtshock/Factions).
 
 Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kakifrucht/HalfminerBattle).
 
@@ -22,6 +22,11 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Player data storage
       - Storage for other types of data
     - Can easily be queried with YAML API
+    - Caches customtext files
+      - To mark a chapter, use "#chaptername argument" (argument optional and not limited)
+        - Supports aliases via "#chaptername argument|alias argument"
+      - Automatic replacement of '&' with Bukkit color code
+      - If line ends with space char, add next line to current line
     - Thread safe
   - Teleport
     - Disallows movement
@@ -178,6 +183,15 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Countdown via bossbar
     - Send custom messages to player or broadcast
     - Set news and motd message
+  - /customtext
+    - Displays custom text data
+    - Should be binded via Bukkit aliases (commands.yml in server root)
+    - Utilizes CustomtextCache
+    - Extends CustomtextCache with syntax elements
+      - Placeholder support for text
+      - Make commands clickable by ending them with '/' character
+        - Escape clickable command via "//"
+        - Commands are written in italic
   - /disposal
     - Opens portable disposal
   - /hms
