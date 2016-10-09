@@ -18,6 +18,7 @@ import java.util.List;
  * - Extends CustomtextCache with syntax elements
  *   - Placeholder support for text
  *   - Make commands clickable by ending them with '/' character
+ *     - A line must be started with '\' (backslash character) to be parsed
  *     - Escape auto command via "//"
  *     - Commands are written in italic
  */
@@ -52,67 +53,68 @@ public class Cmdcustomtext extends HalfminerCommand {
                 return;
             }
 
-            // do async, as component API is thread safe
-            scheduler.runTaskAsynchronously(hms, () -> {
+            for (String raw : text) {
 
-                for (String raw : text) {
+                // placeholder replace, send message directly if not starting with '\' character
+                String send = Language.placeholderReplace(raw, "%PLAYER%", sender.getName());
+                if (!send.startsWith("\\")) {
+                    sender.sendMessage(send);
+                    continue;
+                }
 
-                    // placeholder replace
-                    String send = Language.placeholderReplace(raw, "%PLAYER%", sender.getName());
+                // build json message via component api
+                List<BaseComponent> components = new ArrayList<>();
 
-                    List<BaseComponent> components = new ArrayList<>();
+                StringBuilder sbText = new StringBuilder();
+                StringBuilder sbCommand = new StringBuilder();
+                boolean readingCommand = false;
 
-                    StringBuilder sbText = new StringBuilder();
-                    StringBuilder sbCommand = new StringBuilder();
-                    boolean readingCommand = false;
+                for (int i = 1; i < send.length(); i++) {
 
-                    for (int i = 0; i < send.length(); i++) {
+                    char current = send.charAt(i);
 
-                        char current = send.charAt(i);
+                    if (current == '/') {
 
-                        if (current == '/') {
+                        if (readingCommand) {
 
-                            if (readingCommand) {
+                            // if command was not escaped
+                            if (sbCommand.length() > 1) {
+                                TextComponent commandComponent = new TextComponent(sbCommand.toString());
+                                BaseComponent lastComponent = components.get(components.size() - 1);
 
-                                // if command was not escaped
-                                if (sbCommand.length() > 1) {
-                                    TextComponent commandComponent = new TextComponent(sbCommand.toString());
-                                    BaseComponent lastComponent = components.get(components.size() - 1);
+                                // set color/boldness from last component, always set clickable commands italic
+                                commandComponent.setColor(lastComponent.getColor());
+                                commandComponent.setBold(lastComponent.isBold());
+                                commandComponent.setItalic(true);
 
-                                    // set color/boldness from last component, always set clickable commands italic
-                                    commandComponent.setColor(lastComponent.getColor());
-                                    commandComponent.setBold(lastComponent.isBold());
-                                    commandComponent.setItalic(true);
+                                commandComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                                        sbCommand.toString()));
+                                commandComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                        new ComponentBuilder(Language.getMessage("cmdCustomtextClick")).create()));
 
-                                    commandComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                            sbCommand.toString()));
-                                    commandComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                            new ComponentBuilder(Language.getMessage("cmdCustomtextClick")).create()));
+                                components.add(commandComponent);
+                            } else sbText.append("/");
 
-                                    components.add(commandComponent);
-                                } else sbText.append("/");
+                            sbCommand = new StringBuilder();
+                            readingCommand = false;
+                        } else {
 
-                                sbCommand = new StringBuilder();
-                                readingCommand = false;
-                            } else {
-
-                                addToFromLegacyText(components, sbText.toString());
-                                sbText = new StringBuilder();
-                                readingCommand = true;
-                            }
+                            addToFromLegacyText(components, sbText.toString());
+                            sbText = new StringBuilder();
+                            readingCommand = true;
                         }
-
-                        if (readingCommand) sbCommand.append(current);
-                        else if (current != '/') sbText.append(current);
                     }
 
-                    addToFromLegacyText(components, sbText.toString());
-                    TextComponent componentToSend = new TextComponent();
-                    components.forEach(componentToSend::addExtra);
-
-                    ((Player) sender).spigot().sendMessage(componentToSend);
+                    if (readingCommand) sbCommand.append(current);
+                    else if (current != '/') sbText.append(current);
                 }
-            });
+
+                addToFromLegacyText(components, sbText.toString());
+                TextComponent componentToSend = new TextComponent();
+                components.forEach(componentToSend::addExtra);
+
+                ((Player) sender).spigot().sendMessage(componentToSend);
+            }
 
         } catch (CachingException e) {
 

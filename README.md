@@ -190,6 +190,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Extends CustomtextCache with syntax elements
       - Placeholder support for text
       - Make commands clickable by ending them with '/' character
+        - A line must be started with '\' (backslash character) to be parsed
         - Escape clickable command via "//"
         - Commands are written in italic
   - /disposal
