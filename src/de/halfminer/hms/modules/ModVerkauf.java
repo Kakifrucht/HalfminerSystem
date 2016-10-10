@@ -1,36 +1,124 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.enums.Sellable;
+import de.halfminer.hms.exception.HookException;
+import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.interfaces.Sweepable;
-import org.bukkit.OfflinePlayer;
+import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * - Auto sells chests on open
- * - Allows easy toggling
+ *   - Needs to be toggled
+ * - Sell items that are sellable
+ *   - Custom multiplier per permission
+ *   - Price settable via config
+ * - Can be accessed via command
  */
+@SuppressWarnings("unused")
 public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
 
-    private final Set<UUID> autoSelling = new HashSet<>();
+    private final HanHooks hooksHandler = (HanHooks) hms.getHandler(HandlerType.HOOKS);
 
-    @EventHandler
+    private final Set<UUID> autoSelling = new HashSet<>();
+    private Map<String, Integer> prices;
+
+    @EventHandler(priority = EventPriority.MONITOR,ignoreCancelled = true)
     public void onChestOpen(InventoryOpenEvent e) {
 
-        if (e.getInventory().getHolder() instanceof Chest || e.getInventory().getHolder() instanceof DoubleChest) {
+        if (e.getPlayer() instanceof Player
+                && autoSelling.contains(e.getPlayer().getUniqueId())
+                && (e.getInventory().getHolder() instanceof Chest
+                || e.getInventory().getHolder() instanceof DoubleChest)) {
 
+            Inventory chest = e.getInventory();
+            ItemStack item = chest.getItem(0);
+            if (item != null) {
+                Sellable sell = Sellable.getFromMaterial(item.getType());
+                if (sell != null) {
+
+                    Player seller = (Player) e.getPlayer();
+                    int amountSold = sellMaterial(seller, e.getInventory(), sell);
+                    rewardPlayer(seller, sell, amountSold);
+                }
+            }
         }
     }
 
-    public boolean togglePlayer(Player player) {
+    public int sellMaterial(Player player, Inventory inventory, Sellable toSell) {
+
+        int sellCount = 0;
+        for (int i = 0; i < inventory.getContents().length; i++) {
+            ItemStack stack = inventory.getItem(i);
+            if (stack != null
+                    && stack.getType().equals(toSell.getMaterial())
+                    && stack.getDurability() == toSell.getItemId()) {
+
+                sellCount += stack.getAmount();
+                inventory.setItem(i, null);
+            }
+        }
+        player.updateInventory();
+        return sellCount;
+    }
+
+    public void rewardPlayer(Player toReward, Sellable sold, int amount) {
+
+        if (amount == 0) return;
+
+        // get rank multiplier
+        double multiplier = 1.0d;
+        if (toReward.hasPermission("hms.level.5")) multiplier = 2.5d;
+        else if (toReward.hasPermission("hms.level.4")) multiplier = 2.0d;
+        else if (toReward.hasPermission("hms.level.3")) multiplier = 1.75d;
+        else if (toReward.hasPermission("hms.level.2")) multiplier = 1.5d;
+        else if (toReward.hasPermission("hms.level.1")) multiplier = 1.25d;
+
+        int baseValue = 1000;
+        if (prices.containsKey(sold.getClearText()))
+            baseValue = prices.get(sold.getClearText());
+
+        // calculate revenue
+        double revenue = (amount / (double) baseValue) * multiplier;
+
+        try {
+            hooksHandler.addMoney(toReward, revenue);
+        } catch (HookException e) {
+            // This should not happen under normal circumstances, print stacktrace just in case
+            e.printStackTrace();
+            toReward.sendMessage(Language.getMessagePlaceholders("errorOccurred", true, "%PREFIX%", "Verkauf"));
+            return;
+        }
+
+        storage.getPlayer(toReward).incrementDouble(DataType.REVENUE, revenue);
+        revenue = Utils.roundDouble(revenue);
+
+        // print message
+        String materialFriendly = Language.makeStringFriendly(sold.name());
+        toReward.sendMessage(Language.getMessagePlaceholders("modVerkaufSuccess", true, "%PREFIX%", "Verkauf",
+                "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
+                "%AMOUNT%", String.valueOf(amount)));
+
+        hms.getLogger().info(Language.getMessagePlaceholders("modVerkaufSuccessLog", false, "%PLAYER%",
+                toReward.getName(), "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
+                "%AMOUNT%", String.valueOf(amount)));
+    }
+
+    public boolean toggleAutoSell(Player player) {
 
         UUID uuid = player.getUniqueId();
         boolean contains = autoSelling.contains(uuid);
@@ -44,15 +132,19 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
     @Override
     public void loadConfig() {
 
+        prices = new HashMap<>();
+
+        ConfigurationSection section = hms.getConfig().getConfigurationSection("verkauf");
+        for (String key : section.getKeys(false)) {
+            prices.put(key, section.getInt(key));
+        }
     }
 
     @Override
     public void sweep() {
 
-        Iterator<UUID> it = autoSelling.iterator();
-        while (it.hasNext()) {
-            OfflinePlayer player = server.getOfflinePlayer(it.next());
-            if (player.getLastPlayed() + 10000 < System.currentTimeMillis()) it.remove();
-        }
+        // remove uuid's that are offline for at least 10 minutes
+        autoSelling.removeIf(uuid ->
+                server.getOfflinePlayer(uuid).getLastPlayed() + 600000 < System.currentTimeMillis());
     }
 }

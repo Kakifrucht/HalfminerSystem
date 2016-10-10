@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.18
+version: 3.18.2
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de
@@ -78,6 +78,7 @@ permissions:
       hms.spawn.others: true
       hms.spawn.set: true
       hms.verkauf: true
+      hms.verkauf.auto: true
       hms.vote: true
       hms.bypass.*: true
       hms.chat.*: true
@@ -241,3 +242,5 @@ permissions:
     description: Teleport other players to spawn
   hms.spawn.set:
     description: Access to spawn set command
+  hms.verkauf.auto:
+    description: Access to automatic selling

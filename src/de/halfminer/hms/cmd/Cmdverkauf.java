@@ -1,32 +1,25 @@
 package de.halfminer.hms.cmd;
 
-import com.earth2me.essentials.api.NoLoanPermittedException;
-import com.earth2me.essentials.api.UserDoesNotExistException;
-import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.enums.Sellable;
+import de.halfminer.hms.modules.ModVerkauf;
 import de.halfminer.hms.util.Language;
-import de.halfminer.hms.util.Utils;
-import net.ess3.api.Economy;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import java.math.BigDecimal;
 
 /**
- * - Sell farm items
- * - Revenue configurable
+ * - Sell sellable items via command
+ * - Uses ModVerkauf for the actual sale
  * - Possibility to sell multiple inventories at once
- * - Multipliers for ranks (via permissions)
  */
 @SuppressWarnings("unused")
 public class Cmdverkauf extends HalfminerCommand {
 
+    private final ModVerkauf verkaufModule = (ModVerkauf) hms.getModule(ModuleType.VERKAUF);
+
     private Player player;
-    private String[] args;
-    private Material toBeSold;
-    private int toBeSoldId = 0;
+    private Sellable toBeSold;
     private int sellCountTotal = 0;
 
     public Cmdverkauf() {
@@ -35,8 +28,6 @@ public class Cmdverkauf extends HalfminerCommand {
 
     @Override
     public void run(CommandSender sender, String label, String[] args) {
-
-        this.args = args;
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(Language.getMessagePlaceholders("notAPlayer", true, "%PREFIX%", "Verkauf"));
@@ -47,60 +38,29 @@ public class Cmdverkauf extends HalfminerCommand {
 
         if (args.length > 0) {
 
-            switch (args[0].toLowerCase()) {
-                case "beetroot":
-                    toBeSold = Material.BEETROOT;
-                    break;
-                case "brownmushroom":
-                    toBeSold = Material.BROWN_MUSHROOM;
-                    break;
-                case "cactus":
-                    toBeSold = Material.CACTUS;
-                    break;
-                case "carrot":
-                    toBeSold = Material.CARROT_ITEM;
-                    break;
-                case "cocoa":
-                    toBeSold = Material.INK_SACK;
-                    toBeSoldId = 3;
-                    break;
-                case "melon":
-                    toBeSold = Material.MELON;
-                    break;
-                case "netherwart":
-                    toBeSold = Material.NETHER_STALK;
-                    break;
-                case "potato":
-                    toBeSold = Material.POTATO_ITEM;
-                    break;
-                case "pumpkin":
-                    toBeSold = Material.PUMPKIN;
-                    break;
-                case "redmushroom":
-                    toBeSold = Material.RED_MUSHROOM;
-                    break;
-                case "sugarcane":
-                    toBeSold = Material.SUGAR_CANE;
-                    break;
-                case "wheat":
-                    toBeSold = Material.WHEAT;
-                    break;
-                /*case "auto":
-                    toBeSold = Material.CHEST;
-                    break;*/
-                default:
-                    toBeSold = null;
+            if (args[0].equalsIgnoreCase("auto")) {
+
+                if (!player.hasPermission("hms.verkauf.auto")) {
+                    player.sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Verkauf"));
+                    return;
+                }
+
+                boolean toggledOn = verkaufModule.toggleAutoSell(player);
+
+                if (toggledOn)
+                    player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufAutoOn", true, "%PREFIX%", "Verkauf"));
+                else
+                    player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufAutoOff", true, "%PREFIX%", "Verkauf"));
+                return;
             }
 
-            //ModVerkauf verkauf = (ModVerkauf) hms.getModule()
+            this.toBeSold = Sellable.getFromString(args[0]);
 
-            /*if (toBeSold.equals(Material.CHEST)) {
-
-            } else */if (toBeSold != null) sellLoop();
-            else sender.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
+            if (toBeSold != null) sellLoop();
+            else player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
 
         } else {
-            sender.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
+            player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
         }
     }
 
@@ -108,63 +68,15 @@ public class Cmdverkauf extends HalfminerCommand {
 
         Inventory playerInv = player.getInventory();
 
-        int sellCount = 0;
-
-        for (int i = 0; i < playerInv.getContents().length; i++) {
-            ItemStack stack = playerInv.getItem(i);
-            if (stack != null && stack.getType() == toBeSold && stack.getDurability() == toBeSoldId) {
-                sellCount += stack.getAmount();
-                playerInv.setItem(i, null);
-            }
-        }
-
-        player.updateInventory();
+        int sellCount = verkaufModule.sellMaterial(player, playerInv, toBeSold);
         sellCountTotal += sellCount;
 
-        if (sellCount > 0) {
-
+        if (sellCount > 0)
             scheduler.runTaskLater(hms, this::sellLoop, 2L);
-
-        } else {
-
-            if (sellCountTotal > 0) {
-
-                //get rank multiplier
-                double multiplier = 1.0d;
-                if (player.hasPermission("hms.level.5")) multiplier = 2.5d;
-                else if (player.hasPermission("hms.level.4")) multiplier = 2.0d;
-                else if (player.hasPermission("hms.level.3")) multiplier = 1.75d;
-                else if (player.hasPermission("hms.level.2")) multiplier = 1.5d;
-                else if (player.hasPermission("hms.level.1")) multiplier = 1.25d;
-
-                //calculate revenue
-                int baseValue = hms.getConfig().getInt("command.verkauf." + args[0].toLowerCase(), 1000);
-                double revenue = (sellCountTotal / (double) baseValue) * multiplier;
-
-                try {
-                    Economy.add(player.getName(), BigDecimal.valueOf(revenue));
-                } catch (UserDoesNotExistException | NoLoanPermittedException e) {
-                    // This should not happen under normal circumstances, print stacktrace just in case
-                    e.printStackTrace();
-                }
-
-                storage.getPlayer(player).incrementDouble(DataType.REVENUE, revenue);
-                revenue = Utils.roundDouble(revenue);
-
-                //print message
-                String materialFriendly = Language.makeStringFriendly(args[0]);
-                player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufSuccess", true, "%PREFIX%", "Verkauf",
-                        "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
-                        "%AMOUNT%", String.valueOf(sellCountTotal)));
-
-                hms.getLogger().info(Language.getMessagePlaceholders("cmdVerkaufSuccessLog", false, "%PLAYER%",
-                        player.getName(), "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
-                        "%AMOUNT%", String.valueOf(sellCountTotal)));
-            } else {
-
-                player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufNotInInv", true, "%PREFIX%", "Verkauf",
-                        "%MATERIAL%", Language.makeStringFriendly(args[0])));
-            }
-        }
+        else if (sellCountTotal > 0)
+            verkaufModule.rewardPlayer(player, toBeSold, sellCountTotal);
+        else
+            player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufNotInInv", true, "%PREFIX%", "Verkauf",
+                    "%MATERIAL%", Language.makeStringFriendly(toBeSold.name())));
     }
 }

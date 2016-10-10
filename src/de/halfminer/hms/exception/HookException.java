@@ -26,4 +26,10 @@ public class HookException extends Exception {
     public Exception getParentException() {
         return parent;
     }
+
+    @Override
+    public void printStackTrace() {
+        if (hasParentException()) parent.printStackTrace();
+        else super.printStackTrace();
+    }
 }

@@ -1,13 +1,17 @@
 package de.halfminer.hms.handlers;
 
 import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
+import net.ess3.api.Economy;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.math.BigDecimal;
 
 /**
  * - Hooks external plugins
@@ -52,6 +56,15 @@ public class HanHooks extends HalfminerHandler {
             balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
             return Utils.roundDouble(balance);
         } catch (UserDoesNotExistException e) {
+            throw new HookException(e);
+        }
+    }
+
+    public void addMoney(Player player, double amount) throws HookException {
+
+        try {
+            Economy.add(player.getName(), BigDecimal.valueOf(amount));
+        } catch (UserDoesNotExistException | NoLoanPermittedException e) {
             throw new HookException(e);
         }
     }

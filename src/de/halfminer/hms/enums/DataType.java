@@ -1,5 +1,8 @@
 package de.halfminer.hms.enums;
 
+/**
+ * Contains references to all stats type, usable with {@link de.halfminer.hms.util.HalfminerPlayer}
+ */
 public enum DataType {
 
     BLOCKS_BROKEN   ("blocksbroken"),

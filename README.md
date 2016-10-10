@@ -173,6 +173,13 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - Tps
     - Calculates ticks per second
     - Notifies staff when servers ticks TPS is too low
+  - Verkauf
+    - Auto sells chests on open
+      - Needs to be toggled
+    - Sell items that are sellable
+      - Custom multiplier per permission
+      - Price settable via config
+    - Can be accessed via command
 - **Commands**
   - /chat
     - Chat manipulation tools
@@ -248,10 +255,9 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - View own / other players stats
     - Allows to compare statistics easily
   - /verkauf
-    - Sell farm items
-    - Revenue configurable
+    - Sell sellable items via command
+    - Uses ModVerkauf for the actual sale
     - Possibility to sell multiple inventories at once
-    - Multipliers for ranks (via permissions)
   - /vote
     - Shows vote links (custom per player) and current votecount
     - Execute custom command when vote is received (configure Votifier to "/vote voted %PLAYER%")

@@ -38,7 +38,7 @@ public class Cmdcustomtext extends HalfminerCommand {
         try {
             cache = storage.getCache("customtext.txt");
         } catch (CachingException e) {
-            sender.sendMessage(Language.getMessagePlaceholders("cmdCustomtextError", true, "%PREFIX%", "Info"));
+            sender.sendMessage(Language.getMessagePlaceholders("errorOccurred", true, "%PREFIX%", "Info"));
             e.printStackTrace();
             return;
         }
@@ -122,7 +122,7 @@ public class Cmdcustomtext extends HalfminerCommand {
                     || e.getReason().equals(CachingException.Reason.FILE_EMPTY)) {
                 sender.sendMessage(Language.getMessagePlaceholders("cmdCustomtextNotFound", true, "%PREFIX%", "Info"));
             } else {
-                sender.sendMessage(Language.getMessagePlaceholders("cmdCustomtextError", true, "%PREFIX%", "Info"));
+                sender.sendMessage(Language.getMessagePlaceholders("errorOccurred", true, "%PREFIX%", "Info"));
                 hms.getLogger().warning(Language.getMessagePlaceholders("cmdCustomtextErrorLog",
                         false, "%ERROR%", e.getReason().toString()));
             }

@@ -1,5 +1,8 @@
 package de.halfminer.hms.enums;
 
+/**
+ * Contains references to all modules
+ */
 public enum ModuleType {
 
     ANTI_KILLFARMING    ("AntiKillfarming"),
@@ -17,7 +20,8 @@ public enum ModuleType {
     STATIC_LISTENERS    ("StaticListeners"),
     STATS               ("Stats"),
     TITLES              ("Titles"),
-    TPS                 ("Tps");
+    TPS                 ("Tps"),
+    VERKAUF             ("Verkauf");
 
     private final String className;
 

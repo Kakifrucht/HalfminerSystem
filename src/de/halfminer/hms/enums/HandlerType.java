@@ -1,5 +1,8 @@
 package de.halfminer.hms.enums;
 
+/**
+ * Contains references to all handlers
+ */
 public enum HandlerType {
 
     BOSS_BAR    ("BossBar"),
