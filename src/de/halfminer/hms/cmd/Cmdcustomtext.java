@@ -14,8 +14,7 @@ import java.util.List;
 /**
  * - Displays custom text data
  * - Should be binded via Bukkit aliases (commands.yml in server root)
- * - Utilizes CustomtextCache
- * - Extends CustomtextCache with syntax elements
+ * - Utilizes and extends CustomtextCache with syntax elements
  *   - Placeholder support for text
  *   - Make commands clickable by ending them with '/' character
  *     - A line must be started with '\' (backslash character) to be parsed
@@ -43,7 +42,7 @@ public class Cmdcustomtext extends HalfminerCommand {
             return;
         }
 
-        String chapter = Language.arrayToString(args, 0, false);
+        String chapter = Language.arrayToString(args, 0, false).toLowerCase();
 
         try {
             List<String> text = cache.getChapter(chapter);

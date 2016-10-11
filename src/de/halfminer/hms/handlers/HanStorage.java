@@ -26,8 +26,8 @@ import java.util.UUID;
  *   - Storage for other types of data
  * - Can easily be queried with YAML API
  * - Caches customtext files
- *   - To mark a chapter, use "#chaptername argument" (argument optional and not limited)
- *     - Supports aliases via "#chaptername argument|alias argument"
+ *   - To mark a chapter, use "#chaptername argument" (argument optional and not limited, case insensitive)
+ *     - Supports aliases via comma such as "#chaptername argument,alias argument"
  *   - Automatic replacement of '&' with Bukkit color code
  *   - If line ends with space char, add next line to current line
  * - Thread safe

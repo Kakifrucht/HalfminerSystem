@@ -23,8 +23,8 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Storage for other types of data
     - Can easily be queried with YAML API
     - Caches customtext files
-      - To mark a chapter, use "#chaptername argument" (argument optional and not limited)
-        - Supports aliases via "#chaptername argument|alias argument"
+      - To mark a chapter, use "#chaptername argument" (argument optional and not limited, case insensitive)
+        - Supports aliases via comma such as "#chaptername argument,alias argument"
       - Automatic replacement of '&' with Bukkit color code
       - If line ends with space char, add next line to current line
     - Thread safe
@@ -193,8 +193,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - /customtext
     - Displays custom text data
     - Should be binded via Bukkit aliases (commands.yml in server root)
-    - Utilizes CustomtextCache
-    - Extends CustomtextCache with syntax elements
+    - Utilizes and extends CustomtextCache with syntax elements
       - Placeholder support for text
       - Make commands clickable by ending them with '/' character
         - A line must be started with '\' (backslash character) to be parsed

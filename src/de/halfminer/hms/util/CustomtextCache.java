@@ -12,10 +12,10 @@ import java.util.Map;
 /**
  * Cache that reads customtext file formats, used by Cmdcustomtext and managed by HanStorage
  * Format:
- * #chapter subchapter|chapteralt subchapteralt
+ * #chapter subchapter,chapteralt subchapteralt
  * Text
  * If "Text" ends with a space char, consider the next line as continuation of current line
- * Chapter aliases are separated with '|' character
+ * Chapters are not case sensitive and aliases are separated with comma
  * The '&' character will be replaced with Bukkit's color code
  */
 public class CustomtextCache {
@@ -30,15 +30,16 @@ public class CustomtextCache {
 
     public List<String> getChapter(String chapter) throws CachingException {
 
-        if (wasModified()) reCacheFile();
+        if (chapter.length() == 0 || wasModified()) reCacheFile();
 
         if (cache.size() == 0)
             throw new CachingException(CachingException.Reason.FILE_EMPTY);
 
-        if (!cache.containsKey(chapter))
+        String lowercaseChapter = chapter.toLowerCase();
+        if (lowercaseChapter.length() == 0 || !cache.containsKey(lowercaseChapter))
             throw new CachingException(CachingException.Reason.CHAPTER_NOT_FOUND);
 
-        return cache.get(chapter);
+        return cache.get(lowercaseChapter);
     }
 
     private void reCacheFile() throws CachingException {
@@ -81,9 +82,9 @@ public class CustomtextCache {
                                 .replaceAll(" +", " ")  // replace spaces with single space
                                 .split("\\|");          // split at '|' character
 
-                        // remove leading/trailing whitespace
+                        // remove leading/trailing whitespace and lowercase (not case sensitive)
                         for (int i = 0; i < currentChapters.length; i++)
-                            currentChapters[i] = currentChapters[i].trim();
+                            currentChapters[i] = currentChapters[i].trim().toLowerCase();
 
                     } else {
 
