@@ -174,7 +174,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Calculates ticks per second
     - Notifies staff when servers ticks TPS is too low
   - Verkauf
-    - Auto sells chests on open
+    - Auto sells chests on inventory close
       - Needs to be toggled
     - Sell items that are sellable
       - Custom multiplier per permission

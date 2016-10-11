@@ -30,7 +30,7 @@ public class CustomtextCache {
 
     public List<String> getChapter(String chapter) throws CachingException {
 
-        if (chapter.length() == 0 || wasModified()) reCacheFile();
+        if (wasModified()) reCacheFile();
 
         if (cache.size() == 0)
             throw new CachingException(CachingException.Reason.FILE_EMPTY);

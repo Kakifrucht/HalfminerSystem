@@ -1,7 +1,6 @@
 package de.halfminer.hms.handlers;
 
 import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.util.Language;
@@ -64,7 +63,7 @@ public class HanHooks extends HalfminerHandler {
 
         try {
             Economy.add(player.getName(), BigDecimal.valueOf(amount));
-        } catch (UserDoesNotExistException | NoLoanPermittedException e) {
+        } catch (Exception e) {
             throw new HookException(e);
         }
     }

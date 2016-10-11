@@ -42,7 +42,7 @@ public class Cmdcustomtext extends HalfminerCommand {
             return;
         }
 
-        String chapter = Language.arrayToString(args, 0, false).toLowerCase();
+        String chapter = Language.arrayToString(args, 0, false);
 
         try {
             List<String> text = cache.getChapter(chapter);
@@ -78,6 +78,7 @@ public class Cmdcustomtext extends HalfminerCommand {
 
                             // if command was not escaped
                             if (sbCommand.length() > 1) {
+                                //TODO check for color code directly in front of command and in next component set color to this one
                                 TextComponent commandComponent = new TextComponent(sbCommand.toString());
                                 BaseComponent lastComponent = components.get(components.size() - 1);
 
