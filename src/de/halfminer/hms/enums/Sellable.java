@@ -43,7 +43,12 @@ public enum Sellable {
     }
 
     public static Sellable getFromMaterial(Material material) {
-        return valueOf(material.toString());
+
+        try {
+            return valueOf(material.toString());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public static Sellable getFromString(String string) {
