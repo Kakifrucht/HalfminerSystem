@@ -8,6 +8,7 @@ import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.ConfigurationSection;
@@ -144,7 +145,11 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
     public void sweep() {
 
         // remove uuid's that are offline for at least 10 minutes
-        autoSelling.removeIf(uuid ->
-                server.getOfflinePlayer(uuid).getLastPlayed() + 600000 < System.currentTimeMillis());
+        Iterator<UUID> it = autoSelling.iterator();
+        while (it.hasNext()) {
+            OfflinePlayer player = server.getOfflinePlayer(it.next());
+            if (!player.isOnline() && player.getLastPlayed() + 600000 < System.currentTimeMillis())
+                it.remove();
+        }
     }
 }
