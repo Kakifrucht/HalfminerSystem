@@ -80,7 +80,7 @@ public class CustomtextCache {
                         currentChapters = line
                                 .substring(1)           // remove #
                                 .replaceAll(" +", " ")  // replace spaces with single space
-                                .split("\\|");          // split at '|' character
+                                .split(",");          // split at komma
 
                         // remove leading/trailing whitespace and lowercase (not case sensitive)
                         for (int i = 0; i < currentChapters.length; i++)

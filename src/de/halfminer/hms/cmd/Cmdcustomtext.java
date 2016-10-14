@@ -3,12 +3,10 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.util.CustomtextCache;
 import de.halfminer.hms.util.Language;
-import net.md_5.bungee.api.chat.*;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,75 +44,18 @@ public class Cmdcustomtext extends HalfminerCommand {
 
         try {
             List<String> text = cache.getChapter(chapter);
-            if (!(sender instanceof Player)) {
-                for (String send : text)
-                    sender.sendMessage(Language.placeholderReplace(send, "%PLAYER%", Language.getMessage("consoleName")));
-                return;
-            }
 
-            for (String raw : text) {
+            if (sender instanceof Player) {
 
-                // placeholder replace, send message directly if not starting with '\' character
-                String send = Language.placeholderReplace(raw, "%PLAYER%", sender.getName());
-                if (!send.startsWith("\\")) {
-                    sender.sendMessage(send);
-                    continue;
+                for (String raw : text) {
+
+                    // placeholder replace, send message directly if not starting with '\' character
+                    String send = Language.placeholderReplace(raw, "%PLAYER%", sender.getName());
+                    if (!send.startsWith("\\")) sender.sendMessage(send);
+                    else ((Player) sender).spigot().sendMessage(Utils.makeCommandsClickable(send.substring(1)));
                 }
-
-                // build json message via component api
-                List<BaseComponent> components = new ArrayList<>();
-
-                StringBuilder sbText = new StringBuilder();
-                StringBuilder sbCommand = new StringBuilder();
-                boolean readingCommand = false;
-
-                for (int i = 1; i < send.length(); i++) {
-
-                    char current = send.charAt(i);
-
-                    if (current == '/') {
-
-                        if (readingCommand) {
-
-                            // if command was not escaped
-                            if (sbCommand.length() > 1) {
-                                //TODO check for color code directly in front of command and in next component set color to this one
-                                TextComponent commandComponent = new TextComponent(sbCommand.toString());
-                                BaseComponent lastComponent = components.get(components.size() - 1);
-
-                                // set color/boldness from last component, always set clickable commands italic
-                                commandComponent.setColor(lastComponent.getColor());
-                                commandComponent.setBold(lastComponent.isBold());
-                                commandComponent.setItalic(true);
-
-                                commandComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                        sbCommand.toString()));
-                                commandComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                        new ComponentBuilder(Language.getMessage("cmdCustomtextClick")).create()));
-
-                                components.add(commandComponent);
-                            } else sbText.append("/");
-
-                            sbCommand = new StringBuilder();
-                            readingCommand = false;
-                        } else {
-
-                            addToFromLegacyText(components, sbText.toString());
-                            sbText = new StringBuilder();
-                            readingCommand = true;
-                        }
-                    }
-
-                    if (readingCommand) sbCommand.append(current);
-                    else if (current != '/') sbText.append(current);
-                }
-
-                addToFromLegacyText(components, sbText.toString());
-                TextComponent componentToSend = new TextComponent();
-                components.forEach(componentToSend::addExtra);
-
-                ((Player) sender).spigot().sendMessage(componentToSend);
-            }
+            } else for (String send : text)
+                sender.sendMessage(Language.placeholderReplace(send, "%PLAYER%", Language.getMessage("consoleName")));
 
         } catch (CachingException e) {
 
@@ -127,9 +68,5 @@ public class Cmdcustomtext extends HalfminerCommand {
                         false, "%ERROR%", e.getReason().toString()));
             }
         }
-    }
-
-    private void addToFromLegacyText(List<BaseComponent> addTo, String legacyText) {
-        Collections.addAll(addTo, TextComponent.fromLegacyText(legacyText));
     }
 }
