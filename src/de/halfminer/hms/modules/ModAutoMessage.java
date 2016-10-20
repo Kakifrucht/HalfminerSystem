@@ -12,6 +12,7 @@ import java.util.Random;
 /**
  * - Sends messages in a given interval
  * - Messages configurable
+ *   - Commands can be made clickable (start with '~' and encapsulate command with trailing '/')
  */
 @SuppressWarnings("unused")
 public class ModAutoMessage extends HalfminerModule {
@@ -23,32 +24,38 @@ public class ModAutoMessage extends HalfminerModule {
     @Override
     public void loadConfig() {
 
-        // Load messages
         List<String> messagesList = hms.getConfig().getStringList("autoMessage.messages");
+        String separator = Language.getMessage("lineSeparator");
+
+        // If no messages are set disable
         if (messagesList.size() == 0) {
-            // If no messages are set disable
             if (running != null) running.cancel();
             return;
         }
-        // Build messages
-        String separator = Language.getMessage("lineSeparator");
-        messages = new ArrayList<>(messagesList.size());
-        for (String str : messagesList) {
-            String toAdd = ChatColor.translateAlternateColorCodes('&', str.replace("\\n", "\n"));
-            toAdd = " \n" + separator + ChatColor.RESET
-                    + toAdd + ChatColor.RESET
+
+        messages = new ArrayList<>();
+        for (String message : messagesList) {
+
+            boolean parseMessage = message.startsWith("~");
+
+            String buildMessage = parseMessage ? message.substring(1) : message;
+            buildMessage = " \n" + separator + ChatColor.RESET
+                    + ChatColor.translateAlternateColorCodes('&', buildMessage) + ChatColor.RESET
                     + "\n" + separator + ChatColor.RESET
                     + " ";
-            messages.add(toAdd);
+
+            if (parseMessage) buildMessage = "~" + buildMessage;
+            messages.add(buildMessage);
         }
 
         // Set task
         if (running != null) running.cancel();
-
         int interval = hms.getConfig().getInt("autoMessage.intervalSeconds", 240) * 20;
+
         running = scheduler.runTaskTimerAsynchronously(hms, () -> {
-            String message = messages.get(rnd.nextInt(messages.size()));
-            for (Player player : server.getOnlinePlayers()) player.sendMessage(message);
+
+            String message = this.messages.get(rnd.nextInt(this.messages.size()));
+            for (Player player : server.getOnlinePlayers()) Language.sendParsedText(player, message);
         }, interval, interval);
     }
 }

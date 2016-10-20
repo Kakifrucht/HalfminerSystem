@@ -18,7 +18,6 @@ public class Cmdsignedit extends HalfminerCommand {
     }
 
     @Override
-    @SuppressWarnings("EmptyCatchBlock")
     public void run(CommandSender sender, String label, String[] args) {
 
         if (sender instanceof Player) {
@@ -36,7 +35,7 @@ public class Cmdsignedit extends HalfminerCommand {
                         try {
                             amountToCopy = Byte.parseByte(args[1]);
                             if (amountToCopy > 9 || amountToCopy < 1) amountToCopy = 1;
-                        } catch (NumberFormatException e) {
+                        } catch (NumberFormatException ignored) {
                         }
                     }
 
@@ -61,7 +60,7 @@ public class Cmdsignedit extends HalfminerCommand {
                             usageMessage(player);
                             return;
                         }
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException ignored) {
                     }
                 }
             }
@@ -75,5 +74,4 @@ public class Cmdsignedit extends HalfminerCommand {
     private void usageMessage(Player player) {
         player.sendMessage(Language.getMessagePlaceholders("cmdSigneditUsage", true, "%PREFIX%", "Info"));
     }
-
 }

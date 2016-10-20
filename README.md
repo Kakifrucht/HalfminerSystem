@@ -67,6 +67,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - AutoMessage
     - Sends messages in a given interval
     - Messages configurable
+      - Commands can be made clickable (start with '~' and encapsulate command with trailing '/')
   - ChatManager
     - Hooks into Vault to get prefix and suffix
     - Custom chatformats
@@ -196,9 +197,8 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Utilizes and extends CustomtextCache with syntax elements
       - Placeholder support for text
       - Make commands clickable by ending them with '/' character
-        - A line must be started with '\' (backslash character) to be parsed
-        - Escape clickable command via "//"
-        - Commands are written in italic
+        - A line must be started with '~' to be parsed
+        - Commands will be printed in italic
   - /disposal
     - Opens portable disposal
   - /hms

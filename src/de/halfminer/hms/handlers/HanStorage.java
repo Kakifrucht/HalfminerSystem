@@ -112,8 +112,12 @@ public class HanStorage extends HalfminerHandler implements Disableable {
                 if (cacheFile.createNewFile()) {
                     hms.getLogger().info(Language.getMessagePlaceholders("hanStorageCacheCreate", false,
                             "%DATEINAME%", cacheFile.getName()));
+                } else {
+                    hms.getLogger().severe(Language.getMessage("hanStorageCacheCouldNotCreate"));
+                    throw new CachingException(CachingException.Reason.CANNOT_WRITE);
                 }
             } catch (IOException e) {
+                // small duplication :)
                 hms.getLogger().severe(Language.getMessage("hanStorageCacheCouldNotCreate"));
                 throw new CachingException(CachingException.Reason.CANNOT_WRITE);
             }
