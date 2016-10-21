@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * - Shows join title
@@ -39,7 +40,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private final Map<String, String> lang = new HashMap<>();
-    private final Map<Player, Double> balances = new HashMap<>();
+    private final Map<Player, Double> balances = new ConcurrentHashMap<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void joinTitles(PlayerJoinEvent e) {
