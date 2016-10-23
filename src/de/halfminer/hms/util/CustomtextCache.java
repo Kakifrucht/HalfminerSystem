@@ -115,12 +115,12 @@ public class CustomtextCache {
 
         private void storeInCache() throws CachingException {
 
+            if (currentLine.length() > 0) currentContent.add(currentLine);
+
             if (currentChapters == null || currentContent.size() == 0) {
                 clearCurrent();
                 return;
             }
-
-            if (currentLine.length() > 0) currentContent.add(currentLine);
 
             for (String chapter : currentChapters) {
 

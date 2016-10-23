@@ -199,6 +199,9 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Make commands clickable by ending them with '/' character
         - A line must be started with '~' to be parsed
         - Commands will be printed in italic
+      - Support for command execution
+        - Lines starting with "~>" will make the player execute following text
+        - Lines starting with "~~>" will make the console execute following text as command
   - /disposal
     - Opens portable disposal
   - /hms

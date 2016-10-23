@@ -6,6 +6,8 @@ import de.halfminer.hms.util.Language;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * - Displays custom text data
  * - Should be binded via Bukkit aliases (commands.yml in server root)
@@ -14,6 +16,9 @@ import org.bukkit.entity.Player;
  *   - Make commands clickable by ending them with '/' character
  *     - A line must be started with '~' to be parsed
  *     - Commands will be printed in italic
+ *   - Support for command execution
+ *     - Lines starting with "~>" will make the player execute following text
+ *     - Lines starting with "~~>" will make the console execute following text as command
  */
 @SuppressWarnings("unused")
 public class Cmdcustomtext extends HalfminerCommand {
@@ -36,13 +41,39 @@ public class Cmdcustomtext extends HalfminerCommand {
             return;
         }
 
-        String chapter = Language.arrayToString(args, 0, false);
+        String chapterName = Language.arrayToString(args, 0, false);
 
         try {
 
-            for (String raw : cache.getChapter(chapter))
-                Language.sendParsedText(sender, Language.placeholderReplace(raw, "%PLAYER%",
-                        sender instanceof Player ? sender.getName() : Language.getMessage("consoleName")));
+            List<String> chapter = cache.getChapter(chapterName);
+            boolean senderIsPlayer = sender instanceof Player;
+
+            for (String raw : chapter) {
+
+                String placeholderReplaced = Language.placeholderReplace(raw, "%PLAYER%",
+                        senderIsPlayer ? sender.getName() : Language.getMessage("consoleName"));
+
+                // check for command (only for players)
+                if (senderIsPlayer) {
+
+                    Player player = (Player) sender;
+                    if (placeholderReplaced.startsWith("~>")) {
+
+                        player.chat(placeholderReplaced.substring(2).trim());
+                        return;
+                    } else if (placeholderReplaced.startsWith("~~>")) {
+
+                        String command = placeholderReplaced.substring(3).trim();
+                        if (command.startsWith("/")) command = command.substring(1);
+
+                        server.dispatchCommand(server.getConsoleSender(), command);
+                        return;
+                    }
+                }
+
+                Language.sendParsedText(sender, placeholderReplaced);
+            }
+
 
         } catch (CachingException e) {
 
