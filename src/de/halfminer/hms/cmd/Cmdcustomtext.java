@@ -60,14 +60,14 @@ public class Cmdcustomtext extends HalfminerCommand {
                     if (placeholderReplaced.startsWith("~>")) {
 
                         player.chat(placeholderReplaced.substring(2).trim());
-                        return;
+                        continue;
                     } else if (placeholderReplaced.startsWith("~~>")) {
 
                         String command = placeholderReplaced.substring(3).trim();
                         if (command.startsWith("/")) command = command.substring(1);
 
                         server.dispatchCommand(server.getConsoleSender(), command);
-                        return;
+                        continue;
                     }
                 }
 
