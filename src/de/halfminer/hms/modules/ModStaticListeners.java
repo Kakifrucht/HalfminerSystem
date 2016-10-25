@@ -22,7 +22,6 @@ import java.util.List;
 
 /**
  * - Removes quit message
- * - Disables some deals in villager trades
  * - Keeps itemname of colored items in anvil
  * - Commandfilter
  *   - Disables commands in bed (teleport glitch)
@@ -38,32 +37,24 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void merchantBlockAndAnvilNameKeep(InventoryClickEvent e) {
+    public void anvilKeepName(InventoryClickEvent e) {
 
         Inventory clickedInv = e.getInventory();
         if (clickedInv == null || !(e.getWhoClicked() instanceof Player)) return;
         Player player = (Player) e.getWhoClicked();
 
         ItemStack clickedItem = e.getCurrentItem();
-        if (clickedItem != null && !clickedItem.getType().equals(Material.AIR)) {
+        if (clickedItem != null
+                && !clickedItem.getType().equals(Material.AIR)
+                && clickedInv.getType() == InventoryType.ANVIL
+                && e.getRawSlot() == 2) {
 
-            // deny book trading
-            if (clickedInv.getType() == InventoryType.MERCHANT
-                    && !player.hasPermission("hms.bypass.merchant")
-                    && clickedItem.getType().equals(Material.WRITTEN_BOOK)) {
+            ItemMeta originalMeta = clickedInv.getItem(0).getItemMeta();
 
-                e.setCancelled(true);
+            if (originalMeta.hasDisplayName()
+                    && originalMeta.getDisplayName().contains("" + ChatColor.COLOR_CHAR)) {
 
-            // keep colored names
-            } else if (clickedInv.getType() == InventoryType.ANVIL && e.getRawSlot() == 2) {
-
-                ItemMeta originalMeta = clickedInv.getItem(0).getItemMeta();
-
-                if (originalMeta.hasDisplayName()
-                        && originalMeta.getDisplayName().contains("" + ChatColor.COLOR_CHAR)) {
-
-                    Utils.setDisplayName(clickedItem, originalMeta.getDisplayName());
-                }
+                Utils.setDisplayName(clickedItem, originalMeta.getDisplayName());
             }
         }
     }

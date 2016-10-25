@@ -93,7 +93,6 @@ permissions:
       hms.bypass.commandfilter: true
       hms.bypass.glitchcheck: true
       hms.bypass.hopperlimit: true
-      hms.bypass.merchant: true
       hms.bypass.nethercheck: true
       hms.bypass.nokillfarming: true
       hms.bypass.pvp: true
@@ -167,8 +166,6 @@ permissions:
     description: Bypass glitch movement check
   hms.bypass.hopperlimit:
     description: Bypass hopper placement limit
-  hms.bypass.merchant:
-    description: Bypass merchant restrictions
   hms.bypass.nethercheck:
     description: Bypass netherroof position check
   hms.bypass.nokillfarming:
