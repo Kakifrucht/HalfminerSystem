@@ -51,7 +51,8 @@ public class Cmdcustomtext extends HalfminerCommand {
             for (String raw : chapter) {
 
                 String placeholderReplaced = Language.placeholderReplace(raw, "%PLAYER%",
-                        senderIsPlayer ? sender.getName() : Language.getMessage("consoleName"));
+                        senderIsPlayer ? sender.getName() : Language.getMessage("consoleName"),
+                        "%ARGS%", chapterName);
 
                 // check for command (only for players)
                 if (senderIsPlayer) {
@@ -83,7 +84,7 @@ public class Cmdcustomtext extends HalfminerCommand {
             } else {
                 sender.sendMessage(Language.getMessagePlaceholders("errorOccurred", true, "%PREFIX%", "Info"));
                 hms.getLogger().warning(Language.getMessagePlaceholders("cmdCustomtextErrorLog",
-                        false, "%ERROR%", e.getReason().toString()));
+                        false, "%ERROR%", e.getCleanReason()));
             }
         }
     }

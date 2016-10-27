@@ -50,6 +50,8 @@ public class CustomtextCache {
             lastCached = file.lastModified();
             this.cache = helper.getCache();
 
+        } catch (CachingException e) {
+            throw e;
         } catch (Exception e) {
             throw new CachingException(CachingException.Reason.CANNOT_READ);
         }
@@ -63,7 +65,9 @@ public class CustomtextCache {
 
         private final Map<String, List<String>> cache = new HashMap<>();
 
-        private String[] currentChapters = null;
+        private int lineNumber = 0;
+        private int lineNumberLastHashtag = 0;
+        private List<String> currentChapters = new ArrayList<>();
         private List<String> currentContent = new ArrayList<>();
         private String currentLine = "";
 
@@ -74,17 +78,21 @@ public class CustomtextCache {
                 String line;
                 while ((line = reader.readLine()) != null) {
 
+                    lineNumber++;
                     if (line.startsWith("#")) {
 
                         storeInCache();
-                        currentChapters = line
+                        String[] chapters = line
                                 .substring(1)           // remove #
                                 .replaceAll(" +", " ")  // replace spaces with single space
                                 .split(",");            // split at komma
 
                         // remove leading/trailing whitespace and lowercase (not case sensitive)
-                        for (int i = 0; i < currentChapters.length; i++)
-                            currentChapters[i] = currentChapters[i].trim().toLowerCase();
+                        for (String chapter : chapters)
+                            if (chapter.length() > 1)
+                                currentChapters.add(chapter.trim().toLowerCase());
+
+                        lineNumberLastHashtag = lineNumber;
 
                     } else {
 
@@ -125,7 +133,7 @@ public class CustomtextCache {
             for (String chapter : currentChapters) {
 
                 if (chapter.length() == 0 || cache.containsKey(chapter))
-                    throw new CachingException(CachingException.Reason.SYNTAX_ERROR);
+                    throw new CachingException(CachingException.Reason.SYNTAX_ERROR, lineNumberLastHashtag);
 
                 cache.put(chapter, currentContent);
             }
@@ -134,9 +142,9 @@ public class CustomtextCache {
         }
 
         private void clearCurrent() {
-            currentChapters = null;
-            currentLine = "";
+            currentChapters = new ArrayList<>();
             currentContent = new ArrayList<>();
+            currentLine = "";
         }
     }
 }

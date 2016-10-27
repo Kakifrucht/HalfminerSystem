@@ -181,7 +181,7 @@ localization:
   cmdChatTitle: '&7Titel an &e%SENDTO% &7für &a%TIME% Sekunden &7versendet, Nachricht: &r%MESSAGE%'
   cmdCustomtextClick: 'Klicken, um das Kommando auszuführen'
   cmdCustomtextErrorLog: 'Beim Parsen von customtext.txt ist folgender Fehler aufgetreten: %ERROR%'
-  cmdCustomtextNotFound: '&cUnbekanntes Kapitel'
+  cmdCustomtextNotFound: '&cUnbekanntes Thema'
   cmdDisposalTitle: 'Mülleimer'
   cmdHmsConfigReloaded: '&aKonfiguration neugeladen'
   cmdHmsHomeblockRemove: '&a%PLAYER% &7kann jetzt /home benutzen'
