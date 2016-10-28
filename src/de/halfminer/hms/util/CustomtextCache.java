@@ -15,7 +15,7 @@ import java.util.Map;
  * #chapter subchapter,chapteralt subchapteralt
  * Text
  * If "Text" ends with a space char, consider the next line as continuation of current line
- * Chapters are not case sensitive and aliases are separated with comma
+ * Chapters are not case sensitive and aliases are separated with comma, they may contain wildcards with '*' character
  * The '&' character will be replaced with Bukkit's color code
  */
 public class CustomtextCache {
@@ -28,18 +28,27 @@ public class CustomtextCache {
         this.file = file;
     }
 
-    public List<String> getChapter(String chapter) throws CachingException {
+    public List<String> getChapter(String[] chapter) throws CachingException {
 
         if (wasModified()) reCacheFile();
 
         if (cache.size() == 0)
             throw new CachingException(CachingException.Reason.FILE_EMPTY);
 
-        String lowercaseChapter = chapter.toLowerCase();
-        if (lowercaseChapter.length() == 0 || !cache.containsKey(lowercaseChapter))
-            throw new CachingException(CachingException.Reason.CHAPTER_NOT_FOUND);
+        String[] chapterLowercase = new String[chapter.length];
+        for (int i = 0; i < chapter.length; i++)
+            chapterLowercase[i] = chapter[i].toLowerCase();
 
-        return cache.get(lowercaseChapter);
+        // check for literal argument and if not found, for wildcards
+        String currentChapter = Language.arrayToString(chapterLowercase, 0, false);
+        for (int i = chapterLowercase.length; i >= 0; i--) {
+            if (cache.containsKey(currentChapter))
+                return cache.get(currentChapter);
+            if (i > 0)
+                currentChapter = Language.arrayToString(chapterLowercase, 0, i, false) + " *";
+        }
+
+        throw new CachingException(CachingException.Reason.CHAPTER_NOT_FOUND);
     }
 
     private void reCacheFile() throws CachingException {

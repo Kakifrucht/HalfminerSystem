@@ -218,7 +218,7 @@ localization:
   cmdLagServerLag: '&cDer Server ist sehr instabil, das Team arbeitet daran'
   cmdLagServerUnstable: '&eDer Server ist etwas instabil, das Team arbeitet daran'
   cmdLagStable: '&aDie Verbindung ist stabil'
-  cmdNeutpAlreadyUsed: '&cDu kannst diesen Befehl nur einmal verwenden'
+  cmdNeutpAlreadyUsed: '&cDu kannst Neutp nur einmal verwenden, es wurde ein automatischer Homepunkt angelegt den du mit &a/home &cerreichen kannst'
   cmdNeutpBossbar: 'Lies die &a/hilfe &fum mehr über den Server zu erfahren'
   cmdNeutpDocumentation: '&7Es wurde ein automatischer Homepunkt angelegt (&e/home&7). Du kannst einen neuen mit &e/sethome&7 setzen. Alle Informationen zum Server unter &e/hilfe&7.'
   cmdNeutpLog: 'Neutp: %PLAYER% wurde zu %LOCATION% teleportiert'

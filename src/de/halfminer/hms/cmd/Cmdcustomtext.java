@@ -41,18 +41,16 @@ public class Cmdcustomtext extends HalfminerCommand {
             return;
         }
 
-        String chapterName = Language.arrayToString(args, 0, false);
-
         try {
 
-            List<String> chapter = cache.getChapter(chapterName);
+            List<String> chapter = cache.getChapter(args);
             boolean senderIsPlayer = sender instanceof Player;
 
             for (String raw : chapter) {
 
                 String placeholderReplaced = Language.placeholderReplace(raw, "%PLAYER%",
                         senderIsPlayer ? sender.getName() : Language.getMessage("consoleName"),
-                        "%ARGS%", chapterName);
+                        "%ARGS%", Language.arrayToString(args, 0, false));
 
                 // check for command (only for players)
                 if (senderIsPlayer) {

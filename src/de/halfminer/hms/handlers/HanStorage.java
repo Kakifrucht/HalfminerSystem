@@ -28,6 +28,7 @@ import java.util.UUID;
  * - Caches customtext files
  *   - To mark a chapter, use "#chaptername argument" (argument optional and not limited, case insensitive)
  *     - Supports aliases via comma such as "#chaptername argument,alias argument"
+ *     - Supports wildcards, such as "#chaptername argument" or "#chaptername *"
  *   - Automatic replacement of '&' with Bukkit color code
  *   - If line ends with space char, add next line to current line
  * - Thread safe

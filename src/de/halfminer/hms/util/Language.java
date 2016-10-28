@@ -122,18 +122,33 @@ public class Language {
     }
 
     /**
-     * Takes an array and creates the string with spaces between entries, starting from given index
+     * Takes an array and creates the string with spaces between entries, starting from given startIndex
      *
-     * @param args           Array to convert
-     * @param index          int to start from
+     * @param array Array to convert
+     * @param startIndex int to start from
      * @param translateColor if true, will also translate color codes &
      * @return String
      */
-    public static String arrayToString(String[] args, int index, boolean translateColor) {
+    public static String arrayToString(String[] array, int startIndex, boolean translateColor) {
+        return arrayToString(array, startIndex, array.length, translateColor);
+    }
+
+    /**
+     * Takes an array and creates the string with spaces between entries, starting from given startIndex
+     * until given endIndex
+     *
+     * @param array Array to convert
+     * @param startIndex int to start from
+     * @param endIndex int to end
+     * @param translateColor if true, will also translate color codes &
+     * @return String
+     */
+    public static String arrayToString(String[] array, int startIndex, int endIndex, boolean translateColor) {
+
         String toReturn = "";
-        if (args.length == 0) return toReturn;
-        for (int i = index; i < args.length; i++) {
-            toReturn += args[i] + ' ';
+        if (array.length == 0) return toReturn;
+        for (int i = startIndex; i < array.length && i < endIndex; i++) {
+            toReturn += array[i] + ' ';
         }
         if (translateColor) toReturn = ChatColor.translateAlternateColorCodes('&', toReturn);
         return toReturn.substring(0, toReturn.length() - 1);
