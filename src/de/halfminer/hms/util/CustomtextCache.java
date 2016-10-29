@@ -16,6 +16,7 @@ import java.util.Map;
  * Text
  * If "Text" ends with a space char, consider the next line as continuation of current line
  * Chapters are not case sensitive and aliases are separated with comma, they may contain wildcards with '*' character
+ * They may also contain aliases in between, such as #chapter subchapter|subchapteralias
  * The '&' character will be replaced with Bukkit's color code
  */
 public class CustomtextCache {
@@ -62,6 +63,7 @@ public class CustomtextCache {
         } catch (CachingException e) {
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CachingException(CachingException.Reason.CANNOT_READ);
         }
     }
@@ -96,10 +98,12 @@ public class CustomtextCache {
                                 .replaceAll(" +", " ")  // replace spaces with single space
                                 .split(",");            // split at komma
 
-                        // remove leading/trailing whitespace and lowercase (not case sensitive)
-                        for (String chapter : chapters)
-                            if (chapter.length() > 1)
-                                currentChapters.add(chapter.trim().toLowerCase());
+                        for (String chapter : chapters) {
+                            // remove leading/trailing whitespace and lowercase (not case sensitive)
+                            String trimmed = chapter.trim().toLowerCase();
+                            // add to current chapters, parse additional "|" seperated aliases
+                            currentChapters.addAll(parseChaptersToList(trimmed));
+                        }
 
                         lineNumberLastHashtag = lineNumber;
 
@@ -134,7 +138,7 @@ public class CustomtextCache {
 
             if (currentLine.length() > 0) currentContent.add(currentLine);
 
-            if (currentChapters == null || currentContent.size() == 0) {
+            if (currentChapters.size() == 0 || currentContent.size() == 0) {
                 clearCurrent();
                 return;
             }
@@ -148,6 +152,49 @@ public class CustomtextCache {
             }
 
             clearCurrent();
+        }
+
+        private List<String> parseChaptersToList(String chapters) {
+
+            List<String> toReturn = new ArrayList<>();
+
+            String[] argumentsSplit = chapters.split(" ");
+            String[][] allChapters = new String[argumentsSplit.length][];
+            List<Pair<Integer, Integer>> currentIndex = new ArrayList<>(argumentsSplit.length);
+
+            for (int i = 0; i < allChapters.length; i++) {
+                allChapters[i] = argumentsSplit[i].split("\\|");
+                currentIndex.add(new Pair<>(0, allChapters[i].length - 1));
+            }
+
+            do {
+                String addToList = "";
+                for (int i = 0; i < allChapters.length; i++) {
+                    int index = currentIndex.get(i).getLeft();
+                    addToList += allChapters[i][index] + " ";
+                }
+
+                if (addToList.length() > 0) {
+                    // cut last space char
+                    addToList = addToList.substring(0, addToList.length() - 1);
+                    toReturn.add(addToList);
+                }
+
+            } while (incrementCounter(currentIndex));
+
+            return toReturn;
+        }
+
+        private boolean incrementCounter(List<Pair<Integer, Integer>> counterListToIncrement) {
+
+            for (Pair<Integer, Integer> currentPair : counterListToIncrement) {
+                int currentIndex = currentPair.getLeft();
+                if (currentIndex < currentPair.getRight()) {
+                    currentPair.setLeft(currentIndex + 1);
+                    return true;
+                } else currentPair.setLeft(0);
+            }
+            return false;
         }
 
         private void clearCurrent() {
