@@ -145,8 +145,8 @@ public class Language {
      */
     public static String arrayToString(String[] array, int startIndex, int endIndex, boolean translateColor) {
 
-        if (startIndex >= endIndex) throw new IllegalArgumentException
-                ("startIndex (" + startIndex + ") must be smaller then endIndex(" + endIndex + ")");
+        if (!(startIndex <= endIndex)) throw new IllegalArgumentException
+                ("startIndex (" + startIndex + ") must be smaller or equal to endIndex(" + endIndex + ")");
 
         String toReturn = "";
         if (array.length == 0) return toReturn;

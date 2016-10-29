@@ -154,24 +154,31 @@ public class CustomtextCache {
             clearCurrent();
         }
 
+        /**
+         * Takes a pre parsed chapter string and creates every combination when splitting arguments at '|' character
+         * as aliases. For example: String "test test2|test3|test4" will create a list that contains "test test2",
+         * "test test3" and "test test4". It may contain more split arguments such as "test|test2 test3|test4|test5" etc.
+         *
+         * @param chapters pre parsed chapter string to split further
+         * @return list containing every combination of given string
+         */
         private List<String> parseChaptersToList(String chapters) {
 
             List<String> toReturn = new ArrayList<>();
 
+            // array containing commands split at space char
             String[] argumentsSplit = chapters.split(" ");
-            String[][] allChapters = new String[argumentsSplit.length][];
-            List<Pair<Integer, Integer>> currentIndex = new ArrayList<>(argumentsSplit.length);
+            // list containing a pair, where left value is current index and right value is further split array at '|' char
+            List<Pair<Integer, String[]>> allArgumentsSplit = new ArrayList<>(argumentsSplit.length);
 
-            for (int i = 0; i < allChapters.length; i++) {
-                allChapters[i] = argumentsSplit[i].split("\\|");
-                currentIndex.add(new Pair<>(0, allChapters[i].length - 1));
-            }
+            for (String splitAtSpace : argumentsSplit)
+                allArgumentsSplit.add(new Pair<>(0, splitAtSpace.split("\\|")));
 
             do {
                 String addToList = "";
-                for (int i = 0; i < allChapters.length; i++) {
-                    int index = currentIndex.get(i).getLeft();
-                    addToList += allChapters[i][index] + " ";
+                for (Pair<Integer, String[]> currentPair : allArgumentsSplit) {
+                    int index = currentPair.getLeft();
+                    addToList += currentPair.getRight()[index] + " ";
                 }
 
                 if (addToList.length() > 0) {
@@ -180,16 +187,23 @@ public class CustomtextCache {
                     toReturn.add(addToList);
                 }
 
-            } while (incrementCounter(currentIndex));
+            } while (incrementCounter(allArgumentsSplit));
 
             return toReturn;
         }
 
-        private boolean incrementCounter(List<Pair<Integer, Integer>> counterListToIncrement) {
+        /**
+         * Increments a list containing pairs of current indices, returning false if every combination has been met.
+         * It will modify the index part of the list passed.
+         *
+         * @param counterListToIncrement list containing a pair consisting of current index and array of strings
+         * @return true if list was incremented and false if algorithm should terminate
+         */
+        private boolean incrementCounter(List<Pair<Integer, String[]>> counterListToIncrement) {
 
-            for (Pair<Integer, Integer> currentPair : counterListToIncrement) {
+            for (Pair<Integer, String[]> currentPair : counterListToIncrement) {
                 int currentIndex = currentPair.getLeft();
-                if (currentIndex < currentPair.getRight()) {
+                if (currentIndex < currentPair.getRight().length - 1) {
                     currentPair.setLeft(currentIndex + 1);
                     return true;
                 } else currentPair.setLeft(0);
