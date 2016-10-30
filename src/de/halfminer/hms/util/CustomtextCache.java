@@ -146,7 +146,7 @@ public class CustomtextCache {
             for (String chapter : currentChapters) {
 
                 if (chapter.length() == 0 || cache.containsKey(chapter))
-                    throw new CachingException(CachingException.Reason.SYNTAX_ERROR, lineNumberLastHashtag);
+                    throw new CachingException(CachingException.Reason.SYNTAX_ERROR, lineNumberLastHashtag, chapter);
 
                 cache.put(chapter, currentContent);
             }

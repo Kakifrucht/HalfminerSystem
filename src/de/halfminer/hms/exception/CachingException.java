@@ -9,15 +9,18 @@ public class CachingException extends Exception {
 
     private final Reason reason;
     private final int lineNumber;
+    private final String chapterName;
 
     public CachingException(Reason reason) {
         this.reason = reason;
         this.lineNumber = Integer.MIN_VALUE;
+        this.chapterName = "";
     }
 
-    public CachingException(Reason reason, int lineNumber) {
+    public CachingException(Reason reason, int lineNumber, String chapterName) {
         this.reason = reason;
         this.lineNumber = lineNumber;
+        this.chapterName = chapterName;
     }
 
     public Reason getReason() {
@@ -27,7 +30,7 @@ public class CachingException extends Exception {
     public String getCleanReason() {
 
         String cleanString = Language.makeStringFriendly(reason.name());
-        if (lineNumber > 0) cleanString += " (l" + lineNumber + ")";
+        if (lineNumber > 0) cleanString += " (l" + lineNumber + ", " + chapterName + ")";
         return cleanString;
     }
 
