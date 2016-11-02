@@ -311,7 +311,7 @@ localization:
   modPvPKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK% &7Kills in Folge'
   modRespawnFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modRespawnForced: '&7Du wurdest von einem Serverteam-Mitglied zum Spawn teleportiert'
-  modRespawnHeadBroadcast: '&e%PLAYER% &ahat seinen eigenen Kopf erhalten!'
+  modRespawnHeadBroadcast: '&e%PLAYER% &ahat seinen eigenen Kopf erhalten'
   modRespawnHeadLore: '&7Zufallsdrop'
   modSignEditLinePasted: '&aSchild editiert'
   modSignEditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'

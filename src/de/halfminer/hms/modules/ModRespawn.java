@@ -182,7 +182,8 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         firstSpawnCommand = hms.getConfig().getString("respawn.firstJoinCommand", "");
 
         welcomeWords = new HashSet<>();
-        welcomeWords.addAll(hms.getConfig().getStringList("respawn.welcomeWords").stream().collect(Collectors.toList()));
+        welcomeWords.addAll(hms.getConfig().getStringList("respawn.welcomeWords")
+                .stream().map(String::toLowerCase).collect(Collectors.toList()));
 
         timeForWelcomeSeconds = hms.getConfig().getInt("respawn.timeForWelcomeSeconds", 300);
         randomRange = hms.getConfig().getInt("respawn.randomRange", 1);
