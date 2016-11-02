@@ -134,6 +134,10 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Adds a first time join
       - Else, removes join message
       - Execute custom command on first join
+    - Adds random chance to get own head dropped if new players are being welcomed
+      - Custom welcome words
+      - Cooldown to prevent misuse
+      - Custom probability
   - SignEdit
     - Allows editing of signs
     - Use command /signedit

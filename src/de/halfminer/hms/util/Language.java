@@ -255,4 +255,22 @@ public class Language {
         components.forEach(parsedComponent::addExtra);
         return parsedComponent;
     }
+
+    public static String filterNonUsernameChars(String toFilter) {
+
+        StringBuilder sb = new StringBuilder(toFilter.toLowerCase());
+
+        for (int i = 0; i < sb.length(); i++) {
+
+            char toCheck = sb.charAt(i);
+            if (Character.isLetter(toCheck) || Character.isDigit(toCheck) || toCheck == '_' || toCheck == ' ') continue;
+
+            sb.deleteCharAt(i);
+            i--;
+        }
+
+        if (sb.length() > 16) sb.setLength(16);
+
+        return sb.toString();
+    }
 }

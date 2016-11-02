@@ -5,6 +5,7 @@ import de.halfminer.hms.util.Language;
 /**
  * Exception thrown by HanStorage, if the cache doesn't contain a chapter or cannot parse a file due to syntax error
  */
+@SuppressWarnings("SameParameterValue")
 public class CachingException extends Exception {
 
     private final Reason reason;

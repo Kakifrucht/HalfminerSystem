@@ -1,5 +1,8 @@
 #HalfminerSystem Config
 command:
+  hms:
+    #Path to remote schematic location for /hms copyschematic
+    remoteSchematicPath: '/path'
   home:
     #Time in minutes until /home will be blocked
     timeUntilHomeBlockMinutes: 15
@@ -120,6 +123,15 @@ pvp:
 respawn:
   #Command to be run on first player join, supports %PLAYER% placeholder
   firstJoinCommand: 'kit starter %PLAYER%'
+  #Range per thousand, 1 is equivalent to 0,1%, 2 to 0,2% etc.
+  randomRange: 1
+  #Time in seconds a player can welcome another player, this will also be the threshold value to prevent abuse
+  timeForWelcomeSeconds: 300
+  #Words of which one needs to be matched (case insensitive) to be able to win own head
+  welcomeWords:
+  - 'willkommen'
+  - 'willkommen,'
+  - 'hallo'
 skillLevel:
   #Level that has to be reached for a derank to occur
   derankThreshold: 16
@@ -299,6 +311,8 @@ localization:
   modPvPKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK% &7Kills in Folge'
   modRespawnFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modRespawnForced: '&7Du wurdest von einem Serverteam-Mitglied zum Spawn teleportiert'
+  modRespawnHeadBroadcast: '&e%PLAYER% &ahat seinen eigenen Kopf erhalten!'
+  modRespawnHeadLore: '&7Zufallsdrop'
   modSignEditLinePasted: '&aSchild editiert'
   modSignEditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
   modSignEditSignPasted: '&aText eingefügt, es verbleiben &e%AMOUNT% &aKopien'

@@ -41,7 +41,6 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
 
         Inventory clickedInv = e.getInventory();
         if (clickedInv == null || !(e.getWhoClicked() instanceof Player)) return;
-        Player player = (Player) e.getWhoClicked();
 
         ItemStack clickedItem = e.getCurrentItem();
         if (clickedItem != null

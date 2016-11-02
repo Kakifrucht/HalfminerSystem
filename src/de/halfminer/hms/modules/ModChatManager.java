@@ -135,7 +135,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         Set<Player> mentioned = new HashSet<>();
         long currentTime = System.currentTimeMillis() / 1000;
-        for (String str : filterNonUsernameChars(message).split(" ")) {
+        for (String str : Language.filterNonUsernameChars(message).split(" ")) {
 
             if (players.containsKey(str)) {
                 Player pMentioned = players.get(str);
@@ -233,24 +233,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 && amountUppercase > (message.length() / 2)) msg = msg.toLowerCase();
 
         return msg;
-    }
-
-    private String filterNonUsernameChars(String toFilter) {
-
-        StringBuilder sb = new StringBuilder(toFilter.toLowerCase());
-
-        for (int i = 0; i < sb.length(); i++) {
-
-            char toCheck = sb.charAt(i);
-            if (Character.isLetter(toCheck) || Character.isDigit(toCheck) || toCheck == '_' || toCheck == ' ') continue;
-
-            sb.deleteCharAt(i);
-            i--;
-        }
-
-        if (sb.length() > 16) sb.setLength(16);
-
-        return sb.toString();
     }
 
     private boolean hasLastMessage(Player p) {
