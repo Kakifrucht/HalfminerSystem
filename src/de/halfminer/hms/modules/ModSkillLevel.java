@@ -1,8 +1,6 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.DataType;
-import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
@@ -41,8 +39,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private int derankLossAmount;
     private int timeUntilKillCountAgain;
     private String skillgroupNameAdmin;
-
-    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private final Scoreboard scoreboard = server.getScoreboardManager().getMainScoreboard();
     private final Map<Pair<UUID, UUID>, Long> lastKill = new HashMap<>();

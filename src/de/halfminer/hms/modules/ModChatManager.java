@@ -1,9 +1,6 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.HookException;
-import de.halfminer.hms.handlers.HanHooks;
-import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Pair;
@@ -40,9 +37,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *   - Writing capitalized
  */
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
-
-    private final HanHooks hooks = (HanHooks) hms.getHandler(HandlerType.HOOKS);
-    private final HanTitles title = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private final List<Pair<String, String>> chatFormats = new ArrayList<>();
     private String topFormat;
@@ -116,8 +110,8 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         String suffix;
 
         try {
-            prefix = hooks.getPrefix(p);
-            suffix = hooks.getSuffix(p);
+            prefix = hookHandler.getPrefix(p);
+            suffix = hookHandler.getSuffix(p);
         } catch (HookException ex) {
             prefix = "";
             suffix = "";
@@ -145,10 +139,10 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         for (Player wasMentioned : mentioned) {
-            if (hooks.isAfk(wasMentioned))
-                title.sendActionBar(p, Language.getMessagePlaceholders("modChatManIsAfk", false,
+            if (hookHandler.isAfk(wasMentioned))
+                titleHandler.sendActionBar(p, Language.getMessagePlaceholders("modChatManIsAfk", false,
                         "%PLAYER%", wasMentioned.getName()));
-            title.sendActionBar(wasMentioned, Language.getMessagePlaceholders("modChatManMentioned", false,
+            titleHandler.sendActionBar(wasMentioned, Language.getMessagePlaceholders("modChatManMentioned", false,
                     "%PLAYER%", p.getName()));
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_TOUCH, 0.2f, 1.8f);
             lastMentioned.put(wasMentioned, currentTime + mentionDelay);

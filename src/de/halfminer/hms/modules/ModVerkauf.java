@@ -1,10 +1,8 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.DataType;
-import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.exception.HookException;
-import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
@@ -32,8 +30,6 @@ import java.util.*;
  */
 @SuppressWarnings("unused")
 public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
-
-    private final HanHooks hooksHandler = (HanHooks) hms.getHandler(HandlerType.HOOKS);
 
     private final Set<UUID> autoSelling = new HashSet<>();
     private Map<String, Integer> prices;
@@ -97,7 +93,7 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
         double revenue = (amount / (double) baseValue) * multiplier;
 
         try {
-            hooksHandler.addMoney(toReward, revenue);
+            hookHandler.addMoney(toReward, revenue);
         } catch (HookException e) {
             // This should not happen under normal circumstances, print stacktrace just in case
             e.printStackTrace();

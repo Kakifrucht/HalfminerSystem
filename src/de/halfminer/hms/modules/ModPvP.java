@@ -1,7 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.AttackSpeed;
 import de.halfminer.hms.util.Language;
@@ -39,8 +37,6 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener, Sweepable {
-
-    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     private int thresholdUntilShown;
 

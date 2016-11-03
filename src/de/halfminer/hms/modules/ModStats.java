@@ -1,9 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.DataType;
-import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
-import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
@@ -166,7 +164,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             message = Language.getMessagePlaceholders("modStatsRightClickExempt", true, "%PREFIX%", clicked.getName());
         }
 
-        if (((HanHooks) hms.getHandler(HandlerType.HOOKS)).isAfk(clicked))
+        if (hookHandler.isAfk(clicked))
             message += ' ' + Language.getMessage("modStatsRightClickAFKAppend");
 
         clicker.sendMessage(message);

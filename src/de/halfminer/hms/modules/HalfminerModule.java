@@ -2,7 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.handlers.HanStorage;
+import de.halfminer.hms.handlers.*;
 import de.halfminer.hms.interfaces.Reloadable;
 
 /**
@@ -11,7 +11,11 @@ import de.halfminer.hms.interfaces.Reloadable;
  */
 public abstract class HalfminerModule extends HalfminerClass implements Reloadable {
 
+    final static HanBossBar barHandler = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
+    final static HanHooks hookHandler = (HanHooks) hms.getHandler(HandlerType.HOOKS);
     final static HanStorage storage = (HanStorage) hms.getHandler(HandlerType.STORAGE);
+    final static HanTeleport teleportHandler = (HanTeleport) hms.getHandler(HandlerType.TELEPORT);
+    final static HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
 
     @Override
     public void loadConfig() {

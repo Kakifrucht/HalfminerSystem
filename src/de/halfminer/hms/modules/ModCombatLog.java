@@ -1,9 +1,6 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.DataType;
-import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.handlers.HanBossBar;
-import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,9 +39,6 @@ import java.util.Map;
  *   - Enderpearls
  */
 public class ModCombatLog extends HalfminerModule implements Listener {
-
-    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
-    private final HanBossBar barHandler = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
 
     private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<>());

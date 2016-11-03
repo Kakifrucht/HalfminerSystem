@@ -2,11 +2,7 @@ package de.halfminer.hms.modules;
 
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.enums.DataType;
-import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.HookException;
-import de.halfminer.hms.handlers.HanBossBar;
-import de.halfminer.hms.handlers.HanHooks;
-import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.events.UserBalanceUpdateEvent;
@@ -35,10 +31,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
 
-    private final HanBossBar bossbarHandler = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
-    private final HanHooks hooksHandler = (HanHooks) hms.getHandler(HandlerType.HOOKS);
-    private final HanTitles titleHandler = (HanTitles) hms.getHandler(HandlerType.TITLES);
-
     private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, Double> balances = new ConcurrentHashMap<>();
 
@@ -51,7 +43,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
             titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("newplayer"),
                     "%PLAYER%", joined.getName()), 10, 200, 10);
-            bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("newplayerbar"),
+            barHandler.sendBar(joined, Language.placeholderReplace(lang.get("newplayerbar"),
                     "%PLAYER%", joined.getName()), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
 
             scheduler.runTaskLater(hms, () -> updateBalanceAndTablist(joined), 3L);
@@ -67,7 +59,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                 final String news = storage.getString("news");
                 if (news.length() > 0) {
                     scheduler.runTaskLater(hms, () -> {
-                        bossbarHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
+                        barHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
                                 "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 30);
                         titleHandler.sendTitle(joined, " \n" + news, 10, 100, 10);
                     }, 120);
@@ -103,7 +95,7 @@ public class ModTitles extends HalfminerModule implements Listener {
         }
 
         try {
-            balance = hooksHandler.getMoney(player);
+            balance = hookHandler.getMoney(player);
         } catch (HookException e) {
             if (e.hasParentException() && e.getParentException() instanceof UserDoesNotExistException) {
                 // Try again two ticks later

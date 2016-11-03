@@ -111,8 +111,13 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         if (containsWelcome && mentioned != null) {
 
             lastWelcome.put(p.getUniqueId(), System.currentTimeMillis());
+            titleHandler.sendActionBar(p, "Head drop...");
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException ignored) {}
 
             if (new Random().nextInt(1000) < randomRange) {
+                titleHandler.sendActionBar(p, "&a&lYES");
                 scheduler.runTask(hms, () -> {
 
                     ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
@@ -127,7 +132,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                                 "%PREFIX%", "Skull", "%PLAYER%", p.getName()), "hms.default");
                     }
                 });
-            }
+            } else titleHandler.sendActionBar(p, "&cNo");
         }
     }
 
