@@ -138,6 +138,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Custom welcome words
       - Cooldown to prevent misuse
       - Custom probability
+      - Uses (sub)title and bossbar for information and plays sounds
   - SignEdit
     - Allows editing of signs
     - Use command /signedit

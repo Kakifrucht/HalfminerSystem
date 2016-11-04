@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +56,10 @@ public class Cmdhms extends HalfminerCommand {
 
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
+                case "copyschematic":
+                    //copySchematic();
+                    sender.sendMessage("Not yet implemented");
+                    return;
                 case "reload":
                     reload();
                     return;
@@ -79,6 +84,19 @@ public class Cmdhms extends HalfminerCommand {
             }
         }
         showUsage();
+    }
+
+    private void copySchematic() {
+
+        //TODO
+
+        String path = hms.getConfig().getString("command.hms.remoteSchematicPath", "");
+
+        if (path.length() > 0) {
+            System.out.println( new File("./plugins/WorldGuard/schematics/", "").getAbsolutePath());
+            //File toCopy = new File(server.getF)
+        }
+
     }
 
     private void reload() {

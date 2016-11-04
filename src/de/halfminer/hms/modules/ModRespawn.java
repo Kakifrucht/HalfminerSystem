@@ -2,9 +2,13 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
  *   - Custom welcome words
  *   - Cooldown to prevent misuse
  *   - Custom probability
+ *   - Uses (sub)title and bossbar for information and plays sounds
  */
 public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
@@ -111,14 +116,16 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         if (containsWelcome && mentioned != null) {
 
             lastWelcome.put(p.getUniqueId(), System.currentTimeMillis());
-            titleHandler.sendActionBar(p, "Head drop...");
+            titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitle"), 10, 30, 0);
+            barHandler.sendBar(p, Language.getMessage("modRespawnHeadBossbar"), BarColor.WHITE, BarStyle.SOLID, 5, 1.0d);
+
             try {
                 Thread.sleep(1000L);
             } catch (InterruptedException ignored) {}
 
-            if (new Random().nextInt(1000) < randomRange) {
-                titleHandler.sendActionBar(p, "&a&lYES");
-                scheduler.runTask(hms, () -> {
+            scheduler.runTask(hms, () -> {
+
+                if (new Random().nextInt(1000) < randomRange && Utils.hasRoom(p, 1)) {
 
                     ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
                     skull.setDurability((short) 3);
@@ -127,12 +134,16 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                     meta.setLore(Collections.singletonList(Language.getMessage("modRespawnHeadLore")));
                     skull.setItemMeta(meta);
 
-                    if (p.getInventory().addItem(skull).size() == 0) {
-                        server.broadcast(Language.getMessagePlaceholders("modRespawnHeadBroadcast", true,
-                                "%PREFIX%", "Skull", "%PLAYER%", p.getName()), "hms.default");
-                    }
-                });
-            } else titleHandler.sendActionBar(p, "&cNo");
+                    p.getInventory().addItem(skull);
+                    server.broadcast(Language.getMessagePlaceholders("modRespawnHeadBroadcast", true,
+                            "%PREFIX%", "Skull", "%PLAYER%", p.getName()), "hms.default");
+                    p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
+                    titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitleYes"), 0, 30, 10);
+                } else {
+                    titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitleNo"), 0, 30, 10);
+                    p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT, 1.0f, 2.0f);
+                }
+            });
         }
     }
 
