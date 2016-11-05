@@ -63,10 +63,10 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         if (!joined.hasPlayedBefore()) {
 
             message = Language.getMessagePlaceholders("modRespawnFirstJoin", false, "%PLAYER%", joined.getName());
-            newPlayers.put(joined.getName().toLowerCase(), joined.getUniqueId());
 
             scheduler.runTaskLater(hms, () -> {
 
+                newPlayers.put(joined.getName().toLowerCase(), joined.getUniqueId());
                 joined.teleport(respawnLoc);
                 if (firstSpawnCommand.length() > 0) {
                     server.dispatchCommand(server.getConsoleSender(),
@@ -88,7 +88,8 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         e.setJoinMessage(message);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    // priority is at high, because Factions cancels chat events to send out individual messages
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onChatWelcomeReward(AsyncPlayerChatEvent e) {
 
         Player p = e.getPlayer();
@@ -97,20 +98,17 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         Player mentioned = null;
         boolean containsWelcome = false;
 
-        for (String message : e.getMessage().split(" ")) {
-            if (welcomeWords.contains(message)) containsWelcome = true;
-            else {
+        for (String message : e.getMessage().toLowerCase().split(" ")) {
 
-                String normalized = Language.filterNonUsernameChars(message).toLowerCase();
-                if (newPlayers.containsKey(normalized) && !normalized.equalsIgnoreCase(p.getName())) {
-                    OfflinePlayer player = server.getOfflinePlayer(newPlayers.get(normalized));
-                    if (player.isOnline()) {
-                        mentioned = (Player) player;
-                        if (containsWelcome) break;
-                    }
+            if (welcomeWords.contains(message)) containsWelcome = true;
+            else if (mentioned == null) {
+
+                String normalized = Language.filterNonUsernameChars(message);
+                if (newPlayers.containsKey(normalized) && !normalized.equalsIgnoreCase(p.getName().toLowerCase())) {
+                    mentioned = server.getPlayer(newPlayers.get(normalized));
+                    if (containsWelcome && mentioned != null) break;
                 }
             }
-
         }
 
         if (containsWelcome && mentioned != null) {
@@ -119,11 +117,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitle"), 10, 30, 0);
             barHandler.sendBar(p, Language.getMessage("modRespawnHeadBossbar"), BarColor.WHITE, BarStyle.SOLID, 5, 1.0d);
 
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException ignored) {}
-
-            scheduler.runTask(hms, () -> {
+            scheduler.runTaskLater(hms, () -> {
 
                 if (new Random().nextInt(1000) < randomRange && Utils.hasRoom(p, 1)) {
 
@@ -143,7 +137,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                     titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitleNo"), 0, 30, 10);
                     p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT, 1.0f, 2.0f);
                 }
-            });
+            }, 20L);
         }
     }
 
