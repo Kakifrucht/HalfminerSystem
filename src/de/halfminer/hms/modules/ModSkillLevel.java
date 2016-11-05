@@ -72,6 +72,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         Player victim = e.getEntity().getPlayer();
 
         if (killer != null
+                && killer != victim
                 && !killer.hasPermission("hms.bypass.skilllevel")
                 && !victim.hasPermission("hms.bypass.skilllevel")) {
 
@@ -143,17 +144,20 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         hPlayer.set(DataType.SKILL_LEVEL, newLevel);
 
         // Send title/log if necessary
-        if (newLevel != level && player instanceof Player) {
+        if (newLevel != level) {
 
-            String sendTitle;
-            if (newLevel > level) {
-                sendTitle = Language.getMessagePlaceholders("modSkillLevelUprankTitle", false, "%SKILLLEVEL%",
-                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
-            } else {
-                sendTitle = Language.getMessagePlaceholders("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
-                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
+            if (player instanceof Player) {
+                String sendTitle;
+                if (newLevel > level) {
+                    sendTitle = Language.getMessagePlaceholders("modSkillLevelUprankTitle", false, "%SKILLLEVEL%",
+                            String.valueOf(newLevel), "%SKILLGROUP%", teamName);
+                } else {
+                    sendTitle = Language.getMessagePlaceholders("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
+                            String.valueOf(newLevel), "%SKILLGROUP%", teamName);
+                }
+                titleHandler.sendTitle((Player) player, sendTitle, 10, 50, 10);
             }
-            titleHandler.sendTitle((Player) player, sendTitle, 10, 50, 10);
+
             hms.getLogger().info(Language.getMessagePlaceholders("modSkillLevelLog", false, "%PLAYER%", player.getName(),
                     "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(elo)));
         }
