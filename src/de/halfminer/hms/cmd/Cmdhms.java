@@ -104,14 +104,15 @@ public class Cmdhms extends HalfminerCommand {
         File toCopy = new File("plugins/WorldEdit/schematics/", args[1] + ".schematic");
         File destination = new File(destinationPath, args[1] + ".schematic");
 
+        // check if destination path exists first
         if (!Files.exists(new File(destinationPath).toPath())) {
             p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotConfigured", true, "%PREFIX%", "HMS"));
             return;
         }
 
         if (toCopy.exists()) {
-            if (!destination.exists()) {
 
+            if (!destination.exists()) {
                 scheduler.runTaskAsynchronously(hms, () -> {
                     try {
                         Files.copy(toCopy.toPath(), destination.toPath());
@@ -123,13 +124,10 @@ public class Cmdhms extends HalfminerCommand {
                         e.printStackTrace();
                     }
                 });
-            } else {
+            } else
                 p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicAlreadyExists", true, "%PREFIX%", "HMS"));
-            }
-        } else {
+        } else
             p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicDoesntExist", true, "%PREFIX%", "HMS"));
-        }
-
     }
 
     private void reload() {

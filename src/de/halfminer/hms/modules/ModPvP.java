@@ -1,7 +1,7 @@
 package de.halfminer.hms.modules;
 
+import de.halfminer.hms.enums.AttackSpeed;
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.AttackSpeed;
 import de.halfminer.hms.util.Language;
 import org.bukkit.Location;
 import org.bukkit.Sound;
