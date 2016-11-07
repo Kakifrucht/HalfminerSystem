@@ -2,7 +2,7 @@
 command:
   hms:
     #Path to remote schematic location for /hms copyschematic
-    remoteSchematicPath: '/path'
+    remoteSchematicPath: '/put/your/path/here'
   home:
     #Time in minutes until /home will be blocked
     timeUntilHomeBlockMinutes: 15
@@ -196,6 +196,12 @@ localization:
   cmdCustomtextNotFound: '&cUnbekanntes Thema'
   cmdDisposalTitle: 'Mülleimer'
   cmdHmsConfigReloaded: '&aKonfiguration neugeladen'
+  cmdHmsCopySchematicAlreadyExists: '&cDie Schematic existiert bereits im Zielverzeichnis'
+  cmdHmsCopySchematicCopyError: '&cDie Schematic konnte nicht kopiert werden'
+  cmdHmsCopySchematicCopySuccess: '&7Schematic wurde &aerfolgreich &7kopiert'
+  cmdHmsCopySchematicDoesntExist: '&7Die angegebene Schematic konnte &cnicht &7gefunden werden (Groß- und Kleinschreibung?)'
+  cmdHmsCopySchematicNotConfigured: '&cEs wurde kein gültiger Zielpfad in der Konfiguration angegeben'
+  cmdHmsCopySchematicNotSpecified: '&7Gebe den Namen der zu kopierenden Schematic an'
   cmdHmsHomeblockRemove: '&a%PLAYER% &7kann jetzt /home benutzen'
   cmdHmsMotdFailed: '&cVerwendung: &f/hms setmotd <motd>'
   cmdHmsMotdUpdated: '&7Die MOTD wurde geändert zu: &r&7%NEWMOTD%'

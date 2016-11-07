@@ -45,7 +45,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private Objective skillObjective = scoreboard.getObjective("skill");
     private String[] teams;
 
-
     @EventHandler
     public void joinRecalculate(PlayerJoinEvent e) {
 
@@ -147,15 +146,10 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         if (newLevel != level) {
 
             if (player instanceof Player) {
-                String sendTitle;
-                if (newLevel > level) {
-                    sendTitle = Language.getMessagePlaceholders("modSkillLevelUprankTitle", false, "%SKILLLEVEL%",
-                            String.valueOf(newLevel), "%SKILLGROUP%", teamName);
-                } else {
-                    sendTitle = Language.getMessagePlaceholders("modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
-                            String.valueOf(newLevel), "%SKILLGROUP%", teamName);
-                }
-                titleHandler.sendTitle((Player) player, sendTitle, 10, 50, 10);
+                String toSend = Language.getMessagePlaceholders(newLevel > level ?
+                        "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
+                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
+                titleHandler.sendTitle((Player) player, toSend, 10, 50, 10);
             }
 
             hms.getLogger().info(Language.getMessagePlaceholders("modSkillLevelLog", false, "%PLAYER%", player.getName(),

@@ -19,12 +19,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 /**
+ * - Copy a WorldEdit schematic to another directory (copyschematic)
  * - Reload config (reload)
  * - Rename items, supports lore (rename)
  * - Ring players to get their attention (ring)
@@ -57,8 +60,7 @@ public class Cmdhms extends HalfminerCommand {
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
                 case "copyschematic":
-                    //copySchematic();
-                    sender.sendMessage("Not yet implemented");
+                    copySchematic();
                     return;
                 case "reload":
                     reload();
@@ -88,13 +90,44 @@ public class Cmdhms extends HalfminerCommand {
 
     private void copySchematic() {
 
-        //TODO
+        if (args.length < 2) {
+            p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotSpecified", true, "%PREFIX%", "HMS"));
+            return;
+        }
 
-        String path = hms.getConfig().getString("command.hms.remoteSchematicPath", "");
+        String destinationPath = hms.getConfig().getString("command.hms.remoteSchematicPath", "");
+        if (destinationPath.length() == 0 || destinationPath.equals("/put/your/path/here")) {
+            p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotConfigured", true, "%PREFIX%", "HMS"));
+            return;
+        }
 
-        if (path.length() > 0) {
-            System.out.println( new File("./plugins/WorldGuard/schematics/", "").getAbsolutePath());
-            //File toCopy = new File(server.getF)
+        File toCopy = new File("plugins/WorldEdit/schematics/", args[1] + ".schematic");
+        File destination = new File(destinationPath, args[1] + ".schematic");
+
+        if (!Files.exists(new File(destinationPath).toPath())) {
+            p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotConfigured", true, "%PREFIX%", "HMS"));
+            return;
+        }
+
+        if (toCopy.exists()) {
+            if (!destination.exists()) {
+
+                scheduler.runTaskAsynchronously(hms, () -> {
+                    try {
+                        Files.copy(toCopy.toPath(), destination.toPath());
+                        p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicCopySuccess",
+                                true, "%PREFIX%", "HMS"));
+                    } catch (IOException e) {
+                        p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicCopyError",
+                                true, "%PREFIX%", "HMS"));
+                        e.printStackTrace();
+                    }
+                });
+            } else {
+                p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicAlreadyExists", true, "%PREFIX%", "HMS"));
+            }
+        } else {
+            p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicDoesntExist", true, "%PREFIX%", "HMS"));
         }
 
     }
