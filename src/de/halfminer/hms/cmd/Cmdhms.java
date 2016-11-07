@@ -91,13 +91,15 @@ public class Cmdhms extends HalfminerCommand {
     private void copySchematic() {
 
         if (args.length < 2) {
-            p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotSpecified", true, "%PREFIX%", "HMS"));
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotSpecified",
+                    true, "%PREFIX%", "HMS"));
             return;
         }
 
         String destinationPath = hms.getConfig().getString("command.hms.remoteSchematicPath", "");
         if (destinationPath.length() == 0 || destinationPath.equals("/put/your/path/here")) {
-            p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotConfigured", true, "%PREFIX%", "HMS"));
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotConfigured",
+                    true, "%PREFIX%", "HMS"));
             return;
         }
 
@@ -106,7 +108,8 @@ public class Cmdhms extends HalfminerCommand {
 
         // check if destination path exists first
         if (!Files.exists(new File(destinationPath).toPath())) {
-            p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotConfigured", true, "%PREFIX%", "HMS"));
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicNotConfigured",
+                    true, "%PREFIX%", "HMS"));
             return;
         }
 
@@ -116,18 +119,20 @@ public class Cmdhms extends HalfminerCommand {
                 scheduler.runTaskAsynchronously(hms, () -> {
                     try {
                         Files.copy(toCopy.toPath(), destination.toPath());
-                        p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicCopySuccess",
+                        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicCopySuccess",
                                 true, "%PREFIX%", "HMS"));
                     } catch (IOException e) {
-                        p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicCopyError",
+                        sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicCopyError",
                                 true, "%PREFIX%", "HMS"));
                         e.printStackTrace();
                     }
                 });
             } else
-                p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicAlreadyExists", true, "%PREFIX%", "HMS"));
+                sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicAlreadyExists",
+                        true, "%PREFIX%", "HMS"));
         } else
-            p.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicDoesntExist", true, "%PREFIX%", "HMS"));
+            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicDoesntExist",
+                    true, "%PREFIX%", "HMS"));
     }
 
     private void reload() {
