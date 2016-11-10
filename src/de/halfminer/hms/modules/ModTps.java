@@ -2,7 +2,6 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
-import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.LinkedList;
@@ -11,7 +10,7 @@ import java.util.LinkedList;
  * - Calculates ticks per second
  * - Notifies staff when servers ticks TPS is too low
  */
-public class ModTps extends HalfminerModule implements Listener {
+public class ModTps extends HalfminerModule {
 
     private final LinkedList<Double> tpsHistory = new LinkedList<>();
     private BukkitTask task;
@@ -39,20 +38,21 @@ public class ModTps extends HalfminerModule implements Listener {
         historySize = hms.getConfig().getInt("tps.historySize", 6);
         alertStaff = hms.getConfig().getDouble("tps.alertThreshold", 17.0d);
 
-        if (task != null) task.cancel();
-
         tpsHistory.clear();
         tpsHistory.add(20.0);
         lastAverageTps = 20.0;
         lastTaskTimestamp = System.currentTimeMillis();
+
+        if (task != null) task.cancel();
         task = scheduler.runTaskTimer(hms, () -> {
             long now = System.currentTimeMillis();
-            long lastUpdate = now - lastTaskTimestamp; //time in milliseconds since last check
+            long lastUpdate = now - lastTaskTimestamp; // time in milliseconds since last check
             lastTaskTimestamp = now;
 
             double currentTps = ticksBetweenUpdate * 1000.0 / lastUpdate;
 
-            if (currentTps > 21.0d) return; //disregard peaks due to fluctuations
+            // disregard peaks due to fluctuations
+            if (currentTps > 21.0d) return;
 
             if (tpsHistory.size() >= historySize) tpsHistory.removeFirst();
             tpsHistory.add(currentTps);

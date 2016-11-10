@@ -121,6 +121,36 @@ public class Cmdhms extends HalfminerCommand {
                         Files.copy(toCopy.toPath(), destination.toPath());
                         sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicCopySuccess",
                                 true, "%PREFIX%", "HMS"));
+
+                        // auto delete after 10 minutes
+                        if (args.length > 2 && args[2].startsWith("auto")) {
+
+                            sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicDelete",
+                                    true, "%PREFIX%", "HMS"));
+
+                            scheduler.runTaskLaterAsynchronously(hms, () -> {
+
+                                try {
+                                    Files.delete(toCopy.toPath());
+                                    hms.getLogger().info(Language.getMessagePlaceholders("cmdHmsCopySchematicDeleted",
+                                            false, "%PATH%", toCopy.toPath().toString()));
+                                } catch (Exception e) {
+                                    hms.getLogger().warning(Language.getMessagePlaceholders("cmdHmsCopySchematicDeletedError",
+                                            false, "%PATH%", toCopy.toPath().toString()));
+                                    e.printStackTrace();
+                                }
+
+                                try {
+                                    Files.delete(destination.toPath());
+                                    hms.getLogger().info(Language.getMessagePlaceholders("cmdHmsCopySchematicDeleted",
+                                            false, "%PATH%", destination.toPath().toString()));
+                                } catch (Exception e) {
+                                    hms.getLogger().warning(Language.getMessagePlaceholders("cmdHmsCopySchematicDeletedError",
+                                            false, "%PATH%", destination.toPath().toString()));
+                                    e.printStackTrace();
+                                }
+                            }, 12000L);
+                        }
                     } catch (IOException e) {
                         sender.sendMessage(Language.getMessagePlaceholders("cmdHmsCopySchematicCopyError",
                                 true, "%PREFIX%", "HMS"));
