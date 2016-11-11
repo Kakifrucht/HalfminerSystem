@@ -13,7 +13,6 @@ import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.*;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -39,10 +38,6 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public class Cmdhms extends HalfminerCommand {
-
-    private CommandSender sender;
-    private Player player;
-    private String[] args;
 
     private static final String prefix = "HMS";
 

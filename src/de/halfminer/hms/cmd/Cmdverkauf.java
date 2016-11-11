@@ -4,7 +4,6 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.modules.ModVerkauf;
 import de.halfminer.hms.util.Language;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -17,7 +16,6 @@ public class Cmdverkauf extends HalfminerCommand {
 
     private final ModVerkauf verkaufModule = (ModVerkauf) hms.getModule(ModuleType.VERKAUF);
 
-    private Player player;
     private Sellable toBeSold;
     private int sellCountTotal = 0;
 

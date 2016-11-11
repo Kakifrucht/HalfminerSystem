@@ -2,7 +2,6 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.Language;
-import org.bukkit.entity.Player;
 
 /**
  * - Executes Essentials /home after unblock from vote
@@ -20,12 +19,11 @@ public class Cmdhome extends HalfminerCommand {
     @Override
     public void execute() {
 
-        if (isPlayer) {
+        if (!isPlayer) {
             sender.sendMessage(Language.getMessage("notAPlayer"));
             return;
         }
 
-        Player player = (Player) sender;
         String command = "ehome" + ' ' + Language.arrayToString(args, 0, false);
 
         if (player.hasPermission("hms.moderator") || player.hasPermission("essentials.home"))
