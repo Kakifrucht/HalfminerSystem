@@ -12,8 +12,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -34,15 +32,14 @@ public class Cmdneutp extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
-        if (!(sender instanceof Player)) {
+        if (!isPlayer) {
             sender.sendMessage(Language.getMessage("notAPlayer"));
             return;
         }
 
         final HanTeleport tp = (HanTeleport) hms.getHandler(HandlerType.TELEPORT);
-        final Player player = (Player) sender;
         final HalfminerPlayer hPlayer = storage.getPlayer(player);
 
         if (tp.hasPendingTeleport(player, true)) return;

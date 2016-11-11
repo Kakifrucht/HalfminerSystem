@@ -2,7 +2,6 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.Language;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -19,31 +18,33 @@ public class Cmdhome extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
-        if (sender instanceof Player) {
+        if (isPlayer) {
+            sender.sendMessage(Language.getMessage("notAPlayer"));
+            return;
+        }
 
-            Player player = (Player) sender;
-            String command = "ehome" + ' ' + Language.arrayToString(args, 0, false);
+        Player player = (Player) sender;
+        String command = "ehome" + ' ' + Language.arrayToString(args, 0, false);
 
-            if (player.hasPermission("hms.moderator") || player.hasPermission("essentials.home"))
-                server.dispatchCommand(player, command);
-            else if (storage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
-                    || storage.getPlayer(player).getInt(DataType.TIME_ONLINE) < 18000
-                    || storage.getInt("vote.ip"
-                    + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) > 1) {
+        if (player.hasPermission("hms.moderator") || player.hasPermission("essentials.home"))
+            server.dispatchCommand(player, command);
+        else if (storage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
+                || storage.getPlayer(player).getInt(DataType.TIME_ONLINE) < 18000
+                || storage.getInt("vote.ip"
+                + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) > 1) {
 
-                player.addAttachment(hms, "essentials.home", true, 0);
-                server.dispatchCommand(player, command);
+            player.addAttachment(hms, "essentials.home", true, 0);
+            server.dispatchCommand(player, command);
 
-            } else {
+        } else {
 
-                player.sendMessage(Language.getMessagePlaceholders("cmdHomeDenied", true, "%PREFIX%", "Home",
-                        "%PLAYER%", player.getName()));
+            player.sendMessage(Language.getMessagePlaceholders("cmdHomeDenied", true, "%PREFIX%", "Home",
+                    "%PLAYER%", player.getName()));
 
-                hms.getLogger().info(Language.getMessagePlaceholders("cmdHomeDeniedLog", false,
-                        "%PLAYER%", player.getName()));
-            }
-        } else sender.sendMessage(Language.getMessage("notAPlayer"));
+            hms.getLogger().info(Language.getMessagePlaceholders("cmdHomeDeniedLog", false,
+                    "%PLAYER%", player.getName()));
+        }
     }
 }

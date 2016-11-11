@@ -4,7 +4,6 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.modules.ModVerkauf;
 import de.halfminer.hms.util.Language;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -27,14 +26,12 @@ public class Cmdverkauf extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
-        if (!(sender instanceof Player)) {
+        if (!isPlayer) {
             sender.sendMessage(Language.getMessagePlaceholders("notAPlayer", true, "%PREFIX%", "Verkauf"));
             return;
         }
-
-        player = (Player) sender;
 
         if (args.length > 0) {
 

@@ -3,7 +3,6 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.util.CustomtextCache;
 import de.halfminer.hms.util.Language;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class Cmdcustomtext extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
         if (args.length == 0) return;
 
@@ -44,16 +43,15 @@ public class Cmdcustomtext extends HalfminerCommand {
         try {
 
             List<String> chapter = cache.getChapter(args);
-            boolean senderIsPlayer = sender instanceof Player;
 
             for (String raw : chapter) {
 
                 String placeholderReplaced = Language.placeholderReplace(raw, "%PLAYER%",
-                        senderIsPlayer ? sender.getName() : Language.getMessage("consoleName"),
+                        isPlayer ? sender.getName() : Language.getMessage("consoleName"),
                         "%ARGS%", Language.arrayToString(args, 0, false));
 
                 // check for command (only for players)
-                if (senderIsPlayer) {
+                if (isPlayer) {
 
                     Player player = (Player) sender;
                     if (placeholderReplaced.startsWith("~>")) {

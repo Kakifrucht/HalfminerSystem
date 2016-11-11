@@ -26,7 +26,7 @@ public class Cmdspawn extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
         if (args.length == 0) teleport(sender, false);
         else {
@@ -82,6 +82,6 @@ public class Cmdspawn extends HalfminerCommand {
             }
             else tp.startTeleport((Player) toTeleport, respawn.getSpawn());
 
-        } else toTeleport.sendMessage(Language.getMessage("notAPlayer"));
+        } else sender.sendMessage(Language.getMessage("notAPlayer"));
     }
 }

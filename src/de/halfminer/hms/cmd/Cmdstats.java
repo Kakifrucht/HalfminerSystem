@@ -7,7 +7,6 @@ import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -22,28 +21,28 @@ public class Cmdstats extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
         if (args.length > 0) {
 
             boolean compare = args.length > 1 && args[1].equalsIgnoreCase("compare") && sender instanceof Player;
             try {
-                showStats(sender, storage.getPlayer(args[0]), compare);
+                showStats(storage.getPlayer(args[0]), compare);
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, "Stats");
             }
 
         } else {
 
-            if (sender instanceof Player) showStats(sender, storage.getPlayer((Player) sender), false);
+            if (isPlayer) showStats(storage.getPlayer((Player) sender), false);
             else sender.sendMessage(Language.getMessage("notAPlayer"));
         }
     }
 
-    private void showStats(final CommandSender sendTo, final HalfminerPlayer player, boolean compare) {
+    private void showStats(final HalfminerPlayer player, boolean compare) {
 
         HalfminerPlayer compareWith = null;
-        if (compare && !sendTo.equals(player.getBase())) compareWith = storage.getPlayer((Player) sendTo);
+        if (compare && !sender.equals(player.getBase())) compareWith = storage.getPlayer((Player) sender);
 
         final String oldNames = player.getString(DataType.LAST_NAMES);
 
@@ -68,17 +67,17 @@ public class Cmdstats extends HalfminerCommand {
             message += Language.getMessagePlaceholders("cmdStatsOldnames", false,
                     "%OLDNAMES%", oldNames) + "\n";
 
-        if (sendTo.equals(player.getBase()))
+        if (sender.equals(player.getBase()))
             message += Language.getMessage("cmdStatsShowotherStats") + "\n";
         else if (compare)
             message += Language.getMessage("cmdStatsCompareLegend") + "\n";
-        else if (sendTo instanceof Player) {
+        else if (sender instanceof Player) {
             message += Language.getMessagePlaceholders("cmdStatsCompareInfo", false,
                     "%PLAYER%", player.getName()) + "\n";
         }
 
         message += Language.getMessage("lineSeparator");
-        sendTo.sendMessage(message);
+        sender.sendMessage(message);
 
     }
 

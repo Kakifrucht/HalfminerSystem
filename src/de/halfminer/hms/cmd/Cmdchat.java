@@ -10,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -29,7 +28,6 @@ public class Cmdchat extends HalfminerCommand {
 
     private final HanBossBar bossBar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
     private final HanTitles titles = (HanTitles) hms.getHandler(HandlerType.TITLES);
-    private CommandSender sender;
     private String message;
 
     public Cmdchat() {
@@ -37,9 +35,7 @@ public class Cmdchat extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
-
-        this.sender = sender;
+    public void execute() {
 
         if (!sender.hasPermission("hms.chat.advanced")) {
             clearChat();

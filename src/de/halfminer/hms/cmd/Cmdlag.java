@@ -4,7 +4,6 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModTps;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -20,7 +19,7 @@ public class Cmdlag extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
         // determine latency
         CraftPlayer player;
@@ -41,7 +40,7 @@ public class Cmdlag extends HalfminerCommand {
                 return;
             }
 
-        } else if (sender instanceof Player) {
+        } else if (isPlayer) {
             player = (CraftPlayer) sender;
             showSummary = true;
         } else {

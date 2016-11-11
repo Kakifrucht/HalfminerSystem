@@ -6,7 +6,6 @@ import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -26,7 +25,7 @@ public class Cmdvote extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
         if (args.length > 0) {
 
@@ -73,7 +72,7 @@ public class Cmdvote extends HalfminerCommand {
                     }
                 }
 
-            } else if (args[0].equalsIgnoreCase("getreward") && sender instanceof Player) {
+            } else if (isPlayer && args[0].equalsIgnoreCase("getreward")) {
 
                 Player player = (Player) sender;
                 int rewardAmount = storage.getInt("vote.reward." + player.getUniqueId());
@@ -92,12 +91,12 @@ public class Cmdvote extends HalfminerCommand {
                 }
                 storage.set("vote.reward." + player.getUniqueId(), rewardAmount);
 
-            } else showMessage(sender);
+            } else showMessage();
 
-        } else showMessage(sender);
+        } else showMessage();
     }
 
-    private void showMessage(CommandSender sender) {
+    private void showMessage() {
 
         String playername = "";
         int rewardLeft = 0;

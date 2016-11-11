@@ -7,7 +7,6 @@ import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +24,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 public class Cmdhmsapi extends HalfminerCommand {
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
         if (args.length == 0 || !sender.isOp()) return;
 
@@ -53,9 +52,8 @@ public class Cmdhmsapi extends HalfminerCommand {
 
             } else setHasRoomBoolean(args[1], false);
 
-        } else if (sender instanceof Player) {
+        } else if (isPlayer) {
 
-            Player player = (Player) sender;
             ConsoleCommandSender consoleInstance = server.getConsoleSender();
 
             if (args[0].equalsIgnoreCase("takecase")) {

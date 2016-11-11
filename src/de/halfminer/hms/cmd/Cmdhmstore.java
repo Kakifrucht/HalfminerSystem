@@ -5,7 +5,6 @@ import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 
 /**
  * - Edit HalfminerSystem storage
@@ -24,7 +23,7 @@ public class Cmdhmstore extends HalfminerCommand {
     }
 
     @Override
-    public void run(final CommandSender sender, String label, String[] args) {
+    public void execute() {
 
         if (args.length > 1) {
 

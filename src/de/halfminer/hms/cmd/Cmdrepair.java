@@ -3,8 +3,6 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -24,14 +22,12 @@ public class Cmdrepair extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
+    public void execute() {
 
-        if (!(sender instanceof Player)) {
+        if (!isPlayer) {
             sender.sendMessage(Language.getMessage("notAPlayer"));
             return;
         }
-
-        Player player = (Player) sender;
 
         if (args.length > 0 && args[0].equalsIgnoreCase("all") && sender.hasPermission("hms.repair.all")) {
 

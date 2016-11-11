@@ -41,7 +41,7 @@ import java.util.UUID;
 public class Cmdhms extends HalfminerCommand {
 
     private CommandSender sender;
-    private Player p;
+    private Player player;
     private String[] args;
 
     private static final String prefix = "HMS";
@@ -51,11 +51,7 @@ public class Cmdhms extends HalfminerCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String label, String[] args) {
-
-        this.sender = sender;
-        if (sender instanceof Player) p = (Player) sender;
-        this.args = args;
+    public void execute() {
 
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
@@ -172,17 +168,17 @@ public class Cmdhms extends HalfminerCommand {
 
     private void renameItem() {
 
-        if (p == null) {
+        if (!isPlayer) {
             sender.sendMessage(Language.getMessage("notAPlayer"));
             return;
         }
 
         if (args.length > 1) {
 
-            ItemStack item = p.getInventory().getItemInMainHand();
+            ItemStack item = player.getInventory().getItemInMainHand();
 
             if (item == null || item.getType() == Material.AIR) {
-                p.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameFailed", true, "%PREFIX%", prefix));
+                player.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameFailed", true, "%PREFIX%", prefix));
                 return;
             }
 
@@ -232,11 +228,11 @@ public class Cmdhms extends HalfminerCommand {
             meta.setDisplayName(newName);
             meta.setLore(lore);
             item.setItemMeta(meta);
-            p.updateInventory();
+            player.updateInventory();
 
             if (newName == null) newName = "";
 
-            p.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameDone", true, "%PREFIX%",
+            player.sendMessage(Language.getMessagePlaceholders("cmdHmsRenameDone", true, "%PREFIX%",
                     prefix, "%NAME%", newName));
         } else showUsage();
     }
@@ -307,7 +303,7 @@ public class Cmdhms extends HalfminerCommand {
 
     private void searchHomes() {
 
-        if (p == null) {
+        if (!isPlayer) {
             sender.sendMessage(Language.getMessage("notAPlayer"));
             return;
         }
