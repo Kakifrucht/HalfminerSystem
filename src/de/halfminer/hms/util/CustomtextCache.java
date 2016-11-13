@@ -10,14 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Cache that reads customtext file formats, used by Cmdcustomtext and managed by HanStorage
- * Format:
- * #chapter subchapter,chapteralt subchapteralt
- * Text
- * If "Text" ends with a space char, consider the next line as continuation of current line
- * Chapters are not case sensitive and aliases are separated with comma, they may contain wildcards with '*' character
- * They may also contain aliases in between, such as #chapter subchapter|subchapteralias
- * The '&' character will be replaced with Bukkit's color code
+ * Cache that reads customtext file formats, used by {@link de.halfminer.hms.cmd.Cmdcustomtext}
+ * and managed by {@link de.halfminer.hms.handlers.HanStorage}<br>
+ * Format:<br>
+ * #chapter subchapter,chapteralt subchapteralt<br>
+ * Text<br>
+ * - If "Text" ends with a space char, consider the next line as continuation of current line<br>
+ * - Chapters are not case sensitive and aliases are separated with comma, they may contain wildcards with '*' character<br>
+ * - They may also contain aliases in between, such as #chapter subchapter|subchapteralias<br>
+ * - The '&' character will be replaced with Bukkit's color code<br>
  */
 public class CustomtextCache {
 

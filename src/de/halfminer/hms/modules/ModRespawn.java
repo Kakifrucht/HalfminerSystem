@@ -100,7 +100,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
         for (String message : e.getMessage().toLowerCase().split(" ")) {
 
-            if (welcomeWords.contains(message)) containsWelcome = true;
+            if (!containsWelcome && welcomeWords.contains(message)) containsWelcome = true;
             else if (mentioned == null) {
 
                 String normalized = Language.filterNonUsernameChars(message);
