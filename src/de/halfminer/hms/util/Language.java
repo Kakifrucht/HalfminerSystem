@@ -273,4 +273,8 @@ public class Language {
 
         return sb.toString();
     }
+
+    public static String getPlayername(CommandSender toGet) {
+        return toGet instanceof Player ? toGet.getName() : getMessage("consoleName");
+    }
 }

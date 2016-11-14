@@ -192,6 +192,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Chat manipulation tools
     - Toggle globalmute
     - Clear chat
+    - Send clickable command message to all players
     - Title broadcast
     - Bossbar broadcast
     - Countdown via bossbar

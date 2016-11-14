@@ -240,8 +240,7 @@ public class Cmdhms extends HalfminerCommand {
         }
 
         final Player toRing = server.getPlayer(args[1]);
-        String senderName = sender.getName();
-        if (senderName.equals("CONSOLE")) senderName = Language.getMessage("consoleName");
+        String senderName = Language.getPlayername(sender);
 
         if (toRing == null) {
 

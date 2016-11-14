@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitTask;
  * - Chat manipulation tools
  * - Toggle globalmute
  * - Clear chat
+ * - Send clickable command message to all players
  * - Title broadcast
  * - Bossbar broadcast
  * - Countdown via bossbar
@@ -66,6 +67,9 @@ public class Cmdchat extends HalfminerCommand {
                 case "send":
                     if (!hasAdvancedPermission()) return;
                     sendMessage();
+                    break;
+                case "sendcommand":
+                    sendCommand();
                     break;
                 default:
                     showUsage();
@@ -137,8 +141,7 @@ public class Cmdchat extends HalfminerCommand {
 
     private void clearChat() {
 
-        String whoCleared = sender.getName();
-        if (whoCleared.equals("CONSOLE")) whoCleared = Language.getMessage("consoleName");
+        String whoCleared = Language.getPlayername(sender);
 
         String clearMessage = "";
         for (int i = 0; i < 100; i++) clearMessage += ChatColor.RESET + " \n";
@@ -244,6 +247,31 @@ public class Cmdchat extends HalfminerCommand {
         }
         sender.sendMessage(Language.getMessagePlaceholders("cmdChatSend", true, "%PREFIX%", "Chat",
                 "%SENDTO%", sendToString));
+    }
+
+    private void sendCommand() {
+
+        if (args.length < 3) {
+            showUsage();
+            return;
+        }
+
+        Player directRecipient = server.getPlayer(args[1]);
+        if (directRecipient == null) {
+            sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", "Chat"));
+            return;
+        }
+
+        String command = Language.arrayToString(args, 2, false);
+        if (!command.startsWith("/")) command = "/" + command;
+
+        String toSend = Language.getMessagePlaceholders("cmdChatClickableCommand", true,
+                "%PREFIX%", Language.getPlayername(sender),
+                "%PLAYER%", directRecipient.getName(),
+                "%COMMAND%", command + "/"); // append slash since it will be parsed
+
+        directRecipient.playSound(directRecipient.getLocation(), Sound.BLOCK_NOTE_HARP, 0.5f, 1.7f);
+        server.getOnlinePlayers().forEach(p -> Language.sendParsedText(p, "~" + toSend));
     }
 
     /**
