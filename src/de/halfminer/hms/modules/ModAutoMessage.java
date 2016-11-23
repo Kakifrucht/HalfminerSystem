@@ -56,7 +56,7 @@ public class ModAutoMessage extends HalfminerModule {
 
             String message = this.messages.get(rnd.nextInt(this.messages.size()));
             MessageBuilder.create(hms, message)
-                    .setMode(MessageBuilder.MessageMode.DIRECT_STRING)
+                    .setMode(MessageBuilder.Mode.DIRECT_STRING)
                     .broadcastMessage(false);
         }, interval, interval);
     }

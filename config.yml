@@ -278,7 +278,7 @@ localization:
   hanHooksLoadChatFailed: 'Vault Chat konnte nicht gefunden werden'
   hanStorageCacheCouldNotCreate: 'Die Datei konnte nicht erstellt werden'
   hanStorageCacheCouldNotRead: 'Die Datei konnte nicht gelesen werden'
-  hanStorageCacheCreate: 'Die Datei %DATEINAME% wurde erstellt'
+  hanStorageCacheCreate: 'Die Datei %FILENAME% wurde erstellt'
   hanStorageSaveSuccessful: 'Die Daten wurden gespeichert'
   hanStorageSaveUnsuccessful: 'Die Daten konnten nicht gespeichert werden'
   hanTeleportBar: 'Teleport im Gange, bleibe still stehen...'

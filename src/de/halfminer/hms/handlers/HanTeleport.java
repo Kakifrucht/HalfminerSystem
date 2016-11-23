@@ -2,7 +2,7 @@ package de.halfminer.hms.handlers;
 
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.interfaces.Reloadable;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -51,7 +51,9 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             return;
         }
 
-        player.sendMessage(Language.placeholderReplace(lang.get("start"), "%TIME%", String.valueOf(delay)));
+        MessageBuilder.create(hms, lang.get("start")).setMode(MessageBuilder.Mode.DIRECT_STRING)
+                .addPlaceholderReplace("%TIME%", String.valueOf(delay))
+                .sendMessage(player);
         bar.sendBar(player, lang.get("startbar"), BarColor.YELLOW, BarStyle.SOLID, delay);
         currentTeleport.put(player, scheduler.runTaskTimer(hms, tp, 25L, 20L));
     }
@@ -68,11 +70,11 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
 
         defaultTime = hms.getConfig().getInt("handler.teleport.cooldownSeconds", 3);
 
-        lang.put("start", Language.getMessagePlaceholders("hanTeleportStart", true, "%PREFIX%", "Teleport"));
-        lang.put("startbar", Language.getMessage("hanTeleportBar"));
-        lang.put("pending", Language.getMessagePlaceholders("hanTeleportPending", true, "%PREFIX%", "Teleport"));
-        lang.put("moved", Language.getMessagePlaceholders("hanTeleportMoved", true, "%PREFIX%", "Teleport"));
-        lang.put("done", Language.getMessagePlaceholders("hanTeleportDone", true, "%PREFIX%", "Teleport"));
+        lang.put("start", MessageBuilder.create(hms, "hanTeleportStart", "Teleport").returnMessage());
+        lang.put("startbar", MessageBuilder.create(hms, "hanTeleportBar").returnMessage());
+        lang.put("pending", MessageBuilder.create(hms, "hanTeleportPending", "Teleport").returnMessage());
+        lang.put("moved", MessageBuilder.create(hms, "hanTeleportMoved", "Teleport").returnMessage());
+        lang.put("done", MessageBuilder.create(hms, "hanTeleportDone", "Teleport").returnMessage());
     }
 
     private class Teleport implements Runnable {

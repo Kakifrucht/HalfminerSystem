@@ -3,7 +3,7 @@ package de.halfminer.hms.handlers;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.exception.HookException;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.Economy;
 import net.milkbowl.vault.chat.Chat;
@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.math.BigDecimal;
+import java.util.logging.Level;
 
 /**
  * - Hooks external plugins
@@ -32,9 +33,9 @@ public class HanHooks extends HalfminerHandler {
             RegisteredServiceProvider<Chat> provider = server.getServicesManager()
                     .getRegistration(net.milkbowl.vault.chat.Chat.class);
             if (provider != null) vaultChatHook = provider.getProvider();
-            else hms.getLogger().warning(Language.getMessage("hanHooksLoadChatFailed"));
+            else MessageBuilder.create(hms, "hanHooksLoadChatFailed").logMessage(Level.WARNING);
 
-        } else hms.getLogger().warning(Language.getMessage("hanHooksLoadChatFailed"));
+        } else MessageBuilder.create(hms, "hanHooksLoadChatFailed").logMessage(Level.WARNING);
     }
 
     public Essentials getEssentialsHook() {

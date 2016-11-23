@@ -49,7 +49,7 @@ public class MessageBuilder {
 
     private final String lang;
     private String prefix;
-    private MessageMode mode;
+    private Mode mode;
     private final List<String> placeholders = new ArrayList<>();
 
     private boolean translateColor = true;
@@ -59,10 +59,10 @@ public class MessageBuilder {
     private MessageBuilder(JavaPlugin plugin, String lang) {
         this.plugin = plugin;
         this.lang = lang;
-        this.mode = MessageMode.GET_FROM_LOCALE_FILE;
+        this.mode = Mode.GET_FROM_LOCALE_FILE;
     }
 
-    public MessageBuilder setMode(MessageMode mode) {
+    public MessageBuilder setMode(Mode mode) {
         this.mode = mode;
         return this;
     }
@@ -91,7 +91,7 @@ public class MessageBuilder {
     public String returnMessage() {
 
         String toReturn;
-        if (this.mode.equals(MessageMode.GET_FROM_LOCALE_FILE)) {
+        if (this.mode.equals(Mode.GET_FROM_LOCALE_FILE)) {
             toReturn = getMessage(lang);
             // allow removal of messages
             if (toReturn == null || toReturn.length() == 0)
@@ -263,7 +263,7 @@ public class MessageBuilder {
         return parsedComponent;
     }
 
-    public enum MessageMode {
+    public enum Mode {
         GET_FROM_LOCALE_FILE,
         DIRECT_STRING
     }

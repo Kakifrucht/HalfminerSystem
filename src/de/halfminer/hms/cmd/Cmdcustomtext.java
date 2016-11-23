@@ -49,7 +49,7 @@ public class Cmdcustomtext extends HalfminerCommand {
             for (String rawLine : chapter) {
 
                 MessageBuilder builder = MessageBuilder.create(hms, rawLine)
-                        .setMode(MessageBuilder.MessageMode.DIRECT_STRING)
+                        .setMode(MessageBuilder.Mode.DIRECT_STRING)
                         .toggleClickableCommands()
                         .addPlaceholderReplace("%PLAYER%", Language.getPlayername(sender))
                         .addPlaceholderReplace("%ARGS%", Language.arrayToString(args, 0, false));

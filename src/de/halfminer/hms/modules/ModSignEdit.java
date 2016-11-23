@@ -84,7 +84,5 @@ public class ModSignEdit extends HalfminerModule implements Listener {
             numberEdit = (byte) (line - 1);
             this.signText = signText;
         }
-
     }
-
 }

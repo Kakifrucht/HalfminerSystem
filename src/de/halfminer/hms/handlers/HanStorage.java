@@ -5,7 +5,7 @@ import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.util.CustomtextCache;
 import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * - Autosave
@@ -112,15 +113,16 @@ public class HanStorage extends HalfminerHandler implements Disableable {
         if (!cacheFile.exists()) {
             try {
                 if (cacheFile.createNewFile()) {
-                    hms.getLogger().info(Language.getMessagePlaceholders("hanStorageCacheCreate", false,
-                            "%DATEINAME%", cacheFile.getName()));
+                    MessageBuilder.create(hms, "hanStorageCacheCreate")
+                            .addPlaceholderReplace("%FILENAME%", cacheFile.getName())
+                            .logMessage(Level.INFO);
                 } else {
-                    hms.getLogger().severe(Language.getMessage("hanStorageCacheCouldNotCreate"));
+                    MessageBuilder.create(hms, "hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
                     throw new CachingException(CachingException.Reason.CANNOT_WRITE);
                 }
             } catch (IOException e) {
                 // small duplication :)
-                hms.getLogger().severe(Language.getMessage("hanStorageCacheCouldNotCreate"));
+                MessageBuilder.create(hms, "hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
                 throw new CachingException(CachingException.Reason.CANNOT_WRITE);
             }
         }
@@ -139,9 +141,9 @@ public class HanStorage extends HalfminerHandler implements Disableable {
             sysConfig.save(sysFile);
             uuidConfig.save(uuidFile);
             playerConfig.save(playerFile);
-            hms.getLogger().info(Language.getMessage("hanStorageSaveSuccessful"));
+            MessageBuilder.create(hms, "hanStorageSaveSuccessful").logMessage(Level.INFO);
         } catch (IOException e) {
-            hms.getLogger().warning(Language.getMessage("hanStorageSaveUnsuccessful"));
+            MessageBuilder.create(hms, "hanStorageSaveUnsuccessful").logMessage(Level.WARNING);
             e.printStackTrace();
         }
     }
