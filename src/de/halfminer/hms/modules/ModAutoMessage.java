@@ -1,8 +1,8 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -55,7 +55,9 @@ public class ModAutoMessage extends HalfminerModule {
         running = scheduler.runTaskTimerAsynchronously(hms, () -> {
 
             String message = this.messages.get(rnd.nextInt(this.messages.size()));
-            for (Player player : server.getOnlinePlayers()) Language.sendParsedText(player, message);
+            MessageBuilder.create(hms, message)
+                    .setMode(MessageBuilder.MessageMode.DIRECT_STRING)
+                    .broadcastMessage(false);
         }, interval, interval);
     }
 }

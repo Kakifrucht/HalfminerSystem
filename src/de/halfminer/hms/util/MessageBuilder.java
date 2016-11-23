@@ -135,7 +135,8 @@ public class MessageBuilder {
 
     public void broadcastMessage(Collection<? extends CommandSender> sendTo, boolean log) {
 
-        sendTo.forEach(this::sendMessage);
+        String messageToBroadcast = returnMessage();
+        sendTo.forEach(player -> player.sendMessage(messageToBroadcast));
         if (log) plugin.getLogger().info(returnMessage());
     }
 
@@ -147,6 +148,15 @@ public class MessageBuilder {
         return plugin.getConfig().getString("localization." + messageKey);
     }
 
+    /**
+     * Replace the placeholders from a given string with the given placeholders. The String will only be iterated once,
+     * so the performance of this algorithm lies within O(n). Placeholders must start and end with character '%'.
+     *
+     * @param originalMessage string containing the message that contains the placeholders
+     * @param replacements    array containing as even index the placeholder in format %PLACEHOLDER%
+     *                        and odd index the string that will replace the placeholder
+     * @return String containing the finished replaced message
+     */
     private String placeholderReplace(String toReplace) {
 
         if (placeholders.size() == 0) return toReplace;
@@ -187,6 +197,14 @@ public class MessageBuilder {
         return message.toString();
     }
 
+    /**
+     * Parses a string using the Component API ({@link net.md_5.bungee.api.chat.BaseComponent}).
+     * Commands will be made clickable and italic, adding a hover message to the command. Commands
+     * must be incapsulated with trailing '/' character.
+     *
+     * @param text string that will be parsed
+     * @return TextComponent that is ready to be sent to a {@link org.bukkit.entity.Player}
+     */
     private TextComponent makeCommandsClickable(String text) {
 
         TextComponent parsedComponent = new TextComponent();

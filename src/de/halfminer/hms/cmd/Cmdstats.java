@@ -44,11 +44,8 @@ public class Cmdstats extends HalfminerCommand {
         HalfminerPlayer compareWith = null;
         if (compare && !sender.equals(player.getBase())) compareWith = storage.getPlayer((Player) sender);
 
-        final String oldNames = player.getString(DataType.LAST_NAMES);
-
-        // build the message
-        String message = MessageBuilder.returnMessage(hms, "cmdStatsTop") + "\n";
-        message += MessageBuilder.create(hms, "cmdStatsShow")
+        MessageBuilder.create(hms, "cmdStatsTop").sendMessage(sender);
+        MessageBuilder.create(hms, "cmdStatsShow")
                 .addPlaceholderReplace("%PLAYER%", player.getName())
                 .addPlaceholderReplace("%SKILLGROUP%",
                         ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(player.getBase()))
@@ -62,28 +59,25 @@ public class Cmdstats extends HalfminerCommand {
                 .addPlaceholderReplace("%MOBKILLS%", getIntAndCompare(player, DataType.MOB_KILLS, compareWith))
                 .addPlaceholderReplace("%BLOCKSPLACED%", getIntAndCompare(player, DataType.BLOCKS_PLACED, compareWith))
                 .addPlaceholderReplace("%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith))
-                .addPlaceholderReplace("%OLDNAMES%", oldNames)
-                .returnMessage() + "\n";
+                .sendMessage(sender);
 
+        String oldNames = player.getString(DataType.LAST_NAMES);
         if (oldNames.length() > 0)
-            message += MessageBuilder.create(hms, "cmdStatsOldnames")
+            MessageBuilder.create(hms, "cmdStatsOldnames")
                     .addPlaceholderReplace("%OLDNAMES%", oldNames)
-                    .returnMessage() + "\n";
+                    .sendMessage(sender);
 
         if (sender.equals(player.getBase()))
-            message += MessageBuilder.returnMessage(hms, "cmdStatsShowotherStats") + "\n";
+            MessageBuilder.create(hms, "cmdStatsShowotherStats").sendMessage(sender);
         else if (compare)
-            message += MessageBuilder.returnMessage(hms, "cmdStatsCompareLegend") + "\n";
+            MessageBuilder.create(hms, "cmdStatsCompareLegend").sendMessage(sender);
         else if (sender instanceof Player) {
-            message += MessageBuilder.create(hms, "cmdStatsCompareInfo")
+            MessageBuilder.create(hms, "cmdStatsCompareInfo")
                     .addPlaceholderReplace("%PLAYER%", player.getName())
-                    .returnMessage() + "\n";
+                    .sendMessage(sender);
         }
 
-        message += MessageBuilder.returnMessage(hms, "lineSeparator");
-        MessageBuilder.create(hms, message)
-                .setMode(MessageBuilder.MessageMode.DIRECT_STRING)
-                .sendMessage(sender);
+        MessageBuilder.create(hms, "lineSeparator").sendMessage(sender);
     }
 
     private String getIntAndCompare(HalfminerPlayer player, DataType type, HalfminerPlayer compareWith) {

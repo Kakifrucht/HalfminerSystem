@@ -27,7 +27,7 @@ public class Cmdlag extends HalfminerCommand {
         if (args.length > 0) { //get other player
 
             if (!sender.hasPermission("hms.lag.others")) {
-                MessageBuilder.create(hms, "noPermission", "Lag").sendMessage(sender);
+                sendNoPermissionMessage("Lag");
                 return;
             }
 

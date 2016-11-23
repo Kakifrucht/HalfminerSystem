@@ -7,7 +7,6 @@ import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.modules.ModChatManager;
 import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -142,17 +141,16 @@ public class Cmdchat extends HalfminerCommand {
 
         String whoCleared = Language.getPlayername(sender);
 
-        String clearMessage = "";
-        for (int i = 0; i < 100; i++) clearMessage += ChatColor.RESET + " \n";
+        final StringBuilder clearMessage = new StringBuilder();
+        for (int i = 0; i < 100; i++) clearMessage.append(" \n");
 
-        for (Player player : server.getOnlinePlayers()) {
+        server.getOnlinePlayers().stream()
+                .filter(p -> !p.hasPermission("hms.chat.advanced"))
+                .forEach(p -> p.sendMessage(clearMessage.toString()));
 
-            if (!player.hasPermission("hms.chat.advanced")) player.sendMessage(clearMessage);
-
-            MessageBuilder.create(hms, "cmdChatCleared", "Chat")
-                    .addPlaceholderReplace("%PLAYER%", whoCleared)
-                    .sendMessage(player);
-        }
+        MessageBuilder.create(hms, "cmdChatCleared", "Chat")
+                .addPlaceholderReplace("%PLAYER%", whoCleared)
+                .broadcastMessage(false);
 
         MessageBuilder.create(hms, "cmdChatClearedLog")
                 .addPlaceholderReplace("%PLAYER%", whoCleared)
@@ -319,7 +317,7 @@ public class Cmdchat extends HalfminerCommand {
 
     private boolean hasAdvancedPermission() {
         boolean hasPerm = sender.hasPermission("hms.chat.advanced");
-        if (!hasPerm) MessageBuilder.create(hms, "noPermission", "Chat").sendMessage(sender);
+        if (!hasPerm) sendNoPermissionMessage("Chat");
         return hasPerm;
     }
 

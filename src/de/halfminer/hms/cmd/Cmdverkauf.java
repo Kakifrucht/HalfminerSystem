@@ -42,8 +42,7 @@ public class Cmdverkauf extends HalfminerCommand {
                 }
 
                 boolean toggledOn = verkaufModule.toggleAutoSell(player);
-                MessageBuilder.create(hms, toggledOn ? "" +
-                        "cmdVerkaufAutoOn" : "cmdVerkaufAutoOff", "Verkauf")
+                MessageBuilder.create(hms, toggledOn ? "cmdVerkaufAutoOn" : "cmdVerkaufAutoOff", "Verkauf")
                         .sendMessage(player);
                 return;
             }
