@@ -23,11 +23,12 @@ public class Language {
      * @param messageKey key of the message, without "localization." as key
      * @return String containing the message with prefix or not, converted newlines and translated color codes
      */
+    @Deprecated
     public static String getMessage(String messageKey) {
 
         String toReturn = hms.getConfig().getString("localization." + messageKey);
         if (toReturn == null || toReturn.length() == 0) return ""; //Allow messages to be removed
-        //Get proper color codes and newlines, add prefix
+        // Get proper color codes and newlines, add prefix
         toReturn = ChatColor.translateAlternateColorCodes('&', toReturn).replace("\\n", "\n");
 
         return toReturn;
@@ -42,6 +43,7 @@ public class Language {
      *                        and odd index the string that will replace the placeholder
      * @return String containing the finished replaced message
      */
+    @Deprecated
     public static String placeholderReplace(String originalMessage, String... replacements) {
 
         if (replacements == null) return originalMessage;
@@ -89,6 +91,7 @@ public class Language {
      * @param replacements    array containing as even index the placeholder and odd index with what to replace it
      * @return String containing the finished replaced and translated message
      */
+    @Deprecated
     public static String placeholderReplaceColor(String originalMessage, String... replacements) {
         return ChatColor.translateAlternateColorCodes('&', placeholderReplace(originalMessage, replacements));
     }
@@ -102,6 +105,7 @@ public class Language {
      * @param replacements array containing as even index the placeholder and odd index with what to replace it
      * @return String containing the finished message
      */
+    @Deprecated
     public static String getMessagePlaceholders(String messageKey, boolean prefix, String... replacements) {
         String toReturn = getMessage(messageKey);
 
@@ -179,6 +183,7 @@ public class Language {
      * @param sendTo recipient for the message
      * @param toParseAndSend message that will be send and/or parsed
      */
+    @Deprecated
     public static void sendParsedText(CommandSender sendTo, String toParseAndSend) {
 
         if (sendTo instanceof Player && toParseAndSend.startsWith("~")) {
@@ -198,7 +203,8 @@ public class Language {
      * @param text string that will be parsed
      * @return TextComponent that is ready to be sent to a {@link org.bukkit.entity.Player}
      */
-    private static TextComponent makeCommandsClickable(String text) {
+    @Deprecated
+    public static TextComponent makeCommandsClickable(String text) {
 
         TextComponent parsedComponent = new TextComponent();
         List<BaseComponent> components = new ArrayList<>();

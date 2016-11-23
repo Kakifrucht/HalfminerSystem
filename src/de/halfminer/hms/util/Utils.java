@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * Static methods that are shared between other classes
@@ -24,8 +25,9 @@ public final class Utils {
             try {
                 toReturn.add(Material.valueOf(material.toUpperCase()));
             } catch (IllegalArgumentException ignored) {
-                HalfminerSystem.getInstance().getLogger().warning(Language.getMessagePlaceholders("utilInvalidMaterial",
-                        false, "%MATERIAL%", material));
+                MessageBuilder.create(HalfminerSystem.getInstance(), "utilInvalidMaterial")
+                        .addPlaceholderReplace("%MATERIAL%", material)
+                        .logMessage(Level.WARNING);
             }
         }
         return toReturn;
