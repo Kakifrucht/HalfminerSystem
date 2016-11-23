@@ -5,7 +5,7 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 /**
  * - Records lots of statistics about a player
@@ -73,9 +74,10 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             } else {
                 hPlayer.set(DataType.LAST_NAMES, lastName);
             }
-
-            server.broadcast(Language.getMessagePlaceholders("modStatsNameChange", true,
-                    "%PREFIX%", "Name", "%OLDNAME%", lastName, "%NEWNAME%", player.getName()), "hms.default");
+            MessageBuilder.create(hms, "modStatsNameChange", "Name")
+                    .addPlaceholderReplace("%OLDNAME%", lastName)
+                    .addPlaceholderReplace("%NEWNAME%", player.getName())
+                    .broadcastMessage(true);
         }
 
         storage.setUUID(player);
@@ -112,26 +114,34 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             hKiller.set(DataType.KD_RATIO, kdRatioKiller);
             hVictim.set(DataType.KD_RATIO, kdRatioVictim);
 
-            killer.sendMessage(Language.getMessagePlaceholders("modStatsPvPKill", true, "%PREFIX%", "PvP",
-                    "%VICTIM%", victim.getName(), "%KILLS%", String.valueOf(killsKiller),
-                    "%KDRATIO%", String.valueOf(kdRatioKiller)));
+            MessageBuilder.create(hms, "modStatsPvPKill", "PvP")
+                    .addPlaceholderReplace("%VICTIM%", victim.getName())
+                    .addPlaceholderReplace("%KILLS%", String.valueOf(killsKiller))
+                    .addPlaceholderReplace("%KDRATIO%", String.valueOf(kdRatioKiller))
+                    .sendMessage(killer);
 
-            victim.sendMessage(Language.getMessagePlaceholders("modStatsPvPDeath", true, "%PREFIX%", "PvP",
-                    "%KILLER%", killer.getName(), "%DEATHS%", String.valueOf(deathsVictim),
-                    "%KDRATIO%", String.valueOf(kdRatioVictim)));
+            MessageBuilder.create(hms, "modStatsPvPDeath", "PvP")
+                    .addPlaceholderReplace("%KILLER%", killer.getName())
+                    .addPlaceholderReplace("%DEATHS%", String.valueOf(deathsVictim))
+                    .addPlaceholderReplace("%KDRATIO%", String.valueOf(kdRatioVictim))
+                    .sendMessage(victim);
 
-            hms.getLogger().info(Language.getMessagePlaceholders("modStatsPvPLog", false,
-                    "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
+            MessageBuilder.create(hms, "modStatsPvPLog")
+                    .addPlaceholderReplace("%KILLER%", killer.getName())
+                    .addPlaceholderReplace("%VICTIM%", victim.getName())
+                    .logMessage(Level.INFO);
         } else {
 
             hVictim.incrementInt(DataType.DEATHS, 1);
             hVictim.set(DataType.KD_RATIO, calculateKDRatio(hVictim));
 
-            victim.sendMessage(Language.getMessagePlaceholders("modStatsDeath", true, "%PREFIX%", "PvP",
-                    "%DEATHS%", String.valueOf(hVictim.getInt(DataType.DEATHS))));
+            MessageBuilder.create(hms, "modStatsDeath", "PvP")
+                    .addPlaceholderReplace("%DEATHS%", hVictim.getString(DataType.DEATHS))
+                    .sendMessage(victim);
 
-            hms.getLogger().info(Language.getMessagePlaceholders("modStatsDeathLog", false,
-                    "%PLAYER%", victim.getName()));
+            MessageBuilder.create(hms, "modStatsDeathLog")
+                    .addPlaceholderReplace("%PLAYER%", victim.getName())
+                    .logMessage(Level.INFO);
         }
     }
 
@@ -151,25 +161,21 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             if (data.getLeft().equals(clicked) && currentTime < data.getRight()) return;
         }
 
-        String message;
+        HalfminerPlayer hClicked = storage.getPlayer(clicked);
+        String skillgroup = ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);
+        String kills = String.valueOf(hClicked.getInt(DataType.KILLS));
+        String kdratio = String.valueOf(hClicked.getDouble(DataType.KD_RATIO));
 
-        if (!clicked.hasPermission("hms.bypass.statsrightclick")) {
-            HalfminerPlayer hClicked = storage.getPlayer(clicked);
-            String skillgroup = ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);
-            String kills = String.valueOf(hClicked.getInt(DataType.KILLS));
-            String kdratio = String.valueOf(hClicked.getDouble(DataType.KD_RATIO));
-            message = Language.getMessagePlaceholders("modStatsRightClick", true, "%PREFIX%", clicked.getName(),
-                    "%SKILLGROUP%", skillgroup, "%KILLS%", kills, "%KDRATIO%", kdratio);
-        } else {
-            message = Language.getMessagePlaceholders("modStatsRightClickExempt", true, "%PREFIX%", clicked.getName());
-        }
+        MessageBuilder.create(hms, !clicked.hasPermission("hms.bypass.statsrightclick") ?
+                "modStatsRightClick" : "modStatsRightClickExempt", clicked.getName())
+                .addPlaceholderReplace("%SKILLGROUP%", skillgroup)
+                .addPlaceholderReplace("%KILLS%", kills)
+                .addPlaceholderReplace("%KDRATIO%", kdratio)
+                .addPlaceholderReplace("%AFK%", hookHandler.isAfk(clicked) ?
+                        MessageBuilder.returnMessage(hms, "modStatsRightClickAFKAppend") : "")
+                .sendMessage(clicker);
 
-        if (hookHandler.isAfk(clicked))
-            message += ' ' + Language.getMessage("modStatsRightClickAFKAppend");
-
-        clicker.sendMessage(message);
         clicker.playSound(clicked.getLocation(), Sound.BLOCK_SLIME_HIT, 1.0f, 2.0f);
-
         lastInteract.put(clicker, new Pair<>(clicked, currentTime + 6));
     }
 

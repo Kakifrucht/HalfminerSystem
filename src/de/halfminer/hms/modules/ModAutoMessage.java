@@ -1,6 +1,5 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitTask;
@@ -25,7 +24,7 @@ public class ModAutoMessage extends HalfminerModule {
     public void loadConfig() {
 
         List<String> messagesList = hms.getConfig().getStringList("autoMessage.messages");
-        String separator = Language.getMessage("lineSeparator");
+        String separator = MessageBuilder.returnMessage(hms, "lineSeparator");
 
         // If no messages are set disable
         if (messagesList.size() == 0) {

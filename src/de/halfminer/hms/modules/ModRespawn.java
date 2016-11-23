@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -62,15 +63,20 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
         if (!joined.hasPlayedBefore()) {
 
-            message = Language.getMessagePlaceholders("modRespawnFirstJoin", false, "%PLAYER%", joined.getName());
+            message = MessageBuilder.create(hms, "modRespawnFirstJoin")
+                    .addPlaceholderReplace("%PLAYER%", joined.getName())
+                    .returnMessage();
 
             scheduler.runTaskLater(hms, () -> {
 
                 newPlayers.put(joined.getName().toLowerCase(), joined.getUniqueId());
                 joined.teleport(respawnLoc);
                 if (firstSpawnCommand.length() > 0) {
+
                     server.dispatchCommand(server.getConsoleSender(),
-                            Language.placeholderReplace(firstSpawnCommand, "%PLAYER%", joined.getName()));
+                            MessageBuilder.create(hms, firstSpawnCommand)
+                                    .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                                    .returnMessage());
                 }
             }, 1L);
 
@@ -80,7 +86,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         } else if (toTeleportOnJoin.contains(joined)) {
             scheduler.runTaskLater(hms, () -> {
                 joined.teleport(respawnLoc);
-                joined.sendMessage(Language.getMessagePlaceholders("modRespawnForced", true, "%PREFIX%", "Spawn"));
+                MessageBuilder.create(hms, "modRespawnForced", "Spawn").sendMessage(joined);
                 toTeleportOnJoin.remove(joined);
             }, 1L);
         }
@@ -115,8 +121,9 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         if (containsWelcome && mentioned != null) {
 
             lastWelcome.put(p.getUniqueId(), System.currentTimeMillis());
-            titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitle"), 10, 30, 0);
-            barHandler.sendBar(p, Language.getMessage("modRespawnHeadBossbar"), BarColor.WHITE, BarStyle.SOLID, 5, 1.0d);
+            titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnHeadTitle"), 10, 30, 0);
+            barHandler.sendBar(p, MessageBuilder.returnMessage(hms, "modRespawnHeadBossbar"),
+                    BarColor.WHITE, BarStyle.SOLID, 5, 1.0d);
 
             scheduler.runTaskLater(hms, () -> {
 
@@ -126,16 +133,17 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                     skull.setDurability((short) 3);
                     SkullMeta meta = (SkullMeta) skull.getItemMeta();
                     meta.setOwner(p.getName());
-                    meta.setLore(Collections.singletonList(Language.getMessage("modRespawnHeadLore")));
+                    meta.setLore(Collections.singletonList(MessageBuilder.returnMessage(hms, "modRespawnHeadLore")));
                     skull.setItemMeta(meta);
 
                     p.getInventory().addItem(skull);
-                    server.broadcast(Language.getMessagePlaceholders("modRespawnHeadBroadcast", true,
-                            "%PREFIX%", "Skull", "%PLAYER%", p.getName()), "hms.default");
+                    MessageBuilder.create(hms, "modRespawnHeadBroadcast", "Skull")
+                            .addPlaceholderReplace("%PLAYER%", p.getName())
+                            .broadcastMessage(true);
                     p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
-                    titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitleYes"), 0, 60, 10);
+                    titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnHeadTitleYes"), 0, 60, 10);
                 } else {
-                    titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitleNo"), 0, 30, 10);
+                    titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnHeadTitleNo"), 0, 30, 10);
                     p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT, 1.0f, 2.0f);
                 }
             }, 20L);

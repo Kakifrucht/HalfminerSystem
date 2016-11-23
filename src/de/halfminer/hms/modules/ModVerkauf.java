@@ -5,6 +5,7 @@ import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Chest;
@@ -19,6 +20,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * - Auto sells chests on inventory close
@@ -97,7 +99,7 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
         } catch (HookException e) {
             // This should not happen under normal circumstances, print stacktrace just in case
             e.printStackTrace();
-            toReward.sendMessage(Language.getMessagePlaceholders("errorOccurred", true, "%PREFIX%", "Verkauf"));
+            MessageBuilder.create(hms, "errorOccurred", "Verkauf").sendMessage(toReward);
             return;
         }
 
@@ -106,13 +108,18 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
 
         // print message
         String materialFriendly = Language.makeStringFriendly(sold.name());
-        toReward.sendMessage(Language.getMessagePlaceholders("modVerkaufSuccess", true, "%PREFIX%", "Verkauf",
-                "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
-                "%AMOUNT%", String.valueOf(amount)));
+        MessageBuilder.create(hms, "modVerkaufSuccess", "Verkauf")
+                .addPlaceholderReplace("%MATERIAL%", materialFriendly)
+                .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))
+                .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                .sendMessage(toReward);
 
-        hms.getLogger().info(Language.getMessagePlaceholders("modVerkaufSuccessLog", false, "%PLAYER%",
-                toReward.getName(), "%MATERIAL%", materialFriendly, "%MONEY%", String.valueOf(revenue),
-                "%AMOUNT%", String.valueOf(amount)));
+        MessageBuilder.create(hms, "modVerkaufSuccessLog")
+                .addPlaceholderReplace("%PLAYER%", toReward.getName())
+                .addPlaceholderReplace("%MATERIAL%", materialFriendly)
+                .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))
+                .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                .logMessage(Level.INFO);
     }
 
     public boolean toggleAutoSell(Player player) {

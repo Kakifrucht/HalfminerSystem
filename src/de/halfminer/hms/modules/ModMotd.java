@@ -1,6 +1,6 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -41,11 +41,16 @@ public class ModMotd extends HalfminerModule implements Listener {
         playerCountThreshold = hms.getConfig().getInt("motd.playerCountThreshold", 50);
         playerCountBuffer = hms.getConfig().getInt("motd.playerCountBuffer", 1);
         playerCountLimit = server.getMaxPlayers();
-        String setMotd = Language.getMessagePlaceholders("modMotdLine", false, "%REPLACE%", storage.getString("news"));
+        String setMotd = MessageBuilder.create(hms, "modMotdLine")
+                .addPlaceholderReplace("%REPLACE%", storage.getString("news"))
+                .returnMessage();
 
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");
         motd = new String[strList.size()];
         for (int i = 0; i < strList.size(); i++)
-            motd[i] = Language.placeholderReplaceColor(setMotd, "%COLOR%", '&' + strList.get(i));
+            motd[i] = MessageBuilder.create(hms, setMotd)
+                    .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                    .addPlaceholderReplace("%COLOR%", '&' + strList.get(i))
+                    .returnMessage();
     }
 }

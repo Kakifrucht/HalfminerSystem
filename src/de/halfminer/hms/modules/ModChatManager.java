@@ -3,6 +3,7 @@ package de.halfminer.hms.modules;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -52,7 +53,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         Player p = e.getPlayer();
         if (isGlobalmuted && !p.hasPermission("hms.chat.bypassglobalmute")) {
-            p.sendMessage(Language.getMessagePlaceholders("modChatManGlobalmuteDenied", true, "%PREFIX%", "Chat"));
+            MessageBuilder.create(hms, "modChatManGlobalmuteDenied", "Chat").sendMessage(p);
             e.setCancelled(true);
             return;
         }
@@ -69,8 +70,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                     colorCount += 2;
 
             if ((message.length() - colorCount) < 2) {
-
-                p.sendMessage(Language.getMessagePlaceholders("modChatManTooShort", true, "%PREFIX%", "Chat"));
+                MessageBuilder.create(hms, "modChatManTooShort", "Chat").sendMessage(p);
                 e.setCancelled(true);
                 return;
             }
@@ -96,7 +96,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 }
 
                 if (cancel) {
-                    p.sendMessage(Language.getMessagePlaceholders("modChatManRepeat", true, "%PREFIX%", "Chat"));
+                    MessageBuilder.create(hms, "modChatManRepeat", "Chat").sendMessage(p);
                     e.setCancelled(true);
                     return;
                 }
@@ -117,9 +117,12 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             suffix = "";
         }
 
-        format = Language.placeholderReplace(format, "%PLAYER%", "%1$s",
-                "%PREFIX%", prefix, "%SUFFIX%", suffix, "%MESSAGE%", "%2$s");
-        format = ChatColor.translateAlternateColorCodes('&', format);
+        format = MessageBuilder.create(hms, format)
+                .addPlaceholderReplace("%PLAYER%", "%1$s")
+                .addPlaceholderReplace("%PREFIX%", prefix)
+                .addPlaceholderReplace("%SUFFIX%", suffix)
+                .addPlaceholderReplace("%MESSAGE%", "%2$s")
+                .returnMessage();
 
         // mention check
         Map<String, Player> players = new HashMap<>();
@@ -139,11 +142,17 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         for (Player wasMentioned : mentioned) {
+
             if (hookHandler.isAfk(wasMentioned))
-                titleHandler.sendActionBar(p, Language.getMessagePlaceholders("modChatManIsAfk", false,
-                        "%PLAYER%", wasMentioned.getName()));
-            titleHandler.sendActionBar(wasMentioned, Language.getMessagePlaceholders("modChatManMentioned", false,
-                    "%PLAYER%", p.getName()));
+
+                titleHandler.sendActionBar(p,
+                        MessageBuilder.create(hms, "modChatManIsAfk")
+                                .addPlaceholderReplace("%PLAYER%", wasMentioned.getName())
+                                .returnMessage());
+            titleHandler.sendActionBar(wasMentioned,
+                    MessageBuilder.create(hms, "modChatManMentioned")
+                            .addPlaceholderReplace("%PLAYER%", p.getName())
+                            .returnMessage());
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_TOUCH, 0.2f, 1.8f);
             lastMentioned.put(wasMentioned, currentTime + mentionDelay);
         }
@@ -159,15 +168,8 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     public void toggleGlobalmute() {
 
         isGlobalmuted = !isGlobalmuted;
-        if (isGlobalmuted) {
-
-            server.broadcast(Language.getMessagePlaceholders("modChatManGlobalmuteOn",
-                    true, "%PREFIX%", "Chat"), "hms.default");
-        } else {
-
-            server.broadcast(Language.getMessagePlaceholders("modChatManGlobalmuteOff",
-                    true, "%PREFIX%", "Chat"), "hms.default");
-        }
+        MessageBuilder.create(hms, isGlobalmuted ? "modChatManGlobalmuteOn" : "modChatManGlobalmuteOff", "Chat")
+                .broadcastMessage(true);
     }
 
     private String getFormat(Player sender) {

@@ -1,6 +1,6 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -28,7 +28,10 @@ public class ModSignEdit extends HalfminerModule implements Listener {
 
         Player player = e.getPlayer();
         Block block = e.getClickedBlock();
-        if (block != null && (block.getType() == Material.SIGN || block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
+        if (block != null &&
+                (block.getType() == Material.SIGN
+                        || block.getType() == Material.SIGN_POST
+                        || block.getType() == Material.WALL_SIGN)) {
 
             Sign sign = (Sign) block.getState();
             EditInfo info = edit.get(player);
@@ -36,24 +39,23 @@ public class ModSignEdit extends HalfminerModule implements Listener {
             if (info.amountToCopy > 0 && info.copySign == null) {
 
                 info.copySign = sign.getLines();
-                player.sendMessage(Language.getMessagePlaceholders("modSignEditSignCopied", true, "%PREFIX%", "Info"));
-
+                MessageBuilder.create(hms, "modSignEditSignCopied", "Signedit").sendMessage(player);
             } else {
 
                 if (info.amountToCopy > 0) {
                     for (int i = 0; i < 4; i++) sign.setLine(i, info.copySign[i]);
                     if (--info.amountToCopy == 0) edit.remove(player);
-                    player.sendMessage(Language.getMessagePlaceholders("modSignEditSignPasted", true, "%PREFIX%", "Info", "%AMOUNT%", Integer.toString(info.amountToCopy)));
+                    MessageBuilder.create(hms, "modSignEditSignPasted", "Signedit")
+                            .addPlaceholderReplace("%AMOUNT%", String.valueOf(info.amountToCopy))
+                            .sendMessage(player);
                 } else {
                     sign.setLine(info.numberEdit, info.signText);
-                    player.sendMessage(Language.getMessagePlaceholders("modSignEditLinePasted", true, "%PREFIX%", "Info"));
+                    MessageBuilder.create(hms, "modSignEditLinePasted", "Signedit").sendMessage(player);
                     edit.remove(player);
                 }
 
                 sign.update();
-
             }
-
             e.setCancelled(true);
         }
     }

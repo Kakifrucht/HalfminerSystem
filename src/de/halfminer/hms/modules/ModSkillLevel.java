@@ -4,7 +4,7 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * - PvP based skilllevel system / ELO
@@ -59,7 +60,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             // set last pvp time to 30 days in the future, to prevent additional inactivity deranks
             hPlayer.set(DataType.LAST_PVP, (System.currentTimeMillis() / 1000) + 2592000);
             updateSkill(player, derankLossAmount);
-            player.sendMessage(Language.getMessagePlaceholders("modSkillLevelDerank", true, "%PREFIX%", "PvP"));
+            MessageBuilder.create(hms, "modSkillLevelDerank", "PvP").sendMessage(player);
 
         } else updateSkill(player, 0);
     }
@@ -146,14 +147,21 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         if (newLevel != level) {
 
             if (player instanceof Player) {
-                String toSend = Language.getMessagePlaceholders(newLevel > level ?
-                        "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle", false, "%SKILLLEVEL%",
-                        String.valueOf(newLevel), "%SKILLGROUP%", teamName);
-                titleHandler.sendTitle((Player) player, toSend, 10, 50, 10);
+                titleHandler.sendTitle((Player) player,
+                        MessageBuilder.create(hms, newLevel > level ?
+                                "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle")
+                                .addPlaceholderReplace("%SKILLLEVEL%", String.valueOf(newLevel))
+                                .addPlaceholderReplace("%SKILLGROUP%", teamName)
+                                .returnMessage(),
+                        10, 50, 10);
             }
 
-            hms.getLogger().info(Language.getMessagePlaceholders("modSkillLevelLog", false, "%PLAYER%", player.getName(),
-                    "%SKILLOLD%", String.valueOf(level), "%SKILLNEW%", String.valueOf(newLevel), "%SKILLNO%", String.valueOf(elo)));
+            MessageBuilder.create(hms, "modSkillLevelLog")
+                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .addPlaceholderReplace("%SKILLOLD%", String.valueOf(level))
+                    .addPlaceholderReplace("%SKILLNEW%", String.valueOf(newLevel))
+                    .addPlaceholderReplace("%SKILLNO%", String.valueOf(elo))
+                    .logMessage(Level.INFO);
         }
     }
 
@@ -179,7 +187,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         timeUntilDerankThreshold = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
         timeUntilKillCountAgain = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
-        skillgroupNameAdmin = Language.getMessage("modSkillLevelAdmingroupName");
+        skillgroupNameAdmin = MessageBuilder.returnMessage(hms, "modSkillLevelAdmingroupName");
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 

@@ -3,7 +3,7 @@ package de.halfminer.hms.modules;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.HookException;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.boss.BarColor;
@@ -15,7 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,7 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
 
-    private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, Double> balances = new ConcurrentHashMap<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -41,10 +39,13 @@ public class ModTitles extends HalfminerModule implements Listener {
 
         if (!storage.getPlayer(joined).getBoolean(DataType.NEUTP_USED)) {
 
-            titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("newplayer"),
-                    "%PLAYER%", joined.getName()), 10, 200, 10);
-            barHandler.sendBar(joined, Language.placeholderReplace(lang.get("newplayerbar"),
-                    "%PLAYER%", joined.getName()), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
+            titleHandler.sendTitle(joined, MessageBuilder.create(hms, "modTitlesNewPlayerFormat")
+                    .addPlaceholderReplace("%PLAYER%", joined.getName())
+                    .returnMessage(), 10, 200, 10);
+
+            barHandler.sendBar(joined, MessageBuilder.create(hms, "modTitlesNewPlayerFormatBar")
+                    .addPlaceholderReplace("%PLAYER%", joined.getName())
+                    .returnMessage(), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
 
             scheduler.runTaskLater(hms, () -> updateBalanceAndTablist(joined), 3L);
         } else {
@@ -52,15 +53,17 @@ public class ModTitles extends HalfminerModule implements Listener {
             // delay due to potential Essentials issues
             scheduler.runTaskLater(hms, () -> {
 
-                titleHandler.sendTitle(joined, Language.placeholderReplace(lang.get("joinformat"),
-                        "%BALANCE%", String.valueOf(updateBalanceAndTablist(joined)),
-                        "%PLAYERCOUNT%", getPlayercountString()), 10, 100, 10);
+                titleHandler.sendTitle(joined, MessageBuilder.create(hms, "modTitlesJoinFormat")
+                        .addPlaceholderReplace("%BALANCE%", String.valueOf(updateBalanceAndTablist(joined)))
+                        .addPlaceholderReplace("%PLAYERCOUNT%", getPlayercountString())
+                        .returnMessage(), 10, 100, 10);
 
                 final String news = storage.getString("news");
                 if (news.length() > 0) {
                     scheduler.runTaskLater(hms, () -> {
-                        barHandler.sendBar(joined, Language.placeholderReplace(lang.get("news"),
-                                "%NEWS%", news), BarColor.YELLOW, BarStyle.SOLID, 30);
+                        barHandler.sendBar(joined, MessageBuilder.create(hms, "modTitlesNewsFormat")
+                                .addPlaceholderReplace("%NEWS%", news)
+                                .returnMessage(), BarColor.YELLOW, BarStyle.SOLID, 30);
                         titleHandler.sendTitle(joined, " \n" + news, 10, 100, 10);
                     }, 120);
                 }
@@ -115,8 +118,10 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private void updateTablist(Player player) {
 
-        titleHandler.setTablistHeaderFooter(player, Language.placeholderReplace(lang.get("tablist"),
-                "%BALANCE%", String.valueOf(balances.get(player)), "%PLAYERCOUNT%", getPlayercountString()));
+        titleHandler.setTablistHeaderFooter(player, MessageBuilder.create(hms, "modTitlesTablist")
+                .addPlaceholderReplace("%BALANCE%", String.valueOf(balances.get(player)))
+                .addPlaceholderReplace("%PLAYERCOUNT%", getPlayercountString())
+                .returnMessage());
     }
 
     private String getPlayercountString() {
@@ -125,12 +130,6 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     @Override
     public void loadConfig() {
-
-        lang.put("newplayer", Language.getMessage("modTitlesNewPlayerFormat"));
-        lang.put("newplayerbar", Language.getMessage("modTitlesNewPlayerFormatBar"));
-        lang.put("joinformat", Language.getMessage("modTitlesJoinFormat"));
-        lang.put("news", Language.getMessage("modTitlesNewsFormat"));
-        lang.put("tablist", Language.getMessage("modTitlesTablist"));
         server.getOnlinePlayers().forEach(this::updateBalanceAndTablist);
     }
 }

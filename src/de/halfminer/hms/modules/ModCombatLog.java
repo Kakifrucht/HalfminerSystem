@@ -1,7 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.DataType;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -40,7 +40,6 @@ import java.util.Map;
  */
 public class ModCombatLog extends HalfminerModule implements Listener {
 
-    private final Map<String, String> lang = new HashMap<>();
     private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<>());
 
     private boolean broadcastLog;
@@ -66,7 +65,9 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             untagPlayer(e.getPlayer());
 
             if (broadcastLog)
-                server.broadcast(Language.placeholderReplace(lang.get("loggedOut"), "%PLAYER%", e.getPlayer().getName()), "hms.default");
+                MessageBuilder.create(hms, "modCombatLogLoggedOut", "PvP")
+                        .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
+                        .broadcastMessage(true);
 
             if (e.getPlayer().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) e.getPlayer().getLastDamageCause();
@@ -107,7 +108,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 && e.getSlot() <= 39
                 && e.getCurrentItem() != null
                 && !e.getCurrentItem().getType().equals(Material.AIR)) {
-            e.getWhoClicked().sendMessage(lang.get("noArmorChange"));
+            MessageBuilder.create(hms, "modCombatLogNoArmorChange", "PvP").sendMessage(e.getWhoClicked());
             e.setCancelled(true);
         }
     }
@@ -116,7 +117,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     public void onCommandCheckIfBlocked(PlayerCommandPreprocessEvent e) {
 
         if (isTagged(e.getPlayer())) {
-            e.getPlayer().sendMessage(lang.get("noCommand"));
+            MessageBuilder.create(hms, "modCombatLogNoCommand", "PvP").sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }
@@ -126,7 +127,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         if (isTagged(e.getPlayer()) && e.hasItem() && e.getItem().getType() == Material.ENDER_PEARL
                 && ((e.getAction() == Action.RIGHT_CLICK_BLOCK) || (e.getAction() == Action.RIGHT_CLICK_AIR))) {
-            e.getPlayer().sendMessage(lang.get("noEnderpearl"));
+            MessageBuilder.create(hms, "modCombatLogNoEnderpearl", "PvP").sendMessage(e.getPlayer());
             e.getPlayer().updateInventory();
             e.setCancelled(true);
         }
@@ -149,20 +150,22 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         final int health = otherHealth >= 0 ? otherHealth : 0;
         final int healthScale = (int) other.getMaxHealth();
 
-        barHandler.sendBar(p, Language.placeholderReplace(lang.get("bossbar"), "%PLAYER%", other.getName(),
-                "%LEVEL%", storage.getPlayer(other).getString(DataType.SKILL_LEVEL),
-                "%HEALTH%", String.valueOf(health), "%MAXHEALTH%", String.valueOf(healthScale)),
+        barHandler.sendBar(p, MessageBuilder.create(hms, "modCombatLogBossBar", "PvP")
+                .addPlaceholderReplace("%PLAYER%", other.getName())
+                .addPlaceholderReplace("%LEVEL%", storage.getPlayer(other).getString(DataType.SKILL_LEVEL))
+                .addPlaceholderReplace("%HEALTH%", String.valueOf(health))
+                .addPlaceholderReplace("%MAXHEALTH%", String.valueOf(healthScale))
+                .returnMessage(),
                 BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) health / healthScale);
 
         if (isTagged(p)) tagged.get(p).cancel();
         tagged.put(p, scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
 
-            final String symbols = lang.get("symbols");
+            final String symbols = MessageBuilder.returnMessage(hms, "modCombatLogProgressSymbols");
             int time = tagTime;
 
             @Override
             public void run() {
-
                 // build the progressbar
                 int timePercentage = (int) Math.round((time / (double) tagTime) * 10);
                 String progressBar = "" + ChatColor.DARK_RED + ChatColor.STRIKETHROUGH;
@@ -175,10 +178,10 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                     progressBar += symbols;
                 }
 
-                String message = Language.placeholderReplace(lang.get("countdown"), "%TIME%", String.valueOf(time),
-                        "%PROGRESSBAR%", progressBar);
-
-                if (time-- > 0) titleHandler.sendActionBar(p, message);
+                if (time-- > 0) titleHandler.sendActionBar(p, MessageBuilder.create(hms, "modCombatLogCountdown")
+                        .addPlaceholderReplace("%TIME%", String.valueOf(time))
+                        .addPlaceholderReplace("%PROGRESSBAR%", progressBar)
+                        .returnMessage());
                 else untagPlayer(p);
             }
         }, 0L, 20L));
@@ -189,7 +192,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         if (!isTagged(p)) return;
 
         tagged.get(p).cancel();
-        titleHandler.sendActionBar(p, lang.get("untagged"));
+        titleHandler.sendActionBar(p, MessageBuilder.returnMessage(hms, "modCombatLogUntagged"));
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 2f);
 
         tagged.remove(p);
@@ -204,14 +207,5 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
         tagTime = hms.getConfig().getInt("combatLog.tagTime", 15);
-
-        lang.put("bossbar", Language.getMessage("modCombatLogBossBar"));
-        lang.put("countdown", Language.getMessage("modCombatLogCountdown"));
-        lang.put("symbols", Language.getMessage("modCombatLogProgressSymbols"));
-        lang.put("untagged", Language.getMessage("modCombatLogUntagged"));
-        lang.put("loggedOut", Language.getMessagePlaceholders("modCombatLogLoggedOut", true, "%PREFIX%", "PvP"));
-        lang.put("noArmorChange", Language.getMessagePlaceholders("modCombatLogNoArmorChange", true, "%PREFIX%", "PvP"));
-        lang.put("noCommand", Language.getMessagePlaceholders("modCombatLogNoCommand", true, "%PREFIX%", "PvP"));
-        lang.put("noEnderpearl", Language.getMessagePlaceholders("modCombatLogNoEnderpearl", true, "%PREFIX%", "PvP"));
     }
 }

@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,6 +20,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * - Limits redstone usage
@@ -44,7 +46,6 @@ public class ModPerformance extends HalfminerModule implements Listener {
     private int hopperLimit;
     private int hopperLimitRadius;
     private boolean logHopperLimit;
-    private String hopperLimitMessage;
     // Entity limits
     private int entityLimitLiving;
     private int entityLimitSame;
@@ -69,17 +70,19 @@ public class ModPerformance extends HalfminerModule implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void checkHopperLimit(BlockPlaceEvent e) {
+
         if (e.getPlayer().hasPermission("hms.bypass.hopperlimit")) return;
+
         Block block = e.getBlock();
-        if (block.getType() == Material.HOPPER) {
-            if (tooManyHoppers(block.getLocation())) {
-                e.setCancelled(true);
-                e.getPlayer().sendMessage(hopperLimitMessage);
-                if (logHopperLimit) {
-                    hms.getLogger().info(Language.getMessagePlaceholders("modPerformanceReachedHopperLog", false,
-                            "%PLAYER%", e.getPlayer().getName(), "%LIMIT%", String.valueOf(hopperLimit), "%LOCATION%",
-                            Language.getStringFromLocation(block.getLocation())));
-                }
+        if (block.getType() == Material.HOPPER && tooManyHoppers(block.getLocation())) {
+            e.setCancelled(true);
+            MessageBuilder.create(hms, "modPerformanceReachedHopper", "Info").sendMessage(e.getPlayer());
+            if (logHopperLimit) {
+                MessageBuilder.create(hms, "modPerformanceReachedHopperLog")
+                        .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
+                        .addPlaceholderReplace("%LIMIT%", String.valueOf(hopperLimit))
+                        .addPlaceholderReplace("%LOCATION%", Language.getStringFromLocation(block.getLocation()))
+                        .logMessage(Level.INFO);
             }
         }
     }
@@ -142,8 +145,6 @@ public class ModPerformance extends HalfminerModule implements Listener {
         entityLimitLiving = hms.getConfig().getInt("performance.entitiyLimitLiving", 100);
         entityLimitSame = hms.getConfig().getInt("performance.entityLimitSame", 25);
         boxSize = hms.getConfig().getInt("performance.boxSize", 16);
-
-        hopperLimitMessage = Language.getMessagePlaceholders("modPerformanceReachedHopper", true, "%PREFIX%", "Info");
 
         if (clearTask != null) clearTask.cancel();
         clearTask = scheduler.runTaskTimer(hms, () -> {

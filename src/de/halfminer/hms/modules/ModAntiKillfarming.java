@@ -1,7 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -38,7 +38,6 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     private int thresholdUntilBlock;
     private int thresholdUntilRemovalSeconds;
 
-    private final Map<String, String> lang = new HashMap<>();
     private final Set<String> exemptCommands = new HashSet<>();
 
     private final Map<UUID, AntiKillfarmingContainer> containerMap = new HashMap<>();
@@ -77,8 +76,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
             if (container.getAmountKilled(victim) == thresholdUntilBlock - 1) {
                 // warn players
-                killer.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"), "%PREFIX%", "PvP"));
-                victim.sendMessage(Language.placeholderReplace(lang.get("killfarmWarning"), "%PREFIX%", "PvP"));
+                MessageBuilder.create(hms, "modAntiKillfarmingWarning", "PvP").sendMessage(killer, victim);
             } else if (container.getAmountKilled(victim) >= thresholdUntilBlock) blockPlayers(killer, victim);
         }
     }
@@ -96,8 +94,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
         // direct PvP check
         if (e.getDamager() instanceof Player)
-            e.setCancelled(checkTimeAndMessage((Player) e.getDamager(), "noPvPAttack")
-                    || checkTimeAndMessage(victim, "noPvPProtect", (Player) e.getDamager()));
+            e.setCancelled(checkTimeAndMessage((Player) e.getDamager(), "modAntiKillfarmingNoPvPAttack")
+                    || checkTimeAndMessage(victim, "modAntiKillfarmingNoPvPProtect", (Player) e.getDamager()));
 
         // prevent death by tnt ignition
         if (e.getDamager() instanceof TNTPrimed
@@ -110,8 +108,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
             Player shooter = (Player) ((Projectile) e.getDamager()).getShooter();
 
-            e.setCancelled(checkTimeAndMessage(shooter, "noPvPAttack")
-                    || checkTimeAndMessage(victim, "noPvPProtect", shooter));
+            e.setCancelled(checkTimeAndMessage(shooter, "modAntiKillfarmingNoPvPAttack")
+                    || checkTimeAndMessage(victim, "modAntiKillfarmingNoPvPProtect", shooter));
         }
     }
 
@@ -123,8 +121,10 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         int blockTime = getBlockTime(toCheck);
         if (blockTime >= 0) {
             if (messageKey.length() > 0)
-                toMessage.sendMessage(Language.placeholderReplace(lang.get(messageKey),
-                        "%PLAYER%", toCheck.getName(), "%TIME%", String.valueOf(blockTime)));
+                MessageBuilder.create(hms, messageKey, "PvP")
+                        .addPlaceholderReplace("%PLAYER%", toCheck.getName())
+                        .addPlaceholderReplace("%TIME%", String.valueOf(blockTime))
+                        .sendMessage(toMessage);
             return true;
         }
         return false;
@@ -150,8 +150,9 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         if (time > 0) {
             String command = e.getMessage().split(" ")[0].toLowerCase();
             if (!exemptCommands.contains(command.substring(1, command.length()))) {
-                e.getPlayer().sendMessage(Language.placeholderReplace(lang.get("noCommand"),
-                        "%TIME%", String.valueOf(time)));
+                MessageBuilder.create(hms, "modAntiKillfarmingNoCommand", "PvP")
+                        .addPlaceholderReplace("%TIME%", String.valueOf(time))
+                        .sendMessage(e.getPlayer());
                 e.setCancelled(true);
             }
         }
@@ -170,7 +171,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     private boolean splashPotionCheck(ProjectileHitEvent e) {
 
         return e.getEntity().getShooter() instanceof Player
-                && checkTimeAndMessage((Player) e.getEntity().getShooter(), "noPvPAttack");
+                && checkTimeAndMessage((Player) e.getEntity().getShooter(), "modAntiKillfarmingNoPvPAttack");
     }
 
     /**
@@ -209,12 +210,20 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         // ensure that once both blocks run out they get reblocked when trying to kill directly again
         killerCon.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
 
-        server.broadcastMessage(Language.placeholderReplace(lang.get("blockedBroadcast"),
-                "%KILLER%", killer.getName(), "%VICTIM%", victim.getName()));
-        killer.sendMessage(Language.placeholderReplace(lang.get("blockedKiller"),
-                "%TIME%", String.valueOf(blockTimeKiller / 60), "%PLAYER%", victim.getName()));
-        victim.sendMessage(Language.placeholderReplace(lang.get("blockedVictim"),
-                "%TIME%", String.valueOf(blockTimeVictim / 60), "%PLAYER%", killer.getName()));
+        MessageBuilder.create(hms, "modAntiKillfarmingBlockedBroadcast", "PvP")
+                .addPlaceholderReplace("%KILLER%", killer.getName())
+                .addPlaceholderReplace("%VICTIM%", victim.getName())
+                .broadcastMessage(true);
+
+        MessageBuilder.create(hms, "modAntiKillfarmingBlockedKiller", "PvP")
+                .addPlaceholderReplace("%TIME%", String.valueOf(blockTimeKiller / 60))
+                .addPlaceholderReplace("%PLAYER%", victim.getName())
+                .sendMessage(killer);
+
+        MessageBuilder.create(hms, "modAntiKillfarmingBlockedVictim", "PvP")
+                .addPlaceholderReplace("%TIME%", String.valueOf(blockTimeVictim / 60))
+                .addPlaceholderReplace("%PLAYER%", killer.getName())
+                .sendMessage(victim);
     }
 
     @Override
@@ -228,23 +237,6 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         // Get allowed commands
         exemptCommands.clear();
         exemptCommands.addAll(hms.getConfig().getStringList("antiKillfarming.killfarmingCommandExemptions"));
-
-        // Get language
-        lang.clear();
-        lang.put("killfarmWarning", Language.getMessagePlaceholders("modAntiKillfarmingWarning", true,
-                "%PREFIX%", "PvP"));
-        lang.put("noCommand", Language.getMessagePlaceholders("modAntiKillfarmingNoCommand",
-                true, "%PREFIX%", "Info"));
-        lang.put("noPvPAttack", Language.getMessagePlaceholders("modAntiKillfarmingNoPvPAttack",
-                true, "%PREFIX%", "PvP"));
-        lang.put("noPvPProtect", Language.getMessagePlaceholders("modAntiKillfarmingNoPvPProtect",
-                true, "%PREFIX%", "PvP"));
-        lang.put("blockedBroadcast", Language.getMessagePlaceholders("modAntiKillfarmingBlockedBroadcast",
-                true, "%PREFIX%", "PvP"));
-        lang.put("blockedKiller", Language.getMessagePlaceholders("modAntiKillfarmingBlockedKiller",
-                true, "%PREFIX%", "PvP"));
-        lang.put("blockedVictim", Language.getMessagePlaceholders("modAntiKillfarmingBlockedVictim",
-                true, "%PREFIX%", "PvP"));
     }
 
     @Override

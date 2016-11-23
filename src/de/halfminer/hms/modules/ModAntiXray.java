@@ -2,6 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -123,13 +124,14 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             if (counter.isBypassed()) color = ChatColor.YELLOW;
             else if (counter.isCheckedPermanently()) color = ChatColor.RED;
 
-            toReturn += Language.getMessagePlaceholders("modAntiXrayShowFormat", false,
-                    "%PLAYER%", color + counter.getOwnerName(),
-                    "%LOCATION%", Language.getStringFromLocation(last),
-                    "%WORLD%", last.getWorld().getName(),
-                    "%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString()),
-                    "%PROTECTED%", String.valueOf(counter.getProtectedBreakages()),
-                    "%BROKEN%", String.valueOf(counter.getBreakages())) + "\n";
+            toReturn += MessageBuilder.create(hms, "modAntiXrayShowFormat")
+                    .addPlaceholderReplace("%PLAYER%", color + counter.getOwnerName())
+                    .addPlaceholderReplace("%LOCATION%", Language.getStringFromLocation(last))
+                    .addPlaceholderReplace("%WORLD%", last.getWorld().getName())
+                    .addPlaceholderReplace("%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString()))
+                    .addPlaceholderReplace("%PROTECTED%", String.valueOf(counter.getProtectedBreakages()))
+                    .addPlaceholderReplace("%BROKEN%", String.valueOf(counter.getBreakages()))
+                    .returnMessage() + "\n";
         }
 
         if (toReturn.length() > 0) toReturn = toReturn.substring(0, toReturn.length() - 1);
@@ -145,13 +147,14 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             else counter.setInformed((Player) toNotify);
         }
 
-        toNotify.sendMessage(Language.getMessagePlaceholders("modAntiXrayDetected", true,
-                "%PREFIX%", "AntiXRay", "%PLAYER%", counter.getOwnerName(),
-                "%BROKENTOTAL%", String.valueOf(counter.getBreakages()),
-                "%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()),
-                "%LASTLOCATION%", Language.getStringFromLocation(counter.getLastProtectedLocation()),
-                "%WORLD%", counter.getLastProtectedLocation().getWorld().getName(),
-                "%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString())));
+        MessageBuilder.create(hms, "modAntiXrayShowFormat", "AntiXRay")
+                .addPlaceholderReplace("%PLAYER%", counter.getOwnerName())
+                .addPlaceholderReplace("%BROKENTOTAL%", String.valueOf(counter.getBreakages()))
+                .addPlaceholderReplace("%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()))
+                .addPlaceholderReplace("%LASTLOCATION%", Language.getStringFromLocation(counter.getLastProtectedLocation()))
+                .addPlaceholderReplace("%WORLD%", counter.getLastProtectedLocation().getWorld().getName())
+                .addPlaceholderReplace("%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString()))
+                .sendMessage(toNotify);
     }
 
     private boolean counterExists(UUID player) {

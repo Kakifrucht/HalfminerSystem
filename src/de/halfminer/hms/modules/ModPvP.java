@@ -2,7 +2,7 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.AttackSpeed;
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
@@ -167,8 +167,11 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             killStreak.put(killerUid, streak);
 
             if (streak > thresholdUntilShown || streak % 5 == 0) {
-                scheduler.runTaskLater(hms, () -> titleHandler.sendActionBar(null, Language.getMessagePlaceholders("modPvPKillStreak", false,
-                        "%PLAYER%", killer.getName(), "%STREAK%", String.valueOf(streak))), 0L);
+                scheduler.runTaskLater(hms, () -> titleHandler.sendActionBar(null,
+                        MessageBuilder.create(hms, "modPvPKillStreak")
+                                .addPlaceholderReplace("%PLAYER%", killer.getName())
+                                .addPlaceholderReplace("%STREAK%", String.valueOf(streak))
+                                .returnMessage()), 0L);
             }
         } else {
             victim.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);

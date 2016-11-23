@@ -1,6 +1,6 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -65,8 +65,9 @@ public class ModTps extends HalfminerModule {
 
             // send message if server is unstable
             if (lastAverageTps < alertStaff && tpsHistory.size() == historySize)
-                server.broadcast(Language.getMessagePlaceholders("modTpsServerUnstable",
-                        true, "%PREFIX%", "Lag", "%TPS%", String.valueOf(lastAverageTps)), "hms.lag.notify");
+                MessageBuilder.create(hms, "modTpsServerUnstable", "Lag")
+                        .addPlaceholderReplace("%TPS%", String.valueOf(lastAverageTps))
+                        .broadcastMessage("hms.lag.notify", true);
         }, ticksBetweenUpdate, ticksBetweenUpdate);
     }
 }

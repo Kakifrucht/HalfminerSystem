@@ -1,6 +1,6 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -64,7 +64,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         Player player = e.getPlayer();
         if (player.hasPermission("hms.bypass.commandfilter")) return;
         if (player.isSleeping()) {
-            player.sendMessage(Language.getMessagePlaceholders("modStaticListenersCommandSleep", true, "%PREFIX%", "Info"));
+            MessageBuilder.create(hms, "modStaticListenersCommandSleep", "Info").sendMessage(player);
             e.setCancelled(true);
         } else {
 
@@ -101,8 +101,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                 && ((complete.size() > 10 && complete.get(0).startsWith("/"))
                 || (complete.size() == 0 && !buffer.contains(" ")))) {
 
-            e.getSender().sendMessage(Language.getMessagePlaceholders("modStaticListenersTabHelp", true,
-                    "%PREFIX%", "Info"));
+            MessageBuilder.create(hms, "modStaticListenersTabHelp", "Info").sendMessage(e.getSender());
             e.setCompletions(Collections.singletonList("/hilfe"));
         }
     }

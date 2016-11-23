@@ -14,7 +14,7 @@ import java.util.logging.Level;
 /**
  * Class containing a builder used for messaging players / console
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings({"WeakerAccess", "SameParameterValue"})
 public class MessageBuilder {
 
     /**
@@ -52,7 +52,6 @@ public class MessageBuilder {
     private Mode mode;
     private final List<String> placeholders = new ArrayList<>();
 
-    private boolean translateColor = true;
     private boolean makeCommandsClickable = true;
     private boolean startsWithClickableChar = false;
 
@@ -64,11 +63,6 @@ public class MessageBuilder {
 
     public MessageBuilder setMode(Mode mode) {
         this.mode = mode;
-        return this;
-    }
-
-    public MessageBuilder toggleColorTranslate() {
-        translateColor = !translateColor;
         return this;
     }
 
@@ -110,33 +104,38 @@ public class MessageBuilder {
             this.addPlaceholderReplace("%PREFIX%", prefix);
         }
 
-        if (translateColor) toReturn = ChatColor.translateAlternateColorCodes(colorCode, toReturn);
-        toReturn = toReturn.replace("\\n", "\n");
-
+        toReturn = ChatColor.translateAlternateColorCodes(colorCode, toReturn).replace("\\n", "\n");
         toReturn = placeholderReplace(toReturn);
-
         return toReturn;
     }
 
-    public void sendMessage(CommandSender sendTo) {
+    public void sendMessage(CommandSender... sendToPlayers) {
 
         String messageToSend = returnMessage();
 
-        if (startsWithClickableChar && sendTo instanceof Player) {
+        for (CommandSender sendTo : sendToPlayers) {
+            if (startsWithClickableChar && sendTo instanceof Player) {
 
-            Player pSendTo = (Player) sendTo;
-            pSendTo.spigot().sendMessage(makeCommandsClickable(messageToSend));
-        } else sendTo.sendMessage(messageToSend);
+                Player pSendTo = (Player) sendTo;
+                pSendTo.spigot().sendMessage(makeCommandsClickable(messageToSend));
+            } else sendTo.sendMessage(messageToSend);
+        }
     }
 
     public void broadcastMessage(boolean log) {
-        broadcastMessage(plugin.getServer().getOnlinePlayers(), log);
+        broadcastMessage(plugin.getServer().getOnlinePlayers(), log, "");
     }
 
-    public void broadcastMessage(Collection<? extends CommandSender> sendTo, boolean log) {
+    public void broadcastMessage(String permission, boolean log) {
+        broadcastMessage(plugin.getServer().getOnlinePlayers(), log, permission);
+    }
 
-        String messageToBroadcast = returnMessage();
-        sendTo.forEach(player -> player.sendMessage(messageToBroadcast));
+    public void broadcastMessage(Collection<? extends CommandSender> sendTo, boolean log, String permission) {
+
+        sendTo.stream()
+                .filter(player -> player.hasPermission(permission))
+                .forEach(this::sendMessage);
+
         if (log) plugin.getLogger().info(returnMessage());
     }
 
@@ -152,9 +151,7 @@ public class MessageBuilder {
      * Replace the placeholders from a given string with the given placeholders. The String will only be iterated once,
      * so the performance of this algorithm lies within O(n). Placeholders must start and end with character '%'.
      *
-     * @param originalMessage string containing the message that contains the placeholders
-     * @param replacements    array containing as even index the placeholder in format %PLACEHOLDER%
-     *                        and odd index the string that will replace the placeholder
+     * @param toReplace string containing the message that contains the placeholders
      * @return String containing the finished replaced message
      */
     private String placeholderReplace(String toReplace) {
