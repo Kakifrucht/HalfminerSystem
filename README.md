@@ -6,6 +6,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
 ## Current features
 - Modular, lightweight, efficient
 - Messages completely, functionality mostly configurable
+  - Supports clickable commands by using '~' character and encapsulating command in '/'
 - **Handlers**
   - BossBar
     - Send bar to specific player or broadcast

@@ -4,6 +4,7 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.modules.ModVerkauf;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -27,7 +28,7 @@ public class Cmdverkauf extends HalfminerCommand {
     public void execute() {
 
         if (!isPlayer) {
-            sender.sendMessage(Language.getMessagePlaceholders("notAPlayer", true, "%PREFIX%", "Verkauf"));
+            sendNotAPlayerMessage("Verkauf");
             return;
         }
 
@@ -36,27 +37,23 @@ public class Cmdverkauf extends HalfminerCommand {
             if (args[0].equalsIgnoreCase("auto")) {
 
                 if (!player.hasPermission("hms.verkauf.auto")) {
-                    player.sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Verkauf"));
+                    sendNoPermissionMessage("Verkauf");
                     return;
                 }
 
                 boolean toggledOn = verkaufModule.toggleAutoSell(player);
-
-                if (toggledOn)
-                    player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufAutoOn", true, "%PREFIX%", "Verkauf"));
-                else
-                    player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufAutoOff", true, "%PREFIX%", "Verkauf"));
+                MessageBuilder.create(hms, toggledOn ? "" +
+                        "cmdVerkaufAutoOn" : "cmdVerkaufAutoOff", "Verkauf")
+                        .sendMessage(player);
                 return;
             }
 
             this.toBeSold = Sellable.getFromString(args[0]);
 
             if (toBeSold != null) sellLoop();
-            else player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
+            else MessageBuilder.create(hms, "cmdVerkaufUsage", "Verkauf").sendMessage(player);
 
-        } else {
-            player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufUsage", true, "%PREFIX%", "Verkauf"));
-        }
+        } else MessageBuilder.create(hms, "cmdVerkaufUsage", "Verkauf").sendMessage(player);
     }
 
     private void sellLoop() {
@@ -70,8 +67,8 @@ public class Cmdverkauf extends HalfminerCommand {
             scheduler.runTaskLater(hms, this::sellLoop, 2L);
         else if (sellCountTotal > 0)
             verkaufModule.rewardPlayer(player, toBeSold, sellCountTotal);
-        else
-            player.sendMessage(Language.getMessagePlaceholders("cmdVerkaufNotInInv", true, "%PREFIX%", "Verkauf",
-                    "%MATERIAL%", Language.makeStringFriendly(toBeSold.name())));
+        else MessageBuilder.create(hms, "cmdVerkaufNotInInv", "Verkauf")
+                    .addPlaceholderReplace("%MATERIAL%", Language.makeStringFriendly(toBeSold.name()))
+                    .sendMessage(player);
     }
 }

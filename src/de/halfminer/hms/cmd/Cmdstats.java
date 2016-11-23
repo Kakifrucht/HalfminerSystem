@@ -5,7 +5,7 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -35,7 +35,7 @@ public class Cmdstats extends HalfminerCommand {
         } else {
 
             if (isPlayer) showStats(storage.getPlayer((Player) sender), false);
-            else sender.sendMessage(Language.getMessage("notAPlayer"));
+            else sendNotAPlayerMessage("Stats");
         }
     }
 
@@ -47,38 +47,43 @@ public class Cmdstats extends HalfminerCommand {
         final String oldNames = player.getString(DataType.LAST_NAMES);
 
         // build the message
-        String message = Language.getMessage("cmdStatsTop") + "\n";
-        message += Language.getMessagePlaceholders("cmdStatsShow", false,
-                "%PLAYER%", player.getName(),
-                "%SKILLGROUP%", ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(player.getBase()),
-                "%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith),
-                "%ONLINETIME%", getIntAndCompare(player, DataType.TIME_ONLINE, compareWith),
-                "%KILLS%", getIntAndCompare(player, DataType.KILLS, compareWith),
-                "%DEATHS%", getIntAndCompare(player, DataType.DEATHS, compareWith),
-                "%KDRATIO%", getDoubleAndCompare(player, DataType.KD_RATIO, compareWith),
-                "%VOTES%", getIntAndCompare(player, DataType.VOTES, compareWith),
-                "%REVENUE%", getDoubleAndCompare(player, DataType.REVENUE, compareWith),
-                "%MOBKILLS%", getIntAndCompare(player, DataType.MOB_KILLS, compareWith),
-                "%BLOCKSPLACED%", getIntAndCompare(player, DataType.BLOCKS_PLACED, compareWith),
-                "%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith),
-                "%OLDNAMES%", oldNames) + "\n";
+        String message = MessageBuilder.returnMessage(hms, "cmdStatsTop") + "\n";
+        message += MessageBuilder.create(hms, "cmdStatsShow")
+                .addPlaceholderReplace("%PLAYER%", player.getName())
+                .addPlaceholderReplace("%SKILLGROUP%",
+                        ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(player.getBase()))
+                .addPlaceholderReplace("%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith))
+                .addPlaceholderReplace("%ONLINETIME%", getIntAndCompare(player, DataType.TIME_ONLINE, compareWith))
+                .addPlaceholderReplace("%KILLS%", getIntAndCompare(player, DataType.KILLS, compareWith))
+                .addPlaceholderReplace("%DEATHS%", getIntAndCompare(player, DataType.DEATHS, compareWith))
+                .addPlaceholderReplace("%KDRATIO%", getDoubleAndCompare(player, DataType.KD_RATIO, compareWith))
+                .addPlaceholderReplace("%VOTES%", getIntAndCompare(player, DataType.VOTES, compareWith))
+                .addPlaceholderReplace("%REVENUE%", getDoubleAndCompare(player, DataType.REVENUE, compareWith))
+                .addPlaceholderReplace("%MOBKILLS%", getIntAndCompare(player, DataType.MOB_KILLS, compareWith))
+                .addPlaceholderReplace("%BLOCKSPLACED%", getIntAndCompare(player, DataType.BLOCKS_PLACED, compareWith))
+                .addPlaceholderReplace("%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith))
+                .addPlaceholderReplace("%OLDNAMES%", oldNames)
+                .returnMessage() + "\n";
 
         if (oldNames.length() > 0)
-            message += Language.getMessagePlaceholders("cmdStatsOldnames", false,
-                    "%OLDNAMES%", oldNames) + "\n";
+            message += MessageBuilder.create(hms, "cmdStatsOldnames")
+                    .addPlaceholderReplace("%OLDNAMES%", oldNames)
+                    .returnMessage() + "\n";
 
         if (sender.equals(player.getBase()))
-            message += Language.getMessage("cmdStatsShowotherStats") + "\n";
+            message += MessageBuilder.returnMessage(hms, "cmdStatsShowotherStats") + "\n";
         else if (compare)
-            message += Language.getMessage("cmdStatsCompareLegend") + "\n";
+            message += MessageBuilder.returnMessage(hms, "cmdStatsCompareLegend") + "\n";
         else if (sender instanceof Player) {
-            message += Language.getMessagePlaceholders("cmdStatsCompareInfo", false,
-                    "%PLAYER%", player.getName()) + "\n";
+            message += MessageBuilder.create(hms, "cmdStatsCompareInfo")
+                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .returnMessage() + "\n";
         }
 
-        message += Language.getMessage("lineSeparator");
-        sender.sendMessage(message);
-
+        message += MessageBuilder.returnMessage(hms, "lineSeparator");
+        MessageBuilder.create(hms, message)
+                .setMode(MessageBuilder.MessageMode.DIRECT_STRING)
+                .sendMessage(sender);
     }
 
     private String getIntAndCompare(HalfminerPlayer player, DataType type, HalfminerPlayer compareWith) {

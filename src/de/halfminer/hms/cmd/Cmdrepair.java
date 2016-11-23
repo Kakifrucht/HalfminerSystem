@@ -3,6 +3,7 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -25,7 +26,7 @@ public class Cmdrepair extends HalfminerCommand {
     public void execute() {
 
         if (!isPlayer) {
-            sender.sendMessage(Language.getMessage("notAPlayer"));
+            sendNotAPlayerMessage("Repair");
             return;
         }
 
@@ -34,8 +35,9 @@ public class Cmdrepair extends HalfminerCommand {
             doRepair(player.getInventory().getItemInOffHand(), true);
             for (ItemStack item : player.getInventory().getStorageContents()) doRepair(item, true);
             for (ItemStack item : player.getInventory().getArmorContents()) doRepair(item, true);
-            sender.sendMessage(Language.getMessagePlaceholders("cmdRepairDoneAll", true, "%PREFIX%", "Repair",
-                    "%AMOUNT%", String.valueOf(totalRepairs)));
+            MessageBuilder.create(hms, "cmdRepairDoneAll", "Repair")
+                    .addPlaceholderReplace("%AMOUNT%", String.valueOf(totalRepairs))
+                    .sendMessage(sender);
         } else {
 
             HalfminerPlayer hPlayer = storage.getPlayer(player);
@@ -56,8 +58,9 @@ public class Cmdrepair extends HalfminerCommand {
             long repairTime = hPlayer.getLong(DataType.LAST_REPAIR) + secondsUntil;
             long currentTime = System.currentTimeMillis() / 1000;
             if (currentTime < repairTime) {
-                sender.sendMessage(Language.getMessagePlaceholders("cmdRepairCooldown", true, "%PREFIX%", "Repair",
-                        "%MINUTES%", String.valueOf(((repairTime - currentTime) / 60) + 1)));
+                MessageBuilder.create(hms, "cmdRepairCooldown", "Repair")
+                        .addPlaceholderReplace("%MINUTES%", String.valueOf(((repairTime - currentTime) / 60) + 1))
+                        .sendMessage(sender);
                 return;
             }
 
@@ -65,9 +68,10 @@ public class Cmdrepair extends HalfminerCommand {
             if (doRepair(hand, player.hasPermission("hms.repair.stacks"))) {
 
                 hPlayer.set(DataType.LAST_REPAIR, System.currentTimeMillis() / 1000);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdRepairDone", true, "%PREFIX%", "Repair",
-                        "%NAME%", Language.makeStringFriendly(hand.getType().toString())));
-            } else sender.sendMessage(Language.getMessagePlaceholders("cmdRepairError", true, "%PREFIX%", "Repair"));
+                MessageBuilder.create(hms, "cmdRepairDone", "Repair")
+                        .addPlaceholderReplace("%NAME%", Language.makeStringFriendly(hand.getType().toString()))
+                        .sendMessage(sender);
+            } else MessageBuilder.create(hms, "cmdRepairError", "Repair").sendMessage(sender);
         }
     }
 

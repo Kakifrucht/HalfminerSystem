@@ -8,7 +8,7 @@ import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.modules.HalfminerModule;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
@@ -111,7 +111,7 @@ public class HalfminerSystem extends JavaPlugin {
 
         if (command.hasPermission(sender)) {
             command.run(sender, label, args);
-        } else sender.sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Info"));
+        } else MessageBuilder.create(this, "noPermission", "Info").sendMessage(sender);
 
         return true;
     }

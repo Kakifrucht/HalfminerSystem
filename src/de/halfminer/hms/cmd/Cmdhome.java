@@ -2,6 +2,9 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
+
+import java.util.logging.Level;
 
 /**
  * - Executes Essentials /home after unblock from vote
@@ -20,7 +23,7 @@ public class Cmdhome extends HalfminerCommand {
     public void execute() {
 
         if (!isPlayer) {
-            sender.sendMessage(Language.getMessage("notAPlayer"));
+            sendNotAPlayerMessage("Home");
             return;
         }
 
@@ -38,11 +41,13 @@ public class Cmdhome extends HalfminerCommand {
 
         } else {
 
-            player.sendMessage(Language.getMessagePlaceholders("cmdHomeDenied", true, "%PREFIX%", "Home",
-                    "%PLAYER%", player.getName()));
+            MessageBuilder.create(hms, "cmdHomeDenied", "Home")
+                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .sendMessage(player);
 
-            hms.getLogger().info(Language.getMessagePlaceholders("cmdHomeDeniedLog", false,
-                    "%PLAYER%", player.getName()));
+            MessageBuilder.create(hms, "cmdHomeDeniedLog")
+                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .logMessage(Level.INFO);
         }
     }
 }

@@ -4,6 +4,7 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 
 /**
@@ -54,49 +55,57 @@ public class Cmdhmstore extends HalfminerCommand {
 
                 String setTo = Language.arrayToString(args, 2, false);
                 set(path, setTo);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSet", true, "%PREFIX%", "Info",
-                        "%PATH%", path, "%VALUE%", setTo));
+                MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
+                        .addPlaceholderReplace("%PATH%", path)
+                        .addPlaceholderReplace("%VALUE%", setTo)
+                        .sendMessage(sender);
             } else if (args.length > 2 && args[0].equalsIgnoreCase("setint")) {
 
                 int setTo;
                 try {
                     setTo = Integer.decode(args[2]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSetError", true, "%PREFIX%", "Info"));
+                    MessageBuilder.create(hms, "cmdHmstoreSetError", "Info").sendMessage(sender);
                     return;
                 }
 
                 set(path, setTo);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSet", true, "%PREFIX%", "Info",
-                        "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
+                MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
+                        .addPlaceholderReplace("%PATH%", path)
+                        .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
+                        .sendMessage(sender);
             } else if (args.length > 2 && args[0].equalsIgnoreCase("setbool")) {
 
                 boolean setTo = Boolean.parseBoolean(args[2]);
                 set(path, setTo);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSet", true, "%PREFIX%", "Info",
-                        "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
+                MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
+                        .addPlaceholderReplace("%PATH%", path)
+                        .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
+                        .sendMessage(sender);
             } else if (args.length > 2 && args[0].equalsIgnoreCase("setdouble")) {
 
                 double setTo = Double.parseDouble(args[2]);
                 set(path, setTo);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSet", true, "%PREFIX%", "Info",
-                        "%PATH%", path, "%VALUE%", String.valueOf(setTo)));
+                MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
+                        .addPlaceholderReplace("%PATH%", path)
+                        .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
+                        .sendMessage(sender);
             } else if (args[0].equalsIgnoreCase("get")) {
 
                 String value;
                 if (player == null) value = storage.getString(path);
                 else value = player.getString(type);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreGet", true, "%PREFIX%", "Info",
-                        "%PATH%", path, "%VALUE%", value));
+                MessageBuilder.create(hms, "cmdHmstoreGet", "Info")
+                        .addPlaceholderReplace("%PATH%", path)
+                        .addPlaceholderReplace("%VALUE%", value)
+                        .sendMessage(sender);
             } else if (args[0].equalsIgnoreCase("remove")) {
 
                 set(path, null);
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreRemove", true, "%PREFIX%", "Info",
-                        "%PATH%", path));
-            } else {
-
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreUsage", true, "%PREFIX%", "Info"));
-            }
+                MessageBuilder.create(hms, "cmdHmstoreRemove", "Info")
+                        .addPlaceholderReplace("%PATH%", path)
+                        .sendMessage(sender);
+            } else MessageBuilder.create(hms, "cmdHmstoreUsage", "Info").sendMessage(sender);
             return;
         }
 
@@ -104,9 +113,9 @@ public class Cmdhmstore extends HalfminerCommand {
 
             scheduler.runTaskAsynchronously(hms, () -> {
                 storage.saveConfig();
-                sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreSave", true, "%PREFIX%", "Info"));
+                MessageBuilder.create(hms, "cmdHmstoreSave", "Info").sendMessage(sender);
             });
-        } else sender.sendMessage(Language.getMessagePlaceholders("cmdHmstoreUsage", true, "%PREFIX%", "Info"));
+        } else MessageBuilder.create(hms, "cmdHmstoreUsage", "Info").sendMessage(sender);
     }
 
     private void set(String path, Object setTo) {

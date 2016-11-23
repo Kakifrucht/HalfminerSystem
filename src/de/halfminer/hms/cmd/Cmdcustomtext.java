@@ -3,9 +3,11 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.util.CustomtextCache;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * - Displays custom text data
@@ -35,7 +37,7 @@ public class Cmdcustomtext extends HalfminerCommand {
         try {
             cache = storage.getCache("customtext.txt");
         } catch (CachingException e) {
-            sender.sendMessage(Language.getMessagePlaceholders("errorOccurred", true, "%PREFIX%", "Info"));
+            MessageBuilder.create(hms, "errorOccurred", "Info").sendMessage(sender);
             e.printStackTrace();
             return;
         }
@@ -44,23 +46,27 @@ public class Cmdcustomtext extends HalfminerCommand {
 
             List<String> chapter = cache.getChapter(args);
 
-            for (String raw : chapter) {
+            for (String rawLine : chapter) {
 
-                String placeholderReplaced = Language.placeholderReplace(raw,
-                        "%PLAYER%", Language.getPlayername(sender),
-                        "%ARGS%", Language.arrayToString(args, 0, false));
+                MessageBuilder builder = MessageBuilder.create(hms, rawLine)
+                        .setMode(MessageBuilder.MessageMode.DIRECT_STRING)
+                        .toggleClickableCommands()
+                        .addPlaceholderReplace("%PLAYER%", Language.getPlayername(sender))
+                        .addPlaceholderReplace("%ARGS%", Language.arrayToString(args, 0, false));
 
                 // check for command (only for players)
                 if (isPlayer) {
 
+                    String message = builder.returnMessage();
+
                     Player player = (Player) sender;
-                    if (placeholderReplaced.startsWith("~>")) {
+                    if (message.startsWith("~>")) {
 
-                        player.chat(placeholderReplaced.substring(2).trim());
+                        player.chat(message.substring(2).trim());
                         continue;
-                    } else if (placeholderReplaced.startsWith("~~>")) {
+                    } else if (message.startsWith("~~>")) {
 
-                        String command = placeholderReplaced.substring(3).trim();
+                        String command = message.substring(3).trim();
                         if (command.startsWith("/")) command = command.substring(1);
 
                         server.dispatchCommand(server.getConsoleSender(), command);
@@ -68,19 +74,19 @@ public class Cmdcustomtext extends HalfminerCommand {
                     }
                 }
 
-                Language.sendParsedText(sender, placeholderReplaced);
+                builder.toggleClickableCommands().sendMessage(sender);
             }
-
 
         } catch (CachingException e) {
 
             if (e.getReason().equals(CachingException.Reason.CHAPTER_NOT_FOUND)
                     || e.getReason().equals(CachingException.Reason.FILE_EMPTY)) {
-                sender.sendMessage(Language.getMessagePlaceholders("cmdCustomtextNotFound", true, "%PREFIX%", "Info"));
+                MessageBuilder.create(hms, "cmdCustomtextNotFound", "Info").sendMessage(sender);
             } else {
-                sender.sendMessage(Language.getMessagePlaceholders("errorOccurred", true, "%PREFIX%", "Info"));
-                hms.getLogger().warning(Language.getMessagePlaceholders("cmdCustomtextErrorLog",
-                        false, "%ERROR%", e.getCleanReason()));
+                MessageBuilder.create(hms, "errorOccurred", "Info").sendMessage(sender);
+                MessageBuilder.create(hms, "cmdCustomtextErrorLog")
+                        .addPlaceholderReplace("%ERROR%", e.getCleanReason())
+                        .logMessage(Level.WARNING);
             }
         }
     }

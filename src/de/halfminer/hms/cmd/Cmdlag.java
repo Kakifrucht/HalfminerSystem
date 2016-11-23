@@ -2,7 +2,7 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModTps;
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -27,7 +27,7 @@ public class Cmdlag extends HalfminerCommand {
         if (args.length > 0) { //get other player
 
             if (!sender.hasPermission("hms.lag.others")) {
-                sender.sendMessage(Language.getMessagePlaceholders("noPermission", true, "%PREFIX%", "Lag"));
+                MessageBuilder.create(hms, "noPermission", "Lag").sendMessage(sender);
                 return;
             }
 
@@ -36,7 +36,7 @@ public class Cmdlag extends HalfminerCommand {
             if (toGet != null) {
                 player = (CraftPlayer) toGet;
             } else {
-                sender.sendMessage(Language.getMessagePlaceholders("playerNotOnline", true, "%PREFIX%", "Lag"));
+                MessageBuilder.create(hms, "playerNotOnline", "Lag").sendMessage(sender);
                 return;
             }
 
@@ -44,7 +44,7 @@ public class Cmdlag extends HalfminerCommand {
             player = (CraftPlayer) sender;
             showSummary = true;
         } else {
-            sender.sendMessage(Language.getMessage("notAPlayer"));
+            sendNotAPlayerMessage("Lag");
             return;
         }
 
@@ -78,18 +78,21 @@ public class Cmdlag extends HalfminerCommand {
         } else tpsString = ChatColor.GREEN + tpsString;
 
         // Send ping and tps information to player
-        sender.sendMessage(Language.getMessagePlaceholders("cmdLagPlayerInfo", true, "%PREFIX%", "Lag", "%PLAYER%", player.getName(), "%LATENCY%", pingString));
-        sender.sendMessage(Language.getMessagePlaceholders("cmdLagServerInfo", true, "%PREFIX%", "Lag", "%TPS%", tpsString));
+        MessageBuilder.create(hms, "cmdLagPlayerInfo", "Lag")
+                .addPlaceholderReplace("%PLAYER%", player.getName())
+                .addPlaceholderReplace("%LATENCY%", pingString)
+                .sendMessage(sender);
+        MessageBuilder.create(hms, "cmdLagServerInfo", "Lag")
+                .addPlaceholderReplace("%TPS%", tpsString)
+                .sendMessage(sender);
 
         if (showSummary) { // determines the summary message, only shown when viewing own status
-            if (summaryServerLag == 0 && !summaryPlayerLag)
-                sender.sendMessage(Language.getMessagePlaceholders("cmdLagStable", true, "%PREFIX%", "Lag"));
-            else if (summaryServerLag == 1)
-                sender.sendMessage(Language.getMessagePlaceholders("cmdLagServerUnstable", true, "%PREFIX%", "Lag"));
-            else if (summaryServerLag == 2)
-                sender.sendMessage(Language.getMessagePlaceholders("cmdLagServerLag", true, "%PREFIX%", "Lag"));
-            else
-                sender.sendMessage(Language.getMessagePlaceholders("cmdLagPlayerLag", true, "%PREFIX%", "Lag"));
+            String messageKey;
+            if (summaryServerLag == 0 && !summaryPlayerLag) messageKey = "cmdLagStable";
+            else if (summaryServerLag == 1) messageKey = "cmdLagServerUnstable";
+            else if (summaryServerLag == 2) messageKey = "cmdLagServerLag";
+            else messageKey = "cmdLagPlayerLag";
+            MessageBuilder.create(hms, messageKey, "Lag").sendMessage(sender);
         }
     }
 }

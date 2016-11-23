@@ -100,13 +100,14 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
         for (String message : e.getMessage().toLowerCase().split(" ")) {
 
+            if (containsWelcome && mentioned != null) break;
+
             if (!containsWelcome && welcomeWords.contains(message)) containsWelcome = true;
             else if (mentioned == null) {
 
                 String normalized = Language.filterNonUsernameChars(message);
                 if (newPlayers.containsKey(normalized) && !normalized.equalsIgnoreCase(p.getName().toLowerCase())) {
                     mentioned = server.getPlayer(newPlayers.get(normalized));
-                    if (containsWelcome && mentioned != null) break;
                 }
             }
         }
@@ -132,7 +133,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                     server.broadcast(Language.getMessagePlaceholders("modRespawnHeadBroadcast", true,
                             "%PREFIX%", "Skull", "%PLAYER%", p.getName()), "hms.default");
                     p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
-                    titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitleYes"), 0, 30, 10);
+                    titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitleYes"), 0, 60, 10);
                 } else {
                     titleHandler.sendTitle(p, Language.getMessage("modRespawnHeadTitleNo"), 0, 30, 10);
                     p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT, 1.0f, 2.0f);
@@ -175,11 +176,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
     @Override
     public void sweep() {
-
-        Iterator<UUID> it = lastWelcome.keySet().iterator();
-        while (it.hasNext()) {
-            if (canWelcomePlayer(it.next())) it.remove();
-        }
+        lastWelcome.keySet().removeIf(this::canWelcomePlayer);
     }
 
     @Override

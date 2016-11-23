@@ -6,6 +6,7 @@ import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,6 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
+import java.util.logging.Level;
 
 /**
  * - Teleport to random location
@@ -35,7 +37,7 @@ public class Cmdneutp extends HalfminerCommand {
     public void execute() {
 
         if (!isPlayer) {
-            sender.sendMessage(Language.getMessage("notAPlayer"));
+            sendNotAPlayerMessage("Disposal");
             return;
         }
 
@@ -45,11 +47,11 @@ public class Cmdneutp extends HalfminerCommand {
         if (tp.hasPendingTeleport(player, true)) return;
 
         if (hPlayer.getBoolean(DataType.NEUTP_USED)){
-            player.sendMessage(Language.getMessagePlaceholders("cmdNeutpAlreadyUsed", true, "%PREFIX%", "Neutp"));
+            MessageBuilder.create(hms, "cmdNeutpAlreadyUsed", "Neutp").sendMessage(player);
             return;
         }
 
-        player.sendMessage(Language.getMessagePlaceholders("cmdNeutpStart", true, "%PREFIX%", "Neutp"));
+        MessageBuilder.create(hms, "cmdNeutpStart", "Neutp").sendMessage(player);
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));
 
@@ -85,17 +87,19 @@ public class Cmdneutp extends HalfminerCommand {
             server.dispatchCommand(player, "sethome neutp");
 
             for (int i = 0; i < 100; i++) player.sendMessage("");
-            player.sendMessage(Language.getMessagePlaceholders("cmdNeutpTpDone", true, "%PREFIX%", "Neutp",
-                    "%PLAYER%", player.getName()));
+            MessageBuilder.create(hms, "cmdNeutpTpDone", "Neutp")
+                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .sendMessage(player);
 
-            hms.getLogger().info(Language.getMessagePlaceholders("cmdNeutpLog", false, "%PLAYER%",
-                    player.getName(), "%LOCATION%", Language.getStringFromLocation(loc)));
+            MessageBuilder.create(hms, "cmdNeutpLog")
+                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .addPlaceholderReplace("%LOCATION%", Language.getStringFromLocation(loc))
+                    .logMessage(Level.INFO);
 
             scheduler.runTaskLater(hms, () -> {
-                player.sendMessage(Language.getMessagePlaceholders("cmdNeutpDocumentation",
-                        true, "%PREFIX%", "Neutp"));
+                MessageBuilder.create(hms, "cmdNeutpDocumentation", "Neutp").sendMessage(player);
                 ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR)).sendBar(player,
-                        Language.getMessage("cmdNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
+                        MessageBuilder.returnMessage(hms, "cmdNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
             }, 120L);
         }, () -> {
 

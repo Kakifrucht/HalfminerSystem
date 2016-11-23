@@ -1,6 +1,6 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.entity.Player;
 
 /**
@@ -17,11 +17,11 @@ public class Cmddisposal extends HalfminerCommand {
     public void execute() {
 
         if (!isPlayer) {
-            sender.sendMessage(Language.getMessage("notAPlayer"));
+            sendNotAPlayerMessage("Disposal");
             return;
         }
 
         Player p = (Player) sender;
-        p.openInventory(server.createInventory(p, 36, Language.getMessage("cmdDisposalTitle")));
+        p.openInventory(server.createInventory(p, 36, MessageBuilder.returnMessage(hms, "cmdDisposalTitle")));
     }
 }
