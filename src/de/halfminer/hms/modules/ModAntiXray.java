@@ -147,7 +147,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             else counter.setInformed((Player) toNotify);
         }
 
-        MessageBuilder.create(hms, "modAntiXrayShowFormat", "AntiXRay")
+        MessageBuilder.create(hms, "modAntiXrayDetected", "AntiXRay")
                 .addPlaceholderReplace("%PLAYER%", counter.getOwnerName())
                 .addPlaceholderReplace("%BROKENTOTAL%", String.valueOf(counter.getBreakages()))
                 .addPlaceholderReplace("%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()))

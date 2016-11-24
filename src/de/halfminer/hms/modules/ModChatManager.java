@@ -118,11 +118,15 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         format = MessageBuilder.create(hms, format)
+                .setMode(MessageBuilder.Mode.DIRECT_STRING)
                 .addPlaceholderReplace("%PLAYER%", "%1$s")
                 .addPlaceholderReplace("%PREFIX%", prefix)
                 .addPlaceholderReplace("%SUFFIX%", suffix)
                 .addPlaceholderReplace("%MESSAGE%", "%2$s")
                 .returnMessage();
+        System.out.println(format);
+
+        e.setFormat(format);
 
         // mention check
         Map<String, Player> players = new HashMap<>();
@@ -143,16 +147,16 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         for (Player wasMentioned : mentioned) {
 
-            if (hookHandler.isAfk(wasMentioned))
-
-                titleHandler.sendActionBar(p,
-                        MessageBuilder.create(hms, "modChatManIsAfk")
+            if (hookHandler.isAfk(wasMentioned)) {
+                titleHandler.sendActionBar(p, MessageBuilder.create(hms, "modChatManIsAfk")
                                 .addPlaceholderReplace("%PLAYER%", wasMentioned.getName())
                                 .returnMessage());
-            titleHandler.sendActionBar(wasMentioned,
-                    MessageBuilder.create(hms, "modChatManMentioned")
+            }
+
+            titleHandler.sendActionBar(wasMentioned, MessageBuilder.create(hms, "modChatManMentioned")
                             .addPlaceholderReplace("%PLAYER%", p.getName())
                             .returnMessage());
+
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_TOUCH, 0.2f, 1.8f);
             lastMentioned.put(wasMentioned, currentTime + mentionDelay);
         }
@@ -162,7 +166,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 new Pair<>(message.length() > 20 ? message.substring(0, 20) : message, System.currentTimeMillis()));
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
         e.setMessage(message);
-        e.setFormat(format);
     }
 
     public void toggleGlobalmute() {

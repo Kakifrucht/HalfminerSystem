@@ -150,7 +150,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         final int health = otherHealth >= 0 ? otherHealth : 0;
         final int healthScale = (int) other.getMaxHealth();
 
-        barHandler.sendBar(p, MessageBuilder.create(hms, "modCombatLogBossBar", "PvP")
+        barHandler.sendBar(p, MessageBuilder.create(hms, "modCombatLogBossBar")
                 .addPlaceholderReplace("%PLAYER%", other.getName())
                 .addPlaceholderReplace("%LEVEL%", storage.getPlayer(other).getString(DataType.SKILL_LEVEL))
                 .addPlaceholderReplace("%HEALTH%", String.valueOf(health))

@@ -54,7 +54,7 @@ public class MessageBuilder {
 
     private boolean makeCommandsClickable = true;
     private boolean startsWithClickableChar = false;
-    private boolean addPrefix = true;
+    private boolean loggingMode = false;
 
     private MessageBuilder(JavaPlugin plugin, String lang) {
         this.plugin = plugin;
@@ -100,13 +100,14 @@ public class MessageBuilder {
             startsWithClickableChar = true;
         }
 
-        if (prefix != null && addPrefix) {
+        if (prefix != null && !loggingMode) {
             toReturn = plugin.getConfig().getString("localization.prefix") + toReturn;
             this.addPlaceholderReplace("%PREFIX%", prefix);
         }
 
         toReturn = placeholderReplace(toReturn);
         toReturn = ChatColor.translateAlternateColorCodes(colorCode, toReturn).replace("\\n", "\n");
+        if (loggingMode) toReturn = ChatColor.stripColor(toReturn);
         return toReturn;
     }
 
@@ -141,9 +142,9 @@ public class MessageBuilder {
     }
 
     public void logMessage(Level logLevel) {
-        addPrefix = false;
+        loggingMode = true;
         plugin.getLogger().log(logLevel, ChatColor.stripColor(returnMessage()));
-        addPrefix = true;
+        loggingMode = false;
     }
 
     private String getMessage(String messageKey) {
