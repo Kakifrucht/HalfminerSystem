@@ -54,6 +54,7 @@ public class MessageBuilder {
 
     private boolean makeCommandsClickable = true;
     private boolean startsWithClickableChar = false;
+    private boolean addPrefix = true;
 
     private MessageBuilder(JavaPlugin plugin, String lang) {
         this.plugin = plugin;
@@ -99,13 +100,13 @@ public class MessageBuilder {
             startsWithClickableChar = true;
         }
 
-        if (prefix != null) {
+        if (prefix != null && addPrefix) {
             toReturn = plugin.getConfig().getString("localization.prefix") + toReturn;
             this.addPlaceholderReplace("%PREFIX%", prefix);
         }
 
-        toReturn = ChatColor.translateAlternateColorCodes(colorCode, toReturn).replace("\\n", "\n");
         toReturn = placeholderReplace(toReturn);
+        toReturn = ChatColor.translateAlternateColorCodes(colorCode, toReturn).replace("\\n", "\n");
         return toReturn;
     }
 
@@ -133,14 +134,16 @@ public class MessageBuilder {
     public void broadcastMessage(Collection<? extends CommandSender> sendTo, boolean log, String permission) {
 
         sendTo.stream()
-                .filter(player -> player.hasPermission(permission))
+                .filter(player -> permission.length() == 0 || player.hasPermission(permission))
                 .forEach(this::sendMessage);
 
-        if (log) plugin.getLogger().info(returnMessage());
+        if (log) logMessage(Level.INFO);
     }
 
     public void logMessage(Level logLevel) {
-        plugin.getLogger().log(logLevel, returnMessage());
+        addPrefix = false;
+        plugin.getLogger().log(logLevel, ChatColor.stripColor(returnMessage()));
+        addPrefix = true;
     }
 
     private String getMessage(String messageKey) {
