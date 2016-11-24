@@ -2,8 +2,8 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -69,7 +69,7 @@ public class Cmdrepair extends HalfminerCommand {
 
                 hPlayer.set(DataType.LAST_REPAIR, System.currentTimeMillis() / 1000);
                 MessageBuilder.create(hms, "cmdRepairDone", "Repair")
-                        .addPlaceholderReplace("%NAME%", Language.makeStringFriendly(hand.getType().toString()))
+                        .addPlaceholderReplace("%NAME%", Utils.makeStringFriendly(hand.getType().toString()))
                         .sendMessage(sender);
             } else MessageBuilder.create(hms, "cmdRepairError", "Repair").sendMessage(sender);
         }

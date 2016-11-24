@@ -4,7 +4,6 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.OfflinePlayer;
@@ -107,7 +106,7 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
         revenue = Utils.roundDouble(revenue);
 
         // print message
-        String materialFriendly = Language.makeStringFriendly(sold.name());
+        String materialFriendly = Utils.makeStringFriendly(sold.name());
         MessageBuilder.create(hms, "modVerkaufSuccess", "Verkauf")
                 .addPlaceholderReplace("%MATERIAL%", materialFriendly)
                 .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))

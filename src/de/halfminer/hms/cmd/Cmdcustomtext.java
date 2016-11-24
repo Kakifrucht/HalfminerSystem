@@ -2,8 +2,8 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.util.CustomtextCache;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -51,8 +51,8 @@ public class Cmdcustomtext extends HalfminerCommand {
                 MessageBuilder builder = MessageBuilder.create(hms, rawLine)
                         .setMode(MessageBuilder.Mode.DIRECT_STRING)
                         .toggleClickableCommands()
-                        .addPlaceholderReplace("%PLAYER%", Language.getPlayername(sender))
-                        .addPlaceholderReplace("%ARGS%", Language.arrayToString(args, 0, false));
+                        .addPlaceholderReplace("%PLAYER%", Utils.getPlayername(sender))
+                        .addPlaceholderReplace("%ARGS%", Utils.arrayToString(args, 0, false));
 
                 // check for command (only for players)
                 if (isPlayer) {

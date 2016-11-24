@@ -2,7 +2,6 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
@@ -51,10 +50,10 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                 MessageBuilder.create(hms, "modGlitchProtectionMove", "AntiGlitch")
                         .addPlaceholderReplace("%PREFIX%", "Warnung")
                         .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
-                        .addPlaceholderReplace("%LOCATION%", Language.getStringFromLocation(e.getTo()))
+                        .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(e.getTo()))
                         .addPlaceholderReplace("%WORLD%", e.getTo().getWorld().getName())
                         .addPlaceholderReplace("%MATERIAL%",
-                                Language.makeStringFriendly(e.getFrom().getBlock().getType().toString()))
+                                Utils.makeStringFriendly(e.getFrom().getBlock().getType().toString()))
                         .broadcastMessage("hms.bypass.glitchcheck", true);
                 lastGlitchAlert.put(e.getPlayer(), (System.currentTimeMillis() / 1000) + 4);
             }
@@ -89,7 +88,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                 MessageBuilder.create(hms, "modGlitchProtectionDismountTped", "AntiGlitch").sendMessage(p);
                 MessageBuilder.create(hms, "modGlitchProtectionDismountTpedNotify", "AntiGlitch")
                         .addPlaceholderReplace("%PLAYER%", p.getName())
-                        .addPlaceholderReplace("%LOCATION%", Language.getStringFromLocation(loc))
+                        .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
                         .addPlaceholderReplace("%WORLD%", w.getName())
                         .broadcastMessage("hms.bypass.glitchcheck", true);
             }, 0L);
@@ -165,7 +164,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                         MessageBuilder.create(hms, "modGlitchProtectionNether", "AntiGlitch").sendMessage(p);
                         MessageBuilder.create(hms, "modGlitchProtectionNetherNotify", "AntiGlitch")
                                 .addPlaceholderReplace("%PLAYER%", p.getName())
-                                .addPlaceholderReplace("%LOCATION%", Language.getStringFromLocation(loc))
+                                .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
                                 .broadcastMessage("hms.bypass.nethercheck", true);
                     }
                 }

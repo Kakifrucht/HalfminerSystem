@@ -1,6 +1,6 @@
 package de.halfminer.hms.exception;
 
-import de.halfminer.hms.util.Language;
+import de.halfminer.hms.util.Utils;
 
 /**
  * Exception thrown by HanStorage, if the cache doesn't contain a chapter or cannot parse a file due to syntax error
@@ -30,7 +30,7 @@ public class CachingException extends Exception {
 
     public String getCleanReason() {
 
-        String cleanString = Language.makeStringFriendly(reason.name());
+        String cleanString = Utils.makeStringFriendly(reason.name());
         if (lineNumber > 0) cleanString += " (l" + lineNumber + ", " + chapterName + ")";
         return cleanString;
     }

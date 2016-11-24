@@ -4,7 +4,6 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanTitles;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
@@ -33,7 +32,7 @@ public class Cmdhmsapi extends HalfminerCommand {
             Player sendTo = server.getPlayer(args[1]);
             if (sendTo != null) {
                 ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendTitle(sendTo,
-                        Language.arrayToString(args, 2, false), 0, 50, 10);
+                        Utils.arrayToString(args, 2, false), 0, 50, 10);
             }
 
         } else if (args[0].equalsIgnoreCase("hasroom") && args.length > 2) {

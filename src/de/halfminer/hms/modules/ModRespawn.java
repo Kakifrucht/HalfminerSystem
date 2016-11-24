@@ -1,7 +1,6 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
@@ -111,7 +110,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             if (!containsWelcome && welcomeWords.contains(message)) containsWelcome = true;
             else if (mentioned == null) {
 
-                String normalized = Language.filterNonUsernameChars(message);
+                String normalized = Utils.filterNonUsernameChars(message);
                 if (newPlayers.containsKey(normalized) && !normalized.equalsIgnoreCase(p.getName().toLowerCase())) {
                     mentioned = server.getPlayer(newPlayers.get(normalized));
                 }

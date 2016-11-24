@@ -1,8 +1,8 @@
 package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.DataType;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 
 import java.util.logging.Level;
 
@@ -27,7 +27,7 @@ public class Cmdhome extends HalfminerCommand {
             return;
         }
 
-        String command = "ehome" + ' ' + Language.arrayToString(args, 0, false);
+        String command = "ehome" + ' ' + Utils.arrayToString(args, 0, false);
 
         if (player.hasPermission("hms.moderator") || player.hasPermission("essentials.home"))
             server.dispatchCommand(player, command);

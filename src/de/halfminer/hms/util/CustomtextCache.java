@@ -42,12 +42,12 @@ public class CustomtextCache {
             chapterLowercase[i] = chapter[i].toLowerCase();
 
         // check for literal argument and if not found, for wildcards
-        String currentChapter = Language.arrayToString(chapterLowercase, 0, false);
+        String currentChapter = Utils.arrayToString(chapterLowercase, 0, false);
         for (int i = chapterLowercase.length; i >= 0; i--) {
             if (cache.containsKey(currentChapter))
                 return cache.get(currentChapter);
             if (i > 0)
-                currentChapter = Language.arrayToString(chapterLowercase, 0, i, false) + " *";
+                currentChapter = Utils.arrayToString(chapterLowercase, 0, i, false) + " *";
         }
 
         throw new CachingException(CachingException.Reason.CHAPTER_NOT_FOUND);

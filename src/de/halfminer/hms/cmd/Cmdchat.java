@@ -5,8 +5,8 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.modules.ModChatManager;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -139,7 +139,7 @@ public class Cmdchat extends HalfminerCommand {
 
     private void clearChat() {
 
-        String whoCleared = Language.getPlayername(sender);
+        String whoCleared = Utils.getPlayername(sender);
 
         final StringBuilder clearMessage = new StringBuilder();
         for (int i = 0; i < 100; i++) clearMessage.append(" \n");
@@ -261,10 +261,10 @@ public class Cmdchat extends HalfminerCommand {
             return;
         }
 
-        String command = Language.arrayToString(args, 2, false);
+        String command = Utils.arrayToString(args, 2, false);
         if (!command.startsWith("/")) command = "/" + command;
 
-        MessageBuilder.create(hms, "cmdChatClickableCommand", Language.getPlayername(sender))
+        MessageBuilder.create(hms, "cmdChatClickableCommand", Utils.getPlayername(sender))
                 .addPlaceholderReplace("%PLAYER%", directRecipient.getName())
                 .addPlaceholderReplace("%COMMAND%", command + "/") // append slash since it will be parsed
                 .broadcastMessage(false);
@@ -279,7 +279,7 @@ public class Cmdchat extends HalfminerCommand {
             return;
         }
 
-        String message = Language.arrayToString(args, 1, true).replace("\\n", "\n");
+        String message = Utils.arrayToString(args, 1, true).replace("\\n", "\n");
         storage.set("chatmessage", message);
         storage.set("chatmessagetime", (System.currentTimeMillis() / 1000));
         MessageBuilder.create(hms, "cmdChatMessageSet", "Chat")

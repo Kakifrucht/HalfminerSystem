@@ -11,8 +11,8 @@ import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.modules.ModAntiXray;
 import de.halfminer.hms.modules.ModSkillLevel;
 import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -184,7 +184,7 @@ public class Cmdhms extends HalfminerCommand {
                 if (args[1].equalsIgnoreCase("reset")) newName = "";
                 else {
 
-                    newName = Language.arrayToString(args, 1, true);
+                    newName = Utils.arrayToString(args, 1, true);
                     // Cut new string at -lore
                     for (int i = 0; i < newName.length(); i++) {
                         if (newName.substring(i).toLowerCase().startsWith("-lore")) {
@@ -205,7 +205,7 @@ public class Cmdhms extends HalfminerCommand {
                     // Check if new lore was specified, else just clear it
                     if (args.length > i + 1) {
                         // Split lines of lore at | character, set the lore list
-                        String[] loreToArray = Language.arrayToString(args, i + 1, true).split("[|]");
+                        String[] loreToArray = Utils.arrayToString(args, i + 1, true).split("[|]");
                         lore = Arrays.asList(loreToArray);
                         break;
                     } else {
@@ -236,7 +236,7 @@ public class Cmdhms extends HalfminerCommand {
         }
 
         final Player toRing = server.getPlayer(args[1]);
-        String senderName = Language.getPlayername(sender);
+        String senderName = Utils.getPlayername(sender);
 
         if (toRing == null) {
             MessageBuilder.create(hms, "playerNotOnline", prefix).sendMessage(sender);

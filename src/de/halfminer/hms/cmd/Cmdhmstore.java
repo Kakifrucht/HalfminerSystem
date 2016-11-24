@@ -3,8 +3,8 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 
 /**
@@ -53,7 +53,7 @@ public class Cmdhmstore extends HalfminerCommand {
 
             if (args.length > 2 && args[0].equalsIgnoreCase("set")) {
 
-                String setTo = Language.arrayToString(args, 2, false);
+                String setTo = Utils.arrayToString(args, 2, false);
                 set(path, setTo);
                 MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
                         .addPlaceholderReplace("%PATH%", path)

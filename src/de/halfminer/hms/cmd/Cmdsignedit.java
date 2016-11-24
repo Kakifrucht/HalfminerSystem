@@ -2,8 +2,8 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModSignEdit;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 
 /**
  * - Copy signs, define copy amount
@@ -56,7 +56,7 @@ public class Cmdsignedit extends HalfminerCommand {
                 if (line > 0 && line < 5) {
                     String setTo = "";
                     if (args.length > 1) {
-                        setTo = Language.arrayToString(args, 1, true);
+                        setTo = Utils.arrayToString(args, 1, true);
                         if (setTo.length() > 15) setTo = setTo.substring(0, 15); // truncate if necessary
                         signEdit.setLine(player, line, setTo);
                     } else signEdit.setLine(player, line, ""); // empty line

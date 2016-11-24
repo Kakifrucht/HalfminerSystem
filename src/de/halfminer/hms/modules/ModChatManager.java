@@ -2,9 +2,9 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -124,7 +124,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 .addPlaceholderReplace("%SUFFIX%", suffix)
                 .addPlaceholderReplace("%MESSAGE%", "%2$s")
                 .returnMessage();
-        System.out.println(format);
 
         e.setFormat(format);
 
@@ -136,7 +135,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         Set<Player> mentioned = new HashSet<>();
         long currentTime = System.currentTimeMillis() / 1000;
-        for (String str : Language.filterNonUsernameChars(message).split(" ")) {
+        for (String str : Utils.filterNonUsernameChars(message).split(" ")) {
 
             if (players.containsKey(str)) {
                 Player pMentioned = players.get(str);

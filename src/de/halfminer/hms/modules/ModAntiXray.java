@@ -1,7 +1,6 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
@@ -126,9 +125,9 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
 
             toReturn += MessageBuilder.create(hms, "modAntiXrayShowFormat")
                     .addPlaceholderReplace("%PLAYER%", color + counter.getOwnerName())
-                    .addPlaceholderReplace("%LOCATION%", Language.getStringFromLocation(last))
+                    .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(last))
                     .addPlaceholderReplace("%WORLD%", last.getWorld().getName())
-                    .addPlaceholderReplace("%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString()))
+                    .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()))
                     .addPlaceholderReplace("%PROTECTED%", String.valueOf(counter.getProtectedBreakages()))
                     .addPlaceholderReplace("%BROKEN%", String.valueOf(counter.getBreakages()))
                     .returnMessage() + "\n";
@@ -151,9 +150,9 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
                 .addPlaceholderReplace("%PLAYER%", counter.getOwnerName())
                 .addPlaceholderReplace("%BROKENTOTAL%", String.valueOf(counter.getBreakages()))
                 .addPlaceholderReplace("%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()))
-                .addPlaceholderReplace("%LASTLOCATION%", Language.getStringFromLocation(counter.getLastProtectedLocation()))
+                .addPlaceholderReplace("%LASTLOCATION%", Utils.getStringFromLocation(counter.getLastProtectedLocation()))
                 .addPlaceholderReplace("%WORLD%", counter.getLastProtectedLocation().getWorld().getName())
-                .addPlaceholderReplace("%MATERIAL%", Language.makeStringFriendly(counter.getLastMaterial().toString()))
+                .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()))
                 .sendMessage(toNotify);
     }
 

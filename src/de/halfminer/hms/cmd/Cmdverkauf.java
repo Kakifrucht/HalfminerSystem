@@ -3,8 +3,8 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.modules.ModVerkauf;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -67,7 +67,7 @@ public class Cmdverkauf extends HalfminerCommand {
         else if (sellCountTotal > 0)
             verkaufModule.rewardPlayer(player, toBeSold, sellCountTotal);
         else MessageBuilder.create(hms, "cmdVerkaufNotInInv", "Verkauf")
-                    .addPlaceholderReplace("%MATERIAL%", Language.makeStringFriendly(toBeSold.name()))
+                    .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(toBeSold.name()))
                     .sendMessage(player);
     }
 }

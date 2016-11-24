@@ -5,8 +5,8 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.Language;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -93,7 +93,7 @@ public class Cmdneutp extends HalfminerCommand {
 
             MessageBuilder.create(hms, "cmdNeutpLog")
                     .addPlaceholderReplace("%PLAYER%", player.getName())
-                    .addPlaceholderReplace("%LOCATION%", Language.getStringFromLocation(loc))
+                    .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
                     .logMessage(Level.INFO);
 
             scheduler.runTaskLater(hms, () -> {
