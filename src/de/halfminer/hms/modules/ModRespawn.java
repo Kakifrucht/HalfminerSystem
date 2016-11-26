@@ -75,6 +75,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                     server.dispatchCommand(server.getConsoleSender(),
                             MessageBuilder.create(hms, firstSpawnCommand)
                                     .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                                    .addPlaceholderReplace("%PLAYER%", joined.getName())
                                     .returnMessage());
                 }
             }, 1L);
@@ -111,7 +112,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             else if (mentioned == null) {
 
                 String normalized = Utils.filterNonUsernameChars(message);
-                if (newPlayers.containsKey(normalized) && !normalized.equalsIgnoreCase(p.getName().toLowerCase())) {
+                if (newPlayers.containsKey(normalized) && !normalized.equalsIgnoreCase(p.getName())) {
                     mentioned = server.getPlayer(newPlayers.get(normalized));
                 }
             }
@@ -122,7 +123,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             lastWelcome.put(p.getUniqueId(), System.currentTimeMillis());
             titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnHeadTitle"), 10, 30, 0);
             barHandler.sendBar(p, MessageBuilder.returnMessage(hms, "modRespawnHeadBossbar"),
-                    BarColor.WHITE, BarStyle.SOLID, 5, 1.0d);
+                    BarColor.WHITE, BarStyle.SOLID, 10, 1.0d);
 
             scheduler.runTaskLater(hms, () -> {
 
