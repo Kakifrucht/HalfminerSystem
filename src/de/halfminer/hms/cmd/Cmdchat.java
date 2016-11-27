@@ -283,8 +283,6 @@ public class Cmdchat extends HalfminerCommand {
             return;
         }
 
-        if (!verifyMessage()) return;
-
         String message = Utils.arrayToString(args, 1, true).replace("\\n", "\n");
         storage.set("chatmessage", message);
         storage.set("chatmessagetime", (System.currentTimeMillis() / 1000));
