@@ -6,6 +6,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,11 +40,21 @@ public class ModHealthBar extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityHit(EntityDamageByEntityEvent e) {
 
-        if (!(e.getDamager() instanceof Damageable) || !(e.getEntity() instanceof Damageable))
+        if (!(e.getDamager() instanceof Damageable || e.getDamager() instanceof Projectile)
+                || !(e.getEntity() instanceof Damageable))
             return;
 
         Damageable victim = (Damageable) e.getEntity();
-        Damageable attacker = (Damageable) e.getDamager();
+        Damageable attacker;
+
+        if (e.getDamager() instanceof Projectile) {
+
+            Projectile projectile = (Projectile) e.getDamager();
+            if (projectile.getShooter() instanceof Damageable)
+                attacker = (Damageable) projectile.getShooter();
+            else return;
+
+        } else attacker = (Damageable) e.getDamager();
 
         if (victim instanceof Player) addToDamageable(attacker, (Player) victim);
         if (attacker instanceof Player) addToDamageable(victim, (Player) attacker);
