@@ -209,6 +209,8 @@ public class Cmdchat extends HalfminerCommand {
 
     private void setNews() {
 
+        if (!verifyMessage()) return;
+
         storage.set("news", message);
         hms.getModule(ModuleType.MOTD).loadConfig();
         if (sender instanceof Player) {
@@ -222,6 +224,8 @@ public class Cmdchat extends HalfminerCommand {
     }
 
     private void sendMessage() {
+
+        if (!verifyMessage()) return;
 
         String sendToString;
 
@@ -278,6 +282,8 @@ public class Cmdchat extends HalfminerCommand {
             showUsage();
             return;
         }
+
+        if (!verifyMessage()) return;
 
         String message = Utils.arrayToString(args, 1, true).replace("\\n", "\n");
         storage.set("chatmessage", message);
