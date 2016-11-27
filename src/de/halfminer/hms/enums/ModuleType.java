@@ -11,6 +11,7 @@ public enum ModuleType {
     CHAT_MANAGER        ("ChatManager"),
     COMBAT_LOG          ("CombatLog"),
     GLITCH_PROTECTION   ("GlitchProtection"),
+    HEALTH_BAR          ("HealthBar"),
     MOTD                ("Motd"),
     PERFORMANCE         ("Performance"),
     PVP                 ("PvP"),

@@ -93,7 +93,6 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Writing capitalized
   - CombatLog
     - Tags players when hitting/being hit
-    - Shows health, name of attacker/victim and level via BossBar
     - Combatlogging causes instant death
     - Shows actionbar message containing time left in fight
     - Untags players after timer runs out, player logs out or a player is killed
@@ -108,6 +107,15 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Override Spigot teleport safety between worlds
     - Prevents glitching with chorus fruit, instead teleports down
     - Kills players above netherroof / notifies staff
+  - HealthBar
+    - Shows healthbar of attacking/attacked player/entity in bossbar
+      - Contains playername / mobname
+      - If player, shows players skilllevel
+      - Updates on damage or health regain for every player who hit the entity
+      - Dynamic bar segmentation, solid if none available client side
+    - Only shows one bar at a time
+      - Shows bar and updates for 8 seconds max, or until other entity was hit
+      - When entity was killed, shows bar in green and only for 2 seconds
   - Motd
     - Configurable Serverlist Motd
       - Can be set via command

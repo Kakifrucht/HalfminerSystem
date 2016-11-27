@@ -1,12 +1,9 @@
 package de.halfminer.hms.modules;
 
-import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -28,7 +25,6 @@ import java.util.Map;
 
 /**
  * - Tags players when hitting/being hit
- * - Shows health, name of attacker/victim and level via BossBar
  * - Combatlogging causes instant death
  * - Shows actionbar message containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
@@ -54,7 +50,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         untagPlayer(victim);
         if (killer != null) {
             untagPlayer(killer);
-            barHandler.removeBar(killer);
         }
     }
 
@@ -93,9 +88,10 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 if (projectile.getShooter() instanceof Player) attacker = (Player) projectile.getShooter();
             }
 
-            if (attacker != null && attacker != victim && !attacker.isDead() && !victim.isDead()) {
-                tagPlayer(victim, attacker, (int) attacker.getHealth());
-                tagPlayer(attacker, victim, (int) Math.ceil(victim.getHealth() - e.getFinalDamage()));
+            if (attacker != null && attacker != victim
+                    && !attacker.isDead() && !victim.isDead()) {
+                tagPlayer(victim);
+                tagPlayer(attacker);
             }
         }
     }
@@ -143,20 +139,9 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         }
     }
 
-    private void tagPlayer(final Player p, final Player other, int otherHealth) {
+    private void tagPlayer(final Player p) {
 
         if (p.hasPermission("hms.bypass.combatlog")) return;
-
-        final int health = otherHealth >= 0 ? otherHealth : 0;
-        final int healthScale = (int) other.getMaxHealth();
-
-        barHandler.sendBar(p, MessageBuilder.create(hms, "modCombatLogBossBar")
-                .addPlaceholderReplace("%PLAYER%", other.getName())
-                .addPlaceholderReplace("%LEVEL%", storage.getPlayer(other).getString(DataType.SKILL_LEVEL))
-                .addPlaceholderReplace("%HEALTH%", String.valueOf(health))
-                .addPlaceholderReplace("%MAXHEALTH%", String.valueOf(healthScale))
-                .returnMessage(),
-                BarColor.RED, BarStyle.SEGMENTED_20, 8, (double) health / healthScale);
 
         if (isTagged(p)) tagged.get(p).cancel();
         tagged.put(p, scheduler.runTaskTimerAsynchronously(hms, new Runnable() {
