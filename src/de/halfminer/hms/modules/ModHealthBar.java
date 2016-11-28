@@ -126,9 +126,9 @@ public class ModHealthBar extends HalfminerModule implements Listener {
             style = BarStyle.SOLID;
         }
 
-        if (health == 0) color = BarColor.RED;
+        if (health == 0) color = BarColor.GREEN;
         else if (healthRatio < 0.2d) color = BarColor.YELLOW;
-        else color = BarColor.GREEN;
+        else color = BarColor.RED;
 
         for (Player toUpdate : updatePlayers) {
             // disregard if no longer online, will be removed automatically by bukkit scheduler

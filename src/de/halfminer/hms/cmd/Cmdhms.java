@@ -115,31 +115,10 @@ public class Cmdhms extends HalfminerCommand {
                         if (args.length > 2 && args[2].startsWith("auto")) {
 
                             MessageBuilder.create(hms, "cmdHmsCopySchematicDelete", prefix).sendMessage(sender);
+
                             scheduler.runTaskLaterAsynchronously(hms, () -> {
-
-                                try {
-                                    Files.delete(toCopy.toPath());
-                                    MessageBuilder.create(hms, "cmdHmsCopySchematicDeleted")
-                                            .addPlaceholderReplace("%PATH%", toCopy.toPath().toString())
-                                            .logMessage(Level.INFO);
-                                } catch (Exception e) {
-                                    MessageBuilder.create(hms, "cmdHmsCopySchematicDeletedError")
-                                            .addPlaceholderReplace("%PATH%", toCopy.toPath().toString())
-                                            .logMessage(Level.WARNING);
-                                    e.printStackTrace();
-                                }
-
-                                try {
-                                    Files.delete(destination.toPath());
-                                    MessageBuilder.create(hms, "cmdHmsCopySchematicDeleted")
-                                            .addPlaceholderReplace("%PATH%", destination.toPath().toString())
-                                            .logMessage(Level.INFO);
-                                } catch (Exception e) {
-                                    MessageBuilder.create(hms, "cmdHmsCopySchematicDeletedError")
-                                            .addPlaceholderReplace("%PATH%", destination.toPath().toString())
-                                            .logMessage(Level.WARNING);
-                                    e.printStackTrace();
-                                }
+                                deleteFile(toCopy);
+                                deleteFile(destination);
                             }, 12000L);
                         }
                     } catch (IOException e) {
@@ -149,6 +128,21 @@ public class Cmdhms extends HalfminerCommand {
                 });
             } else MessageBuilder.create(hms, "cmdHmsCopySchematicAlreadyExists", prefix).sendMessage(sender);
         } else MessageBuilder.create(hms, "cmdHmsCopySchematicDoesntExist", prefix).sendMessage(sender);
+    }
+
+    private void deleteFile(File toDelete) {
+
+        try {
+            Files.delete(toDelete.toPath());
+            MessageBuilder.create(hms, "cmdHmsCopySchematicDeleted")
+                    .addPlaceholderReplace("%PATH%", toDelete.toPath().toString())
+                    .logMessage(Level.INFO);
+        } catch (Exception e) {
+            MessageBuilder.create(hms, "cmdHmsCopySchematicDeletedError")
+                    .addPlaceholderReplace("%PATH%", toDelete.toPath().toString())
+                    .logMessage(Level.WARNING);
+            e.printStackTrace();
+        }
     }
 
     private void reload() {

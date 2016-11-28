@@ -80,6 +80,7 @@ public class Cmdstats extends HalfminerCommand {
         MessageBuilder.create(hms, "lineSeparator").sendMessage(sender);
     }
 
+    @SuppressWarnings("Duplicates")
     private String getIntAndCompare(HalfminerPlayer player, DataType type, HalfminerPlayer compareWith) {
         String returnString = "";
         int playerVar = player.getInt(type);
@@ -95,7 +96,10 @@ public class Cmdstats extends HalfminerCommand {
         return returnString + String.valueOf(playerVar);
     }
 
+    @SuppressWarnings("Duplicates")
     private String getDoubleAndCompare(HalfminerPlayer player, DataType type, HalfminerPlayer compareWith) {
+
+        // code duplicated, as Java doesn't offer simple ways to abstract primitive types
         String returnString = "";
         double playerVar = player.getDouble(type);
 

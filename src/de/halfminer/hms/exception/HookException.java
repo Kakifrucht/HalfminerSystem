@@ -17,6 +17,7 @@ public class HookException extends Exception {
 
     /**
      * Check if this Exception was caused by another exception
+     *
      * @return true if hook caused another exception, false if plugin not properly hooked
      */
     public boolean hasParentException() {
@@ -29,7 +30,7 @@ public class HookException extends Exception {
 
     @Override
     public void printStackTrace() {
-        if (hasParentException()) parent.printStackTrace();
+        if (parent != null) parent.printStackTrace();
         else super.printStackTrace();
     }
 }
