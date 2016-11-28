@@ -106,22 +106,29 @@ public class ModHealthBar extends HalfminerModule implements Listener {
         Player otherPlayer = entityToUpdate instanceof Player ? (Player) entityToUpdate : null;
 
         int health;
-        double maxHealth = entityToUpdate.getMaxHealth();
+        double maxHealth;
+        double healthRatio;
+        BarStyle style;
+        BarColor color;
+
+        maxHealth = entityToUpdate.getMaxHealth();
 
         if (newHealth == -1) health = (int) entityToUpdate.getHealth();
         else health = Math.max(newHealth, 0);
-
         health = Math.min(health, (int) maxHealth);
 
+        healthRatio = health / maxHealth;
+
         // get segmented style for maxhealth if available, else show solid bar
-        BarStyle style;
         try {
             style = BarStyle.valueOf("SEGMENTED_" + (int) maxHealth);
         } catch (IllegalArgumentException e) {
             style = BarStyle.SOLID;
         }
 
-        BarColor color = health > 0 ? BarColor.RED : BarColor.GREEN;
+        if (health == 0) color = BarColor.RED;
+        else if (healthRatio < 0.2d) color = BarColor.YELLOW;
+        else color = BarColor.GREEN;
 
         for (Player toUpdate : updatePlayers) {
             // disregard if no longer online, will be removed automatically by bukkit scheduler
@@ -138,7 +145,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
                     color,
                     style,
                     health > 0 ? 8 : 2, // only show bar for two seconds if dead, else 8 seconds
-                    health / maxHealth); // calculate ratio
+                    healthRatio);
         }
     }
 
