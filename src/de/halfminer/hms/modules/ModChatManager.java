@@ -49,6 +49,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
     private final Cache<Player, String> lastMessageCache = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
+            .weakKeys()
             .build();
 
     private boolean isGlobalmuted = false;

@@ -45,6 +45,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     private final Cache<Player, Boolean> hasShotBow = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.SECONDS)
+            .weakKeys()
             .build();
 
     private final Map<UUID, Integer> killStreak = new HashMap<>();

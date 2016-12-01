@@ -35,9 +35,10 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
     private final Set<Player> waitingForChorusTP = new HashSet<>();
     private Set<Material> protectedMaterial;
 
-    private Cache<Player, Boolean> lastGlitchAlert = CacheBuilder.newBuilder()
+    private final Cache<Player, Boolean> lastGlitchAlert = CacheBuilder.newBuilder()
             .concurrencyLevel(1)
             .expireAfterWrite(4, TimeUnit.SECONDS)
+            .weakKeys()
             .build();
 
     private BukkitTask checkIfOverNether;
