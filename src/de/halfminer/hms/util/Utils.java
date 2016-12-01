@@ -1,5 +1,6 @@
 package de.halfminer.hms.util;
 
+import com.google.common.cache.Cache;
 import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -8,7 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +20,7 @@ import java.util.logging.Level;
 /**
  * Static methods that are shared between other classes
  */
+@SuppressWarnings("WeakerAccess")
 public final class Utils {
 
     private Utils() {}
@@ -150,5 +154,19 @@ public final class Utils {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(displayName);
         item.setItemMeta(meta);
+    }
+
+    public static <K, V> Cache<K, V> getNewCache(@Nullable Cache<K, V> oldCache,
+                                                 Cache newCache, JavaPlugin plugin, String moduleName) {
+
+        boolean canReload = (oldCache == null || oldCache.size() == 0);
+
+        if (!canReload && plugin != null) {
+            MessageBuilder.create(plugin, "cacheCouldNotBeReloaded")
+                    .addPlaceholderReplace("%MODULE%", moduleName)
+                    .logMessage(Level.WARNING);
+        }
+
+        return canReload ? newCache : oldCache;
     }
 }

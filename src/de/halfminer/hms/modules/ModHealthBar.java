@@ -160,7 +160,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
 
             this.player = player;
             setLastDamageable(initiatedDamageable);
-            scheduleTask();
+            scheduleTask(initiatedDamageable.isDead());
         }
 
         void setLastDamageable(Damageable updateTo) {
@@ -179,7 +179,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
             } else list = damageableHealthSeenBy.get(updateTo);
 
             if (!list.contains(player)) list.add(player);
-            scheduleTask();
+            scheduleTask(updateTo.isDead());
         }
 
         void cleanFromDamageableList() {
@@ -192,7 +192,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
             }
         }
 
-        void scheduleTask() {
+        void scheduleTask(boolean quickRemove) {
 
             if (currentRemovalTask != null)
                 currentRemovalTask.cancel();
@@ -202,7 +202,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
                 cleanFromDamageableList();
                 playerSeesBar.remove(player);
                 barHandler.removeBar(player);
-            }, 120L);
+            }, quickRemove ? 40L : 120L);
         }
     }
 }

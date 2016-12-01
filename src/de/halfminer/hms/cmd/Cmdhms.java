@@ -132,17 +132,18 @@ public class Cmdhms extends HalfminerCommand {
 
     private void deleteFile(File toDelete) {
 
+        boolean success = false;
+
         try {
             Files.delete(toDelete.toPath());
-            MessageBuilder.create(hms, "cmdHmsCopySchematicDeleted")
-                    .addPlaceholderReplace("%PATH%", toDelete.toPath().toString())
-                    .logMessage(Level.INFO);
+            success = true;
         } catch (Exception e) {
-            MessageBuilder.create(hms, "cmdHmsCopySchematicDeletedError")
-                    .addPlaceholderReplace("%PATH%", toDelete.toPath().toString())
-                    .logMessage(Level.WARNING);
             e.printStackTrace();
         }
+
+        MessageBuilder.create(hms, success ? "cmdHmsCopySchematicDeleted" : "cmdHmsCopySchematicDeletedError")
+                .addPlaceholderReplace("%PATH%", toDelete.toPath().toString())
+                .logMessage(success ? Level.INFO : Level.WARNING);
     }
 
     private void reload() {

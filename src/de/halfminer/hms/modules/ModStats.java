@@ -1,12 +1,13 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -21,9 +22,9 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -43,7 +44,13 @@ import java.util.logging.Level;
 public class ModStats extends HalfminerModule implements Disableable, Listener, Sweepable {
 
     private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
-    private Map<Player, Pair<Player, Long>> lastInteract;
+
+    private final Cache<Player, Player> lastInteract = CacheBuilder.newBuilder()
+            .expireAfterWrite(5, TimeUnit.SECONDS)
+            .concurrencyLevel(1)
+            .weakKeys()
+            .weakValues()
+            .build();
 
     private int timeUntilHomeBlockSeconds;
 
@@ -156,10 +163,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
         if (((ModCombatLog) hms.getModule(ModuleType.COMBAT_LOG)).isTagged(clicker)) return;
 
-        if (lastInteract.containsKey(clicker)) {
-            Pair<Player, Long> data = lastInteract.get(clicker);
-            if (data.getLeft().equals(clicked) && currentTime < data.getRight()) return;
-        }
+        if (lastInteract.getIfPresent(clicker) == clicked) return;
 
         HalfminerPlayer hClicked = storage.getPlayer(clicked);
         String skillgroup = ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);
@@ -176,7 +180,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
                 .sendMessage(clicker);
 
         clicker.playSound(clicked.getLocation(), Sound.BLOCK_SLIME_HIT, 1.0f, 2.0f);
-        lastInteract.put(clicker, new Pair<>(clicked, currentTime + 6));
+        lastInteract.put(clicker, clicked);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -215,7 +219,6 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
     @Override
     public void loadConfig() {
 
-        lastInteract = new HashMap<>();
         timeUntilHomeBlockSeconds = hms.getConfig().getInt("command.home.timeUntilHomeBlockMinutes") * 60;
 
         // if reload ocurred while the server ran, add players to list
@@ -242,6 +245,6 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
     @Override
     public void sweep() {
-        this.lastInteract = new HashMap<>();
+        lastInteract.cleanUp();
     }
 }

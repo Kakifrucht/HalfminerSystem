@@ -1,12 +1,13 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,7 +19,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -32,14 +35,19 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
 
-    private final Set<UUID> autoSelling = new HashSet<>();
+    private final Cache<Player, Boolean> autoSellingCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(10, TimeUnit.MINUTES)
+            .weakKeys()
+            .concurrencyLevel(1)
+            .build();
+
     private Map<String, Integer> prices;
 
     @EventHandler(priority = EventPriority.MONITOR,ignoreCancelled = true)
     public void onChestOpen(InventoryCloseEvent e) {
 
         if (e.getPlayer() instanceof Player
-                && autoSelling.contains(e.getPlayer().getUniqueId())
+                && autoSellingCache.getIfPresent(e.getPlayer()) != null
                 && (e.getInventory().getHolder() instanceof Chest
                 || e.getInventory().getHolder() instanceof DoubleChest)) {
 
@@ -123,11 +131,10 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
 
     public boolean toggleAutoSell(Player player) {
 
-        UUID uuid = player.getUniqueId();
-        boolean contains = autoSelling.contains(uuid);
+        boolean contains = autoSellingCache.getIfPresent(player) != null;
 
-        if (contains) autoSelling.remove(uuid);
-        else autoSelling.add(uuid);
+        if (contains) autoSellingCache.invalidate(player);
+        else autoSellingCache.put(player, true);
 
         return !contains;
     }
@@ -145,13 +152,6 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
 
     @Override
     public void sweep() {
-
-        // remove uuid's that are offline for at least 10 minutes
-        Iterator<UUID> it = autoSelling.iterator();
-        while (it.hasNext()) {
-            OfflinePlayer player = server.getOfflinePlayer(it.next());
-            if (!player.isOnline() && player.getLastPlayed() + 600000 < System.currentTimeMillis())
-                it.remove();
-        }
+        autoSellingCache.cleanUp();
     }
 }

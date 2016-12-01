@@ -1,11 +1,14 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -18,10 +21,9 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -35,16 +37,17 @@ import java.util.logging.Level;
  */
 public class ModSkillLevel extends HalfminerModule implements Disableable, Listener, Sweepable {
 
+    private final Scoreboard scoreboard = server.getScoreboardManager().getMainScoreboard();
+
+    private Cache<Pair<UUID, UUID>, Boolean> hasKilled;
+
+    private Objective skillObjective = scoreboard.getObjective("skill");
+    private String[] teams;
+
     private int derankLevelThreshold;
     private int timeUntilDerankThreshold;
     private int derankLossAmount;
-    private int timeUntilKillCountAgain;
     private String skillgroupNameAdmin;
-
-    private final Scoreboard scoreboard = server.getScoreboardManager().getMainScoreboard();
-    private final Map<Pair<UUID, UUID>, Long> lastKill = new HashMap<>();
-    private Objective skillObjective = scoreboard.getObjective("skill");
-    private String[] teams;
 
     @EventHandler
     public void joinRecalculate(PlayerJoinEvent e) {
@@ -85,9 +88,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             // Prevent grinding
             Pair<UUID, UUID> bothPlayers = new Pair<>(killer.getUniqueId(), victim.getUniqueId());
-            if (killDoesCount(bothPlayers)) {
+            if (hasKilled.getIfPresent(bothPlayers) == null) {
 
-                lastKill.put(bothPlayers, System.currentTimeMillis() / 1000);
+                hasKilled.put(bothPlayers, true);
 
                 // Calculate skill modifier
                 int killerLevel = hKiller.getInt(DataType.SKILL_LEVEL);
@@ -173,21 +176,20 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         else return skillgroupNameAdmin;
     }
 
-    private boolean killDoesCount(Pair<UUID, UUID> uuidPair) {
-
-        return !lastKill.containsKey(uuidPair)
-                || lastKill.get(uuidPair) + timeUntilKillCountAgain
-                < System.currentTimeMillis() / 1000;
-    }
-
     @Override
     public void loadConfig() {
 
         derankLevelThreshold = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
         timeUntilDerankThreshold = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
-        timeUntilKillCountAgain = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10) * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
         skillgroupNameAdmin = MessageBuilder.returnMessage(hms, "modSkillLevelAdmingroupName");
+        int timeUntilKillCountAgain = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10);
+
+        hasKilled = Utils.getNewCache(hasKilled,
+                CacheBuilder.newBuilder()
+                        .concurrencyLevel(1)
+                        .expireAfterWrite(timeUntilKillCountAgain, TimeUnit.MINUTES)
+                        .build(), hms, "Skilllevel");
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 
@@ -243,6 +245,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
     @Override
     public void sweep() {
-        lastKill.keySet().removeIf(this::killDoesCount);
+        hasKilled.cleanUp();
     }
 }

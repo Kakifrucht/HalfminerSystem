@@ -35,6 +35,7 @@ public class MessageBuilder {
      * @return MessageBuilder that can send a parsed message
      */
     public static MessageBuilder create(JavaPlugin plugin, String lang, String prefix) {
+        if (plugin == null) throw new IllegalArgumentException("Plugin cannot be null");
         return create(plugin, lang).setPrefix(prefix);
     }
 

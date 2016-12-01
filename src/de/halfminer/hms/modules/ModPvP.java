@@ -1,5 +1,7 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.enums.AttackSpeed;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
@@ -24,6 +26,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * - Halves PvP cooldown
@@ -40,7 +43,10 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     private int thresholdUntilShown;
 
-    private Map<Player, Long> lastBowShot = new HashMap<>();
+    private final Cache<Player, Boolean> hasShotBow = CacheBuilder.newBuilder()
+            .expireAfterWrite(1, TimeUnit.SECONDS)
+            .build();
+
     private final Map<UUID, Integer> killStreak = new HashMap<>();
 
     @EventHandler
@@ -130,9 +136,9 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         if (!e.getEntity().hasPermission("hms.bypass.pvp") && e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
             long currentTime = System.currentTimeMillis();
-            if (lastBowShot.containsKey(p) && lastBowShot.get(p) + 1000 > currentTime) {
+            if (hasShotBow.getIfPresent(p) != null) {
                 e.setCancelled(true);
-            } else lastBowShot.put(p, currentTime);
+            } else hasShotBow.put(p, true);
         }
     }
 
@@ -198,6 +204,6 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     @Override
     public void sweep() {
-        lastBowShot = new HashMap<>();
+        hasShotBow.cleanUp();
     }
 }

@@ -1,5 +1,7 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
@@ -16,10 +18,9 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * - Logs and notifies about possible wall glitching
@@ -33,7 +34,11 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
     private final Set<Player> waitingForChorusTP = new HashSet<>();
     private Set<Material> protectedMaterial;
-    private Map<Player, Long> lastGlitchAlert = new HashMap<>();
+
+    private Cache<Player, Boolean> lastGlitchAlert = CacheBuilder.newBuilder()
+            .concurrencyLevel(1)
+            .expireAfterWrite(4, TimeUnit.SECONDS)
+            .build();
 
     private BukkitTask checkIfOverNether;
 
@@ -44,8 +49,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                 && !e.getPlayer().hasPermission("hms.bypass.glitchcheck")
                 && Math.round(e.getFrom().getY()) == e.getFrom().getBlockY()) {
 
-            if (lastGlitchAlert.get(e.getPlayer()) == null
-                    || lastGlitchAlert.get(e.getPlayer()) < System.currentTimeMillis() / 1000) {
+            if (lastGlitchAlert.getIfPresent(e.getPlayer()) != null) {
 
                 MessageBuilder.create(hms, "modGlitchProtectionMove", "AntiGlitch")
                         .addPlaceholderReplace("%PREFIX%", "Warnung")
@@ -55,7 +59,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                         .addPlaceholderReplace("%MATERIAL%",
                                 Utils.makeStringFriendly(e.getFrom().getBlock().getType().toString()))
                         .broadcastMessage("hms.bypass.glitchcheck", true);
-                lastGlitchAlert.put(e.getPlayer(), (System.currentTimeMillis() / 1000) + 4);
+                lastGlitchAlert.put(e.getPlayer(), true);
             }
         }
     }
@@ -142,7 +146,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
     @Override
     public void sweep() {
-        lastGlitchAlert = new HashMap<>();
+        lastGlitchAlert.cleanUp();
     }
 
     @Override

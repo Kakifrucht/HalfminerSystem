@@ -1,5 +1,7 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
@@ -20,7 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -41,12 +43,11 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
     private final Set<OfflinePlayer> toTeleportOnJoin = new HashSet<>();
 
-    private final Map<String, UUID> newPlayers = new HashMap<>();
-    private final Map<UUID, Long> lastWelcome = new ConcurrentHashMap<>();
+    private Cache<String, UUID> newPlayers;
+    private Cache<UUID, Boolean> lastWelcome;
 
     // config random drop
     private Set<String> welcomeWords;
-    private int timeForWelcomeSeconds;
     private int randomRange;
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -80,9 +81,6 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                 }
             }, 1L);
 
-            scheduler.runTaskLater(hms, () ->
-                    newPlayers.remove(joined.getName().toLowerCase()), timeForWelcomeSeconds * 20L);
-
         } else if (toTeleportOnJoin.contains(joined)) {
             scheduler.runTaskLater(hms, () -> {
                 joined.teleport(respawnLoc);
@@ -99,7 +97,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
     public void onChatWelcomeReward(AsyncPlayerChatEvent e) {
 
         Player p = e.getPlayer();
-        if (welcomeWords.size() == 0 || !canWelcomePlayer(p.getUniqueId())) return;
+        if (welcomeWords.size() == 0 || lastWelcome.getIfPresent(p.getUniqueId()) != null) return;
 
         Player mentioned = null;
         boolean containsWelcome = false;
@@ -112,15 +110,16 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             else if (mentioned == null) {
 
                 String normalized = Utils.filterNonUsernameChars(message);
-                if (newPlayers.containsKey(normalized) && !normalized.equalsIgnoreCase(p.getName())) {
-                    mentioned = server.getPlayer(newPlayers.get(normalized));
+                if (!normalized.equalsIgnoreCase(p.getName())) {
+                    UUID uuid = newPlayers.getIfPresent(normalized);
+                    if (uuid != null) mentioned = server.getPlayer(uuid);
                 }
             }
         }
 
         if (containsWelcome && mentioned != null) {
 
-            lastWelcome.put(p.getUniqueId(), System.currentTimeMillis());
+            lastWelcome.put(p.getUniqueId(), true);
             titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnHeadTitle"), 10, 30, 0);
             barHandler.sendBar(p, MessageBuilder.returnMessage(hms, "modRespawnHeadBossbar"),
                     BarColor.WHITE, BarStyle.SOLID, 10, 1.0d);
@@ -154,7 +153,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         return respawnLoc;
     }
 
-    public void tpToSpawn(Player p) {
+    void tpToSpawn(Player p) {
         p.teleport(respawnLoc);
     }
 
@@ -176,15 +175,10 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         loc.getWorld().setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
-    private boolean canWelcomePlayer(UUID uuid) {
-
-        return !lastWelcome.containsKey(uuid)
-                || lastWelcome.get(uuid) + (timeForWelcomeSeconds * 1000) < System.currentTimeMillis();
-    }
-
     @Override
     public void sweep() {
-        lastWelcome.keySet().removeIf(this::canWelcomePlayer);
+        newPlayers.cleanUp();
+        lastWelcome.cleanUp();
     }
 
     @Override
@@ -200,7 +194,18 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         welcomeWords.addAll(hms.getConfig().getStringList("respawn.welcomeWords")
                 .stream().map(String::toLowerCase).collect(Collectors.toList()));
 
-        timeForWelcomeSeconds = hms.getConfig().getInt("respawn.timeForWelcomeSeconds", 300);
+        int timeForWelcomeSeconds = hms.getConfig().getInt("respawn.timeForWelcomeSeconds", 300);
+
+        newPlayers = Utils.getNewCache(newPlayers,
+                CacheBuilder.newBuilder()
+                .expireAfterWrite(timeForWelcomeSeconds, TimeUnit.SECONDS)
+                .build(), hms, "Respawn");
+
+        lastWelcome = Utils.getNewCache(lastWelcome,
+                CacheBuilder.newBuilder()
+                        .expireAfterWrite(timeForWelcomeSeconds, TimeUnit.SECONDS)
+                        .build(), hms, "Respawn");
+
         randomRange = hms.getConfig().getInt("respawn.randomRange", 1);
     }
 }

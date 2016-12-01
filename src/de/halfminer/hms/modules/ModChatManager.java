@@ -1,5 +1,7 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
@@ -14,7 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * - Hooks into Vault to get prefix and suffix
@@ -42,10 +44,13 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     private final List<Pair<String, String>> chatFormats = new ArrayList<>();
     private String topFormat;
     private String defaultFormat;
-    private int mentionDelay;
 
-    private Map<Player, Long> lastMentioned = new ConcurrentHashMap<>();
-    private final Map<Player, Pair<String, Long>> lastMessage = new ConcurrentHashMap<>();
+    private Cache<Player, Boolean> wasMentioned;
+
+    private final Cache<Player, String> lastMessageCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .build();
+
     private boolean isGlobalmuted = false;
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -76,10 +81,10 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             }
 
             // check if last message is the same
-            if (hasLastMessage(p)) {
+            String lastMessage = lastMessageCache.getIfPresent(p);
+            if (lastMessage != null) {
 
                 boolean cancel = false;
-                String last = lastMessage.get(p).getLeft();
 
                 /*
                   Message must start the same as last message, if message is shorter than 20 characters, check
@@ -87,10 +92,10 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                   his sentence by resending it's beginning "hello im a very nice person", the length check ensures
                   that the message won't be blocked.
                  */
-                if (message.startsWith(last)) {
+                if (message.startsWith(lastMessage)) {
 
-                    if (last.length() < 20) {
-                        if (Math.abs(last.length() - message.length()) < 4)
+                    if (lastMessage.length() < 20) {
+                        if (Math.abs(lastMessage.length() - message.length()) < 4)
                             cancel = true;
                     } else cancel = true;
                 }
@@ -134,12 +139,11 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 .forEach(player -> players.put(player.getName().toLowerCase(), player));
 
         Set<Player> mentioned = new HashSet<>();
-        long currentTime = System.currentTimeMillis() / 1000;
         for (String str : Utils.filterNonUsernameChars(message).split(" ")) {
 
             if (players.containsKey(str)) {
                 Player pMentioned = players.get(str);
-                if (!lastMentioned.containsKey(pMentioned) || !(lastMentioned.get(pMentioned) > currentTime))
+                if (wasMentioned.getIfPresent(pMentioned) == null)
                     mentioned.add(pMentioned);
             }
         }
@@ -157,12 +161,11 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                             .returnMessage());
 
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_TOUCH, 0.2f, 1.8f);
-            lastMentioned.put(wasMentioned, currentTime + mentionDelay);
+            this.wasMentioned.put(wasMentioned, true);
         }
 
         // play sound, set message and format, store for spam protection
-        lastMessage.put(p,
-                new Pair<>(message.length() > 20 ? message.substring(0, 20) : message, System.currentTimeMillis()));
+        lastMessageCache.put(p, message.length() > 20 ? message.substring(0, 20) : message);
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
         e.setMessage(message);
     }
@@ -233,25 +236,16 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         return msg;
     }
 
-    private boolean hasLastMessage(Player p) {
-
-        if (lastMessage.containsKey(p)) {
-
-            Pair<String, Long> pair = lastMessage.get(p);
-            if (pair.getRight() + 60000 < System.currentTimeMillis()) {
-                lastMessage.remove(p);
-                return false;
-            } else return true;
-        }
-
-        return false;
-    }
-
     @Override
     public void loadConfig() {
 
         sweep();
-        mentionDelay = hms.getConfig().getInt("chat.mentionDelay", 10);
+        int mentionDelay = hms.getConfig().getInt("chat.mentionDelay", 10);
+
+        wasMentioned = Utils.getNewCache(wasMentioned,
+                CacheBuilder.newBuilder()
+                .expireAfterWrite(mentionDelay, TimeUnit.SECONDS)
+                .build(), hms, "ChatManager");
 
         chatFormats.clear();
         for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {
@@ -280,7 +274,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
     @Override
     public void sweep() {
-        this.lastMentioned = new ConcurrentHashMap<>();
-        lastMessage.keySet().forEach(this::hasLastMessage);
+        wasMentioned.cleanUp();
+        lastMessageCache.cleanUp();
     }
 }
