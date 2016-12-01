@@ -185,11 +185,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         skillgroupNameAdmin = MessageBuilder.returnMessage(hms, "modSkillLevelAdmingroupName");
         int timeUntilKillCountAgain = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10);
 
-        hasKilled = Utils.getNewCache(hasKilled,
+        hasKilled = Utils.copyValues(hasKilled,
                 CacheBuilder.newBuilder()
                         .concurrencyLevel(1)
                         .expireAfterWrite(timeUntilKillCountAgain, TimeUnit.MINUTES)
-                        .build(), hms, "Skilllevel");
+                        .build());
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 

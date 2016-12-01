@@ -242,10 +242,10 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         sweep();
         int mentionDelay = hms.getConfig().getInt("chat.mentionDelay", 10);
 
-        wasMentioned = Utils.getNewCache(wasMentioned,
+        wasMentioned = Utils.copyValues(wasMentioned,
                 CacheBuilder.newBuilder()
                 .expireAfterWrite(mentionDelay, TimeUnit.SECONDS)
-                .build(), hms, "ChatManager");
+                .build());
 
         chatFormats.clear();
         for (String formatUnparsed : hms.getConfig().getStringList("chat.formats")) {

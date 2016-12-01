@@ -334,11 +334,11 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         }
 
         void reloadCache() {
-            playerCache = Utils.getNewCache(playerCache,
+            playerCache = Utils.copyValues(playerCache,
                     CacheBuilder.newBuilder()
                             .concurrencyLevel(1)
                             .expireAfterWrite(thresholdUntilRemovalSeconds, TimeUnit.SECONDS)
-                            .build(), null, "");
+                            .build());
         }
     }
 }

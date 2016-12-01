@@ -9,11 +9,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -156,17 +156,23 @@ public final class Utils {
         item.setItemMeta(meta);
     }
 
-    public static <K, V> Cache<K, V> getNewCache(@Nullable Cache<K, V> oldCache,
-                                                 Cache newCache, JavaPlugin plugin, String moduleName) {
+    /**
+     * Adds values from old cache to new cache, checks if old cache is null
+     *
+     * @param oldCache cache to copy from or null
+     * @param newCache cache to copy to or pass on if oldCache is null
+     * @param <K> key value of both caches
+     * @param <V> entry value of both caches
+     * @return newCache copied values
+     */
+    public static <K, V> Cache<K, V> copyValues(@Nullable Cache<K, V> oldCache, Cache<K, V> newCache) {
 
-        boolean canReload = (oldCache == null || oldCache.size() == 0);
-
-        if (!canReload && plugin != null) {
-            MessageBuilder.create(plugin, "cacheCouldNotBeReloaded")
-                    .addPlaceholderReplace("%MODULE%", moduleName)
-                    .logMessage(Level.WARNING);
+        if (oldCache != null) {
+            for (Map.Entry<K, V> entry : oldCache.asMap().entrySet()) {
+                newCache.put(entry.getKey(), entry.getValue());
+            }
         }
 
-        return canReload ? newCache : oldCache;
+        return newCache;
     }
 }
