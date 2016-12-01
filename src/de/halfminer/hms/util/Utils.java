@@ -168,6 +168,7 @@ public final class Utils {
     public static <K, V> Cache<K, V> copyValues(@Nullable Cache<K, V> oldCache, Cache<K, V> newCache) {
 
         if (oldCache != null) {
+            oldCache.cleanUp();
             for (Map.Entry<K, V> entry : oldCache.asMap().entrySet()) {
                 newCache.put(entry.getKey(), entry.getValue());
             }

@@ -47,7 +47,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
     private Cache<Player, Boolean> wasMentioned;
 
-    private final Cache<Player, String> lastMessageCache = CacheBuilder.newBuilder()
+    private final Cache<Player, String> lastSentMessage = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .weakKeys()
             .build();
@@ -82,7 +82,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             }
 
             // check if last message is the same
-            String lastMessage = lastMessageCache.getIfPresent(p);
+            String lastMessage = lastSentMessage.getIfPresent(p);
             if (lastMessage != null) {
 
                 boolean cancel = false;
@@ -166,7 +166,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         // play sound, set message and format, store for spam protection
-        lastMessageCache.put(p, message.length() > 20 ? message.substring(0, 20) : message);
+        lastSentMessage.put(p, message.length() > 20 ? message.substring(0, 20) : message);
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1.0f, 2.0f);
         e.setMessage(message);
     }
@@ -240,7 +240,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     @Override
     public void loadConfig() {
 
-        sweep();
         int mentionDelay = hms.getConfig().getInt("chat.mentionDelay", 10);
 
         wasMentioned = Utils.copyValues(wasMentioned,
@@ -276,6 +275,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     @Override
     public void sweep() {
         wasMentioned.cleanUp();
-        lastMessageCache.cleanUp();
+        lastSentMessage.cleanUp();
     }
 }

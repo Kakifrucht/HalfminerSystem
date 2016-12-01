@@ -48,20 +48,18 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
         if (protectedMaterial.contains(e.getFrom().getBlock().getType())
                 && !e.getPlayer().hasPermission("hms.bypass.glitchcheck")
-                && Math.round(e.getFrom().getY()) == e.getFrom().getBlockY()) {
+                && Math.round(e.getFrom().getY()) == e.getFrom().getBlockY()
+                && lastGlitchAlert.getIfPresent(e.getPlayer()) == null) {
 
-            if (lastGlitchAlert.getIfPresent(e.getPlayer()) != null) {
-
-                MessageBuilder.create(hms, "modGlitchProtectionMove", "AntiGlitch")
-                        .addPlaceholderReplace("%PREFIX%", "Warnung")
-                        .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
-                        .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(e.getTo()))
-                        .addPlaceholderReplace("%WORLD%", e.getTo().getWorld().getName())
-                        .addPlaceholderReplace("%MATERIAL%",
-                                Utils.makeStringFriendly(e.getFrom().getBlock().getType().toString()))
-                        .broadcastMessage("hms.bypass.glitchcheck", true);
-                lastGlitchAlert.put(e.getPlayer(), true);
-            }
+            MessageBuilder.create(hms, "modGlitchProtectionMove", "AntiGlitch")
+                    .addPlaceholderReplace("%PREFIX%", "Warnung")
+                    .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
+                    .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(e.getTo()))
+                    .addPlaceholderReplace("%WORLD%", e.getTo().getWorld().getName())
+                    .addPlaceholderReplace("%MATERIAL%",
+                            Utils.makeStringFriendly(e.getFrom().getBlock().getType().toString()))
+                    .broadcastMessage("hms.bypass.glitchcheck", true);
+            lastGlitchAlert.put(e.getPlayer(), true);
         }
     }
 
