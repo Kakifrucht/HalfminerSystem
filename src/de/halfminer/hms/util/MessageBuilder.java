@@ -6,9 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -43,15 +41,16 @@ public class MessageBuilder {
         return create(plugin, lang).returnMessage();
     }
 
-    private final static char colorCode = '&';
-    private final static char clickablePrefix = '~';
+    private final static char COLOR_CODE = '&';
+    private final static char CLICKABLE_PREFIX = '~';
+    private final static char PLACEHOLDER_CHARACTER = '%';
 
     private final JavaPlugin plugin;
 
     private final String lang;
     private String prefix;
     private Mode mode;
-    private final List<String> placeholders = new ArrayList<>();
+    private final Map<String, String> placeholders = new HashMap<>();
 
     private boolean makeCommandsClickable = true;
     private boolean startsWithClickableChar = false;
@@ -78,9 +77,15 @@ public class MessageBuilder {
         return this;
     }
 
+    /**
+     * Adds a placeholder and what to replace it with to the message. The placeholder character % will be stripped.
+     *
+     * @param placeholder String to replace
+     * @param replaceWith String with what to replace with
+     * @return MessageBuilder, same instance
+     */
     public MessageBuilder addPlaceholderReplace(String placeholder, String replaceWith) {
-        placeholders.add(placeholder);
-        placeholders.add(replaceWith);
+        placeholders.put(placeholder.replaceAll(PLACEHOLDER_CHARACTER + "", ""), replaceWith);
         return this;
     }
 
@@ -96,7 +101,7 @@ public class MessageBuilder {
             toReturn = lang;
         }
 
-        if (makeCommandsClickable && toReturn.startsWith("" + clickablePrefix)) {
+        if (makeCommandsClickable && toReturn.startsWith("" + CLICKABLE_PREFIX)) {
             toReturn = toReturn.substring(1);
             startsWithClickableChar = true;
         }
@@ -107,7 +112,7 @@ public class MessageBuilder {
         }
 
         toReturn = placeholderReplace(toReturn);
-        toReturn = ChatColor.translateAlternateColorCodes(colorCode, toReturn).replace("\\n", "\n");
+        toReturn = ChatColor.translateAlternateColorCodes(COLOR_CODE, toReturn).replace("\\n", "\n");
         if (loggingMode) toReturn = ChatColor.stripColor(toReturn);
         return toReturn;
     }
@@ -144,7 +149,7 @@ public class MessageBuilder {
 
     public void logMessage(Level logLevel) {
         loggingMode = true;
-        plugin.getLogger().log(logLevel, ChatColor.stripColor(returnMessage()));
+        plugin.getLogger().log(logLevel, returnMessage());
         loggingMode = false;
     }
 
@@ -168,28 +173,18 @@ public class MessageBuilder {
         for (int i = 0; i < message.length(); i++) {
 
             // Go into placeholder read mode
-            if (message.charAt(i) == '%') {
+            if (message.charAt(i) == PLACEHOLDER_CHARACTER) {
 
                 // get the placeholder
-                placeholder.append('%');
                 for (int j = i + 1; j < message.length() && message.charAt(j) != '%'; j++) {
                     placeholder.append(message.charAt(j));
-                }
-                placeholder.append('%');
-
-                // get the string that will replace the placeholder
-                String replaceWith = null;
-                for (int j = 0; j < placeholders.size(); j += 2) {
-                    if (placeholders.get(j).equals(placeholder.toString())) {
-                        replaceWith = placeholders.get(j + 1);
-                        break;
-                    }
                 }
 
                 // Do the replacement, add length of string to the outer loop index, since we do not want to iterate over
                 // it again, or if no replacement was found, add the length of the read placeholder to skip it
-                if (replaceWith != null) {
-                    message.replace(i, i + placeholder.length(), replaceWith);
+                if (placeholders.containsKey(placeholder.toString())) {
+                    String replaceWith = placeholders.get(placeholder.toString());
+                    message.replace(i, i + placeholder.length() + 2, replaceWith);
                     i += replaceWith.length() - 1;
                 } else i += placeholder.length() - 1;
 
