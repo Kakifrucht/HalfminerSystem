@@ -87,11 +87,10 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         if ((damager != null && damager.hasPermission("hms.bypass.pvp"))
                 || damagee.hasPermission("hms.bypass.pvp")) return;
 
-        // reduce damage immunity
+        // half damage immunity on next tick, else overwritten
         scheduler.runTaskLater(hms, () -> {
-            if (!e.isCancelled())
-                // damage immunity only passes until 10/20 has been reached
-                damagee.setNoDamageTicks(16);
+            // damage immunity passes when 10/20 has been reached
+            if (!e.isCancelled()) damagee.setNoDamageTicks(15);
         }, 0L);
 
         if (damager != null) {
