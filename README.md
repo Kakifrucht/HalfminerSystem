@@ -57,6 +57,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
         - Splash/Lingering potion throwing
       - Blocks commands
       - Prints message with remaining block time
+    - Allows other modules to check if a kill was farmed
     - Punishment doubles for every additional block
   - AntiXray
     - Counts players block breaks
@@ -96,7 +97,6 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Combatlogging causes instant death
     - Shows actionbar message containing time left in fight
     - Untags players after timer runs out, player logs out or a player is killed
-    - Halves satiation health regeneration during combat
     - Disables during fight:
       - Taking off armor
       - Commands
@@ -138,6 +138,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Killstreak via actionbar
     - Sounds on kill/death
     - Remove effects on teleport
+    - Halves satiation health regeneration during combat
   - Respawn
     - Respawns player at custom location
     - Adds a first time join

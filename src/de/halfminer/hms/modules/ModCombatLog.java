@@ -11,7 +11,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -28,7 +27,6 @@ import java.util.Map;
  * - Combatlogging causes instant death
  * - Shows actionbar message containing time left in fight
  * - Untags players after timer runs out, player logs out or a player is killed
- * - Halves satiation health regeneration during combat
  * - Disables during fight:
  *   - Taking off armor
  *   - Commands
@@ -126,16 +124,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             MessageBuilder.create(hms, "modCombatLogNoEnderpearl", "PvP").sendMessage(e.getPlayer());
             e.getPlayer().updateInventory();
             e.setCancelled(true);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onRegeneration(EntityRegainHealthEvent e) {
-
-        if (e.getEntity() instanceof Player
-                && e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.SATIATED)
-                && isTagged((Player) e.getEntity())) {
-            e.setAmount(e.getAmount() / 2);
         }
     }
 

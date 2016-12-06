@@ -1,8 +1,11 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -14,6 +17,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * - Counts amount of kills between two players
@@ -29,6 +33,7 @@ import java.util.*;
  *     - Splash/Lingering potion throwing
  *   - Blocks commands
  *   - Prints message with remaining block time
+ * - Allows other modules to check if a kill was farmed
  * - Punishment doubles for every additional block
  */
 @SuppressWarnings("unused")
@@ -40,6 +45,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
     private final Set<String> exemptCommands = new HashSet<>();
 
+    private Cache<Pair<UUID, UUID>, Boolean> hasKilled;
     private final Map<UUID, AntiKillfarmingContainer> containerMap = new HashMap<>();
 
     /**
@@ -59,6 +65,10 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
                     || killer.hasPermission("hms.bypass.nokillfarming")
                     || victim.hasPermission("hms.bypass.nokillfarming"))
                 return;
+
+            // store information to not allow grinding
+            Pair<UUID, UUID> bothPlayers = new Pair<>(killer.getUniqueId(), victim.getUniqueId());
+            if (hasKilled.getIfPresent(bothPlayers) == null) hasKilled.put(bothPlayers, true);
 
             // remove the killer from the victims map, to reset the killfarm counter
             if (containerMap.containsKey(victim.getUniqueId())) {
@@ -169,9 +179,12 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     }
 
     private boolean splashPotionCheck(ProjectileHitEvent e) {
-
         return e.getEntity().getShooter() instanceof Player
                 && checkTimeAndMessage((Player) e.getEntity().getShooter(), "modAntiKillfarmingNoPvPAttack");
+    }
+
+    boolean isNotRepeatedKill(Player killer, Player victim) {
+        return hasKilled.getIfPresent(new Pair<>(killer.getUniqueId(), victim.getUniqueId())) == null;
     }
 
     /**
@@ -234,6 +247,14 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         thresholdUntilBlock = hms.getConfig().getInt("antiKillfarming.thresholdUntilBlock", 5);
         thresholdUntilRemovalSeconds = hms.getConfig().getInt("antiKillfarming.thresholdUntilRemoval", 100);
 
+        int timeUntilCount = hms.getConfig().getInt("antiKillfarming.timeUntilKillCountAgainMinutes", 10);
+
+        hasKilled = Utils.copyValues(hasKilled,
+                CacheBuilder.newBuilder()
+                        .concurrencyLevel(1)
+                        .expireAfterWrite(timeUntilCount, TimeUnit.MINUTES)
+                        .build());
+
         // Get allowed commands
         exemptCommands.clear();
         exemptCommands.addAll(hms.getConfig().getStringList("antiKillfarming.killfarmingCommandExemptions"));
@@ -242,6 +263,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     @Override
     public void sweep() {
         containerMap.values().removeIf(AntiKillfarmingContainer::sweep);
+        hasKilled.cleanUp();
     }
 
     /**

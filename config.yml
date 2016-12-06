@@ -36,6 +36,8 @@ antiKillfarming:
   thresholdUntilBlock: 5
   #Amount of seconds until the killstreak is reset
   thresholdUntilRemoval: 100
+  #Time in minutes until a kill will be counted again (used by other modules to check if a kill is valid)
+  timeUntilKillCountAgainMinutes: 10
   #List of commands that are still allowed during killfarming command block
   killfarmingCommandExemptions:
   - 'regeln'
@@ -139,8 +141,6 @@ skillLevel:
   timeUntilDerankDays: 4
   #Amount of elo points the player will lose on derank
   derankLossAmount: 250
-  #Time in minutes until a kill will be counted again towards elo after a kill
-  timeUntilKillCountAgainMinutes: 10
   #Six skillgroups need to be set, first character is the color code, bottom skillgroup is default
   skillGroups:
   - 0Pro
@@ -170,6 +170,9 @@ verkauf:
   redmushroom: 30
   sugarcane: 55
   wheat: 25
+#Use '&' as color code
+#Lines starting with '~' will be parsed to make commands clickable, close the command with another '/'
+#Messages can be removed by simply setting the message to nothing ('')
 localization:
   consoleName: 'Konsole'
   lineSeparator: '&e&m------------------------------------------------\n'
@@ -190,8 +193,7 @@ localization:
   cmdChatMessageNotSet: '&cEs ist keine Nachricht gesetzt, verwende &f/c set <Nachricht>'
   cmdChatNewsSetTo: '&aNachricht als News gesetzt'
   cmdChatSend: '&7Deine Nachricht wurde an %SENDTO% versendet'
-  cmdChatUsage: '&cVerwendung:\n&f/c clear --> Chat leeren\n/c sendcommand <Spieler> <Kommando> --> Kommando schicken\n/c countdown <Zeit> --> Countdown starten\n/c globalmute --> Globalmute umschalten\n/c set [Nachricht] --> Definiere deine Nachricht\n/c title [Zeit] [Spieler] --> Zeige die Nachricht als Titel\n/c bossbar [Zeit] [Spieler] [Farbe] --> Nachricht in BossBar\n/c news --> Setze Nachricht als Servernews\n/c send [Spieler] --> Schicke deine Nachricht'
-  cmdChatTitle: '&7Titel an &e%SENDTO% &7für &a%TIME% Sekunden &7versendet, Nachricht: &r%MESSAGE%'
+  cmdChatUsage: '&6&lKommandos:\n &f/c clear\n /c sendcommand <Spieler> <Kommando>\n /c countdown <Zeit> --> Countdown starten\n /c globalmute\n /c set [Nachricht]\n | /c title [Zeit] [Spieler]\n | /c bossbar [Zeit] [Spieler] [Farbe]\n | /c news\n | /c send [Spieler]'  cmdChatTitle: '&7Titel an &e%SENDTO% &7für &a%TIME% Sekunden &7versendet, Nachricht: &r%MESSAGE%'
   cmdCustomtextClick: 'Klicken, um das Kommando auszuführen'
   cmdCustomtextErrorLog: 'Beim Parsen von customtext.txt ist folgender Fehler aufgetreten: %ERROR%'
   cmdCustomtextNotFound: '&cUnbekanntes Thema'

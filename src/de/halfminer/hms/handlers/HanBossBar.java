@@ -46,7 +46,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
             public void run() {
 
                 setProgress(broadcastBar, (double) timeLeft / time);
-                if (timeLeft-- < 0) removeBar();
+                if (--timeLeft < 0) removeBar();
             }
         }, 0L, 20L);
     }
@@ -106,7 +106,7 @@ public class HanBossBar extends HalfminerHandler implements Disableable {
             public void run() {
 
                 setProgress(bar, (double) currentTime / time);
-                if (currentTime-- < 0) removeBar(player);
+                if (--currentTime < 0) removeBar(player);
             }
         }, 0L, 20L);
         currentBar.put(player, new Pair<>(bar, cancel));

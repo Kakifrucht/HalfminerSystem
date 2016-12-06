@@ -3,6 +3,7 @@ package de.halfminer.hms.modules;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.enums.AttackSpeed;
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
@@ -37,6 +38,7 @@ import java.util.concurrent.TimeUnit;
  * - Killstreak via actionbar
  * - Sounds on kill/death
  * - Remove effects on teleport
+ * - Halves satiation health regeneration during combat
  */
 @SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener, Sweepable {
@@ -194,6 +196,16 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             p.removePotionEffect(PotionEffectType.JUMP);
             p.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
             p.removePotionEffect(PotionEffectType.LEVITATION);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onRegeneration(EntityRegainHealthEvent e) {
+
+        if (e.getEntity() instanceof Player
+                && e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.SATIATED)
+                && (((ModCombatLog) hms.getModule(ModuleType.COMBAT_LOG)).isTagged((Player) e.getEntity()))) {
+            e.setAmount(e.getAmount() / 2);
         }
     }
 

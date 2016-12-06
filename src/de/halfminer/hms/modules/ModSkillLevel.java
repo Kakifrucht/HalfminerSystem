@@ -1,14 +1,10 @@
 package de.halfminer.hms.modules;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.interfaces.Disableable;
-import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.Pair;
-import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -22,8 +18,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -35,11 +29,9 @@ import java.util.logging.Level;
  * - Colors name depending on skillgroup
  * - Sorts tablist in descending order
  */
-public class ModSkillLevel extends HalfminerModule implements Disableable, Listener, Sweepable {
+public class ModSkillLevel extends HalfminerModule implements Disableable, Listener {
 
     private final Scoreboard scoreboard = server.getScoreboardManager().getMainScoreboard();
-
-    private Cache<Pair<UUID, UUID>, Boolean> hasKilled;
 
     private Objective skillObjective = scoreboard.getObjective("skill");
     private String[] teams;
@@ -87,10 +79,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             hVictim.set(DataType.LAST_PVP, currentTime);
 
             // Prevent grinding
-            Pair<UUID, UUID> bothPlayers = new Pair<>(killer.getUniqueId(), victim.getUniqueId());
-            if (hasKilled.getIfPresent(bothPlayers) == null) {
-
-                hasKilled.put(bothPlayers, true);
+            if (((ModAntiKillfarming) hms.getModule(ModuleType.ANTI_KILLFARMING)).isNotRepeatedKill(killer, victim)) {
 
                 // Calculate skill modifier
                 int killerLevel = hKiller.getInt(DataType.SKILL_LEVEL);
@@ -183,13 +172,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         timeUntilDerankThreshold = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
         skillgroupNameAdmin = MessageBuilder.returnMessage(hms, "modSkillLevelAdmingroupName");
-        int timeUntilKillCountAgain = hms.getConfig().getInt("skillLevel.timeUntilKillCountAgainMinutes", 10);
-
-        hasKilled = Utils.copyValues(hasKilled,
-                CacheBuilder.newBuilder()
-                        .concurrencyLevel(1)
-                        .expireAfterWrite(timeUntilKillCountAgain, TimeUnit.MINUTES)
-                        .build());
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 
@@ -241,10 +223,5 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 currentTeam.unregister();
             }
         }
-    }
-
-    @Override
-    public void sweep() {
-        hasKilled.cleanUp();
     }
 }
