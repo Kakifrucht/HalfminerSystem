@@ -54,7 +54,6 @@ public class MessageBuilder {
 
     private boolean makeCommandsClickable = true;
     private boolean startsWithClickableChar = false;
-    private boolean loggingMode = false;
 
     private MessageBuilder(JavaPlugin plugin, String lang) {
         this.plugin = plugin;
@@ -90,6 +89,10 @@ public class MessageBuilder {
     }
 
     public String returnMessage() {
+        return returnMessage(false);
+    }
+
+    public String returnMessage(boolean loggingMode) {
 
         String toReturn;
         if (this.mode.equals(Mode.GET_FROM_LOCALE_FILE)) {
@@ -113,7 +116,22 @@ public class MessageBuilder {
 
         toReturn = placeholderReplace(toReturn);
         toReturn = ChatColor.translateAlternateColorCodes(COLOR_CODE, toReturn).replace("\\n", "\n");
-        if (loggingMode) toReturn = ChatColor.stripColor(toReturn);
+
+        // if logging, remove color codes and remove encapsulating command '/' if necessary
+        if (loggingMode) {
+            toReturn = ChatColor.stripColor(toReturn);
+            if (startsWithClickableChar) {
+                StringBuilder removeSlash = new StringBuilder(toReturn);
+                boolean removeNextSlash = false;
+                for (int i = 0; i < removeSlash.length(); i++) {
+                    if (removeSlash.charAt(i) == '/') {
+                        if (removeNextSlash) removeSlash.deleteCharAt(i);
+                        removeNextSlash = !removeNextSlash;
+                    }
+                }
+                toReturn = removeSlash.toString();
+            }
+        }
         return toReturn;
     }
 
@@ -148,9 +166,7 @@ public class MessageBuilder {
     }
 
     public void logMessage(Level logLevel) {
-        loggingMode = true;
-        plugin.getLogger().log(logLevel, returnMessage());
-        loggingMode = false;
+        plugin.getLogger().log(logLevel, returnMessage(true));
     }
 
     private String getMessage(String messageKey) {
