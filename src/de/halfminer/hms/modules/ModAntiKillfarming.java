@@ -1,11 +1,8 @@
 package de.halfminer.hms.modules;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
-import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -17,7 +14,6 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * - Counts amount of kills between two players
@@ -241,8 +237,6 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         // Get allowed commands
         exemptCommands.clear();
         exemptCommands.addAll(hms.getConfig().getStringList("antiKillfarming.killfarmingCommandExemptions"));
-
-        containerMap.values().forEach(AntiKillfarmingContainer::reloadCache);
     }
 
     @Override
@@ -257,17 +251,15 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     private class AntiKillfarmingContainer {
 
         /**
-         * Cache containing the players that got killed by the containers owner
+         * Map containing the players that got killed by the containers owner
          * Pair mapping: Left - Timestamp, Right - Counter (amount of kills)
          */
-        Cache<UUID, Pair<Long, Integer>> playerCache;
+        final Map<UUID, Pair<Long, Integer>> players = new HashMap<>();
 
         int amountBlocked = 0;
         long blockedUntil = -1;
 
-        AntiKillfarmingContainer() {
-            reloadCache();
-        }
+        AntiKillfarmingContainer() {}
 
         /**
          * Update a players timestamp and amount
@@ -278,26 +270,21 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
          */
         void incrementPlayer(Player toUpdate, long timeDiff) {
 
-            Pair<Long, Integer> playerInfo = playerCache.getIfPresent(toUpdate.getUniqueId());
+            if (isStillValid(toUpdate.getUniqueId())) {
 
-            if (playerInfo != null) {
+                Pair<Long, Integer> pair = players.get(toUpdate.getUniqueId());
+                pair.setLeft((System.currentTimeMillis() / 1000) + timeDiff);
+                pair.setRight(pair.getRight() + 1);
 
-                playerInfo.setLeft((System.currentTimeMillis() / 1000) + timeDiff);
-                playerInfo.setRight(playerInfo.getRight() + 1);
-
-            } else playerCache.put(toUpdate.getUniqueId(), new Pair<>(System.currentTimeMillis() / 1000, 1));
+            } else players.put(toUpdate.getUniqueId(), new Pair<>(System.currentTimeMillis() / 1000, 1));
         }
 
         void removePlayer(Player toRemove) {
-            playerCache.invalidate(toRemove.getUniqueId());
+            players.remove(toRemove.getUniqueId());
         }
 
         int getAmountKilled(Player toGet) {
-
-            Pair<Long, Integer> playerInfo = playerCache.getIfPresent(toGet.getUniqueId());
-
-            if (playerInfo != null) return playerInfo.getRight();
-            else return 0;
+            return players.get(toGet.getUniqueId()).getRight();
         }
 
         int blockOwner() {
@@ -329,16 +316,14 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         }
 
         boolean sweep() {
-            playerCache.cleanUp();
-            return amountBlocked == 0 && playerCache.size() == 0;
+
+            players.keySet().removeIf(uuid -> !isStillValid(uuid));
+            return amountBlocked == 0 && players.size() == 0;
         }
 
-        void reloadCache() {
-            playerCache = Utils.copyValues(playerCache,
-                    CacheBuilder.newBuilder()
-                            .concurrencyLevel(1)
-                            .expireAfterWrite(thresholdUntilRemovalSeconds, TimeUnit.SECONDS)
-                            .build());
+        private boolean isStillValid(UUID uuid) {
+            return players.containsKey(uuid)
+                    && players.get(uuid).getLeft() + thresholdUntilRemovalSeconds > System.currentTimeMillis() / 1000;
         }
     }
 }
