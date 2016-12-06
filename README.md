@@ -139,6 +139,8 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Sounds on kill/death
     - Remove effects on teleport
     - Halves satiation health regeneration during combat
+    - Remove regeneration potion effect when eating golden apple
+      - Ensures that absorption does not fully regenerate when eating a non Notch golden apple
   - Respawn
     - Respawns player at custom location
     - Adds a first time join

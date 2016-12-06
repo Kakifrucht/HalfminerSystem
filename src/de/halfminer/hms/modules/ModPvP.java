@@ -7,6 +7,7 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -15,10 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -39,6 +37,8 @@ import java.util.concurrent.TimeUnit;
  * - Sounds on kill/death
  * - Remove effects on teleport
  * - Halves satiation health regeneration during combat
+ * - Remove regeneration potion effect when eating golden apple
+ *   - Ensures that absorption does not fully regenerate when eating a non Notch golden apple
  */
 @SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener, Sweepable {
@@ -200,12 +200,35 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onRegeneration(EntityRegainHealthEvent e) {
+    public void lowerRegenerationDuringFight(EntityRegainHealthEvent e) {
 
         if (e.getEntity() instanceof Player
                 && e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.SATIATED)
                 && (((ModCombatLog) hms.getModule(ModuleType.COMBAT_LOG)).isTagged((Player) e.getEntity()))) {
             e.setAmount(e.getAmount() / 2);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onGoldAppleEatRemoveRegeneration(PlayerItemConsumeEvent e) {
+
+        Player p = e.getPlayer();
+        if (e.getItem().getType().equals(Material.GOLDEN_APPLE)) {
+
+            // if a player eats a Notch Apple first, and then a normal one, he will regain the 8 hearts from the Notch
+            // apple regeneration, so we remove the effect first and readd it
+            if (p.hasPotionEffect(PotionEffectType.ABSORPTION)
+                    && e.getItem().getDurability() == 0
+                    && p.getPotionEffect(PotionEffectType.ABSORPTION).getAmplifier() > 1) {
+
+                PotionEffect oldEffect = p.getPotionEffect(PotionEffectType.ABSORPTION);
+                p.removePotionEffect(PotionEffectType.ABSORPTION);
+                p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
+                        oldEffect.getDuration(),
+                        oldEffect.getAmplifier() / 4,
+                        oldEffect.isAmbient()));
+            }
+            scheduler.runTask(hms, () -> p.removePotionEffect(PotionEffectType.REGENERATION));
         }
     }
 

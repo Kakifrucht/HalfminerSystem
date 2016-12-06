@@ -4,6 +4,7 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -41,7 +42,8 @@ public class ModHealthBar extends HalfminerModule implements Listener {
     public void onEntityHit(EntityDamageByEntityEvent e) {
 
         if (!(e.getDamager() instanceof Damageable || e.getDamager() instanceof Projectile)
-                || !(e.getEntity() instanceof Damageable))
+                || !(e.getEntity() instanceof Damageable)
+                || e.getEntity() instanceof ArmorStand)
             return;
 
         Damageable victim = (Damageable) e.getEntity();
