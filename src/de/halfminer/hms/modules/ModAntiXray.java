@@ -216,7 +216,9 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
         }
 
         boolean notifyAgain() {
-            return pastProtectedLocation == null || pastProtectedLocation.distance(lastProtectedLocation) > 3.0d;
+            return pastProtectedLocation == null
+                    || pastProtectedLocation.getWorld().equals(lastProtectedLocation.getWorld())
+                    || pastProtectedLocation.distance(lastProtectedLocation) > 3.0d;
         }
 
         int incrementBreakages() {

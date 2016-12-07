@@ -6,7 +6,6 @@ import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -18,10 +17,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -126,16 +126,11 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
             scheduler.runTaskLater(hms, () -> {
 
-                if (new Random().nextInt(1000) < randomRange && Utils.hasRoom(p, 1)) {
+                if (Utils.random(randomRange) && Utils.hasRoom(p, 1)) {
 
-                    ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
-                    skull.setDurability((short) 3);
-                    SkullMeta meta = (SkullMeta) skull.getItemMeta();
-                    meta.setOwner(p.getName());
-                    meta.setLore(Collections.singletonList(MessageBuilder.returnMessage(hms, "modRespawnHeadLore")));
-                    skull.setItemMeta(meta);
+                    p.getInventory().addItem(Utils.getPlayerSkull(p,
+                            Collections.singletonList(MessageBuilder.returnMessage(hms, "modRespawnHeadLore"))));
 
-                    p.getInventory().addItem(skull);
                     MessageBuilder.create(hms, "modRespawnHeadBroadcast", "Skull")
                             .addPlaceholderReplace("%PLAYER%", p.getName())
                             .broadcastMessage(true);
