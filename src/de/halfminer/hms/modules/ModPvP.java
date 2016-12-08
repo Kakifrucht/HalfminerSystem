@@ -215,8 +215,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         Player p = e.getPlayer();
         if (e.getItem().getType().equals(Material.GOLDEN_APPLE)) {
 
-            // if a player eats a Notch Apple first, and then a normal one, he will regain the 8 hearts from the Notch
-            // apple regeneration, so we remove the effect first and readd it
+            // if a player eats a Notch Apple first, and then a non Notch one, he will regain the 8
+            // hearts from the Notch apple absorption, so we remove the effect first and readd it
             if (p.hasPotionEffect(PotionEffectType.ABSORPTION)
                     && e.getItem().getDurability() == 0
                     && p.getPotionEffect(PotionEffectType.ABSORPTION).getAmplifier() > 1) {
@@ -224,7 +224,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 PotionEffect oldEffect = p.getPotionEffect(PotionEffectType.ABSORPTION);
                 p.removePotionEffect(PotionEffectType.ABSORPTION);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
-                        oldEffect.getDuration(),
+                        120 * 20, // measured in ticks, 120 seconds
                         oldEffect.getAmplifier() / 4,
                         oldEffect.isAmbient()));
             }
