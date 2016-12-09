@@ -213,7 +213,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     public void onGoldAppleEatRemoveRegeneration(PlayerItemConsumeEvent e) {
 
         Player p = e.getPlayer();
-        if (e.getItem().getType().equals(Material.GOLDEN_APPLE)) {
+        if (e.getItem().getType().equals(Material.GOLDEN_APPLE)
+                && !p.hasPermission("hms.bypass.pvp")) {
 
             // if a player eats a Notch Apple first, and then a non Notch one, he will regain the 8
             // hearts from the Notch apple absorption, so we remove the effect first and readd it

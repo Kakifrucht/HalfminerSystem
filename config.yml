@@ -16,8 +16,9 @@ command:
     #Longest cooldown if no level has been met
     maxCooldown: 28800
   vote:
-    #Command to run when a player has voted
-    voteRewardCommand: give %PLAYER% diamond 4
+    #Command to run when a player has voted, add ; to seperate and run multiple commands
+    #Use pseudo command "tell" to send a message, supports color codes
+    voteRewardCommand: 'give %PLAYER% diamond 4;tell &eYou got 4 Diamonds'
     #Amount of votes until command execution
     threshold: 2000
     #Command to execute when threshold has been met

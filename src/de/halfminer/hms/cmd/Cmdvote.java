@@ -7,6 +7,7 @@ import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * - Shows vote links (custom per player) and current votecount
@@ -54,7 +55,7 @@ public class Cmdvote extends HalfminerCommand {
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 2.0f);
                     String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
                     storage.incrementInt("vote.ip" + address, 1);
-                    if (!dropCase(playerHasVoted)) {
+                    if (!giveReward(playerHasVoted)) {
                         storage.incrementInt("vote.reward." + playerHasVoted.getUniqueId(), 1);
                         MessageBuilder.create(hms, "cmdVoteRewardInvFull", "Vote").sendMessage(playerHasVoted);
                     }
@@ -75,19 +76,33 @@ public class Cmdvote extends HalfminerCommand {
 
             } else if (isPlayer && args[0].equalsIgnoreCase("getreward")) {
 
-                Player player = (Player) sender;
-                int rewardAmount = storage.getInt("vote.reward." + player.getUniqueId());
+                final int rewardAmount = storage.getInt("vote.reward." + player.getUniqueId());
 
                 if (rewardAmount == 0) {
                     MessageBuilder.create(hms, "cmdVoteRewardDeny", "Vote").sendMessage(player);
                     return;
                 }
 
-                while (rewardAmount > 0 && dropCase(player)) rewardAmount--;
+                // drop one reward per second
+                new BukkitRunnable() {
 
-                //Reward could not be paid due to full inventory, send message
-                if (rewardAmount > 0) MessageBuilder.create(hms, "cmdVoteRewardInvFull", "Vote").sendMessage(player);
-                storage.set("vote.reward." + player.getUniqueId(), rewardAmount);
+                    private int rewardAmountTask = rewardAmount;
+                    final private String storageKey = "vote.reward." + player.getUniqueId();
+
+                    @Override
+                    public void run() {
+                        if (rewardAmountTask > 0 && giveReward(player)) rewardAmountTask--;
+                        else {
+                            if (rewardAmountTask > 0) {
+                                // if reward could not be paid due to full inventory, send message
+                                MessageBuilder.create(hms, "cmdVoteRewardInvFull", "Vote").sendMessage(player);
+                                storage.set(storageKey, rewardAmountTask);
+                            } else storage.set(storageKey, null);
+
+                            this.cancel();
+                        }
+                    }
+                }.runTaskTimer(hms, 0L, 20L);
 
             } else showMessage();
 
@@ -121,16 +136,26 @@ public class Cmdvote extends HalfminerCommand {
         MessageBuilder.create(hms, "lineSeparator").sendMessage(sender);
     }
 
-    private boolean dropCase(Player player) {
+    private boolean giveReward(Player player) {
 
-        if (!Utils.hasRoom(player, 1)) return false;
+        if (!Utils.hasRoom(player, 1))
+            return false;
 
-        String command = hms.getConfig().getString("command.vote.voteRewardCommand");
-        command = MessageBuilder.create(hms, command)
-                .setMode(MessageBuilder.Mode.DIRECT_STRING)
-                .addPlaceholderReplace("%PLAYER%", player.getName())
-                .returnMessage();
-        server.dispatchCommand(server.getConsoleSender(), command);
+        for (String command : hms.getConfig().getString("command.vote.voteRewardCommand").split(";")) {
+            String trimmedCommand = command.trim();
+            if (trimmedCommand.startsWith("tell ")) {
+                MessageBuilder.create(hms, trimmedCommand.substring(5), "Vote")
+                        .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                        .addPlaceholderReplace("%PLAYER%", player.getName())
+                        .sendMessage(player);
+            } else {
+                trimmedCommand = MessageBuilder.create(hms, command)
+                        .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                        .addPlaceholderReplace("%PLAYER%", player.getName())
+                        .returnMessage();
+                server.dispatchCommand(server.getConsoleSender(), trimmedCommand);
+            }
+        }
         return true;
     }
 }
