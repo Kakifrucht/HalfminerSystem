@@ -154,6 +154,12 @@ public final class Utils {
         item.setItemMeta(meta);
     }
 
+    public static void setItemLore(ItemStack item, List<String> lore) {
+        ItemMeta edit = item.getItemMeta();
+        edit.setLore(lore);
+        item.setItemMeta(edit);
+    }
+
     /**
      * Adds values from old cache to new cache, checks if old cache is null
      *

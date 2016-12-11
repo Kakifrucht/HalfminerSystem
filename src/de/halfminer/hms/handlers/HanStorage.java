@@ -3,6 +3,7 @@ package de.halfminer.hms.handlers;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.interfaces.Disableable;
+import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.util.CustomtextCache;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
@@ -35,8 +36,8 @@ import java.util.logging.Level;
  *   - If line ends with space char, add next line to current line
  * - Thread safe
  */
-@SuppressWarnings("unused")
-public class HanStorage extends HalfminerHandler implements Disableable {
+@SuppressWarnings({"unused", "SameParameterValue"})
+public class HanStorage extends HalfminerHandler implements Disableable, Reloadable {
 
     private File sysFile;
     private File uuidFile;
@@ -49,10 +50,6 @@ public class HanStorage extends HalfminerHandler implements Disableable {
     private final Map<File, CustomtextCache> textCaches = new HashMap<>();
 
     private BukkitTask task;
-
-    public HanStorage() {
-        load();
-    }
 
     public void set(String path, Object value) {
         sysConfig.set(path, value);
@@ -111,17 +108,22 @@ public class HanStorage extends HalfminerHandler implements Disableable {
         File cacheFile = new File(hms.getDataFolder(), fileName);
 
         if (!cacheFile.exists()) {
-            try {
-                if (cacheFile.createNewFile()) {
-                    MessageBuilder.create(hms, "hanStorageCacheCreate")
-                            .addPlaceholderReplace("%FILENAME%", cacheFile.getName())
-                            .logMessage(Level.INFO);
-                } else {
-                    MessageBuilder.create(hms, "hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
-                    throw new CachingException(CachingException.Reason.CANNOT_WRITE);
+
+            // check jar first if
+            if (hms.getResource(fileName) != null) hms.saveResource(fileName, false);
+            else {
+                try {
+                    //noinspection ResultOfMethodCallIgnored - we'll check below
+                    cacheFile.createNewFile();
+                } catch (IOException ignored) {
                 }
-            } catch (IOException e) {
-                // small duplication :)
+            }
+
+            if (cacheFile.exists()) {
+                MessageBuilder.create(hms, "hanStorageCacheCreate")
+                        .addPlaceholderReplace("%FILENAME%", cacheFile.getName())
+                        .logMessage(Level.INFO);
+            } else {
                 MessageBuilder.create(hms, "hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
                 throw new CachingException(CachingException.Reason.CANNOT_WRITE);
             }
@@ -148,7 +150,8 @@ public class HanStorage extends HalfminerHandler implements Disableable {
         }
     }
 
-    public void load() {
+    @Override
+    public void loadConfig() {
 
         if (sysFile == null) {
             sysFile = new File(hms.getDataFolder(), "sysdata.yml");

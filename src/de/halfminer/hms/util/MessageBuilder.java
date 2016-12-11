@@ -92,7 +92,7 @@ public class MessageBuilder {
         return returnMessage(false);
     }
 
-    public String returnMessage(boolean loggingMode) {
+    private String returnMessage(boolean loggingMode) {
 
         String toReturn;
         if (this.mode.equals(Mode.GET_FROM_LOCALE_FILE)) {
