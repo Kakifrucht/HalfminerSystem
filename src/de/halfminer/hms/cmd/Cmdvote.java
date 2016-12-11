@@ -85,10 +85,13 @@ public class Cmdvote extends HalfminerCommand {
                 }
 
                 // drop one reward per second
+                final String storageKey = "vote.reward." + player.getUniqueId();
+                // set to 0 immediately to not allow the execution twice
+                storage.set(storageKey, null);
+
                 new BukkitRunnable() {
 
                     private int rewardAmountTask = rewardAmount;
-                    final private String storageKey = "vote.reward." + player.getUniqueId();
 
                     @Override
                     public void run() {
@@ -98,7 +101,7 @@ public class Cmdvote extends HalfminerCommand {
                                 // if reward could not be paid due to full inventory, send message
                                 MessageBuilder.create(hms, "cmdVoteRewardInvFull", "Vote").sendMessage(player);
                                 storage.set(storageKey, rewardAmountTask);
-                            } else storage.set(storageKey, null);
+                            }
 
                             this.cancel();
                         }

@@ -4,10 +4,7 @@ import de.halfminer.hms.exception.CachingException;
 import org.bukkit.ChatColor;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Cache that reads customtext file formats, used by {@link de.halfminer.hms.cmd.Cmdcustomtext}
@@ -51,6 +48,10 @@ public class CustomtextCache {
         }
 
         throw new CachingException(CachingException.Reason.CHAPTER_NOT_FOUND);
+    }
+
+    public Set<String> getAllChapters() {
+        return cache.keySet();
     }
 
     private void reCacheFile() throws CachingException {

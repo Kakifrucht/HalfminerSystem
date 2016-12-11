@@ -109,7 +109,7 @@ public class HanStorage extends HalfminerHandler implements Disableable, Reloada
 
         if (!cacheFile.exists()) {
 
-            // check jar first if
+            // check jar first if it has such file
             if (hms.getResource(fileName) != null) hms.saveResource(fileName, false);
             else {
                 try {
