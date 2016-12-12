@@ -225,6 +225,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Opens portable disposal
   - /hms
     - Copy a WorldEdit schematic to another directory (copyschematic)
+    - Give a custom item defined in customitems.txt to a player (give)
     - Reload config (reload)
     - Rename items, supports lore (rename)
     - Ring players to get their attention (ring)

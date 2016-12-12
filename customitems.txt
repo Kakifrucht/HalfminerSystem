@@ -1,0 +1,6 @@
+#First line must be material name
+#examplesword
+DIAMOND_SWORD
+itemid: 0
+name: &6&lDiamond Sword
+lore: &7Owner: &6%PLAYER%|&7Another line

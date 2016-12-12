@@ -5,14 +5,14 @@ import com.earth2me.essentials.User;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.exception.CachingException;
+import de.halfminer.hms.exception.GiveItemException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.handlers.HanHooks;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.modules.ModAntiXray;
 import de.halfminer.hms.modules.ModSkillLevel;
-import de.halfminer.hms.util.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.Utils;
+import de.halfminer.hms.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,14 +21,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
  * - Copy a WorldEdit schematic to another directory (copyschematic)
+ * - Give a custom item defined in customitems.txt to a player (give)
  * - Reload config (reload)
  * - Rename items, supports lore (rename)
  * - Ring players to get their attention (ring)
@@ -54,6 +52,9 @@ public class Cmdhms extends HalfminerCommand {
             switch (args[0].toLowerCase()) {
                 case "copyschematic":
                     copySchematic();
+                    return;
+                case "give":
+                    give();
                     return;
                 case "reload":
                     reload();
@@ -144,6 +145,78 @@ public class Cmdhms extends HalfminerCommand {
         MessageBuilder.create(hms, success ? "cmdHmsCopySchematicDeleted" : "cmdHmsCopySchematicDeletedError")
                 .addPlaceholderReplace("%PATH%", toDelete.toPath().toString())
                 .logMessage(success ? Level.INFO : Level.WARNING);
+    }
+
+    private void give() {
+
+        CustomtextCache cache;
+        try {
+            cache = storage.getCache("customitems.txt");
+        } catch (CachingException e) {
+            MessageBuilder.create(hms, "cmdHmsGiveCacheError", prefix)
+                    .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                    .sendMessage(sender);
+            return;
+        }
+
+        CustomitemCache itemCache = new CustomitemCache(hms, cache);
+        if (args.length < 3) {
+
+            Set<String> allItems = itemCache.getAllItems();
+            if (!allItems.isEmpty()) {
+
+                String allItemString = "";
+                for (String itemKey : allItems) allItemString += itemKey + " ";
+                allItemString = allItemString.substring(0, allItemString.length() - 1);
+
+                MessageBuilder.create(hms, "cmdHmsGiveList", prefix)
+                        .addPlaceholderReplace("%LIST%", allItemString)
+                        .sendMessage(sender);
+
+            } else MessageBuilder.create(hms, "cmdHmsGiveListNone", prefix).sendMessage(sender);
+
+            return;
+        }
+
+        Player giveTo = server.getPlayer(args[1]);
+
+        if (giveTo == null) {
+            MessageBuilder.create(hms, "playerNotOnline", prefix).sendMessage(sender);
+            return;
+        }
+
+        int amount = 1;
+        if (args.length > 3) {
+            try {
+                amount = Integer.parseInt(args[3]);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        try {
+            itemCache.giveItem(args[2], giveTo, amount);
+            MessageBuilder.create(hms, "cmdHmsGiveSuccessful", prefix)
+                    .addPlaceholderReplace("%PLAYER%", giveTo.getName())
+                    .addPlaceholderReplace("%ITEM%", args[2].toLowerCase())
+                    .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                    .sendMessage(sender);
+        } catch (GiveItemException e) {
+
+            if (e.getReason().equals(GiveItemException.Reason.INVENTORY_FULL)) {
+
+                int totalLost = 0;
+                for (ItemStack lost : e.getNotGivenItems().values()) {
+                    totalLost += lost.getAmount();
+                }
+                MessageBuilder.create(hms, "cmdHmsGiveInventoryFull", prefix)
+                        .addPlaceholderReplace("%AMOUNT%", String.valueOf(totalLost))
+                        .sendMessage(sender);
+            } else {
+                MessageBuilder.create(hms, "cmdHmsGiveError", prefix)
+                        .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                        .sendMessage(sender);
+            }
+        }
     }
 
     private void reload() {
