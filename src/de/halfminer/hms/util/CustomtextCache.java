@@ -29,8 +29,7 @@ public class CustomtextCache {
 
     public List<String> getChapter(String[] chapter) throws CachingException {
 
-        if (wasModified()) reCacheFile();
-
+        reCacheFile();
         if (cache.size() == 0)
             throw new CachingException(CachingException.Reason.FILE_EMPTY);
 
@@ -50,11 +49,14 @@ public class CustomtextCache {
         throw new CachingException(CachingException.Reason.CHAPTER_NOT_FOUND);
     }
 
-    public Set<String> getAllChapters() {
+    public Set<String> getAllChapters() throws CachingException {
+        reCacheFile();
         return cache.keySet();
     }
 
     private void reCacheFile() throws CachingException {
+
+        if (!wasModified()) return;
 
         try {
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));

@@ -139,12 +139,14 @@ public class MessageBuilder {
 
         String messageToSend = returnMessage();
 
-        for (CommandSender sendTo : sendToPlayers) {
-            if (startsWithClickableChar && sendTo instanceof Player) {
+        if (messageToSend.length() > 0) {
+            for (CommandSender sendTo : sendToPlayers) {
+                if (startsWithClickableChar && sendTo instanceof Player) {
 
-                Player pSendTo = (Player) sendTo;
-                pSendTo.spigot().sendMessage(makeCommandsClickable(messageToSend));
-            } else sendTo.sendMessage(messageToSend);
+                    Player pSendTo = (Player) sendTo;
+                    pSendTo.spigot().sendMessage(makeCommandsClickable(messageToSend));
+                } else sendTo.sendMessage(messageToSend);
+            }
         }
     }
 
@@ -166,7 +168,9 @@ public class MessageBuilder {
     }
 
     public void logMessage(Level logLevel) {
-        plugin.getLogger().log(logLevel, returnMessage(true));
+        String toLog = returnMessage(true);
+        if (toLog.length() > 0)
+            plugin.getLogger().log(logLevel, toLog);
     }
 
     private String getMessage(String messageKey) {
