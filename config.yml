@@ -365,5 +365,5 @@ localization:
   modVerkaufSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
   modVerkaufSuccessLog: 'Verkauf: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
   utilCustomitemCacheInvalidKey: 'Der Schlüssel %KEY% ist ungültig'
-  utilCustomitemCacheInvalidParameter: 'Der für den Schlüssel %KEY% übergebene Parameter ist ungültig'
+  utilCustomitemCacheInvalidParameter: 'Der für den Schlüssel "%KEY%" übergebene Parameter "%PARAMETER%" ist ungültig, überspringe...'
   utilInvalidMaterial: 'Das Material %MATERIAL% existiert nicht'
