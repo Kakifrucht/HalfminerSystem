@@ -34,7 +34,6 @@ public class CustomitemCache {
         try {
             itemUnparsed = originalCache.getChapter(new String[]{itemKey});
         } catch (CachingException e) {
-            e.printStackTrace();
             throw new GiveItemException(GiveItemException.Reason.ITEM_NOT_FOUND);
         }
 
@@ -50,12 +49,12 @@ public class CustomitemCache {
         toGive = new ItemStack(itemMaterial);
         toGive.setAmount(amount);
 
-        for (int i = 0; i < itemUnparsed.size(); i++) {
+        for (int i = 1; i < itemUnparsed.size(); i++) {
 
             String parse = itemUnparsed.get(i);
             int indexOf = parse.indexOf(':');
             if (indexOf < 1 || parse.length() == indexOf) {
-                if (i > 0) logInvalidKey(parse);
+                logInvalidKey(parse);
                 continue;
             }
 
