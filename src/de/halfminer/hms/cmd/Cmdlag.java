@@ -4,7 +4,7 @@ import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModTps;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**

@@ -2,6 +2,8 @@ package de.halfminer.hms.modules;
 
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.util.MessageBuilder;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.ArmorStand;
@@ -102,7 +104,8 @@ public class ModHealthBar extends HalfminerModule implements Listener {
 
     private void updateBossbars(Damageable entityToUpdate, int newHealth) {
 
-        if (!damageableHealthSeenBy.containsKey(entityToUpdate)) return;
+        if (!damageableHealthSeenBy.containsKey(entityToUpdate)
+                || !(entityToUpdate instanceof Attributable)) return;
 
         List<Player> updatePlayers = damageableHealthSeenBy.get(entityToUpdate);
         Player otherPlayer = entityToUpdate instanceof Player ? (Player) entityToUpdate : null;
@@ -113,7 +116,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
         BarStyle style;
         BarColor color;
 
-        maxHealth = entityToUpdate.getMaxHealth();
+        maxHealth = ((Attributable) entityToUpdate).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 
         if (newHealth == -1) health = (int) entityToUpdate.getHealth();
         else health = Math.max(newHealth, 0);
