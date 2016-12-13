@@ -139,7 +139,7 @@ public class MessageBuilder {
 
         String messageToSend = returnMessage();
 
-        if (messageToSend.length() > 0) {
+        if (messageToSend.length() > 0 || this.mode == Mode.DIRECT_STRING) {
             for (CommandSender sendTo : sendToPlayers) {
                 if (startsWithClickableChar && sendTo instanceof Player) {
 
