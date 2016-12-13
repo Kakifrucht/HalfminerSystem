@@ -52,26 +52,27 @@ public class CustomitemCache {
         for (int i = 1; i < itemUnparsed.size(); i++) {
 
             String parse = itemUnparsed.get(i);
-            int indexOf = parse.indexOf(':');
-            if (indexOf < 1 || parse.length() == indexOf) {
+            Pair<String, String> keyParamPair;
+            try {
+                keyParamPair = Utils.getKeyValuePair(parse);
+            } catch (IllegalArgumentException e) {
                 logInvalidKey(parse);
                 continue;
             }
 
-            String key = parse.substring(0, indexOf);
             // get the actual parameter and replace player placeholder
-            String parameter = MessageBuilder.create(plugin, parse.substring(indexOf + 1, parse.length()).trim())
+            String parameter = MessageBuilder.create(plugin, keyParamPair.getRight())
                     .setMode(MessageBuilder.Mode.DIRECT_STRING)
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName())
                     .returnMessage();
 
-            switch (key.toLowerCase()) {
+            switch (keyParamPair.getLeft().toLowerCase()) {
                 case "itemid":
                     try {
                         short itemId = Short.parseShort(parameter);
                         toGive.setDurability(itemId);
                     } catch (NumberFormatException e) {
-                        logInvalidParameter(key, parameter);
+                        logInvalidParameter(keyParamPair.getLeft(), parameter);
                     }
                     break;
                 case "name":
@@ -85,25 +86,25 @@ public class CustomitemCache {
                     for (String enchantStr : enchantsSplit) {
                         String[] split = enchantStr.split(":");
                         if (split.length < 1) {
-                            logInvalidParameter(key, enchantStr);
+                            logInvalidParameter(keyParamPair.getLeft(), enchantStr);
                             continue;
                         }
 
                         Enchantment enchant = Enchantments.getByName(split[0]);
                         if (enchant == null) {
-                            logInvalidParameter(key, split[0]);
+                            logInvalidParameter(keyParamPair.getLeft(), split[0]);
                             continue;
                         }
                         try {
                             int level = Integer.decode(split[1]);
                             toGive.addUnsafeEnchantment(enchant, level);
                         } catch (NumberFormatException e) {
-                            logInvalidParameter(key, split[1]);
+                            logInvalidParameter(keyParamPair.getLeft(), split[1]);
                         }
                     }
                     break;
                 default:
-                    logInvalidKey(key);
+                    logInvalidKey(keyParamPair.getLeft());
             }
         }
 

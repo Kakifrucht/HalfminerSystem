@@ -197,4 +197,28 @@ public final class Utils {
     public static boolean random(int probabilityInPermill) {
         return new Random().nextInt(1000) < probabilityInPermill;
     }
+
+    /**
+     * Returns a pair containing the parsed key and value of a given String seperated via ':' character.<br>
+     * Example: "key: value" becomes Pair<"key", "value"><br>
+     *          " othertest  :  value " becomes Pair<" othertest  ", "value">
+     *
+     * @param colonSeperated String seperated via ':' character
+     * @return Pair containing the parsed key and value
+     * @throws IllegalArgumentException if input String doesn't contain a colon, no key or no value
+     */
+    public static Pair<String, String> getKeyValuePair(String colonSeperated) throws IllegalArgumentException {
+
+        int indexOf = colonSeperated.indexOf(':');
+        if (indexOf < 1 || colonSeperated.length() == indexOf) {
+            throw new IllegalArgumentException("Invalid input, String must be seperated with colon");
+        }
+
+        String key = colonSeperated.substring(0, indexOf);
+        String value = colonSeperated.substring(indexOf + 1).trim();
+
+        if (value.length() == 0)
+            throw new IllegalArgumentException("Invalid input, no value defined");
+        return new Pair<>(key, value);
+    }
 }
