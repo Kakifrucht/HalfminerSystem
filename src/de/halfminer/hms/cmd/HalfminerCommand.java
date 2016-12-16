@@ -43,7 +43,7 @@ public abstract class HalfminerCommand extends HalfminerClass {
         MessageBuilder.create(hms, "notAPlayer", prefix).sendMessage(sender);
     }
 
-    void sendNoPermissionMessage(String prefix) {
+    protected void sendNoPermissionMessage(String prefix) {
         MessageBuilder.create(hms, "noPermission", prefix).sendMessage(sender);
     }
 }

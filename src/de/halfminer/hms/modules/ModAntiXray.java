@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -75,10 +76,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
 
                 // Notify if the bypass has only been set now or if the distance between the last ore is high enough
                 if (firstDetection || counter.notifyAgain()) {
-
-                    notify(server.getConsoleSender(), counter, false);
-                    for (Player toNotify : server.getOnlinePlayers())
-                        if (toNotify.hasPermission("hms.antixray.notify")) notify(toNotify, counter, false);
+                    notify(null, counter, false);
                 }
             }
         }
@@ -137,7 +135,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
         return toReturn;
     }
 
-    private void notify(CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotified) {
+    private void notify(@Nullable CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotified) {
 
         if (counter.isBypassed()) return;
 
@@ -146,14 +144,16 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             else counter.setInformed((Player) toNotify);
         }
 
-        MessageBuilder.create(hms, "modAntiXrayDetected", "AntiXRay")
+        MessageBuilder message = MessageBuilder.create(hms, "modAntiXrayDetected", "AntiXRay")
                 .addPlaceholderReplace("%PLAYER%", counter.getOwnerName())
                 .addPlaceholderReplace("%BROKENTOTAL%", String.valueOf(counter.getBreakages()))
                 .addPlaceholderReplace("%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()))
                 .addPlaceholderReplace("%LASTLOCATION%", Utils.getStringFromLocation(counter.getLastProtectedLocation()))
                 .addPlaceholderReplace("%WORLD%", counter.getLastProtectedLocation().getWorld().getName())
-                .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()))
-                .sendMessage(toNotify);
+                .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()));
+
+        if (toNotify != null) message.sendMessage(toNotify);
+        else message.broadcastMessage("hms.antixray.notify", true);
     }
 
     private boolean counterExists(UUID player) {
