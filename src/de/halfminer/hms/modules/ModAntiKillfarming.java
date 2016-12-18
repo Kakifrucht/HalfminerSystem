@@ -66,9 +66,11 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
                     || victim.hasPermission("hms.bypass.nokillfarming"))
                 return;
 
-            // store information to not allow grinding
-            Pair<UUID, UUID> bothPlayers = new Pair<>(killer.getUniqueId(), victim.getUniqueId());
-            if (hasKilled.getIfPresent(bothPlayers) == null) hasKilled.put(bothPlayers, true);
+            // store information to not allow grinding, on next tick
+            scheduler.runTaskLater(hms, () -> {
+                Pair<UUID, UUID> bothPlayers = new Pair<>(killer.getUniqueId(), victim.getUniqueId());
+                if (hasKilled.getIfPresent(bothPlayers) == null) hasKilled.put(bothPlayers, true);
+            }, 1L);
 
             // remove the killer from the victims map, to reset the killfarm counter
             if (containerMap.containsKey(victim.getUniqueId())) {
