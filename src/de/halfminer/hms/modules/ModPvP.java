@@ -3,9 +3,11 @@ package de.halfminer.hms.modules;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.enums.AttackSpeed;
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.ModuleType;
+import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -23,6 +25,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +37,8 @@ import java.util.concurrent.TimeUnit;
  * - Bow spamming disabled
  * - Disable hitting self with bow
  * - Killstreak via actionbar
+ * - Run custom actions with custom probabilities on kill
+ *   - See customactions.txt for example actions
  * - Sounds on kill/death
  * - Remove effects on teleport
  * - Halves satiation health regeneration during combat
@@ -43,6 +48,9 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
+    private final static ModAntiKillfarming antiKillfarming =
+            (ModAntiKillfarming) hms.getModule(ModuleType.ANTI_KILLFARMING);
+
     private int thresholdUntilShown;
 
     private final Cache<Player, Boolean> hasShotBow = CacheBuilder.newBuilder()
@@ -51,6 +59,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             .build();
 
     private final Map<UUID, Integer> killStreak = new HashMap<>();
+    private ActionProbabilityContainer container;
 
     @EventHandler
     public void onInteractSetAttackSpeed(PlayerInteractEvent e) {
@@ -145,7 +154,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     }
 
     @EventHandler
-    public void deathSoundsHealStreaks(PlayerDeathEvent e) {
+    public void deathSoundsAndStreaksAndHealAndActions(PlayerDeathEvent e) {
 
         e.setDeathMessage("");
 
@@ -164,6 +173,13 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 }
                 killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
             }, 5);
+
+            // run action on kill
+            if (container != null && antiKillfarming.isNotRepeatedKill(killer, victim)) {
+                CustomAction action = container.getNextAction();
+                action.addPlaceholderForNextRun("%KILLNO%", storage.getPlayer(killer).getString(DataType.KILLS));
+                action.runAction(killer, victim);
+            }
 
             UUID killerUid = killer.getUniqueId();
             killStreak.remove(victim.getUniqueId());
@@ -235,7 +251,18 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
     @Override
     public void loadConfig() {
+
         thresholdUntilShown = hms.getConfig().getInt("pvp.streakThreshold", 30);
+        container = null;
+
+        try {
+            List<String> actionList = hms.getConfig().getStringList("pvp.actionsOnKill");
+            if (actionList.size() == 0) return;
+            CustomtextCache actionCache = storage.getCache("customactions.txt");
+            CustomitemCache itemCache = new CustomitemCache(hms, storage.getCache("customitems.txt"));
+            container = new ActionProbabilityContainer(actionList, hms, actionCache, itemCache);
+        } catch (CachingException ignored) {
+        }
     }
 
     @Override

@@ -2,20 +2,24 @@ package de.halfminer.hms.util;
 
 import com.earth2me.essentials.Enchantments;
 import de.halfminer.hms.exception.CachingException;
+import de.halfminer.hms.exception.FormattingException;
 import de.halfminer.hms.exception.GiveItemException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.logging.Level;
 
 /**
- * - Parses a CustomtextCache to create a custom ItemStack that will be given to a player
- * - Define custom id, custom name, custom lore and custom enchants, see customitems.txt for example
+ * Parses a CustomtextCache to create a custom {@link ItemStack} that will be given to a player.
+ * Define custom id, custom name, custom lore and custom enchants, see customitems.txt for example.
+ * The owner of a skull can be set aswell. Additional placeholders can be passed to the item.
  */
 @SuppressWarnings("SameParameterValue")
 public class CustomitemCache {
@@ -29,10 +33,15 @@ public class CustomitemCache {
     }
 
     public void giveItem(String itemKey, Player giveTo, int amount) throws GiveItemException {
+        giveItem(itemKey, giveTo, amount, null);
+    }
+
+    public void giveItem(String itemKey, Player giveTo, int amount,
+                         @Nullable Map<String, String> additionalPlaceholders) throws GiveItemException {
 
         List<String> itemUnparsed;
         try {
-            itemUnparsed = originalCache.getChapter(new String[]{itemKey});
+            itemUnparsed = originalCache.getChapter(itemKey);
         } catch (CachingException e) {
             throw new GiveItemException(GiveItemException.Reason.ITEM_NOT_FOUND);
         }
@@ -55,16 +64,21 @@ public class CustomitemCache {
             Pair<String, String> keyParamPair;
             try {
                 keyParamPair = Utils.getKeyValuePair(parse);
-            } catch (IllegalArgumentException e) {
+            } catch (FormattingException e) {
                 logInvalidKey(parse);
                 continue;
             }
 
-            // get the actual parameter and replace player placeholder
-            String parameter = MessageBuilder.create(plugin, keyParamPair.getRight())
+            MessageBuilder parameterParse = MessageBuilder.create(plugin, keyParamPair.getRight())
                     .setMode(MessageBuilder.Mode.DIRECT_STRING)
-                    .addPlaceholderReplace("%PLAYER%", giveTo.getName())
-                    .returnMessage();
+                    .addPlaceholderReplace("%PLAYER%", giveTo.getName());
+
+            if (additionalPlaceholders != null) {
+                additionalPlaceholders.entrySet()
+                        .forEach(entry -> parameterParse.addPlaceholderReplace(entry.getKey(), entry.getValue()));
+            }
+            // get the actual parameter and replace player placeholder
+            String parameter = parameterParse.returnMessage();
 
             switch (keyParamPair.getLeft().toLowerCase()) {
                 case "itemid":
@@ -103,6 +117,18 @@ public class CustomitemCache {
                         }
                     }
                     break;
+                case "skullowner":
+                    if (!toGive.getType().equals(Material.SKULL_ITEM)) {
+                        logInvalidParameter(keyParamPair.getLeft(), parameter);
+                        return;
+                    }
+                    SkullMeta meta = (SkullMeta) toGive.getItemMeta();
+                    boolean success = meta.setOwner(parameter);
+                    if (success) {
+                        toGive.setItemMeta(meta);
+                    } else {
+                        logInvalidParameter(keyParamPair.getLeft(), parameter);
+                    }
                 default:
                     logInvalidKey(keyParamPair.getLeft());
             }

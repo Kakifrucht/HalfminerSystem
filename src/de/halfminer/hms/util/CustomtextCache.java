@@ -27,6 +27,10 @@ public class CustomtextCache {
         this.file = file;
     }
 
+    public List<String> getChapter(String chapter) throws CachingException {
+        return getChapter(new String[]{chapter});
+    }
+
     public List<String> getChapter(String[] chapter) throws CachingException {
 
         reCacheFile();

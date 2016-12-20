@@ -2,6 +2,7 @@ package de.halfminer.hms.util;
 
 import com.google.common.cache.Cache;
 import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.exception.FormattingException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -205,20 +206,20 @@ public final class Utils {
      *
      * @param colonSeperated String seperated via ':' character
      * @return Pair containing the parsed key and value
-     * @throws IllegalArgumentException if input String doesn't contain a colon, no key or no value
+     * @throws FormattingException if input String doesn't contain a colon, no key or no value
      */
-    public static Pair<String, String> getKeyValuePair(String colonSeperated) throws IllegalArgumentException {
+    public static Pair<String, String> getKeyValuePair(String colonSeperated) throws FormattingException {
 
         int indexOf = colonSeperated.indexOf(':');
         if (indexOf < 1 || colonSeperated.length() == indexOf) {
-            throw new IllegalArgumentException("Invalid input, String must be seperated with colon");
+            throw new FormattingException("Invalid input, String must be seperated with colon");
         }
 
         String key = colonSeperated.substring(0, indexOf);
         String value = colonSeperated.substring(indexOf + 1).trim();
 
         if (value.length() == 0)
-            throw new IllegalArgumentException("Invalid input, no value defined");
+            throw new FormattingException("Invalid input, no value defined");
         return new Pair<>(key, value);
     }
 }

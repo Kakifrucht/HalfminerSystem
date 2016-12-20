@@ -1,0 +1,7 @@
+#exampleaction
+cmd: give %PLAYER% dirt 1
+tell: &7You have received 1 dirt
+#exampleaction2
+players: 2
+give: examplesword
+broadcast: &a%PLAYER% &7has received &e%PLAYER2%'s &7skull

@@ -121,6 +121,14 @@ performance:
   #Entity limit box radius, that will be checked on mobspawn from a spawner
   boxSize: 16
 pvp:
+  #Define actions to be run when a player kills another player (not repeatedly), key left of ':' must be a number
+  #and defines the probability for the action to be run in relation to the other actions. The sum doesn't have to be
+  #100. The action must be defined in customactions.txt. Write "nothing" as action name to not do anything. By deleting
+  #the list no actions will be run on kill.
+  actionsOnKill:
+  - '5: exampleaction'
+  - '5: exampleaction2'
+  - '90: nothing'
   #Amount of kills until every kill is shown in actionbar
   streakThreshold: 30
 respawn:
@@ -364,6 +372,11 @@ localization:
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps beträgt lediglich &e%TPS%'
   modVerkaufSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
   modVerkaufSuccessLog: 'Verkauf: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
+  utilActionProbabilityContainerError: 'Fehler beim parsen der Wahrscheinlichkeitstabelle: %TYPE% in Zeile %LINE%'
+  utilCustomActionCommandNotFound: 'Das Kommando existiert nicht oder konnte nicht ausgeführt werden, breche ab: %COMMAND%'
+  utilCustomActionGiveItemError: 'Der Gegenstand %ITEM% konnte nicht gegeben werden, breche ab, Grund: %REASON%'
+  utilCustomActionParseError: 'Fehler beim parsen der Aktion %NAME%: %TYPE% in Zeile %LINE%'
+  utilCustomActionParseErrorNoLine: 'Fehler beim parsen der Aktion %NAME%: %TYPE%'
   utilCustomitemCacheInvalidKey: 'Der Schlüssel %KEY% ist ungültig'
   utilCustomitemCacheInvalidParameter: 'Der für den Schlüssel "%KEY%" übergebene Parameter "%PARAMETER%" ist ungültig, überspringe...'
   utilInvalidMaterial: 'Das Material %MATERIAL% existiert nicht'

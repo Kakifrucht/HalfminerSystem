@@ -17,23 +17,25 @@ public class MessageBuilder {
 
     /**
      * Create a new MessageBuilder
+     *
      * @param plugin plugin calling the builder
      * @param lang either the language key, or the message directly passed
      * @return MessageBuilder that can send a parsed message
      */
     public static MessageBuilder create(JavaPlugin plugin, String lang) {
+        if (plugin == null) throw new IllegalArgumentException("Plugin cannot be null");
         return new MessageBuilder(plugin, lang);
     }
 
     /**
      * Create a new MessageBuilder with a given prefix
+     *
      * @param plugin plugin calling the builder
      * @param lang either the language key, or the message directly passed
      * @param prefix prefix to be used
      * @return MessageBuilder that can send a parsed message
      */
     public static MessageBuilder create(JavaPlugin plugin, String lang, String prefix) {
-        if (plugin == null) throw new IllegalArgumentException("Plugin cannot be null");
         return create(plugin, lang).setPrefix(prefix);
     }
 
@@ -84,7 +86,7 @@ public class MessageBuilder {
      * @return MessageBuilder, same instance
      */
     public MessageBuilder addPlaceholderReplace(String placeholder, String replaceWith) {
-        placeholders.put(placeholder.replaceAll(PLACEHOLDER_CHARACTER + "", ""), replaceWith);
+        placeholders.put(placeholder.replaceAll(PLACEHOLDER_CHARACTER + "", "").trim(), replaceWith);
         return this;
     }
 
@@ -206,7 +208,7 @@ public class MessageBuilder {
                     String replaceWith = placeholders.get(placeholder.toString());
                     message.replace(i, i + placeholder.length() + 2, replaceWith);
                     i += replaceWith.length() - 1;
-                } else i += placeholder.length() - 1;
+                } else i += placeholder.length();
 
                 placeholder.setLength(0);
             }

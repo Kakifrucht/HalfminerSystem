@@ -136,6 +136,8 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Bow spamming disabled
     - Disable hitting self with bow
     - Killstreak via actionbar
+    - Run custom actions with custom probabilities on kill
+      - See customactions.txt for example actions
     - Sounds on kill/death
     - Remove effects on teleport
     - Halves satiation health regeneration during combat
