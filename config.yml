@@ -143,6 +143,20 @@ respawn:
   - 'willkommen'
   - 'willkommen,'
   - 'hallo'
+sell:
+  #Base amount for 1 HalfCoin
+  beetroot: 30
+  brownmushroom: 20
+  cactus: 110
+  carrot: 30
+  cocoa: 45
+  melon: 110
+  netherwart: 40
+  potato: 30
+  pumpkin: 40
+  redmushroom: 30
+  sugarcane: 55
+  wheat: 25
 skillLevel:
   #Level that has to be reached for a derank to occur
   derankThreshold: 16
@@ -165,20 +179,6 @@ tps:
   historySize: 6
   #If the tps falls under this value, players with notify permission will be notified
   alertThreshold: 17.0
-verkauf:
-  #Base amount for 1 HalfCoin
-  beetroot: 30
-  brownmushroom: 20
-  cactus: 110
-  carrot: 30
-  cocoa: 45
-  melon: 110
-  netherwart: 40
-  potato: 30
-  pumpkin: 40
-  redmushroom: 30
-  sugarcane: 55
-  wheat: 25
 #Use '&' as color code
 #Lines starting with '~' will be parsed to make commands clickable, close the command with another '/'
 #Messages can be removed by simply setting the message to nothing ('')
@@ -268,6 +268,10 @@ localization:
   cmdRepairDone: '&aGegenstand &e%NAME% &aerfolgreich repariert'
   cmdRepairDoneAll: '&7Es wurden &e%AMOUNT% &7Gegenstände repariert'
   cmdRepairError: '&cDieser Gegenstand kann nicht repariert werden'
+  cmdSellNotInInv: '&cDu hast kein &e%MATERIAL% &cin deinem Inventar'
+  cmdSellAutoOff: '&7Die Inhalte von Kisten, die du schließt, werden von nun an &cnicht mehr automatisch &7verkauft'
+  cmdSellAutoOn: '&7Die Inhalte von Kisten, die du schließt, werden von nun an &aautomatisch &7verkauft'
+  cmdSellUsage: '&cVerwendung: &f/verkauf <auto|beetroot|brownmushroom|cactus|carrot|cocoa|melon|netherwart|potato|pumpkin|redmushroom|sugarcane|wheat>'
   cmdSigneditCopy: '&7Klicke das Schild, welches du kopieren möchtest, erstelle &e%AMOUNT% &7Kopien'
   cmdSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu ändern'
   cmdSigneditUsage: '&cVerwendung: &f/signedit copy [anzahl], /signedit <zeile> [text]'
@@ -281,10 +285,6 @@ localization:
   cmdStatsShow: '&3Statistiken von %PLAYER% &e>>\n&rSkillgruppe: &e%SKILLGROUP% &7| &rSkilllevel: &e%SKILLLEVEL%&7&o/22\n&rZeit Online: &e%ONLINETIME% &7Minuten | &rGeld: &e%REVENUE% &7HCs verdient\n&rKills: &e%KILLS% &7Mord(e) | &rDeaths: &e%DEATHS% &7Tod(e) | &rK/D: &e%KDRATIO%\n&rGevotet: &e%VOTES% &7mal | &rMobs: &e%MOBKILLS% &7Mobs getötet\n&rBlöcke: &e%BLOCKSPLACED% &7platziert | &e%BLOCKSBROKEN% &7gebrochen'
   cmdStatsShowotherStats: '&7Statistiken zu anderen Spielern: &e/stats <Spieler>'
   cmdStatsTop: '&e&m-------------------&c&l Statistiken &e&m-------------------'
-  cmdVerkaufNotInInv: '&cDu hast kein &e%MATERIAL% &cin deinem Inventar'
-  cmdVerkaufAutoOff: '&7Die Inhalte von Kisten, die du schließt, werden von nun an &cnicht mehr automatisch &7verkauft'
-  cmdVerkaufAutoOn: '&7Die Inhalte von Kisten, die du schließt, werden von nun an &aautomatisch &7verkauft'
-  cmdVerkaufUsage: '&cVerwendung: &f/verkauf <auto|beetroot|brownmushroom|cactus|carrot|cocoa|melon|netherwart|potato|pumpkin|redmushroom|sugarcane|wheat>'
   cmdVoteGrabReward: '~&7Hole dir deine Belohnung jetzt mit &a/vote getreward/'
   cmdVoteMessage: '&3Klicke folgenden Link zum Voten (kostenlos) &e>>\n&6&ohttps://halfminer.de/?name=%PLAYER%#voten'
   cmdVoteReached: '&2&l%TOTALVOTESTHRESHOLD% Votes erreicht! &7Event wird angekündigt'
@@ -345,6 +345,8 @@ localization:
   modRespawnHeadTitle: ' \n&6Willkommens Kopfdrop: &0&l&k||||'
   modRespawnHeadTitleNo: ' \n&6Willkommens Kopfdrop: &7&l&c:('
   modRespawnHeadTitleYes: ' \n&6Willkommens Kopfdrop: &7&l&a:)'
+  modSellSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
+  modSellSuccessLog: 'Sell: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
   modSignEditLinePasted: '&aSchild editiert'
   modSignEditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
   modSignEditSignPasted: '&aText eingefügt, es verbleiben &e%AMOUNT% &aKopien'
@@ -370,8 +372,6 @@ localization:
   modTitlesNewsFormat: '&lNeuigkeiten: &r%NEWS%'
   modTitlesTablist: '&6&lTwo and a half Miner&7\nKonto: &a%BALANCE% &7&oHCs%BOTTOM%&7Teamspeak: &fts.halfminer.de &7| Online: &a%PLAYERCOUNT% &7&oSpieler'
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps beträgt lediglich &e%TPS%'
-  modVerkaufSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
-  modVerkaufSuccessLog: 'Verkauf: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
   utilActionProbabilityContainerError: 'Fehler beim parsen der Wahrscheinlichkeitstabelle: %TYPE% in Zeile %LINE%'
   utilCustomActionCommandNotFound: 'Das Kommando existiert nicht oder konnte nicht ausgeführt werden, breche ab: %COMMAND%'
   utilCustomActionGiveItemError: 'Der Gegenstand %ITEM% konnte nicht gegeben werden, breche ab, Grund: %REASON%'

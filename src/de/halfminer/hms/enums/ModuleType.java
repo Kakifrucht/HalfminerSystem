@@ -16,13 +16,13 @@ public enum ModuleType {
     PERFORMANCE         ("Performance"),
     PVP                 ("PvP"),
     RESPAWN             ("Respawn"),
+    SELL                ("Sell"),
     SIGN_EDIT           ("SignEdit"),
     SKILL_LEVEL         ("SkillLevel"),
     STATIC_LISTENERS    ("StaticListeners"),
     STATS               ("Stats"),
     TITLES              ("Titles"),
-    TPS                 ("Tps"),
-    VERKAUF             ("Verkauf");
+    TPS                 ("Tps");
 
     private final String className;
 

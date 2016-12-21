@@ -2,33 +2,33 @@ package de.halfminer.hms.cmd;
 
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.enums.Sellable;
-import de.halfminer.hms.modules.ModVerkauf;
+import de.halfminer.hms.modules.ModSell;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.inventory.Inventory;
 
 /**
  * - Sell sellable items via command
- * - Uses ModVerkauf for the actual sale
+ * - Uses ModSell for the actual sale
  * - Possibility to sell multiple inventories at once
  */
 @SuppressWarnings("unused")
-public class Cmdverkauf extends HalfminerCommand {
+public class Cmdsell extends HalfminerCommand {
 
-    private final ModVerkauf verkaufModule = (ModVerkauf) hms.getModule(ModuleType.VERKAUF);
+    private final ModSell sellModule = (ModSell) hms.getModule(ModuleType.SELL);
 
     private Sellable toBeSold;
     private int sellCountTotal = 0;
 
-    public Cmdverkauf() {
-        this.permission = "hms.verkauf";
+    public Cmdsell() {
+        this.permission = "hms.sell";
     }
 
     @Override
     public void execute() {
 
         if (!isPlayer) {
-            sendNotAPlayerMessage("Verkauf");
+            sendNotAPlayerMessage("Sell");
             return;
         }
 
@@ -36,13 +36,13 @@ public class Cmdverkauf extends HalfminerCommand {
 
             if (args[0].equalsIgnoreCase("auto")) {
 
-                if (!player.hasPermission("hms.verkauf.auto")) {
-                    sendNoPermissionMessage("Verkauf");
+                if (!player.hasPermission("hms.sell.auto")) {
+                    sendNoPermissionMessage("Sell");
                     return;
                 }
 
-                boolean toggledOn = verkaufModule.toggleAutoSell(player);
-                MessageBuilder.create(hms, toggledOn ? "cmdVerkaufAutoOn" : "cmdVerkaufAutoOff", "Verkauf")
+                boolean toggledOn = sellModule.toggleAutoSell(player);
+                MessageBuilder.create(hms, toggledOn ? "cmdSellAutoOn" : "cmdSellAutoOff", "Sell")
                         .sendMessage(player);
                 return;
             }
@@ -50,23 +50,23 @@ public class Cmdverkauf extends HalfminerCommand {
             this.toBeSold = Sellable.getFromString(args[0]);
 
             if (toBeSold != null) sellLoop();
-            else MessageBuilder.create(hms, "cmdVerkaufUsage", "Verkauf").sendMessage(player);
+            else MessageBuilder.create(hms, "cmdSellUsage", "Sell").sendMessage(player);
 
-        } else MessageBuilder.create(hms, "cmdVerkaufUsage", "Verkauf").sendMessage(player);
+        } else MessageBuilder.create(hms, "cmdSellUsage", "Sell").sendMessage(player);
     }
 
     private void sellLoop() {
 
         Inventory playerInv = player.getInventory();
 
-        int sellCount = verkaufModule.sellMaterial(player, playerInv, toBeSold);
+        int sellCount = sellModule.sellMaterial(player, playerInv, toBeSold);
         sellCountTotal += sellCount;
 
         if (sellCount > 0)
             scheduler.runTaskLater(hms, this::sellLoop, 2L);
         else if (sellCountTotal > 0)
-            verkaufModule.rewardPlayer(player, toBeSold, sellCountTotal);
-        else MessageBuilder.create(hms, "cmdVerkaufNotInInv", "Verkauf")
+            sellModule.rewardPlayer(player, toBeSold, sellCountTotal);
+        else MessageBuilder.create(hms, "cmdSellNotInInv", "Sell")
                     .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(toBeSold.name()))
                     .sendMessage(player);
     }

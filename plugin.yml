@@ -40,6 +40,9 @@ commands:
   repair:
     description: Repair the currently held item
     aliases: [fix]
+  sell:
+    description: Earn money by selling farm supplies
+    aliases: [verkauf, vk]
   signedit:
     description: Edit the contents of a sign or copy it
     aliases: [se]
@@ -49,9 +52,6 @@ commands:
   stats:
     description: View the statistics of a player
     aliases: [st]
-  verkauf:
-    description: Earn money by selling farm supplies
-    aliases: [vk]
   vote:
     description: Vote for the server
 permissions:
@@ -72,13 +72,13 @@ permissions:
       hms.lag.notify: true
       hms.moderator: true
       hms.newtp: true
-      hms.stats: true
+      hms.sell: true
+      hms.sell.auto: true
       hms.signedit: true
       hms.spawn: true
       hms.spawn.others: true
       hms.spawn.set: true
-      hms.verkauf: true
-      hms.verkauf.auto: true
+      hms.stats: true
       hms.vote: true
       hms.bypass.*: true
       hms.chat.*: true
@@ -146,9 +146,9 @@ permissions:
   hms.stats:
     default: true
     description: Access to stats command
-  hms.verkauf:
+  hms.sell:
     default: true
-    description: Access to verkauf command
+    description: Access to sell command
   hms.vote:
     default: true
     description: Access to vote command
@@ -230,6 +230,8 @@ permissions:
     description: No repair cooldown
   hms.repair.stacks:
     description: Allows single stacks to be repaired
+  hms.sell.auto:
+    description: Access to automatic selling
   hms.signedit:
     description: Access to sign editing
   hms.spawn:
@@ -239,5 +241,3 @@ permissions:
     description: Teleport other players to spawn
   hms.spawn.set:
     description: Access to spawn set command
-  hms.verkauf.auto:
-    description: Access to automatic selling

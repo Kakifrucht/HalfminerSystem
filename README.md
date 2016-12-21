@@ -153,6 +153,13 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Cooldown to prevent misuse
       - Custom probability
       - Uses (sub)title and bossbar for information and plays sounds
+  - Sell
+    - Auto sells chests on inventory close
+      - Needs to be toggled
+    - Sell items that are sellable
+      - Custom multiplier per permission
+      - Price settable via config
+    - Can be accessed via command
   - SignEdit
     - Allows editing of signs
     - Use command /signedit
@@ -194,13 +201,6 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - Tps
     - Calculates ticks per second
     - Notifies staff when servers ticks TPS is too low
-  - Verkauf
-    - Auto sells chests on inventory close
-      - Needs to be toggled
-    - Sell items that are sellable
-      - Custom multiplier per permission
-      - Price settable via config
-    - Can be accessed via command
 - **Commands**
   - /chat
     - Chat manipulation tools
@@ -268,6 +268,10 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Adds configurable variable cooldown per level
       - Will only apply cooldown if item was actually repaired
     - If repairing single item, checks if it is a stack (permission required)
+  - /sell
+    - Sell sellable items via command
+    - Uses ModSell for the actual sale
+    - Possibility to sell multiple inventories at once
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number
@@ -279,10 +283,6 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - /stats
     - View own / other players stats
     - Allows to compare statistics easily
-  - /verkauf
-    - Sell sellable items via command
-    - Uses ModVerkauf for the actual sale
-    - Possibility to sell multiple inventories at once
   - /vote
     - Shows vote links (custom per player) and current votecount
     - Execute custom command(s) when vote is received (configure Votifier to "/vote voted %PLAYER%")

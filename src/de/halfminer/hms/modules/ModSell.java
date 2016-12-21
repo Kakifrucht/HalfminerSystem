@@ -33,7 +33,7 @@ import java.util.logging.Level;
  * - Can be accessed via command
  */
 @SuppressWarnings("unused")
-public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
+public class ModSell extends HalfminerModule implements Listener, Sweepable {
 
     private final Cache<Player, Boolean> autoSellingCache = CacheBuilder.newBuilder()
             .expireAfterAccess(10, TimeUnit.MINUTES)
@@ -106,7 +106,7 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
         } catch (HookException e) {
             // This should not happen under normal circumstances, print stacktrace just in case
             e.printStackTrace();
-            MessageBuilder.create(hms, "errorOccurred", "Verkauf").sendMessage(toReward);
+            MessageBuilder.create(hms, "errorOccurred", "Sell").sendMessage(toReward);
             return;
         }
 
@@ -115,13 +115,13 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
 
         // print message
         String materialFriendly = Utils.makeStringFriendly(sold.name());
-        MessageBuilder.create(hms, "modVerkaufSuccess", "Verkauf")
+        MessageBuilder.create(hms, "modSellSuccess", "Sell")
                 .addPlaceholderReplace("%MATERIAL%", materialFriendly)
                 .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))
                 .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
                 .sendMessage(toReward);
 
-        MessageBuilder.create(hms, "modVerkaufSuccessLog")
+        MessageBuilder.create(hms, "modSellSuccessLog")
                 .addPlaceholderReplace("%PLAYER%", toReward.getName())
                 .addPlaceholderReplace("%MATERIAL%", materialFriendly)
                 .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))
@@ -144,7 +144,7 @@ public class ModVerkauf extends HalfminerModule implements Listener, Sweepable {
 
         prices = new HashMap<>();
 
-        ConfigurationSection section = hms.getConfig().getConfigurationSection("verkauf");
+        ConfigurationSection section = hms.getConfig().getConfigurationSection("sell");
         for (String key : section.getKeys(false)) {
             prices.put(key, section.getInt(key));
         }
