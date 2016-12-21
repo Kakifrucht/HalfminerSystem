@@ -2,6 +2,7 @@ package de.halfminer.hms.util;
 
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.FormattingException;
+import de.halfminer.hms.interfaces.CacheHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -21,21 +22,20 @@ public class ActionProbabilityContainer {
     private final List<Pair<Integer, CustomAction>> actionList;
 
     private int probabilityTotal = 0;
-    private int lineNumber;
 
-    public ActionProbabilityContainer(List<String> toParse, JavaPlugin plugin,
-                                      CustomtextCache actionCache, CustomitemCache itemCache) {
+    public ActionProbabilityContainer(List<String> probabilityList, JavaPlugin plugin,
+                                      CacheHolder cacheHolder) throws CachingException {
         this.plugin = plugin;
 
         actionList = new ArrayList<>();
-        for (lineNumber = 0; lineNumber < toParse.size(); lineNumber++) {
+        for (int lineNumber = 0; lineNumber < probabilityList.size(); lineNumber++) {
 
-            String actionToParse = toParse.get(lineNumber);
+            String actionToParse = probabilityList.get(lineNumber);
             Pair<String, String> keyValuePair;
             try {
                 keyValuePair = Utils.getKeyValuePair(actionToParse);
             } catch (FormattingException e) {
-                logError("FORMAT");
+                logError("FORMAT", lineNumber);
                 continue;
             }
 
@@ -43,22 +43,23 @@ public class ActionProbabilityContainer {
             try {
                 probability = Integer.parseInt(keyValuePair.getLeft());
                 if (probability < 1) {
-                    logError("NUMBER");
+                    logError("NUMBER", lineNumber);
                     continue;
                 }
             } catch (NumberFormatException e) {
-                logError("NUMBER");
+                logError("NUMBER", lineNumber);
                 continue;
             }
 
             probabilityTotal += probability;
 
             try {
-
-                CustomAction action = new CustomAction(plugin, itemCache, actionCache, keyValuePair.getRight());
+                CustomAction action = new CustomAction(keyValuePair.getRight(), plugin, cacheHolder);
                 actionList.add(new Pair<>(probabilityTotal, action));
             } catch (CachingException e) {
-                logError("ACTIONNAME");
+                if (e.getReason().equals(CachingException.Reason.CHAPTER_NOT_FOUND))
+                    logError("ACTIONNAME", lineNumber);
+                else throw e;
             }
         }
     }
@@ -73,7 +74,7 @@ public class ActionProbabilityContainer {
         throw new RuntimeException("No action was selected");
     }
 
-    private void logError(String type) {
+    private void logError(String type, int lineNumber) {
         MessageBuilder.create(plugin, "utilActionProbabilityContainerError")
                 .addPlaceholderReplace("%TYPE%", type)
                 .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber + 1))

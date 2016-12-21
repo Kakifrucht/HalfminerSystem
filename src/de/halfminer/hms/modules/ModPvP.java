@@ -7,7 +7,9 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.interfaces.Sweepable;
-import de.halfminer.hms.util.*;
+import de.halfminer.hms.util.ActionProbabilityContainer;
+import de.halfminer.hms.util.CustomAction;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -258,9 +260,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         try {
             List<String> actionList = hms.getConfig().getStringList("pvp.actionsOnKill");
             if (actionList.size() == 0) return;
-            CustomtextCache actionCache = storage.getCache("customactions.txt");
-            CustomitemCache itemCache = new CustomitemCache(hms, storage.getCache("customitems.txt"));
-            container = new ActionProbabilityContainer(actionList, hms, actionCache, itemCache);
+            container = new ActionProbabilityContainer(actionList, hms, storage);
         } catch (CachingException ignored) {
         }
     }
