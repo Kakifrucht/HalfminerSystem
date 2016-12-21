@@ -27,10 +27,10 @@ import java.util.logging.Level;
  * - Gives some information about the server via chat and bossbar
  */
 @SuppressWarnings("unused")
-public class Cmdneutp extends HalfminerCommand {
+public class Cmdnewtp extends HalfminerCommand {
 
-    public Cmdneutp() {
-        this.permission = "hms.neutp";
+    public Cmdnewtp() {
+        this.permission = "hms.newtp";
     }
 
     @Override
@@ -46,19 +46,19 @@ public class Cmdneutp extends HalfminerCommand {
 
         if (tp.hasPendingTeleport(player, true)) return;
 
-        if (hPlayer.getBoolean(DataType.NEUTP_USED)){
-            MessageBuilder.create(hms, "cmdNeutpAlreadyUsed", "Neutp").sendMessage(player);
+        if (hPlayer.getBoolean(DataType.NEWTP_USED)){
+            MessageBuilder.create(hms, "cmdNewtpAlreadyUsed", "Newtp").sendMessage(player);
             return;
         }
 
-        MessageBuilder.create(hms, "cmdNeutpStart", "Neutp").sendMessage(player);
+        MessageBuilder.create(hms, "cmdNewtpStart", "Newtp").sendMessage(player);
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));
 
         Random rnd = new Random();
 
-        int boundMin = hms.getConfig().getInt("command.neutp.boundMin", 1000);
-        int boundMax = hms.getConfig().getInt("command.neutp.boundMax", 10000) - boundMin;
+        int boundMin = hms.getConfig().getInt("command.newtp.boundMin", 1000);
+        int boundMax = hms.getConfig().getInt("command.newtp.boundMax", 10000) - boundMin;
         int iterations = 10;
 
         World world = server.getWorlds().get(0);
@@ -82,24 +82,24 @@ public class Cmdneutp extends HalfminerCommand {
 
         tp.startTeleport(player, loc, 5, () -> {
 
-            hPlayer.set(DataType.NEUTP_USED, true);
+            hPlayer.set(DataType.NEWTP_USED, true);
 
-            server.dispatchCommand(player, "sethome neutp");
+            server.dispatchCommand(player, "sethome newtp");
 
             for (int i = 0; i < 100; i++) player.sendMessage("");
-            MessageBuilder.create(hms, "cmdNeutpTpDone", "Neutp")
+            MessageBuilder.create(hms, "cmdNewtpTpDone", "Newtp")
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .sendMessage(player);
 
-            MessageBuilder.create(hms, "cmdNeutpLog")
+            MessageBuilder.create(hms, "cmdNewtpLog")
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
                     .logMessage(Level.INFO);
 
             scheduler.runTaskLater(hms, () -> {
-                MessageBuilder.create(hms, "cmdNeutpDocumentation", "Neutp").sendMessage(player);
+                MessageBuilder.create(hms, "cmdNewtpDocumentation", "Newtp").sendMessage(player);
                 ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR)).sendBar(player,
-                        MessageBuilder.returnMessage(hms, "cmdNeutpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
+                        MessageBuilder.returnMessage(hms, "cmdNewtpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
             }, 120L);
         }, () -> {
 

@@ -256,7 +256,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - /lag
     - Information if player or server lags
     - View other players latency/ping
-  - /neutp
+  - /newtp
     - Teleport to random location
       - Set min/max x/z values
     - Checks for safe teleport location

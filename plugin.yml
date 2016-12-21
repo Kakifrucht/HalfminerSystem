@@ -34,9 +34,9 @@ commands:
   lag:
     description: View the connection info
     aliases: [ping]
-  neutp:
+  newtp:
     description: Teleports the player to a random location
-    aliases: [tpneu]
+    aliases: [tpnew, neutp, tpneu]
   repair:
     description: Repair the currently held item
     aliases: [fix]
@@ -71,7 +71,7 @@ permissions:
       hms.lag.others: true
       hms.lag.notify: true
       hms.moderator: true
-      hms.neutp: true
+      hms.newtp: true
       hms.stats: true
       hms.signedit: true
       hms.spawn: true
@@ -140,9 +140,9 @@ permissions:
   hms.level.0:
     default: true
     description: Access to features restricted to level 0
-  hms.neutp:
+  hms.newtp:
     default: true
-    description: Access to neutp command
+    description: Access to newtp command
   hms.stats:
     default: true
     description: Access to stats command

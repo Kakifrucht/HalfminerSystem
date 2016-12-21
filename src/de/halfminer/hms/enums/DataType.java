@@ -15,7 +15,7 @@ public enum DataType {
     LAST_NAMES      ("lastnames"),
     LAST_REPAIR     ("lastrepair"),
     MOB_KILLS       ("mobkills"),
-    NEUTP_USED      ("neutp"),
+    NEWTP_USED      ("newtp"),
     REVENUE         ("revenue"),
     SKILL_ELO       ("skillelo"),
     SKILL_LEVEL     ("skilllevel"),

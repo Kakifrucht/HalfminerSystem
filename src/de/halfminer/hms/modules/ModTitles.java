@@ -37,7 +37,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
         final Player joined = e.getPlayer();
 
-        if (!storage.getPlayer(joined).getBoolean(DataType.NEUTP_USED)) {
+        if (!storage.getPlayer(joined).getBoolean(DataType.NEWTP_USED)) {
 
             titleHandler.sendTitle(joined, MessageBuilder.create(hms, "modTitlesNewPlayerFormat")
                     .addPlaceholderReplace("%PLAYER%", joined.getName())
