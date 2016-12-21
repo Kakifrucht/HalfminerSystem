@@ -35,7 +35,7 @@ public class CustomtextCache {
 
         reCacheFile();
         if (cache.size() == 0)
-            throw new CachingException(CachingException.Reason.FILE_EMPTY);
+            throw new CachingException(file.getName(), CachingException.Reason.FILE_EMPTY);
 
         String[] chapterLowercase = new String[chapter.length];
         for (int i = 0; i < chapter.length; i++)
@@ -50,7 +50,7 @@ public class CustomtextCache {
                 currentChapter = Utils.arrayToString(chapterLowercase, 0, i, false) + " *";
         }
 
-        throw new CachingException(CachingException.Reason.CHAPTER_NOT_FOUND);
+        throw new CachingException(file.getName(), CachingException.Reason.CHAPTER_NOT_FOUND);
     }
 
     public Set<String> getAllChapters() throws CachingException {
@@ -58,7 +58,7 @@ public class CustomtextCache {
         return cache.keySet();
     }
 
-    private void reCacheFile() throws CachingException {
+    public void reCacheFile() throws CachingException {
 
         if (!wasModified()) return;
 
@@ -72,7 +72,7 @@ public class CustomtextCache {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CachingException(CachingException.Reason.CANNOT_READ);
+            throw new CachingException(file.getName(), CachingException.Reason.CANNOT_READ);
         }
     }
 
@@ -134,7 +134,7 @@ public class CustomtextCache {
                 storeInCache();
 
             } catch (IOException e) {
-                throw new CachingException(CachingException.Reason.CANNOT_READ);
+                throw new CachingException(file.getName(), CachingException.Reason.CANNOT_READ);
             }
         }
 
@@ -154,7 +154,8 @@ public class CustomtextCache {
             for (String chapter : currentChapters) {
 
                 if (chapter.length() == 0 || cache.containsKey(chapter))
-                    throw new CachingException(CachingException.Reason.SYNTAX_ERROR, lineNumberLastHashtag, chapter);
+                    throw new CachingException(file.getName(), CachingException.Reason.SYNTAX_ERROR,
+                            lineNumberLastHashtag, chapter);
 
                 cache.put(chapter, currentContent);
             }

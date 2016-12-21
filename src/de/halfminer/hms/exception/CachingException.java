@@ -8,17 +8,20 @@ import de.halfminer.hms.util.Utils;
 @SuppressWarnings("SameParameterValue")
 public class CachingException extends Exception {
 
+    private final String fileName;
     private final Reason reason;
     private final int lineNumber;
     private final String chapterName;
 
-    public CachingException(Reason reason) {
+    public CachingException(String fileName, Reason reason) {
+        this.fileName = fileName;
         this.reason = reason;
         this.lineNumber = Integer.MIN_VALUE;
         this.chapterName = "";
     }
 
-    public CachingException(Reason reason, int lineNumber, String chapterName) {
+    public CachingException(String fileName, Reason reason, int lineNumber, String chapterName) {
+        this.fileName = fileName;
         this.reason = reason;
         this.lineNumber = lineNumber;
         this.chapterName = chapterName;
@@ -29,8 +32,7 @@ public class CachingException extends Exception {
     }
 
     public String getCleanReason() {
-
-        String cleanString = Utils.makeStringFriendly(reason.name());
+        String cleanString = Utils.makeStringFriendly(reason.name() + " in " + fileName);
         if (lineNumber > 0) cleanString += " (l" + lineNumber + ", " + chapterName + ")";
         return cleanString;
     }

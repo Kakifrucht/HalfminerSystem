@@ -2,6 +2,7 @@ package de.halfminer.hms.handlers;
 
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.interfaces.CacheHolder;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.util.CustomtextCache;
@@ -37,7 +38,7 @@ import java.util.logging.Level;
  * - Thread safe
  */
 @SuppressWarnings({"unused", "SameParameterValue"})
-public class HanStorage extends HalfminerHandler implements Disableable, Reloadable {
+public class HanStorage extends HalfminerHandler implements CacheHolder, Disableable, Reloadable {
 
     private File sysFile;
     private File uuidFile;
@@ -125,7 +126,7 @@ public class HanStorage extends HalfminerHandler implements Disableable, Reloada
                         .logMessage(Level.INFO);
             } else {
                 MessageBuilder.create(hms, "hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
-                throw new CachingException(CachingException.Reason.CANNOT_WRITE);
+                throw new CachingException(fileName, CachingException.Reason.CANNOT_WRITE);
             }
         }
 

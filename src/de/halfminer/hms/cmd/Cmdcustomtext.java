@@ -84,7 +84,7 @@ public class Cmdcustomtext extends HalfminerCommand {
                 MessageBuilder.create(hms, "cmdCustomtextNotFound", "Info").sendMessage(sender);
             } else {
                 MessageBuilder.create(hms, "errorOccurred", "Info").sendMessage(sender);
-                MessageBuilder.create(hms, "cmdCustomtextErrorLog")
+                MessageBuilder.create(hms, "utilCustomtextCacheParseError")
                         .addPlaceholderReplace("%ERROR%", e.getCleanReason())
                         .logMessage(Level.WARNING);
             }

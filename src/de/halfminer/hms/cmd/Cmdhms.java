@@ -152,9 +152,10 @@ public class Cmdhms extends HalfminerCommand {
         CustomtextCache cache;
         try {
             cache = storage.getCache("customitems.txt");
+            cache.reCacheFile();
         } catch (CachingException e) {
-            MessageBuilder.create(hms, "cmdHmsGiveCacheError", prefix)
-                    .addPlaceholderReplace("%REASON%", e.getCleanReason())
+            MessageBuilder.create(hms, "utilCustomtextCacheParseError", prefix)
+                    .addPlaceholderReplace("%ERROR%", e.getCleanReason())
                     .sendMessage(sender);
             return;
         }
