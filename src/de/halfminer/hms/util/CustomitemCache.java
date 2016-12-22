@@ -96,31 +96,30 @@ public class CustomitemCache {
                     Utils.setItemLore(toGive, Arrays.asList(parameter.split("[|]")));
                     break;
                 case "enchant":
-                    String[] enchantsSplit = parameter.split(" ");
-                    for (String enchantStr : enchantsSplit) {
-                        String[] split = enchantStr.split(":");
-                        if (split.length < 1) {
+                    StringArgumentSeparator separator = new StringArgumentSeparator(parameter);
+                    for (String enchantStr : separator.getArguments()) {
+                        StringArgumentSeparator separatorEnchants = new StringArgumentSeparator(enchantStr, ':');
+                        if (!separatorEnchants.meetsLength(2)) {
                             logInvalidParameter(keyParamPair.getLeft(), enchantStr);
                             continue;
                         }
 
-                        Enchantment enchant = Enchantments.getByName(split[0]);
+                        String enchantName = separatorEnchants.getArgument(0);
+                        int level = separatorEnchants.getArgumentInt(1);
+
+                        Enchantment enchant = Enchantments.getByName(enchantName);
                         if (enchant == null) {
-                            logInvalidParameter(keyParamPair.getLeft(), split[0]);
+                            logInvalidParameter(keyParamPair.getLeft(), enchantName);
                             continue;
                         }
-                        try {
-                            int level = Integer.decode(split[1]);
-                            toGive.addUnsafeEnchantment(enchant, level);
-                        } catch (NumberFormatException e) {
-                            logInvalidParameter(keyParamPair.getLeft(), split[1]);
-                        }
+                        if (level > 0) toGive.addUnsafeEnchantment(enchant, level);
+                        else logInvalidParameter(keyParamPair.getLeft(), separatorEnchants.getArgument(1));
                     }
                     break;
                 case "skullowner":
                     if (!toGive.getType().equals(Material.SKULL_ITEM)) {
                         logInvalidParameter(keyParamPair.getLeft(), parameter);
-                        return;
+                        continue;
                     }
                     SkullMeta meta = (SkullMeta) toGive.getItemMeta();
                     boolean success = meta.setOwner(parameter);
@@ -129,6 +128,7 @@ public class CustomitemCache {
                     } else {
                         logInvalidParameter(keyParamPair.getLeft(), parameter);
                     }
+                    break;
                 default:
                     logInvalidKey(keyParamPair.getLeft());
             }

@@ -20,16 +20,20 @@ public class StringArgumentSeparator {
         arguments = strings;
     }
 
+    public String[] getArguments() {
+        return arguments;
+    }
+
     public int getLength() {
         return arguments.length;
     }
 
     public boolean meetsLength(int length) {
-        return length > getLength();
+        return getLength() >= length;
     }
 
     public String getArgument(int arg) {
-        if (!meetsLength(arg)) return "";
+        if (!meetsLength(arg + 1)) return "";
         return arguments[arg];
     }
 
@@ -43,7 +47,7 @@ public class StringArgumentSeparator {
     }
 
     public int getArgumentIntMinimum(int arg, int minimum) {
-        if (!meetsLength(arg)) return minimum;
-        return Math.min(minimum, getArgumentInt(arg));
+        if (!meetsLength(arg + 1)) return minimum;
+        return Math.max(minimum, getArgumentInt(arg));
     }
 }

@@ -29,7 +29,7 @@ public class CustomAction {
 
     private int playersRequired = 1;
 
-    private final Map<String, String> nextRunPlaceholders = new HashMap<>();
+    private final Map<String, String> placeholders = new HashMap<>();
 
     /**
      * Create a new action. If the action name is "nothing", the action won't do anything on run.
@@ -92,6 +92,11 @@ public class CustomAction {
             return;
         }
 
+        placeholders.put("%PLAYER%", players[0].getName());
+        for (int i = 1; i < players.length + 1; i++) {
+            placeholders.put("PLAYER" + i, players[i - 1].getName());
+        }
+
         for (Pair<Type, String> action : parsedActionList) {
 
             MessageBuilder parsedMessage = replaceWithPlaceholders(action.getRight(), players);
@@ -109,11 +114,8 @@ public class CustomAction {
                 case GIVE_CUSTOM_ITEM:
                     try {
                         StringArgumentSeparator separator = new StringArgumentSeparator(parsedMessage.returnMessage());
-                        Map<String, String> allPlaceholders = new HashMap<>();
-                        allPlaceholders.putAll(nextRunPlaceholders);
-                        allPlaceholders.putAll(getPlayerPlaceholderMap(players));
-                        itemCache.giveItem(parsedMessage.returnMessage(), players[0],
-                                separator.getArgumentIntMinimum(1, 1), allPlaceholders);
+                        itemCache.giveItem(separator.getArgument(0), players[0],
+                                separator.getArgumentIntMinimum(1, 1), placeholders);
                     } catch (GiveItemException e) {
 
                         if (!e.getReason().equals(GiveItemException.Reason.INVENTORY_FULL)) {
@@ -123,6 +125,7 @@ public class CustomAction {
                                     .logMessage(Level.WARNING);
                         }
                         // quit execution of action on fail
+                        placeholders.clear();
                         return;
                     }
                     break;
@@ -132,34 +135,22 @@ public class CustomAction {
                     else parsedMessage.sendMessage(players[0]);
             }
         }
-        nextRunPlaceholders.clear();
+        placeholders.clear();
     }
 
     public void addPlaceholderForNextRun(String placeholder, String replaceWith) {
-        nextRunPlaceholders.put(placeholder, replaceWith);
+        placeholders.put(placeholder, replaceWith);
     }
 
     private MessageBuilder replaceWithPlaceholders(String toReplace, Player[] players) {
 
-        MessageBuilder message = MessageBuilder.create(plugin, toReplace).setMode(MessageBuilder.Mode.DIRECT_STRING);
+        MessageBuilder message = MessageBuilder.create(plugin, toReplace)
+                .setMode(MessageBuilder.Mode.DIRECT_STRING);
 
-        nextRunPlaceholders.entrySet()
-                .forEach(entry -> message.addPlaceholderReplace(entry.getKey(), entry.getValue()));
-
-        getPlayerPlaceholderMap(players).entrySet()
+        placeholders.entrySet()
                 .forEach(entry -> message.addPlaceholderReplace(entry.getKey(), entry.getValue()));
 
         return message;
-    }
-
-    private Map<String, String> getPlayerPlaceholderMap(Player[] players) {
-
-        Map<String, String> toReturn = new HashMap<>();
-        toReturn.put("%PLAYER%", players[0].getName());
-        for (int i = 1; i < players.length + 1; i++) {
-            toReturn.put("PLAYER" + i, players[i - 1].getName());
-        }
-        return toReturn;
     }
 
     private void logError(String type, int lineNumber) {
