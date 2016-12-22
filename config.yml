@@ -337,6 +337,8 @@ localization:
   modPerformanceReachedHopper: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
   modPerformanceReachedHopperLog: '%PLAYER% hat das Hopperlimit (%LIMIT%) bei %LOCATION% erreicht'
   modPvPKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK% &7Kills in Folge'
+  modPvPResurrect: '&c%PLAYER% &7hat ein Totem der Unsterblichkeit gegen &e%KILLER% &7benutzt'
+  modPvPResurrectSuicide: '&c%PLAYER% &7hat ein Totem der Unsterblichkeit ohne Gegner benutzt'
   modRespawnFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modRespawnForced: '&7Du wurdest von einem Serverteam-Mitglied zum Spawn teleportiert'
   modRespawnHeadBossbar: 'Weitere Informationen: &a/hilfe willkommen'

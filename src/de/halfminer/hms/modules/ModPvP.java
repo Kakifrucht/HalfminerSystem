@@ -46,6 +46,7 @@ import java.util.concurrent.TimeUnit;
  * - Halves satiation health regeneration during combat
  * - Remove regeneration potion effect when eating golden apple
  *   - Ensures that absorption does not fully regenerate when eating a non Notch golden apple
+ * - Broadcast resurrect via Totem of Undying
  */
 @SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener, Sweepable {
@@ -249,6 +250,27 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             }
             scheduler.runTask(hms, () -> p.removePotionEffect(PotionEffectType.REGENERATION));
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onResurrect(EntityResurrectEvent e) {
+
+        if (!(e.getEntity() instanceof Player)) return;
+
+        Player p = (Player) e.getEntity();
+        String killer = "";
+        if (p.getKiller() != null) {
+            killer = p.getKiller().getName();
+        } else if (p.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+            killer = ((EntityDamageByEntityEvent) p.getLastDamageCause()).getDamager().getName();
+        }
+
+        MessageBuilder broadcast = MessageBuilder.create(hms,
+                killer.length() > 0 ? "modPvPResurrect" : "modPvPResurrectSuicide", "PvP")
+                .addPlaceholderReplace("%PLAYER%", p.getName());
+
+        if (killer.length() > 0) broadcast.addPlaceholderReplace("%KILLER%", killer);
+        broadcast.broadcastMessage(true);
     }
 
     @Override

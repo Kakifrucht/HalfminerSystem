@@ -143,6 +143,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Halves satiation health regeneration during combat
     - Remove regeneration potion effect when eating golden apple
       - Ensures that absorption does not fully regenerate when eating a non Notch golden apple
+    - Broadcast resurrect via Totem of Undying
   - Respawn
     - Respawns player at custom location
     - Adds a first time join
