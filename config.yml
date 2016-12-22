@@ -131,6 +131,8 @@ pvp:
   - '90: nothing'
   #Amount of kills until every kill is shown in actionbar
   streakThreshold: 30
+  #Amount of strength to reduce per level while having the effect applied in PvP, max value is 3.0 (complete removal)
+  strengthEffectReducePerLevel: 1.5
 respawn:
   #Command to be run on first player join, supports %PLAYER% placeholder
   firstJoinCommand: 'kit starter %PLAYER%'

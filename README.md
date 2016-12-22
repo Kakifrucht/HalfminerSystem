@@ -132,7 +132,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
   - PvP
     - Halves PvP cooldown
       - Reduces damage immunity
-    - Strength potions damage nerfed
+    - Strength potions damage nerfed, configurable
     - Bow spamming disabled
     - Disable hitting self with bow
     - Killstreak via actionbar

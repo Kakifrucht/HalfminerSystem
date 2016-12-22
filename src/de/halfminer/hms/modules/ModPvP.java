@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * - Halves PvP cooldown
  *   - Reduces damage immunity
- * - Strength potions damage nerfed
+ * - Strength potions damage nerfed, configurable
  * - Bow spamming disabled
  * - Disable hitting self with bow
  * - Killstreak via actionbar
@@ -53,6 +53,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     private final static ModAntiKillfarming antiKillfarming =
             (ModAntiKillfarming) hms.getModule(ModuleType.ANTI_KILLFARMING);
 
+    private double strengthReducePerLevel;
     private int thresholdUntilShown;
 
     private final Cache<Player, Boolean> hasShotBow = CacheBuilder.newBuilder()
@@ -113,7 +114,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
 
                     double newDamage = e.getDamage(EntityDamageEvent.DamageModifier.BASE)
-                            - 1.5d * (effect.getAmplifier() + 1);
+                            - strengthReducePerLevel * (effect.getAmplifier() + 1);
                     double damageRatio = newDamage / e.getDamage(EntityDamageEvent.DamageModifier.BASE);
 
                     e.setDamage(EntityDamageEvent.DamageModifier.BASE, newDamage);
@@ -125,8 +126,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                             e.getDamage(EntityDamageEvent.DamageModifier.RESISTANCE) * damageRatio);
                     e.setDamage(EntityDamageEvent.DamageModifier.BLOCKING,
                             e.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) * damageRatio);
-
-                    return;
+                    break;
                 }
             }
 
@@ -254,6 +254,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     @Override
     public void loadConfig() {
 
+        strengthReducePerLevel = hms.getConfig().getDouble("pvp.strengthEffectReducePerLevel", 1.5d);
+        strengthReducePerLevel = Math.min(3.0d, strengthReducePerLevel);
         thresholdUntilShown = hms.getConfig().getInt("pvp.streakThreshold", 30);
         container = null;
 
