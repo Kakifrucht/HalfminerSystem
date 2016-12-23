@@ -152,8 +152,6 @@ public class Cmdvote extends HalfminerCommand {
     private boolean giveReward(Player player) {
 
         List<String> probabilityList = hms.getConfig().getStringList("command.vote.rewardActions");
-        if (probabilityList.size() == 0)
-            return false;
 
         try {
             ActionProbabilityContainer actions = new ActionProbabilityContainer(probabilityList, hms, storage);

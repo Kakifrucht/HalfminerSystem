@@ -283,7 +283,6 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
         try {
             List<String> actionList = hms.getConfig().getStringList("pvp.actionsOnKill");
-            if (actionList.size() == 0) return;
             container = new ActionProbabilityContainer(actionList, hms, storage);
         } catch (CachingException ignored) {
         }

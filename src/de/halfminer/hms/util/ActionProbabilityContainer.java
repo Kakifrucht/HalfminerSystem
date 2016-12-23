@@ -62,6 +62,11 @@ public class ActionProbabilityContainer {
                 else throw e;
             }
         }
+
+        if (actionList.size() == 0) {
+            probabilityTotal = 1;
+            actionList.add(new Pair<>(1, new CustomAction("nothing", plugin, cacheHolder)));
+        }
     }
 
     public CustomAction getNextAction() {
