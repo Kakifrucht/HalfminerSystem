@@ -378,6 +378,7 @@ localization:
   modTitlesTablist: '&6&lTwo and a half Miner&7\nKonto: &a%BALANCE% &7&oHCs%BOTTOM%&7Teamspeak: &fts.halfminer.de &7| Online: &a%PLAYERCOUNT% &7&oSpieler'
   modTpsServerUnstable: '&cDer Server ist instabil, die Tps beträgt lediglich &e%TPS%'
   utilActionProbabilityContainerError: 'Fehler beim parsen der Wahrscheinlichkeitstabelle: %TYPE% in Zeile %LINE%'
+  utilActionProbabilityContainerNoActions: 'Es konnte keine Aktion geparsed werden, füge leere Aktion hinzu...'
   utilCustomActionCommandNotFound: 'Das Kommando existiert nicht oder konnte nicht ausgeführt werden, breche ab: %COMMAND%'
   utilCustomActionGiveItemError: 'Der Gegenstand %ITEM% konnte nicht gegeben werden, breche ab, Grund: %REASON%'
   utilCustomActionParseError: 'Fehler beim parsen der Aktion %NAME%: %TYPE% in Zeile %LINE%'
