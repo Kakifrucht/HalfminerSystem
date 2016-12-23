@@ -286,8 +286,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Allows to compare statistics easily
   - /vote
     - Shows vote links (custom per player) and current votecount
-    - Execute custom command(s) when vote is received (configure Votifier to "/vote voted %PLAYER%")
-      - Send custom message to player with pseudo tell command
+    - Execute custom actions when vote is received (configure Votifier to "/vote voted %PLAYER%")
     - Execute command if certain votecount has been reached (event notifier for instance)
     - If offline or inventory full, stores reward for retrieval later (/vote getreward)
     - Counts votes for /stats

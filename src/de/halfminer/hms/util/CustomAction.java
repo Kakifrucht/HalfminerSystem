@@ -82,14 +82,14 @@ public class CustomAction {
         }
     }
 
-    public void runAction(Player... players) {
+    public boolean runAction(Player... players) {
 
         // support empty action
-        if (parsedActionList == null) return;
+        if (parsedActionList == null) return true;
 
         if (players.length < playersRequired) {
             logError("NOTENOUGHPLAYERS", 0);
-            return;
+            return false;
         }
 
         placeholders.put("%PLAYER%", players[0].getName());
@@ -109,6 +109,7 @@ public class CustomAction {
                         MessageBuilder.create(plugin, "utilCustomActionCommandNotFound")
                                 .addPlaceholderReplace("%COMMAND%", parsedMessage.returnMessage())
                                 .logMessage(Level.WARNING);
+                        return false;
                     }
                     break;
                 case GIVE_CUSTOM_ITEM:
@@ -126,7 +127,7 @@ public class CustomAction {
                         }
                         // quit execution of action on fail
                         placeholders.clear();
-                        return;
+                        return false;
                     }
                     break;
                 case BROADCAST:
@@ -136,6 +137,7 @@ public class CustomAction {
             }
         }
         placeholders.clear();
+        return true;
     }
 
     public void addPlaceholderForNextRun(String placeholder, String replaceWith) {

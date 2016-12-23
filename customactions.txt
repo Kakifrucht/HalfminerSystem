@@ -5,3 +5,9 @@ tell: &7You have received 1 dirt
 players: 2
 give: examplesword
 broadcast: &a%PLAYER% &7has received &e%PLAYER2%'s &7skull
+#votereward1
+cmd: give %PLAYER% diamond 1
+tell: &7You have received 1 diamonds
+#votereward2
+cmd: give %PLAYER% diamond 2
+tell: &7You have received 2 diamonds

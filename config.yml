@@ -16,9 +16,13 @@ command:
     #Longest cooldown if no level has been met
     maxCooldown: 28800
   vote:
-    #Command to run when a player has voted, add ; to seperate and run multiple commands
-    #Use pseudo command "tell" to send a message, supports color codes
-    voteRewardCommand: 'give %PLAYER% diamond 4;tell &eYou got 4 Diamonds'
+    #Define actions to be run when a player votes, key left of ':' must be a number and defines the
+    #probability for the action to be run in relation to the other actions. The sum doesn't have to be
+    #100. The action must be defined in customactions.txt. Write "nothing" as action name to not do anything.
+    #By deleting the list no actions will be run on vote.
+    rewardActions:
+    - '50: votereward1'
+    - '50: votereward2'
     #Amount of votes until command execution
     threshold: 2000
     #Command to execute when threshold has been met
@@ -121,10 +125,8 @@ performance:
   #Entity limit box radius, that will be checked on mobspawn from a spawner
   boxSize: 16
 pvp:
-  #Define actions to be run when a player kills another player (not repeatedly), key left of ':' must be a number
-  #and defines the probability for the action to be run in relation to the other actions. The sum doesn't have to be
-  #100. The action must be defined in customactions.txt. Write "nothing" as action name to not do anything. By deleting
-  #the list no actions will be run on kill.
+  #See config key "command.vote.rewardActions" above for information, replace vote with kill.
+  #Killer variable can be accessed via %PLAYER2% placeholder (for commands and broadcast).
   actionsOnKill:
   - '5: exampleaction'
   - '5: exampleaction2'
@@ -285,11 +287,12 @@ localization:
   cmdStatsShow: '&3Statistiken von %PLAYER% &e>>\n&rSkillgruppe: &e%SKILLGROUP% &7| &rSkilllevel: &e%SKILLLEVEL%&7&o/22\n&rZeit Online: &e%ONLINETIME% &7Minuten | &rGeld: &e%REVENUE% &7HCs verdient\n&rKills: &e%KILLS% &7Mord(e) | &rDeaths: &e%DEATHS% &7Tod(e) | &rK/D: &e%KDRATIO%\n&rGevotet: &e%VOTES% &7mal | &rMobs: &e%MOBKILLS% &7Mobs getötet\n&rBlöcke: &e%BLOCKSPLACED% &7platziert | &e%BLOCKSBROKEN% &7gebrochen'
   cmdStatsShowotherStats: '&7Statistiken zu anderen Spielern: &e/stats <Spieler>'
   cmdStatsTop: '&e&m-------------------&c&l Statistiken &e&m-------------------'
+  cmdVoteActionCacheError: 'Fehler beim lesen des Aktions Caches für %PLAYER%, Grund: %ERROR%'
   cmdVoteGrabReward: '~&7Hole dir deine Belohnung jetzt mit &a/vote getreward/'
   cmdVoteMessage: '&3Klicke folgenden Link zum Voten (kostenlos) &e>>\n&6&ohttps://halfminer.de/?name=%PLAYER%#voten'
   cmdVoteReached: '&2&l%TOTALVOTESTHRESHOLD% Votes erreicht! &7Event wird angekündigt'
   cmdVoteRewardDeny: '&cDu hast keine offene Belohnung'
-  cmdVoteRewardInvFull: '~&cDein Inventar ist voll, bitte mache Platz und verwende das Kommando &a/vote getreward/'
+  cmdVoteRewardCouldNotExecute: '~&cDein Inventar ist voll, bitte mache Platz und verwende das Kommando &a/vote getreward/'
   cmdVoteTop: '&e&m--------------------&c&l Voten &e&m--------------------'
   cmdVoteUntil: '&7Votes bis zum nächsten Event: &d%TOTALVOTES%&7&o/2000'
   cmdVoteVoted: '~&e%PLAYER% hat eben mit &a/vote/ &egevotet'
