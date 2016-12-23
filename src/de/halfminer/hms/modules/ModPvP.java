@@ -51,9 +51,6 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
-    private final static ModAntiKillfarming antiKillfarming =
-            (ModAntiKillfarming) hms.getModule(ModuleType.ANTI_KILLFARMING);
-
     private double strengthReducePerLevel;
     private int thresholdUntilShown;
 
@@ -178,7 +175,10 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             }, 5);
 
             // run action on kill
-            if (container != null && antiKillfarming.isNotRepeatedKill(killer, victim)) {
+            if (container != null &&
+                    ((ModAntiKillfarming) hms
+                    .getModule(ModuleType.ANTI_KILLFARMING))
+                    .isNotRepeatedKill(killer, victim)) {
                 CustomAction action = container.getNextAction();
                 action.addPlaceholderForNextRun("%KILLNO%", storage.getPlayer(killer).getString(DataType.KILLS));
                 action.runAction(killer, victim);
