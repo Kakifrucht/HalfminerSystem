@@ -80,6 +80,10 @@ public class CustomtextCache {
         return file.lastModified() > lastCached;
     }
 
+    public boolean wasModifiedSince(long since) {
+        return file.lastModified() > since;
+    }
+
     private class ParseHelper {
 
         private final Map<String, List<String>> cache = new HashMap<>();

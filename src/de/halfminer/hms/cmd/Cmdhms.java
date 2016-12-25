@@ -31,6 +31,7 @@ import java.util.logging.Level;
  * - Rename items, supports lore (rename)
  * - Ring players to get their attention (ring)
  * - Remove a players /home block (rmhomeblock)
+ * - Run an action defined in customactions.txt (runaction)
  * - Search for homes in a given radius, hooking into Essentials (searchhomes)
  * - Edit skillelo of player (updateskill)
  * - List all currently by antixray watched players (xraybypass)
@@ -67,6 +68,9 @@ public class Cmdhms extends HalfminerCommand {
                     return;
                 case "rmhomeblock":
                     rmHomeBlock();
+                    return;
+                case "runaction":
+                    runAction();
                     return;
                 case "searchhomes":
                     searchHomes();
@@ -363,6 +367,39 @@ public class Cmdhms extends HalfminerCommand {
                 e.sendNotFoundMessage(sender, prefix);
             }
         } else showUsage();
+    }
+
+    private void runAction() {
+
+        if (args.length < 3) {
+            showUsage();
+            return;
+        }
+
+        // build player param
+        Player[] params = new Player[args.length - 2];
+        for (int i = 2; i < args.length; i++) {
+            Player selected = server.getPlayer(args[i]);
+            if (selected != null) params[i - 2] = selected;
+            else {
+                MessageBuilder.create(hms, "playerNotOnline", "HMS").sendMessage(sender);
+                return;
+            }
+        }
+
+        try {
+            CustomAction action = new CustomAction(args[1], hms, storage);
+            if (!action.runAction(params)) {
+                MessageBuilder.create(hms, "cmdHmsRunActionExecuteError", "HMS")
+                        .addPlaceholderReplace("%ACTIONNAME%", args[1])
+                        .sendMessage(sender);
+            }
+        } catch (CachingException e) {
+            MessageBuilder.create(hms, "cmdHmsRunActionCacheError", "HMS")
+                    .addPlaceholderReplace("%ACTIONNAME%", args[1])
+                    .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                    .sendMessage(sender);
+        }
     }
 
     private void searchHomes() {

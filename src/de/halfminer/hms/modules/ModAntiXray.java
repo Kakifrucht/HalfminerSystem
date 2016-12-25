@@ -68,7 +68,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             if (brokenProtected >= protectedBlockThreshold
                     && brokenProtected / (double) blocksBroken > protectedBlockRatio) {
 
-                boolean firstDetection = false;
+                boolean firstDetection = false; //TODO make it work
                 if (!counter.isCheckedPermanently()) {
                     firstDetection = true;
                     observedPermanently.add(uuid);

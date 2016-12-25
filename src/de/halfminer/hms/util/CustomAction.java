@@ -25,8 +25,10 @@ public class CustomAction {
     private final String actionName;
     private final JavaPlugin plugin;
     private final CustomitemCache itemCache;
-    private final List<Pair<Type, String>> parsedActionList;
+    private final CustomtextCache actionCache;
 
+    private long lastCached;
+    private List<Pair<Type, String>> parsedActionList;
     private int playersRequired = 1;
 
     private final Map<String, String> placeholders = new HashMap<>();
@@ -45,18 +47,24 @@ public class CustomAction {
         this.actionName = action.toLowerCase();
         this.plugin = plugin;
         this.itemCache = new CustomitemCache(plugin, holder.getCache("customitems.txt"));
-        CustomtextCache actionCache = holder.getCache("customactions.txt");
+        this.actionCache = holder.getCache("customactions.txt");
+        this.lastCached = System.currentTimeMillis();
 
-        if (action.equalsIgnoreCase("nothing")) {
+        parseAction();
+    }
+
+    private void parseAction() throws CachingException {
+
+        if (actionName.equalsIgnoreCase("nothing")) {
             this.parsedActionList = null;
             return;
         } else this.parsedActionList = new ArrayList<>();
 
-        List<String> actionParsed = actionCache.getChapter(actionName);
+        List<String> actionUnparsed = actionCache.getChapter(actionName);
 
-        for (int lineNumber = 0; lineNumber < actionParsed.size(); lineNumber++) {
+        for (int lineNumber = 0; lineNumber < actionUnparsed.size(); lineNumber++) {
 
-            String line = actionParsed.get(lineNumber);
+            String line = actionUnparsed.get(lineNumber);
 
             Pair<String, String> keyValuePair;
             try {
@@ -92,6 +100,16 @@ public class CustomAction {
             return false;
         }
 
+        // reparse if cache was modified
+        if (actionCache.wasModifiedSince(lastCached)) {
+            System.out.println("reparse triggered");
+            try {
+                parseAction();
+                lastCached = System.currentTimeMillis();
+            } catch (CachingException ignored) {
+            }
+        }
+
         placeholders.put("%PLAYER%", players[0].getName());
         for (int i = 1; i < players.length + 1; i++) {
             placeholders.put("PLAYER" + i, players[i - 1].getName());
@@ -99,7 +117,7 @@ public class CustomAction {
 
         for (Pair<Type, String> action : parsedActionList) {
 
-            MessageBuilder parsedMessage = replaceWithPlaceholders(action.getRight(), players);
+            MessageBuilder parsedMessage = replaceWithPlaceholders(action.getRight());
 
             switch (action.getLeft()) {
                 case CONSOLE_COMMAND:
@@ -144,7 +162,7 @@ public class CustomAction {
         placeholders.put(placeholder, replaceWith);
     }
 
-    private MessageBuilder replaceWithPlaceholders(String toReplace, Player[] players) {
+    private MessageBuilder replaceWithPlaceholders(String toReplace) {
 
         MessageBuilder message = MessageBuilder.create(plugin, toReplace)
                 .setMode(MessageBuilder.Mode.DIRECT_STRING);

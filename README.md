@@ -233,6 +233,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Rename items, supports lore (rename)
     - Ring players to get their attention (ring)
     - Remove a players /home block (rmhomeblock)
+    - Run an action defined in customactions.txt (runaction)
     - Search for homes in a given radius, hooking into Essentials (searchhomes)
     - Edit skillelo of player (updateskill)
     - List all currently by antixray watched players (xraybypass)
