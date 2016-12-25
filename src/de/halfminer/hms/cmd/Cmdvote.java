@@ -8,7 +8,6 @@ import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -85,36 +84,25 @@ public class Cmdvote extends HalfminerCommand {
             } else if (isPlayer && args[0].equalsIgnoreCase("getreward")) {
 
                 final String storageKey = "vote.reward." + player.getUniqueId();
-                final int rewardAmount = storage.getInt(storageKey);
+                int rewardAmount = storage.getInt(storageKey);
 
                 if (rewardAmount == 0) {
                     MessageBuilder.create(hms, "cmdVoteRewardDeny", "Vote").sendMessage(player);
                     return;
                 }
 
-                // set to 0 immediately to not allow the execution twice
-                storage.set(storageKey, null);
-
-                // execute one reward action per second
-                new BukkitRunnable() {
-
-                    private int rewardAmountTask = rewardAmount;
-
-                    @Override
-                    public void run() {
-                        if (rewardAmountTask > 0 && giveReward(player)) rewardAmountTask--;
-                        else {
-                            // if action could not be executed, send message
-                            if (rewardAmountTask > 0) {
-                                MessageBuilder.create(hms, "cmdVoteRewardCouldNotExecute", "Vote")
-                                        .sendMessage(player);
-                                storage.set(storageKey, rewardAmountTask);
-                            }
-
-                            this.cancel();
-                        }
+                while (rewardAmount > 0) {
+                    if (giveReward(player)) rewardAmount--;
+                    else {
+                        // if action could not be executed, send message
+                        MessageBuilder.create(hms, "cmdVoteRewardCouldNotExecute", "Vote")
+                                .sendMessage(player);
+                        storage.set(storageKey, rewardAmount);
+                        break;
                     }
-                }.runTaskTimer(hms, 0L, 20L);
+                }
+
+                storage.set(storageKey, rewardAmount);
 
             } else showMessage();
 

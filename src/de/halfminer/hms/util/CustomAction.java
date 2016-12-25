@@ -102,7 +102,6 @@ public class CustomAction {
 
         // reparse if cache was modified
         if (actionCache.wasModifiedSince(lastCached)) {
-            System.out.println("reparse triggered");
             try {
                 parseAction();
                 lastCached = System.currentTimeMillis();
@@ -148,6 +147,12 @@ public class CustomAction {
                         return false;
                     }
                     break;
+                case HAS_ROOM:
+                    StringArgumentSeparator separator = new StringArgumentSeparator(parsedMessage.returnMessage());
+                    if (!Utils.hasRoom(players[0], separator.getArgumentIntMinimum(0, 1))) {
+                        return false;
+                    }
+                    break;
                 case BROADCAST:
                 case TELL:
                     if (action.getLeft() == Type.BROADCAST) parsedMessage.broadcastMessage(true);
@@ -185,6 +190,7 @@ public class CustomAction {
 
     private enum Type {
         REQUIRED_PLAYERS    ("players"),
+        HAS_ROOM            ("hasroom"),
         CONSOLE_COMMAND     ("cmd"),
         GIVE_CUSTOM_ITEM    ("give"),
         BROADCAST           ("broadcast"),
