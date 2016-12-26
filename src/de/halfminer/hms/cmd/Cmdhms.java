@@ -377,10 +377,10 @@ public class Cmdhms extends HalfminerCommand {
         }
 
         // build player param
-        Player[] params = new Player[args.length - 2];
+        Player[] players = new Player[args.length - 2];
         for (int i = 2; i < args.length; i++) {
             Player selected = server.getPlayer(args[i]);
-            if (selected != null) params[i - 2] = selected;
+            if (selected != null) players[i - 2] = selected;
             else {
                 MessageBuilder.create(hms, "playerNotOnline", "HMS").sendMessage(sender);
                 return;
@@ -389,11 +389,12 @@ public class Cmdhms extends HalfminerCommand {
 
         try {
             CustomAction action = new CustomAction(args[1], hms, storage);
-            if (!action.runAction(params)) {
-                MessageBuilder.create(hms, "cmdHmsRunActionExecuteError", "HMS")
-                        .addPlaceholderReplace("%ACTIONNAME%", args[1])
-                        .sendMessage(sender);
-            }
+            boolean success = action.runAction(players);
+
+            MessageBuilder.create(hms, success ? "cmdHmsRunActionSuccess" : "cmdHmsRunActionExecuteError", "HMS")
+                    .addPlaceholderReplace("%ACTIONNAME%", args[1])
+                    .sendMessage(sender);
+
         } catch (CachingException e) {
             MessageBuilder.create(hms, "cmdHmsRunActionCacheError", "HMS")
                     .addPlaceholderReplace("%ACTIONNAME%", args[1])

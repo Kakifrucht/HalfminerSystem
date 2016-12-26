@@ -238,6 +238,7 @@ localization:
   cmdHmsRingTitle: '&cDu wirst angeklingelt\nBitte antworte %PLAYER%'
   cmdHmsRunActionCacheError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht geladen werden, Grund: %REASON%'
   cmdHmsRunActionExecuteError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht ausgeführt werden (Konditionen nicht erfüllt, oder siehe Konsole)'
+  cmdHmsRunActionSuccess: '&7Die Aktion &a%ACTIONNAME% &7wurde ausgeführt'
   cmdHmsSearchhomesNoneFound: '&cEs wurden keine Homes gefunden'
   cmdHmsSearchhomesResults: '&7%PLAYER% &e>> &a%HOMENAME%'
   cmdHmsSearchhomesStarted: '&7Die Suche nach Homes in einem Radius von &e%RADIUS% &7Blöcken wurde gestartet...'
