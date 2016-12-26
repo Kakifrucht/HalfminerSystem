@@ -2,7 +2,9 @@ package de.halfminer.hms.modules;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.interfaces.Sweepable;
+import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
@@ -10,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,11 +21,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -46,8 +49,9 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
     private Cache<String, UUID> newPlayers;
     private Cache<UUID, Boolean> lastWelcome;
 
-    // config random drop
+    // config random action welcome bonus
     private Set<String> welcomeWords;
+    private CustomAction action;
     private int randomRange;
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -120,26 +124,26 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         if (containsWelcome && mentioned != null) {
 
             lastWelcome.put(p.getUniqueId(), true);
-            titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnHeadTitle"), 10, 30, 0);
-            barHandler.sendBar(p, MessageBuilder.returnMessage(hms, "modRespawnHeadBossbar"),
+            titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusTitle"), 10, 30, 0);
+            barHandler.sendBar(p, MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusBossbar"),
                     BarColor.WHITE, BarStyle.SOLID, 10, 1.0d);
 
             scheduler.runTaskLater(hms, () -> {
 
-                if (Utils.random(randomRange) && Utils.hasRoom(p, 1)) {
+                if (Utils.random(randomRange)) {
 
-                    p.getInventory().addItem(Utils.getPlayerSkull(p,
-                            Collections.singletonList(MessageBuilder.returnMessage(hms, "modRespawnHeadLore"))));
+                    action.addPlaceholderForNextRun("%CUSTOM%", MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusCustom"));
 
-                    MessageBuilder.create(hms, "modRespawnHeadBroadcast", "Skull")
-                            .addPlaceholderReplace("%PLAYER%", p.getName())
-                            .broadcastMessage(true);
-                    p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
-                    titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnHeadTitleYes"), 0, 60, 10);
-                } else {
-                    titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnHeadTitleNo"), 0, 30, 10);
-                    p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT, 1.0f, 2.0f);
+                    if (action.runAction(p)) {
+                        p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
+                        titleHandler.sendTitle(p,
+                                MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusTitleYes"), 0, 60, 10);
+                        return;
+                    }
                 }
+
+                titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusTitleNo"), 0, 30, 10);
+                p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT, 1.0f, 2.0f);
             }, 20L);
         }
     }
@@ -179,17 +183,33 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
     @Override
     public void loadConfig() {
 
+        FileConfiguration config = hms.getConfig();
+
         Object loc = storage.get("spawnlocation");
         if (loc instanceof Location) respawnLoc = (Location) loc;
         else respawnLoc = server.getWorlds().get(0).getSpawnLocation();
 
-        firstSpawnCommand = hms.getConfig().getString("respawn.firstJoinCommand", "");
+        firstSpawnCommand = config.getString("respawn.firstJoinCommand", "");
 
         welcomeWords = new HashSet<>();
-        welcomeWords.addAll(hms.getConfig().getStringList("respawn.welcomeWords")
+        welcomeWords.addAll(config.getStringList("respawn.welcomeWords")
                 .stream().map(String::toLowerCase).collect(Collectors.toList()));
 
-        int timeForWelcomeSeconds = hms.getConfig().getInt("respawn.timeForWelcomeSeconds", 300);
+        try {
+            action = new CustomAction(config.getString("respawn.customActionWelcomeBonus", "nothing"), hms, storage);
+        } catch (CachingException e) {
+            MessageBuilder.create(hms, "modRespawnWelcomeBonusActionError")
+                    .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                    .logMessage(Level.WARNING);
+            try {
+                action = new CustomAction("nothing", hms, storage);
+            } catch (CachingException ignored) {
+                // cannot happen, as CachingException's are not thrown on init of empty CustomAction
+            }
+        }
+
+        int timeForWelcomeSeconds = config.getInt("respawn.timeForWelcomeSeconds", 300);
+        randomRange = hms.getConfig().getInt("respawn.randomRange", 1);
 
         newPlayers = Utils.copyValues(newPlayers,
                 CacheBuilder.newBuilder()
@@ -200,7 +220,5 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                 CacheBuilder.newBuilder()
                         .expireAfterWrite(timeForWelcomeSeconds, TimeUnit.SECONDS)
                         .build());
-
-        randomRange = hms.getConfig().getInt("respawn.randomRange", 1);
     }
 }

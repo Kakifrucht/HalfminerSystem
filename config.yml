@@ -138,11 +138,13 @@ pvp:
 respawn:
   #Command to be run on first player join, supports %PLAYER% placeholder
   firstJoinCommand: 'kit starter %PLAYER%'
-  #Range per thousand, 1 is equivalent to 0,1%, 2 to 0,2% etc.
+  #Name of custom action to be executed on welcoming new players on the server
+  customActionWelcomeBonus: 'nothing'
+  #Probability for custom action execute, range per thousand, 1 is equivalent to 0,1%, 2 to 0,2% etc.
   randomRange: 1
   #Time in seconds a player can welcome another player, this will also be the threshold value to prevent abuse
   timeForWelcomeSeconds: 300
-  #Words of which one needs to be matched (case insensitive) to be able to win own head
+  #Words of which one needs to be matched (case insensitive) to get a custom action execute
   welcomeWords:
   - 'willkommen'
   - 'willkommen,'
@@ -235,7 +237,7 @@ localization:
   cmdHmsRingSent: '&a%PLAYER% wurde angeklingelt'
   cmdHmsRingTitle: '&cDu wirst angeklingelt\nBitte antworte %PLAYER%'
   cmdHmsRunActionCacheError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht geladen werden, Grund: %REASON%'
-  cmdHmsRunActionExecuteError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht ausgeführt werden (siehe Konsole)'
+  cmdHmsRunActionExecuteError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht ausgeführt werden (Konditionen nicht erfüllt, oder siehe Konsole)'
   cmdHmsSearchhomesNoneFound: '&cEs wurden keine Homes gefunden'
   cmdHmsSearchhomesResults: '&7%PLAYER% &e>> &a%HOMENAME%'
   cmdHmsSearchhomesStarted: '&7Die Suche nach Homes in einem Radius von &e%RADIUS% &7Blöcken wurde gestartet...'
@@ -346,12 +348,12 @@ localization:
   modPvPResurrectSuicide: '&c%PLAYER% &7hat ein Totem der Unsterblichkeit ohne Gegner benutzt'
   modRespawnFirstJoin: '&0&l>>>> &bWillkommen, &a&l%PLAYER%&b! &0&l<<<<'
   modRespawnForced: '&7Du wurdest von einem Serverteam-Mitglied zum Spawn teleportiert'
-  modRespawnHeadBossbar: 'Weitere Informationen: &a/hilfe willkommen'
-  modRespawnHeadBroadcast: '&e%PLAYER% &ahat seinen eigenen Kopf erhalten'
-  modRespawnHeadLore: '&7Zufallsdrop'
-  modRespawnHeadTitle: ' \n&6Willkommens Kopfdrop: &0&l&k||||'
-  modRespawnHeadTitleNo: ' \n&6Willkommens Kopfdrop: &7&l&c:('
-  modRespawnHeadTitleYes: ' \n&6Willkommens Kopfdrop: &7&l&a:)'
+  modRespawnWelcomeBonusActionError: 'Die Willkommens Bonus Aktion konnte nicht geladen werden, Grund: %REASON%'
+  modRespawnWelcomeBonusBossbar: 'Weitere Informationen: &a/hilfe willkommen'
+  modRespawnWelcomeBonusCustom: '&7Zufallsdrop'
+  modRespawnWelcomeBonusTitle: ' \n&6Willkommens Kopfdrop: &0&l&k||||'
+  modRespawnWelcomeBonusTitleNo: ' \n&6Willkommens Kopfdrop: &7&l&c:('
+  modRespawnWelcomeBonusTitleYes: ' \n&6Willkommens Kopfdrop: &7&l&a:)'
   modSellSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
   modSellSuccessLog: 'Sell: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
   modSignEditLinePasted: '&aSchild editiert'

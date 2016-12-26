@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -180,19 +179,6 @@ public final class Utils {
         }
 
         return newCache;
-    }
-
-    public static ItemStack getPlayerSkull(Player skullToGet, List<String> itemLore) {
-
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
-
-        skull.setDurability((short) 3);
-        SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        meta.setOwner(skullToGet.getName());
-        meta.setLore(itemLore);
-        skull.setItemMeta(meta);
-
-        return skull;
     }
 
     public static boolean random(int probabilityInPermill) {

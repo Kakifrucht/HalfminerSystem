@@ -62,7 +62,7 @@ public class Cmdvote extends HalfminerCommand {
                     boolean receivedReward = giveReward(playerHasVoted);
                     if (!receivedReward) {
                         storage.incrementInt("vote.reward." + playerHasVoted.getUniqueId(), 1);
-                        MessageBuilder.create(hms, "cmdVoteRewardInvFull", "Vote").sendMessage(playerHasVoted);
+                        MessageBuilder.create(hms, "cmdVoteRewardCouldNotExecute", "Vote").sendMessage(playerHasVoted);
                     }
 
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 2.0f);
@@ -94,16 +94,12 @@ public class Cmdvote extends HalfminerCommand {
                 while (rewardAmount > 0) {
                     if (giveReward(player)) rewardAmount--;
                     else {
-                        // if action could not be executed, send message
-                        MessageBuilder.create(hms, "cmdVoteRewardCouldNotExecute", "Vote")
-                                .sendMessage(player);
-                        storage.set(storageKey, rewardAmount);
+                        MessageBuilder.create(hms, "cmdVoteRewardCouldNotExecute", "Vote").sendMessage(player);
                         break;
                     }
                 }
 
                 storage.set(storageKey, rewardAmount);
-
             } else showMessage();
 
         } else showMessage();
