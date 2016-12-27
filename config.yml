@@ -225,6 +225,7 @@ localization:
   cmdHmsCopySchematicNotSpecified: '&7Gebe den Namen der zu kopierenden Schematic an'
   cmdHmsGiveError: '&cDer Gegenstand konnte nicht gegeben werden, Grund: %REASON%'
   cmdHmsGiveInventoryFull: '&cNicht genügend Platz im Inventar, &a%AMOUNT%x &cverloren'
+  cmdHmsGiveItemNotFound: '&cDer Gegenstand &e%ITEM% &cist nicht definiert'
   cmdHmsGiveList: '&eAlle Gegenstände: &f%LIST%'
   cmdHmsGiveListNone: '&cEs wurden keine Gegenstände definiert'
   cmdHmsGiveSuccessful: '&7Gebe &e%PLAYER% &a%AMOUNT% &7mal &e%ITEM%'
