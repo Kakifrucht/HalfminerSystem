@@ -150,6 +150,7 @@ public class CustomAction {
                 case HAS_ROOM:
                     StringArgumentSeparator separator = new StringArgumentSeparator(parsedMessage.returnMessage());
                     if (!Utils.hasRoom(players[0], separator.getArgumentIntMinimum(0, 1))) {
+                        placeholders.clear();
                         return false;
                     }
                     break;

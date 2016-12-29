@@ -1,6 +1,7 @@
 package de.halfminer.hms.modules;
 
 import de.halfminer.hms.util.MessageBuilder;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -29,6 +30,7 @@ public class ModMotd extends HalfminerModule implements Listener {
 
         if (fakeLimit > playerCountThreshold - playerCountBuffer) fakeLimit += playerCountBuffer;
         else fakeLimit = playerCountThreshold;
+
         if (fakeLimit >= playerCountLimit) fakeLimit = playerCountLimit;
 
         e.setMaxPlayers(fakeLimit);
@@ -41,8 +43,13 @@ public class ModMotd extends HalfminerModule implements Listener {
         playerCountThreshold = hms.getConfig().getInt("motd.playerCountThreshold", 50);
         playerCountBuffer = hms.getConfig().getInt("motd.playerCountBuffer", 1);
         playerCountLimit = server.getMaxPlayers();
+
+        // add reset code to start of news
+        String newsString = storage.getString("news");
+        newsString = ChatColor.RESET + newsString;
+
         String setMotd = MessageBuilder.create(hms, "modMotdLine")
-                .addPlaceholderReplace("%REPLACE%", storage.getString("news"))
+                .addPlaceholderReplace("%REPLACE%", newsString)
                 .returnMessage();
 
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");

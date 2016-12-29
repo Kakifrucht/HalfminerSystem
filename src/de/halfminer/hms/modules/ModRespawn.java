@@ -132,7 +132,8 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
                 if (Utils.random(randomRange)) {
 
-                    action.addPlaceholderForNextRun("%CUSTOM%", MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusCustom"));
+                    action.addPlaceholderForNextRun("%CUSTOM%",
+                            MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusCustom"));
 
                     if (action.runAction(p)) {
                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);

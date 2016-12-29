@@ -342,7 +342,7 @@ localization:
   modGlitchProtectionMove: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION% &c(&e%WORLD%&c, &e%MATERIAL%&c)'
   modGlitchProtectionNether: '&cDer Aufenthalt auf dem Netherdach ist verboten'
   modGlitchProtectionNetherNotify: '&c%PLAYER% war auf dem Netherdach bei &e%LOCATION%&c und wurde getötet'
-  modMotdLine: '&e&l<<<<<%COLOR%&l Two and a half Miner &e&l>>>>>\n&7%REPLACE%&7! (mc.halfminer.de)'
+  modMotdLine: '&e&l<<<<<%COLOR%&l Two and a half Miner &e&l>>>>>\n%REPLACE%&r (mc.halfminer.de)'
   modPerformanceReachedHopper: '&cEs sind bereits zu viele Hopper in deiner Umgebung'
   modPerformanceReachedHopperLog: '%PLAYER% hat das Hopperlimit (%LIMIT%) bei %LOCATION% erreicht'
   modPvPKillStreak: '&a&l%PLAYER%&7 hat &c&l%STREAK% &7Kills in Folge'
