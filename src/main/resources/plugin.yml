@@ -1,5 +1,5 @@
 name: HalfminerSystem
-version: 3.22.7
+version: ${project.version}
 description: Halfminer.de Coreplugin
 author: Kakifrucht
 website: https://halfminer.de

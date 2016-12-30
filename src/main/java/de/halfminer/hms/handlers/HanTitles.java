@@ -128,5 +128,4 @@ public class HanTitles extends HalfminerHandler {
                 IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + message + "\"}"), (byte) 2);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(actionbar);
     }
-
 }
