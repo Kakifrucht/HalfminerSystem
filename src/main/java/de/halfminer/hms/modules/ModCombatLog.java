@@ -73,7 +73,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
                 // untag last damaging player, ensure that last player gets the kill
                 untagPlayer(lastOpponent);
-                NMSUtils.setLastDamager(p, lastOpponent);
+                NMSUtils.setKiller(p, lastOpponent);
 
                 if (broadcastLog) {
                     MessageBuilder.create(hms, "modCombatLogLoggedOut", "PvP")
@@ -82,7 +82,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                             .broadcastMessage(true);
                 }
             }
-            p.setHealth(0.0);
+            p.setHealth(0.0d);
         }
     }
 

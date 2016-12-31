@@ -15,9 +15,13 @@ public final class NMSUtils {
 
     private NMSUtils() {}
 
-    public static void setLastDamager(Player setFrom, Player setTo) {
-        ((CraftPlayer) setFrom).getHandle()
-                .damageEntity(DamageSource.playerAttack(((CraftPlayer) setTo).getHandle()), 1f);
+    public static void setKiller(Player toKill, Player killer) {
+        EntityPlayer toKillNMS = ((CraftPlayer) toKill).getHandle();
+        toKillNMS.killer = ((CraftPlayer) killer).getHandle();
+        toKillNMS.getCombatTracker()
+                .trackDamage(DamageSource.playerAttack(((CraftPlayer) killer).getHandle()), 0.1f, 0.1f);
+        /* Preferred method, but may get prevented by third party plugins: */
+        //toKillNMS.damageEntity(DamageSource.playerAttack(((CraftPlayer) killer).getHandle()), 0.1f);
     }
 
     public static int getPing(Player p) {
