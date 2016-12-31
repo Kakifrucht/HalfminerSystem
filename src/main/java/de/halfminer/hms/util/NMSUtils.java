@@ -20,8 +20,8 @@ public final class NMSUtils {
         toKillNMS.killer = ((CraftPlayer) killer).getHandle();
         toKillNMS.getCombatTracker()
                 .trackDamage(DamageSource.playerAttack(((CraftPlayer) killer).getHandle()), 0.1f, 0.1f);
-        /* Preferred method, but may get prevented by third party plugins: */
-        //toKillNMS.damageEntity(DamageSource.playerAttack(((CraftPlayer) killer).getHandle()), 0.1f);
+        /* Preferred method, but may get prevented by third party plugins such as NoCheatPlus: */
+        //toKillNMS.damageEntity(DamageSource.playerAttack(((CraftPlayer) killer).getHandle()), Float.MAX_VALUE);
     }
 
     public static int getPing(Player p) {

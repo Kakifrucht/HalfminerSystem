@@ -112,8 +112,11 @@ public class MessageBuilder {
         }
 
         if (prefix != null && !loggingMode) {
-            toReturn = plugin.getConfig().getString("localization.prefix") + toReturn;
-            this.addPlaceholderReplace("%PREFIX%", prefix);
+            String prefixPlaceholder = plugin.getConfig().getString("localization.prefix");
+            if (prefixPlaceholder.length() > 0) {
+                toReturn = prefixPlaceholder + toReturn;
+                this.addPlaceholderReplace("%PREFIX%", prefix);
+            }
         }
 
         toReturn = placeholderReplace(toReturn);
