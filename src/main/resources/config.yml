@@ -331,7 +331,7 @@ localization:
   modChatManTooShort: '&cDie Nachricht ist zu kurz'
   modCombatLogBossBar: '&7Kampf mit &a&l%PLAYER% &7(Level: &a%LEVEL%&7) - &4%HEALTH%&f/&7%MAXHEALTH% &oLeben'
   modCombatLogCountdown: '&cIm Kampf: &e%TIME% &7Sekunden | &r%PROGRESSBAR%&r &7| Ausloggen: Tod'
-  modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf ausgeloggt'
+  modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf gegen &a%ENEMY% &causgeloggt'
   modCombatLogNoArmorChange: '&cDu kannst im Kampf nicht deine Rüstung ausziehen'
   modCombatLogNoCommand: '&cDu kannst im Kampf keine Kommandos benutzen'
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'

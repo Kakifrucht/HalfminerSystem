@@ -7,7 +7,7 @@
     <groupId>de.halfminer</groupId>
     <artifactId>HalfminerSystem</artifactId>
     <name>HalfminerSystem</name>
-    <version>3.22.7</version>
+    <version>3.22.8</version>
     <url>https://halfminer.de</url>
 
     <properties>
@@ -78,9 +78,18 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
             <version>LATEST</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>LATEST</version>
+            <type>javadoc</type>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -95,22 +104,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>19.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
             <version>LATEST</version>
-            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>LATEST</version>
-            <type>javadoc</type>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

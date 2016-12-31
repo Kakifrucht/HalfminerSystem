@@ -94,8 +94,11 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Writing capitalized
   - CombatLog
     - Tags players when hitting/being hit
-    - Combatlogging causes instant death
     - Shows actionbar message containing time left in fight
+    - On logout
+      - Combat logging player dies
+      - Last attacker will get the kill and get untagged
+      - Message will be broadcast, containing last attacker
     - Untags players after timer runs out, player logs out or a player is killed
     - Disables during fight:
       - Taking off armor

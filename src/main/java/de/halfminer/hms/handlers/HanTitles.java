@@ -1,11 +1,10 @@
 package de.halfminer.hms.handlers;
 
-import net.minecraft.server.v1_11_R1.*;
+import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
+import javax.annotation.Nullable;
 
 /**
  * - Main title/subtitle
@@ -22,7 +21,7 @@ public class HanTitles extends HalfminerHandler {
      * @param player to send the title to, or null to broadcast
      * @param title  message containing the title, color codes do not need to be translated
      */
-    public void sendTitle(Player player, String title) {
+    public void sendTitle(@Nullable Player player, String title) {
         sendTitle(player, title, 10, 100, 10);
     }
 
@@ -38,7 +37,7 @@ public class HanTitles extends HalfminerHandler {
      * @param stay    time in ticks message stays
      * @param fadeOut time in ticks until message faded out after it stay
      */
-    public void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
+    public void sendTitle(@Nullable Player player, String title, int fadeIn, int stay, int fadeOut) {
 
         String[] split = ChatColor.translateAlternateColorCodes('&', title).replace("\\n", "\n").split("\n");
         String topTitle = split[0];
@@ -47,14 +46,10 @@ public class HanTitles extends HalfminerHandler {
         if (split.length > 2) sendActionBar(player, split[2]);
 
         if (player == null) {
-
             for (Player sendTo : server.getOnlinePlayers()) {
-                sendTitlePackets(sendTo, topTitle, subTitle, fadeIn, stay, fadeOut);
+                NMSUtils.sendTitlePackets(sendTo, topTitle, subTitle, fadeIn, stay, fadeOut);
             }
-
-        } else {
-            sendTitlePackets(player, topTitle, subTitle, fadeIn, stay, fadeOut);
-        }
+        } else NMSUtils.sendTitlePackets(player, topTitle, subTitle, fadeIn, stay, fadeOut);
     }
 
     /**
@@ -63,69 +58,30 @@ public class HanTitles extends HalfminerHandler {
      * @param player  to send the title to, or null to broadcast
      * @param message message to send
      */
-    public void sendActionBar(Player player, String message) {
+    public void sendActionBar(@Nullable Player player, String message) {
 
         String send = ChatColor.translateAlternateColorCodes('&', message);
         if (player == null) {
-
-            for (Player sendTo : server.getOnlinePlayers()) sendActionBarPacket(sendTo, send);
-        } else {
-
-            sendActionBarPacket(player, send);
-        }
+            for (Player sendTo : server.getOnlinePlayers()) {
+                NMSUtils.sendActionBarPacket(sendTo, send);
+            }
+        } else NMSUtils.sendActionBarPacket(player, send);
     }
 
     /**
-     * Sets the footer and header for a specified player. Seperate header from footer with newline
+     * Sets the footer and header for a specified player. Seperate header from footer with newline "\n".
      *
      * @param player   to send the title to
      * @param messages message to send
      */
     public void setTablistHeaderFooter(Player player, String messages) {
 
-        if (!player.isOnline()) return;
         String[] messagesParsed = messages.split("%BOTTOM%");
         String header = messagesParsed[0];
         String footer = "";
-        if (messagesParsed.length > 1) footer = messagesParsed[1];
+        if (messagesParsed.length > 1)
+            footer = messagesParsed[1];
 
-        PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(
-                IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + header + "\"}")
-        );
-
-        try {
-            Field footerField = packet.getClass().getDeclaredField("b");
-            footerField.setAccessible(true);
-            footerField.set(packet, IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + footer + "\"}"));
-            footerField.setAccessible(false);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace(); //this should not happen
-        }
-
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-    }
-
-    private void sendTitlePackets(Player player, String topTitle, String subTitle, int fadeIn, int stay, int fadeOut) {
-
-        if (!player.isOnline() || (topTitle.length() == 0 && subTitle.length() == 0)) return;
-        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-
-        connection.sendPacket(new PacketPlayOutTitle(fadeIn, stay, fadeOut));
-        if (topTitle.length() > 0)
-            connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE,
-                    IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + topTitle + "\"}")));
-
-        if (subTitle.length() > 0)
-            connection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE,
-                    IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + subTitle + "\"}")));
-    }
-
-    private void sendActionBarPacket(Player player, String message) {
-
-        if (!player.isOnline() || message.length() == 0) return;
-
-        PacketPlayOutChat actionbar = new PacketPlayOutChat(
-                IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + message + "\"}"), (byte) 2);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(actionbar);
+        NMSUtils.sendTablistPackets(player, header, footer);
     }
 }

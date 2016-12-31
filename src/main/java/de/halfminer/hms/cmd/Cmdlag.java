@@ -3,8 +3,8 @@ package de.halfminer.hms.cmd;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModTps;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -21,78 +21,81 @@ public class Cmdlag extends HalfminerCommand {
     @Override
     public void execute() {
 
-        // determine latency
-        CraftPlayer player;
-        boolean showSummary = false;
-        if (args.length > 0) { //get other player
+        Player player;
+        if (args.length > 0) {
 
             if (!sender.hasPermission("hms.lag.others")) {
                 sendNoPermissionMessage("Lag");
                 return;
             }
 
-            Player toGet = server.getPlayer(args[0]);
+            //get player to lookup
+            player = server.getPlayer(args[0]);
 
-            if (toGet != null) {
-                player = (CraftPlayer) toGet;
-            } else {
+            if (player == null) {
                 MessageBuilder.create(hms, "playerNotOnline", "Lag").sendMessage(sender);
                 return;
             }
 
         } else if (isPlayer) {
-            player = (CraftPlayer) sender;
-            showSummary = true;
+            player = this.player;
         } else {
             sendNotAPlayerMessage("Lag");
             return;
         }
 
         // get latency and tps
-        int ping = player.getHandle().ping;
+        int ping = NMSUtils.getPing(player);
         double tps = ((ModTps) hms.getModule(ModuleType.TPS)).getTps();
 
-        // values for summary, determine who is lagging
-        int summaryServerLag = 0;
-        boolean summaryPlayerLag = true; // set to false if player is not lagging
-
-        String pingString;
-        if (ping > 1000 || ping < 0) pingString = ChatColor.DARK_RED + "> 1000"; // ping not yet known
-        else {
-            pingString = String.valueOf(ping);
-            if (ping > 200) pingString = ChatColor.RED + pingString;
-            else if (ping > 100) pingString = ChatColor.YELLOW + pingString;
+        boolean playerIsLagging = true;
+        String pingColored;
+        if (ping > 1000 || ping < 0) {
+            // ping not known (e.g. just logged in)
+            pingColored = ChatColor.DARK_RED + "> 1000";
+        } else {
+            pingColored = String.valueOf(ping);
+            if (ping > 200) pingColored = ChatColor.RED + pingColored;
+            else if (ping > 100) pingColored = ChatColor.YELLOW + pingColored;
             else {
-                pingString = ChatColor.GREEN + pingString;
-                summaryPlayerLag = false;
+                pingColored = ChatColor.GREEN + pingColored;
+                playerIsLagging = false;
             }
         }
 
-        String tpsString = String.valueOf(tps);
+        ServerStatus serverLagStatus = ServerStatus.STABLE;
+        String tpsColored = String.valueOf(tps);
         if (tps < 12.0d) {
-            tpsString = ChatColor.RED + tpsString;
-            summaryServerLag = 2;
+            tpsColored = ChatColor.RED + tpsColored;
+            serverLagStatus = ServerStatus.LAGGING;
         } else if (tps < 16.0d) {
-            tpsString = ChatColor.YELLOW + tpsString;
-            summaryServerLag = 1;
-        } else tpsString = ChatColor.GREEN + tpsString;
+            tpsColored = ChatColor.YELLOW + tpsColored;
+            serverLagStatus = ServerStatus.UNSTABLE;
+        } else tpsColored = ChatColor.GREEN + tpsColored;
 
         // Send ping and tps information to player
         MessageBuilder.create(hms, "cmdLagPlayerInfo", "Lag")
                 .addPlaceholderReplace("%PLAYER%", player.getName())
-                .addPlaceholderReplace("%LATENCY%", pingString)
+                .addPlaceholderReplace("%LATENCY%", pingColored)
                 .sendMessage(sender);
         MessageBuilder.create(hms, "cmdLagServerInfo", "Lag")
-                .addPlaceholderReplace("%TPS%", tpsString)
+                .addPlaceholderReplace("%TPS%", tpsColored)
                 .sendMessage(sender);
 
-        if (showSummary) { // determines the summary message, only shown when viewing own status
+        // determines the summary message, only shown when viewing own status
+        if (player.equals(this.player)) {
             String messageKey;
-            if (summaryServerLag == 0 && !summaryPlayerLag) messageKey = "cmdLagStable";
-            else if (summaryServerLag == 1) messageKey = "cmdLagServerUnstable";
-            else if (summaryServerLag == 2) messageKey = "cmdLagServerLag";
+            if (serverLagStatus == ServerStatus.STABLE && !playerIsLagging) messageKey = "cmdLagStable";
+            else if (serverLagStatus == ServerStatus.UNSTABLE) messageKey = "cmdLagServerUnstable";
+            else if (serverLagStatus == ServerStatus.LAGGING) messageKey = "cmdLagServerLag";
             else messageKey = "cmdLagPlayerLag";
             MessageBuilder.create(hms, messageKey, "Lag").sendMessage(sender);
         }
+    }
+
+    private enum ServerStatus {
+        STABLE,
+        UNSTABLE,
+        LAGGING
     }
 }

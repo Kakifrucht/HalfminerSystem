@@ -1,6 +1,10 @@
 package de.halfminer.hms.modules;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.NMSUtils;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -21,11 +25,15 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * - Tags players when hitting/being hit
- * - Combatlogging causes instant death
  * - Shows actionbar message containing time left in fight
+ * - On logout
+ *   - Combat logging player dies
+ *   - Last attacker will get the kill and get untagged
+ *   - Message will be broadcast, containing last attacker
  * - Untags players after timer runs out, player logs out or a player is killed
  * - Disables during fight:
  *   - Taking off armor
@@ -35,6 +43,7 @@ import java.util.Map;
 public class ModCombatLog extends HalfminerModule implements Listener {
 
     private final Map<Player, BukkitTask> tagged = Collections.synchronizedMap(new HashMap<>());
+    private Cache<Player, Player> lastOpponentCache;
 
     private boolean broadcastLog;
     private int tagTime;
@@ -54,21 +63,26 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     @EventHandler
     public void logoutCheckIfInCombat(PlayerQuitEvent e) {
 
-        if (isTagged(e.getPlayer())) {
-            untagPlayer(e.getPlayer());
+        Player p = e.getPlayer();
+        if (isTagged(p)) {
 
-            if (broadcastLog)
-                MessageBuilder.create(hms, "modCombatLogLoggedOut", "PvP")
-                        .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
-                        .broadcastMessage(true);
+            untagPlayer(p);
+            Player lastOpponent = lastOpponentCache.getIfPresent(p);
+            // cannot be null logically
+            if (lastOpponent != null) {
 
-            if (e.getPlayer().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) e.getPlayer().getLastDamageCause();
-                if (e2.getDamager() instanceof Player)
-                    untagPlayer((Player) e2.getDamager());
+                // untag last damaging player, ensure that last player gets the kill
+                untagPlayer(lastOpponent);
+                NMSUtils.setLastDamager(p, lastOpponent);
+
+                if (broadcastLog) {
+                    MessageBuilder.create(hms, "modCombatLogLoggedOut", "PvP")
+                            .addPlaceholderReplace("%PLAYER%", p.getName())
+                            .addPlaceholderReplace("%ENEMY%", lastOpponent.getName())
+                            .broadcastMessage(true);
+                }
             }
-
-            e.getPlayer().setHealth(0.0);
+            p.setHealth(0.0);
         }
     }
 
@@ -88,6 +102,8 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
             if (attacker != null && attacker != victim
                     && !attacker.isDead() && !victim.isDead()) {
+                lastOpponentCache.put(victim, attacker);
+                lastOpponentCache.put(attacker, victim);
                 tagPlayer(victim);
                 tagPlayer(attacker);
             }
@@ -180,5 +196,11 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         broadcastLog = hms.getConfig().getBoolean("combatLog.broadcastLog", true);
         tagTime = hms.getConfig().getInt("combatLog.tagTime", 15);
+
+        lastOpponentCache = Utils.copyValues(lastOpponentCache,
+                CacheBuilder.newBuilder()
+                        .weakKeys()
+                        .expireAfterWrite(tagTime, TimeUnit.SECONDS)
+                        .build());
     }
 }
