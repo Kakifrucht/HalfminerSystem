@@ -24,8 +24,6 @@ import java.util.Map;
 @SuppressWarnings("SameParameterValue")
 public class HanTeleport extends HalfminerHandler implements Reloadable {
 
-    private final HanBossBar bar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);
-
     private final Map<String, String> lang = new HashMap<>();
     private int defaultTime;
 
@@ -54,7 +52,8 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
         MessageBuilder.create(hms, lang.get("start")).setMode(MessageBuilder.Mode.DIRECT_STRING)
                 .addPlaceholderReplace("%TIME%", String.valueOf(delay))
                 .sendMessage(player);
-        bar.sendBar(player, lang.get("startbar"), BarColor.YELLOW, BarStyle.SOLID, delay);
+        ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR))
+                .sendBar(player, lang.get("startbar"), BarColor.YELLOW, BarStyle.SOLID, delay);
         currentTeleport.put(player, scheduler.runTaskTimer(hms, tp, 25L, 20L));
     }
 
@@ -141,7 +140,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             }
 
             if (!teleportSuccessful) {
-                bar.removeBar(player);
+                ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR)).removeBar(player);
                 if (toRunIfCancelled != null) scheduler.runTaskLater(hms, toRunIfCancelled, 0L);
             }
         }

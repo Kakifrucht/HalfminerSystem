@@ -117,10 +117,14 @@ public class HalfminerSystem extends JavaPlugin {
     }
 
     public HalfminerHandler getHandler(HandlerType type) {
+        if (handlers.size() != HandlerType.values().length)
+            throw new RuntimeException("Illegal call to getHandler before all handlers were initialized");
         return handlers.get(type);
     }
 
     public HalfminerModule getModule(ModuleType type) {
+        if (modules.size() != ModuleType.values().length)
+            throw new RuntimeException("Illegal call to getModule before all modules were initialized");
         return modules.get(type);
     }
 
