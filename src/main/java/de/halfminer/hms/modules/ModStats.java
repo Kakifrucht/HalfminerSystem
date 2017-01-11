@@ -62,7 +62,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         timeOnline.put(player, System.currentTimeMillis() / 1000);
 
         String lastName = hPlayer.getName();
-        if (!(lastName.length() == 0) && !lastName.equalsIgnoreCase(player.getName())) {
+        if (lastName.length() != 0 && !lastName.equalsIgnoreCase(player.getName())) {
 
             String lastNames = hPlayer.getString(DataType.LAST_NAMES);
 
@@ -159,11 +159,9 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
         Player clicker = e.getPlayer();
         Player clicked = (Player) e.getRightClicked();
-        long currentTime = System.currentTimeMillis() / 1000;
 
-        if (((ModCombatLog) hms.getModule(ModuleType.COMBAT_LOG)).isTagged(clicker)) return;
-
-        if (lastInteract.getIfPresent(clicker) == clicked) return;
+        if (((ModCombatLog) hms.getModule(ModuleType.COMBAT_LOG)).isTagged(clicker)
+                || lastInteract.getIfPresent(clicker) == clicked) return;
 
         HalfminerPlayer hClicked = storage.getPlayer(clicked);
         String skillgroup = ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);

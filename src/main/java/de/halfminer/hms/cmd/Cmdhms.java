@@ -198,11 +198,12 @@ public class Cmdhms extends HalfminerCommand {
             }
         }
 
+        String itemName = args[2].toLowerCase();
         try {
-            itemCache.giveItem(args[2], giveTo, amount);
+            itemCache.giveItem(itemName, giveTo, amount);
             MessageBuilder.create(hms, "cmdHmsGiveSuccessful", PREFIX)
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName())
-                    .addPlaceholderReplace("%ITEM%", args[2].toLowerCase())
+                    .addPlaceholderReplace("%ITEM%", itemName)
                     .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
                     .sendMessage(sender);
         } catch (GiveItemException e) {
@@ -214,11 +215,13 @@ public class Cmdhms extends HalfminerCommand {
                     totalLost += lost.getAmount();
                 }
                 MessageBuilder.create(hms, "cmdHmsGiveInventoryFull", PREFIX)
+                        .addPlaceholderReplace("%PLAYER%", giveTo.getName())
+                        .addPlaceholderReplace("%ITEM%", itemName)
                         .addPlaceholderReplace("%AMOUNT%", String.valueOf(totalLost))
                         .sendMessage(sender);
             } else if (e.getReason().equals(GiveItemException.Reason.ITEM_NOT_FOUND)) {
                 MessageBuilder.create(hms, "cmdHmsGiveItemNotFound", PREFIX)
-                        .addPlaceholderReplace("%ITEM%", args[2].toLowerCase())
+                        .addPlaceholderReplace("%ITEM%", itemName)
                         .sendMessage(sender);
             } else {
                 MessageBuilder.create(hms, "cmdHmsGiveError", PREFIX)

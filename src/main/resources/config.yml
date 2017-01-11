@@ -11,9 +11,9 @@ command:
     boundMin: 1000
     boundMax: 10000
   repair:
-    #Base cooldown, which will be doubled per hms.level
+    #Base cooldown in seconds, which will be doubled per hms.level
     cooldownBase: 900
-    #Longest cooldown if no level has been met
+    #Longest cooldown in seconds if no level has been met
     maxCooldown: 28800
   vote:
     #Define actions to be run when a player votes, key left of ':' must be a number and defines the
@@ -52,15 +52,15 @@ antiKillfarming:
   - 'tempban'
   - 'bminfo'
 antiXray:
-  #Time until a counted player won't be counter anymore since last protected break
+  #Time until a counted player won't be counted anymore since last protected break (if not permanently checked)
   intervalUntilClearSeconds: 300
-  #Amount of protected blocks that have to be broken at least in given time frame
+  #Minimum amount of protected blocks that have to be broken to be permanently checked
   protectedBlockThreshold: 20
+  #Amount of protected blocks in percent which will place a player into permanent checking mode, if
+  #protectedBlockThreshold was also passed
+  protectedBlockRatioThreshold: 0.04
   #Maximum Y level until breaks are no longer counted
   yLevelThreshold: 30
-  #Amount of protected blocks in percent which will place a player into permanent checking mode, if
-  #he also passed the protectedBlockThreshold
-  protectedBlockRatioThreshold: 0.04
   #Protected blocks / materials
   protectedBlocks:
   - DIAMOND_ORE
@@ -224,7 +224,7 @@ localization:
   cmdHmsCopySchematicNotConfigured: '&cEs wurde kein gültiger Zielpfad in der Konfiguration angegeben'
   cmdHmsCopySchematicNotSpecified: '&7Gebe den Namen der zu kopierenden Schematic an'
   cmdHmsGiveError: '&cDer Gegenstand konnte nicht gegeben werden, Grund: %REASON%'
-  cmdHmsGiveInventoryFull: '&cNicht genügend Platz im Inventar, &a%AMOUNT%x &cverloren'
+  cmdHmsGiveInventoryFull: '&cNicht genügend Platz im Inventar von &e%PLAYER%&c, &a%AMOUNT%&cx&e%ITEM% &cverloren'
   cmdHmsGiveItemNotFound: '&cDer Gegenstand &e%ITEM% &cist nicht definiert'
   cmdHmsGiveList: '&eAlle Gegenstände: &f%LIST%'
   cmdHmsGiveListNone: '&cEs wurden keine Gegenstände definiert'
