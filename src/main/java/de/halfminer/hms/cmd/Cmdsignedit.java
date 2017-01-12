@@ -75,7 +75,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                     this.lineText = setTo;
 
                     MessageBuilder.create(hms, "cmdSigneditSet", PREFIX)
-                            .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber))
+                            .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber + 1))
                             .addPlaceholderReplace("%TEXT%", setTo)
                             .sendMessage(player);
                     setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT);
