@@ -7,7 +7,7 @@
     <groupId>de.halfminer</groupId>
     <artifactId>HalfminerSystem</artifactId>
     <name>HalfminerSystem</name>
-    <version>3.22.8</version>
+    <version>3.22.9</version>
     <url>https://halfminer.de</url>
 
     <properties>

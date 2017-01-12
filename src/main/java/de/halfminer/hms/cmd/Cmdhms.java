@@ -2,6 +2,7 @@ package de.halfminer.hms.cmd;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
+import de.halfminer.hms.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;

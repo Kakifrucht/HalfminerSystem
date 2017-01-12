@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanBossBar;

@@ -1,6 +1,6 @@
 package de.halfminer.hms;
 
-import de.halfminer.hms.cmd.HalfminerCommand;
+import de.halfminer.hms.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.handlers.HalfminerHandler;

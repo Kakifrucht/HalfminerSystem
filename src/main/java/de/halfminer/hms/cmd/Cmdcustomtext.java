@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.util.CustomtextCache;
 import de.halfminer.hms.util.MessageBuilder;

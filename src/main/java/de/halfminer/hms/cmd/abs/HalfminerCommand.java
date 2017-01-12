@@ -1,4 +1,4 @@
-package de.halfminer.hms.cmd;
+package de.halfminer.hms.cmd.abs;
 
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.enums.HandlerType;

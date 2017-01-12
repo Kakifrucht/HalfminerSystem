@@ -1,5 +1,6 @@
 package de.halfminer.hms.cmd;
 
+import de.halfminer.hms.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.enums.Sellable;
 import de.halfminer.hms.modules.ModSell;

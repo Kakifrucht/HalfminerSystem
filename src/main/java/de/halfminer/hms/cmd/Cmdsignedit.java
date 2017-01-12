@@ -1,16 +1,30 @@
 package de.halfminer.hms.cmd;
 
-import de.halfminer.hms.enums.ModuleType;
-import de.halfminer.hms.modules.ModSignEdit;
+import de.halfminer.hms.cmd.abs.HalfminerPersistenceCommand;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * - Copy signs, define copy amount
  * - Edit signs, define line number
  */
 @SuppressWarnings("unused")
-public class Cmdsignedit extends HalfminerCommand {
+public class Cmdsignedit extends HalfminerPersistenceCommand {
+
+    private final static String PREFIX = "Signedit";
+
+    // Single line editing data
+    private int lineNumber;
+    private String lineText;
+
+    // Sign copy data
+    private int amountToCopy;
+    private String[] signToBeCopied;
 
     public Cmdsignedit() {
         this.permission = "hms.signedit";
@@ -20,11 +34,9 @@ public class Cmdsignedit extends HalfminerCommand {
     public void execute() {
 
         if (!isPlayer) {
-            sendNotAPlayerMessage("Signedit");
+            sendNotAPlayerMessage(PREFIX);
             return;
         }
-
-        ModSignEdit signEdit = (ModSignEdit) hms.getModule(ModuleType.SIGN_EDIT);
 
         if (args.length <= 0) {
             showUsage();
@@ -33,7 +45,7 @@ public class Cmdsignedit extends HalfminerCommand {
 
         if (args[0].equalsIgnoreCase("copy")) {
 
-            byte amountToCopy = 1;
+            amountToCopy = 1;
 
             if (args.length > 1) {
                 try {
@@ -43,28 +55,30 @@ public class Cmdsignedit extends HalfminerCommand {
                 }
             }
 
-            signEdit.makeCopies(player, amountToCopy);
-            MessageBuilder.create(hms, "cmdSigneditCopy", "Signedit")
+            MessageBuilder.create(hms, "cmdSigneditCopy", PREFIX)
                     .addPlaceholderReplace("%AMOUNT%", String.valueOf(amountToCopy))
                     .sendMessage(player);
+            setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT);
             return;
 
         } else {
 
             try {
-                byte line = Byte.parseByte(args[0]);
-                if (line > 0 && line < 5) {
+                lineNumber = Integer.parseInt(args[0]) - 1;
+                if (lineNumber >= 0 && lineNumber < 4) {
                     String setTo = "";
                     if (args.length > 1) {
                         setTo = Utils.arrayToString(args, 1, true);
                         if (setTo.length() > 15) setTo = setTo.substring(0, 15); // truncate if necessary
-                        signEdit.setLine(player, line, setTo);
-                    } else signEdit.setLine(player, line, ""); // empty line
+                    }
 
-                    MessageBuilder.create(hms, "cmdSigneditSet", "Signedit")
-                            .addPlaceholderReplace("%LINE%", String.valueOf(line))
+                    this.lineText = setTo;
+
+                    MessageBuilder.create(hms, "cmdSigneditSet", PREFIX)
+                            .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber))
                             .addPlaceholderReplace("%TEXT%", setTo)
                             .sendMessage(player);
+                    setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT);
                     return;
                 } else {
                     showUsage();
@@ -76,7 +90,45 @@ public class Cmdsignedit extends HalfminerCommand {
         showUsage();
     }
 
+    @Override
+    public boolean execute(Event e) {
+
+        boolean keep = true;
+        PlayerInteractEvent interactEvent = (PlayerInteractEvent) e;
+
+        Block block = interactEvent.getClickedBlock();
+        if (block != null && (block.getType() == Material.SIGN
+                        || block.getType() == Material.SIGN_POST
+                        || block.getType() == Material.WALL_SIGN)) {
+
+            Sign sign = (Sign) block.getState();
+
+            if (amountToCopy > 0 && signToBeCopied == null) {
+
+                signToBeCopied = sign.getLines();
+                MessageBuilder.create(hms, "cmdSigneditSignCopied", PREFIX).sendMessage(player);
+            } else {
+
+                if (signToBeCopied != null) {
+                    for (int i = 0; i < 4; i++) sign.setLine(i, signToBeCopied[i]);
+                    if (--amountToCopy == 0) keep = false;
+                    MessageBuilder.create(hms, "cmdSigneditSignPasted", PREFIX)
+                            .addPlaceholderReplace("%AMOUNT%", String.valueOf(amountToCopy))
+                            .sendMessage(player);
+                } else {
+                    sign.setLine(lineNumber, lineText);
+                    MessageBuilder.create(hms, "cmdSigneditLinePasted", PREFIX).sendMessage(player);
+                    keep = false;
+                }
+
+                sign.update();
+            }
+            interactEvent.setCancelled(true);
+        }
+        return keep;
+    }
+
     private void showUsage() {
-        MessageBuilder.create(hms, "cmdSigneditUsage", "Signedit").sendMessage(player);
+        MessageBuilder.create(hms, "cmdSigneditUsage", PREFIX).sendMessage(player);
     }
 }

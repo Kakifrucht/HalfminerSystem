@@ -104,6 +104,8 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Taking off armor
       - Commands
       - Enderpearls
+  - CommandPersistence
+    - Stores and calls registered persistent commands to be executed when a given event is fired for a player
   - GlitchProtection
     - Notifies staff about potential wall glitching
     - Detects dismount glitches, forces player to spawn
@@ -164,9 +166,6 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Custom multiplier per permission
       - Price settable via config
     - Can be accessed via command
-  - SignEdit
-    - Allows editing of signs
-    - Use command /signedit
   - SkillLevel
     - PvP based skilllevel system / ELO
     - Dynamic ELO determination
