@@ -10,6 +10,25 @@ command:
     #Bounds in which the random position will lie in
     boundMin: 1000
     boundMax: 10000
+  rank:
+    #Custom action that will be executed if/once player is online
+    actionToExecute: 'examplerank'
+    #If action cannot fully execute, execute this action, will be ignored if empty
+    actionToExecuteOnFail: ''
+    #Base amounts that will be multiplied as specified by randNamesAndMultipliers and passed as
+    #parameter %PARAM2% - %PARAMX% to the supplied action names above
+    baseAmountValues:
+    - 100
+    - 5
+    #Add rank name (passed as %PARAM1%) and multiplier for above base values, that will be passed to the action
+    #First rank must have permission hms.level.1, second hms.level.2 etc.
+    #First value will be the rank parameter for /rank <Player> [rank]
+    rankNamesAndMultipliers:
+    - 'Premium, 1'
+    - 'Vip, 2'
+    - 'Legend, 4'
+    #True if you want to deduct already multiplied amounts of previous ranks again, useful for rank upgrades
+    deductPreviousRanks: true
   repair:
     #Base cooldown in seconds, which will be doubled per hms.level
     cooldownBase: 900
@@ -272,6 +291,12 @@ localization:
   cmdNewtpLog: 'Newtp: %PLAYER% wurde zu %LOCATION% teleportiert'
   cmdNewtpStart: '&aDu wirst an einen eigenen Ort teleportiert'
   cmdNewtpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'
+  cmdRankActionNotFound: '&cDie Aktion &e%ACTIONNAME% &cfür &b%PLAYER% &ckonnte nicht ausgeführt werden'
+  cmdRankInvalidRankCommand: '&cUnbekannter Rang'
+  cmdRankInvalidRankConfig: '&cUngültige Konfiguration: &r%INVALIDINPUT%'
+  cmdRankNewLevelSameOrLower: '&e%PLAYER% &chat bereits den Rang &b%NEWRANK% &coder einen höheren'
+  cmdRankNotOnline: '&7Der Spieler &e%PLAYER% &7ist aktuell nicht online, er erhält den Rang sobald er den Server betritt'
+  cmdRankUsage: '&cVerwendung: &f/rank <Spieler> <Rang>'
   cmdRepairCooldown: '&cDu kannst erst wieder in &e%MINUTES% &cMinuten reparieren'
   cmdRepairDone: '&aGegenstand &e%NAME% &aerfolgreich repariert'
   cmdRepairDoneAll: '&7Es wurden &e%AMOUNT% &7Gegenstände repariert'

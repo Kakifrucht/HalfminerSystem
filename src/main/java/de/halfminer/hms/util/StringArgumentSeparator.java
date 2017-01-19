@@ -37,8 +37,14 @@ public class StringArgumentSeparator {
         return arguments[arg];
     }
 
+    /**
+     * Gets the argument as integer.
+     *
+     * @param arg argument to get
+     * @return parsed integer or Integer.MIN_VALUE if couldn't be parsed
+     */
     public int getArgumentInt(int arg) {
-        String str = getArgument(arg);
+        String str = getArgument(arg).replaceAll(" ", "");
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {

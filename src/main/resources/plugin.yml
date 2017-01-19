@@ -37,6 +37,9 @@ commands:
   newtp:
     description: Teleports the player to a random location
     aliases: [tpnew, neutp, tpneu]
+  rank:
+    description: Give custom ranks to players
+    aliases: [rang]
   repair:
     description: Repair the currently held item
     aliases: [fix]
@@ -72,6 +75,7 @@ permissions:
       hms.lag.notify: true
       hms.moderator: true
       hms.newtp: true
+      hms.rank: true
       hms.sell: true
       hms.sell.auto: true
       hms.signedit: true
@@ -222,6 +226,8 @@ permissions:
     description: Access to commands restricted to level 6
   hms.moderator:
     description: Access to moderative commands
+  hms.rank:
+    description: Access to rank command
   hms.repair:
     description: Access to repair command
   hms.repair.all:

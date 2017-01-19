@@ -276,6 +276,14 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
     - Sell sellable items via command
     - Uses ModSell for the actual sale
     - Possibility to sell multiple inventories at once
+  - /rank
+    - Give out ranks to players
+    - Executes a custom action to give out rewards and run custom commands
+      - If player is offline waits until he is back online to execute action
+      - If action fails executes custom fallback action
+      - Add custom parameters that will be multiplied by a custom amount per rank (see config)
+        - Possibility to deduct reward multipliers for previous ranks
+    - Prevents giving out same or lower rank
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number

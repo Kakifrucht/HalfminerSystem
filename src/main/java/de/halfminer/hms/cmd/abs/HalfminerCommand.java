@@ -30,7 +30,11 @@ public abstract class HalfminerCommand extends HalfminerClass {
             isPlayer = true;
             player = (Player) sender;
         }
+        preExecute();
         execute();
+    }
+
+    protected void preExecute() {
     }
 
     protected abstract void execute();

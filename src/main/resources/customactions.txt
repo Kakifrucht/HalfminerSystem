@@ -14,3 +14,8 @@ tell: &7You have received 1 diamonds
 hasroom: 1
 cmd: give %PLAYER% diamond 2
 tell: &7You have received 2 diamonds
+#examplerank
+broadcast: %PLAYER% has donated
+cmd: setgroup %PLAYER% %PARAM1%
+cmd: eco give %PLAYER% %PARAM2%
+cmd: give %PLAYER% diamond %PARAM3%
