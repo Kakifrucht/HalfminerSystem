@@ -126,7 +126,6 @@ public class Cmdrank extends HalfminerPersistenceCommand {
                 for (int i = 0; i < multipliedAmounts.size(); i++) {
                     int current = multipliedAmounts.get(i);
                     int alreadyGiven = baseAmounts.get(i) * multiplierOfPreviousRank;
-                    System.out.println(current + " " + alreadyGiven);
                     multipliedAmounts.set(i, current - alreadyGiven);
                 }
             }
