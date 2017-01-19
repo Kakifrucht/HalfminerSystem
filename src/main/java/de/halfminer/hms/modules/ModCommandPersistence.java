@@ -48,6 +48,10 @@ public class ModCommandPersistence extends HalfminerModule implements Listener {
             case EVENT_PLAYER_JOIN:
                 runOnJoin.put(command.getSenderUUID(), command);
                 break;
+            case NONE:
+                runOnInteract.entrySet().removeIf(entry -> entry.getValue().equals(command));
+                runOnJoin.entrySet().removeIf(entry -> entry.getValue().equals(command));
+                break;
         }
     }
 }

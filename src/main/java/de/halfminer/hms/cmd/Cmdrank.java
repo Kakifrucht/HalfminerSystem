@@ -57,6 +57,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
                 setPersistent(PersistenceMode.EVENT_PLAYER_JOIN);
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender.get(), "Rank");
+                return;
             }
         } else uuidToReward = playerToReward.getUniqueId();
 
@@ -85,6 +86,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
 
         if (rankName == null) {
             MessageBuilder.create(hms, "cmdRankInvalidRankCommand", "Rank").sendMessage(sender.get());
+            setPersistent(PersistenceMode.NONE);
             return;
         }
 
@@ -160,6 +162,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         MessageBuilder.create(hms, "cmdRankInvalidRankConfig", "Rank")
                 .addPlaceholderReplace("%INVALIDINPUT%", level)
                 .sendMessage(sender.get());
+        setPersistent(PersistenceMode.NONE);
     }
 
     private void addPlaceholdersToAction(CustomAction action, List<Integer> multipliedAmounts) {

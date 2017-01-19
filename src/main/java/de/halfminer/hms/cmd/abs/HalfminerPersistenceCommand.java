@@ -76,6 +76,7 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
 
     public enum PersistenceMode {
         EVENT_PLAYER_INTERACT,
-        EVENT_PLAYER_JOIN
+        EVENT_PLAYER_JOIN,
+        NONE
     }
 }
