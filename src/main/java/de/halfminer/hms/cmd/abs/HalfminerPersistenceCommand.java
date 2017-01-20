@@ -68,7 +68,11 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
     }
 
     protected CommandSender getOriginalSender() {
-        return isPlayer ? server.getPlayer(persistenceSender) : server.getConsoleSender();
+        if (isPlayer) {
+            return player != null ? player : server.getPlayer(persistenceSender);
+        } else {
+            return sender != null ? sender : server.getConsoleSender();
+        }
     }
 
     public enum PersistenceMode {
