@@ -5,6 +5,7 @@ import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,13 +24,15 @@ import java.util.logging.Level;
  *   - Add custom parameters that will be multiplied by a custom amount per rank (see config)
  *     - Possibility to deduct reward multipliers for previous ranks
  * - Prevents giving out same or lower rank
+ * - Instead of defining upgrade rank on command execution can define number of ranks that player will be upranked
  */
 @SuppressWarnings("unused")
 public class Cmdrank extends HalfminerPersistenceCommand {
 
-    private String rankName;
-    private List<Integer> multiplierList;
-    private int multiplierValue;
+    private String rankToGiveName;
+    private int upgradeAmount = Integer.MIN_VALUE;
+    private List<Pair<String, Integer>> rankNameAndMultiplierPairs;
+    private int rankToGiveMultiplier;
 
     public Cmdrank() {
         this.permission = "hms.rank";
@@ -54,7 +57,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             }
         } else uuidToReward = playerToReward.getUniqueId();
 
-        multiplierList = new ArrayList<>();
+        rankNameAndMultiplierPairs = new ArrayList<>();
         for (String level : hms.getConfig().getStringList("command.rank.rankNamesAndMultipliers")) {
 
             StringArgumentSeparator current = new StringArgumentSeparator(level, ',');
@@ -71,15 +74,21 @@ public class Cmdrank extends HalfminerPersistenceCommand {
                 return;
             }
             if (currentRank.equalsIgnoreCase(args[1])) {
-                rankName = currentRank;
-                multiplierValue = multiplier;
+                rankToGiveName = currentRank;
+                rankToGiveMultiplier = multiplier;
             }
-            multiplierList.add(multiplier);
+            rankNameAndMultiplierPairs.add(new Pair<>(currentRank, multiplier));
         }
 
-        if (rankName == null) {
-            MessageBuilder.create(hms, "cmdRankInvalidRankCommand", "Rank").sendMessage(sender);
-            return;
+        if (rankToGiveName == null) {
+            try {
+                upgradeAmount = Integer.parseInt(args[1]);
+            } catch (NumberFormatException ignored) {}
+
+            if (upgradeAmount > rankNameAndMultiplierPairs.size() || upgradeAmount < 1) {
+                MessageBuilder.create(hms, "cmdRankInvalidRankCommand", "Rank").sendMessage(sender);
+                return;
+            }
         }
 
         if (playerToReward != null) {
@@ -103,19 +112,33 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             playerLevel++;
         }
 
+        if (rankToGiveName == null) {
+            int getFromList = playerLevel + upgradeAmount - 1;
+            if (getFromList >= rankNameAndMultiplierPairs.size()) {
+                MessageBuilder send = MessageBuilder.create(hms, "cmdRankInvalidUpgradeParam", "Rank")
+                        .addPlaceholderReplace("%PLAYER%", player.getName())
+                        .addPlaceholderReplace("%UPGRADEAMOUNT%", String.valueOf(upgradeAmount));
+                sendAndLogMessageBuilder(send);
+                return true;
+            }
+            Pair<String, Integer> rankPair = rankNameAndMultiplierPairs.get(getFromList);
+            rankToGiveName = rankPair.getLeft();
+            rankToGiveMultiplier = rankPair.getRight();
+        }
+
         List<Integer> baseAmounts = hms.getConfig().getIntegerList("command.rank.baseAmountValues");
         List<Integer> multipliedAmounts = new ArrayList<>();
         for (Integer base : baseAmounts) {
-            multipliedAmounts.add(base * multiplierValue);
+            multipliedAmounts.add(base * rankToGiveMultiplier);
         }
 
         if (playerLevel > 0) {
             // check if new level is lower/same as old one
-            int multiplierOfPreviousRank = multiplierList.get(playerLevel - 1);
-            if (multiplierOfPreviousRank >= multiplierValue) {
+            int multiplierOfPreviousRank = rankNameAndMultiplierPairs.get(playerLevel - 1).getRight();
+            if (multiplierOfPreviousRank >= rankToGiveMultiplier) {
                 MessageBuilder send = MessageBuilder.create(hms, "cmdRankNewLevelSameOrLower", "Rank")
                         .addPlaceholderReplace("%PLAYER%", player.getName())
-                        .addPlaceholderReplace("%NEWRANK%", rankName);
+                        .addPlaceholderReplace("%NEWRANK%", rankToGiveName);
                 sendAndLogMessageBuilder(send);
                 return true;
             }
@@ -163,14 +186,14 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             String placeholderReplaced = MessageBuilder.create(hms, commandOnDisable)
                     .setMode(MessageBuilder.Mode.DIRECT_STRING)
                     .addPlaceholderReplace("%PLAYER%", args[0])
-                    .addPlaceholderReplace("%RANK%", rankName)
+                    .addPlaceholderReplace("%RANK%", rankToGiveName)
                     .returnMessage();
 
             server.dispatchCommand(server.getConsoleSender(), placeholderReplaced);
         }
         MessageBuilder.create(hms, "cmdRankPersistenceDisable")
                 .addPlaceholderReplace("%PLAYER%", args[0])
-                .addPlaceholderReplace("%RANK%", rankName)
+                .addPlaceholderReplace("%RANK%", rankToGiveName)
                 .logMessage(Level.WARNING);
     }
 
@@ -181,7 +204,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     }
 
     private void addPlaceholdersToAction(CustomAction action, List<Integer> multipliedAmounts) {
-        action.addPlaceholderForNextRun("%PARAM1%", rankName);
+        action.addPlaceholderForNextRun("%PARAM1%", rankToGiveName);
         for (int i = 0; i < multipliedAmounts.size(); i++) {
             action.addPlaceholderForNextRun("%PARAM" + (i + 2) + "%", String.valueOf(multipliedAmounts.get(i)));
         }

@@ -284,6 +284,7 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Add custom parameters that will be multiplied by a custom amount per rank (see config)
         - Possibility to deduct reward multipliers for previous ranks
     - Prevents giving out same or lower rank
+    - Instead of defining upgrade rank on command execution can define number of ranks that player will be upranked
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number
