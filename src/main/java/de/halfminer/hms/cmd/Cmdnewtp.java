@@ -38,7 +38,7 @@ public class Cmdnewtp extends HalfminerCommand {
     public void execute() {
 
         if (!isPlayer) {
-            sendNotAPlayerMessage("Disposal");
+            sendNotAPlayerMessage("Newtp");
             return;
         }
 

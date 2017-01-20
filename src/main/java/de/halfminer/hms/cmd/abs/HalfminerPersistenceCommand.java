@@ -42,12 +42,17 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
     public abstract boolean execute(Event e);
 
     /**
-     * Get the senders UUID.
-     *
-     * @return the senders UUID, or default "00000000-0000-0000-0000-000000000000"
-     * UUID if not a player or not yet initialized
+     * Will be called if plugin is disabled while this command still persists.
      */
-    public UUID getSenderUUID() {
+    public abstract void onDisable();
+
+    /**
+     * Get the persistence owners UUID (the one that should trigger the
+     * execution of the command) or the senders UUID if not specified.
+     *
+     * @return UUID, or default "00000000-0000-0000-0000-000000000000" UUID if not a player or not yet initialized
+     */
+    public UUID getPersistenceUUID() {
         if (persistenceOwner != null)
             return persistenceOwner;
         else {
@@ -63,8 +68,6 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
         persistenceOwner = uuidOfOwner;
     }
 
-    //TODO add method that will be called if command is discarded due to shutdown
-
     public PersistenceMode getMode() {
         return mode;
     }
@@ -76,7 +79,6 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
 
     public enum PersistenceMode {
         EVENT_PLAYER_INTERACT,
-        EVENT_PLAYER_JOIN,
-        NONE
+        EVENT_PLAYER_JOIN
     }
 }

@@ -4,7 +4,6 @@ import de.halfminer.hms.cmd.abs.HalfminerPersistenceCommand;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.CustomAction;
-import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.entity.Player;
@@ -47,14 +46,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         Player playerToReward = server.getPlayerExact(args[0]);
         if (playerToReward == null) {
             try {
-                HalfminerPlayer p = storage.getPlayer(args[0]);
-                uuidToReward = p.getUniqueId();
-                MessageBuilder.create(hms, "cmdRankNotOnline", "Rank")
-                        .addPlaceholderReplace("%PLAYER%", args[0])
-                        .sendMessage(sender.get());
-
-                setPersistenceOwner(uuidToReward);
-                setPersistent(PersistenceMode.EVENT_PLAYER_JOIN);
+                uuidToReward = storage.getPlayer(args[0]).getUniqueId();
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender.get(), "Rank");
                 return;
@@ -86,12 +78,17 @@ public class Cmdrank extends HalfminerPersistenceCommand {
 
         if (rankName == null) {
             MessageBuilder.create(hms, "cmdRankInvalidRankCommand", "Rank").sendMessage(sender.get());
-            setPersistent(PersistenceMode.NONE);
             return;
         }
 
         if (playerToReward != null) {
             execute(null);
+        } else {
+            MessageBuilder.create(hms, "cmdRankNotOnline", "Rank")
+                    .addPlaceholderReplace("%PLAYER%", args[0])
+                    .sendMessage(sender.get());
+            setPersistenceOwner(uuidToReward);
+            setPersistent(PersistenceMode.EVENT_PLAYER_JOIN);
         }
     }
 
@@ -157,11 +154,29 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         return true;
     }
 
+    @Override
+    public void onDisable() {
+
+        String commandOnDisable = hms.getConfig().getString("command.rank.commandToExecuteOnDisable");
+        if (commandOnDisable.length() > 0) {
+            String placeholderReplaced = MessageBuilder.create(hms, commandOnDisable)
+                    .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                    .addPlaceholderReplace("%PLAYER%", args[0])
+                    .addPlaceholderReplace("%RANK%", rankName)
+                    .returnMessage();
+
+            server.dispatchCommand(server.getConsoleSender(), placeholderReplaced);
+        }
+        MessageBuilder.create(hms, "cmdRankPersistenceDisable")
+                .addPlaceholderReplace("%PLAYER%", args[0])
+                .addPlaceholderReplace("%RANK%", rankName)
+                .logMessage(Level.WARNING);
+    }
+
     private void sendInvalidRankConfig(String level) {
         MessageBuilder.create(hms, "cmdRankInvalidRankConfig", "Rank")
                 .addPlaceholderReplace("%INVALIDINPUT%", level)
                 .sendMessage(sender.get());
-        setPersistent(PersistenceMode.NONE);
     }
 
     private void addPlaceholdersToAction(CustomAction action, List<Integer> multipliedAmounts) {

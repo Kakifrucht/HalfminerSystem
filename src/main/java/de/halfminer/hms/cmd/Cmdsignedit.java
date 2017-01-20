@@ -94,8 +94,8 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
     @Override
     public boolean execute(Event e) {
 
-        if (player.get() == null) return true;
         Player player = super.player.get();
+        if (player == null) return true;
 
         boolean isDone = false;
         PlayerInteractEvent interactEvent = (PlayerInteractEvent) e;
@@ -108,7 +108,6 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
             Sign sign = (Sign) block.getState();
 
             if (amountToCopy > 0 && signToBeCopied == null) {
-
                 signToBeCopied = sign.getLines();
                 MessageBuilder.create(hms, "cmdSigneditSignCopied", PREFIX).sendMessage(player);
             } else {
@@ -130,6 +129,10 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
             interactEvent.setCancelled(true);
         }
         return isDone;
+    }
+
+    @Override
+    public void onDisable() {
     }
 
     private void showUsage() {
