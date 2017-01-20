@@ -6,11 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
-import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 /**
- * Called by {@link ModCommandPersistence} after being registered via {@link #setPersistent(PersistenceMode)}.
+ * Called by {@link ModCommandPersistence} after being registered via {@link #setPersistent(PersistenceMode, UUID)}.
  */
 @SuppressWarnings("unused")
 public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
@@ -18,20 +17,9 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
     private final static ModCommandPersistence persistence =
             (ModCommandPersistence) hms.getModule(ModuleType.COMMAND_PERSISTENCE);
 
-    protected WeakReference<CommandSender> sender;
-    protected WeakReference<Player> player;
-
+    private UUID persistenceSender;
     private UUID persistenceOwner;
     private PersistenceMode mode;
-
-    protected void preExecute() {
-        sender = new WeakReference<>(super.sender);
-        super.sender = null;
-        if (isPlayer) {
-            player = new WeakReference<>(super.player);
-            super.player = null;
-        }
-    }
 
     /**
      * Execute with event passed by {@link ModCommandPersistence}.
@@ -47,34 +35,44 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
     public abstract void onDisable();
 
     /**
-     * Get the persistence owners UUID (the one that should trigger the
-     * execution of the command) or the senders UUID if not specified.
+     * Get the persistence owners UUID.
      *
-     * @return UUID, or default "00000000-0000-0000-0000-000000000000" UUID if not a player or not yet initialized
+     * @return UUID of player that will trigger persistence module
+     * @throws RuntimeException when persistence was not enabled
      */
     public UUID getPersistenceUUID() {
         if (persistenceOwner != null)
             return persistenceOwner;
-        else {
-            Player player1 = player.get();
-            if (player1 != null)
-                return player1.getUniqueId();
-            else
-                return UUID.fromString("00000000-0000-0000-0000-000000000000");
-        }
-    }
-
-    protected void setPersistenceOwner(UUID uuidOfOwner) {
-        persistenceOwner = uuidOfOwner;
+        throw new RuntimeException("getPersistenceUUID() called before persistence was set");
     }
 
     public PersistenceMode getMode() {
         return mode;
     }
 
-    protected void setPersistent(PersistenceMode mode) {
+    /**
+     * Enables persistence for this command, define on which event and for which UUID of a player.
+     * After calling this method {@link #sender} and {@link #player} will be set to null to prevent
+     * memory leaks. They can be referenced by {@link #getOriginalSender()} and {@link #getPersistencePlayer()}.
+     *
+     * @param mode which event will trigger this command
+     * @param setTo sets the given UUID to the event trigger
+     */
+    protected void setPersistent(PersistenceMode mode, UUID setTo) {
         this.mode = mode;
+        this.persistenceSender = isPlayer ? player.getUniqueId() : null;
+        this.persistenceOwner = setTo;
+        this.sender = null;
+        this.player = null;
         persistence.addPersistentCommand(this);
+    }
+
+    protected CommandSender getOriginalSender() {
+        return isPlayer ? server.getPlayer(persistenceSender) : server.getConsoleSender();
+    }
+
+    protected Player getPersistencePlayer() {
+        return server.getPlayer(persistenceSender);
     }
 
     public enum PersistenceMode {

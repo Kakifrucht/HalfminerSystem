@@ -58,8 +58,8 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
 
             MessageBuilder.create(hms, "cmdSigneditCopy", PREFIX)
                     .addPlaceholderReplace("%AMOUNT%", String.valueOf(amountToCopy))
-                    .sendMessage(player.get());
-            setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT);
+                    .sendMessage(player);
+            setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT, player.getUniqueId());
             return;
 
         } else {
@@ -78,8 +78,8 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                     MessageBuilder.create(hms, "cmdSigneditSet", PREFIX)
                             .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber + 1))
                             .addPlaceholderReplace("%TEXT%", setTo)
-                            .sendMessage(player.get());
-                    setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT);
+                            .sendMessage(player);
+                    setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT, player.getUniqueId());
                     return;
                 } else {
                     showUsage();
@@ -94,8 +94,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
     @Override
     public boolean execute(Event e) {
 
-        Player player = super.player.get();
-        if (player == null) return true;
+        Player player = getPersistencePlayer();
 
         boolean isDone = false;
         PlayerInteractEvent interactEvent = (PlayerInteractEvent) e;
@@ -136,6 +135,6 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
     }
 
     private void showUsage() {
-        MessageBuilder.create(hms, "cmdSigneditUsage", PREFIX).sendMessage(player.get());
+        MessageBuilder.create(hms, "cmdSigneditUsage", PREFIX).sendMessage(player);
     }
 }

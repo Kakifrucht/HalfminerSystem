@@ -6,6 +6,7 @@ import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
@@ -26,7 +27,6 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class Cmdrank extends HalfminerPersistenceCommand {
 
-    private UUID uuidToReward;
     private String rankName;
     private List<Integer> multiplierList;
     private int multiplierValue;
@@ -39,16 +39,17 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     protected void execute() {
 
         if (args.length < 2) {
-            MessageBuilder.create(hms, "cmdRankUsage", "Rank").sendMessage(sender.get());
+            MessageBuilder.create(hms, "cmdRankUsage", "Rank").sendMessage(sender);
             return;
         }
 
         Player playerToReward = server.getPlayerExact(args[0]);
+        UUID uuidToReward;
         if (playerToReward == null) {
             try {
                 uuidToReward = storage.getPlayer(args[0]).getUniqueId();
             } catch (PlayerNotFoundException e) {
-                e.sendNotFoundMessage(sender.get(), "Rank");
+                e.sendNotFoundMessage(sender, "Rank");
                 return;
             }
         } else uuidToReward = playerToReward.getUniqueId();
@@ -77,7 +78,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         }
 
         if (rankName == null) {
-            MessageBuilder.create(hms, "cmdRankInvalidRankCommand", "Rank").sendMessage(sender.get());
+            MessageBuilder.create(hms, "cmdRankInvalidRankCommand", "Rank").sendMessage(sender);
             return;
         }
 
@@ -86,16 +87,15 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         } else {
             MessageBuilder.create(hms, "cmdRankNotOnline", "Rank")
                     .addPlaceholderReplace("%PLAYER%", args[0])
-                    .sendMessage(sender.get());
-            setPersistenceOwner(uuidToReward);
-            setPersistent(PersistenceMode.EVENT_PLAYER_JOIN);
+                    .sendMessage(sender);
+            setPersistent(PersistenceMode.EVENT_PLAYER_JOIN, uuidToReward);
         }
     }
 
     @Override
     public boolean execute(Event e) {
 
-        Player toReward = server.getPlayer(uuidToReward);
+        Player toReward = getPersistencePlayer();
 
         int playerLevel = 0;
         while (toReward.hasPermission("hms.level." + (playerLevel + 1))) {
@@ -176,7 +176,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     private void sendInvalidRankConfig(String level) {
         MessageBuilder.create(hms, "cmdRankInvalidRankConfig", "Rank")
                 .addPlaceholderReplace("%INVALIDINPUT%", level)
-                .sendMessage(sender.get());
+                .sendMessage(sender);
     }
 
     private void addPlaceholdersToAction(CustomAction action, List<Integer> multipliedAmounts) {
@@ -195,6 +195,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
 
     private void sendAndLogMessageBuilder(MessageBuilder toSendAndLog) {
         toSendAndLog.logMessage(Level.SEVERE);
-        if (sender.get() != null) toSendAndLog.sendMessage(sender.get());
+        CommandSender originalSender = getOriginalSender();
+        if (originalSender != null) toSendAndLog.sendMessage(originalSender);
     }
 }
