@@ -3,8 +3,7 @@ package de.halfminer.hms.cmd.abs;
 import de.halfminer.hms.enums.ModuleType;
 import de.halfminer.hms.modules.ModCommandPersistence;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerEvent;
 
 import java.util.UUID;
 
@@ -27,7 +26,7 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
      * @param e Event that causes the execution of the command
      * @return true if it has executed successfully and should not be called anymore, false if it must be called again
      */
-    public abstract boolean execute(Event e);
+    public abstract boolean execute(PlayerEvent e);
 
     /**
      * Will be called if plugin is disabled while this command still persists.
@@ -53,7 +52,8 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
     /**
      * Enables persistence for this command, define on which event and for which UUID of a player.
      * After calling this method {@link #sender} and {@link #player} will be set to null to prevent
-     * memory leaks. They can be referenced by {@link #getOriginalSender()} and {@link #getPersistencePlayer()}.
+     * memory leaks. They can be referenced by {@link #getOriginalSender() getOriginalSender}
+     * and {@link PlayerEvent#getPlayer() getPlayer}.
      *
      * @param mode which event will trigger this command
      * @param setTo sets the given UUID to the event trigger
@@ -69,10 +69,6 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
 
     protected CommandSender getOriginalSender() {
         return isPlayer ? server.getPlayer(persistenceSender) : server.getConsoleSender();
-    }
-
-    protected Player getPersistencePlayer() {
-        return server.getPlayer(persistenceSender);
     }
 
     public enum PersistenceMode {

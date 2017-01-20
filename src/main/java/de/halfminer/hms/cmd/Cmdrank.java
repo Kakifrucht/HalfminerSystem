@@ -8,7 +8,7 @@ import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         }
 
         if (playerToReward != null) {
-            execute(null);
+            execute(playerToReward);
         } else {
             MessageBuilder.create(hms, "cmdRankNotOnline", "Rank")
                     .addPlaceholderReplace("%PLAYER%", args[0])
@@ -93,12 +93,13 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     }
 
     @Override
-    public boolean execute(Event e) {
+    public boolean execute(PlayerEvent e) {
+        return execute(e.getPlayer());
+    }
 
-        Player toReward = getPersistencePlayer();
-
+    public boolean execute(Player player) {
         int playerLevel = 0;
-        while (toReward.hasPermission("hms.level." + (playerLevel + 1))) {
+        while (player.hasPermission("hms.level." + (playerLevel + 1))) {
             playerLevel++;
         }
 
@@ -113,7 +114,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             int multiplierOfPreviousRank = multiplierList.get(playerLevel - 1);
             if (multiplierOfPreviousRank >= multiplierValue) {
                 MessageBuilder send = MessageBuilder.create(hms, "cmdRankNewLevelSameOrLower", "Rank")
-                        .addPlaceholderReplace("%PLAYER%", toReward.getName())
+                        .addPlaceholderReplace("%PLAYER%", player.getName())
                         .addPlaceholderReplace("%NEWRANK%", rankName);
                 sendAndLogMessageBuilder(send);
                 return true;
@@ -133,9 +134,9 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         try {
             CustomAction action = new CustomAction(actionName, hms, storage);
             addPlaceholdersToAction(action, multipliedAmounts);
-            actionHasFailed = !action.runAction(toReward);
+            actionHasFailed = !action.runAction(player);
         } catch (CachingException e1) {
-            logActionNotFound(toReward, actionName);
+            logActionNotFound(player, actionName);
         }
 
         if (actionHasFailed) {
@@ -144,10 +145,10 @@ public class Cmdrank extends HalfminerPersistenceCommand {
                 if (actionOnFail.length() > 0) {
                     CustomAction failAction = new CustomAction(actionOnFail, hms, storage);
                     addPlaceholdersToAction(failAction, multipliedAmounts);
-                    failAction.runAction(toReward);
+                    failAction.runAction(player);
                 }
             } catch (CachingException e1) {
-                logActionNotFound(toReward, actionOnFail);
+                logActionNotFound(player, actionOnFail);
             }
         }
 

@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -92,9 +92,9 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
     }
 
     @Override
-    public boolean execute(Event e) {
+    public boolean execute(PlayerEvent e) {
 
-        Player player = getPersistencePlayer();
+        Player player = e.getPlayer();
 
         boolean isDone = false;
         PlayerInteractEvent interactEvent = (PlayerInteractEvent) e;
