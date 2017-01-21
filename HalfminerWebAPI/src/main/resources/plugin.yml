@@ -1,0 +1,8 @@
+name: HalfminerWebAPI
+version: ${project.version}
+description: Halfminer.de HTTP API
+author: Kakifrucht
+website: https://halfminer.de
+
+main: de.halfminer.hmwapi.HalfminerWebAPI
+depend: [HalfminerSystem]

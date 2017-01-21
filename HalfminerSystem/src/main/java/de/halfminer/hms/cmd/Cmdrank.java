@@ -29,9 +29,10 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class Cmdrank extends HalfminerPersistenceCommand {
 
-    private String rankToGiveName;
+    private final List<Pair<String, Integer>> rankNameAndMultiplierPairs = new ArrayList<>();
+
     private int upgradeAmount = Integer.MIN_VALUE;
-    private List<Pair<String, Integer>> rankNameAndMultiplierPairs;
+    private String rankToGiveName;
     private int rankToGiveMultiplier;
 
     public Cmdrank() {
@@ -57,7 +58,6 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             }
         } else uuidToReward = playerToReward.getUniqueId();
 
-        rankNameAndMultiplierPairs = new ArrayList<>();
         for (String level : hms.getConfig().getStringList("command.rank.rankNamesAndMultipliers")) {
 
             StringArgumentSeparator current = new StringArgumentSeparator(level, ',');
@@ -103,10 +103,11 @@ public class Cmdrank extends HalfminerPersistenceCommand {
 
     @Override
     public boolean execute(PlayerEvent e) {
-        return execute(e.getPlayer());
+        execute(e.getPlayer());
+        return true;
     }
 
-    public boolean execute(Player player) {
+    private void execute(Player player) {
         int playerLevel = 0;
         while (player.hasPermission("hms.level." + (playerLevel + 1))) {
             playerLevel++;
@@ -119,7 +120,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
                         .addPlaceholderReplace("%PLAYER%", player.getName())
                         .addPlaceholderReplace("%UPGRADEAMOUNT%", String.valueOf(upgradeAmount));
                 sendAndLogMessageBuilder(send);
-                return true;
+                return;
             }
             Pair<String, Integer> rankPair = rankNameAndMultiplierPairs.get(getFromList);
             rankToGiveName = rankPair.getLeft();
@@ -140,7 +141,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
                         .addPlaceholderReplace("%PLAYER%", player.getName())
                         .addPlaceholderReplace("%NEWRANK%", rankToGiveName);
                 sendAndLogMessageBuilder(send);
-                return true;
+                return;
             }
 
             if (hms.getConfig().getBoolean("command.rank.deductPreviousRanks")) {
@@ -175,7 +176,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             }
         }
 
-        return true;
+        return;
     }
 
     @Override
