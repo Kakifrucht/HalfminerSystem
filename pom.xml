@@ -5,10 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.halfminer</groupId>
-    <artifactId>HalfminerSystem</artifactId>
-    <name>HalfminerSystem</name>
+    <artifactId>HalfminerSystemParent</artifactId>
+    <packaging>pom</packaging>
+    <name>HalfminerSystemParent</name>
     <version>3.23.2</version>
     <url>https://halfminer.de</url>
+    <modules>
+        <module>HalfminerSystem</module>
+        <module>HalfminerWebAPI</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,14 +53,6 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
-        </repository>
-        <repository>
-            <id>ess-repo</id>
-            <url>http://repo.ess3.net/content/groups/essentials</url>
-        </repository>
-        <repository>
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
@@ -67,7 +64,6 @@
             <artifactId>spigot-api</artifactId>
             <version>1.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -75,7 +71,6 @@
             <version>1.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
             <classifier>javadoc</classifier>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
@@ -89,18 +84,6 @@
             <artifactId>bungeecord-api</artifactId>
             <version>LATEST</version>
             <type>javadoc</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>LATEST</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.ess3</groupId>
-            <artifactId>Essentials</artifactId>
-            <version>2.13-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
