@@ -7,7 +7,7 @@
     <groupId>de.halfminer</groupId>
     <artifactId>HalfminerSystemParent</artifactId>
     <packaging>pom</packaging>
-    <name>HalfminerSystemParent</name>
+    <name>HalfminerSystem</name>
     <version>3.23.2</version>
     <url>https://halfminer.de</url>
     <modules>
@@ -52,10 +52,6 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -63,27 +59,6 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.11-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.11-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-            <classifier>javadoc</classifier>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>LATEST</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>LATEST</version>
-            <type>javadoc</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
