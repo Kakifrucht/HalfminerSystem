@@ -23,12 +23,12 @@ public class ModCommandPersistence extends HalfminerModule implements Disableabl
     private final Map<Pair<UUID, HalfminerPersistenceCommand.PersistenceMode>,
             HalfminerPersistenceCommand> runOnEvent = new HashMap<>();
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent e) {
         execute(e, HalfminerPersistenceCommand.PersistenceMode.EVENT_PLAYER_INTERACT);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
         execute(e, HalfminerPersistenceCommand.PersistenceMode.EVENT_PLAYER_JOIN);
     }
