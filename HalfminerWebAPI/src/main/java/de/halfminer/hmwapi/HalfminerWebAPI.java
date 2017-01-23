@@ -19,29 +19,27 @@ public class HalfminerWebAPI extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (load()) {
-            getLogger().info("HalfminerWebAPI enabled successfully");
-        } else {
-            getLogger().warning("Couldn't bind port, plugin disabled");
-            this.setEnabled(false);
-        }
+        if (load()) getLogger().info("HalfminerWebAPI enabled successfully");
     }
 
     @Override
     public void onDisable() {
-        server.stop();
-        getLogger().info("Disabling HalfminerWebAPI, HTTP server stopped");
+        if (server != null) {
+            server.stop();
+            getLogger().info("Disabling HalfminerWebAPI, HTTP server stopped");
+        }
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        //TODO status commands
+        //TODO status commands, config reload command
         return false;
     }
 
     private boolean load() {
 
         if (server != null) {
+            getLogger().info("Reloading HTTP server, stopping old instance...");
             server.stop();
         }
 
@@ -51,17 +49,16 @@ public class HalfminerWebAPI extends JavaPlugin {
         saveConfig();
 
         int port = getConfig().getInt("server.port");
-        Set<String> whitelist = new HashSet<>(getConfig().getStringList("server.whitelist"));
+        Set<String> whitelist = new HashSet<>(getConfig().getStringList("server.whitelistedIPs"));
         if (whitelist.size() < 1) {
-            //TODO
+            getLogger().warning("No whitelisted IP's specified, HTTP server was not started");
             return false;
         }
 
         try {
             server = new HTTPServer(port, whitelist);
         } catch (IOException e) {
-            e.printStackTrace();
-            //TODO
+            getLogger().severe("Couldn't bind port " + port + ", disabling");
             return false;
         }
         return true;

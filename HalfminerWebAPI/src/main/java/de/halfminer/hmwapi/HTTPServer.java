@@ -25,7 +25,7 @@ public class HTTPServer extends NanoHTTPD {
     public NanoHTTPD.Response serve(IHTTPSession session) {
 
         String ipAddress = session.getHeaders().get("remote-addr");
-        if (whitelistedIPs.contains(ipAddress)) {
+        if (!whitelistedIPs.contains(ipAddress)) {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "", "");
         }
 
@@ -34,14 +34,18 @@ public class HTTPServer extends NanoHTTPD {
         try {
             command = (APICommand) this.getClass()
                     .getClassLoader()
-                    .loadClass("de.halfminer.hmwapi.cmd.Cmd" + parsedRequest.getArgument(0)).newInstance();
+                    .loadClass("de.halfminer.hmwapi.cmd.Cmd" + parsedRequest.getArgument(0).toLowerCase())
+                    .newInstance();
         } catch (ClassNotFoundException e) {
             return newFixedLengthResponse(Response.Status.BAD_REQUEST, "", "");
         } catch (Exception e) {
+            e.printStackTrace();
             return newFixedLengthResponse(Response.Status.INTERNAL_ERROR,
                     "text/plain", "An internal error has occurred");
         }
 
-        return newFixedLengthResponse(Response.Status.OK, "application/json", command.execute(session, parsedRequest).toString());
+        return newFixedLengthResponse(Response.Status.OK,
+                "application/json",
+                command.execute(session, parsedRequest).toString());
     }
 }

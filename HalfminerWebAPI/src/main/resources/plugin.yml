@@ -6,3 +6,17 @@ website: https://halfminer.de
 
 main: de.halfminer.hmwapi.HalfminerWebAPI
 depend: [HalfminerSystem]
+
+commands:
+  hmwapi:
+    description: Base command
+    aliases: [hmw]
+
+permissions:
+  hmwapi.*:
+    description: Access to all permissions
+    default: op
+    children:
+      hmwapi.command: true
+  hmwapi.command:
+    description: Access to hmwapi command
