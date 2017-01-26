@@ -1,4 +1,4 @@
-# HalfminerSystem
+# Halfminer Repositories
 Modification repository for Minecraft Server [Two and a half Miner](https://halfminer.de).
 
 Halfminer Teamspeak Bot can be found [here](https://github.com/Kakifrucht/HalfminerBot).
