@@ -29,7 +29,7 @@ public class HTTPServer extends NanoHTTPD {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "", "");
         }
 
-        StringArgumentSeparator parsedRequest = new StringArgumentSeparator(session.getUri(), '/');
+        StringArgumentSeparator parsedRequest = new StringArgumentSeparator(session.getUri().substring(1), '/');
         APICommand command;
         try {
             command = (APICommand) this.getClass()
@@ -44,8 +44,6 @@ public class HTTPServer extends NanoHTTPD {
                     "text/plain", "An internal error has occurred");
         }
 
-        return newFixedLengthResponse(Response.Status.OK,
-                "application/json",
-                command.execute(session, parsedRequest).toString());
+        return command.execute(session, parsedRequest);
     }
 }

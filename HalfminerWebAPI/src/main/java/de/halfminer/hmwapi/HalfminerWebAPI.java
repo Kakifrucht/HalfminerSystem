@@ -16,10 +16,17 @@ import java.util.Set;
  */
 public class HalfminerWebAPI extends JavaPlugin {
 
+    private static HalfminerWebAPI instance;
+
+    public static HalfminerWebAPI getInstance() {
+        return instance;
+    }
+
     private HTTPServer server;
 
     @Override
     public void onEnable() {
+        instance = this;
         if (load()) {
             getLogger().info("HalfminerWebAPI enabled successfully");
         } else {

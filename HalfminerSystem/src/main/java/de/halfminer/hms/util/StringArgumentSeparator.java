@@ -1,12 +1,15 @@
 package de.halfminer.hms.util;
 
+import java.util.Arrays;
+
 /**
  * Helper class to parse a String into arguments and easily convert between different types.
  */
 @SuppressWarnings("ALL")
 public class StringArgumentSeparator {
 
-    private final String[] arguments;
+    private String[] arguments;
+    private int startingPoint = 0;
 
     public StringArgumentSeparator(String string) {
         arguments = string.split(" ");
@@ -26,6 +29,14 @@ public class StringArgumentSeparator {
 
     public int getLength() {
         return arguments.length;
+    }
+
+    public StringArgumentSeparator removeFirstElement() {
+        if (arguments.length == 1)
+            arguments = new String[0];
+        else
+            arguments = Arrays.copyOfRange(arguments, 1, arguments.length);
+        return this;
     }
 
     public boolean meetsLength(int length) {
