@@ -1,0 +1,61 @@
+#HalfminerBattle Config
+gameMode:
+  global:
+    #Disable hunger loss
+    noHungerLoss: true
+  duel:
+    #Broadcast duel wins
+    broadcastWin: true
+    #Time in seconds until server will broadcast that a dueling player is waiting to be dueled
+    waitingForMatchRemind: 30
+    #Max duel time
+    gameTime: 300
+localization:
+  prefix: '&7HalfminerBattle &e>>&r '
+  help: '&7Faire Duelle mit gleicher Ausrüstung in Arenen\n&e/duel <Spielername> - &7&oDuellanfrage schicken\n&e/duel match - &7&oDuellpartner finden\n&e/duel leave - &7&oWarteschlange verlassen\n&e/duel list - &7&oArenaliste anzeigen'
+  pluginDisabled: '&cDas Plugin ist aktuell deaktiviert'
+  showArenaList: '&aGrüne Arenen&7 sind aktuell frei, &crote Arenen &7sind belegt: '
+  teleportIntoArenaDenied: '&cDu darfst dich nicht in Arenen teleportieren'
+  addedToQueue: '&7Du bist nun in der Warteschlange, verwende &6/duel leave&7 zum verlassen'
+  alreadyInQueue: '&cDu bist bereits in einer Warteschlange, verwende &6/duel leave&c zum verlassen'
+  battleCooldown: '&cDu hast die Warteschlange oder die Arena eben erst verlassen, bitte warte noch etwas'
+  leftQueue: '&7Du hast die Warteschlange verlassen'
+  notInQueue: '&cDu bist nicht in der Warteschlange'
+  playerWaitingForMatch: '&e%PLAYER%&7 wartet auf einen Duellpartner. Gib &a/duel match&7 für ein faires Duell mit gleicher Ausrüstung ein'
+  removedFromQueueNotTheCause: '&cDein Duellpartner hat die Warteschlange verlassen, womit du auch entfernt wurdest'
+  duelRequestSent: '&aDeine Herausforderung wurde an &e%PLAYER%&a geschickt, verwende &6/duel leave&a zum zurückziehen'
+  duelExempt: '&cDu kannst &e%PLAYER%&c keine Anfragen schicken'
+  duelRequest: '&e%PLAYER%&7 hat dir eine Duell Herausforderung geschickt. Gib &6/duel %PLAYER% &7ein, um sie zu akzeptieren'
+  duelRequestAlreadyOpen: '&cDu hast bereits eine offene Duell Herausforderung, verwende &6/duel leave&c zum zurückziehen'
+  duelRequestYourself: '&cDu kannst dir selber keine Anfrage schicken'
+  duelNotOnline: '&cDer Spieler ist nicht online oder existiert nicht'
+  duelRequestCancel: '&aDeine Herausforderung wurde zurückgezogen'
+  duelRequestCancelled: '&e%PLAYER% &7hat seine Herausforderung zurückgezogen'
+  duelRequesteeNotAvailable: '&e%PLAYER%&c ist bereits in der Warteschlange oder im Spiel'
+  duelRequestPending: '&cDu hast bereits eine offene Anfrage abgeschickt'
+  duelRequestAccepted: '&aDu hast die Herausforderung akzeptiert'
+  duelRequestWasAccepted: '&aDeine Anfrage wurde von &e%PLAYER%&a akzeptiert'
+  duelAddedToQueue: '&bDu bist nun in der Warteschlange mit &e%PLAYER%&b, da alle Arenen in Verwendung sind'
+  chooseArena: '&aGib im Chat die Nummer für die Arena ein, auf der du gegen &e%PLAYER%&a spielen willst: '
+  chooseArenaRefreshed: '&bDie Auswahl wurde aktualisiert: '
+  chooseArenaInvalid: '&cUngültige Auswahl, bitte versuche es erneut'
+  partnerChoosingArena: '&e%PLAYER%&7 wählt nun eine Arena aus, das Duell startet gleich'
+  gameStartingCountdown: '&7Das Duell in der Arena &e%ARENA%&7 gegen &c%PLAYER%&7 startet in 5 Sekunden'
+  gameStarting: '&aDer Kampf beginnt!'
+  inGame: '&cIm Kampf darfst du keine Kommandos verwenden'
+  gameTimeRunningOut: '&cDas Duell wird in &e%TIME%&c Sekunden abgebrochen'
+  gameWon: '&aDu hast das Duell gegen &e%PLAYER%&a gewonnen'
+  gameLost: '&cDu hast das Duell gegen &e%PLAYER%&c verloren'
+  gameTied: '&7Das Duell gegen &e%PLAYER%&7 ist unentschieden'
+  gameBroadcast: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7gewonnen'
+  randomArena: 'Zufall'
+  noPermission: '&cDu hast keine Rechte dies zu verwenden'
+  adminHelp: '&7/hmb duel create <name> | /hmb duel remove <name> | /hmb duel spawnA <name> | /hmb duel spawnB <name> | /hmb duel setkit <arenaname> | /hmb duel reload'
+  adminCreate: '&aDie Arena &e%ARENA%&a wurde erstellt. Verwende &6/hmb duel spawnA/spawnB %ARENA%&a um die Spawns zu setzen'
+  adminCreateFailed: '&cDie Arena &e%ARENA%&c existiert bereits'
+  adminRemove: '&aDie Arena &e%ARENA%&a wurde entfernt'
+  adminArenaDoesntExist: '&cDie Arena &e%ARENA%&c existiert nicht'
+  adminSetSpawn: '&aDer Spawn für die Arena &e%ARENA%&a wurde gesetzt'
+  adminSetKit: '&aDas Kit für die Arena &e%ARENA%&a wurde gesetzt'
+  adminSettingsReloaded: '&aDie Konfiguration wurde neugeladen'
+  adminSettingsReloadedError: '&cFehler beim neuladen der Arena Konfiguration, siehe Konsole für weitere Informationen'

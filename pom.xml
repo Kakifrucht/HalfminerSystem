@@ -12,6 +12,7 @@
     <url>https://halfminer.de</url>
     <modules>
         <module>HalfminerSystem</module>
+        <module>HalfminerBattle</module>
         <module>HalfminerWebAPI</module>
     </modules>
 

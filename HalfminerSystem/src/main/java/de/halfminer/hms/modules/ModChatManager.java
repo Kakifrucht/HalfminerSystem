@@ -215,7 +215,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
                 int charAt = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(next);
 
-                System.out.println(charAt);
                 if ((charAt > 21 && sender.hasPermission("hms.chat.allowformatcode"))
                         || (charAt < 22 && charAt > -1 && sender.hasPermission("hms.chat.allowcolor"))) {
                     sb.setCharAt(i, ChatColor.COLOR_CHAR);
