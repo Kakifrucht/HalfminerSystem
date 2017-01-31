@@ -1,12 +1,15 @@
 package de.halfminer.hmb.arena;
 
+import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.DuelMode;
-import de.halfminer.hmb.util.Util;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.Collection;
 
 public class DuelArena extends AbstractKitArena {
 
@@ -27,8 +30,14 @@ public class DuelArena extends AbstractKitArena {
         addPlayers(playerA, playerB);
         clearAndStorePlayers();
 
-        Util.sendMessage(playerA, "gameStartingCountdown", "%PLAYER%", playerB.getName(), "%ARENA%", getName());
-        Util.sendMessage(playerB, "gameStartingCountdown", "%PLAYER%", playerA.getName(), "%ARENA%", getName());
+        MessageBuilder.create(hmb, "gameStartingCountdown", HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%PLAYER%", playerB.getName())
+                .addPlaceholderReplace("%ARENA%", getName())
+                .sendMessage(playerA);
+        MessageBuilder.create(hmb, "gameStartingCountdown", HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%PLAYER%", playerA.getName())
+                .addPlaceholderReplace("%ARENA%", getName())
+                .sendMessage(playerB);
 
         task = Bukkit.getScheduler().runTaskTimer(hmb, new Runnable() {
 
@@ -44,8 +53,9 @@ public class DuelArena extends AbstractKitArena {
                     preparePlayer(playerB);
                 }
                 if (timeLeft <= 15 && timeLeft > 0) {
-                    Util.sendMessage(playerA, "gameTimeRunningOut", "%TIME%", Integer.toString(timeLeft));
-                    Util.sendMessage(playerB, "gameTimeRunningOut", "%TIME%", Integer.toString(timeLeft));
+                    MessageBuilder.create(hmb, "gameTimeRunningOut", HalfminerBattle.PREFIX)
+                            .addPlaceholderReplace("%TIME%", Integer.toString(timeLeft))
+                            .sendMessage(playerA, playerB);
                 }
                 if (timeLeft <= 0) {
                     mode.getQueue().gameHasFinished(playerA, false);
@@ -58,7 +68,7 @@ public class DuelArena extends AbstractKitArena {
 
             private void preparePlayer(Player player) {
                 player.setWalkSpeed(0.2F);
-                Util.sendMessage(player, "gameStarting");
+                MessageBuilder.create(hmb, "gameStarting", HalfminerBattle.PREFIX).sendMessage(player);
                 equipPlayers();
             }
 
@@ -81,10 +91,24 @@ public class DuelArena extends AbstractKitArena {
         restorePlayers();
 
         // Messaging and broadcasting
-        Util.sendMessage(winner, hasWinner ? "gameWon" : "gameTied", "%PLAYER%", loser.getName());
-        Util.sendMessage(loser, hasWinner ? "gameLost" : "gameTied", "%PLAYER%", winner.getName());
-        if (hasWinner && mode.doWinBroadcast())
-            Util.broadcastMessage("gameBroadcast", new Player[]{winner, loser}, "%WINNER%", winner.getName(), "%LOSER%", loser.getName(), "%ARENA%", name);
+        MessageBuilder.create(hmb, hasWinner ? "gameWon" : "gameTied", HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%PLAYER%", loser.getName())
+                .sendMessage(winner);
+        MessageBuilder.create(hmb, hasWinner ? "gameLost" : "gameTied", HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%PLAYER%", winner.getName())
+                .sendMessage(loser);
+
+        if (hasWinner && mode.doWinBroadcast()) {
+            Collection<? extends Player> sendTo = hmb.getServer().getOnlinePlayers();
+            sendTo.remove(winner);
+            sendTo.remove(loser);
+            MessageBuilder.create(hmb, "gameBroadcast", HalfminerBattle.PREFIX)
+                    .addPlaceholderReplace("%WINNER%", winner.getName())
+                    .addPlaceholderReplace("%LOSER%", loser.getName())
+                    .addPlaceholderReplace("%ARENA%", name)
+                    .broadcastMessage(sendTo, false, "");
+
+        }
         playersInArena.clear();
     }
 

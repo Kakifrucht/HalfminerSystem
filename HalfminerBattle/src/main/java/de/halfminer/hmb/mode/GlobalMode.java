@@ -1,7 +1,7 @@
 package de.halfminer.hmb.mode;
 
+import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.mode.abs.AbstractMode;
-import de.halfminer.hmb.util.Util;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,7 +32,7 @@ public class GlobalMode extends AbstractMode {
     public void disableCommandDuringFight(PlayerCommandPreprocessEvent e) {
 
         if (pm.isInBattle(e.getPlayer()) && !e.getPlayer().hasPermission("hmb.admin")) {
-            Util.sendMessage(e.getPlayer(), "inGame");
+            MessageBuilder.create(hmb, "inGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }
@@ -59,7 +59,7 @@ public class GlobalMode extends AbstractMode {
     @EventHandler(ignoreCancelled = true)
     public void teleportDisable(PlayerTeleportEvent e) {
         if (!pm.isInBattle(e.getPlayer()) && am.isArenaSpawn(e.getTo())) {
-            Util.sendMessage(e.getPlayer(), "teleportIntoArenaDenied");
+            MessageBuilder.create(hmb, "teleportIntoArenaDenied", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }

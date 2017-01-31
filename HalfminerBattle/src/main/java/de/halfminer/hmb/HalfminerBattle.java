@@ -4,7 +4,7 @@ import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.abs.GameMode;
-import de.halfminer.hmb.util.Util;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +21,7 @@ import java.util.Map;
 public class HalfminerBattle extends JavaPlugin {
 
     public final static String PACKAGE_PATH = "de.halfminer.hmb";
+    public static String PREFIX;
     private static HalfminerBattle instance;
 
     public static HalfminerBattle getInstance() {
@@ -35,6 +36,7 @@ public class HalfminerBattle extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        PREFIX = MessageBuilder.returnMessage(this, "prefix");
 
         if (!saveAndReloadConfig()) {
             setDisabledAfterException();
@@ -104,7 +106,7 @@ public class HalfminerBattle extends JavaPlugin {
                     return called.onAdminCommand(sender, args);
             }
 
-            Util.sendMessage(sender, "adminHelp");
+            MessageBuilder.create(this, "adminHelp", PREFIX).sendMessage(sender);
             return false;
         }
 

@@ -4,7 +4,9 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -188,6 +190,30 @@ public class ArenaManager {
         return false;
     }
 
+    public String getStringFromArenaList(List<Arena> arenas, boolean addRandom) {
+
+        StringBuilder sb = new StringBuilder();
+        int number = 1;
+        for (Arena arena : arenas) {
+            sb.append(ChatColor.GREEN)
+                    .append(number)
+                    .append(": ")
+                    .append(ChatColor.GRAY)
+                    .append(arena.getName())
+                    .append(' ');
+            number++;
+        }
+
+        if (addRandom) {
+            sb.append(ChatColor.YELLOW)
+                    .append(number)
+                    .append(": ")
+                    .append(ChatColor.GRAY)
+                    .append(MessageBuilder.returnMessage(HalfminerBattle.getInstance(), "randomArena"));
+        } else sb.setLength(sb.length() - 1);
+        return sb.toString();
+    }
+
     private void saveData() {
         arenaConfig.set("arenas", null);
         arenaConfig.set("kits", null);
@@ -242,15 +268,5 @@ public class ArenaManager {
         float yaw = Float.parseFloat(toLocationSplit[4]);
         float pitch = Float.parseFloat(toLocationSplit[5]);
         return new Location(hmb.getServer().getWorld(toLocationSplit[0]), x, y, z, yaw, pitch);
-    }
-
-    /**
-     * Converts a given location to a string
-     *
-     * @param loc Location that is supposed to be converted
-     * @return String that can be converted back into a Location
-     */
-    private String locationToString(Location loc) {
-        return loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
     }
 }

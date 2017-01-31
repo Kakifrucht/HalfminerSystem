@@ -50,6 +50,7 @@ localization:
   gameBroadcast: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7gewonnen'
   randomArena: 'Zufall'
   noPermission: '&cDu hast keine Rechte dies zu verwenden'
+  notAPlayer: 'Dieses Kommando kann nur als Spieler ausgeführt werden'
   adminHelp: '&7/hmb duel create <name> | /hmb duel remove <name> | /hmb duel spawnA <name> | /hmb duel spawnB <name> | /hmb duel setkit <arenaname> | /hmb duel reload'
   adminCreate: '&aDie Arena &e%ARENA%&a wurde erstellt. Verwende &6/hmb duel spawnA/spawnB %ARENA%&a um die Spawns zu setzen'
   adminCreateFailed: '&cDie Arena &e%ARENA%&c existiert bereits'

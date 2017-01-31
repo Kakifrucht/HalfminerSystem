@@ -4,7 +4,7 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.duel.DuelQueue;
-import de.halfminer.hmb.util.Util;
+import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -43,19 +43,19 @@ public class DuelMode extends AbstractMode {
     public boolean onCommand(CommandSender sender, String[] args) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be executed ingame");
+            MessageBuilder.create(hmb, "notAPlayer").sendMessage(sender);
             return false;
         }
 
         Player player = (Player) sender;
         if (!player.hasPermission("hmb.mode.duel.use")) {
-            Util.sendMessage(player, "noPermission");
+            MessageBuilder.create(hmb, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 
         if (am.getArenasFromType(GameModeType.DUEL).size() == 0) {
             //TODO set message to gamemode specific disabled
-            Util.sendMessage(player, "pluginDisabled");
+            MessageBuilder.create(hmb, "pluginDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 
@@ -68,13 +68,16 @@ public class DuelMode extends AbstractMode {
                     queue.removeFromQueue(player);
                     break;
                 case "list":
-                    Util.sendMessage(player, "showArenaList");
-                    player.sendMessage(Util.getStringFromArenaList(am.getArenasFromType(MODE), false));
+                    MessageBuilder.create(hmb, "showArenaList", HalfminerBattle.PREFIX).sendMessage(player);
+                    MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE), false),
+                            HalfminerBattle.PREFIX)
+                            .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                            .sendMessage(player);
                     break;
                 default:
                     queue.requestSend(player, hmb.getServer().getPlayer(args[0]));
             }
-        } else Util.sendMessage(player, "help");
+        } else MessageBuilder.create(hmb, "help", HalfminerBattle.PREFIX).sendMessage(player);
 
         return true;
     }
@@ -83,12 +86,12 @@ public class DuelMode extends AbstractMode {
     public boolean onAdminCommand(CommandSender sender, String[] args) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be executed ingame");
+            MessageBuilder.create(hmb, "notAPlayer").sendMessage(sender);
             return true;
         }
 
         if (args.length < 3) {
-            Util.sendMessage(sender, "adminHelp");
+            MessageBuilder.create(hmb, "adminHelp", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 
@@ -99,35 +102,36 @@ public class DuelMode extends AbstractMode {
             String arg = args[1].toLowerCase();
             switch (arg) {
                 case "create":
-                    if (am.addArena(GameModeType.DUEL, args[2], player.getLocation()))
-                        Util.sendMessage(player, "adminCreate", "%ARENA%", args[2]);
-                    else Util.sendMessage(player, "adminCreateFailed", "%ARENA%", args[2]);
+                    boolean successCreate = am.addArena(GameModeType.DUEL, args[2], player.getLocation());
+                    MessageBuilder.create(hmb, successCreate ? "adminCreate" : "adminCreateFailed", HalfminerBattle.PREFIX)
+                            .addPlaceholderReplace("%ARENA%", args[2])
+                            .sendMessage(sender);
                     break;
                 case "remove":
-                    if (am.delArena(GameModeType.DUEL, args[2]))
-                        Util.sendMessage(player, "adminRemove", "%ARENA%", args[2]);
-                    else
-                        Util.sendMessage(player, "adminArenaDoesntExist", "%ARENA%", args[2]);
+                    boolean successRemove = am.delArena(GameModeType.DUEL, args[2]);
+                    MessageBuilder.create(hmb, successRemove ? "adminRemove" : "adminArenaDoesntExist", HalfminerBattle.PREFIX)
+                            .addPlaceholderReplace("%ARENA%", args[2])
+                            .sendMessage(sender);
                     break;
                 case "spawna":
                 case "spawnb":
-                    if (am.setSpawn(GameModeType.DUEL, args[2], player.getLocation(),
-                            arg.equalsIgnoreCase("spawna") ? 0 : 1))
-                        Util.sendMessage(player, "adminSetSpawn", "%ARENA%", args[2]);
-                    else
-                        Util.sendMessage(player, "adminArenaDoesntExist", "%ARENA%", args[1]);
+                    boolean successSetSpawn = am.setSpawn(GameModeType.DUEL, args[2], player.getLocation(),
+                            arg.equalsIgnoreCase("spawna") ? 0 : 1);
+                    MessageBuilder.create(hmb, successSetSpawn ? "adminSetSpawn" : "adminArenaDoesntExist", HalfminerBattle.PREFIX)
+                            .addPlaceholderReplace("%ARENA%", args[2])
+                            .sendMessage(sender);
                     break;
                 case "setkit":
-                    if (am.setKit(GameModeType.DUEL, args[2], player.getInventory()))
-                        Util.sendMessage(player, "adminSetKit", "%ARENA%", args[2]);
-                    else
-                        Util.sendMessage(player, "adminArenaDoesntExist", "%ARENA%", args[2]);
+                    boolean successKit = am.setKit(GameModeType.DUEL, args[2], player.getInventory());
+                    MessageBuilder.create(hmb, successKit ? "adminSetKit" : "adminArenaDoesntExist", HalfminerBattle.PREFIX)
+                            .addPlaceholderReplace("%ARENA%", args[2])
+                            .sendMessage(sender);
                     break;
                 default:
-                    Util.sendMessage(player, "adminHelp");
+                    MessageBuilder.create(hmb, "adminHelp", HalfminerBattle.PREFIX).sendMessage(sender);
             }
 
-        } else Util.sendMessage(sender, "noPermission");
+        } else MessageBuilder.create(hmb, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
 
         return true;
     }
