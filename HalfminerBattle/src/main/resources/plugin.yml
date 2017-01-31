@@ -11,10 +11,10 @@ commands:
     description: Duel base command
     usage: /duel <subcommand/playername>
     aliases: [1vs1,duell,pvp]
-  global:
+  hmb:
     description: Add, remove and edit arenas
     usage: /global <subcommand> [argument]
-    aliases: [hmb, hmbattle, hbattle, halfminerbattle]
+    aliases: [hmbattle, hbattle, halfminerbattle, global]
 permissions:
   hmb.*:
     default: op

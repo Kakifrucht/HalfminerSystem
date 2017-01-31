@@ -44,7 +44,7 @@ class BattlePlayer {
         this.lastStateChange = System.currentTimeMillis();
 
         // remove partners if idling or in queue cooldown
-        if ((state.equals(BattleState.IDLE) || state.equals(BattleState.QUEUE_COOLDOWN)) && gamePartners != null) {
+        if (gamePartners != null && (state.equals(BattleState.IDLE) || state.equals(BattleState.QUEUE_COOLDOWN))) {
 
             for (BattlePlayer p : gamePartners) {
                 p.getGamePartners().remove(this);

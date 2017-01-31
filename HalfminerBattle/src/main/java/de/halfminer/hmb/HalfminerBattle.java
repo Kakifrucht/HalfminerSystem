@@ -30,18 +30,14 @@ public class HalfminerBattle extends JavaPlugin {
     private final PlayerManager playerManager = new PlayerManager();
     private ArenaManager arenaManager;
 
-    // Modes
     private final Map<GameModeType, GameMode> gameModes = new HashMap<>();
 
     @Override
     public void onEnable() {
         instance = this;
-        saveAndReloadConfig();
 
-        try {
-            arenaManager = new ArenaManager();
-        } catch (IOException e) {
-            setDisabledAfterException(e);
+        if (!saveAndReloadConfig()) {
+            setDisabledAfterException();
             return;
         }
 
@@ -54,7 +50,8 @@ public class HalfminerBattle extends JavaPlugin {
                 gameModes.put(type, mode);
             }
         } catch (Exception e) {
-            setDisabledAfterException(e);
+            e.printStackTrace();
+            setDisabledAfterException();
             return;
         }
 
@@ -62,16 +59,26 @@ public class HalfminerBattle extends JavaPlugin {
         getLogger().info("HalfminerBattle enabled");
     }
 
-    private void saveAndReloadConfig() {
+    public boolean saveAndReloadConfig() {
+
         saveDefaultConfig(); // Save default config.yml if not yet done
         reloadConfig(); // Make sure that if the file changed, it is reread
         getConfig().options().copyDefaults(true); // If parameters are missing, add them
         saveConfig(); // Save config.yml to disk
+
+        gameModes.values().forEach(GameMode::onConfigReload);
+        try {
+            if (arenaManager != null) arenaManager.reloadConfig();
+            else arenaManager = new ArenaManager();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    private void setDisabledAfterException(Exception e) {
+    private void setDisabledAfterException() {
         getLogger().severe("An error while enabling HalfminerBattle occurred, see stacktrace for information");
-        e.printStackTrace();
         setEnabled(false);
     }
 
@@ -91,19 +98,6 @@ public class HalfminerBattle extends JavaPlugin {
                 && sender.hasPermission("hmb.admin")) {
 
             if (args.length > 0) {
-
-                if (args[0].equalsIgnoreCase("reload")) {
-                    saveAndReloadConfig();
-                    gameModes.values().forEach(GameMode::onConfigReload);
-                    try {
-                        arenaManager.reloadConfig();
-                        Util.sendMessage(sender, "adminSettingsReloaded");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Util.sendMessage(sender, "adminSettingsReloadedError");
-                    }
-                    return true;
-                }
 
                 GameMode called = getGameMode(args[0]);
                 if (called != null)

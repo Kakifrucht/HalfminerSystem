@@ -14,7 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class DuelQueue {
 
@@ -25,7 +27,7 @@ public class DuelQueue {
     private static final ArenaManager am = hmb.getArenaManager();
 
     private final DuelMode duelMode;
-    private Set<Player> isSelectingArena = new HashSet<>();
+    private List<Player> isSelectingArena = new LinkedList<>();
     private Player waitingForMatch = null;
     private BukkitTask waitingForMatchTask;
 
@@ -148,6 +150,7 @@ public class DuelQueue {
 
         if (partner != null) {
 
+            isSelectingArena.remove(partner);
             if (hasRequested(toRemove)) {
                 Util.sendMessage(toRemove, "duelRequestCancel");
                 if (partner.isOnline())
@@ -188,15 +191,8 @@ public class DuelQueue {
         pm.setBattlePartners(playerB, playerA);
         pm.setState(BattleState.IN_QUEUE, playerA, playerB);
 
-        if (am.getFreeArenasFromType(GameModeType.DUEL).size() > 0) {
-            Util.sendMessage(playerA, "partnerChoosingArena", "%PLAYER%", playerB.getName());
-            isSelectingArena.add(playerA);
-            showFreeArenaSelection(playerA, false);
-        } else {
-            //TODO change message that no arena is available, will be added to next free arena automatically
-            Util.sendMessage(playerA, "duelAddedToQueue", "%PLAYER%", playerB.getName());
-            Util.sendMessage(playerB, "duelAddedToQueue", "%PLAYER%", playerA.getName());
-        }
+        isSelectingArena.add(playerA);
+        showFreeArenaSelection(playerA, false);
     }
 
     /**
@@ -214,14 +210,20 @@ public class DuelQueue {
         List<Arena> freeArenas = am.getFreeArenasFromType(MODE);
 
         if (freeArenas.size() == 0) {
-            //TODO send message that no free arenas are available and it will clear automatically
-        } else if (freeArenas.size() == 1) {
-            arenaWasSelected(player, "1");
+            //TODO send message that no free arenas are available and it will add to free one automatically
         } else {
-            if (refreshMessage) Util.sendMessage(player, "chooseArenaRefreshed");
-            else Util.sendMessage(player, "chooseArena", "%PLAYER%", pm.getFirstPartner(player).getName());
 
-            player.sendMessage(Util.getStringFromArenaList(freeArenas, true));
+            if (freeArenas.size() == 1) {
+                arenaWasSelected(player, "1");
+            } else {
+                if (refreshMessage) Util.sendMessage(player, "chooseArenaRefreshed");
+                else Util.sendMessage(player, "chooseArena", "%PLAYER%", pm.getFirstPartner(player).getName());
+
+                if (!refreshMessage) {
+                    Util.sendMessage(pm.getFirstPartner(player), "partnerChoosingArena", "%PLAYER%", player.getName());
+                }
+                player.sendMessage(Util.getStringFromArenaList(freeArenas, true));
+            }
         }
     }
 
@@ -266,7 +268,8 @@ public class DuelQueue {
         selectedArena.gameStart(player, playerB);
 
         // Update selection for players who are currently selecting
-        for (Player playerSelecting : isSelectingArena) showFreeArenaSelection(playerSelecting, true);
+        for (Player playerSelecting : isSelectingArena)
+            showFreeArenaSelection(playerSelecting, true);
     }
 
     /**
