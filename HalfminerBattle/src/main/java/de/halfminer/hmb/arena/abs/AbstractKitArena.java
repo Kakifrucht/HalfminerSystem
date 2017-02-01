@@ -43,11 +43,20 @@ public abstract class AbstractKitArena extends AbstractArena {
 
         List<Player> reset = toClear != null ? Arrays.asList(toClear) : playersInArena;
 
-        int spawnNumber = 0;
         for (Player clear : reset) {
             clear.leaveVehicle();
             pm.storePlayerData(clear);
-            clear.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)));
+        }
+        teleportIntoArena(toClear);
+    }
+
+    protected void teleportIntoArena(Player... toTeleport) {
+
+        List<Player> reset = toTeleport != null ? Arrays.asList(toTeleport) : playersInArena;
+
+        int spawnNumber = 0;
+        for (Player player : reset) {
+            player.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)));
         }
     }
 

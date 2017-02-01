@@ -96,19 +96,33 @@ public class HalfminerBattle extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
         // admin commands
-        if (cmd.getName().equalsIgnoreCase("hmb")
-                && sender.hasPermission("hmb.admin")) {
+        if (cmd.getName().equalsIgnoreCase("hmb")) {
 
-            if (args.length > 0) {
-
-                GameMode called = getGameMode(args[0]);
-                if (called != null)
-                    return called.onAdminCommand(sender, args);
+            if (!sender.hasPermission("hmb.admin")) {
+                MessageBuilder.create(this, "noPermission", PREFIX).sendMessage(sender);
+                return true;
             }
 
-            MessageBuilder.create(this, "adminHelp", PREFIX).sendMessage(sender);
-            return false;
+            if (args.length > 0) {
+                GameMode called = getGameMode(args[0]);
+                if (called != null) {
+                    if (!called.onAdminCommand(sender, args)) {
+                        MessageBuilder.create(this, "adminNotDefined")
+                                .addPlaceholderReplace("%GAMEMODE%", args[0])
+                                .sendMessage(sender);
+                    }
+                } else {
+                    getGameMode(GameModeType.GLOBAL).onAdminCommand(sender, args);
+                }
+                return true;
+            }
+
+            MessageBuilder.create(this, "adminVersion", PREFIX)
+                    .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
+                    .sendMessage(sender);
+            return true;
         }
+
 
         return getGameMode(cmd.getName()).onCommand(sender, args);
     }

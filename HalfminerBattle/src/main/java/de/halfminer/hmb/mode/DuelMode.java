@@ -12,7 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class DuelMode extends AbstractMode {
 
@@ -44,7 +47,7 @@ public class DuelMode extends AbstractMode {
 
         if (!(sender instanceof Player)) {
             MessageBuilder.create(hmb, "notAPlayer").sendMessage(sender);
-            return false;
+            return true;
         }
 
         Player player = (Player) sender;
@@ -54,8 +57,7 @@ public class DuelMode extends AbstractMode {
         }
 
         if (am.getArenasFromType(GameModeType.DUEL).size() == 0) {
-            //TODO set message to gamemode specific disabled
-            MessageBuilder.create(hmb, "pluginDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(hmb, "gamemodeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 
@@ -84,56 +86,7 @@ public class DuelMode extends AbstractMode {
 
     @Override
     public boolean onAdminCommand(CommandSender sender, String[] args) {
-
-        if (!(sender instanceof Player)) {
-            MessageBuilder.create(hmb, "notAPlayer").sendMessage(sender);
-            return true;
-        }
-
-        if (args.length < 3) {
-            MessageBuilder.create(hmb, "adminHelp", HalfminerBattle.PREFIX).sendMessage(sender);
-            return true;
-        }
-
-        Player player = (Player) sender;
-
-        if (player.hasPermission("hmb.admin")) {
-
-            String arg = args[1].toLowerCase();
-            switch (arg) {
-                case "create":
-                    boolean successCreate = am.addArena(GameModeType.DUEL, args[2], player.getLocation());
-                    MessageBuilder.create(hmb, successCreate ? "adminCreate" : "adminCreateFailed", HalfminerBattle.PREFIX)
-                            .addPlaceholderReplace("%ARENA%", args[2])
-                            .sendMessage(sender);
-                    break;
-                case "remove":
-                    boolean successRemove = am.delArena(GameModeType.DUEL, args[2]);
-                    MessageBuilder.create(hmb, successRemove ? "adminRemove" : "adminArenaDoesntExist", HalfminerBattle.PREFIX)
-                            .addPlaceholderReplace("%ARENA%", args[2])
-                            .sendMessage(sender);
-                    break;
-                case "spawna":
-                case "spawnb":
-                    boolean successSetSpawn = am.setSpawn(GameModeType.DUEL, args[2], player.getLocation(),
-                            arg.equalsIgnoreCase("spawna") ? 0 : 1);
-                    MessageBuilder.create(hmb, successSetSpawn ? "adminSetSpawn" : "adminArenaDoesntExist", HalfminerBattle.PREFIX)
-                            .addPlaceholderReplace("%ARENA%", args[2])
-                            .sendMessage(sender);
-                    break;
-                case "setkit":
-                    boolean successKit = am.setKit(GameModeType.DUEL, args[2], player.getInventory());
-                    MessageBuilder.create(hmb, successKit ? "adminSetKit" : "adminArenaDoesntExist", HalfminerBattle.PREFIX)
-                            .addPlaceholderReplace("%ARENA%", args[2])
-                            .sendMessage(sender);
-                    break;
-                default:
-                    MessageBuilder.create(hmb, "adminHelp", HalfminerBattle.PREFIX).sendMessage(sender);
-            }
-
-        } else MessageBuilder.create(hmb, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
-
-        return true;
+        return false;
     }
 
     @Override
@@ -197,14 +150,16 @@ public class DuelMode extends AbstractMode {
     public void onChatSelectArena(AsyncPlayerChatEvent e) {
 
         if (queue.isSelectingArena(e.getPlayer())) {
-            e.setCancelled(true);
+            if (am.getFreeArenasFromType(MODE).size() > 0) {
+                e.setCancelled(true);
 
-            final Player player = e.getPlayer();
-            final String message = e.getMessage();
-            Bukkit.getScheduler().scheduleSyncDelayedTask(HalfminerBattle.getInstance(), () -> {
-                // It may happen that between event fire and task execution the partner leaves the queue, redo select check
-                if (queue.isSelectingArena(player)) queue.arenaWasSelected(player, message);
-            });
+                final Player player = e.getPlayer();
+                final String message = e.getMessage();
+                Bukkit.getScheduler().scheduleSyncDelayedTask(HalfminerBattle.getInstance(), () -> {
+                    // It may happen that between event fire and task execution the partner leaves the queue, redo select check
+                    if (queue.isSelectingArena(player)) queue.arenaWasSelected(player, message);
+                });
+            }
         }
     }
 

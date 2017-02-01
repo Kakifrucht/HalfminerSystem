@@ -96,7 +96,7 @@ public class DuelQueue {
             MessageBuilder.create(hmb, "duelRequestYourself", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
-        if (sendTo.hasPermission("hmb.duel.exempt")) {
+        if (sendTo.hasPermission("hmb.mode.duel.exempt.request")) {
             MessageBuilder.create(hmb, "duelExempt", HalfminerBattle.PREFIX)
                     .addPlaceholderReplace("%PLAYER%", sendTo.getName())
                     .sendMessage(sender);
@@ -218,7 +218,7 @@ public class DuelQueue {
     }
 
     /**
-     * Method sending the map selecting player a possible selection. This will only be called if
+     * Sends the player who will select an arena all possible choices. This will only be called if
      * an arena is actually free. It generates a list, where each free arena gets a number, the possibility to
      * select a random arena exists aswell. This selection updates when another player selects an arena
      * and when an arena becomes available. If only one arena is available no selection will be shown.
@@ -230,29 +230,26 @@ public class DuelQueue {
     private void showFreeArenaSelection(Player player, boolean refreshMessage) {
 
         List<Arena> freeArenas = am.getFreeArenasFromType(MODE);
+        Player partner = pm.getFirstPartner(player);
 
         if (freeArenas.size() == 0) {
-            //TODO send message that no free arenas are available and it will add to free one automatically
-        } else {
-
-            if (freeArenas.size() == 1) {
+            MessageBuilder.create(hmb, "chooseArenaNoneAvailable", HalfminerBattle.PREFIX)
+                    .sendMessage(player, partner);
+        } else if (freeArenas.size() == 1) {
                 arenaWasSelected(player, "1");
+        } else {
+            if (refreshMessage) {
+                MessageBuilder.create(hmb, "chooseArenaRefreshed", HalfminerBattle.PREFIX).sendMessage(player);
             } else {
-                if (refreshMessage) {
-                    MessageBuilder.create(hmb, "chooseArenaRefreshed", HalfminerBattle.PREFIX).sendMessage(player);
-                } else {
-                    MessageBuilder.create(hmb, "chooseArena", HalfminerBattle.PREFIX)
-                            .addPlaceholderReplace("%PLAYER%", pm.getFirstPartner(player).getName())
-                            .sendMessage(player);
-                }
+                MessageBuilder.create(hmb, "chooseArena", HalfminerBattle.PREFIX)
+                        .addPlaceholderReplace("%PLAYER%", partner.getName())
+                        .sendMessage(player);
 
-                if (!refreshMessage) {
-                    MessageBuilder.create(hmb, "partnerChoosingArena", HalfminerBattle.PREFIX)
-                            .addPlaceholderReplace("%PLAYER%", player.getName())
-                            .sendMessage(pm.getFirstPartner(player));
-                }
-                player.sendMessage(am.getStringFromArenaList(freeArenas, true));
+                MessageBuilder.create(hmb, "partnerChoosingArena", HalfminerBattle.PREFIX)
+                        .addPlaceholderReplace("%PLAYER%", player.getName())
+                        .sendMessage(partner);
             }
+            player.sendMessage(am.getStringFromArenaList(freeArenas, true));
         }
     }
 

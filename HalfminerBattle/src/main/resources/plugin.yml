@@ -5,15 +5,16 @@ author: Kakifrucht
 website: https://halfminer.de
 
 main: de.halfminer.hmb.HalfminerBattle
+depend: [HalfminerSystem]
 
 commands:
   duel:
-    description: Duel base command
+    description: Duel mode base command
     usage: /duel <subcommand/playername>
-    aliases: [1vs1,duell,pvp]
+    aliases: [1vs1, duell, pvp, 1v1]
   hmb:
-    description: Add, remove and edit arenas
-    usage: /global <subcommand> [argument]
+    description: Access admin commands per gamemode, add, remove and edit arenas)
+    usage: /hmb <subcommand> [argument]
     aliases: [hmbattle, hbattle, halfminerbattle, global]
 permissions:
   hmb.*:
@@ -31,12 +32,12 @@ permissions:
     default: op
     description: Access to all duel functionality
     children:
-      hmb.mode.duel.exempt: true
+      hmb.mode.duel.exempt.request: true
       hmb.mode.duel.use: true
   hmb.mode.duel.use:
     default: true
     description: Access to duel mode
   hmb.admin:
-    description: Administrative permission
-  hmb.mode.duel.exempt:
+    description: Administrative permission, access to /hmb
+  hmb.mode.duel.exempt.request:
     description: Exempt players cannot be duel requested

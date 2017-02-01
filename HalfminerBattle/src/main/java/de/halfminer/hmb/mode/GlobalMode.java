@@ -1,6 +1,7 @@
 package de.halfminer.hmb.mode;
 
 import de.halfminer.hmb.HalfminerBattle;
+import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
@@ -71,14 +72,83 @@ public class GlobalMode extends AbstractMode {
 
     @Override
     public boolean onAdminCommand(CommandSender sender, String[] args) {
-        //TODO move arena commands
+
         if (args[0].equalsIgnoreCase("reload")) {
+
             boolean success = hmb.saveAndReloadConfig();
             MessageBuilder.create(hmb, success ? "adminSettingsReloaded" : "adminSettingsReloadedError")
                     .sendMessage(sender);
-            return true;
+        } else {
+
+            if (args.length < 3) {
+                MessageBuilder.create(hmb, "adminHelp", HalfminerBattle.PREFIX).sendMessage(sender);
+                return true;
+            }
+
+            GameModeType type = GameModeType.getGameMode(args[1]);
+            if (type == null) {
+                MessageBuilder.create(hmb, "adminUnknownGamemode", HalfminerBattle.PREFIX).sendMessage(sender);
+                return true;
+            }
+
+            boolean isPlayer = sender instanceof Player;
+            Player player = isPlayer ? (Player) sender : null;
+
+            String arg = args[0].toLowerCase();
+            switch (arg) {
+                case "create":
+                    if (!isPlayer) {
+                        sendNotAPlayerMessage(sender);
+                        return true;
+                    }
+                    boolean successCreate = am.addArena(type, args[2], player.getLocation());
+                    sendStatusMessage(sender, successCreate ? "adminCreate" : "adminCreateFailed", args[2]);
+                    break;
+                case "remove":
+                    boolean successRemove = am.delArena(type, args[2]);
+                    sendStatusMessage(sender, successRemove ? "adminRemove" : "adminArenaDoesntExist", args[2]);
+                    break;
+                case "setspawn":
+                    if (!isPlayer) {
+                        sendNotAPlayerMessage(sender);
+                        return true;
+                    }
+                    int spawnNumber = Integer.MAX_VALUE;
+                    if (args.length > 3) {
+                        try {
+                            spawnNumber = Integer.parseInt(args[3]);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    boolean successSetSpawn = am.setSpawn(type, args[2], player.getLocation(), spawnNumber);
+                    sendStatusMessage(sender, successSetSpawn ? "adminSetSpawn" : "adminArenaDoesntExist", args[2]);
+                    break;
+                case "clearspawns":
+                    boolean successClear = am.clearSpawns(type, args[2]);
+                    sendStatusMessage(sender, successClear ? "adminClearSpawns" : "adminArenaDoesntExist", args[2]);
+                    break;
+                case "setkit":
+                    if (!isPlayer) {
+                        sendNotAPlayerMessage(sender);
+                        return true;
+                    }
+                    boolean successKit = am.setKit(type, args[2], player.getInventory());
+                    sendStatusMessage(sender, successKit ? "adminSetKit" : "adminArenaDoesntExist", args[2]);
+                    break;
+                default:
+                    MessageBuilder.create(hmb, "adminHelp", HalfminerBattle.PREFIX).sendMessage(sender);
+            }
         }
-        return false;
+        return true;
+    }
+
+    private void sendStatusMessage(CommandSender sender, String messageKey, String arenaName) {
+        MessageBuilder.create(hmb, messageKey, HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%ARENA%", arenaName)
+                .sendMessage(sender);
+    }
+
+    private void sendNotAPlayerMessage(CommandSender sender) {
+        MessageBuilder.create(hmb, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sender);
     }
 
     @Override

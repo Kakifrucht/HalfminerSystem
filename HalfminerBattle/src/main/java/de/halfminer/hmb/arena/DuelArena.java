@@ -69,6 +69,7 @@ public class DuelArena extends AbstractKitArena {
             private void preparePlayer(Player player) {
                 player.setWalkSpeed(0.2F);
                 MessageBuilder.create(hmb, "gameStarting", HalfminerBattle.PREFIX).sendMessage(player);
+                teleportIntoArena(player);
                 equipPlayers();
             }
 

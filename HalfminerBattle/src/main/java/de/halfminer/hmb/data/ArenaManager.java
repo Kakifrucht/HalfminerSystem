@@ -164,6 +164,15 @@ public class ArenaManager {
         return false;
     }
 
+    public boolean clearSpawns(GameModeType gameMode, String arenaName) {
+        Arena clearSpawns = getArena(gameMode, arenaName);
+        if (clearSpawns != null) {
+            clearSpawns.setSpawns(Collections.emptyList());
+            return true;
+        }
+        return false;
+    }
+
     public boolean setKit(GameModeType gameMode, String arenaName, PlayerInventory setKitTo) {
         Arena setKit = getArena(gameMode, arenaName);
         if (setKit instanceof AbstractKitArena) {
