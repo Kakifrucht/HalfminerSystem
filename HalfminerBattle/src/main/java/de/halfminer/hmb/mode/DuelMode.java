@@ -63,7 +63,7 @@ public class DuelMode extends AbstractMode {
         }
 
         if (am.getArenasFromType(GameModeType.DUEL).size() == 0) {
-            MessageBuilder.create(hmb, "gamemodeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(hmb, "modeGlobalGamemodeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 
@@ -76,7 +76,7 @@ public class DuelMode extends AbstractMode {
                     queue.removeFromQueue(player);
                     break;
                 case "list":
-                    MessageBuilder.create(hmb, "showArenaList", HalfminerBattle.PREFIX).sendMessage(player);
+                    MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(player);
                     MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE), false),
                             HalfminerBattle.PREFIX)
                             .setMode(MessageBuilder.Mode.DIRECT_STRING)
@@ -85,7 +85,7 @@ public class DuelMode extends AbstractMode {
                 default:
                     queue.requestSend(player, hmb.getServer().getPlayer(args[0]));
             }
-        } else MessageBuilder.create(hmb, "help", HalfminerBattle.PREFIX).sendMessage(player);
+        } else MessageBuilder.create(hmb, "modeDuelShowHelp", HalfminerBattle.PREFIX).sendMessage(player);
 
         return true;
     }

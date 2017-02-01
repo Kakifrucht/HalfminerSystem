@@ -117,7 +117,7 @@ public class HalfminerBattle extends JavaPlugin {
                 return true;
             }
 
-            MessageBuilder.create(this, "adminVersion", PREFIX)
+            MessageBuilder.create(this, "version", PREFIX)
                     .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
                     .sendMessage(sender);
             return true;

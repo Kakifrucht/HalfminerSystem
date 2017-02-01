@@ -31,11 +31,11 @@ public class DuelArena extends AbstractKitArena {
         addPlayers(playerA, playerB);
         clearAndStorePlayers();
 
-        MessageBuilder.create(hmb, "gameStartingCountdown", HalfminerBattle.PREFIX)
+        MessageBuilder.create(hmb, "modeDuelCountdownStart", HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%PLAYER%", playerB.getName())
                 .addPlaceholderReplace("%ARENA%", getName())
                 .sendMessage(playerA);
-        MessageBuilder.create(hmb, "gameStartingCountdown", HalfminerBattle.PREFIX)
+        MessageBuilder.create(hmb, "modeDuelCountdownStart", HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%PLAYER%", playerA.getName())
                 .addPlaceholderReplace("%ARENA%", getName())
                 .sendMessage(playerB);
@@ -54,7 +54,7 @@ public class DuelArena extends AbstractKitArena {
                     preparePlayer(playerB);
                 }
                 if (timeLeft <= 15 && timeLeft > 0) {
-                    MessageBuilder.create(hmb, "gameTimeRunningOut", HalfminerBattle.PREFIX)
+                    MessageBuilder.create(hmb, "modeDuelTimeRunningOut", HalfminerBattle.PREFIX)
                             .addPlaceholderReplace("%TIME%", Integer.toString(timeLeft))
                             .sendMessage(playerA, playerB);
                 }
@@ -69,7 +69,7 @@ public class DuelArena extends AbstractKitArena {
 
             private void preparePlayer(Player player) {
                 player.setWalkSpeed(0.2F);
-                MessageBuilder.create(hmb, "gameStarting", HalfminerBattle.PREFIX).sendMessage(player);
+                MessageBuilder.create(hmb, "modeDuelGameStarting", HalfminerBattle.PREFIX).sendMessage(player);
                 teleportIntoArena(player);
                 equipPlayers();
             }

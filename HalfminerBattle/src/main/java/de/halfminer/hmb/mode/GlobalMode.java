@@ -36,7 +36,7 @@ public class GlobalMode extends AbstractMode {
     public void disableCommandDuringFight(PlayerCommandPreprocessEvent e) {
 
         if (pm.isInBattle(e.getPlayer()) && !e.getPlayer().hasPermission("hmb.admin")) {
-            MessageBuilder.create(hmb, "inGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
+            MessageBuilder.create(hmb, "modeGlobalInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }
@@ -63,7 +63,7 @@ public class GlobalMode extends AbstractMode {
     @EventHandler(ignoreCancelled = true)
     public void teleportDisable(PlayerTeleportEvent e) {
         if (!pm.isInBattle(e.getPlayer()) && am.isArenaSpawn(e.getTo())) {
-            MessageBuilder.create(hmb, "teleportIntoArenaDenied", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
+            MessageBuilder.create(hmb, "modeGlobalTeleportIntoArenaDenied", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }
