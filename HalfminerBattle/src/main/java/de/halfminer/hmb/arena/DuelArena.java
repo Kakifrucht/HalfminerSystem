@@ -9,8 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Collection;
-
 public class DuelArena extends AbstractKitArena {
 
     private static final DuelMode mode = (DuelMode) hmb.getGameMode(GameModeType.DUEL);
@@ -77,39 +75,13 @@ public class DuelArena extends AbstractKitArena {
     }
 
     /**
-     * Called once a game ends. Will issue restoring of players and resetting.
+     * Called once a game ends. Will issue restoring of players and resets arena.
      * This happens due to death of a player (duel win), time running out, reloading of plugin
      * or logging out.
-     *
-     * @param loser     player that caused the game end
-     * @param hasWinner true if a duel has a winner (logout or death), false if not (reload, time ran out)
      */
-    public void gameEnd(Player loser, boolean hasWinner) {
-
+    public void gameEnd() {
         task.cancel();
-        Player winner = loser.equals(playersInArena.get(0)) ? playersInArena.get(0) : playersInArena.get(1);
-
         restorePlayers();
-
-        // Messaging and broadcasting
-        MessageBuilder.create(hmb, hasWinner ? "gameWon" : "gameTied", HalfminerBattle.PREFIX)
-                .addPlaceholderReplace("%PLAYER%", loser.getName())
-                .sendMessage(winner);
-        MessageBuilder.create(hmb, hasWinner ? "gameLost" : "gameTied", HalfminerBattle.PREFIX)
-                .addPlaceholderReplace("%PLAYER%", winner.getName())
-                .sendMessage(loser);
-
-        if (hasWinner && mode.doWinBroadcast()) {
-            Collection<? extends Player> sendTo = hmb.getServer().getOnlinePlayers();
-            sendTo.remove(winner);
-            sendTo.remove(loser);
-            MessageBuilder.create(hmb, "gameBroadcast", HalfminerBattle.PREFIX)
-                    .addPlaceholderReplace("%WINNER%", winner.getName())
-                    .addPlaceholderReplace("%LOSER%", loser.getName())
-                    .addPlaceholderReplace("%ARENA%", name)
-                    .broadcastMessage(sendTo, false, "");
-
-        }
         playersInArena.clear();
     }
 

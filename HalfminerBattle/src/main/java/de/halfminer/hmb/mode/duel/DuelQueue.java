@@ -9,11 +9,13 @@ import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -311,12 +313,41 @@ public class DuelQueue {
     public void gameHasFinished(Player playerA, boolean hasWinner) {
 
         DuelArena arena = (DuelArena) pm.getArena(playerA);
+        Player winner = pm.getFirstPartner(playerA);
 
-        // Get the duel partner
-        Player playerB = pm.getFirstPartner(playerA);
+        // Messaging
+        MessageBuilder.create(hmb, hasWinner ? "gameWon" : "gameTied", HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%PLAYER%", playerA.getName())
+                .sendMessage(winner);
+        MessageBuilder.create(hmb, hasWinner ? "gameLost" : "gameTied", HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%PLAYER%", winner.getName())
+                .sendMessage(playerA);
 
-        arena.gameEnd(playerA, hasWinner); // Reset arena and reset players
-        pm.setState(BattleState.IDLE, playerA, playerB);
+        // broadcasting
+        if (hasWinner) {
+
+            // player logged out, ensure that winner gets the kill due to logout
+            if (!playerA.isOnline()) {
+                NMSUtils.setKiller(playerA, winner);
+                playerA.setHealth(0.0d);
+            }
+
+            if (duelMode.doWinBroadcast()) {
+                Collection<? extends Player> sendTo = hmb.getServer().getOnlinePlayers();
+                sendTo.remove(winner);
+                sendTo.remove(playerA);
+                MessageBuilder.create(hmb, "gameBroadcast", HalfminerBattle.PREFIX)
+                        .addPlaceholderReplace("%WINNER%", winner.getName())
+                        .addPlaceholderReplace("%LOSER%", playerA.getName())
+                        .addPlaceholderReplace("%ARENA%", arena.getName())
+                        .broadcastMessage(sendTo, false, "");
+            }
+
+        }
+
+        // Reset arena and reset players
+        arena.gameEnd();
+        pm.setState(BattleState.IDLE, playerA, winner);
 
         for (Player player : isSelectingArena)
             showFreeArenaSelection(player, true);
