@@ -107,7 +107,7 @@ public class HalfminerBattle extends JavaPlugin {
                 GameMode called = getGameMode(args[0]);
                 if (called != null) {
                     if (!called.onAdminCommand(sender, args)) {
-                        MessageBuilder.create(this, "adminNotDefined")
+                        MessageBuilder.create(this, "adminNotDefined", PREFIX)
                                 .addPlaceholderReplace("%GAMEMODE%", args[0])
                                 .sendMessage(sender);
                     }
@@ -117,7 +117,7 @@ public class HalfminerBattle extends JavaPlugin {
                 return true;
             }
 
-            MessageBuilder.create(this, "version", PREFIX)
+            MessageBuilder.create(this, "adminCommandUsage", PREFIX)
                     .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
                     .sendMessage(sender);
             return true;

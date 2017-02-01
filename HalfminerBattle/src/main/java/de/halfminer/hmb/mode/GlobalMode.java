@@ -21,7 +21,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 @SuppressWarnings("unused")
 public class GlobalMode extends AbstractMode {
 
-    private boolean noHungerLossInDuel;
+    private boolean noHungerLossInBattle;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPvPUncancel(EntityDamageByEntityEvent e) {
@@ -44,7 +44,7 @@ public class GlobalMode extends AbstractMode {
     @EventHandler(ignoreCancelled = true)
     public void eatDecayDisable(FoodLevelChangeEvent e) {
 
-        if (noHungerLossInDuel && e.getEntity() instanceof Player
+        if (noHungerLossInBattle && e.getEntity() instanceof Player
                 && pm.isInBattle((Player) e.getEntity())) {
             e.setCancelled(true);
         }
@@ -79,12 +79,12 @@ public class GlobalMode extends AbstractMode {
         if (args[0].equalsIgnoreCase("reload")) {
 
             boolean success = hmb.saveAndReloadConfig();
-            MessageBuilder.create(hmb, success ? "adminSettingsReloaded" : "adminSettingsReloadedError")
+            MessageBuilder.create(hmb, success ? "adminSettingsReloaded" : "adminSettingsReloadedError", HalfminerBattle.PREFIX)
                     .sendMessage(sender);
         } else {
 
             if (args.length < 3) {
-                MessageBuilder.create(hmb, "adminHelp", HalfminerBattle.PREFIX).sendMessage(sender);
+                sendUsageInformation(sender);
                 return true;
             }
 
@@ -138,20 +138,26 @@ public class GlobalMode extends AbstractMode {
                     sendStatusMessage(sender, successKit ? "adminSetKit" : "adminArenaDoesntExist", args[2]);
                     break;
                 default:
-                    MessageBuilder.create(hmb, "adminHelp", HalfminerBattle.PREFIX).sendMessage(sender);
+                    sendUsageInformation(sender);
             }
         }
         return true;
     }
 
-    private void sendStatusMessage(CommandSender sender, String messageKey, String arenaName) {
-        MessageBuilder.create(hmb, messageKey, HalfminerBattle.PREFIX)
-                .addPlaceholderReplace("%ARENA%", arenaName)
-                .sendMessage(sender);
+    private void sendUsageInformation(CommandSender sendTo) {
+        MessageBuilder.create(hmb, "adminCommandUsage", HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%VERSION%", hmb.getDescription().getVersion())
+                .sendMessage(sendTo);
     }
 
-    private void sendNotAPlayerMessage(CommandSender sender) {
-        MessageBuilder.create(hmb, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sender);
+    private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName) {
+        MessageBuilder.create(hmb, messageKey, HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%ARENA%", arenaName)
+                .sendMessage(sendTo);
+    }
+
+    private void sendNotAPlayerMessage(CommandSender sendTo) {
+        MessageBuilder.create(hmb, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sendTo);
     }
 
     @Override
@@ -159,6 +165,6 @@ public class GlobalMode extends AbstractMode {
 
     @Override
     public void onConfigReload() {
-        noHungerLossInDuel = hmb.getConfig().getBoolean("noHungerLossInDuel", true);
+        noHungerLossInBattle = hmb.getConfig().getBoolean("gameMode.global.noHungerLoss", true);
     }
 }

@@ -35,14 +35,6 @@ public class ArenaManager {
         reloadConfig();
     }
 
-    public Arena getArena(GameModeType gameMode, String name) {
-        for (Arena arena : getArenasFromType(gameMode)) {
-            if (arena.getName().equalsIgnoreCase(name))
-                return arena;
-        }
-        return null;
-    }
-
     public List<Arena> getArenasFromType(GameModeType type) {
         if (arenas.containsKey(type))
             return new LinkedList<>(arenas.get(type).values());
@@ -53,6 +45,21 @@ public class ArenaManager {
         List<Arena> all = getArenasFromType(type);
         all.removeIf(arena -> !arena.isFree());
         return all;
+    }
+
+    private Arena getArena(GameModeType gameMode, String name) {
+        for (Arena arena : getArenasFromType(gameMode)) {
+            if (arena.getName().equalsIgnoreCase(name))
+                return arena;
+        }
+        return null;
+    }
+
+    private Map<String, Arena> getArenaMap(GameModeType type) {
+        if (!arenas.containsKey(type)) {
+            arenas.put(type, new HashMap<>());
+        }
+        return arenas.get(type);
     }
 
     public ItemStack[][] getKit(GameModeType gameMode, String name) {
@@ -103,11 +110,7 @@ public class ArenaManager {
                     continue;
                 }
 
-                Map<String, Arena> arenaMap = arenas.get(type);
-                if (!arenas.containsKey(type)) {
-                    arenaMap = new HashMap<>();
-                    arenas.put(type, arenaMap);
-                }
+                Map<String, Arena> arenaMap = getArenaMap(type);
 
                 List<String> spawns = arenaSection.getStringList(name + ".spawns");
                 List<Location> spawnLocations = new ArrayList<>();
@@ -131,7 +134,7 @@ public class ArenaManager {
 
         if (getArena(gameMode, name) != null) return false;
 
-        Map<String, Arena> arenasMode = arenas.get(gameMode);
+        Map<String, Arena> arenasMode = getArenaMap(gameMode);
         Arena newArena = getArenaFromGamemode(gameMode, name);
         if (newArena != null) {
             newArena.setSpawns(Arrays.asList(spawns));
@@ -143,7 +146,7 @@ public class ArenaManager {
 
     public boolean delArena(GameModeType gameMode, String name) {
 
-        Map<String, Arena> arenasMode = arenas.get(gameMode);
+        Map<String, Arena> arenasMode = getArenaMap(gameMode);
         if (arenasMode != null) {
             boolean removed = arenasMode.values().removeIf(a -> a.getName().equalsIgnoreCase(name));
             if (removed) {
@@ -182,6 +185,7 @@ public class ArenaManager {
             newKit[2] = setKitTo.getExtraContents();
             kits.put(new Pair<>(gameMode, arenaName), newKit);
             setKit.reload();
+            saveData();
             return true;
         }
         return false;
@@ -228,8 +232,8 @@ public class ArenaManager {
         arenaConfig.set("kits", null);
         for (Map<String, Arena> arenaPairs : arenas.values()) {
             for (Arena arena : arenaPairs.values()) {
-                ConfigurationSection newSection = hmb.getConfig().createSection("arenas." + arena.getName());
-                newSection.set("gameMode", arena.getGameMode());
+                ConfigurationSection newSection = arenaConfig.createSection("arenas." + arena.getName());
+                newSection.set("gameMode", arena.getGameMode().toString());
                 newSection.set("spawns", arena.getSpawns());
             }
         }

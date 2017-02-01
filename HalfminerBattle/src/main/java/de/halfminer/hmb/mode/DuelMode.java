@@ -77,8 +77,7 @@ public class DuelMode extends AbstractMode {
                     break;
                 case "list":
                     MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(player);
-                    MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE), false),
-                            HalfminerBattle.PREFIX)
+                    MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE), false))
                             .setMode(MessageBuilder.Mode.DIRECT_STRING)
                             .sendMessage(player);
                     break;
@@ -105,16 +104,16 @@ public class DuelMode extends AbstractMode {
 
     @Override
     public void onConfigReload() {
-        broadcastWin = hmb.getConfig().getBoolean("doWinBroadcast", false);
+        broadcastWin = hmb.getConfig().getBoolean("gameMode.duel.broadcastWin", false);
 
-        int remind = hmb.getConfig().getInt("waitingForMatchRemind", Integer.MIN_VALUE);
+        int remind = hmb.getConfig().getInt("gameMode.duel.waitingForMatchRemind", Integer.MIN_VALUE);
         if (remind < 0) {
-            hmb.getConfig().set("waitingForMatchRemind", 0);
+            hmb.getConfig().set("gameMode.duel.waitingForMatchRemind", 0);
             remind = 0;
         }
         waitingForMatchRemind = remind;
 
-        int time = hmb.getConfig().getInt("duelTime", Integer.MIN_VALUE);
+        int time = hmb.getConfig().getInt("gameMode.duel.gameTime", Integer.MIN_VALUE);
         if (time < 20)
             time = 20;
 
@@ -122,8 +121,8 @@ public class DuelMode extends AbstractMode {
         if (modulo != 0)
             time += 5 - modulo;
 
-        if (hmb.getConfig().getInt("duelTime", Integer.MIN_VALUE) != time)
-            hmb.getConfig().set("duelTime", time);
+        if (hmb.getConfig().getInt("gameMode.duel.gameTime", Integer.MIN_VALUE) != time)
+            hmb.getConfig().set("gameMode.duel.gameTime", time);
         duelTime = time + 5;
 
         hmb.saveConfig();

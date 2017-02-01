@@ -28,7 +28,7 @@ public class HalfminerWebAPI extends JavaPlugin {
     public void onEnable() {
         instance = this;
         if (load()) {
-            getLogger().info("HalfminerWebAPI enabled successfully");
+            getLogger().info("HalfminerWebAPI enabled");
         } else {
             getLogger().severe("HalfminerWebAPI was not enabled properly");
         }

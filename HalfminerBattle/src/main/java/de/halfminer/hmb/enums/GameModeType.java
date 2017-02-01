@@ -24,10 +24,11 @@ public enum GameModeType {
     }
 
     public static GameModeType getGameMode(String toResolve) {
+        if (toResolve.length() < 3) return null;
         for (GameModeType type : values()) {
             if (type.getModeClassName().toLowerCase().startsWith(toResolve))
                 return type;
         }
-        throw new RuntimeException("Attempt to resolve GameMode name " + toResolve + " unsuccessful.");
+        return null;
     }
 }
