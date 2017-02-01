@@ -6,7 +6,7 @@ gameMode:
   duel:
     #Broadcast duel wins
     broadcastWin: true
-    #Time in seconds until server will broadcast that a dueling player is waiting to be dueled
+    #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
     waitingForMatchRemind: 30
     #Max duel time
     gameTime: 300
@@ -42,6 +42,7 @@ localization:
   chooseArenaInvalid: '&cUngültige Auswahl, bitte versuche es erneut'
   chooseArenaNoneAvailable: '&7Aktuell sind alle Arenen belegt, ihr werdet automatisch in die nächste freie Arena getan'
   partnerChoosingArena: '&e%PLAYER%&7 wählt nun eine Arena aus, das Duell startet gleich'
+  duelStartingLog: 'Duell startet zwischen %PLAYERA% und %PLAYERB% in Arena %ARENA%'
   gameStartingCountdown: '&7Das Duell in der Arena &e%ARENA%&7 gegen &c%PLAYER%&7 startet in 5 Sekunden'
   gameStarting: '&aDer Kampf beginnt!'
   inGame: '&cIm Kampf darfst du keine Kommandos verwenden'

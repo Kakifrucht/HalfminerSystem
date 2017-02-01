@@ -63,10 +63,10 @@ public class HalfminerBattle extends JavaPlugin {
 
     public boolean saveAndReloadConfig() {
 
-        saveDefaultConfig(); // Save default config.yml if not yet done
-        reloadConfig(); // Make sure that if the file changed, it is reread
-        getConfig().options().copyDefaults(true); // If parameters are missing, add them
-        saveConfig(); // Save config.yml to disk
+        saveDefaultConfig();
+        reloadConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         gameModes.values().forEach(GameMode::onConfigReload);
         try {

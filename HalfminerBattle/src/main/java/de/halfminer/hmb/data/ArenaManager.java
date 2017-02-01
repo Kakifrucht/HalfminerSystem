@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 
 /**
- * Loading arenas and kits from config and creating necessary objects
+ * Loading arenas and kits from config and maintaining necessary data
  */
 public class ArenaManager {
 

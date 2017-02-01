@@ -13,6 +13,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Abstract arena implementing all in interfaces {@link Arena} defined methods
+ */
 public abstract class AbstractArena implements Arena {
 
     protected static final HalfminerBattle hmb = HalfminerBattle.getInstance();

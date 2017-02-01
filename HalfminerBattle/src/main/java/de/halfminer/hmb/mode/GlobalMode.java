@@ -15,6 +15,9 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+/**
+ * Global game mode, functionality shared by all other {@link de.halfminer.hmb.mode.abs.GameMode}
+ */
 @SuppressWarnings("unused")
 public class GlobalMode extends AbstractMode {
 

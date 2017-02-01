@@ -13,6 +13,10 @@ import org.bukkit.potion.PotionEffect;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Encapsulating player specific battle data, such as his state, inventory, survival data (inventory, health..) and
+ * the players arena and game partners
+ */
 class BattlePlayer {
 
     private final UUID baseUUID;

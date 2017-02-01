@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+/**
+ * Arenas are being managed by {@link de.halfminer.hmb.data.ArenaManager}
+ */
 public interface Arena {
 
     /**

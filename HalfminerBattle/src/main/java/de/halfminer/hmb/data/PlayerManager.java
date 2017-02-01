@@ -8,6 +8,9 @@ import org.bukkit.event.Listener;
 
 import java.util.*;
 
+/**
+ * Manages the battle database, encapsulating player specific data in {@link BattlePlayer}, used as I/O interface
+ */
 public class PlayerManager implements Listener {
 
     private final Map<UUID, BattlePlayer> playerMap = new HashMap<>();

@@ -9,6 +9,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+/**
+ * Custom duel kit arena used by {@link DuelMode}, implementing countdowns and preparing fight
+ */
 public class DuelArena extends AbstractKitArena {
 
     private static final DuelMode mode = (DuelMode) hmb.getGameMode(GameModeType.DUEL);

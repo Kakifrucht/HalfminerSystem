@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 public class DuelQueue {
 
@@ -38,9 +39,9 @@ public class DuelQueue {
     }
 
     /**
-     * Method that is being called after a player uses the command /duel match.
+     * Called after a player uses the command /duel match.
      * Puts the player into a queue until another player uses the /duel match command,
-     * or matches the player and generates a valid pair, if a player is already waiting.
+     * somebody duel requests this player, or matches the player if another player is already waiting.
      * It also sends broadcasts after <i>gameMode.duel.waitingForMatchRemind</i> setting
      * seconds if he is still waiting then
      *
@@ -74,16 +75,21 @@ public class DuelQueue {
             }
         } else {
             playersMatched(waitingForMatch, toMatch);
-            waitingForMatch = null;
-            waitingForMatchTask.cancel();
+            clearWaitingForMatch();
         }
     }
 
+    private void clearWaitingForMatch() {
+        waitingForMatch = null;
+        waitingForMatchTask.cancel();
+    }
+
     /**
-     * Method that is being called, after a player specified another player as /duel argument.
-     * This will either a) not do anything, because the sender is already in a queue or because the
-     * receiver is already in a duel or in a queue, b) send a request to specified player, if receiver did not
-     * send the request first, or c) accepts the request, if it was already requested
+     * Called after a player specified another player as /duel argument.
+     * This will either a) not do anything, either sender nor receiver are idle,
+     * b) send a request to specified player, if receiver did not
+     * send the request first, or c) accepts the request, if it was already
+     * requested or sendTo is waiting for a match
      *
      * @param sender player that used command /duel playername
      * @param sendTo player that the request is being sent to or whose duel invitation is being accepted
@@ -116,7 +122,8 @@ public class DuelQueue {
             MessageBuilder.create(hmb, "alreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
-        if (hasRequested(sendTo)) { // Requestee sent a request already, check if to sender of this request
+        // Requestee sent a request already, match if requestee sent the request before or if he is waiting for a match
+        if (hasRequested(sendTo) || waitingForMatch.equals(sendTo)) {
             if (pm.getFirstPartner(sendTo).equals(sender)) {
                 MessageBuilder.create(hmb, "duelRequestAccepted", HalfminerBattle.PREFIX)
                         .addPlaceholderReplace("%PLAYER%", sendTo.getName())
@@ -125,6 +132,7 @@ public class DuelQueue {
                         .addPlaceholderReplace("%PLAYER%", sender.getName())
                         .sendMessage(sendTo);
                 playersMatched(sendTo, sender);
+                if (waitingForMatch.equals(sendTo)) clearWaitingForMatch();
                 return;
             } else {
                 MessageBuilder.create(hmb, "duelRequesteeNotAvailable", HalfminerBattle.PREFIX)
@@ -153,10 +161,10 @@ public class DuelQueue {
 
     /**
      * Removes a player completely from any queue, resetting his battle state, clearing send game invites
-     * and removing him from the /duel match. This will also work during arena selection and actual waiting.
-     * It will also remove the players game partner, if applicable.
+     * and removing him from the duel match. This will also work during arena selection and will remove
+     * the duel partner, if applicable.
      *
-     * @param toRemove player that will be removed from queue
+     * @param toRemove player and players partner that will be removed from queue
      */
     public void removeFromQueue(Player toRemove) {
 
@@ -220,14 +228,15 @@ public class DuelQueue {
     }
 
     /**
-     * Sends the player who will select an arena all possible choices. This will only be called if
-     * an arena is actually free. It generates a list, where each free arena gets a number, the possibility to
+     * Sends the player who will select an arena all possible arena choices.
+     * It sends a list where each free arena gets a number, the possibility to
      * select a random arena exists aswell. This selection updates when another player selects an arena
-     * and when an arena becomes available. If only one arena is available no selection will be shown.
+     * and when an arena becomes available. If only one arena is available no selection will be shown,
+     * if none are free the players will be put into the next free arena automatically and notify them.
      *
      * @param player         player the selection will be sent to
      * @param refreshMessage if true will display message that the information has been refreshed
-     *                       (only when arena state updates), else show arena selection information
+     *                       (only when free arena state updates, not on first send)
      */
     private void showFreeArenaSelection(Player player, boolean refreshMessage) {
 
@@ -260,7 +269,7 @@ public class DuelQueue {
      * {@link DuelMode#onChatSelectArena(AsyncPlayerChatEvent) chat event}
      *
      * @param player     player that chose arena
-     * @param arenaIndex String that contains the players input, generating a random arena if input is invalid
+     * @param arenaIndex String that contains the players input
      */
     public void arenaWasSelected(Player player, String arenaIndex) {
 
@@ -285,10 +294,11 @@ public class DuelQueue {
             selectedArena = (DuelArena) freeArenas.get(rnd.nextInt(freeArenas.size()));
         }
 
-        hmb.getLogger().info("Duel starting between "
-                + player.getName() + " and "
-                + playerB.getName() + " in Arena "
-                + selectedArena.getName());
+        MessageBuilder.create(hmb, "duelStartingLog")
+                .addPlaceholderReplace("%PLAYERA%", player.getName())
+                .addPlaceholderReplace("%PLAYERB%", playerB.getName())
+                .addPlaceholderReplace("%ARENA%", selectedArena.getName())
+                .logMessage(Level.INFO);
 
         isSelectingArena.remove(player);
         pm.setState(BattleState.IN_BATTLE, player, playerB);

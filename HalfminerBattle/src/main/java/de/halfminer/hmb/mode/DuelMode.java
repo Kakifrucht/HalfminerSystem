@@ -20,6 +20,9 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ * Implementing duels between two players
+ */
 public class DuelMode extends AbstractMode {
 
     private static final GameModeType MODE = GameModeType.DUEL;
@@ -169,7 +172,9 @@ public class DuelMode extends AbstractMode {
                 final String message = e.getMessage();
                 Bukkit.getScheduler().scheduleSyncDelayedTask(HalfminerBattle.getInstance(), () -> {
                     // It may happen that between event fire and task execution the partner leaves the queue, redo select check
-                    if (queue.isSelectingArena(player)) queue.arenaWasSelected(player, message);
+                    if (queue.isSelectingArena(player)) {
+                        queue.arenaWasSelected(player, message);
+                    }
                 });
             }
         }
