@@ -9,6 +9,7 @@ import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.modules.HalfminerModule;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
@@ -130,10 +131,7 @@ public class HalfminerSystem extends JavaPlugin {
 
     public void loadConfig() {
 
-        saveDefaultConfig(); // Save default config.yml if not yet done
-        reloadConfig(); // Make sure that if the file changed, it is reread
-        getConfig().options().copyDefaults(true); // If parameters are missing, add them
-        saveConfig(); // Save config.yml to disk
+        Utils.prepareConfig(this);
 
         //noinspection ConstantConditions (suppress warning due to java reflection)
         handlers.values().stream().filter(han -> han instanceof Reloadable).forEach(han -> ((Reloadable) han).loadConfig());

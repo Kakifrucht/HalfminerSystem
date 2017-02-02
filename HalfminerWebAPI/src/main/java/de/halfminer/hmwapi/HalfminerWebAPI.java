@@ -1,5 +1,6 @@
 package de.halfminer.hmwapi;
 
+import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -88,10 +89,7 @@ public class HalfminerWebAPI extends JavaPlugin {
             server = null;
         }
 
-        saveDefaultConfig();
-        reloadConfig();
-        getConfig().options().copyDefaults(true);
-        saveConfig();
+        Utils.prepareConfig(this);
 
         int port = getConfig().getInt("server.port");
         if (port < 1 || port > 65535) {

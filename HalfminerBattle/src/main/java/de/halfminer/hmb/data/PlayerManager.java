@@ -45,7 +45,7 @@ public class PlayerManager implements Listener {
         return isInBattle(toCheck) && isInGameMode(toCheck, gameMode);
     }
 
-    public boolean isInGameMode(Player toGet, GameModeType type) {
+    private boolean isInGameMode(Player toGet, GameModeType type) {
         Arena arena = getBattlePlayer(toGet).getArena();
         return arena != null && arena.getGameMode().equals(type);
     }

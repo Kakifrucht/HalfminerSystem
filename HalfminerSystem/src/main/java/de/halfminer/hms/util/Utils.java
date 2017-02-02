@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -22,6 +23,17 @@ import java.util.logging.Level;
 public final class Utils {
 
     private Utils() {}
+
+    public static void prepareConfig(JavaPlugin plugin) {
+        // Save default config.yml if not yet done
+        plugin.saveDefaultConfig();
+        // If parameters are missing, add them
+        plugin.getConfig().options().copyDefaults(true);
+        // Make sure that if the file changed, it is reread
+        plugin.reloadConfig();
+        // Save config.yml to disk
+        plugin.saveConfig();
+    }
 
     /**
      * Returns a string representation of a location, using block coordinates (only full coords, no floats).

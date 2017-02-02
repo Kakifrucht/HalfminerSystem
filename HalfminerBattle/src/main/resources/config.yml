@@ -12,6 +12,7 @@ gameMode:
     gameTime: 300
 localization:
   prefix: '&7HalfminerBattle &e>>&r '
+  commandClickHover: 'Klicken, um das Kommando auszuführen'
   noPermission: '&cDu hast nicht die Berechtigung dies zu verwenden'
   notAPlayer: 'Dieses Kommando kann nur als Spieler ausgeführt werden'
   playerNotOnline: '&cDer Spieler ist nicht online oder existiert nicht'
@@ -52,7 +53,7 @@ localization:
   modeDuelRequestSent: '~&aDeine Herausforderung wurde an &e%PLAYER%&a geschickt, verwende &6/duel leave/&a zum zurückziehen'
   modeDuelRequestWasAccepted: '&aDeine Anfrage wurde von &e%PLAYER%&a akzeptiert'
   modeDuelRequestYourself: '&cDu kannst dir selber keine Anfrage schicken'
-  modeDuelShowHelp: '~&7Faire Duelle mit gleicher Ausrüstung in Arenen\n&e/&eduel <Spielername> - &7&oDuellanfrage schicken\n&e/duel match/ - &7&oDuellpartner finden\n&e/duel leave/ - &7&oWarteschlange verlassen\n&e/duel list/ - &7&oArenaliste anzeigen'
+  modeDuelShowHelp: '~&7Faire Duelle mit gleicher Ausrüstung in Arenen\n &e/&eduel <Spielername> - &7&oDuellanfrage schicken\n &e/duel match/ - &7&oDuellpartner finden\n &e/duel leave/ - &7&oWarteschlange verlassen\n &e/duel list/ - &7&oArenaliste anzeigen'
   modeDuelStartingLog: 'Duell startet zwischen %PLAYERA% und %PLAYERB% in Arena %ARENA%'
   modeDuelTimeRunningOut: '&cDas Duell wird in &e%TIME%&c Sekunden abgebrochen'
   modeDuelWinBroadcast: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7gewonnen'

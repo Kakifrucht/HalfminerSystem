@@ -26,7 +26,7 @@ public enum GameModeType {
     public static GameModeType getGameMode(String toResolve) {
         if (toResolve.length() < 3) return null;
         for (GameModeType type : values()) {
-            if (type.getModeClassName().toLowerCase().startsWith(toResolve))
+            if (type.getModeClassName().toLowerCase().startsWith(toResolve.toLowerCase()))
                 return type;
         }
         return null;

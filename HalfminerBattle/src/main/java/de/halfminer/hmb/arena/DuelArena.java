@@ -18,8 +18,8 @@ public class DuelArena extends AbstractKitArena {
 
     private BukkitTask task;
 
-    public DuelArena(GameModeType gameMode, String name) {
-        super(gameMode, name);
+    public DuelArena(String name) {
+        super(GameModeType.DUEL, name);
     }
 
     public void gameStart(Player playerA, Player playerB) {

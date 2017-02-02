@@ -31,10 +31,6 @@ public class ArenaManager {
     private Map<GameModeType, Map<String, Arena>> arenas = new HashMap<>();
     private Map<Pair<GameModeType, String>, ItemStack[][]> kits = new HashMap<>();
 
-    public ArenaManager() throws IOException {
-        reloadConfig();
-    }
-
     public List<Arena> getArenasFromType(GameModeType type) {
         if (arenas.containsKey(type))
             return new LinkedList<>(arenas.get(type).values());
@@ -118,13 +114,14 @@ public class ArenaManager {
                     spawnLocations.add(stringToLocation(spawn));
                 }
 
-                if (oldArenas.get(type).containsKey(name.toLowerCase())) {
-                    Arena alreadyExistingToReload = oldArenas.get(type).get(name);
+                Map<String, Arena> oldArenasMap = oldArenas.get(type);
+                if (oldArenasMap != null && oldArenasMap.containsKey(name.toLowerCase())) {
+                    Arena alreadyExistingToReload = oldArenasMap.get(name.toLowerCase());
                     alreadyExistingToReload.setSpawns(spawnLocations);
                     alreadyExistingToReload.reload();
                     arenaMap.put(name.toLowerCase(), alreadyExistingToReload);
                 } else {
-                    addArena(type, name, (Location[]) spawnLocations.toArray());
+                    addArena(type, name, spawnLocations.toArray(new Location[spawnLocations.size()]));
                 }
             }
         }
@@ -258,8 +255,8 @@ public class ArenaManager {
 
         try {
             Class<?> cl = Class.forName(HalfminerBattle.PACKAGE_PATH + ".arena." + gameMode.getArenaClassName());
-            Constructor<?> cons = cl.getConstructor(GameModeType.class, String.class);
-            return (Arena) cons.newInstance(gameMode, name);
+            Constructor<?> cons = cl.getConstructor(String.class);
+            return (Arena) cons.newInstance(name);
         } catch (Exception e) {
             hmb.getLogger().severe("Arena class for GameModeType " + gameMode + " not found");
             e.printStackTrace();

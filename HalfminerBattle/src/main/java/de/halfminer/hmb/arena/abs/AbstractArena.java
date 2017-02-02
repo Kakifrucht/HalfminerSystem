@@ -6,7 +6,6 @@ import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.GameModeType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +15,7 @@ import java.util.List;
 /**
  * Abstract arena implementing all in interfaces {@link Arena} defined methods
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class AbstractArena implements Arena {
 
     protected static final HalfminerBattle hmb = HalfminerBattle.getInstance();
@@ -25,7 +25,7 @@ public abstract class AbstractArena implements Arena {
     // Arena state
     protected final GameModeType gameMode;
     protected final String name;
-    protected List<Location> spawns = Collections.emptyList();
+    protected List<Location> spawns = new ArrayList<>();
     protected final LinkedList<Player> playersInArena = new LinkedList<>();
 
     protected AbstractArena(GameModeType gameMode, String name) {

@@ -12,7 +12,6 @@ import java.util.logging.Level;
 /**
  * Class containing a builder used for messaging players / console
  */
-@SuppressWarnings({"WeakerAccess", "SameParameterValue"})
 public class MessageBuilder {
 
     /**
@@ -112,7 +111,7 @@ public class MessageBuilder {
         }
 
         if (prefix != null && !loggingMode) {
-            String prefixPlaceholder = plugin.getConfig().getString("localization.prefix");
+            String prefixPlaceholder = getMessage("prefix");
             if (prefixPlaceholder.length() > 0) {
                 toReturn = prefixPlaceholder + toReturn;
                 this.addPlaceholderReplace("%PREFIX%", prefix);
@@ -179,7 +178,7 @@ public class MessageBuilder {
     }
 
     private String getMessage(String messageKey) {
-        return plugin.getConfig().getString("localization." + messageKey);
+        return plugin.getConfig().getString("localization." + messageKey, "");
     }
 
     /**
@@ -258,8 +257,13 @@ public class MessageBuilder {
 
                         currentComp.setText(command);
                         currentComp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
-                        currentComp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                new ComponentBuilder(getMessage("cmdCustomtextClick")).create()));
+
+                        String clickHoverMessage = getMessage("commandClickHover");
+                        if (clickHoverMessage.length() > 0) {
+                            currentComp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                    new ComponentBuilder(clickHoverMessage).create()));
+                        }
+
                         // every command is italic
                         currentComp.setItalic(true);
                         // remove closing slash from text

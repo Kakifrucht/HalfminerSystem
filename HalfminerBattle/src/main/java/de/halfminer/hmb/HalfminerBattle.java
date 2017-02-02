@@ -5,11 +5,11 @@ import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.abs.GameMode;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,24 +63,22 @@ public class HalfminerBattle extends JavaPlugin {
 
     public boolean saveAndReloadConfig() {
 
-        saveDefaultConfig();
-        reloadConfig();
-        getConfig().options().copyDefaults(true);
-        saveConfig();
+        Utils.prepareConfig(this);
 
         gameModes.values().forEach(GameMode::onConfigReload);
         try {
-            if (arenaManager != null) arenaManager.reloadConfig();
-            else arenaManager = new ArenaManager();
+            if (arenaManager == null)
+                arenaManager = new ArenaManager();
+            arenaManager.reloadConfig();
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
     private void setDisabledAfterException() {
-        getLogger().severe("An error while enabling HalfminerBattle occurred, see stacktrace for information");
+        getLogger().severe("An error occurred while enabling HalfminerBattle, see stacktrace for information");
         setEnabled(false);
     }
 
@@ -122,7 +120,6 @@ public class HalfminerBattle extends JavaPlugin {
                     .sendMessage(sender);
             return true;
         }
-
 
         return getGameMode(cmd.getName()).onCommand(sender, args);
     }
