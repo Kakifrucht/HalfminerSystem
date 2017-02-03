@@ -105,9 +105,7 @@ class BattlePlayer {
         private final Player player;
 
         private final Location loc;
-        private final ItemStack[] armor;
         private final ItemStack[] inventory;
-        private final ItemStack[] extra;
 
         private final double health;
         private final int foodLevel;
@@ -122,9 +120,7 @@ class BattlePlayer {
             loc = player.getLocation();
 
             player.closeInventory();
-            armor = player.getInventory().getArmorContents();
             inventory = player.getInventory().getContents();
-            extra = player.getInventory().getExtraContents();
 
             health = player.getHealth();
             foodLevel = player.getFoodLevel();
@@ -164,9 +160,7 @@ class BattlePlayer {
 
         private void restoreData() {
             player.closeInventory();
-            player.getInventory().setArmorContents(armor);
             player.getInventory().setContents(inventory);
-            player.getInventory().setExtraContents(extra);
             player.updateInventory();
             player.teleport(loc);
             player.setWalkSpeed(0.2F);

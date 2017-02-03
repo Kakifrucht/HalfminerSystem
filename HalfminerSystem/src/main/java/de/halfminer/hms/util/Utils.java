@@ -29,7 +29,7 @@ public final class Utils {
 
     /**
      * Saves default config if not yet done, reload config, copies default values into config
-     * (useful after config updates or if stuff stuff was removed), it afterwards and stores it.
+     * (useful after config updates or if stuff stuff was removed), writes the file and reloads it again.
      *
      * @param plugin plugin of which the config should be prepared / loaded
      */
@@ -40,9 +40,9 @@ public final class Utils {
         plugin.reloadConfig();
         // If parameters are missing, add them (reload again afterwards)
         plugin.getConfig().options().copyDefaults(true);
-        plugin.reloadConfig();
         // Save config.yml to disk
         plugin.saveConfig();
+        plugin.reloadConfig();
     }
 
     /**

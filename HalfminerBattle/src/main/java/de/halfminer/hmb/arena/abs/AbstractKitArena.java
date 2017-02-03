@@ -1,13 +1,14 @@
 package de.halfminer.hmb.arena.abs;
 
 import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,32 +34,28 @@ public abstract class AbstractKitArena extends AbstractArena {
         kit = am.getKit(gameMode, getName());
     }
 
-    protected void clearAndStorePlayers(Player... toClear) {
+    protected void storeAndClearPlayers(Player... toClear) {
 
-        List<Player> reset = toClear != null ? Arrays.asList(toClear) : playersInArena;
+        List<Player> reset = parameterToList(toClear);
 
         for (Player clear : reset) {
-            clear.leaveVehicle();
             pm.storePlayerData(clear);
+            clear.getInventory().clear();
         }
-        teleportIntoArena(toClear);
+        teleportIntoArena(reset.toArray(new Player[reset.size()]));
     }
 
     protected void teleportIntoArena(Player... toTeleport) {
 
-        List<Player> reset = toTeleport != null ? Arrays.asList(toTeleport) : playersInArena;
-
         int spawnNumber = 0;
-        for (Player player : reset) {
+        for (Player player : parameterToList(toTeleport)) {
             player.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)));
         }
     }
 
     protected void equipPlayers(Player... toEquip) {
 
-        List<Player> reset = toEquip != null ? Arrays.asList(toEquip) : playersInArena;
-
-        for (Player equip : reset) {
+        for (Player equip : parameterToList(toEquip)) {
             PlayerInventory inv = equip.getInventory();
             inv.setContents(addPlayerInfo(equip, kit));
         }
@@ -66,17 +63,23 @@ public abstract class AbstractKitArena extends AbstractArena {
 
     protected void restorePlayers(Player... toReset) {
 
-        List<Player> reset = toReset != null ? Arrays.asList(toReset) : playersInArena;
-
-        for (Player resetPlayer : reset) {
+        for (Player resetPlayer : parameterToList(toReset)) {
             pm.restorePlayer(resetPlayer);
         }
     }
 
+    private List<Player> parameterToList(Player... param) {
+        return param != null && param.length > 0 ? Arrays.asList(param) : playersInArena;
+    }
+
     private ItemStack[] addPlayerInfo(Player player, ItemStack[] toModify) {
         ItemStack[] modified = new ItemStack[toModify.length];
-        List<String> lore = Arrays.asList("", ChatColor.GREEN + player.getName(),
-                ChatColor.GRAY.toString() + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000));
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add(ChatColor.GREEN + Utils.makeStringFriendly(getGameMode().toString())
+                + " | " + ChatColor.GRAY + player.getName());
+        lore.add(ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
+                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000));
 
         for (int i = 0; i < modified.length; i++) {
 
@@ -84,9 +87,7 @@ public abstract class AbstractKitArena extends AbstractArena {
                 ItemStack current = toModify[i].clone();
 
                 if (!current.getType().equals(Material.AIR)) {
-                    ItemMeta meta = current.getItemMeta();
-                    meta.setLore(lore);
-                    current.setItemMeta(meta);
+                    Utils.setItemLore(current, lore);
                 }
                 modified[i] = current;
             }

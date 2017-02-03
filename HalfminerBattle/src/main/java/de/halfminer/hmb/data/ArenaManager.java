@@ -59,8 +59,6 @@ public class ArenaManager {
     }
 
     public ItemStack[] getKit(GameModeType gameMode, String name) {
-        kits.keySet().forEach(p -> System.out.println(p.getLeft() + " " + p.getRight()));
-        System.out.println(gameMode + " " + name + " " + kits.get(new Pair<>(gameMode, name)));
         return kits.get(new Pair<>(gameMode, name));
     }
 
@@ -185,7 +183,6 @@ public class ArenaManager {
         Arena toSetKit = getArena(gameMode, arenaName);
         if (toSetKit instanceof AbstractKitArena) {
             ItemStack[] newKit = setKitTo.getContents();
-            System.out.println(toSetKit.getName());
             kits.put(new Pair<>(gameMode, toSetKit.getName()), newKit);
             toSetKit.reload();
             saveData();

@@ -27,7 +27,8 @@ public class DuelArena extends AbstractKitArena {
                     + " currently not free while trying to start duel between " + playerA + " and " + playerB);
 
         addPlayers(playerA, playerB);
-        clearAndStorePlayers();
+        storeAndClearPlayers();
+        preFight();
 
         MessageBuilder.create(hmb, "modeDuelCountdownStart", HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%PLAYER%", playerB.getName())
@@ -51,6 +52,7 @@ public class DuelArena extends AbstractKitArena {
                 if (timeLeft == timeStart) { // Battle is starting, reset walkspeed and give the kit
                     preparePlayer(playerA);
                     preparePlayer(playerB);
+                    teleportIntoArena();
                 }
                 if (timeLeft <= 15 && timeLeft > 0) {
                     MessageBuilder.create(hmb, "modeDuelTimeRunningOut", HalfminerBattle.PREFIX)
@@ -69,7 +71,6 @@ public class DuelArena extends AbstractKitArena {
             private void preparePlayer(Player player) {
                 player.setWalkSpeed(0.2F);
                 MessageBuilder.create(hmb, "modeDuelGameStarting", HalfminerBattle.PREFIX).sendMessage(player);
-                teleportIntoArena(player);
                 equipPlayers();
             }
 
@@ -85,6 +86,13 @@ public class DuelArena extends AbstractKitArena {
         task.cancel();
         restorePlayers();
         playersInArena.clear();
+    }
+
+    private void preFight() {
+
+        for (Player player : playersInArena) {
+            player.setWalkSpeed(0.0f);
+        }
     }
 
     @Override

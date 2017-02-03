@@ -8,6 +8,9 @@ import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.DuelMode;
+import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.Bukkit;
@@ -16,11 +19,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class DuelQueue {
 
@@ -29,6 +32,8 @@ public class DuelQueue {
     private static final HalfminerBattle hmb = HalfminerBattle.getInstance();
     private static final PlayerManager pm = hmb.getPlayerManager();
     private static final ArenaManager am = hmb.getArenaManager();
+
+    private static final HanTitles titles = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);
 
     private final DuelMode duelMode;
     private final List<Player> isSelectingArena = new LinkedList<>();
@@ -123,24 +128,25 @@ public class DuelQueue {
             MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
-        // Requestee sent a request already, match if requestee sent the request before or if he is waiting for a match
-        if (hasRequestedDuelWith(sendTo, sender) || sendTo.equals(waitingForMatch)) {
-            if (pm.getFirstPartner(sendTo).equals(sender)) {
-                MessageBuilder.create(hmb, "modeDuelRequestAccepted", HalfminerBattle.PREFIX)
-                        .addPlaceholderReplace("%PLAYER%", sendTo.getName())
-                        .sendMessage(sender);
-                MessageBuilder.create(hmb, "modeDuelRequestWasAccepted", HalfminerBattle.PREFIX)
-                        .addPlaceholderReplace("%PLAYER%", sender.getName())
-                        .sendMessage(sendTo);
-                playersMatched(sendTo, sender);
-                if (sendTo.equals(waitingForMatch)) clearWaitingForMatch();
-                return;
-            } else {
-                MessageBuilder.create(hmb, "modeDuelRequesteeNotAvailable", HalfminerBattle.PREFIX)
-                        .addPlaceholderReplace("%PLAYER%", sendTo.getName())
-                        .sendMessage(sender);
-                return;
-            }
+        // Requestee is waiting for match
+        if (sendTo.equals(waitingForMatch)) {
+            MessageBuilder.create(hmb, "modeDuelRequestWasWaitingForMatch", HalfminerBattle.PREFIX)
+                    .addPlaceholderReplace("%PLAYER%", sendTo.getName())
+                    .sendMessage(sender);
+            playersMatched(sendTo, sender);
+            clearWaitingForMatch();
+            return;
+        }
+        // Requestee sent a request already, match if requestee sent the request before
+        if (hasRequestedDuelWith(sendTo, sender)) {
+            MessageBuilder.create(hmb, "modeDuelRequestAccepted", HalfminerBattle.PREFIX)
+                    .addPlaceholderReplace("%PLAYER%", sendTo.getName())
+                    .sendMessage(sender);
+            MessageBuilder.create(hmb, "modeDuelRequestWasAccepted", HalfminerBattle.PREFIX)
+                    .addPlaceholderReplace("%PLAYER%", sender.getName())
+                    .sendMessage(sendTo);
+            playersMatched(sendTo, sender);
+            return;
         }
         if (pm.isNotIdle(sendTo)) {
             MessageBuilder.create(hmb, "modeDuelRequesteeNotAvailable", HalfminerBattle.PREFIX)
@@ -223,6 +229,10 @@ public class DuelQueue {
         pm.setBattlePartners(playerB, playerA);
         pm.setState(BattleState.IN_QUEUE, playerA, playerB);
         pm.addToQueue(MODE, playerA, playerB);
+        MessageBuilder titleMessage = MessageBuilder.create(hmb, "modeDuelShowPartnerTitle")
+                .addPlaceholderReplace("%PLAYER%", playerB.getName());
+        titles.sendTitle(playerA, titleMessage.returnMessage());
+        titles.sendTitle(playerB, titleMessage.addPlaceholderReplace("%PLAYER%", playerA.getName()).returnMessage());
 
         isSelectingArena.add(playerA);
         showFreeArenaSelection(playerA, false);
@@ -344,16 +354,16 @@ public class DuelQueue {
             }
 
             if (duelMode.doWinBroadcast()) {
-                Collection<? extends Player> sendTo = hmb.getServer().getOnlinePlayers();
-                sendTo.remove(winner);
-                sendTo.remove(playerA);
+                List<Player> sendTo = hmb.getServer().getOnlinePlayers().stream()
+                        .filter(obj -> !(obj.equals(winner) || obj.equals(playerA)))
+                        .collect(Collectors.toList());
+
                 MessageBuilder.create(hmb, "modeDuelWinBroadcast", HalfminerBattle.PREFIX)
                         .addPlaceholderReplace("%WINNER%", winner.getName())
                         .addPlaceholderReplace("%LOSER%", playerA.getName())
                         .addPlaceholderReplace("%ARENA%", arena.getName())
                         .broadcastMessage(sendTo, false, "");
             }
-
         }
 
         // Reset arena and reset players
