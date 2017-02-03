@@ -28,17 +28,18 @@ public final class Utils {
     private Utils() {}
 
     /**
-     * Saves default config if not yet done, copies default values into config (useful after updates or if stuff
-     * stuff was removed), reloads it afterwards and stores it.
+     * Saves default config if not yet done, reload config, copies default values into config
+     * (useful after config updates or if stuff stuff was removed), it afterwards and stores it.
      *
      * @param plugin plugin of which the config should be prepared / loaded
      */
     public static void prepareConfig(JavaPlugin plugin) {
         // Save default config.yml if not yet done
         plugin.saveDefaultConfig();
-        // If parameters are missing, add them
-        plugin.getConfig().options().copyDefaults(true);
         // Make sure that if the file changed, it is reread
+        plugin.reloadConfig();
+        // If parameters are missing, add them (reload again afterwards)
+        plugin.getConfig().options().copyDefaults(true);
         plugin.reloadConfig();
         // Save config.yml to disk
         plugin.saveConfig();

@@ -175,8 +175,6 @@ public class Cmdrank extends HalfminerPersistenceCommand {
                 logActionNotFound(player, actionOnFail);
             }
         }
-
-        return;
     }
 
     @Override

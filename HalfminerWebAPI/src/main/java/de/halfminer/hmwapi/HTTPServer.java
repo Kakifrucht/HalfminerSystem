@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class HTTPServer extends NanoHTTPD {
 
-    private Set<String> whitelistedIPs;
+    private final Set<String> whitelistedIPs;
 
     HTTPServer(int port, Set<String> whitelistedIPs) throws IOException {
         super(port);
