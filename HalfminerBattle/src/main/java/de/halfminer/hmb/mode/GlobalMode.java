@@ -22,6 +22,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class GlobalMode extends AbstractMode {
 
     private boolean noHungerLossInBattle;
+    private int queueCooldownSeconds;
+    private double teleportSpawnDistance;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPvPUncancel(EntityDamageByEntityEvent e) {
@@ -161,11 +163,21 @@ public class GlobalMode extends AbstractMode {
         MessageBuilder.create(hmb, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sendTo);
     }
 
+    public int getQueueCooldownSeconds() {
+        return queueCooldownSeconds;
+    }
+
+    public double getTeleportSpawnDistance() {
+        return teleportSpawnDistance;
+    }
+
     @Override
     public void onPluginDisable() {}
 
     @Override
     public void onConfigReload() {
         noHungerLossInBattle = hmb.getConfig().getBoolean("gameMode.global.noHungerLoss", true);
+        queueCooldownSeconds = hmb.getConfig().getInt("gameMode.global.queueCooldownTimeSeconds", 15);
+        teleportSpawnDistance = hmb.getConfig().getDouble("gameMode.global.teleportSpawnDistance", 10.0d);
     }
 }

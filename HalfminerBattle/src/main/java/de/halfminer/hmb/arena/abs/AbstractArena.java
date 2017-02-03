@@ -4,6 +4,7 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.mode.GlobalMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -51,8 +52,9 @@ public abstract class AbstractArena implements Arena {
     @Override
     public boolean isCloseToSpawn(Location loc) {
 
+        GlobalMode global = (GlobalMode) hmb.getGameMode(GameModeType.GLOBAL);
         for (Location spawn : spawns) {
-            if (spawn.distance(loc) <= 10.0d) return true;
+            if (spawn.distance(loc) <= global.getTeleportSpawnDistance()) return true;
         }
 
         return false;

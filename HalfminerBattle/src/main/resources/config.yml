@@ -3,13 +3,17 @@ gameMode:
   global:
     #Disable hunger loss
     noHungerLoss: true
+    #Time in seconds the queue cooldown will take
+    queueCooldownTimeSeconds: 15
+    #Distance in blocks from all spawn points in all arenas that must be met to allow the teleport
+    teleportSpawnDistance: 10
   duel:
     #Broadcast duel wins
     broadcastWin: true
-    #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
-    waitingForMatchRemind: 30
     #Max duel time
     gameTime: 300
+    #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
+    waitingForMatchRemind: 30
 localization:
   prefix: '&7HalfminerBattle &e>>&r '
   commandClickHover: 'Klicken, um das Kommando auszuführen'

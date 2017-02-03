@@ -4,6 +4,7 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.ChatColor;

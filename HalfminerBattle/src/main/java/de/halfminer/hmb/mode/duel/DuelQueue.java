@@ -69,14 +69,20 @@ public class DuelQueue {
             waitingForMatch = toMatch;
             pm.addToQueue(MODE, toMatch);
             MessageBuilder.create(hmb, "modeGlobalAddedToQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
+
             int time;
             if ((time = duelMode.getWaitingForMatchRemind()) > 0) {
-                waitingForMatchTask = Bukkit.getScheduler().runTaskLaterAsynchronously(hmb, () -> {
-                    if (toMatch.equals(waitingForMatch)) {
-                        MessageBuilder.create(hmb, "modeDuelPlayerWaitingForMatch", HalfminerBattle.PREFIX)
-                                .addPlaceholderReplace("%PLAYER%", toMatch.getName())
-                                .broadcastMessage(false);
-                    }
+
+                waitingForMatchTask = Bukkit.getScheduler().runTaskLater(hmb, () -> {
+
+                    List<Player> sendTo = hmb.getServer().getOnlinePlayers()
+                            .stream()
+                            .filter(o -> !waitingForMatch.equals(o))
+                            .collect(Collectors.toList());
+
+                    MessageBuilder.create(hmb, "modeDuelPlayerWaitingForMatch", HalfminerBattle.PREFIX)
+                            .addPlaceholderReplace("%PLAYER%", toMatch.getName())
+                            .broadcastMessage(sendTo, false, "");
                 }, time * 20);
             }
         } else {

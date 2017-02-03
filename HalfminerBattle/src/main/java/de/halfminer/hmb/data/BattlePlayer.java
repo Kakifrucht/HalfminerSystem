@@ -4,6 +4,7 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.mode.GlobalMode;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -40,7 +41,10 @@ class BattlePlayer {
 
     BattleState getState() {
         if (state.equals(BattleState.QUEUE_COOLDOWN)) {
-            if (lastStateChange + 15000 < System.currentTimeMillis()) setState(BattleState.IDLE);
+            GlobalMode global = (GlobalMode) HalfminerBattle.getInstance().getGameMode(GameModeType.GLOBAL);
+            if (lastStateChange + (global.getQueueCooldownSeconds() * 1000) < System.currentTimeMillis()) {
+                setState(BattleState.IDLE);
+            }
         }
         return state;
     }
