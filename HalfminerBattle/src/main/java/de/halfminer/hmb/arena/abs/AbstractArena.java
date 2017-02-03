@@ -35,12 +35,12 @@ public abstract class AbstractArena implements Arena {
 
     @Override
     public boolean isActive() {
-        return spawns.size() > 0;
+        return !spawns.isEmpty();
     }
 
     @Override
     public boolean isFree() {
-        return isActive() && !spawns.isEmpty();
+        return isActive();
     }
 
     @Override
@@ -65,7 +65,7 @@ public abstract class AbstractArena implements Arena {
 
     @Override
     public void setSpawns(List<Location> newSpawns) {
-        this.spawns = newSpawns;
+        this.spawns = new ArrayList<>(newSpawns);
     }
 
     @Override

@@ -4,14 +4,13 @@ import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.GameModeType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
 import java.util.*;
 
 /**
  * Manages the battle database, encapsulating player specific data in {@link BattlePlayer}, used as I/O interface
  */
-public class PlayerManager implements Listener {
+public class PlayerManager {
 
     private final Map<UUID, BattlePlayer> playerMap = new HashMap<>();
 
@@ -30,7 +29,7 @@ public class PlayerManager implements Listener {
     }
 
     public boolean isInQueue(Player toCheck) {
-        return !isNotIdle(toCheck) && !hasState(toCheck, BattleState.IN_BATTLE);
+        return hasState(toCheck, BattleState.IN_QUEUE);
     }
 
     public boolean isInQueue(GameModeType gameMode, Player toCheck) {
@@ -46,8 +45,18 @@ public class PlayerManager implements Listener {
     }
 
     private boolean isInGameMode(Player toGet, GameModeType type) {
-        Arena arena = getBattlePlayer(toGet).getArena();
-        return arena != null && arena.getGameMode().equals(type);
+        BattlePlayer bPlayer = getBattlePlayer(toGet);
+        GameModeType currentMode = bPlayer.getGameMode();
+        Arena arena = bPlayer.getArena();
+        return type.equals(currentMode) || (arena != null && type.equals(arena.getGameMode()));
+    }
+
+    public void addToQueue(GameModeType type, Player... toAdd) {
+        for (Player p : toAdd) {
+            BattlePlayer bPlayer = getBattlePlayer(p);
+            bPlayer.setState(BattleState.IN_QUEUE);
+            bPlayer.setGameMode(type);
+        }
     }
 
     public boolean hasQueueCooldown(Player toCheck) {

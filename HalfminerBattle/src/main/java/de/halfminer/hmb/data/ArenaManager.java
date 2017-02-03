@@ -29,7 +29,7 @@ public class ArenaManager {
     private FileConfiguration arenaConfig;
 
     private Map<GameModeType, Map<String, Arena>> arenas = new HashMap<>();
-    private Map<Pair<GameModeType, String>, ItemStack[][]> kits = new HashMap<>();
+    private Map<Pair<GameModeType, String>, ItemStack[]> kits = new HashMap<>();
 
     public List<Arena> getArenasFromType(GameModeType type) {
         if (arenas.containsKey(type))
@@ -58,18 +58,22 @@ public class ArenaManager {
         return arenas.get(type);
     }
 
-    public ItemStack[][] getKit(GameModeType gameMode, String name) {
+    public ItemStack[] getKit(GameModeType gameMode, String name) {
+        kits.keySet().forEach(p -> System.out.println(p.getLeft() + " " + p.getRight()));
+        System.out.println(gameMode + " " + name + " " + kits.get(new Pair<>(gameMode, name)));
         return kits.get(new Pair<>(gameMode, name));
     }
 
     public void reloadConfig() throws IOException {
 
-        if (arenaFile == null) {
+        if (arenaFile == null || !arenaFile.exists()) {
             arenaFile = new File(hmb.getDataFolder(), "arenas.yml");
-            if (arenaFile.exists() || arenaFile.createNewFile()) {
-                arenaConfig = YamlConfiguration.loadConfiguration(arenaFile);
-            } else throw new IOException("Could not create arenas.yml");
+            if (!arenaFile.exists() && !arenaFile.createNewFile()) {
+                throw new IOException("Could not create arenas.yml");
+            }
         }
+
+        arenaConfig = YamlConfiguration.loadConfiguration(arenaFile);
 
         // kits must be (re)loaded first, as maps depend on them already being loaded
         kits = new HashMap<>();
@@ -78,15 +82,17 @@ public class ArenaManager {
         if (kitSection != null) {
             for (String name : kitSection.getKeys(false)) {
 
-                ItemStack[][] kit = new ItemStack[3][];
                 GameModeType type = GameModeType.getGameMode(kitSection.getString(name + ".gameMode"));
                 if (type == null) {
                     hmb.getLogger().warning("Invalid gamemode type for kit " + name);
                     continue;
                 }
-                List<?> list = kitSection.getList(name + ".stacks");
-                for (int i = 0; i < list.size(); i++) {
-                    kit[i] = (ItemStack[]) list.get(i);
+
+                List<?> contents = kitSection.getList(name + ".content");
+                ItemStack[] kit = new ItemStack[contents.size()];
+                for (int i = 0; i < contents.size(); i++) {
+                    if (contents.get(i) instanceof ItemStack)
+                        kit[i] = (ItemStack) contents.get(i);
                 }
 
                 kits.put(new Pair<>(type, name), kit);
@@ -108,11 +114,11 @@ public class ArenaManager {
 
                 Map<String, Arena> arenaMap = getArenaMap(type);
 
-                List<String> spawns = arenaSection.getStringList(name + ".spawns");
                 List<Location> spawnLocations = new ArrayList<>();
-                for (String spawn : spawns) {
-                    spawnLocations.add(stringToLocation(spawn));
-                }
+                arenaSection
+                        .getList(name + ".spawns")
+                        .stream()
+                        .filter(obj -> obj instanceof Location).forEach(obj -> spawnLocations.add((Location) obj));
 
                 Map<String, Arena> oldArenasMap = oldArenas.get(type);
                 if (oldArenasMap != null && oldArenasMap.containsKey(name.toLowerCase())) {
@@ -159,6 +165,7 @@ public class ArenaManager {
         Arena setSpawn = getArena(gameMode, arenaName);
         if (setSpawn != null) {
             setSpawn.setSpawn(location, spawn);
+            saveData();
             return true;
         }
         return false;
@@ -168,20 +175,19 @@ public class ArenaManager {
         Arena clearSpawns = getArena(gameMode, arenaName);
         if (clearSpawns != null) {
             clearSpawns.setSpawns(Collections.emptyList());
+            saveData();
             return true;
         }
         return false;
     }
 
     public boolean setKit(GameModeType gameMode, String arenaName, PlayerInventory setKitTo) {
-        Arena setKit = getArena(gameMode, arenaName);
-        if (setKit instanceof AbstractKitArena) {
-            ItemStack[][] newKit = new ItemStack[3][];
-            newKit[0] = setKitTo.getArmorContents();
-            newKit[1] = setKitTo.getContents();
-            newKit[2] = setKitTo.getExtraContents();
-            kits.put(new Pair<>(gameMode, arenaName), newKit);
-            setKit.reload();
+        Arena toSetKit = getArena(gameMode, arenaName);
+        if (toSetKit instanceof AbstractKitArena) {
+            ItemStack[] newKit = setKitTo.getContents();
+            System.out.println(toSetKit.getName());
+            kits.put(new Pair<>(gameMode, toSetKit.getName()), newKit);
+            toSetKit.reload();
             saveData();
             return true;
         }
@@ -196,19 +202,20 @@ public class ArenaManager {
                     return true;
             }
         }
-
         return false;
     }
 
     public String getStringFromArenaList(List<Arena> arenas, boolean addRandom) {
 
+        if (arenas.isEmpty()) return "";
+
         StringBuilder sb = new StringBuilder();
         int number = 1;
         for (Arena arena : arenas) {
-            sb.append(ChatColor.GREEN)
+            sb.append(ChatColor.GRAY)
                     .append(number)
                     .append(": ")
-                    .append(ChatColor.GRAY)
+                    .append(arena.isFree() ? ChatColor.GREEN : ChatColor.RED)
                     .append(arena.getName())
                     .append(' ');
             number++;
@@ -225,8 +232,10 @@ public class ArenaManager {
     }
 
     private void saveData() {
+
         arenaConfig.set("arenas", null);
         arenaConfig.set("kits", null);
+
         for (Map<String, Arena> arenaPairs : arenas.values()) {
             for (Arena arena : arenaPairs.values()) {
                 ConfigurationSection newSection = arenaConfig.createSection("arenas." + arena.getName());
@@ -234,13 +243,13 @@ public class ArenaManager {
                 newSection.set("spawns", arena.getSpawns());
             }
         }
-        for (Map.Entry<Pair<GameModeType, String>, ItemStack[][]> kit : kits.entrySet()) {
-            List<ItemStack> concatenatedStacks = new ArrayList<>(50);
-            for (ItemStack[] itemStackArray : kit.getValue()) {
-                Collections.addAll(concatenatedStacks, itemStackArray);
-            }
-            arenaConfig.set("kits." + kit.getKey().getRight() + ".gameMode", kit.getKey().getLeft());
-            arenaConfig.set("kits." + kit.getKey().getRight() + ".stacks", concatenatedStacks);
+
+        for (Map.Entry<Pair<GameModeType, String>, ItemStack[]> entry : kits.entrySet()) {
+            GameModeType gameMode = entry.getKey().getLeft();
+            String arenaName = entry.getKey().getRight();
+            ItemStack[] stacks = entry.getValue();
+            arenaConfig.set("kits." + arenaName + ".gameMode", gameMode.toString());
+            arenaConfig.set("kits." + arenaName + ".content", stacks);
         }
 
         try {
@@ -262,21 +271,5 @@ public class ArenaManager {
             e.printStackTrace();
             return null;
         }
-    }
-
-    /**
-     * Converts a string to a location
-     *
-     * @param toLocation String in correct format
-     * @return Location that the string points to
-     */
-    private Location stringToLocation(String toLocation) {
-        String[] toLocationSplit = toLocation.split(",");
-        double x = Double.parseDouble(toLocationSplit[1]);
-        double y = Double.parseDouble(toLocationSplit[2]);
-        double z = Double.parseDouble(toLocationSplit[3]);
-        float yaw = Float.parseFloat(toLocationSplit[4]);
-        float pitch = Float.parseFloat(toLocationSplit[5]);
-        return new Location(hmb.getServer().getWorld(toLocationSplit[0]), x, y, z, yaw, pitch);
     }
 }

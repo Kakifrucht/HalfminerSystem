@@ -83,7 +83,8 @@ public class GlobalMode extends AbstractMode {
                     .sendMessage(sender);
         } else {
 
-            if (args.length < 3) {
+            // disregard if called via global custom gamemode /hmb glo(balmode)
+            if (args.length < 3 || args[0].toLowerCase().startsWith("glo")) {
                 sendUsageInformation(sender);
                 return true;
             }

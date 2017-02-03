@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitTask;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class DuelQueue {
     private static final ArenaManager am = hmb.getArenaManager();
 
     private final DuelMode duelMode;
-    private List<Player> isSelectingArena = new LinkedList<>();
+    private final List<Player> isSelectingArena = new LinkedList<>();
     private Player waitingForMatch = null;
     private BukkitTask waitingForMatchTask;
 
@@ -61,7 +62,7 @@ public class DuelQueue {
 
         if (waitingForMatch == null) {
             waitingForMatch = toMatch;
-            pm.setState(BattleState.IN_QUEUE, toMatch);
+            pm.addToQueue(MODE, toMatch);
             MessageBuilder.create(hmb, "modeGlobalAddedToQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
             int time;
             if ((time = duelMode.getWaitingForMatchRemind()) > 0) {
@@ -114,7 +115,7 @@ public class DuelQueue {
             MessageBuilder.create(hmb, "modeGlobalQueueCooldown", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
-        if (hasRequested(sender)) {
+        if (hasRequestedDuelWith(sender, null)) {
             MessageBuilder.create(hmb, "modeDuelRequestAlreadyOpen", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
@@ -123,7 +124,7 @@ public class DuelQueue {
             return;
         }
         // Requestee sent a request already, match if requestee sent the request before or if he is waiting for a match
-        if (hasRequested(sendTo) || waitingForMatch.equals(sendTo)) {
+        if (hasRequestedDuelWith(sendTo, sender) || sendTo.equals(waitingForMatch)) {
             if (pm.getFirstPartner(sendTo).equals(sender)) {
                 MessageBuilder.create(hmb, "modeDuelRequestAccepted", HalfminerBattle.PREFIX)
                         .addPlaceholderReplace("%PLAYER%", sendTo.getName())
@@ -132,7 +133,7 @@ public class DuelQueue {
                         .addPlaceholderReplace("%PLAYER%", sender.getName())
                         .sendMessage(sendTo);
                 playersMatched(sendTo, sender);
-                if (waitingForMatch.equals(sendTo)) clearWaitingForMatch();
+                if (sendTo.equals(waitingForMatch)) clearWaitingForMatch();
                 return;
             } else {
                 MessageBuilder.create(hmb, "modeDuelRequesteeNotAvailable", HalfminerBattle.PREFIX)
@@ -156,7 +157,7 @@ public class DuelQueue {
                 .addPlaceholderReplace("%PLAYER%", sender.getName())
                 .sendMessage(sendTo);
         pm.setBattlePartners(sender, sendTo);
-        pm.setState(BattleState.IN_QUEUE, sender);
+        pm.addToQueue(MODE, sender);
     }
 
     /**
@@ -178,7 +179,7 @@ public class DuelQueue {
         if (partner != null) {
 
             isSelectingArena.remove(partner);
-            if (hasRequested(toRemove)) {
+            if (hasRequestedDuelWith(toRemove, partner)) {
                 MessageBuilder.create(hmb, "modeDuelRequestCancel", HalfminerBattle.PREFIX).sendMessage(toRemove);
                 if (partner.isOnline()) {
                     MessageBuilder.create(hmb, "modeDuelRequestCancelled", HalfminerBattle.PREFIX)
@@ -194,8 +195,7 @@ public class DuelQueue {
             }
 
         } else {
-            waitingForMatch = null;
-            waitingForMatchTask.cancel();
+            clearWaitingForMatch();
             MessageBuilder.create(hmb, "modeGlobalLeftQueue", HalfminerBattle.PREFIX).sendMessage(toRemove);
         }
 
@@ -222,6 +222,7 @@ public class DuelQueue {
         pm.setBattlePartners(playerA, playerB);
         pm.setBattlePartners(playerB, playerA);
         pm.setState(BattleState.IN_QUEUE, playerA, playerB);
+        pm.addToQueue(MODE, playerA, playerB);
 
         isSelectingArena.add(playerA);
         showFreeArenaSelection(playerA, false);
@@ -363,8 +364,10 @@ public class DuelQueue {
             showFreeArenaSelection(player, true);
     }
 
-    private boolean hasRequested(Player toCheck) {
-        return pm.isInQueue(toCheck) && pm.getFirstPartner(toCheck) != null;
+    private boolean hasRequestedDuelWith(Player requested, @Nullable Player with) {
+        return pm.isInQueue(requested)
+                && pm.getFirstPartner(requested) != null
+                && (with == null || !pm.isInQueue(with));
     }
 
     public boolean isSelectingArena(Player toCheck) {

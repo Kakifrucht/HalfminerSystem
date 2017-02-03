@@ -5,15 +5,13 @@ import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.duel.DuelQueue;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
@@ -130,20 +128,15 @@ public class DuelMode extends AbstractMode {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPvPKickFromQueue(EntityDamageByEntityEvent e) {
-        onEntityDamage(e.getDamager(), e);
-    }
+        if (e.getEntity() instanceof Player) {
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPvPCombustKickFromQueue(EntityCombustByEntityEvent e) {
-        onEntityDamage(e.getCombuster(), e);
-    }
+            Player victim = (Player) e.getEntity();
+            Player attacker = Utils.getDamagerFromEvent(e);
 
-    private void onEntityDamage(Entity attacker, EntityEvent e) {
-        if (attacker instanceof Player && e.getEntity() instanceof Player) {
-            Player att = (Player) attacker;
-            Player def = (Player) e.getEntity();
-            if (pm.isInQueue(MODE, att)) queue.removeFromQueue(att);
-            if (pm.isInQueue(MODE, def)) queue.removeFromQueue(def);
+            if (pm.isInQueue(MODE, attacker))
+                queue.removeFromQueue(attacker);
+            if (pm.isInQueue(MODE, victim))
+                queue.removeFromQueue(victim);
         }
     }
 

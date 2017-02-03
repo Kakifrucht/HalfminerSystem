@@ -1,5 +1,5 @@
 name: HalfminerBattle
-version: 2.0-SNAPSHOT
+version: ${project.version}
 description: Halfminer.de Battle Arena
 author: Kakifrucht
 website: https://halfminer.de
@@ -24,12 +24,10 @@ permissions:
       hmb.admin: true
       hmb.mode.*: true
   hmb.mode.*:
-    default: op
     description: Access to all gamemodes and advanced permissions
     children:
       hmb.mode.duel: true
   hmb.mode.duel:
-    default: op
     description: Access to all duel functionality
     children:
       hmb.mode.duel.exempt.request: true

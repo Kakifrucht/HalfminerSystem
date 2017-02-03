@@ -3,6 +3,7 @@ package de.halfminer.hmb.data;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleState;
+import de.halfminer.hmb.enums.GameModeType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,6 +23,7 @@ class BattlePlayer {
     private final UUID baseUUID;
 
     private BattleState state = BattleState.IDLE;
+    private GameModeType gameMode;
     private long lastStateChange = System.currentTimeMillis();
     private PlayerData data = null;
 
@@ -47,14 +49,25 @@ class BattlePlayer {
         this.state = state;
         this.lastStateChange = System.currentTimeMillis();
 
-        // remove partners if idling or in queue cooldown
-        if (gamePartners != null && (state.equals(BattleState.IDLE) || state.equals(BattleState.QUEUE_COOLDOWN))) {
+        if (state.equals(BattleState.IDLE) || state.equals(BattleState.QUEUE_COOLDOWN)) {
 
-            for (BattlePlayer p : gamePartners) {
-                p.getGamePartners().remove(this);
+            gameMode = null;
+            // remove partners if idling or in queue cooldown
+            if (gamePartners != null) {
+
+                for (BattlePlayer p : gamePartners) {
+                    List<BattlePlayer> partnersOfPartner = p.getGamePartners();
+                    if (partnersOfPartner != null) {
+                        partnersOfPartner.remove(this);
+                    }
+                }
+                gamePartners = null;
             }
-            gamePartners = null;
         }
+    }
+
+    void setGameMode(GameModeType type) {
+        this.gameMode = type;
     }
 
     void storeData() {
@@ -79,6 +92,10 @@ class BattlePlayer {
 
     Arena getArena() {
         return arena;
+    }
+
+    GameModeType getGameMode() {
+        return gameMode;
     }
 
     private class PlayerData {

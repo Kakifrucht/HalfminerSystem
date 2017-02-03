@@ -16,9 +16,7 @@ import java.util.List;
  */
 public abstract class AbstractKitArena extends AbstractArena {
 
-    private ItemStack[] kitArmor;
-    private ItemStack[] kitContent;
-    private ItemStack[] kitExtra;
+    private ItemStack[] kit;
 
     protected AbstractKitArena(GameModeType gameMode, String name) {
         super(gameMode, name);
@@ -27,16 +25,12 @@ public abstract class AbstractKitArena extends AbstractArena {
 
     @Override
     public boolean isActive() {
-        return super.isActive() && kitArmor != null;
+        return super.isActive() && kit != null;
     }
 
     @Override
     public void reload() {
-        ItemStack[][] kit = am.getKit(gameMode, getName());
-        if (kit == null) return;
-        this.kitArmor = kit[0];
-        this.kitContent = kit[1];
-        this.kitExtra = kit[2];
+        kit = am.getKit(gameMode, getName());
     }
 
     protected void clearAndStorePlayers(Player... toClear) {
@@ -66,9 +60,7 @@ public abstract class AbstractKitArena extends AbstractArena {
 
         for (Player equip : reset) {
             PlayerInventory inv = equip.getInventory();
-            inv.setArmorContents(addPlayerInfo(equip, kitArmor));
-            inv.setContents(addPlayerInfo(equip, kitContent));
-            inv.setExtraContents(addPlayerInfo(equip, kitExtra));
+            inv.setContents(addPlayerInfo(equip, kit));
         }
     }
 

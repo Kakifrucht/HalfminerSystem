@@ -14,8 +14,6 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class DuelArena extends AbstractKitArena {
 
-    private static final DuelMode mode = (DuelMode) hmb.getGameMode(GameModeType.DUEL);
-
     private BukkitTask task;
 
     public DuelArena(String name) {
@@ -42,6 +40,7 @@ public class DuelArena extends AbstractKitArena {
 
         task = Bukkit.getScheduler().runTaskTimer(hmb, new Runnable() {
 
+            private final DuelMode mode = (DuelMode) hmb.getGameMode(GameModeType.DUEL);
             private int timeLeft = mode.getDuelTime();
             private final int timeStart = timeLeft - 5;
 
