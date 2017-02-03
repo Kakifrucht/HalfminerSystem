@@ -10,6 +10,7 @@ import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.ActionProbabilityContainer;
 import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -94,7 +95,12 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         if (!(e.getEntity() instanceof Player)) return;
 
         final Player damagee = (Player) e.getEntity();
-        Player damager = e.getDamager() instanceof Player ? (Player) e.getDamager() : null;
+        Player damager = Utils.getDamagerFromEvent(e);
+
+        // prevent self hit with bow
+        if (damagee.equals(damager)) {
+            e.setCancelled(true);
+        }
 
         if ((damager != null && damager.hasPermission("hms.bypass.pvp"))
                 || damagee.hasPermission("hms.bypass.pvp")) return;
@@ -128,9 +134,6 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 }
             }
 
-        } else if (e.getDamager() instanceof Projectile) {
-            // prevent self hit with bow
-            e.setCancelled(e.getEntity().equals(((Projectile) e.getDamager()).getShooter()));
         }
     }
 
@@ -262,6 +265,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         if (p.getKiller() != null) {
             killer = p.getKiller().getName();
         } else if (p.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+            //
             killer = ((EntityDamageByEntityEvent) p.getLastDamageCause()).getDamager().getName();
         }
 

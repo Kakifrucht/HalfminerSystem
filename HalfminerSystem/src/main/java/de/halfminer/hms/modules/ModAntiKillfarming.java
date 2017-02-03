@@ -9,7 +9,6 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -103,30 +102,12 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
         if (!(e.getEntity() instanceof Player)) return;
         Player victim = (Player) e.getEntity();
+        Player attacker = Utils.getDamagerFromEvent(e);
 
-        // direct PvP check
-        if (e.getDamager() instanceof Player)
-            e.setCancelled(checkTimeAndMessage((Player) e.getDamager(), "modAntiKillfarmingNoPvPAttack")
-                    || checkTimeAndMessage(victim, "modAntiKillfarmingNoPvPProtect", (Player) e.getDamager()));
-
-        // prevent death by tnt ignition
-        if (e.getDamager() instanceof TNTPrimed
-                && ((TNTPrimed) e.getDamager()).getSource() instanceof Player)
-            e.setCancelled(checkTimeAndMessage(victim, ""));
-
-        // arrow hit check
-        if (e.getDamager() instanceof Projectile
-                && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
-
-            Player shooter = (Player) ((Projectile) e.getDamager()).getShooter();
-
-            e.setCancelled(checkTimeAndMessage(shooter, "modAntiKillfarmingNoPvPAttack")
-                    || checkTimeAndMessage(victim, "modAntiKillfarmingNoPvPProtect", shooter));
+        if (attacker != null) {
+            e.setCancelled(checkTimeAndMessage(attacker, "modAntiKillfarmingNoPvPAttack", attacker)
+                    || checkTimeAndMessage(victim, "modAntiKillfarmingNoPvPProtect", attacker));
         }
-    }
-
-    private boolean checkTimeAndMessage(Player toCheck, String messageKey) {
-        return checkTimeAndMessage(toCheck, messageKey, toCheck);
     }
 
     private boolean checkTimeAndMessage(Player toCheck, String messageKey, Player toMessage) {
@@ -182,7 +163,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
     private boolean splashPotionCheck(ProjectileHitEvent e) {
         return e.getEntity().getShooter() instanceof Player
-                && checkTimeAndMessage((Player) e.getEntity().getShooter(), "modAntiKillfarmingNoPvPAttack");
+                && checkTimeAndMessage((Player) e.getEntity().getShooter(),
+                "modAntiKillfarmingNoPvPAttack", (Player) e.getEntity().getShooter());
     }
 
     boolean isNotRepeatedKill(Player killer, Player victim) {

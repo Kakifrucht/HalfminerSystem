@@ -8,6 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +27,12 @@ public final class Utils {
 
     private Utils() {}
 
+    /**
+     * Saves default config if not yet done, copies default values into config (useful after updates or if stuff
+     * stuff was removed), reloads it afterwards and stores it.
+     *
+     * @param plugin plugin of which the config should be prepared / loaded
+     */
     public static void prepareConfig(JavaPlugin plugin) {
         // Save default config.yml if not yet done
         plugin.saveDefaultConfig();
@@ -219,5 +228,28 @@ public final class Utils {
         if (value.length() == 0)
             throw new FormattingException("Invalid input, no value defined");
         return new Pair<>(key, value);
+    }
+
+    /**
+     * Get the {@link Player} that made damage the damage, either by direct hit, bow or primed tnt
+     *
+     * @param e {@link EntityDamageByEntityEvent event} whose attacker should be extracted
+     * @return player if attacker found or null
+     */
+    @Nullable
+    public static Player getDamagerFromEvent(EntityDamageByEntityEvent e) {
+
+        if (e.getDamager() instanceof Player) {
+            return (Player) e.getDamager();
+        } else if (e.getDamager() instanceof Projectile) {
+            Projectile projectile = (Projectile) e.getDamager();
+            if (projectile.getShooter() instanceof Player) return (Player) projectile.getShooter();
+        } else if (e.getDamager() instanceof TNTPrimed) {
+            TNTPrimed tnt = (TNTPrimed) e.getDamager();
+            if (tnt.getSource() instanceof Player) {
+                return (Player) tnt.getSource();
+            }
+        }
+        return null;
     }
 }
