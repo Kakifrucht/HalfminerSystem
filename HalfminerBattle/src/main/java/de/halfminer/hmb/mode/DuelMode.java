@@ -47,19 +47,19 @@ public class DuelMode extends AbstractMode {
     @Override
     public boolean onCommand(CommandSender sender, String[] args) {
 
+        if (am.getArenasFromType(GameModeType.DUEL).size() == 0) {
+            MessageBuilder.create(hmb, "modeGlobalGamemodeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
+            return true;
+        }
+
         if (!(sender instanceof Player)) {
-            MessageBuilder.create(hmb, "notAPlayer").sendMessage(sender);
+            sendArenaList(sender);
             return true;
         }
 
         Player player = (Player) sender;
-        if (!player.hasPermission("hmb.mode.duel.use")) {
+        if (!sender.hasPermission("hmb.mode.duel.use")) {
             MessageBuilder.create(hmb, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
-            return true;
-        }
-
-        if (am.getArenasFromType(GameModeType.DUEL).size() == 0) {
-            MessageBuilder.create(hmb, "modeGlobalGamemodeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 
@@ -72,23 +72,28 @@ public class DuelMode extends AbstractMode {
                     queue.removeFromQueue(player);
                     break;
                 case "list":
-                    MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(player);
-                    MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE)))
-                            .setMode(MessageBuilder.Mode.DIRECT_STRING)
-                            .sendMessage(player);
+                    sendArenaList(sender);
                     break;
                 // hidden command that will be executed on arena selection click
                 case "choose":
                     if (args.length > 1) {
                         queue.arenaWasSelected(player, args[1]);
+                        if (pm.isInBattle(player))
+                            break;
                     }
-                    if (pm.isInBattle(player)) break;
                 default:
                     queue.requestSend(player, hmb.getServer().getPlayer(args[0]));
             }
-        } else MessageBuilder.create(hmb, "modeDuelShowHelp", HalfminerBattle.PREFIX).sendMessage(player);
+        } else MessageBuilder.create(hmb, "modeDuelShowHelp", HalfminerBattle.PREFIX).sendMessage(sender);
 
         return true;
+    }
+
+    private void sendArenaList(CommandSender sender) {
+        MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(sender);
+        MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE)))
+                .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                .sendMessage(sender);
     }
 
     @Override
