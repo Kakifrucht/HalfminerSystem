@@ -65,7 +65,9 @@ public class GlobalMode extends AbstractMode {
 
     @EventHandler(ignoreCancelled = true)
     public void teleportDisable(PlayerTeleportEvent e) {
-        if (!pm.isInBattle(e.getPlayer()) && am.isArenaSpawn(e.getTo())) {
+        if (!pm.isInBattle(e.getPlayer())
+                && !e.getPlayer().hasPermission("hmb.global.bypass.teleportintoarena")
+                && am.isArenaSpawn(e.getTo())) {
             MessageBuilder.create(hmb, "modeGlobalTeleportIntoArenaDenied", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }

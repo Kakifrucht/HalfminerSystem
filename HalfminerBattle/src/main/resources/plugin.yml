@@ -27,6 +27,7 @@ permissions:
     description: Access to all gamemodes and advanced permissions
     children:
       hmb.mode.duel: true
+      hmb.global.bypass.teleportintoarena: true
   hmb.mode.duel:
     description: Access to all duel functionality
     children:
@@ -39,3 +40,5 @@ permissions:
     description: Administrative permission, access to /hmb
   hmb.mode.duel.exempt.request:
     description: Exempt players cannot be duel requested
+  hmb.global.bypass.teleportintoarena:
+    description: Bypass the teleport protection into arenas
