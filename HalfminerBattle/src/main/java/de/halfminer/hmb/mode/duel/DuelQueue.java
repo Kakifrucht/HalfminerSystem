@@ -284,20 +284,19 @@ public class DuelQueue {
 
             ComponentBuilder builder = new ComponentBuilder("");
 
-            int index = 1;
-            for (DuelArena free : freeArenas.stream().map(free -> (DuelArena) free).collect(Collectors.toList())) {
+            for (Arena freeArena : freeArenas) {
                 String tooltipOnHover = MessageBuilder.create(hmb, "modeDuelChooseArenaHover")
-                        .addPlaceholderReplace("%ARENA%", free.getName())
+                        .addPlaceholderReplace("%ARENA%", freeArena.getName())
                         .returnMessage();
-                builder.append(free.getName())
-                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose " + index++))
+                builder.append(freeArena.getName())
+                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose " + freeArena.getName()))
                         .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(tooltipOnHover).create()))
-                        .color(ChatColor.GREEN)
+                        .color(ChatColor.GREEN).bold(true)
                         .append("  ").reset();
             }
 
             builder.append(MessageBuilder.returnMessage(hmb, "randomArena"))
-                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose " + index))
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose random"))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             new ComponentBuilder(MessageBuilder.returnMessage(hmb, "modeDuelChooseArenaRandom")).create()))
                     .color(ChatColor.GRAY);
@@ -311,31 +310,25 @@ public class DuelQueue {
      * {@link DuelMode#onCommand(CommandSender, String[])}
      *
      * @param player     player that chose arena
-     * @param arenaIndex String that contains the players input
+     * @param arenaName  String that contains the arena name
      */
-    public void arenaWasSelected(Player player, String arenaIndex) {
+    public void arenaWasSelected(Player player, String arenaName) {
 
         if (!isSelectingArena.contains(player)) return;
 
-        int index = Integer.MIN_VALUE;
-        try {
-            index = Integer.parseInt(arenaIndex);
-        } catch (NumberFormatException ignored) {}
-
-        if (index == Integer.MIN_VALUE) { // If default value, invalid index given, cancel
-            MessageBuilder.create(hmb, "modeDuelChooseArenaInvalid", HalfminerBattle.PREFIX).sendMessage(player);
-            return;
-        }
-
         Player playerB = pm.getFirstPartner(player);
 
-        DuelArena selectedArena; // Determine which arena was selected
-        List<Arena> freeArenas = am.getFreeArenasFromType(MODE);
-        if (index <= freeArenas.size() && index > 0) {
-            selectedArena = (DuelArena) freeArenas.get(index - 1);
-        } else { // Random selected or invalid index
-            Random rnd = new Random();
-            selectedArena = (DuelArena) freeArenas.get(rnd.nextInt(freeArenas.size()));
+        DuelArena selectedArena;
+        if (arenaName.equalsIgnoreCase("random")) {
+            List<Arena> freeArenas = am.getFreeArenasFromType(MODE);
+            selectedArena = (DuelArena) freeArenas.get(new Random().nextInt(freeArenas.size()));
+        } else {
+            selectedArena = (DuelArena) am.getArena(MODE, arenaName);
+        }
+
+        if (selectedArena == null || !selectedArena.isFree()) {
+            MessageBuilder.create(hmb, "modeDuelChooseArenaInvalid", HalfminerBattle.PREFIX).sendMessage(player);
+            return;
         }
 
         MessageBuilder.create(hmb, "modeDuelStartingLog")

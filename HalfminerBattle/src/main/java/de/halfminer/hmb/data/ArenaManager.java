@@ -42,7 +42,7 @@ public class ArenaManager {
         return all;
     }
 
-    private Arena getArena(GameModeType gameMode, String name) {
+    public Arena getArena(GameModeType gameMode, String name) {
         for (Arena arena : getArenasFromType(gameMode)) {
             if (arena.getName().equalsIgnoreCase(name))
                 return arena;
