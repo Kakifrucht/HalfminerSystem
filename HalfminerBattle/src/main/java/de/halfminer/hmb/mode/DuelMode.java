@@ -111,28 +111,22 @@ public class DuelMode extends AbstractMode {
 
     @Override
     public void onConfigReload() {
+
         broadcastWin = hmb.getConfig().getBoolean("gameMode.duel.broadcastWin", false);
 
-        int remind = hmb.getConfig().getInt("gameMode.duel.waitingForMatchRemind", Integer.MIN_VALUE);
-        if (remind < 0) {
+        waitingForMatchRemind = hmb.getConfig().getInt("gameMode.duel.waitingForMatchRemind", Integer.MIN_VALUE);
+        if (waitingForMatchRemind < 0) {
+            waitingForMatchRemind = 0;
             hmb.getConfig().set("gameMode.duel.waitingForMatchRemind", 0);
-            remind = 0;
+            hmb.saveConfig();
         }
-        waitingForMatchRemind = remind;
 
-        int time = hmb.getConfig().getInt("gameMode.duel.gameTime", Integer.MIN_VALUE);
-        if (time < 20)
-            time = 20;
-
-        int modulo = time % 5;
-        if (modulo != 0)
-            time += 5 - modulo;
-
-        if (hmb.getConfig().getInt("gameMode.duel.gameTime", Integer.MIN_VALUE) != time)
-            hmb.getConfig().set("gameMode.duel.gameTime", time);
-        duelTime = time + 5;
-
-        hmb.saveConfig();
+        duelTime = hmb.getConfig().getInt("gameMode.duel.gameTime", Integer.MIN_VALUE);
+        if (duelTime < 20) {
+            duelTime = 20;
+            hmb.getConfig().set("gameMode.duel.gameTime", 20);
+            hmb.saveConfig();
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
