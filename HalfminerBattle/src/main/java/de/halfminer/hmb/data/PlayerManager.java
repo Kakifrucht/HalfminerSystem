@@ -1,5 +1,6 @@
 package de.halfminer.hmb.data;
 
+import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.GameModeType;
@@ -13,6 +14,12 @@ import java.util.*;
 public class PlayerManager {
 
     private final Map<UUID, BattlePlayer> playerMap = new HashMap<>();
+
+    public PlayerManager(HalfminerBattle hmb) {
+        // cleanup playermap every 20 minutes
+        hmb.getServer().getScheduler().runTaskTimer(hmb, () ->
+                playerMap.values().removeIf(bp -> bp.getState().equals(BattleState.IDLE)), 24000L, 24000L);
+    }
 
     private BattlePlayer getBattlePlayer(Player player) {
 

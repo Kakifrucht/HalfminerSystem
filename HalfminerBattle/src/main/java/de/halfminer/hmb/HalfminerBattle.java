@@ -28,7 +28,7 @@ public class HalfminerBattle extends JavaPlugin {
         return instance;
     }
 
-    private final PlayerManager playerManager = new PlayerManager();
+    private final PlayerManager playerManager = new PlayerManager(this);
     private ArenaManager arenaManager;
 
     private final Map<GameModeType, GameMode> gameModes = new HashMap<>();

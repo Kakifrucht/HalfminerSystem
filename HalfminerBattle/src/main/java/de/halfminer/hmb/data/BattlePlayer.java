@@ -147,6 +147,7 @@ class BattlePlayer {
             } else {
                 restore();
             }
+            data = null;
         }
 
         private void restore() {
