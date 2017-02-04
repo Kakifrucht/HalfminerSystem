@@ -134,25 +134,23 @@ class BattlePlayer {
 
         void restorePlayer() {
 
-            if (player.isDead()) {
+            if (player.isDead() && player.isOnline()) {
                 try {
                     Bukkit.getScheduler().runTaskLater(hmb, () -> {
                         player.spigot().respawn();
-                        restoreHealth();
-                        restoreData();
+                        restore();
                     }, 2L);
                 } catch (IllegalPluginAccessException e) {
-                    // exception thrown, when trying to respawn dead player while shutting down
-                    restoreHealth();
-                    hmb.getLogger().warning(player.getName() + " duel was cancelled while the player was dead already");
+                    // exception is thrown when trying to respawn dead player while shutting down
+                    restore();
                 }
             } else {
-                restoreHealth();
-                restoreData();
+                restore();
             }
         }
 
-        private void restoreHealth() {
+        private void restore() {
+
             player.setHealth(health);
             player.setFoodLevel(foodLevel);
             player.setSaturation(foodSaturation);
@@ -160,9 +158,7 @@ class BattlePlayer {
             player.setFireTicks(0);
             for (PotionEffect effect : player.getActivePotionEffects())
                 player.removePotionEffect(effect.getType());
-        }
 
-        private void restoreData() {
             player.closeInventory();
             player.getInventory().setContents(inventory);
             player.updateInventory();

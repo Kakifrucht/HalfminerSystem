@@ -1,5 +1,5 @@
 # Halfminer Battle
-Battle Arena Bukkit plugin with multiple game modes.
+Battle Arena Bukkit/Spigot plugin with multiple game modes.
 
 Current features
 -------

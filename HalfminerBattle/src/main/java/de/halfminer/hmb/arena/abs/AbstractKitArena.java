@@ -1,6 +1,7 @@
 package de.halfminer.hmb.arena.abs;
 
 import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,16 +68,15 @@ public abstract class AbstractKitArena extends AbstractArena {
         }
     }
 
-    private List<Player> parameterToList(Player... param) {
-        return param != null && param.length > 0 ? Arrays.asList(param) : playersInArena;
-    }
-
     private ItemStack[] addPlayerInfo(Player player, ItemStack[] toModify) {
         ItemStack[] modified = new ItemStack[toModify.length];
         List<String> lore = new ArrayList<>();
         lore.add("");
-        lore.add(ChatColor.GREEN + Utils.makeStringFriendly(getGameMode().toString())
-                + " | " + ChatColor.GRAY + player.getName());
+        lore.add(MessageBuilder.create(hmb, "modeGlobalKitArenaCustomLore")
+                .addPlaceholderReplace("%ARENA%", getName())
+                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(gameMode.toString()))
+                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage());
+
         lore.add(ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
                 + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000));
 

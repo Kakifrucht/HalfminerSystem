@@ -13,9 +13,13 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.NMSUtils;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
@@ -277,18 +281,41 @@ public class DuelQueue {
                         .addPlaceholderReplace("%PLAYER%", player.getName())
                         .sendMessage(partner);
             }
-            player.sendMessage(am.getStringFromArenaList(freeArenas, true));
+
+            ComponentBuilder builder = new ComponentBuilder("");
+
+            int index = 1;
+            for (DuelArena free : freeArenas.stream().map(free -> (DuelArena) free).collect(Collectors.toList())) {
+                String tooltipOnHover = MessageBuilder.create(hmb, "modeDuelChooseArenaHover")
+                        .addPlaceholderReplace("%ARENA%", free.getName())
+                        .returnMessage();
+                builder.append(free.getName())
+                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose " + index++))
+                        .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(tooltipOnHover).create()))
+                        .color(ChatColor.GREEN)
+                        .append("  ").reset();
+            }
+
+            builder.append(MessageBuilder.returnMessage(hmb, "randomArena"))
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose " + index))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            new ComponentBuilder(MessageBuilder.returnMessage(hmb, "modeDuelChooseArenaRandom")).create()))
+                    .color(ChatColor.GRAY);
+
+            player.spigot().sendMessage(builder.create());
         }
     }
 
     /**
      * Called if a player that is currently selecting an arena made an input, information picked up by
-     * {@link DuelMode#onChatSelectArena(AsyncPlayerChatEvent) chat event}
+     * {@link DuelMode#onCommand(CommandSender, String[])}
      *
      * @param player     player that chose arena
      * @param arenaIndex String that contains the players input
      */
     public void arenaWasSelected(Player player, String arenaIndex) {
+
+        if (!isSelectingArena.contains(player)) return;
 
         int index = Integer.MIN_VALUE;
         try {
@@ -335,9 +362,10 @@ public class DuelQueue {
      * an arena is ready.
      *
      * @param playerA   player the game finished for
-     * @param hasWinner if true, the given player argument is the loser of the match
+     * @param hasWinner if true, the given player is the loser of the match
+     * @param hasLogged if true, the given player logged out
      */
-    public void gameHasFinished(Player playerA, boolean hasWinner) {
+    public void gameHasFinished(Player playerA, boolean hasWinner, boolean hasLogged) {
 
         DuelArena arena = (DuelArena) pm.getArena(playerA);
         Player winner = pm.getFirstPartner(playerA);
@@ -354,7 +382,7 @@ public class DuelQueue {
         if (hasWinner) {
 
             // player logged out, ensure that winner gets the kill due to logout
-            if (!playerA.isOnline()) {
+            if (hasLogged) {
                 NMSUtils.setKiller(playerA, winner);
                 playerA.setHealth(0.0d);
             }
@@ -384,9 +412,5 @@ public class DuelQueue {
         return pm.isInQueue(requested)
                 && pm.getFirstPartner(requested) != null
                 && (with == null || !pm.isInQueue(with));
-    }
-
-    public boolean isSelectingArena(Player toCheck) {
-        return isSelectingArena.contains(toCheck);
     }
 }

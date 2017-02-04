@@ -28,7 +28,10 @@ public class DuelArena extends AbstractKitArena {
 
         addPlayers(playerA, playerB);
         storeAndClearPlayers();
-        preFight();
+        healPlayers();
+        for (Player player : playersInArena) {
+            player.setWalkSpeed(0.0f);
+        }
 
         MessageBuilder.create(hmb, "modeDuelCountdownStart", HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%PLAYER%", playerB.getName())
@@ -60,7 +63,7 @@ public class DuelArena extends AbstractKitArena {
                             .sendMessage(playerA, playerB);
                 }
                 if (timeLeft <= 0) {
-                    mode.getQueue().gameHasFinished(playerA, false);
+                    mode.getQueue().gameHasFinished(playerA, false, false);
                     return;
                 }
                 if (timeLeft <= -1) { //just to safeguard from having alot of tasks that do not cancel and throw exceptions
@@ -86,13 +89,6 @@ public class DuelArena extends AbstractKitArena {
         task.cancel();
         restorePlayers();
         playersInArena.clear();
-    }
-
-    private void preFight() {
-
-        for (Player player : playersInArena) {
-            player.setWalkSpeed(0.0f);
-        }
     }
 
     @Override

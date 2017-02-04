@@ -7,11 +7,9 @@ import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.GlobalMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Abstract arena implementing all in interfaces {@link Arena} defined methods
@@ -85,5 +83,21 @@ public abstract class AbstractArena implements Arena {
     @Override
     public void addPlayers(Player... players) {
         Collections.addAll(playersInArena, players);
+    }
+
+    protected void healPlayers(Player... players) {
+        for (Player toHeal : parameterToList(players)) {
+            toHeal.setHealth(20.0d);
+            toHeal.setFoodLevel(20);
+            toHeal.setSaturation(10);
+            toHeal.setExhaustion(0F);
+            toHeal.setFireTicks(0);
+            for (PotionEffect effect : toHeal.getActivePotionEffects())
+                toHeal.removePotionEffect(effect.getType());
+        }
+    }
+
+    protected List<Player> parameterToList(Player... param) {
+        return param != null && param.length > 0 ? Arrays.asList(param) : playersInArena;
     }
 }

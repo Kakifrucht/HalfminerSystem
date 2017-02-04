@@ -6,14 +6,12 @@ import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.duel.DuelQueue;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -65,7 +63,7 @@ public class DuelMode extends AbstractMode {
             return true;
         }
 
-        if (args.length == 1) {
+        if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "match":
                     queue.matchPlayer(player);
@@ -75,10 +73,16 @@ public class DuelMode extends AbstractMode {
                     break;
                 case "list":
                     MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(player);
-                    MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE), false))
+                    MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE)))
                             .setMode(MessageBuilder.Mode.DIRECT_STRING)
                             .sendMessage(player);
                     break;
+                // hidden command that will be executed on arena selection click
+                case "choose":
+                    if (args.length > 1) {
+                        queue.arenaWasSelected(player, args[1]);
+                    }
+                    if (pm.isInBattle(player)) break;
                 default:
                     queue.requestSend(player, hmb.getServer().getPlayer(args[0]));
             }
@@ -97,7 +101,7 @@ public class DuelMode extends AbstractMode {
         hmb.getServer().getOnlinePlayers()
                 .stream()
                 .filter(player -> pm.isInBattle(MODE, player))
-                .forEach(p -> queue.gameHasFinished(p, false));
+                .forEach(p -> queue.gameHasFinished(p, false, false));
     }
 
     @Override
@@ -150,26 +154,7 @@ public class DuelMode extends AbstractMode {
 
         Player didQuit = e.getPlayer();
         if (pm.isInQueue(MODE, didQuit)) queue.removeFromQueue(didQuit);
-        else if (pm.isInBattle(MODE, didQuit)) queue.gameHasFinished(didQuit, true);
-    }
-
-    @EventHandler
-    public void onChatSelectArena(AsyncPlayerChatEvent e) {
-
-        if (queue.isSelectingArena(e.getPlayer())) {
-            if (am.getFreeArenasFromType(MODE).size() > 0) {
-                e.setCancelled(true);
-
-                final Player player = e.getPlayer();
-                final String message = e.getMessage();
-                Bukkit.getScheduler().scheduleSyncDelayedTask(HalfminerBattle.getInstance(), () -> {
-                    // It may happen that between event fire and task execution the partner leaves the queue, redo select check
-                    if (queue.isSelectingArena(player)) {
-                        queue.arenaWasSelected(player, message);
-                    }
-                });
-            }
-        }
+        else if (pm.isInBattle(MODE, didQuit)) queue.gameHasFinished(didQuit, true, true);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -186,6 +171,6 @@ public class DuelMode extends AbstractMode {
 
         Player died = e.getEntity().getPlayer();
         if (pm.isInQueue(died)) queue.removeFromQueue(died);
-        else if (pm.isInBattle(died)) queue.gameHasFinished(died, true);
+        else if (pm.isInBattle(died)) queue.gameHasFinished(died, true, false);
     }
 }

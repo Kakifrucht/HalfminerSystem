@@ -4,8 +4,6 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.GameModeType;
-import de.halfminer.hmb.mode.GlobalMode;
-import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -203,7 +201,7 @@ public class ArenaManager {
         return false;
     }
 
-    public String getStringFromArenaList(List<Arena> arenas, boolean addRandom) {
+    public String getStringFromArenaList(List<Arena> arenas) {
 
         if (arenas.isEmpty()) return "";
 
@@ -219,13 +217,7 @@ public class ArenaManager {
             number++;
         }
 
-        if (addRandom) {
-            sb.append(ChatColor.YELLOW)
-                    .append(number)
-                    .append(": ")
-                    .append(ChatColor.GRAY)
-                    .append(MessageBuilder.returnMessage(HalfminerBattle.getInstance(), "randomArena"));
-        } else sb.setLength(sb.length() - 1);
+        sb.setLength(sb.length() - 1);
         return sb.toString();
     }
 
