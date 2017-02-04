@@ -53,11 +53,12 @@ public class DuelArena extends AbstractKitArena {
             private final BukkitScheduler scheduler = hmb.getServer().getScheduler();
             private final DuelMode mode = (DuelMode) hmb.getGameMode(GameModeType.DUEL);
             private final int timeStart = mode.getDuelTime();
-            private int timeLeft = timeStart + 5;
+            private int timeLeft = timeStart + 6;
 
             @Override
             public void run() {
 
+                timeLeft -= 1;
                 if (timeLeft > timeStart) {
                     final String toSend = MessageBuilder.create(hmb, "modeDuelTitleCountdown")
                             .addPlaceholderReplace("%TIME%", String.valueOf(timeLeft - timeStart))
@@ -70,6 +71,7 @@ public class DuelArena extends AbstractKitArena {
                         playSound(playerB, Sound.BLOCK_NOTE_PLING);
                     });
                 }
+
                 // Battle is starting, reset walkspeed and give the kit
                 if (timeLeft == timeStart) {
                     scheduler.runTask(hmb, () -> {
@@ -78,14 +80,19 @@ public class DuelArena extends AbstractKitArena {
                         teleportIntoArena();
                     });
                 }
+
                 if (timeLeft <= 5 && timeLeft > 0) {
+                    if (timeLeft == 5) {
+                        MessageBuilder.create(hmb, "modeDuelTimeRunningOut", HalfminerBattle.PREFIX)
+                                .sendMessage(playerA, playerB);
+                    }
                     playSound(playerA, Sound.BLOCK_NOTE_PLING);
                 }
-                if (timeLeft <= 1) {
+
+                if (timeLeft <= 0) {
                     scheduler.runTask(hmb,
                             () -> mode.getQueue().gameHasFinished(playerA, false, false));
                 }
-                timeLeft -= 1;
             }
 
             private void preparePlayer(Player player) {
@@ -96,22 +103,18 @@ public class DuelArena extends AbstractKitArena {
                 equipPlayers();
             }
 
-            private void playSound(Player player, Sound toPlay) {
-                player.playSound(player.getLocation(), toPlay, 1.0f, 1.6f);
-            }
-
         }, 0L, 20L);
     }
 
-    /**
-     * Called once a game ends. Will issue restoring of players and resets arena.
-     * This happens due to death of a player (duel win), time running out, reloading of plugin
-     * or logging out.
-     */
     public void gameEnd() {
         task.cancel();
         restorePlayers();
+        playersInArena.forEach(p -> playSound(p, Sound.BLOCK_ANVIL_LAND));
         playersInArena.clear();
+    }
+
+    private void playSound(Player player, Sound toPlay) {
+        player.playSound(player.getLocation(), toPlay, 1.0f, 1.6f);
     }
 
     @Override

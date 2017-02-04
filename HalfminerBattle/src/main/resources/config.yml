@@ -15,7 +15,7 @@ gameMode:
     #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
     waitingForMatchRemind: 30
 localization:
-  prefix: '&7HalfminerBattle &e>>&r '
+  prefix: '&7Battle &e>>&r '
   commandClickHover: 'Klicken, um das Kommando auszuführen'
   noPermission: '&cDu hast nicht die Berechtigung dies zu verwenden'
   notAPlayer: 'Dieses Kommando kann nur als Spieler ausgeführt werden'
@@ -63,11 +63,13 @@ localization:
   modeDuelShowHelp: '~&7Faire Duelle mit gleicher Ausrüstung in Arenen\n &e/&eduel <Spielername> - &7&oDuellanfrage schicken\n &a/duel match/ - &7&oDuellpartner finden\n &a/duel leave/ - &7&oWarteschlange verlassen\n &a/duel list/ - &7&oArenaliste anzeigen'
   modeDuelShowPartnerTitle: ' \n&fDuellpartner: &6&l%PLAYER%'
   modeDuelStartingLog: 'Duell startet zwischen %PLAYERA% und %PLAYERB% in Arena %ARENA%'
+  modeDuelTimeRunningOut: '&cDas Duell wird in 5 Sekunden abgebrochen'
   modeDuelTitleCountdown: 'Duell startet in...\n&e&l%TIME% &rSekunden'
   modeDuelTitleStart: ' \n&6&lStart!'
   modeDuelWinBroadcast: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7gewonnen'
   modeGlobalAddedToQueue: '~&7Du bist nun in der Warteschlange, verwende &a/duel leave/ &7zum verlassen'
   modeGlobalAlreadyInQueue: '~&cDu bist bereits in einer Warteschlange, &7verwende &a/duel leave/ &7zum verlassen'
+  modeGlobalArenaLoadLog: '%ARENAS% Arenen und %KITS% Kits geladen'
   modeGlobalGamemodeDisabled: '&7Dieser Spielmodus ist aktuell &cdeaktiviert'
   modeGlobalInGame: '&cIm Kampf kannst du keine Kommandos verwenden'
   modeGlobalKitArenaCustomLore: '&a%ARENA% &7(&o%MODE%&7) | &b%PLAYER%'

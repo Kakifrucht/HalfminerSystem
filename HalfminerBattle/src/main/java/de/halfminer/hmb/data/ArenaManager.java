@@ -4,6 +4,7 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Loading arenas and kits from config and maintaining necessary data
@@ -79,7 +81,7 @@ public class ArenaManager {
         if (kitSection != null) {
             for (String mode : kitSection.getKeys(false)) {
 
-                GameModeType type = GameModeType.getGameMode(kitSection.getString(mode));
+                GameModeType type = GameModeType.getGameMode(mode);
                 if (type == null) {
                     hmb.getLogger().warning("Invalid gamemode type while loading kit for mode kit " + mode);
                     continue;
@@ -122,6 +124,7 @@ public class ArenaManager {
                         .filter(obj -> obj instanceof Location)
                         .forEach(obj -> spawnLocations.add((Location) obj));
 
+                // check to see if arena already exists and just update kit/spawns, else add new one
                 Map<String, Arena> oldArenasMap = oldArenas.get(type);
                 if (oldArenasMap != null && oldArenasMap.containsKey(arenaName.toLowerCase())) {
                     Arena alreadyExistingToReload = oldArenasMap.get(arenaName.toLowerCase());
@@ -133,6 +136,14 @@ public class ArenaManager {
                 }
             }
         }
+
+        // log load amounts
+        int totalArenas = 0;
+        for (Map<String, Arena> map : arenas.values()) totalArenas += map.size();
+        MessageBuilder.create(hmb, "modeGlobalArenaLoadLog")
+                .addPlaceholderReplace("%ARENAS%", String.valueOf(totalArenas))
+                .addPlaceholderReplace("%KITS%", String.valueOf(kits.size()))
+                .logMessage(Level.INFO);
     }
 
     public boolean addArena(GameModeType gameMode, String name, Location... spawns) {
@@ -153,12 +164,12 @@ public class ArenaManager {
 
         Map<String, Arena> arenasMode = getArenaMap(gameMode);
         if (arenasMode != null) {
-            boolean removed = arenasMode.values().removeIf(a -> a.getName().equalsIgnoreCase(name));
-            if (removed) {
-                kits.keySet().removeIf(pair -> pair.getRight().equalsIgnoreCase(name));
+            Arena arena = arenasMode.get(name.toLowerCase());
+            if (arena != null) {
+                arenasMode.remove(name.toLowerCase());
                 saveData();
+                return true;
             }
-            return removed;
         }
         return false;
     }
