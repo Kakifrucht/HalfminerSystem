@@ -167,6 +167,7 @@ public class ArenaManager {
             Arena arena = arenasMode.get(name.toLowerCase());
             if (arena != null) {
                 arenasMode.remove(name.toLowerCase());
+                kits.remove(new Pair<>(gameMode, arena.getName()));
                 saveData();
                 return true;
             }
