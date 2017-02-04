@@ -322,6 +322,9 @@ public class DuelQueue {
         if (arenaName.equalsIgnoreCase("random")) {
             List<Arena> freeArenas = am.getFreeArenasFromType(MODE);
             selectedArena = (DuelArena) freeArenas.get(new Random().nextInt(freeArenas.size()));
+            MessageBuilder.create(hmb, "modeDuelOpponentChoseRandom", HalfminerBattle.PREFIX)
+                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .sendMessage(playerB);
         } else {
             selectedArena = (DuelArena) am.getArena(MODE, arenaName);
         }

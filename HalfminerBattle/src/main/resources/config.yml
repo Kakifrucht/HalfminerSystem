@@ -45,6 +45,7 @@ localization:
   modeDuelGameTime: '&7Das Duell gegen &e%PLAYER%&7 ist unentschieden'
   modeDuelGameWon: '&aDu hast das Duell gegen &e%PLAYER%&a gewonnen'
   modeDuelNotInQueue: '&cDu bist nicht in der Warteschlange'
+  modeDuelOpponentChoseRandom: '&e%PLAYER% &7hat eine &lzufällige Arena &7ausgesucht'
   modeDuelPartnerChoosingArena: '&e%PLAYER%&7 wählt nun eine Arena aus, das Duell startet gleich'
   modeDuelPlayerWaitingForMatch: '~&e%PLAYER%&7 wartet auf einen Duellpartner. Gib &a/duel match/&7 für ein faires Duell mit gleicher Ausrüstung ein'
   modeDuelQueueRemovedNotTheCause: '&cDein Duellpartner hat die Warteschlange verlassen, womit du auch entfernt wurdest'
