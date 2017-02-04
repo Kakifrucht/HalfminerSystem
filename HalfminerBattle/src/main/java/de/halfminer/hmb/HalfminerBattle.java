@@ -28,7 +28,7 @@ public class HalfminerBattle extends JavaPlugin {
         return instance;
     }
 
-    private final PlayerManager playerManager = new PlayerManager(this);
+    private PlayerManager playerManager;
     private ArenaManager arenaManager;
 
     private final Map<GameModeType, GameMode> gameModes = new HashMap<>();
@@ -37,6 +37,8 @@ public class HalfminerBattle extends JavaPlugin {
     public void onEnable() {
         instance = this;
         PREFIX = MessageBuilder.returnMessage(this, "prefix");
+
+        playerManager = new PlayerManager(this);
 
         if (!saveAndReloadConfig()) {
             setDisabledAfterException();

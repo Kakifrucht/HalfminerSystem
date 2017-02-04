@@ -77,22 +77,26 @@ public class ArenaManager {
 
         ConfigurationSection kitSection = arenaConfig.getConfigurationSection("kits");
         if (kitSection != null) {
-            for (String name : kitSection.getKeys(false)) {
+            for (String mode : kitSection.getKeys(false)) {
 
-                GameModeType type = GameModeType.getGameMode(kitSection.getString(name + ".gameMode"));
+                GameModeType type = GameModeType.getGameMode(kitSection.getString(mode));
                 if (type == null) {
-                    hmb.getLogger().warning("Invalid gamemode type for kit " + name);
+                    hmb.getLogger().warning("Invalid gamemode type while loading kit for mode kit " + mode);
                     continue;
                 }
 
-                List<?> contents = kitSection.getList(name + ".content");
-                ItemStack[] kit = new ItemStack[contents.size()];
-                for (int i = 0; i < contents.size(); i++) {
-                    if (contents.get(i) instanceof ItemStack)
-                        kit[i] = (ItemStack) contents.get(i);
-                }
+                ConfigurationSection kitSectionForMode = kitSection.getConfigurationSection(mode);
+                for (String arenaName : kitSectionForMode.getKeys(false)) {
 
-                kits.put(new Pair<>(type, name), kit);
+                    List<?> contents = kitSectionForMode.getList(arenaName);
+                    ItemStack[] kit = new ItemStack[contents.size()];
+                    for (int i = 0; i < contents.size(); i++) {
+                        if (contents.get(i) instanceof ItemStack)
+                            kit[i] = (ItemStack) contents.get(i);
+                    }
+
+                    kits.put(new Pair<>(type, arenaName), kit);
+                }
             }
         }
 
@@ -101,11 +105,11 @@ public class ArenaManager {
 
         ConfigurationSection arenaSection = arenaConfig.getConfigurationSection("arenas");
         if (arenaSection != null) {
-            for (String name : arenaSection.getKeys(false)) {
+            for (String arenaName : arenaSection.getKeys(false)) {
 
-                GameModeType type = GameModeType.getGameMode(arenaSection.getString(name + ".gameMode"));
+                GameModeType type = GameModeType.getGameMode(arenaSection.getString(arenaName + ".gameMode"));
                 if (type == null) {
-                    hmb.getLogger().warning("Invalid gamemode type for arena " + name);
+                    hmb.getLogger().warning("Invalid gamemode type for arena " + arenaName);
                     continue;
                 }
 
@@ -113,18 +117,19 @@ public class ArenaManager {
 
                 List<Location> spawnLocations = new ArrayList<>();
                 arenaSection
-                        .getList(name + ".spawns")
+                        .getList(arenaName + ".spawns")
                         .stream()
-                        .filter(obj -> obj instanceof Location).forEach(obj -> spawnLocations.add((Location) obj));
+                        .filter(obj -> obj instanceof Location)
+                        .forEach(obj -> spawnLocations.add((Location) obj));
 
                 Map<String, Arena> oldArenasMap = oldArenas.get(type);
-                if (oldArenasMap != null && oldArenasMap.containsKey(name.toLowerCase())) {
-                    Arena alreadyExistingToReload = oldArenasMap.get(name.toLowerCase());
+                if (oldArenasMap != null && oldArenasMap.containsKey(arenaName.toLowerCase())) {
+                    Arena alreadyExistingToReload = oldArenasMap.get(arenaName.toLowerCase());
                     alreadyExistingToReload.setSpawns(spawnLocations);
                     alreadyExistingToReload.reload();
-                    arenaMap.put(name.toLowerCase(), alreadyExistingToReload);
+                    arenaMap.put(arenaName.toLowerCase(), alreadyExistingToReload);
                 } else {
-                    addArena(type, name, spawnLocations.toArray(new Location[spawnLocations.size()]));
+                    addArena(type, arenaName, spawnLocations.toArray(new Location[spawnLocations.size()]));
                 }
             }
         }
@@ -238,8 +243,7 @@ public class ArenaManager {
             GameModeType gameMode = entry.getKey().getLeft();
             String arenaName = entry.getKey().getRight();
             ItemStack[] stacks = entry.getValue();
-            arenaConfig.set("kits." + arenaName + ".gameMode", gameMode.toString());
-            arenaConfig.set("kits." + arenaName + ".content", stacks);
+            arenaConfig.set("kits." + gameMode.toString() + '.' + arenaName, stacks);
         }
 
         try {

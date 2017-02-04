@@ -76,11 +76,8 @@ public class DuelMode extends AbstractMode {
                     break;
                 // hidden command that will be executed on arena selection click
                 case "choose":
-                    if (args.length > 1) {
-                        queue.arenaWasSelected(player, args[1]);
-                        if (pm.isInBattle(player))
-                            break;
-                    }
+                    if (args.length > 1 && queue.arenaWasSelected(player, args[1]))
+                        break;
                 default:
                     queue.requestSend(player, hmb.getServer().getPlayer(args[0]));
             }

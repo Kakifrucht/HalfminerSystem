@@ -4,6 +4,7 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -108,11 +109,11 @@ public class GlobalMode extends AbstractMode {
                         return true;
                     }
                     boolean successCreate = am.addArena(type, args[2], player.getLocation());
-                    sendStatusMessage(sender, successCreate ? "adminCreate" : "adminCreateFailed", args[2]);
+                    sendStatusMessage(sender, successCreate ? "adminCreate" : "adminCreateFailed", args[2], type);
                     break;
                 case "remove":
                     boolean successRemove = am.delArena(type, args[2]);
-                    sendStatusMessage(sender, successRemove ? "adminRemove" : "adminArenaDoesntExist", args[2]);
+                    sendStatusMessage(sender, successRemove ? "adminRemove" : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "setspawn":
                     if (!isPlayer) {
@@ -126,11 +127,11 @@ public class GlobalMode extends AbstractMode {
                         } catch (NumberFormatException ignored) {}
                     }
                     boolean successSetSpawn = am.setSpawn(type, args[2], player.getLocation(), spawnNumber);
-                    sendStatusMessage(sender, successSetSpawn ? "adminSetSpawn" : "adminArenaDoesntExist", args[2]);
+                    sendStatusMessage(sender, successSetSpawn ? "adminSetSpawn" : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "clearspawns":
                     boolean successClear = am.clearSpawns(type, args[2]);
-                    sendStatusMessage(sender, successClear ? "adminClearSpawns" : "adminArenaDoesntExist", args[2]);
+                    sendStatusMessage(sender, successClear ? "adminClearSpawns" : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "setkit":
                     if (!isPlayer) {
@@ -138,7 +139,7 @@ public class GlobalMode extends AbstractMode {
                         return true;
                     }
                     boolean successKit = am.setKit(type, args[2], player.getInventory());
-                    sendStatusMessage(sender, successKit ? "adminSetKit" : "adminArenaDoesntExist", args[2]);
+                    sendStatusMessage(sender, successKit ? "adminSetKit" : "adminArenaDoesntExist", args[2], type);
                     break;
                 default:
                     sendUsageInformation(sender);
@@ -153,9 +154,10 @@ public class GlobalMode extends AbstractMode {
                 .sendMessage(sendTo);
     }
 
-    private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName) {
+    private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName, GameModeType mode) {
         MessageBuilder.create(hmb, messageKey, HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%ARENA%", arenaName)
+                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(mode.toString()))
                 .sendMessage(sendTo);
     }
 

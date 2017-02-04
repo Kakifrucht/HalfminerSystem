@@ -268,7 +268,7 @@ public class DuelQueue {
             MessageBuilder.create(hmb, "modeDuelChooseArenaNoneAvailable", HalfminerBattle.PREFIX)
                     .sendMessage(player, partner);
         } else if (freeArenas.size() == 1) {
-                arenaWasSelected(player, "1");
+            arenaWasSelected(player, "random");
         } else {
             if (refreshMessage) {
                 MessageBuilder.create(hmb, "modeDuelChooseArenaRefreshed", HalfminerBattle.PREFIX).sendMessage(player);
@@ -312,9 +312,9 @@ public class DuelQueue {
      * @param player     player that chose arena
      * @param arenaName  String that contains the arena name
      */
-    public void arenaWasSelected(Player player, String arenaName) {
+    public boolean arenaWasSelected(Player player, String arenaName) {
 
-        if (!isSelectingArena.contains(player)) return;
+        if (!isSelectingArena.contains(player)) return false;
 
         Player playerB = pm.getFirstPartner(player);
 
@@ -331,7 +331,7 @@ public class DuelQueue {
 
         if (selectedArena == null || !selectedArena.isFree()) {
             MessageBuilder.create(hmb, "modeDuelChooseArenaInvalid", HalfminerBattle.PREFIX).sendMessage(player);
-            return;
+            return true;
         }
 
         MessageBuilder.create(hmb, "modeDuelStartingLog")
@@ -348,6 +348,7 @@ public class DuelQueue {
         // Update selection for players who are currently selecting
         for (Player playerSelecting : isSelectingArena)
             showFreeArenaSelection(playerSelecting, true);
+        return true;
     }
 
     /**
