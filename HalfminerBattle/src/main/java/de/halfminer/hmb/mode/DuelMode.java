@@ -158,17 +158,17 @@ public class DuelMode extends AbstractMode {
     @EventHandler(ignoreCancelled = true)
     public void playerMoveDisableDuringCountdown(PlayerMoveEvent e) {
 
-        if (e.getPlayer().getWalkSpeed() == 0.0f && pm.isInBattle(e.getPlayer())) {
+        if (e.getPlayer().getWalkSpeed() == 0.0f && pm.isInBattle(MODE, e.getPlayer())) {
             e.getPlayer().teleport(e.getFrom());
             e.setCancelled(true);
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDeathEndDuel(PlayerDeathEvent e) {
 
         Player died = e.getEntity().getPlayer();
-        if (pm.isInQueue(died)) queue.removeFromQueue(died);
-        else if (pm.isInBattle(died)) queue.gameHasFinished(died, true, false);
+        if (pm.isInQueue(MODE, died)) queue.removeFromQueue(died);
+        else if (pm.isInBattle(MODE, died)) queue.gameHasFinished(died, true, false);
     }
 }
