@@ -51,7 +51,6 @@ localization:
   modeDuelQueueRemovedNotTheCause: '&cDein Duellpartner hat die Warteschlange verlassen, womit du auch entfernt wurdest'
   modeDuelRequest: '~&e%PLAYER%&7 hat dir eine Duell Herausforderung geschickt. Gib &a/duel %PLAYER%/ &7ein, um sie zu akzeptieren'
   modeDuelRequestAccepted: '&7Du hast die Herausforderung &aakzeptiert'
-  modeDuelRequestAlreadyOpen: '~&cDu hast bereits eine offene Duell Herausforderung, &7verwende &a/duel leave/ &7zum zurückziehen'
   modeDuelRequestCancel: '&7Deine Herausforderung wurde zurückgezogen'
   modeDuelRequestCancelled: '&e%PLAYER% &7hat seine Herausforderung &czurückgezogen'
   modeDuelRequestExempt: '&7Du kannst &c%PLAYER% &7keine Anfragen schicken'

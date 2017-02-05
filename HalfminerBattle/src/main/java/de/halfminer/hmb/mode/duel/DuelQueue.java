@@ -22,7 +22,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -112,32 +111,33 @@ public class DuelQueue {
      */
     public void requestSend(Player sender, Player sendTo) {
 
-        if (sendTo == null || !sender.canSee(sendTo)) {
-            MessageBuilder.create(hmb, "playerNotOnline", HalfminerBattle.PREFIX).sendMessage(sender);
+        if (pm.hasQueueCooldown(sender)) {
+            MessageBuilder.create(hmb, "modeGlobalQueueCooldown", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
+
+        if (pm.isNotIdle(sender)) {
+            MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
+            return;
+        }
+
         if (sender.equals(sendTo)) {
             MessageBuilder.create(hmb, "modeDuelRequestYourself", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
+
+        if (sendTo == null || !sender.canSee(sendTo)) {
+            MessageBuilder.create(hmb, "playerNotOnline", HalfminerBattle.PREFIX).sendMessage(sender);
+            return;
+        }
+
         if (sendTo.hasPermission("hmb.mode.duel.exempt.request")) {
             MessageBuilder.create(hmb, "modeDuelRequestExempt", HalfminerBattle.PREFIX)
                     .addPlaceholderReplace("%PLAYER%", sendTo.getName())
                     .sendMessage(sender);
             return;
         }
-        if (pm.hasQueueCooldown(sender)) {
-            MessageBuilder.create(hmb, "modeGlobalQueueCooldown", HalfminerBattle.PREFIX).sendMessage(sender);
-            return;
-        }
-        if (hasRequestedDuelWith(sender, null)) {
-            MessageBuilder.create(hmb, "modeDuelRequestAlreadyOpen", HalfminerBattle.PREFIX).sendMessage(sender);
-            return;
-        }
-        if (pm.isNotIdle(sender)) {
-            MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
-            return;
-        }
+
         // Requestee is waiting for match
         if (sendTo.equals(waitingForMatch)) {
             MessageBuilder.create(hmb, "modeDuelRequestWasWaitingForMatch", HalfminerBattle.PREFIX)
@@ -147,6 +147,7 @@ public class DuelQueue {
             clearWaitingForMatch();
             return;
         }
+
         // Requestee sent a request already, match if requestee sent the request before
         if (hasRequestedDuelWith(sendTo, sender)) {
             MessageBuilder.create(hmb, "modeDuelRequestAccepted", HalfminerBattle.PREFIX)
@@ -158,6 +159,7 @@ public class DuelQueue {
             playersMatched(sendTo, sender);
             return;
         }
+
         if (pm.isNotIdle(sendTo)) {
             MessageBuilder.create(hmb, "modeDuelRequesteeNotAvailable", HalfminerBattle.PREFIX)
                     .addPlaceholderReplace("%PLAYER%", sendTo.getName())
@@ -405,9 +407,11 @@ public class DuelQueue {
             showFreeArenaSelection(player, true);
     }
 
-    private boolean hasRequestedDuelWith(Player requested, @Nullable Player with) {
+    private boolean hasRequestedDuelWith(Player requested, Player with) {
+        Player wasRequested = pm.getFirstPartner(requested);
         return pm.isInQueue(requested)
-                && pm.getFirstPartner(requested) != null
-                && (with == null || !pm.isInQueue(with));
+                && wasRequested != null
+                && wasRequested.equals(with)
+                && !pm.isNotIdle(with);
     }
 }
