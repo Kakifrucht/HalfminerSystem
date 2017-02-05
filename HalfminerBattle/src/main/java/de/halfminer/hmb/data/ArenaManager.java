@@ -223,15 +223,11 @@ public class ArenaManager {
         if (arenas.isEmpty()) return "";
 
         StringBuilder sb = new StringBuilder();
-        int number = 1;
         for (Arena arena : arenas) {
             sb.append(ChatColor.GRAY)
-                    .append(number)
-                    .append(": ")
                     .append(arena.isFree() ? ChatColor.GREEN : ChatColor.RED)
                     .append(arena.getName())
-                    .append(' ');
-            number++;
+                    .append(" &r ");
         }
 
         sb.setLength(sb.length() - 1);

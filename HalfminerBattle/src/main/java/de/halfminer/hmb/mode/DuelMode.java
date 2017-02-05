@@ -133,6 +133,8 @@ public class DuelMode extends AbstractMode {
             Player victim = (Player) e.getEntity();
             Player attacker = Utils.getDamagerFromEvent(e);
 
+            if (attacker == null)
+                return;
             if (pm.isInQueue(MODE, attacker))
                 queue.removeFromQueue(attacker);
             if (pm.isInQueue(MODE, victim))

@@ -23,10 +23,12 @@ public class PlayerManager {
 
     private BattlePlayer getBattlePlayer(Player player) {
 
-        if (playerMap.containsKey(player.getUniqueId())) return playerMap.get(player.getUniqueId());
-        else {
+        UUID uuid = player.getUniqueId();
+        if (playerMap.containsKey(uuid)) {
+            return playerMap.get(uuid);
+        } else {
             BattlePlayer newBattlePlayer = new BattlePlayer(player);
-            playerMap.put(player.getUniqueId(), newBattlePlayer);
+            playerMap.put(uuid, newBattlePlayer);
             return newBattlePlayer;
         }
     }

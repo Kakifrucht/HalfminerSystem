@@ -10,11 +10,9 @@ depend: [HalfminerSystem]
 commands:
   duel:
     description: Duel mode base command
-    usage: /duel <subcommand/playername>
     aliases: [1vs1, duell, pvp, 1v1]
   hmb:
     description: Access admin commands per gamemode, add, remove and edit arenas)
-    usage: /hmb <subcommand> [argument]
     aliases: [hmbattle, hbattle, halfminerbattle, global]
 permissions:
   hmb.*:

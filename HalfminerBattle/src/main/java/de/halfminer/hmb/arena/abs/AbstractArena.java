@@ -52,7 +52,8 @@ public abstract class AbstractArena implements Arena {
 
         GlobalMode global = (GlobalMode) hmb.getGameMode(GameModeType.GLOBAL);
         for (Location spawn : spawns) {
-            if (spawn.distance(loc) <= global.getTeleportSpawnDistance()) return true;
+            if (spawn.getWorld().equals(loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance())
+                return true;
         }
 
         return false;
