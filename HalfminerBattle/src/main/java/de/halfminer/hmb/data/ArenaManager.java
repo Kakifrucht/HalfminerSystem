@@ -175,20 +175,20 @@ public class ArenaManager {
         return false;
     }
 
-    public boolean setSpawn(GameModeType gameMode, String arenaName, Location location, int spawn) {
+    public boolean setSpawn(GameModeType gameMode, String arenaName, Location location, int spawnToSet) {
         Arena setSpawn = getArena(gameMode, arenaName);
         if (setSpawn != null) {
-            setSpawn.setSpawn(location, spawn);
+            setSpawn.setSpawn(location, spawnToSet);
             saveData();
             return true;
         }
         return false;
     }
 
-    public boolean clearSpawns(GameModeType gameMode, String arenaName) {
+    public boolean removeSpawn(GameModeType gameMode, String arenaName, int spawnToRemove) {
         Arena clearSpawns = getArena(gameMode, arenaName);
         if (clearSpawns != null) {
-            clearSpawns.setSpawns(Collections.emptyList());
+            clearSpawns.removeSpawn(spawnToRemove);
             saveData();
             return true;
         }

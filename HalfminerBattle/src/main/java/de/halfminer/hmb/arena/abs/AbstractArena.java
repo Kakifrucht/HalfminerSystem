@@ -77,6 +77,13 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
+    public void removeSpawn(int spawnNumber) {
+        if (spawnNumber >= 0 && spawnNumber < spawns.size())
+            spawns.remove(spawnNumber);
+        else spawns.clear();
+    }
+
+    @Override
     public List<Location> getSpawns() {
         return spawns;
     }

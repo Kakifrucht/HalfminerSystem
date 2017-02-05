@@ -123,16 +123,14 @@ public class GlobalMode extends AbstractMode {
                         return true;
                     }
                     int spawnNumber = Integer.MAX_VALUE;
-                    if (args.length > 3) {
-                        try {
-                            spawnNumber = Integer.parseInt(args[3]);
-                        } catch (NumberFormatException ignored) {}
-                    }
+                    if (args.length > 3) spawnNumber = getNumberFromString(args[3]) - 1;
                     boolean successSetSpawn = am.setSpawn(type, args[2], player.getLocation(), spawnNumber);
                     sendStatusMessage(sender, successSetSpawn ? "adminSetSpawn" : "adminArenaDoesntExist", args[2], type);
                     break;
-                case "clearspawns":
-                    boolean successClear = am.clearSpawns(type, args[2]);
+                case "removespawn":
+                    int spawnNumberToRemove = 0;
+                    if (args.length > 3) spawnNumberToRemove = getNumberFromString(args[3]) - 1;
+                    boolean successClear = am.removeSpawn(type, args[2], spawnNumberToRemove);
                     sendStatusMessage(sender, successClear ? "adminClearSpawns" : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "setkit":
@@ -161,6 +159,14 @@ public class GlobalMode extends AbstractMode {
                 .addPlaceholderReplace("%ARENA%", arenaName)
                 .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(mode.toString()))
                 .sendMessage(sendTo);
+    }
+
+    private int getNumberFromString(String toParse) {
+        try {
+            return Integer.parseInt(toParse);
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE;
+        }
     }
 
     private void sendNotAPlayerMessage(CommandSender sendTo) {

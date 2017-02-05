@@ -48,6 +48,13 @@ public interface Arena {
     void setSpawn(Location spawn, int spawnNumber);
 
     /**
+     * Deletes the specified spawn, or clears it, if it is out of bounds.
+     *
+     * @param spawnNumber spawn to remove (0 is first spawn etc.)
+     */
+    void removeSpawn(int spawnNumber);
+
+    /**
      * @return the arenas spawn points
      */
     List<Location> getSpawns();
