@@ -81,7 +81,9 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                             .broadcastMessage(true);
                 }
             }
-            p.setHealth(0.0d);
+            if (!p.isDead()) {
+                p.setHealth(0.0d);
+            }
         }
     }
 

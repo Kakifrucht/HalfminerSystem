@@ -178,6 +178,14 @@ public class DuelQueue {
         pm.addToQueue(MODE, sender);
     }
 
+    private boolean hasRequestedDuelWith(Player requested, Player with) {
+        Player wasRequested = pm.getFirstPartner(requested);
+        return pm.isInQueue(requested)
+                && wasRequested != null
+                && wasRequested.equals(with)
+                && !pm.isNotIdle(with);
+    }
+
     /**
      * Removes a player completely from any queue, resetting his battle state, clearing send game invites
      * and removing him from the duel match. This will also work during arena selection and will remove
@@ -194,10 +202,13 @@ public class DuelQueue {
 
         Player partner = pm.getFirstPartner(toRemove);
 
+        // if no partner is set, the player is waiting for a match
         if (partner != null) {
 
             Player partnerOfPartner = pm.getFirstPartner(partner);
 
+            // if the partner of the partner is the player to be removed,
+            // they are already matched, else notify about duel request cancel
             if (toRemove.equals(partnerOfPartner)) {
                 MessageBuilder.create(hmb, "modeGlobalLeftQueue", HalfminerBattle.PREFIX).sendMessage(toRemove);
                 MessageBuilder.create(hmb, "modeDuelQueueRemovedNotTheCause", HalfminerBattle.PREFIX)
@@ -370,6 +381,10 @@ public class DuelQueue {
         DuelArena arena = (DuelArena) pm.getArena(playerA);
         Player winner = pm.getFirstPartner(playerA);
 
+        // Reset arena and reset players
+        arena.gameEnd();
+        pm.setState(BattleState.IDLE, playerA, winner);
+
         // Messaging
         MessageBuilder.create(hmb, hasWinner ? "modeDuelGameWon" : "modeDuelGameTime", HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%PLAYER%", playerA.getName())
@@ -382,7 +397,7 @@ public class DuelQueue {
         if (hasWinner) {
 
             // player logged out, ensure that winner gets the kill due to logout
-            if (hasLogged) {
+            if (hasLogged && !playerA.isDead()) {
                 NMSUtils.setKiller(playerA, winner);
                 playerA.setHealth(0.0d);
             }
@@ -396,23 +411,11 @@ public class DuelQueue {
                         .addPlaceholderReplace("%WINNER%", winner.getName())
                         .addPlaceholderReplace("%LOSER%", playerA.getName())
                         .addPlaceholderReplace("%ARENA%", arena.getName())
-                        .broadcastMessage(sendTo, false, "");
+                        .broadcastMessage(sendTo, true, "");
             }
         }
 
-        // Reset arena and reset players
-        arena.gameEnd();
-        pm.setState(BattleState.IDLE, playerA, winner);
-
         for (Player player : isSelectingArena)
             showFreeArenaSelection(player, true);
-    }
-
-    private boolean hasRequestedDuelWith(Player requested, Player with) {
-        Player wasRequested = pm.getFirstPartner(requested);
-        return pm.isInQueue(requested)
-                && wasRequested != null
-                && wasRequested.equals(with)
-                && !pm.isNotIdle(with);
     }
 }
