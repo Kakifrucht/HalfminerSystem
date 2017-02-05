@@ -160,7 +160,7 @@ public class DuelQueue {
             return;
         }
 
-        if (pm.isNotIdle(sendTo)) {
+        if (pm.isNotIdle(sendTo) && !pm.hasQueueCooldown(sendTo)) {
             MessageBuilder.create(hmb, "modeDuelRequesteeNotAvailable", HalfminerBattle.PREFIX)
                     .addPlaceholderReplace("%PLAYER%", sendTo.getName())
                     .sendMessage(sender);
@@ -196,20 +196,22 @@ public class DuelQueue {
 
         if (partner != null) {
 
-            isSelectingArena.remove(partner);
-            if (hasRequestedDuelWith(toRemove, partner)) {
+            Player partnerOfPartner = pm.getFirstPartner(partner);
+
+            if (toRemove.equals(partnerOfPartner)) {
+                MessageBuilder.create(hmb, "modeGlobalLeftQueue", HalfminerBattle.PREFIX).sendMessage(toRemove);
+                MessageBuilder.create(hmb, "modeDuelQueueRemovedNotTheCause", HalfminerBattle.PREFIX)
+                        .addPlaceholderReplace("%PLAYER%", toRemove.getName())
+                        .sendMessage(partner);
+                pm.setState(BattleState.IDLE, partner);
+                isSelectingArena.remove(partner);
+            } else {
                 MessageBuilder.create(hmb, "modeDuelRequestCancel", HalfminerBattle.PREFIX).sendMessage(toRemove);
                 if (partner.isOnline()) {
                     MessageBuilder.create(hmb, "modeDuelRequestCancelled", HalfminerBattle.PREFIX)
                             .addPlaceholderReplace("%PLAYER%", toRemove.getName())
                             .sendMessage(partner);
                 }
-            } else {
-                MessageBuilder.create(hmb, "modeGlobalLeftQueue", HalfminerBattle.PREFIX).sendMessage(toRemove);
-                MessageBuilder.create(hmb, "modeDuelQueueRemovedNotTheCause", HalfminerBattle.PREFIX)
-                        .addPlaceholderReplace("%PLAYER%", toRemove.getName())
-                        .sendMessage(partner);
-                pm.setState(BattleState.IDLE, partner);
             }
 
         } else {
@@ -239,7 +241,6 @@ public class DuelQueue {
 
         pm.setBattlePartners(playerA, playerB);
         pm.setBattlePartners(playerB, playerA);
-        pm.setState(BattleState.IN_QUEUE, playerA, playerB);
         pm.addToQueue(MODE, playerA, playerB);
         MessageBuilder titleMessage = MessageBuilder.create(hmb, "modeDuelShowPartnerTitle")
                 .addPlaceholderReplace("%PLAYER%", playerB.getName());

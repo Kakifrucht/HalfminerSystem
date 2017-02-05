@@ -28,7 +28,7 @@ public class GlobalMode extends AbstractMode {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPvPUncancel(EntityDamageByEntityEvent e) {
-        // Allow Faction members to duel
+        // Allow Faction members to fight
         if (e.isCancelled()
                 && e.getEntity() instanceof Player
                 && pm.isInBattle((Player) e.getEntity()))
