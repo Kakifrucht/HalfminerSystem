@@ -93,6 +93,16 @@ public abstract class AbstractArena implements Arena {
         Collections.addAll(playersInArena, players);
     }
 
+    protected void teleportIntoArena(Player... toTeleport) {
+
+        int spawnNumber = 0;
+        for (Player player : parameterToList(toTeleport)) {
+            if (!player.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)))) {
+                hmb.getLogger().warning("Player " + player.getName() + " could not be teleported into the arena");
+            }
+        }
+    }
+
     protected void healPlayers(Player... players) {
         for (Player toHeal : parameterToList(players)) {
             toHeal.setHealth(20.0d);

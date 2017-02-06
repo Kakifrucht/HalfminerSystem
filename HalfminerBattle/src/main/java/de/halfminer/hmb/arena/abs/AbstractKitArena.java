@@ -45,14 +45,6 @@ public abstract class AbstractKitArena extends AbstractArena {
         teleportIntoArena(reset.toArray(new Player[reset.size()]));
     }
 
-    protected void teleportIntoArena(Player... toTeleport) {
-
-        int spawnNumber = 0;
-        for (Player player : parameterToList(toTeleport)) {
-            player.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)));
-        }
-    }
-
     protected void equipPlayers(Player... toEquip) {
 
         for (Player equip : parameterToList(toEquip)) {

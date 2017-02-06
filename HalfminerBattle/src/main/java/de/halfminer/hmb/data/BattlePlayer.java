@@ -5,6 +5,7 @@ import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.GlobalMode;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -126,7 +127,7 @@ class BattlePlayer {
             player.closeInventory();
             inventory = player.getInventory().getContents();
 
-            health = player.getHealth();
+            health = Math.min(20.0d, player.getHealth());
             foodLevel = player.getFoodLevel();
             foodSaturation = player.getSaturation();
             foodExhaustion = player.getExhaustion();
@@ -152,18 +153,27 @@ class BattlePlayer {
 
         private void restore() {
 
-            player.setHealth(health);
-            player.setFoodLevel(foodLevel);
-            player.setSaturation(foodSaturation);
-            player.setExhaustion(foodExhaustion);
-            player.setFireTicks(0);
-            for (PotionEffect effect : player.getActivePotionEffects())
-                player.removePotionEffect(effect.getType());
+            try {
+                player.setHealth(health);
+                player.setFoodLevel(foodLevel);
+                player.setSaturation(foodSaturation);
+                player.setExhaustion(foodExhaustion);
+                player.setFireTicks(0);
+                for (PotionEffect effect : player.getActivePotionEffects())
+                    player.removePotionEffect(effect.getType());
+            } catch (Exception e) {
+                hmb.getLogger().warning("Player " + player.getName()
+                        + " could not be healed properly, see stacktrace for information");
+                e.printStackTrace();
+            }
 
             player.closeInventory();
             player.getInventory().setContents(inventory);
             player.updateInventory();
-            player.teleport(loc);
+            if (!player.teleport(loc)) {
+                hmb.getLogger().warning("Player " + player.getName()
+                        + " could not be teleported to his original location at " + Utils.getStringFromLocation(loc));
+            }
             player.setWalkSpeed(0.2F);
         }
     }
