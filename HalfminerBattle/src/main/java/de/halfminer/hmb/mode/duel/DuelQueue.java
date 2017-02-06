@@ -36,8 +36,6 @@ public class DuelQueue {
     private static final PlayerManager pm = hmb.getPlayerManager();
     private static final ArenaManager am = hmb.getArenaManager();
 
-    private static final HanTitles titles = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);
-
     private final DuelMode duelMode;
     private final List<Player> isSelectingArena = new LinkedList<>();
     private Player waitingForMatch = null;
@@ -253,10 +251,13 @@ public class DuelQueue {
         pm.setBattlePartners(playerA, playerB);
         pm.setBattlePartners(playerB, playerA);
         pm.addToQueue(MODE, playerA, playerB);
+
+        // send title containing name of duel partner
+        HanTitles titleHandler = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);
         MessageBuilder titleMessage = MessageBuilder.create(hmb, "modeDuelShowPartnerTitle")
                 .addPlaceholderReplace("%PLAYER%", playerB.getName());
-        titles.sendTitle(playerA, titleMessage.returnMessage());
-        titles.sendTitle(playerB, titleMessage.addPlaceholderReplace("%PLAYER%", playerA.getName()).returnMessage());
+        titleHandler.sendTitle(playerA, titleMessage.returnMessage());
+        titleHandler.sendTitle(playerB, titleMessage.addPlaceholderReplace("%PLAYER%", playerA.getName()).returnMessage());
 
         isSelectingArena.add(playerA);
         showFreeArenaSelection(playerA, false);
@@ -360,8 +361,7 @@ public class DuelQueue {
         selectedArena.gameStart(player, playerB);
 
         // Update selection for players who are currently selecting
-        for (Player playerSelecting : isSelectingArena)
-            showFreeArenaSelection(playerSelecting, true);
+        isSelectingArena.forEach(p -> showFreeArenaSelection(p, true));
         return true;
     }
 
@@ -415,7 +415,6 @@ public class DuelQueue {
             }
         }
 
-        for (Player player : isSelectingArena)
-            showFreeArenaSelection(player, true);
+        isSelectingArena.forEach(p -> showFreeArenaSelection(p, true));
     }
 }

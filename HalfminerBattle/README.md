@@ -5,7 +5,7 @@ Current features
 -------
 - Full battle arena solution allowing easy addition of new arena game modes
 - Seamless integration into existing Survival PvP worlds
-- Localization configurable
+- Localization configurable, commands are clickable
 - **Gamemodes**
   - Global functionality
     - Endless amount of arenas
@@ -20,7 +20,7 @@ Current features
       - Command usage
   - Duel mode
     - Robust queue system
-      - Not using a per arena queue, if all arenas are in use the next pair will be added automatically
+      - Not using a per arena queue, if all arenas are in use, the next duel pair will be added automatically once it becomes free
       - Kicks player from queue 
         - on disconnect
         - when engaging in PvP outside of arena

@@ -38,7 +38,7 @@ localization:
   modeDuelChooseArenaRandom: 'In einer &lzufälligen &rArena spielen\n(Gegner erhält Benachrichtigung)'
   modeDuelChooseArenaInvalid: '&cUngültige Auswahl, bitte versuche es erneut'
   modeDuelChooseArenaNoneAvailable: '&7Aktuell sind alle Arenen belegt, ihr werdet automatisch in die nächste freie Arena teleportiert'
-  modeDuelChooseArenaRefreshed: '&bDie Auswahl wurde aktualisiert: '
+  modeDuelChooseArenaRefreshed: '&7Die Auswahl wurde aktualisiert: '
   modeDuelCountdownStart: '&7Das Duell in der Arena &e%ARENA%&7 gegen &c%PLAYER%&7 startet in 5 Sekunden'
   modeDuelGameLost: '&cDu hast das Duell gegen &e%PLAYER%&c verloren'
   modeDuelGameStarting: '&aDer Kampf beginnt!'

@@ -27,10 +27,6 @@ public class DuelArena extends AbstractKitArena {
 
     public void gameStart(Player playerA, Player playerB) {
 
-        if (!isFree())
-            throw new RuntimeException("Arena " + this.getName()
-                    + " currently not free while trying to start duel between " + playerA + " and " + playerB);
-
         addPlayers(playerA, playerB);
         storeAndClearPlayers();
         healPlayers();
