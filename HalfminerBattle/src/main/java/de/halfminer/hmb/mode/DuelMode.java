@@ -32,18 +32,6 @@ public class DuelMode extends AbstractMode {
         return queue;
     }
 
-    public boolean doWinBroadcast() {
-        return broadcastWin;
-    }
-
-    public int getWaitingForMatchRemind() {
-        return waitingForMatchRemind;
-    }
-
-    public int getDuelTime() {
-        return duelTime;
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, String[] args) {
 
@@ -88,7 +76,7 @@ public class DuelMode extends AbstractMode {
 
     private void sendArenaList(CommandSender sender) {
         MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(sender);
-        MessageBuilder.create(hmb, am.getStringFromArenaList(am.getArenasFromType(MODE)))
+        MessageBuilder.create(hmb, am.getStringFromGameMode(MODE))
                 .setMode(MessageBuilder.Mode.DIRECT_STRING)
                 .sendMessage(sender);
     }
@@ -124,6 +112,18 @@ public class DuelMode extends AbstractMode {
             hmb.getConfig().set("gameMode.duel.gameTime", 20);
             hmb.saveConfig();
         }
+    }
+
+    public boolean doWinBroadcast() {
+        return broadcastWin;
+    }
+
+    public int getWaitingForMatchRemind() {
+        return waitingForMatchRemind;
+    }
+
+    public int getDuelTime() {
+        return duelTime;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

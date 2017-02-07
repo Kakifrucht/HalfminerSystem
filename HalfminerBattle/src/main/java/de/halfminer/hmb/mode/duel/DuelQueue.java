@@ -109,16 +109,6 @@ public class DuelQueue {
      */
     public void requestSend(Player sender, Player sendTo) {
 
-        if (pm.hasQueueCooldown(sender)) {
-            MessageBuilder.create(hmb, "modeGlobalQueueCooldown", HalfminerBattle.PREFIX).sendMessage(sender);
-            return;
-        }
-
-        if (pm.isNotIdle(sender)) {
-            MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
-            return;
-        }
-
         if (sender.equals(sendTo)) {
             MessageBuilder.create(hmb, "modeDuelRequestYourself", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
@@ -133,6 +123,16 @@ public class DuelQueue {
             MessageBuilder.create(hmb, "modeDuelRequestExempt", HalfminerBattle.PREFIX)
                     .addPlaceholderReplace("%PLAYER%", sendTo.getName())
                     .sendMessage(sender);
+            return;
+        }
+
+        if (pm.hasQueueCooldown(sender)) {
+            MessageBuilder.create(hmb, "modeGlobalQueueCooldown", HalfminerBattle.PREFIX).sendMessage(sender);
+            return;
+        }
+
+        if (pm.isNotIdle(sender)) {
+            MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
 
@@ -356,9 +356,7 @@ public class DuelQueue {
                 .logMessage(Level.INFO);
 
         isSelectingArena.remove(player);
-        pm.setState(BattleState.IN_BATTLE, player, playerB);
-        pm.setArena(selectedArena, player, playerB);
-        selectedArena.gameStart(player, playerB);
+        selectedArena.gameStart(player, playerB, true);
 
         // Update selection for players who are currently selecting
         isSelectingArena.forEach(p -> showFreeArenaSelection(p, true));
@@ -380,10 +378,7 @@ public class DuelQueue {
 
         DuelArena arena = (DuelArena) pm.getArena(playerA);
         Player winner = pm.getFirstPartner(playerA);
-
-        // Reset arena and reset players
         arena.gameEnd();
-        pm.setState(BattleState.IDLE, playerA, winner);
 
         // Messaging
         MessageBuilder.create(hmb, hasWinner ? "modeDuelGameWon" : "modeDuelGameTime", HalfminerBattle.PREFIX)
@@ -413,6 +408,12 @@ public class DuelQueue {
                         .addPlaceholderReplace("%ARENA%", arena.getName())
                         .broadcastMessage(sendTo, true, "");
             }
+        } else {
+            MessageBuilder.create(hmb, "modeDuelTieLog")
+                    .addPlaceholderReplace("%PLAYERA%", winner.getName())
+                    .addPlaceholderReplace("%PLAYERB%", playerA.getName())
+                    .addPlaceholderReplace("%ARENA%", arena.getName())
+                    .logMessage(Level.INFO);
         }
 
         isSelectingArena.forEach(p -> showFreeArenaSelection(p, true));

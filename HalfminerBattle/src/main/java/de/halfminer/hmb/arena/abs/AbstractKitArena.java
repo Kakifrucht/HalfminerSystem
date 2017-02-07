@@ -34,15 +34,9 @@ public abstract class AbstractKitArena extends AbstractArena {
         kit = am.getKit(gameMode, getName());
     }
 
-    protected void storeAndClearPlayers(Player... toClear) {
-
-        List<Player> reset = parameterToList(toClear);
-
-        for (Player clear : reset) {
-            pm.storePlayerData(clear);
-            clear.getInventory().clear();
-        }
-        teleportIntoArena(reset.toArray(new Player[reset.size()]));
+    protected void storeClearAndTeleportPlayers(Player... players) {
+        storeAndTeleportPlayers(players);
+        parameterToList(players).forEach(p -> p.getInventory().clear());
     }
 
     protected void equipPlayers(Player... toEquip) {
@@ -50,13 +44,6 @@ public abstract class AbstractKitArena extends AbstractArena {
         for (Player equip : parameterToList(toEquip)) {
             PlayerInventory inv = equip.getInventory();
             inv.setContents(addPlayerInfo(equip, kit));
-        }
-    }
-
-    protected void restorePlayers(Player... toReset) {
-
-        for (Player resetPlayer : parameterToList(toReset)) {
-            pm.restorePlayer(resetPlayer);
         }
     }
 

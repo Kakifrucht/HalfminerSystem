@@ -62,6 +62,7 @@ localization:
   modeDuelShowHelp: '~&7Faire Duelle mit gleicher Ausrüstung in Arenen\n &e/&eduel <Spielername> - &7&oDuellanfrage schicken\n &a/duel match/ - &7&oDuellpartner finden\n &a/duel leave/ - &7&oWarteschlange verlassen\n &a/duel list/ - &7&oArenaliste anzeigen'
   modeDuelShowPartnerTitle: ' \n&fDuellpartner: &6&l%PLAYER%'
   modeDuelStartingLog: 'Duell startet zwischen %PLAYERA% und %PLAYERB% in Arena %ARENA%'
+  modeDuelTieLog: 'Das Duell in Arena %ARENA% zwischen %PLAYERA% und %PLAYERB% ist unentschieden ausgegangen'
   modeDuelTimeRunningOut: '&cDas Duell wird in 5 Sekunden abgebrochen'
   modeDuelTitleCountdown: 'Duell startet in...\n&e&l%TIME% &rSekunden'
   modeDuelTitleStart: ' \n&6&lStart!'

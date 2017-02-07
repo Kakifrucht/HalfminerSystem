@@ -7,12 +7,14 @@ import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +24,7 @@ import java.util.UUID;
  */
 class BattlePlayer {
 
+    private static final HalfminerBattle hmb = HalfminerBattle.getInstance();
     private final UUID baseUUID;
 
     private BattleState state = BattleState.IDLE;
@@ -51,12 +54,16 @@ class BattlePlayer {
     }
 
     void setState(BattleState state) {
+        setState(state, null);
+    }
+
+    void setState(BattleState state, GameModeType gameMode) {
         this.state = state;
+        this.gameMode = gameMode;
         this.lastStateChange = System.currentTimeMillis();
 
         if (state.equals(BattleState.IDLE) || state.equals(BattleState.QUEUE_COOLDOWN)) {
 
-            gameMode = null;
             // remove partners if idling or in queue cooldown
             if (gamePartners != null) {
 
@@ -71,16 +78,67 @@ class BattlePlayer {
         }
     }
 
-    void setGameMode(GameModeType type) {
-        this.gameMode = type;
-    }
-
     void storeData() {
-        data = new PlayerData(getBase());
+        data = new PlayerData();
     }
 
-    void restorePlayer() {
-        if (data != null) data.restorePlayer();
+    void restorePlayer(boolean restoreInventory) {
+
+        Player player = getBase();
+        if (data == null)
+            throw new RuntimeException("Could not restore player " + player.getName() + " as data was not set");
+
+        if (player.isDead() && player.isOnline()) {
+            try {
+                Bukkit.getScheduler().runTaskLater(hmb, () -> {
+                    player.spigot().respawn();
+                    restore(player, restoreInventory);
+                }, 2L);
+            } catch (IllegalPluginAccessException e) {
+                // exception is thrown when trying to respawn dead player while shutting down
+                restore(player, restoreInventory);
+            }
+        } else {
+            restore(player, restoreInventory);
+        }
+    }
+
+    private void restore(Player player, boolean restoreInventory) {
+
+        try {
+            player.setHealth(data.health);
+            player.setFoodLevel(data.foodLevel);
+            player.setSaturation(data.foodSaturation);
+            player.setExhaustion(data.foodExhaustion);
+            player.setFireTicks(0);
+            for (PotionEffect effect : player.getActivePotionEffects())
+                player.removePotionEffect(effect.getType());
+            player.addPotionEffects(data.potionEffects);
+        } catch (Exception e) {
+            hmb.getLogger().warning("Player " + player.getName()
+                    + " could not be healed properly, see stacktrace for information");
+            e.printStackTrace();
+        }
+
+        player.setWalkSpeed(data.walkSpeed);
+        player.setGameMode(data.minecraftGamemode);
+
+        if (restoreInventory) restoreInventory();
+
+        if (!player.teleport(data.loc)) {
+            hmb.getLogger().warning("Player " + player.getName()
+                    + " could not be teleported to his original location at " + Utils.getStringFromLocation(data.loc));
+        }
+        data = null;
+    }
+
+    void restoreInventory() {
+        if (data != null) {
+            Player player = getBase();
+            player.closeInventory();
+            player.getInventory().setContents(data.inventory);
+            player.updateInventory();
+        }
     }
 
     void setBattlePartners(List<BattlePlayer> players) {
@@ -93,6 +151,7 @@ class BattlePlayer {
 
     void setArena(Arena arena) {
         this.arena = arena;
+        this.gameMode = arena.getGameMode();
     }
 
     Arena getArena() {
@@ -105,10 +164,6 @@ class BattlePlayer {
 
     private class PlayerData {
 
-        private final HalfminerBattle hmb = HalfminerBattle.getInstance();
-
-        private final Player player;
-
         private final Location loc;
         private final ItemStack[] inventory;
 
@@ -116,10 +171,14 @@ class BattlePlayer {
         private final int foodLevel;
         private final float foodSaturation;
         private final float foodExhaustion;
+        private final Collection<PotionEffect> potionEffects;
 
-        PlayerData(Player player) {
+        private final GameMode minecraftGamemode;
+        private final float walkSpeed;
 
-            this.player = player;
+        PlayerData() {
+
+            Player player = getBase();
 
             player.leaveVehicle();
             loc = player.getLocation();
@@ -131,50 +190,10 @@ class BattlePlayer {
             foodLevel = player.getFoodLevel();
             foodSaturation = player.getSaturation();
             foodExhaustion = player.getExhaustion();
-        }
+            potionEffects = player.getActivePotionEffects();
 
-        void restorePlayer() {
-
-            if (player.isDead() && player.isOnline()) {
-                try {
-                    Bukkit.getScheduler().runTaskLater(hmb, () -> {
-                        player.spigot().respawn();
-                        restore();
-                    }, 2L);
-                } catch (IllegalPluginAccessException e) {
-                    // exception is thrown when trying to respawn dead player while shutting down
-                    restore();
-                }
-            } else {
-                restore();
-            }
-            data = null;
-        }
-
-        private void restore() {
-
-            try {
-                player.setHealth(health);
-                player.setFoodLevel(foodLevel);
-                player.setSaturation(foodSaturation);
-                player.setExhaustion(foodExhaustion);
-                player.setFireTicks(0);
-                for (PotionEffect effect : player.getActivePotionEffects())
-                    player.removePotionEffect(effect.getType());
-            } catch (Exception e) {
-                hmb.getLogger().warning("Player " + player.getName()
-                        + " could not be healed properly, see stacktrace for information");
-                e.printStackTrace();
-            }
-
-            player.closeInventory();
-            player.getInventory().setContents(inventory);
-            player.updateInventory();
-            if (!player.teleport(loc)) {
-                hmb.getLogger().warning("Player " + player.getName()
-                        + " could not be teleported to his original location at " + Utils.getStringFromLocation(loc));
-            }
-            player.setWalkSpeed(0.2F);
+            minecraftGamemode = player.getGameMode();
+            walkSpeed = player.getWalkSpeed();
         }
     }
 }

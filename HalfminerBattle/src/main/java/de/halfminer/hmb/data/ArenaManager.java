@@ -218,8 +218,9 @@ public class ArenaManager {
         return false;
     }
 
-    public String getStringFromArenaList(List<Arena> arenas) {
+    public String getStringFromGameMode(GameModeType modeType) {
 
+        List<Arena> arenas = getArenasFromType(modeType);
         if (arenas.isEmpty()) return "";
 
         StringBuilder sb = new StringBuilder();

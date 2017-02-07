@@ -5,6 +5,7 @@ import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.GlobalMode;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -103,7 +104,16 @@ public abstract class AbstractArena implements Arena {
         }
     }
 
-    protected void healPlayers(Player... players) {
+    protected void storeAndTeleportPlayers(Player... players) {
+        pm.storePlayerData(parameterToArray(players));
+        teleportIntoArena(players);
+    }
+
+    protected void restorePlayers(boolean restoreInventory, Player... players) {
+        pm.restorePlayers(restoreInventory, parameterToArray(players));
+    }
+
+    protected void healAndPreparePlayers(Player... players) {
         for (Player toHeal : parameterToList(players)) {
             toHeal.setHealth(20.0d);
             toHeal.setFoodLevel(20);
@@ -112,10 +122,15 @@ public abstract class AbstractArena implements Arena {
             toHeal.setFireTicks(0);
             for (PotionEffect effect : toHeal.getActivePotionEffects())
                 toHeal.removePotionEffect(effect.getType());
+            toHeal.setGameMode(GameMode.ADVENTURE);
         }
     }
 
     protected List<Player> parameterToList(Player... param) {
         return param != null && param.length > 0 ? Arrays.asList(param) : playersInArena;
+    }
+
+    protected Player[] parameterToArray(Player... param) {
+        return param != null && param.length > 0 ? param : playersInArena.toArray(new Player[playersInArena.size()]);
     }
 }

@@ -20,16 +20,23 @@ import org.bukkit.scheduler.BukkitTask;
 public class DuelArena extends AbstractKitArena {
 
     private BukkitTask task;
+    private boolean useKit;
+    private boolean restoreInventory;
 
     public DuelArena(String name) {
         super(GameModeType.DUEL, name);
     }
 
-    public void gameStart(Player playerA, Player playerB) {
+    public void gameStart(Player playerA, Player playerB, boolean useKit) {
 
+        pm.setArena(this, playerA, playerB);
         addPlayers(playerA, playerB);
-        storeAndClearPlayers();
-        healPlayers();
+        this.useKit = useKit;
+
+        storeClearAndTeleportPlayers();
+        healAndPreparePlayers();
+        // ensures that the players get their stuff back if duel is stopped during 5 seconds cooldown
+        restoreInventory = true;
         for (Player player : playersInArena) {
             player.setWalkSpeed(0.0f);
         }
@@ -63,8 +70,7 @@ public class DuelArena extends AbstractKitArena {
                     scheduler.runTask(hmb, () -> {
                         titles.sendTitle(playerA, toSend, 0, 21, 0);
                         titles.sendTitle(playerB, toSend, 0, 21, 0);
-                        playSound(playerA, Sound.BLOCK_NOTE_PLING);
-                        playSound(playerB, Sound.BLOCK_NOTE_PLING);
+                        playSound(Sound.BLOCK_NOTE_PLING);
                     });
                 }
 
@@ -73,6 +79,7 @@ public class DuelArena extends AbstractKitArena {
                     scheduler.runTask(hmb, () -> {
                         preparePlayer(playerA);
                         preparePlayer(playerB);
+                        playSound(Sound.BLOCK_ANVIL_LAND);
                         teleportIntoArena();
                     });
                 }
@@ -82,7 +89,7 @@ public class DuelArena extends AbstractKitArena {
                         MessageBuilder.create(hmb, "modeDuelTimeRunningOut", HalfminerBattle.PREFIX)
                                 .sendMessage(playerA, playerB);
                     }
-                    playSound(playerA, Sound.BLOCK_NOTE_PLING);
+                    playSound(Sound.BLOCK_NOTE_PLING);
                 }
 
                 if (timeLeft <= 0) {
@@ -95,8 +102,12 @@ public class DuelArena extends AbstractKitArena {
                 player.setWalkSpeed(0.2F);
                 MessageBuilder.create(hmb, "modeDuelGameStarting", HalfminerBattle.PREFIX).sendMessage(player);
                 titles.sendTitle(player, MessageBuilder.returnMessage(hmb, "modeDuelTitleStart"), 0, 30, 0);
-                playSound(player, Sound.BLOCK_ANVIL_LAND);
-                equipPlayers();
+
+                if (useKit) equipPlayers();
+                else {
+                    pm.restorePlayerInventory(player);
+                    restoreInventory = false;
+                }
             }
 
         }, 0L, 20L);
@@ -104,13 +115,13 @@ public class DuelArena extends AbstractKitArena {
 
     public void gameEnd() {
         task.cancel();
-        restorePlayers();
-        playersInArena.forEach(p -> playSound(p, Sound.BLOCK_ANVIL_LAND));
+        restorePlayers(useKit || restoreInventory);
+        playSound(Sound.BLOCK_ANVIL_LAND);
         playersInArena.clear();
     }
 
-    private void playSound(Player player, Sound toPlay) {
-        player.playSound(player.getLocation(), toPlay, 1.0f, 1.6f);
+    private void playSound(Sound toPlay) {
+        playersInArena.forEach(p -> p.playSound(p.getLocation(), toPlay, 1.0f, 1.6f));
     }
 
     @Override

@@ -26,53 +26,6 @@ public class GlobalMode extends AbstractMode {
     private int queueCooldownSeconds;
     private double teleportSpawnDistance;
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPvPUncancel(EntityDamageByEntityEvent e) {
-        // Allow Faction members to fight
-        if (e.isCancelled()
-                && e.getEntity() instanceof Player
-                && pm.isInBattle((Player) e.getEntity()))
-            e.setCancelled(false);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void disableCommandDuringFight(PlayerCommandPreprocessEvent e) {
-
-        if (pm.isInBattle(e.getPlayer()) && !e.getPlayer().hasPermission("hmb.admin")) {
-            MessageBuilder.create(hmb, "modeGlobalInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void eatDecayDisable(FoodLevelChangeEvent e) {
-
-        if (noHungerLossInBattle && e.getEntity() instanceof Player
-                && pm.isInBattle((Player) e.getEntity())) {
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void itemDropDisable(PlayerDropItemEvent e) {
-        if (pm.isInBattle(e.getPlayer())) e.setCancelled(true);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void itemPickupDisable(PlayerPickupItemEvent e) {
-        if (pm.isInBattle(e.getPlayer())) e.setCancelled(true);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void teleportDisable(PlayerTeleportEvent e) {
-        if (!pm.isInBattle(e.getPlayer())
-                && !e.getPlayer().hasPermission("hmb.global.bypass.teleportintoarena")
-                && am.isArenaSpawn(e.getTo())) {
-            MessageBuilder.create(hmb, "modeGlobalTeleportIntoArenaDenied", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
-            e.setCancelled(true);
-        }
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, String[] args) {
         return false;
@@ -173,14 +126,6 @@ public class GlobalMode extends AbstractMode {
         MessageBuilder.create(hmb, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sendTo);
     }
 
-    public int getQueueCooldownSeconds() {
-        return queueCooldownSeconds;
-    }
-
-    public double getTeleportSpawnDistance() {
-        return teleportSpawnDistance;
-    }
-
     @Override
     public void onPluginDisable() {}
 
@@ -189,5 +134,60 @@ public class GlobalMode extends AbstractMode {
         noHungerLossInBattle = hmb.getConfig().getBoolean("gameMode.global.noHungerLoss", true);
         queueCooldownSeconds = hmb.getConfig().getInt("gameMode.global.queueCooldownTimeSeconds", 15);
         teleportSpawnDistance = hmb.getConfig().getDouble("gameMode.global.teleportSpawnDistance", 10.0d);
+    }
+
+    public int getQueueCooldownSeconds() {
+        return queueCooldownSeconds;
+    }
+
+    public double getTeleportSpawnDistance() {
+        return teleportSpawnDistance;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPvPUncancel(EntityDamageByEntityEvent e) {
+        // Allow Faction members to fight
+        if (e.isCancelled()
+                && e.getEntity() instanceof Player
+                && pm.isInBattle((Player) e.getEntity()))
+            e.setCancelled(false);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void disableCommandDuringFight(PlayerCommandPreprocessEvent e) {
+
+        if (pm.isInBattle(e.getPlayer()) && !e.getPlayer().hasPermission("hmb.admin")) {
+            MessageBuilder.create(hmb, "modeGlobalInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void eatDecayDisable(FoodLevelChangeEvent e) {
+
+        if (noHungerLossInBattle && e.getEntity() instanceof Player
+                && pm.isInBattle((Player) e.getEntity())) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void itemDropDisable(PlayerDropItemEvent e) {
+        e.setCancelled(pm.isInBattle(e.getPlayer()));
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void itemPickupDisable(PlayerPickupItemEvent e) {
+        e.setCancelled(pm.isInBattle(e.getPlayer()));
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void teleportDisable(PlayerTeleportEvent e) {
+        if (!pm.isInBattle(e.getPlayer())
+                && !e.getPlayer().hasPermission("hmb.global.bypass.teleportintoarena")
+                && am.isArenaSpawn(e.getTo())) {
+            MessageBuilder.create(hmb, "modeGlobalTeleportIntoArenaDenied", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
+            e.setCancelled(true);
+        }
     }
 }
