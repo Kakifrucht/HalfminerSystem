@@ -6,6 +6,7 @@ import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Global game mode, functionality shared by all other {@link de.halfminer.hmb.mode.abs.GameMode}
@@ -25,6 +31,7 @@ public class GlobalMode extends AbstractMode {
 
     private boolean noHungerLossInBattle;
     private int queueCooldownSeconds;
+    private boolean saveInventoryToDisk;
     private double teleportSpawnDistance;
 
     @Override
@@ -40,6 +47,44 @@ public class GlobalMode extends AbstractMode {
             boolean success = hmb.saveAndReloadConfig();
             MessageBuilder.create(hmb, success ? "adminSettingsReloaded" : "adminSettingsReloadedError", HalfminerBattle.PREFIX)
                     .sendMessage(sender);
+        } else if (args[0].equalsIgnoreCase("openinventory")) {
+
+            if (!(sender instanceof Player)) {
+                sendNotAPlayerMessage(sender);
+                return true;
+            }
+
+            Player player = (Player) sender;
+            if (args.length < 2) {
+                sendUsageInformation(sender);
+                return true;
+            }
+
+            String fileName = args[1];
+            if (!fileName.endsWith(".yml")) {
+                fileName += ".yml";
+            }
+
+            File fileToOpen = new File(hmb.getDataFolder() + File.separator + "inventories", fileName);
+            if (fileToOpen.exists()) {
+                Inventory inventory = hmb.getServer().createInventory(player, 45);
+                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(fileToOpen);
+                List<?> items = yaml.getList("inventory");
+                if (items != null) {
+                    for (int i = 0; i < 45 && i < items.size(); i++) {
+                        Object item = items.get(i);
+                        if (item instanceof ItemStack) {
+                            inventory.setItem(i, (ItemStack) item);
+                        }
+                    }
+                    player.openInventory(inventory);
+                } else {
+                    MessageBuilder.create(hmb, "adminOpenInventoryInvalid", HalfminerBattle.PREFIX).sendMessage(sender);
+                }
+            } else {
+                MessageBuilder.create(hmb, "adminOpenInventoryUnknownFile", HalfminerBattle.PREFIX).sendMessage(sender);
+            }
+
         } else {
 
             // disregard if called via global custom gamemode /hmb glo(balmode)
@@ -134,11 +179,16 @@ public class GlobalMode extends AbstractMode {
     public void onConfigReload() {
         noHungerLossInBattle = hmb.getConfig().getBoolean("gameMode.global.noHungerLoss", true);
         queueCooldownSeconds = hmb.getConfig().getInt("gameMode.global.queueCooldownTimeSeconds", 15);
+        saveInventoryToDisk = hmb.getConfig().getBoolean("gameMode.global.saveInventoryToDisk", false);
         teleportSpawnDistance = hmb.getConfig().getDouble("gameMode.global.teleportSpawnDistance", 10.0d);
     }
 
     public int getQueueCooldownSeconds() {
         return queueCooldownSeconds;
+    }
+
+    public boolean isSaveInventoryToDisk() {
+        return saveInventoryToDisk;
     }
 
     public double getTeleportSpawnDistance() {

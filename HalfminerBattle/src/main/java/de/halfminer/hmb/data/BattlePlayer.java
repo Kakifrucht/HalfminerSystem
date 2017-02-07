@@ -9,11 +9,14 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.potion.PotionEffect;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -185,6 +188,31 @@ class BattlePlayer {
 
             player.closeInventory();
             inventory = player.getInventory().getContents();
+
+            if (((GlobalMode) hmb.getGameMode(GameModeType.GLOBAL)).isSaveInventoryToDisk()) {
+
+                String fileName = player.getName() + String.valueOf(System.currentTimeMillis() / 1000) + ".yml";
+
+                File path = new File(hmb.getDataFolder() + File.separator + "inventories");
+                boolean pathExists = path.exists();
+                if (!pathExists) {
+                    pathExists = path.mkdir();
+                }
+
+                if (pathExists) {
+                    File file = new File(path, fileName);
+                    try {
+                        if (file.createNewFile()) {
+                            YamlConfiguration configFile = new YamlConfiguration();
+                            configFile.set("inventory", inventory);
+                            configFile.save(file);
+                        }
+                    } catch (IOException e) {
+                        hmb.getLogger().warning("Could not write inventory to disk with filename " + fileName);
+                        e.printStackTrace();
+                    }
+                } else hmb.getLogger().warning("Could not create sub folder in plugin directory");
+            }
 
             health = Math.min(20.0d, player.getHealth());
             foodLevel = player.getFoodLevel();
