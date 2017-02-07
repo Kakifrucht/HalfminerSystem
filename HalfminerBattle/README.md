@@ -11,8 +11,9 @@ Current features
     - Endless amount of arenas
     - Custom kits per arena, if gamemode wants to support kits
       - Adds lore to kits to easily identify ones that were possibly extracted from a badly secured arena
-    - Recovers players completely after fight (position, health/status, inventory)
-    - Enables fights even if damage was cancelled, for example due to fighting a clan member
+    - Recovers players completely after fight (position, health/status, inventory if kit was used, potion effects)
+      - Sets gamemode to adventure during fight
+    - Allows hitting even if damage was cancelled, for example due to fighting a clan member
     - Prevents teleporting into arenas via tp delay glitches (Essentials /tpa) if not fighting
     - Disables while fighting:
       - Hunger loss in duel (optional)

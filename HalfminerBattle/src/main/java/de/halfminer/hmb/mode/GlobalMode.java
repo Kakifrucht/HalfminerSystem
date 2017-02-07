@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -142,6 +143,13 @@ public class GlobalMode extends AbstractMode {
 
     public double getTeleportSpawnDistance() {
         return teleportSpawnDistance;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onDeathKeepInventory(PlayerDeathEvent e) {
+        if (pm.isInBattle(e.getEntity())) {
+            e.setKeepInventory(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
