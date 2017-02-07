@@ -6,7 +6,7 @@ gameMode:
     #Time in seconds the queue cooldown will take
     queueCooldownTimeSeconds: 15
     #Save players inventories to disk before battle, to ensure absolutely no data loss
-    saveInventoryToDisk: false
+    saveInventoryToDisk: true
     #Amount of hours after stored inventories should be deleted (async worker called in 1 hour intervals)
     #saveInventoryToDisk must be true, 0 to disable
     saveInventoryToDiskCleanupAfterHours: 24

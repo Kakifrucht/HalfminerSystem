@@ -183,7 +183,7 @@ public class GlobalMode extends AbstractMode {
         noHungerLossInBattle = hmb.getConfig().getBoolean("gameMode.global.noHungerLoss", true);
         queueCooldownSeconds = hmb.getConfig().getInt("gameMode.global.queueCooldownTimeSeconds", 15);
 
-        saveInventoryToDisk = hmb.getConfig().getBoolean("gameMode.global.saveInventoryToDisk", false);
+        saveInventoryToDisk = hmb.getConfig().getBoolean("gameMode.global.saveInventoryToDisk", true);
 
         if (cleanupTask != null) {
             cleanupTask.cancel();
@@ -201,8 +201,10 @@ public class GlobalMode extends AbstractMode {
                 long removeIfBefore = (System.currentTimeMillis() / 1000) - cleanupAfter * 60 * 60;
                 for (File file : files) {
                     String name = file.getName();
+                    int indexOf = name.indexOf('-');
+                    if (indexOf < 1) continue;
                     try {
-                        long timestamp = Long.parseLong(name.substring(0, name.indexOf('-')));
+                        long timestamp = Long.parseLong(name.substring(0, indexOf));
                         if (removeIfBefore > timestamp) {
                             if (!file.delete()) {
                                 hmb.getLogger().warning("Could not delete file " + name);
@@ -212,7 +214,7 @@ public class GlobalMode extends AbstractMode {
                         hmb.getLogger().warning("Invalid file, could not delete " + name);
                     }
                 }
-            }, 0L, 720L);
+            }, 0L, 72000L);
         }
 
         teleportSpawnDistance = hmb.getConfig().getDouble("gameMode.global.teleportSpawnDistance", 10.0d);
