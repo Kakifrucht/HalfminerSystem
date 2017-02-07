@@ -22,9 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -37,6 +35,7 @@ public class DuelQueue {
     private static final ArenaManager am = hmb.getArenaManager();
 
     private final DuelMode duelMode;
+    private final Set<Player> hasRequestedNokit = new HashSet<>();
     private final List<Player> isSelectingArena = new LinkedList<>();
     private Player waitingForMatch = null;
     private BukkitTask waitingForMatchTask;
@@ -107,7 +106,7 @@ public class DuelQueue {
      * @param sender player that used command /duel playername
      * @param sendTo player that the request is being sent to or whose duel invitation is being accepted
      */
-    public void requestSend(Player sender, Player sendTo) {
+    public void requestSend(Player sender, Player sendTo, boolean useKit) {
 
         if (sender.equals(sendTo)) {
             MessageBuilder.create(hmb, "modeDuelRequestYourself", HalfminerBattle.PREFIX).sendMessage(sender);
@@ -137,7 +136,7 @@ public class DuelQueue {
         }
 
         // Requestee is waiting for match
-        if (sendTo.equals(waitingForMatch)) {
+        if (sendTo.equals(waitingForMatch) && useKit) {
             MessageBuilder.create(hmb, "modeDuelRequestWasWaitingForMatch", HalfminerBattle.PREFIX)
                     .addPlaceholderReplace("%PLAYER%", sendTo.getName())
                     .sendMessage(sender);
@@ -148,6 +147,12 @@ public class DuelQueue {
 
         // Requestee sent a request already, match if requestee sent the request before
         if (hasRequestedDuelWith(sendTo, sender)) {
+            if (hasRequestedNokit.contains(sendTo) == useKit) {
+                MessageBuilder.create(hmb, useKit ? "modeDuelRequestAcceptErrorNokit" : "modeDuelRequestAcceptError", HalfminerBattle.PREFIX)
+                        .addPlaceholderReplace("%PLAYER%", sendTo.getName())
+                        .sendMessage(sender);
+                return;
+            }
             MessageBuilder.create(hmb, "modeDuelRequestAccepted", HalfminerBattle.PREFIX)
                     .addPlaceholderReplace("%PLAYER%", sendTo.getName())
                     .sendMessage(sender);
@@ -166,12 +171,17 @@ public class DuelQueue {
         }
 
         // if none apply create a new request
-        MessageBuilder.create(hmb, "modeDuelRequestSent", HalfminerBattle.PREFIX)
+        MessageBuilder.create(hmb, useKit ? "modeDuelRequestSent" : "modeDuelRequestSentNokit", HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%PLAYER%", sendTo.getName())
                 .sendMessage(sender);
-        MessageBuilder.create(hmb, "modeDuelRequest", HalfminerBattle.PREFIX)
+        MessageBuilder.create(hmb, useKit ? "modeDuelRequested" : "modeDuelRequestedNokit", HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%PLAYER%", sender.getName())
                 .sendMessage(sendTo);
+
+        if (!useKit) {
+            hasRequestedNokit.add(sender);
+        }
+
         pm.setBattlePartners(sender, sendTo);
         pm.addToQueue(MODE, sender);
     }
@@ -214,6 +224,7 @@ public class DuelQueue {
                         .sendMessage(partner);
                 pm.setState(BattleState.IDLE, partner);
                 isSelectingArena.remove(partner);
+                hasRequestedNokit.remove(partner);
             } else {
                 MessageBuilder.create(hmb, "modeDuelRequestCancel", HalfminerBattle.PREFIX).sendMessage(toRemove);
                 if (partner.isOnline()) {
@@ -230,6 +241,7 @@ public class DuelQueue {
 
         pm.setState(BattleState.QUEUE_COOLDOWN, toRemove);
         isSelectingArena.remove(toRemove);
+        hasRequestedNokit.remove(toRemove);
     }
 
     /**
@@ -349,14 +361,25 @@ public class DuelQueue {
             return true;
         }
 
-        MessageBuilder.create(hmb, "modeDuelStartingLog")
+        boolean useKit = !hasRequestedNokit.contains(player) && !hasRequestedNokit.contains(playerB);
+        selectedArena.gameStart(player, playerB, useKit);
+
+        MessageBuilder messageBuilder = MessageBuilder.create(hmb,
+                useKit ? "modeDuelCountdownStart" : "modeDuelCountdownStartNokit", HalfminerBattle.PREFIX)
+                .addPlaceholderReplace("%PLAYER%", playerB.getName())
+                .addPlaceholderReplace("%ARENA%", selectedArena.getName());
+
+        messageBuilder.sendMessage(player);
+        messageBuilder.addPlaceholderReplace("%PLAYER%", player.getName()).sendMessage(playerB);
+
+        MessageBuilder.create(hmb, useKit ? "modeDuelStartingLog" : "modeDuelStartingLogNokit")
                 .addPlaceholderReplace("%PLAYERA%", player.getName())
                 .addPlaceholderReplace("%PLAYERB%", playerB.getName())
                 .addPlaceholderReplace("%ARENA%", selectedArena.getName())
                 .logMessage(Level.INFO);
 
         isSelectingArena.remove(player);
-        selectedArena.gameStart(player, playerB, true);
+        hasRequestedNokit.removeAll(Arrays.asList(player, playerB));
 
         // Update selection for players who are currently selecting
         isSelectingArena.forEach(p -> showFreeArenaSelection(p, true));

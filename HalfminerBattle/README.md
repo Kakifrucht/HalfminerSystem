@@ -32,6 +32,7 @@ Current features
         - when entering a bed, since else teleportation is not possible
       - Cooldown after leaving queue
     - Duelling per request (*/duel playername*) or via auto match (*/duel match*)
+      - Players can request duel with own equipment, use */duel playername nokit*, must be accepted with additional nokit parameter
       - When waiting too long for match, will broadcast that a player is waiting, configurable
       - Will start duel if a player duel requests a player that is waiting for a match
     - Dynamic arena selection system, only shows vacant arenas

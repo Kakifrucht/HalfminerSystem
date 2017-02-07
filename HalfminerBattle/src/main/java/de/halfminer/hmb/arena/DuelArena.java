@@ -45,15 +45,6 @@ public class DuelArena extends AbstractKitArena {
         healAndPreparePlayers();
         playersInArena.forEach(p -> p.setWalkSpeed(0.0f));
 
-        MessageBuilder.create(hmb, "modeDuelCountdownStart", HalfminerBattle.PREFIX)
-                .addPlaceholderReplace("%PLAYER%", playerB.getName())
-                .addPlaceholderReplace("%ARENA%", getName())
-                .sendMessage(playerA);
-        MessageBuilder.create(hmb, "modeDuelCountdownStart", HalfminerBattle.PREFIX)
-                .addPlaceholderReplace("%PLAYER%", playerA.getName())
-                .addPlaceholderReplace("%ARENA%", getName())
-                .sendMessage(playerB);
-
         task = Bukkit.getScheduler().runTaskTimerAsynchronously(hmb, new Runnable() {
 
             private final HanTitles titles = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);

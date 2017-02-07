@@ -68,7 +68,8 @@ public class DuelMode extends AbstractMode {
                     if (args.length > 1 && queue.arenaWasSelected(player, args[1]))
                         break;
                 default:
-                    queue.requestSend(player, hmb.getServer().getPlayer(args[0]));
+                    boolean useKit = !(args.length > 1 && args[1].equalsIgnoreCase("nokit"));
+                    queue.requestSend(player, hmb.getServer().getPlayer(args[0]), useKit);
             }
         } else MessageBuilder.create(hmb, "modeDuelShowHelp", HalfminerBattle.PREFIX).sendMessage(sender);
 
