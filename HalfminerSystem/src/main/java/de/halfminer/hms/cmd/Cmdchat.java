@@ -27,7 +27,7 @@ import java.util.logging.Level;
  * - Send custom messages to player or broadcast
  * - Set news and motd message
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "BooleanMethodIsAlwaysInverted"})
 public class Cmdchat extends HalfminerCommand {
 
     private final HanBossBar bossBar = (HanBossBar) hms.getHandler(HandlerType.BOSS_BAR);

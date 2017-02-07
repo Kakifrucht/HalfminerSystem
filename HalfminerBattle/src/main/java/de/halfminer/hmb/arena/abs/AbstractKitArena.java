@@ -25,8 +25,8 @@ public abstract class AbstractKitArena extends AbstractArena {
     }
 
     @Override
-    public boolean isActive() {
-        return super.isActive() && kit != null;
+    public boolean isFree() {
+        return super.isFree() && kit != null;
     }
 
     @Override

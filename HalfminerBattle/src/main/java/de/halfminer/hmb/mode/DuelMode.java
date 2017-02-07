@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 /**
  * Implementing duels between two players
  */
+@SuppressWarnings("unused")
 public class DuelMode extends AbstractMode {
 
     private static final GameModeType MODE = GameModeType.DUEL;

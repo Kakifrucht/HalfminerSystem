@@ -34,30 +34,13 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
-    public boolean isActive() {
-        return !spawns.isEmpty();
-    }
-
-    @Override
     public boolean isFree() {
-        return isActive();
+        return !spawns.isEmpty();
     }
 
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public boolean isCloseToSpawn(Location loc) {
-
-        GlobalMode global = (GlobalMode) hmb.getGameMode(GameModeType.GLOBAL);
-        for (Location spawn : spawns) {
-            if (spawn.getWorld().equals(loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance())
-                return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -90,8 +73,26 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
+    public boolean isCloseToSpawn(Location loc) {
+
+        GlobalMode global = (GlobalMode) hmb.getGameMode(GameModeType.GLOBAL);
+        for (Location spawn : spawns) {
+            if (spawn.getWorld().equals(loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance())
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Add the specified players to the arena
+     *
+     * @param players to be added to the arena
+     */
     public void addPlayers(Player... players) {
-        Collections.addAll(playersInArena, players);
+        if (isFree()) {
+            Collections.addAll(playersInArena, players);
+        } else throw new RuntimeException("Tried to add players to an occupied arena");
     }
 
     protected void teleportIntoArena(Player... toTeleport) {

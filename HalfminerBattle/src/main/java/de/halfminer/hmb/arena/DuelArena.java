@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitTask;
 /**
  * Custom duel kit arena used by {@link DuelMode}, implementing countdowns and preparing fight
  */
+@SuppressWarnings("unused")
 public class DuelArena extends AbstractKitArena {
 
     private BukkitTask task;
@@ -25,6 +26,11 @@ public class DuelArena extends AbstractKitArena {
 
     public DuelArena(String name) {
         super(GameModeType.DUEL, name);
+    }
+
+    @Override
+    public boolean isFree() {
+        return super.isFree() && playersInArena.size() == 0;
     }
 
     public void gameStart(Player playerA, Player playerB, boolean useKit) {
@@ -120,10 +126,5 @@ public class DuelArena extends AbstractKitArena {
 
     private void playSound(Sound toPlay) {
         playersInArena.forEach(p -> p.playSound(p.getLocation(), toPlay, 1.0f, 1.6f));
-    }
-
-    @Override
-    public boolean isFree() {
-        return super.isFree() && playersInArena.size() == 0;
     }
 }
