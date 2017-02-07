@@ -70,6 +70,7 @@ localization:
   modeGlobalAddedToQueue: '~&7Du bist nun in der Warteschlange, verwende &a/duel leave/ &7zum verlassen'
   modeGlobalAlreadyInQueue: '~&cDu bist bereits in einer Warteschlange, &7verwende &a/duel leave/ &7zum verlassen'
   modeGlobalArenaLoadLog: '%ARENAS% Arenen und %KITS% Kits geladen'
+  modeGlobalCommandsInBedDisabled: '&cDu kannst im Bett keine Kommandos benutzen'
   modeGlobalGamemodeDisabled: '&7Dieser Spielmodus ist aktuell &cdeaktiviert'
   modeGlobalInGame: '&cDu kannst im Kampf keine Kommandos benutzen'
   modeGlobalKitArenaCustomLore: '&a%ARENA% &7(&o%MODE%&7) | &b%PLAYER%'

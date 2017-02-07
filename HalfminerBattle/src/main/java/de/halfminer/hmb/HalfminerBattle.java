@@ -8,6 +8,7 @@ import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -120,6 +121,12 @@ public class HalfminerBattle extends JavaPlugin {
             MessageBuilder.create(this, "adminCommandUsage", PREFIX)
                     .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
                     .sendMessage(sender);
+            return true;
+        }
+
+        // no gamemode specific commands in bed, as teleports are not possible while sleeping
+        if (sender instanceof Player && ((Player) sender).isSleeping()) {
+            MessageBuilder.create(this, "modeGlobalCommandsInBedDisabled", PREFIX).sendMessage(sender);
             return true;
         }
 

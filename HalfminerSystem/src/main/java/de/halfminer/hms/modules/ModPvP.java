@@ -265,7 +265,6 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         if (p.getKiller() != null) {
             killer = p.getKiller().getName();
         } else if (p.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-            //
             killer = ((EntityDamageByEntityEvent) p.getLastDamageCause()).getDamager().getName();
         }
 

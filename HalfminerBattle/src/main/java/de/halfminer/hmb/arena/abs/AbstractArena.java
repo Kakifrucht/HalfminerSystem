@@ -105,7 +105,7 @@ public abstract class AbstractArena implements Arena {
     }
 
     protected void storeAndTeleportPlayers(Player... players) {
-        pm.storePlayerData(parameterToArray(players));
+        pm.setArena(this, parameterToArray(players));
         teleportIntoArena(players);
     }
 

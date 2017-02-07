@@ -111,7 +111,8 @@ public class PlayerManager {
     }
 
     /**
-     * Sets the arena the given players are in. This will also set their state to {@link BattleState#IN_BATTLE}
+     * Sets the arena the given players are in.
+     * This will also set their state to {@link BattleState#IN_BATTLE} and store their state
      *
      * @param toSet Arena the player
      * @param setTo player array to set
@@ -121,6 +122,7 @@ public class PlayerManager {
             BattlePlayer battlePlayer = getBattlePlayer(p);
             battlePlayer.setState(BattleState.IN_BATTLE);
             battlePlayer.setArena(toSet);
+            battlePlayer.storeData();
         }
     }
 
@@ -134,17 +136,6 @@ public class PlayerManager {
 
     private boolean hasState(Player toCheck, BattleState state) {
         return getBattlePlayer(toCheck).getState().equals(state);
-    }
-
-    /**
-     * Store the given players data, like position, health, inventory and game mode
-     *
-     * @param players array of players to store the data off
-     */
-    public void storePlayerData(Player... players) {
-        for (Player player : players) {
-            getBattlePlayer(player).storeData();
-        }
     }
 
     /**

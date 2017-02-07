@@ -29,17 +29,15 @@ public class DuelArena extends AbstractKitArena {
 
     public void gameStart(Player playerA, Player playerB, boolean useKit) {
 
-        pm.setArena(this, playerA, playerB);
         addPlayers(playerA, playerB);
         this.useKit = useKit;
+        // ensures that the players get their stuff back if duel is stopped
+        // during 5 seconds countdown, if fighting with own stuff
+        restoreInventory = true;
 
         storeClearAndTeleportPlayers();
         healAndPreparePlayers();
-        // ensures that the players get their stuff back if duel is stopped during 5 seconds cooldown
-        restoreInventory = true;
-        for (Player player : playersInArena) {
-            player.setWalkSpeed(0.0f);
-        }
+        playersInArena.forEach(p -> p.setWalkSpeed(0.0f));
 
         MessageBuilder.create(hmb, "modeDuelCountdownStart", HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%PLAYER%", playerB.getName())
