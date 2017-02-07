@@ -5,14 +5,16 @@ Current features
 -------
 - Full battle arena solution allowing easy addition of new arena game modes
 - Seamless integration into existing Survival PvP worlds
+- Optimized for performance, battle tested and generally robust
 - Localization configurable, commands are clickable
 - **Gamemodes**
   - Global functionality
     - Endless amount of arenas
     - Custom kits per arena, if gamemode wants to support kits
       - Adds lore to kits to easily identify ones that were possibly extracted from a badly secured arena
-      - Can toggle inventory store to disk, to ensure no data loss ocurring
+      - Can toggle inventory store to disk, to prevent any inventory data loss from ever ocurring
         - Command */hmb openinventory* allows retrieval of said items by file name
+        - Automatically cleaning up old files
     - Recovers players completely after fight (position, health/status, inventory if kit was used, potion effects)
       - Sets gamemode to adventure during fight
     - Allows hitting even if damage was cancelled, for example due to fighting a clan member

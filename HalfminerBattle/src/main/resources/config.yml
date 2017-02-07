@@ -5,8 +5,11 @@ gameMode:
     noHungerLoss: true
     #Time in seconds the queue cooldown will take
     queueCooldownTimeSeconds: 15
-    #Save players inventories to disk if using kits, to ensure no data loss if a bug occurs after updating the plugin
+    #Save players inventories to disk before battle, to ensure absolutely no data loss
     saveInventoryToDisk: false
+    #Amount of hours after stored inventories should be deleted (async worker called in 1 hour intervals)
+    #saveInventoryToDisk must be true, 0 to disable
+    saveInventoryToDiskCleanupAfterHours: 24
     #Distance in blocks from all spawn points in all arenas that must be met to allow the teleport
     teleportSpawnDistance: 10
   duel:

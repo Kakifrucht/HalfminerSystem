@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.List;
@@ -32,6 +33,7 @@ public class GlobalMode extends AbstractMode {
     private boolean noHungerLossInBattle;
     private int queueCooldownSeconds;
     private boolean saveInventoryToDisk;
+    private BukkitTask cleanupTask;
     private double teleportSpawnDistance;
 
     @Override
@@ -177,9 +179,42 @@ public class GlobalMode extends AbstractMode {
 
     @Override
     public void onConfigReload() {
+
         noHungerLossInBattle = hmb.getConfig().getBoolean("gameMode.global.noHungerLoss", true);
         queueCooldownSeconds = hmb.getConfig().getInt("gameMode.global.queueCooldownTimeSeconds", 15);
+
         saveInventoryToDisk = hmb.getConfig().getBoolean("gameMode.global.saveInventoryToDisk", false);
+
+        if (cleanupTask != null) {
+            cleanupTask.cancel();
+            cleanupTask = null;
+        }
+        // only run cleanup if saveinventory is enabled and autoclean is set higher than 0
+        int cleanupAfter = hmb.getConfig().getInt("gameMode.global.saveInventoryToDiskCleanupAfterHours", 24);
+        if (saveInventoryToDisk && cleanupAfter > 0) {
+
+            cleanupTask = hmb.getServer().getScheduler().runTaskTimerAsynchronously(hmb, () -> {
+
+                File[] files = new File(hmb.getDataFolder(), "inventories").listFiles();
+                if (files == null) return;
+
+                long removeIfBefore = (System.currentTimeMillis() / 1000) - cleanupAfter * 60 * 60;
+                for (File file : files) {
+                    String name = file.getName();
+                    try {
+                        long timestamp = Long.parseLong(name.substring(0, name.indexOf('-')));
+                        if (removeIfBefore > timestamp) {
+                            if (!file.delete()) {
+                                hmb.getLogger().warning("Could not delete file " + name);
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        hmb.getLogger().warning("Invalid file, could not delete " + name);
+                    }
+                }
+            }, 0L, 720L);
+        }
+
         teleportSpawnDistance = hmb.getConfig().getDouble("gameMode.global.teleportSpawnDistance", 10.0d);
     }
 

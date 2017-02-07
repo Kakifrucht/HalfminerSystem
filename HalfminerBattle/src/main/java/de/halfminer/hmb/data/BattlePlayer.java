@@ -191,27 +191,29 @@ class BattlePlayer {
 
             if (((GlobalMode) hmb.getGameMode(GameModeType.GLOBAL)).isSaveInventoryToDisk()) {
 
-                String fileName = player.getName() + String.valueOf(System.currentTimeMillis() / 1000) + ".yml";
+                hmb.getServer().getScheduler().runTaskAsynchronously(hmb, () -> {
+                    String fileName = String.valueOf(System.currentTimeMillis() / 1000) + "-" + player.getName() + ".yml";
 
-                File path = new File(hmb.getDataFolder() + File.separator + "inventories");
-                boolean pathExists = path.exists();
-                if (!pathExists) {
-                    pathExists = path.mkdir();
-                }
-
-                if (pathExists) {
-                    File file = new File(path, fileName);
-                    try {
-                        if (file.createNewFile()) {
-                            YamlConfiguration configFile = new YamlConfiguration();
-                            configFile.set("inventory", inventory);
-                            configFile.save(file);
-                        }
-                    } catch (IOException e) {
-                        hmb.getLogger().warning("Could not write inventory to disk with filename " + fileName);
-                        e.printStackTrace();
+                    File path = new File(hmb.getDataFolder(), "inventories");
+                    boolean pathExists = path.exists();
+                    if (!pathExists) {
+                        pathExists = path.mkdir();
                     }
-                } else hmb.getLogger().warning("Could not create sub folder in plugin directory");
+
+                    if (pathExists && path.isDirectory()) {
+                        File file = new File(path, fileName);
+                        try {
+                            if (file.createNewFile()) {
+                                YamlConfiguration configFile = new YamlConfiguration();
+                                configFile.set("inventory", inventory);
+                                configFile.save(file);
+                            }
+                        } catch (IOException e) {
+                            hmb.getLogger().warning("Could not write inventory to disk with filename " + fileName);
+                            e.printStackTrace();
+                        }
+                    } else hmb.getLogger().warning("Could not create sub folder in plugin directory");
+                });
             }
 
             health = Math.min(20.0d, player.getHealth());
