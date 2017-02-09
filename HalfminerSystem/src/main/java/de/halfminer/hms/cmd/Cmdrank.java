@@ -183,7 +183,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         String commandOnDisable = hms.getConfig().getString("command.rank.commandToExecuteOnDisable");
         if (commandOnDisable.length() > 0) {
             String placeholderReplaced = MessageBuilder.create(hms, commandOnDisable)
-                    .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                    .setDirectString()
                     .addPlaceholderReplace("%PLAYER%", args[0])
                     .addPlaceholderReplace("%RANK%", rankToGiveName)
                     .returnMessage();

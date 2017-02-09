@@ -78,9 +78,7 @@ public class DuelMode extends AbstractMode {
 
     private void sendArenaList(CommandSender sender) {
         MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(sender);
-        MessageBuilder.create(hmb, am.getStringFromGameMode(MODE))
-                .setMode(MessageBuilder.Mode.DIRECT_STRING)
-                .sendMessage(sender);
+        MessageBuilder.create(hmb, am.getStringFromGameMode(MODE)).setDirectString().sendMessage(sender);
     }
 
     @Override

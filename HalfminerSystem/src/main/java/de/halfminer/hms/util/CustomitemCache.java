@@ -70,7 +70,7 @@ public class CustomitemCache {
             }
 
             MessageBuilder parameterParse = MessageBuilder.create(plugin, keyParamPair.getRight())
-                    .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                    .setDirectString()
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName());
 
             if (additionalPlaceholders != null) {

@@ -537,7 +537,7 @@ public class Cmdhms extends HalfminerCommand {
             if (information.length() > 0) {
                 MessageBuilder.create(hms, "cmdHmsXrayShow", "AntiXRay").sendMessage(sender);
                 MessageBuilder.create(hms, information)
-                        .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                        .setDirectString()
                         .sendMessage(sender);
                 MessageBuilder.create(hms, "cmdHmsXrayLegend").sendMessage(sender);
             } else {

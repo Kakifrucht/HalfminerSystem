@@ -50,7 +50,7 @@ public class MessageBuilder {
 
     private final String lang;
     private String prefix;
-    private Mode mode;
+    private boolean getFromLocale = true;
     private final Map<String, String> placeholders = new HashMap<>();
 
     private boolean makeCommandsClickable = true;
@@ -59,11 +59,10 @@ public class MessageBuilder {
     private MessageBuilder(JavaPlugin plugin, String lang) {
         this.plugin = plugin;
         this.lang = lang;
-        this.mode = Mode.GET_FROM_LOCALE_FILE;
     }
 
-    public MessageBuilder setMode(Mode mode) {
-        this.mode = mode;
+    public MessageBuilder setDirectString() {
+        getFromLocale = false;
         return this;
     }
 
@@ -96,7 +95,7 @@ public class MessageBuilder {
     private String returnMessage(boolean loggingMode) {
 
         String toReturn;
-        if (this.mode.equals(Mode.GET_FROM_LOCALE_FILE)) {
+        if (getFromLocale) {
             toReturn = getMessage(lang);
             // allow removal of messages
             if (toReturn == null || toReturn.length() == 0)
@@ -143,7 +142,7 @@ public class MessageBuilder {
 
         String messageToSend = returnMessage();
 
-        if (messageToSend.length() > 0 || this.mode == Mode.DIRECT_STRING) {
+        if (messageToSend.length() > 0 || !getFromLocale) {
             for (CommandSender sendTo : sendToPlayers) {
                 if (startsWithClickableChar && sendTo instanceof Player) {
 
@@ -287,10 +286,5 @@ public class MessageBuilder {
 
         components.forEach(parsedComponent::addExtra);
         return parsedComponent;
-    }
-
-    public enum Mode {
-        GET_FROM_LOCALE_FILE,
-        DIRECT_STRING
     }
 }

@@ -124,7 +124,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         }
 
         format = MessageBuilder.create(hms, format)
-                .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                .setDirectString()
                 .addPlaceholderReplace("%PLAYER%", "%1$s")
                 .addPlaceholderReplace("%PREFIX%", prefix)
                 .addPlaceholderReplace("%SUFFIX%", suffix)

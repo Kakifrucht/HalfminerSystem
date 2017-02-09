@@ -79,7 +79,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
                     server.dispatchCommand(server.getConsoleSender(),
                             MessageBuilder.create(hms, firstSpawnCommand)
-                                    .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                                    .setDirectString()
                                     .addPlaceholderReplace("%PLAYER%", joined.getName())
                                     .returnMessage());
                 }

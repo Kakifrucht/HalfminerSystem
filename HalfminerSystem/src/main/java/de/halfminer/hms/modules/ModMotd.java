@@ -56,7 +56,7 @@ public class ModMotd extends HalfminerModule implements Listener {
         motd = new String[strList.size()];
         for (int i = 0; i < strList.size(); i++)
             motd[i] = MessageBuilder.create(hms, setMotd)
-                    .setMode(MessageBuilder.Mode.DIRECT_STRING)
+                    .setDirectString()
                     .addPlaceholderReplace("%COLOR%", '&' + strList.get(i))
                     .returnMessage();
     }

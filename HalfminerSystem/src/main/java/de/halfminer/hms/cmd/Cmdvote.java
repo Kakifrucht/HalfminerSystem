@@ -121,7 +121,7 @@ public class Cmdvote extends HalfminerCommand {
 
         MessageBuilder.create(hms, "cmdVoteTop").sendMessage(sender);
         MessageBuilder.create(hms, "cmdVoteMessage").addPlaceholderReplace("%PLAYER%", playername).sendMessage(sender);
-        MessageBuilder.create(hms, " ").setMode(MessageBuilder.Mode.DIRECT_STRING).sendMessage(sender);
+        MessageBuilder.create(hms, " ").setDirectString().sendMessage(sender);
 
         boolean thresholdPassed = totalVotes < totalVotesThreshold;
         MessageBuilder.create(hms, thresholdPassed ? "cmdVoteUntil" : "cmdVoteReached")

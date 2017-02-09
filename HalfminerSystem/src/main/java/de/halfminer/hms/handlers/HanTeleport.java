@@ -49,7 +49,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             return;
         }
 
-        MessageBuilder.create(hms, lang.get("start")).setMode(MessageBuilder.Mode.DIRECT_STRING)
+        MessageBuilder.create(hms, lang.get("start")).setDirectString()
                 .addPlaceholderReplace("%TIME%", String.valueOf(delay))
                 .sendMessage(player);
         ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR))

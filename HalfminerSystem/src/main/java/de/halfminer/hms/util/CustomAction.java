@@ -175,7 +175,7 @@ public class CustomAction {
     private MessageBuilder replaceWithPlaceholders(String toReplace) {
 
         MessageBuilder message = MessageBuilder.create(plugin, toReplace)
-                .setMode(MessageBuilder.Mode.DIRECT_STRING);
+                .setDirectString();
 
         placeholders.entrySet()
                 .forEach(entry -> message.addPlaceholderReplace(entry.getKey(), entry.getValue()));
