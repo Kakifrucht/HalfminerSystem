@@ -44,27 +44,6 @@ public class PlayerManager {
     }
 
     /**
-     * Check if a player is in queue
-     *
-     * @param toCheck Player
-     * @return true if player is in any queue
-     */
-    public boolean isInQueue(Player toCheck) {
-        return hasState(toCheck, BattleState.IN_QUEUE);
-    }
-
-    /**
-     * Check if a player is in queue for given gamemode
-     *
-     * @param gameMode GameModeType
-     * @param toCheck Player
-     * @return true if player is in queue with given gamemode
-     */
-    public boolean isInQueue(GameModeType gameMode, Player toCheck) {
-        return isInQueue(toCheck) && isInGameMode(toCheck, gameMode);
-    }
-
-    /**
      * Check if a player has global queue cooldown
      *
      * @param toCheck Player
@@ -75,27 +54,30 @@ public class PlayerManager {
     }
 
     /**
-     * Check if a player is in battle
+     * Check if a player is in queue for given gamemode
      *
+     * @param gameMode GameModeType, can be {@link GameModeType#GLOBAL} to check every mode
      * @param toCheck Player
-     * @return true if player is in battle
+     * @return true if player is in queue with given gamemode
      */
-    public boolean isInBattle(Player toCheck) {
-        return hasState(toCheck, BattleState.IN_BATTLE);
+    public boolean isInQueue(GameModeType gameMode, Player toCheck) {
+        return hasState(toCheck, BattleState.IN_QUEUE) && isInGameMode(toCheck, gameMode);
     }
 
     /**
      * Check if a player is in battle for given gamemode
-     * @param gameMode GameModeType
+     *
+     * @param gameMode GameModeType, can be {@link GameModeType#GLOBAL} to check every mode
      * @param toCheck Player
      * @return true if player is in battle with given gamemode
      */
     public boolean isInBattle(GameModeType gameMode, Player toCheck) {
-        return isInBattle(toCheck) && isInGameMode(toCheck, gameMode);
+        return hasState(toCheck, BattleState.IN_BATTLE) && isInGameMode(toCheck, gameMode);
     }
 
     private boolean isInGameMode(Player toGet, GameModeType type) {
-        return type.equals(getBattlePlayer(toGet).getGameMode());
+        GameModeType modeSet = getBattlePlayer(toGet).getGameMode();
+        return type.equals(modeSet) || (modeSet != null && type.equals(GameModeType.GLOBAL));
     }
 
     /**

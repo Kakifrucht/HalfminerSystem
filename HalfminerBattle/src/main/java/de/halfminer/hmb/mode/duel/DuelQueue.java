@@ -18,6 +18,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -188,22 +189,21 @@ public class DuelQueue {
 
     private boolean hasRequestedDuelWith(Player requested, Player with) {
         Player wasRequested = pm.getFirstPartner(requested);
-        return pm.isInQueue(requested)
+        return pm.isInQueue(GameModeType.DUEL, requested)
                 && wasRequested != null
-                && wasRequested.equals(with)
-                && !pm.isNotIdle(with);
+                && wasRequested.equals(with);
     }
 
     /**
-     * Removes a player completely from any queue, resetting his battle state, clearing send game invites
-     * and removing him from the duel match. This will also work during arena selection and will remove
-     * the duel partner, if applicable.
+     * Removes a player completely from any (match/request) queue, resetting his battle state, clearing
+     * sent game invites and removing him from the duel match. This will also work during arena selection
+     * and will remove the duel partner, if applicable.
      *
      * @param toRemove player and players partner that will be removed from queue
      */
     public void removeFromQueue(Player toRemove) {
 
-        if (!pm.isInQueue(toRemove)) {
+        if (!pm.isInQueue(GameModeType.DUEL, toRemove)) {
             MessageBuilder.create(hmb, "modeDuelNotInQueue", HalfminerBattle.PREFIX).sendMessage(toRemove);
             return;
         }
@@ -282,30 +282,30 @@ public class DuelQueue {
      * and when an arena becomes available. If only one arena is available no selection will be shown,
      * if none are free the players will be put into the next free arena automatically and notify them.
      *
-     * @param player         player the selection will be sent to
+     * @param selector         player the selection will be sent to
      * @param refreshMessage if true will display message that the information has been refreshed
      *                       (only when free arena state updates, not on first send)
      */
-    private void showFreeArenaSelection(Player player, boolean refreshMessage) {
+    private void showFreeArenaSelection(Player selector, boolean refreshMessage) {
 
         List<Arena> freeArenas = am.getFreeArenasFromType(MODE);
-        Player partner = pm.getFirstPartner(player);
+        Player partner = pm.getFirstPartner(selector);
 
         if (freeArenas.size() == 0) {
             MessageBuilder.create(hmb, "modeDuelChooseArenaNoneAvailable", HalfminerBattle.PREFIX)
-                    .sendMessage(player, partner);
+                    .sendMessage(selector, partner);
         } else if (freeArenas.size() == 1) {
-            arenaWasSelected(player, "random");
+            arenaWasSelected(selector, "random");
         } else {
             if (refreshMessage) {
-                MessageBuilder.create(hmb, "modeDuelChooseArenaRefreshed", HalfminerBattle.PREFIX).sendMessage(player);
+                MessageBuilder.create(hmb, "modeDuelChooseArenaRefreshed", HalfminerBattle.PREFIX).sendMessage(selector);
             } else {
                 MessageBuilder.create(hmb, "modeDuelChooseArena", HalfminerBattle.PREFIX)
                         .addPlaceholderReplace("%PLAYER%", partner.getName())
-                        .sendMessage(player);
+                        .sendMessage(selector);
 
                 MessageBuilder.create(hmb, "modeDuelPartnerChoosingArena", HalfminerBattle.PREFIX)
-                        .addPlaceholderReplace("%PLAYER%", player.getName())
+                        .addPlaceholderReplace("%PLAYER%", selector.getName())
                         .sendMessage(partner);
             }
 
@@ -328,7 +328,8 @@ public class DuelQueue {
                             new ComponentBuilder(MessageBuilder.returnMessage(hmb, "modeDuelChooseArenaRandom")).create()))
                     .color(ChatColor.GRAY);
 
-            player.spigot().sendMessage(builder.create());
+            selector.playSound(selector.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.9f);
+            selector.spigot().sendMessage(builder.create());
         }
     }
 
