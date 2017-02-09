@@ -5,7 +5,8 @@ package de.halfminer.hmb.enums;
  */
 public enum GameModeType {
     GLOBAL  ("GlobalMode", null),
-    DUEL    ("DuelMode", "DuelArena");
+    DUEL    ("DuelMode", "DuelArena"),
+    FFA     ("FFAMode", "FFAArena");
 
     private final String modeClassName;
     private final String arenaClassName;
