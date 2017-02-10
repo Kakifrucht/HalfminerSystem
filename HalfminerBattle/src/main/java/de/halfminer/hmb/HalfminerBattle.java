@@ -4,6 +4,8 @@ import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.abs.GameMode;
+import de.halfminer.hms.handlers.HanStorage;
+import de.halfminer.hms.interfaces.CacheHolder;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.command.Command;
@@ -29,6 +31,7 @@ public class HalfminerBattle extends JavaPlugin {
         return instance;
     }
 
+    private CacheHolder cacheHolder;
     private PlayerManager playerManager;
     private ArenaManager arenaManager;
 
@@ -39,6 +42,7 @@ public class HalfminerBattle extends JavaPlugin {
         instance = this;
         PREFIX = MessageBuilder.returnMessage(this, "prefix");
 
+        cacheHolder = new HanStorage(this);
         playerManager = new PlayerManager(this);
 
         if (!saveAndReloadConfig()) {
@@ -131,6 +135,10 @@ public class HalfminerBattle extends JavaPlugin {
         }
 
         return getGameMode(cmd.getName()).onCommand(sender, args);
+    }
+
+    public CacheHolder getCacheHolder() {
+        return cacheHolder;
     }
 
     public PlayerManager getPlayerManager() {

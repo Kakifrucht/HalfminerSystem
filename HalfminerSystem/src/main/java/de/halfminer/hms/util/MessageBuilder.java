@@ -71,7 +71,7 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder setPrefix(String prefix) {
+    private MessageBuilder setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }

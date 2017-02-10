@@ -156,7 +156,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         String actionName = hms.getConfig().getString("command.rank.actionToExecute");
         boolean actionHasFailed = true;
         try {
-            CustomAction action = new CustomAction(actionName, hms, storage);
+            CustomAction action = new CustomAction(actionName, storage);
             addPlaceholdersToAction(action, multipliedAmounts);
             actionHasFailed = !action.runAction(player);
         } catch (CachingException e1) {
@@ -167,7 +167,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             String actionOnFail = hms.getConfig().getString("command.rank.actionToExecuteOnFail");
             try {
                 if (actionOnFail.length() > 0) {
-                    CustomAction failAction = new CustomAction(actionOnFail, hms, storage);
+                    CustomAction failAction = new CustomAction(actionOnFail, storage);
                     addPlaceholdersToAction(failAction, multipliedAmounts);
                     failAction.runAction(player);
                 }

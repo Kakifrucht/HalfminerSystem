@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
@@ -40,6 +41,8 @@ import java.util.logging.Level;
 @SuppressWarnings({"unused", "SameParameterValue"})
 public class HanStorage extends HalfminerHandler implements CacheHolder, Disableable, Reloadable {
 
+    private final JavaPlugin plugin;
+
     private File sysFile;
     private File uuidFile;
     private File playerFile;
@@ -51,6 +54,14 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
     private final Map<File, CustomtextCache> textCaches = new HashMap<>();
 
     private BukkitTask task;
+
+    public HanStorage() {
+        this.plugin = hms;
+    }
+
+    public HanStorage(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     public void set(String path, Object value) {
         sysConfig.set(path, value);
@@ -104,14 +115,20 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
         return new HalfminerPlayer(playerConfig, uuid);
     }
 
+    @Override
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
+
+    @Override
     public CustomtextCache getCache(String fileName) throws CachingException {
 
-        File cacheFile = new File(hms.getDataFolder(), fileName);
+        File cacheFile = new File(plugin.getDataFolder(), fileName);
 
         if (!cacheFile.exists()) {
 
             // check jar first if it has such file
-            if (hms.getResource(fileName) != null) hms.saveResource(fileName, false);
+            if (plugin.getResource(fileName) != null) plugin.saveResource(fileName, false);
             else {
                 try {
                     //noinspection ResultOfMethodCallIgnored - we'll check below
@@ -121,11 +138,11 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
             }
 
             if (cacheFile.exists()) {
-                MessageBuilder.create(hms, "hanStorageCacheCreate")
+                MessageBuilder.create(plugin, "hanStorageCacheCreate")
                         .addPlaceholderReplace("%FILENAME%", cacheFile.getName())
                         .logMessage(Level.INFO);
             } else {
-                MessageBuilder.create(hms, "hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
+                MessageBuilder.create(plugin, "hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
                 throw new CachingException(fileName, CachingException.Reason.CANNOT_WRITE);
             }
         }
@@ -144,9 +161,9 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
             sysConfig.save(sysFile);
             uuidConfig.save(uuidFile);
             playerConfig.save(playerFile);
-            MessageBuilder.create(hms, "hanStorageSaveSuccessful").logMessage(Level.INFO);
+            MessageBuilder.create(plugin, "hanStorageSaveSuccessful").logMessage(Level.INFO);
         } catch (IOException e) {
-            MessageBuilder.create(hms, "hanStorageSaveUnsuccessful").logMessage(Level.WARNING);
+            MessageBuilder.create(plugin, "hanStorageSaveUnsuccessful").logMessage(Level.WARNING);
             e.printStackTrace();
         }
     }
@@ -155,23 +172,23 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
     public void loadConfig() {
 
         if (sysFile == null) {
-            sysFile = new File(hms.getDataFolder(), "sysdata.yml");
+            sysFile = new File(plugin.getDataFolder(), "sysdata.yml");
             sysConfig = YamlConfiguration.loadConfiguration(sysFile);
         }
 
         if (uuidFile == null) {
-            uuidFile = new File(hms.getDataFolder(), "uuidcache.yml");
+            uuidFile = new File(plugin.getDataFolder(), "uuidcache.yml");
             uuidConfig = YamlConfiguration.loadConfiguration(uuidFile);
         }
 
         if (playerFile == null) {
-            playerFile = new File(hms.getDataFolder(), "playerdata.yml");
+            playerFile = new File(plugin.getDataFolder(), "playerdata.yml");
             playerConfig = YamlConfiguration.loadConfiguration(playerFile);
         }
 
-        int saveInterval = hms.getConfig().getInt("handler.storage.autoSaveMinutes", 15) * 60 * 20;
+        int saveInterval = plugin.getConfig().getInt("handler.storage.autoSaveMinutes", 15) * 60 * 20;
         if (task != null) task.cancel();
-        task = scheduler.runTaskTimerAsynchronously(hms, this::saveConfig, saveInterval, saveInterval);
+        task = scheduler.runTaskTimerAsynchronously(plugin, this::saveConfig, saveInterval, saveInterval);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class GlobalMode extends AbstractMode {
     public boolean onAdminCommand(CommandSender sender, String[] args) {
 
         // disregard if called via global custom gamemode /hmb glo(balmode)
-        if (args.length < 3 || args[0].toLowerCase().startsWith("glo")) {
+        if (args.length == 0 || args[0].toLowerCase().startsWith("glo")) {
             sendUsageInformation(sender);
             return true;
         }
@@ -94,6 +94,11 @@ public class GlobalMode extends AbstractMode {
             }
 
         } else {
+
+            if (args.length < 3) {
+                sendUsageInformation(sender);
+                return true;
+            }
 
             GameModeType type = GameModeType.getGameMode(args[1]);
             if (type == null) {
@@ -248,7 +253,7 @@ public class GlobalMode extends AbstractMode {
             e.setCancelled(false);
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void disableCommandDuringFight(PlayerCommandPreprocessEvent e) {
 
         if (pm.isInBattle(GameModeType.GLOBAL, e.getPlayer()) && !e.getPlayer().hasPermission("hmb.admin")) {
