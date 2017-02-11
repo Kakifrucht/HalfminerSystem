@@ -5,7 +5,7 @@ import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.GlobalMode;
-import org.bukkit.GameMode;
+import de.halfminer.hmb.mode.abs.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -44,7 +44,7 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
-    public GameModeType getGameMode() {
+    public GameModeType getGameModeType() {
         return gameMode;
     }
 
@@ -123,8 +123,12 @@ public abstract class AbstractArena implements Arena {
             toHeal.setFireTicks(0);
             for (PotionEffect effect : toHeal.getActivePotionEffects())
                 toHeal.removePotionEffect(effect.getType());
-            toHeal.setGameMode(GameMode.ADVENTURE);
+            toHeal.setGameMode(org.bukkit.GameMode.ADVENTURE);
         }
+    }
+
+    protected GameMode getGameMode() {
+        return hmb.getGameMode(gameMode);
     }
 
     protected List<Player> parameterToList(Player... param) {

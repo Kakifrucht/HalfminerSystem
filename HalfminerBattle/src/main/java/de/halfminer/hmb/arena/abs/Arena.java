@@ -23,7 +23,7 @@ public interface Arena {
     /**
      * @return the arenas gamemode
      */
-    GameModeType getGameMode();
+    GameModeType getGameModeType();
 
     /**
      * Set the spawn points of the arena

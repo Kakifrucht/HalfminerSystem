@@ -49,7 +49,7 @@ public class DuelArena extends AbstractKitArena {
 
             private final HanTitles titles = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);
             private final BukkitScheduler scheduler = hmb.getServer().getScheduler();
-            private final DuelMode mode = (DuelMode) hmb.getGameMode(GameModeType.DUEL);
+            private final DuelMode mode = (DuelMode) getGameMode();
             private final int timeStart = mode.getDuelTime();
             private int timeLeft = timeStart + 6;
 

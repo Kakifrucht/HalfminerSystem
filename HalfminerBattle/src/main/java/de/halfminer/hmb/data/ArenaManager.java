@@ -6,11 +6,16 @@ import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -235,6 +240,34 @@ public class ArenaManager {
         return sb.toString();
     }
 
+
+    public void sendArenaSelection(Player selector, List<Arena> freeArenas, String command, String randomKey) {
+
+        ComponentBuilder builder = new ComponentBuilder("");
+
+        for (Arena freeArena : freeArenas) {
+            String tooltipOnHover = MessageBuilder.create(hmb, "modeGlobalChooseArenaHover")
+                    .addPlaceholderReplace("%ARENA%", freeArena.getName())
+                    .returnMessage();
+            builder.append(freeArena.getName())
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + freeArena.getName()))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(tooltipOnHover).create()))
+                    .color(net.md_5.bungee.api.ChatColor.GREEN).bold(true)
+                    .append("  ").reset();
+        }
+
+        if (randomKey.length() > 0) {
+            builder.append(MessageBuilder.returnMessage(hmb, "randomArena"))
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + "random"))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            new ComponentBuilder(MessageBuilder.returnMessage(hmb, randomKey)).create()))
+                    .color(net.md_5.bungee.api.ChatColor.GRAY);
+        }
+
+        selector.playSound(selector.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.9f);
+        selector.spigot().sendMessage(builder.create());
+    }
+
     private void saveData() {
 
         arenaConfig.set("arenas", null);
@@ -243,7 +276,7 @@ public class ArenaManager {
         for (Map<String, Arena> arenaPairs : arenas.values()) {
             for (Arena arena : arenaPairs.values()) {
                 ConfigurationSection newSection = arenaConfig.createSection("arenas." + arena.getName());
-                newSection.set("gameMode", arena.getGameMode().toString());
+                newSection.set("gameMode", arena.getGameModeType().toString());
                 newSection.set("spawns", arena.getSpawns());
             }
         }

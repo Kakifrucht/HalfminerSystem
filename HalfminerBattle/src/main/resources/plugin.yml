@@ -10,7 +10,10 @@ depend: [HalfminerSystem]
 commands:
   duel:
     description: Duel mode base command
-    aliases: [1vs1, duell, pvp, 1v1]
+    aliases: [1vs1, duell, 1v1]
+  ffa:
+    description: Free for all mode base command
+    aliases: [pvp]
   hmb:
     description: Access admin commands per gamemode, add, remove and edit arenas)
     aliases: [hmbattle, hbattle, halfminerbattle, global]

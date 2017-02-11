@@ -19,6 +19,11 @@ gameMode:
     gameTime: 300
     #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
     waitingForMatchRemind: 30
+  ffa:
+    #After how many deaths a player will be removed from the arena, set to 0 to disable
+    removeAfterDeaths: 4
+    #How many minutes he will be removed for
+    removeForMinutes: 3
 localization:
   prefix: '&7Battle &e>>&r '
   commandClickHover: 'Klicken, um das Kommando auszuführen'
@@ -41,7 +46,6 @@ localization:
   adminOpenInventoryInvalid: '&cUngültige Datei'
   adminOpenInventoryUnknownFile: '&cDatei nicht gefunden'
   modeDuelChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), auf der du gegen &e%PLAYER% &7spielen willst: '
-  modeDuelChooseArenaHover: 'In &l%ARENA% &rspielen'
   modeDuelChooseArenaRandom: 'In einer &lzufälligen &rArena spielen\n(Gegner erhält Benachrichtigung)'
   modeDuelChooseArenaInvalid: '&cUngültige Auswahl, bitte versuche es erneut'
   modeDuelChooseArenaNoneAvailable: '&7Aktuell sind alle Arenen belegt, ihr werdet automatisch in die nächste freie Arena teleportiert'
@@ -80,9 +84,18 @@ localization:
   modeDuelTitleCountdown: 'Duell startet in...\n&e&l%TIME% &rSekunden'
   modeDuelTitleStart: ' \n&6&lStart!'
   modeDuelWinBroadcast: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7gewonnen'
+  modeFFAArenaLeft: '&7Du hast die Arena &averlassen'
+  modeFFACooldown: '&7Du kannst die Arena frühestens in &c%TIMELEFT% Sekunden &7betreten'
+  modeFFADiedTooOften: '&cDu bist zu häufig am Stück gestorben und wurdest daher aus der Arena entfernt'
+  modeFFAJoined: '~&7Arena betreten, verwende &a/ffa leave/ &7zum verlassen (ausloggen führt zum Tod)'
+  modeFFALoggedOutLog: '%PLAYER% hat sich in FFA Arena %ARENA% ausgeloggt'
+  modeFFANotInArena: '&cDu bist in keiner FFA Arena'
+  modeFFAUsage: '~&7Kämpfe in einer Arena mit Kit und Killserien\n &a/ffa join/ &7- Arena betreten\n &a/ffa leave/ &7- Arena verlassen'
+  modeFFAChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), die du betreten möchtest: '
   modeGlobalAddedToQueue: '~&7Du bist nun in der Warteschlange, verwende &a/duel leave/ &7zum verlassen'
   modeGlobalAlreadyInQueue: '~&cDu bist bereits in einer Warteschlange, &7verwende &a/duel leave/ &7zum verlassen'
   modeGlobalArenaLoadLog: '%ARENAS% Arenen und %KITS% Kits geladen'
+  modeGlobalChooseArenaHover: 'In &l%ARENA% &rspielen'
   modeGlobalCommandsInBedDisabled: '&cDu kannst im Bett keine Kommandos benutzen'
   modeGlobalGamemodeDisabled: '&7Dieser Spielmodus ist aktuell &cdeaktiviert'
   modeGlobalInGame: '&cDu kannst im Kampf keine Kommandos benutzen'

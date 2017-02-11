@@ -44,11 +44,7 @@ public class HalfminerBattle extends JavaPlugin {
 
         cacheHolder = new HanStorage(this);
         playerManager = new PlayerManager(this);
-
-        if (!saveAndReloadConfig()) {
-            setDisabledAfterException();
-            return;
-        }
+        arenaManager = new ArenaManager();
 
         try {
             for (GameModeType type : GameModeType.values()) {
@@ -64,6 +60,11 @@ public class HalfminerBattle extends JavaPlugin {
             return;
         }
 
+        if (!saveAndReloadConfig()) {
+            setDisabledAfterException();
+            return;
+        }
+
         gameModes.values().forEach(mode -> getServer().getPluginManager().registerEvents(mode, this));
         getLogger().info("HalfminerBattle enabled");
     }
@@ -74,8 +75,6 @@ public class HalfminerBattle extends JavaPlugin {
 
         gameModes.values().forEach(GameMode::onConfigReload);
         try {
-            if (arenaManager == null)
-                arenaManager = new ArenaManager();
             arenaManager.reloadConfig();
             return true;
         } catch (Exception e) {
@@ -134,7 +133,13 @@ public class HalfminerBattle extends JavaPlugin {
             return true;
         }
 
-        return getGameMode(cmd.getName()).onCommand(sender, args);
+        GameMode calledMode = getGameMode(cmd.getName());
+        if (arenaManager.getFreeArenasFromType(calledMode.getType()).size() == 0) {
+            MessageBuilder.create(this, "modeGlobalGamemodeDisabled", PREFIX).sendMessage(sender);
+            return true;
+        }
+
+        return calledMode.onCommand(sender, args);
     }
 
     public CacheHolder getCacheHolder() {

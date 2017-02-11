@@ -1,0 +1,2 @@
+#ffa-3
+cmd: give %PLAYER% diamondsword 1

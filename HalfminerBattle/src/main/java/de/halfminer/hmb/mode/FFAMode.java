@@ -15,12 +15,29 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * TODO
  */
 @SuppressWarnings("unused")
 public class FFAMode extends AbstractMode {
+
+    private int removeAfterDeaths;
+    private int removeForMinutes;
+
+    public FFAMode() {
+        super(GameModeType.FFA);
+    }
+
+    public int getRemoveAfterDeaths() {
+        return removeAfterDeaths;
+    }
+
+    public int getRemoveForMinutes() {
+        return removeForMinutes;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, String[] args) {
 
@@ -43,22 +60,27 @@ public class FFAMode extends AbstractMode {
 
         switch (args[0].toLowerCase()) {
             case "join":
-                List<Arena> arenas = am.getArenasFromType(GameModeType.FFA);
-                if (arenas.size() == 0) {
-                    //TODO show disabled status
-                } else if (arenas.size() == 1) {
-                    //TODO add to first
+                List<Arena> freeArenas = am.getFreeArenasFromType(type);
+                if (freeArenas.size() == 1) {
+                    if (((FFAArena) freeArenas.get(0)).addPlayer(player)) {
+                        MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(player);
+                    }
                 } else {
-                    //TODO showselection
+                    MessageBuilder.create(hmb, "modeFFAChooseArena", HalfminerBattle.PREFIX).sendMessage(player);
+                    am.sendArenaSelection(player, freeArenas, "/ffa choose ", "");
+                    return true;
                 }
                 break;
             case "leave":
-                if (!pm.isInBattle(GameModeType.FFA, player)) {
-                    //TODO show error
+                if (!pm.isInBattle(type, player)) {
+                    MessageBuilder.create(hmb, "modeFFANotInArena", HalfminerBattle.PREFIX).sendMessage(player);
                     return true;
                 }
-                //TODO messages
                 ((FFAArena) pm.getArena(player)).removePlayer(player);
+                MessageBuilder.create(hmb, "modeFFAArenaLeft", HalfminerBattle.PREFIX).sendMessage();
+                break;
+            case "choose":
+                //TODO
                 break;
             default:
                 MessageBuilder.create(hmb, "modeFFAUsage", HalfminerBattle.PREFIX).sendMessage(sender);
@@ -76,19 +98,20 @@ public class FFAMode extends AbstractMode {
     public void onPluginDisable() {
         hmb.getServer().getOnlinePlayers()
                 .stream()
-                .filter(p -> pm.isInBattle(GameModeType.FFA, p))
+                .filter(p -> pm.isInBattle(type, p))
                 .forEach(p -> ((FFAArena) pm.getArena(p)).removePlayer(p));
     }
 
     @Override
     public void onConfigReload() {
-        //TODO action list to pass to arenas on reload for kill rewards
+        removeAfterDeaths = hmb.getConfig().getInt("mode.ffa.removeAfterDeaths", 4);
+        removeForMinutes = hmb.getConfig().getInt("mode.ffa.removeForMinutes", 3);
     }
 
     @EventHandler
     public void onDeathRespawn(PlayerDeathEvent e) {
         Player p = e.getEntity();
-        if (pm.isInBattle(GameModeType.FFA, p)) {
+        if (pm.isInBattle(type, p)) {
             FFAArena arena = (FFAArena) pm.getArena(p);
             arena.hasDied(p);
         }
@@ -96,7 +119,7 @@ public class FFAMode extends AbstractMode {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCancelledCommand(PlayerCommandPreprocessEvent e) {
-        if (e.isCancelled() && pm.isInBattle(GameModeType.FFA, e.getPlayer())) {
+        if (e.isCancelled() && pm.isInBattle(type, e.getPlayer())) {
             e.setCancelled(e.getMessage().toLowerCase().startsWith("/ffa leave"));
         }
     }
@@ -104,10 +127,14 @@ public class FFAMode extends AbstractMode {
     @EventHandler
     public void onQuitKillAndRemove(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        if (pm.isInBattle(GameModeType.FFA, p)) {
-            ((FFAArena) pm.getArena(p)).removePlayer(p);
+        if (pm.isInBattle(type, p)) {
+            FFAArena arena = (FFAArena) pm.getArena(p);
+            arena.removePlayer(p);
             if (!p.isDead()) p.setHealth(0.0d);
-            //TODO logging
+            MessageBuilder.create(hmb, "modeFFALoggedOutLog")
+                    .addPlaceholderReplace("%PLAYER%", p.getName())
+                    .addPlaceholderReplace("%ARENA%", arena.getName())
+                    .logMessage(Level.INFO);
         }
     }
 }

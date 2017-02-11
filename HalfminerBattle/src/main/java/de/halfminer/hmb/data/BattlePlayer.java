@@ -156,7 +156,7 @@ class BattlePlayer {
 
     void setArena(Arena arena) {
         this.arena = arena;
-        this.gameMode = arena.getGameMode();
+        this.gameMode = arena.getGameModeType();
     }
 
     Arena getArena() {

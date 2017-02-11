@@ -13,12 +13,7 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.NMSUtils;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -309,29 +304,11 @@ public class DuelQueue {
                         .sendMessage(partner);
             }
 
-            ComponentBuilder builder = new ComponentBuilder("");
-
-            for (Arena freeArena : freeArenas) {
-                String tooltipOnHover = MessageBuilder.create(hmb, "modeDuelChooseArenaHover")
-                        .addPlaceholderReplace("%ARENA%", freeArena.getName())
-                        .returnMessage();
-                builder.append(freeArena.getName())
-                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose " + freeArena.getName()))
-                        .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(tooltipOnHover).create()))
-                        .color(ChatColor.GREEN).bold(true)
-                        .append("  ").reset();
-            }
-
-            builder.append(MessageBuilder.returnMessage(hmb, "randomArena"))
-                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose random"))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder(MessageBuilder.returnMessage(hmb, "modeDuelChooseArenaRandom")).create()))
-                    .color(ChatColor.GRAY);
-
-            selector.playSound(selector.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.9f);
-            selector.spigot().sendMessage(builder.create());
+            am.sendArenaSelection(selector, freeArenas, "/duel choose ", "modeDuelChooseArenaRandom");
         }
     }
+
+
 
     /**
      * Called if a player that is currently selecting an arena made an input, information picked up by

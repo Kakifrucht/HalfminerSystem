@@ -1,10 +1,16 @@
 package de.halfminer.hmb.mode.abs;
 
+import de.halfminer.hmb.enums.GameModeType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 
 
 public interface GameMode extends Listener {
+
+    /**
+     * @return this gamemodes type
+     */
+    GameModeType getType();
 
     /**
      * Called if gamemode specific command was executed
