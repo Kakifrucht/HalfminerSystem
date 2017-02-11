@@ -49,7 +49,7 @@ public class GlobalMode extends AbstractMode {
     @Override
     public boolean onAdminCommand(CommandSender sender, String[] args) {
 
-        // disregard if called via global custom gamemode /hmb glo(balmode)
+        // disregard if called via global custom battle mode /hmb glo(balmode)
         if (args.length == 0 || args[0].toLowerCase().startsWith("glo")) {
             sendUsageInformation(sender);
             return true;

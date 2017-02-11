@@ -81,9 +81,9 @@ public class PlayerManager {
     }
 
     /**
-     * Adds given players player to queue of given gamemode
+     * Adds given players player to queue of given battle mode
      *
-     * @param type GameModeType the player is in queue of
+     * @param type BattleModeType the player is in queue of
      * @param toAdd array of players
      */
     public void addToQueue(BattleModeType type, Player... toAdd) {
@@ -165,7 +165,7 @@ public class PlayerManager {
     }
 
     /**
-     * Returns the first added partner, useful if only one partner is every being set for the gamemode
+     * Returns the first added partner, useful if only one partner is ever being set for the battle mode
      *
      * @param get player to get the first partner of
      * @return first set partner or null if none set

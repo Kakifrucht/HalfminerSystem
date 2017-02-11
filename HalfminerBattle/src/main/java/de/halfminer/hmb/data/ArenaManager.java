@@ -223,7 +223,7 @@ public class ArenaManager {
         return false;
     }
 
-    public String getStringFromGameMode(BattleModeType modeType) {
+    public String getStringFromBattleMode(BattleModeType modeType) {
 
         List<Arena> arenas = getArenasFromType(modeType);
         if (arenas.isEmpty()) return "";

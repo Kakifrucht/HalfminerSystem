@@ -25,7 +25,7 @@ permissions:
       hmb.admin: true
       hmb.mode.*: true
   hmb.mode.*:
-    description: Access to all gamemodes and advanced permissions
+    description: Access to all battle modes and advanced permissions
     children:
       hmb.mode.duel: true
       hmb.global.bypass.teleportintoarena: true

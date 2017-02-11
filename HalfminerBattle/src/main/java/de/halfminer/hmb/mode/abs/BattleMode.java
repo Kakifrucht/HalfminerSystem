@@ -8,12 +8,12 @@ import org.bukkit.event.Listener;
 public interface BattleMode extends Listener {
 
     /**
-     * @return this gamemodes type
+     * @return this BattleMode's type
      */
     BattleModeType getType();
 
     /**
-     * Called if gamemode specific command was executed
+     * Called if battle mode specific command was executed
      *
      * @param sender    sender of  command
      * @param args      given arguments
@@ -22,7 +22,7 @@ public interface BattleMode extends Listener {
     boolean onCommand(CommandSender sender, String[] args);
 
     /**
-     * Called if gamemode specific admin command was executed, such as <i>/hmb <mode> (args[])</i>
+     * Called if battle mode specific admin command was executed, such as <i>/hmb <mode> (args[])</i>
      *
      * @param sender    sender of  command
      * @param args      given arguments
