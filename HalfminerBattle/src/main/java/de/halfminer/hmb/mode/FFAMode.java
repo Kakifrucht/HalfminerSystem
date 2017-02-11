@@ -3,7 +3,7 @@ package de.halfminer.hmb.mode;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.FFAArena;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
@@ -27,7 +27,7 @@ public class FFAMode extends AbstractMode {
     private int removeForMinutes;
 
     public FFAMode() {
-        super(GameModeType.FFA);
+        super(BattleModeType.FFA);
     }
 
     public int getRemoveAfterDeaths() {
@@ -61,14 +61,15 @@ public class FFAMode extends AbstractMode {
         switch (args[0].toLowerCase()) {
             case "join":
                 List<Arena> freeArenas = am.getFreeArenasFromType(type);
-                if (freeArenas.size() == 1) {
+                if (freeArenas.size() == 0) {
+                    MessageBuilder.create(hmb, "modeGlobalBattleModeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
+                } else if (freeArenas.size() == 1) {
                     if (((FFAArena) freeArenas.get(0)).addPlayer(player)) {
                         MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(player);
                     }
                 } else {
                     MessageBuilder.create(hmb, "modeFFAChooseArena", HalfminerBattle.PREFIX).sendMessage(player);
                     am.sendArenaSelection(player, freeArenas, "/ffa choose ", "");
-                    return true;
                 }
                 break;
             case "leave":
@@ -108,8 +109,8 @@ public class FFAMode extends AbstractMode {
 
     @Override
     public void onConfigReload() {
-        removeAfterDeaths = hmb.getConfig().getInt("mode.ffa.removeAfterDeaths", 4);
-        removeForMinutes = hmb.getConfig().getInt("mode.ffa.removeForMinutes", 3);
+        removeAfterDeaths = hmb.getConfig().getInt("battleMode.ffa.removeAfterDeaths", 4);
+        removeForMinutes = hmb.getConfig().getInt("battleMode.ffa.removeForMinutes", 3);
     }
 
     @EventHandler

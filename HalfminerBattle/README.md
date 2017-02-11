@@ -1,16 +1,16 @@
 # Halfminer Battle
-Battle Arena Bukkit/Spigot plugin with multiple game modes.
+Battle Arena Bukkit/Spigot plugin with multiple battle modes.
 
 Current features
 -------
-- Full battle arena solution allowing easy addition of new arena game modes
+- Full battle arena solution allowing easy addition of new arena battle modes
 - Seamless integration into existing Survival PvP worlds
 - Optimized for performance, battle tested and generally robust
 - Localization configurable, commands are clickable
-- **Gamemodes**
+- **Battle Modes**
   - Global functionality
     - Endless amount of arenas
-    - Custom kits per arena, if gamemode wants to support kits
+    - Custom kits per arena, if battle mode wants to support kits
       - Adds lore to kits to easily identify ones that were possibly extracted from a badly secured arena
       - Can toggle inventory store to disk, to prevent any inventory data loss from ever ocurring
         - Command */hmb openinventory* allows retrieval of said items by file name
@@ -41,4 +41,6 @@ Current features
     - Shows current arena status with */duel list*
     - Countdown before game start
     - Set maximum game time in config
+  - FFA mode
+    - TODO
     

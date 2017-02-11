@@ -3,7 +3,7 @@ package de.halfminer.hmb.data;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleState;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
@@ -33,7 +33,7 @@ class BattlePlayer {
     private final UUID baseUUID;
 
     private BattleState state = BattleState.IDLE;
-    private GameModeType gameMode;
+    private BattleModeType battleModeType;
     private long lastStateChange = System.currentTimeMillis();
     private PlayerData data = null;
 
@@ -50,7 +50,7 @@ class BattlePlayer {
 
     BattleState getState() {
         if (state.equals(BattleState.QUEUE_COOLDOWN)) {
-            GlobalMode global = (GlobalMode) HalfminerBattle.getInstance().getGameMode(GameModeType.GLOBAL);
+            GlobalMode global = (GlobalMode) HalfminerBattle.getInstance().getBattleMode(BattleModeType.GLOBAL);
             if (lastStateChange + (global.getQueueCooldownSeconds() * 1000) < System.currentTimeMillis()) {
                 setState(BattleState.IDLE);
             }
@@ -62,9 +62,9 @@ class BattlePlayer {
         setState(state, null);
     }
 
-    void setState(BattleState state, GameModeType gameMode) {
+    void setState(BattleState state, BattleModeType battleMode) {
         this.state = state;
-        this.gameMode = gameMode;
+        this.battleModeType = battleMode;
         this.lastStateChange = System.currentTimeMillis();
 
         if (state.equals(BattleState.IDLE) || state.equals(BattleState.QUEUE_COOLDOWN)) {
@@ -127,7 +127,7 @@ class BattlePlayer {
         }
 
         player.setWalkSpeed(data.walkSpeed);
-        player.setGameMode(data.minecraftGamemode);
+        player.setGameMode(data.gameMode);
 
         if (restoreInventory) restoreInventory();
 
@@ -157,15 +157,15 @@ class BattlePlayer {
 
     void setArena(Arena arena) {
         this.arena = arena;
-        this.gameMode = arena.getGameModeType();
+        this.battleModeType = arena.getBattleModeType();
     }
 
     Arena getArena() {
         return arena;
     }
 
-    GameModeType getGameMode() {
-        return gameMode;
+    BattleModeType getBattleModeType() {
+        return battleModeType;
     }
 
     private class PlayerData {
@@ -179,7 +179,7 @@ class BattlePlayer {
         private final float foodExhaustion;
         private final Collection<PotionEffect> potionEffects;
 
-        private final GameMode minecraftGamemode;
+        private final GameMode gameMode;
         private final float walkSpeed;
 
         PlayerData() {
@@ -192,7 +192,7 @@ class BattlePlayer {
             player.closeInventory();
             inventory = player.getInventory().getContents();
 
-            if (((GlobalMode) hmb.getGameMode(GameModeType.GLOBAL)).isSaveInventoryToDisk()) {
+            if (((GlobalMode) hmb.getBattleMode(BattleModeType.GLOBAL)).isSaveInventoryToDisk()) {
 
                 hmb.getServer().getScheduler().runTaskAsynchronously(hmb, () -> {
 
@@ -228,7 +228,7 @@ class BattlePlayer {
             foodExhaustion = player.getExhaustion();
             potionEffects = player.getActivePotionEffects();
 
-            minecraftGamemode = player.getGameMode();
+            gameMode = player.getGameMode();
             walkSpeed = player.getWalkSpeed();
         }
     }

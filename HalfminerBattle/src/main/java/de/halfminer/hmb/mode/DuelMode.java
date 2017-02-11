@@ -1,7 +1,7 @@
 package de.halfminer.hmb.mode;
 
 import de.halfminer.hmb.HalfminerBattle;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.duel.DuelQueue;
 import de.halfminer.hms.util.MessageBuilder;
@@ -28,7 +28,7 @@ public class DuelMode extends AbstractMode {
     private int duelTime;
 
     public DuelMode() {
-        super(GameModeType.DUEL);
+        super(BattleModeType.DUEL);
     }
 
     public DuelQueue getQueue() {
@@ -94,19 +94,19 @@ public class DuelMode extends AbstractMode {
     @Override
     public void onConfigReload() {
 
-        broadcastWin = hmb.getConfig().getBoolean("gameMode.duel.broadcastWin", false);
+        broadcastWin = hmb.getConfig().getBoolean("battleMode.duel.broadcastWin", false);
 
-        waitingForMatchRemind = hmb.getConfig().getInt("gameMode.duel.waitingForMatchRemind", Integer.MIN_VALUE);
+        waitingForMatchRemind = hmb.getConfig().getInt("battleMode.duel.waitingForMatchRemind", Integer.MIN_VALUE);
         if (waitingForMatchRemind < 0) {
             waitingForMatchRemind = 0;
-            hmb.getConfig().set("gameMode.duel.waitingForMatchRemind", 0);
+            hmb.getConfig().set("battleMode.duel.waitingForMatchRemind", 0);
             hmb.saveConfig();
         }
 
-        duelTime = hmb.getConfig().getInt("gameMode.duel.gameTime", Integer.MIN_VALUE);
+        duelTime = hmb.getConfig().getInt("battleMode.duel.gameTime", Integer.MIN_VALUE);
         if (duelTime < 20) {
             duelTime = 20;
-            hmb.getConfig().set("gameMode.duel.gameTime", 20);
+            hmb.getConfig().set("battleMode.duel.gameTime", 20);
             hmb.saveConfig();
         }
     }

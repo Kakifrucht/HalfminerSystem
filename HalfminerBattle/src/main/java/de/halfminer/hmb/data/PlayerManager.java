@@ -3,7 +3,7 @@ package de.halfminer.hmb.data;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleState;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -54,30 +54,30 @@ public class PlayerManager {
     }
 
     /**
-     * Check if a player is in queue for given gamemode
+     * Check if a player is in queue for given battle mode
      *
-     * @param gameMode GameModeType, can be {@link GameModeType#GLOBAL} to check every mode
+     * @param modeType BattleModeType, can be {@link BattleModeType#GLOBAL} to check every mode
      * @param toCheck Player
-     * @return true if player is in queue with given gamemode
+     * @return true if player is in queue with given battle mode
      */
-    public boolean isInQueue(GameModeType gameMode, Player toCheck) {
-        return hasState(toCheck, BattleState.IN_QUEUE) && isInGameMode(toCheck, gameMode);
+    public boolean isInQueue(BattleModeType modeType, Player toCheck) {
+        return hasState(toCheck, BattleState.IN_QUEUE) && isInBattleMode(toCheck, modeType);
     }
 
     /**
-     * Check if a player is in battle for given gamemode
+     * Check if a player is in battle for given battle mode
      *
-     * @param gameMode GameModeType, can be {@link GameModeType#GLOBAL} to check every mode
+     * @param modeType BattleModeType, can be {@link BattleModeType#GLOBAL} to check every mode
      * @param toCheck Player
-     * @return true if player is in battle with given gamemode
+     * @return true if player is in battle with given battle mode
      */
-    public boolean isInBattle(GameModeType gameMode, Player toCheck) {
-        return hasState(toCheck, BattleState.IN_BATTLE) && isInGameMode(toCheck, gameMode);
+    public boolean isInBattle(BattleModeType modeType, Player toCheck) {
+        return hasState(toCheck, BattleState.IN_BATTLE) && isInBattleMode(toCheck, modeType);
     }
 
-    private boolean isInGameMode(Player toGet, GameModeType type) {
-        GameModeType modeSet = getBattlePlayer(toGet).getGameMode();
-        return type.equals(modeSet) || (modeSet != null && type.equals(GameModeType.GLOBAL));
+    private boolean isInBattleMode(Player toGet, BattleModeType type) {
+        BattleModeType modeSet = getBattlePlayer(toGet).getBattleModeType();
+        return type.equals(modeSet) || (modeSet != null && type.equals(BattleModeType.GLOBAL));
     }
 
     /**
@@ -86,7 +86,7 @@ public class PlayerManager {
      * @param type GameModeType the player is in queue of
      * @param toAdd array of players
      */
-    public void addToQueue(GameModeType type, Player... toAdd) {
+    public void addToQueue(BattleModeType type, Player... toAdd) {
         for (Player p : toAdd) {
             getBattlePlayer(p).setState(BattleState.IN_QUEUE, type);
         }

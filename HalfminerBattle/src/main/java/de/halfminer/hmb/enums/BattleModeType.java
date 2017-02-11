@@ -1,9 +1,9 @@
 package de.halfminer.hmb.enums;
 
 /**
- * Contains a list of included gamemodes and their classnames, needed for reflection.
+ * Contains a list of included battle modes and their classnames, needed for reflection
  */
-public enum GameModeType {
+public enum BattleModeType {
     GLOBAL  ("GlobalMode", null),
     DUEL    ("DuelMode", "DuelArena"),
     FFA     ("FFAMode", "FFAArena");
@@ -11,7 +11,7 @@ public enum GameModeType {
     private final String modeClassName;
     private final String arenaClassName;
 
-    GameModeType(String classNameMode, String classNameArena) {
+    BattleModeType(String classNameMode, String classNameArena) {
         this.modeClassName = classNameMode;
         this.arenaClassName = classNameArena;
     }
@@ -24,9 +24,9 @@ public enum GameModeType {
         return arenaClassName;
     }
 
-    public static GameModeType getGameMode(String toResolve) {
+    public static BattleModeType getBattleMode(String toResolve) {
         if (toResolve.length() < 3) return null;
-        for (GameModeType type : values()) {
+        for (BattleModeType type : values()) {
             if (type.getModeClassName().toLowerCase().startsWith(toResolve.toLowerCase()))
                 return type;
         }

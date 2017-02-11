@@ -1,5 +1,5 @@
 #HalfminerBattle Config
-gameMode:
+battleMode:
   global:
     #Disable hunger loss
     noHungerLoss: true
@@ -24,6 +24,9 @@ gameMode:
     removeAfterDeaths: 4
     #How many minutes he will be removed for
     removeForMinutes: 3
+#Use '&' as color code
+#Lines starting with '~' will be parsed to make commands clickable, close the command with another '/'
+#Messages can be removed by simply setting the message to nothing ('')
 localization:
   prefix: '&7Battle &e>>&r '
   commandClickHover: 'Klicken, um das Kommando auszuführen'
@@ -36,13 +39,13 @@ localization:
   adminCommandUsage: 'HalfminerBattle Version &6%VERSION%\n&6&lAdmin Kommandos:\n &f/hmb <modus>\n /hmb reload\n /hmb openinventory <dateiname>\n&6&lArena Kommandos:\n &f/hmb create <mode> <name>\n /hmb remove <mode> <arenaname>\n /hmb setspawn <mode> <arenaname> [spawnnumber]\n /hmb removespawn <mode> <arenaname> [spawnnumber]\n /hmb setkit <mode> <arenaname>'
   adminCreate: '~&7Die Arena &a%ARENA% &7wurde erstellt. Verwende &e/hmb setspawn %MODE% %ARENA%/ &7um weitere Spawnpunkte setzen'
   adminCreateFailed: '&7Die Arena &c%ARENA% &7existiert bereits'
-  adminNotDefined: '&7Der Modus &c%GAMEMODE% &7hat keine administrativen Kommandos'
+  adminNotDefined: '&7Der Modus &c%BATTLEMODE% &7hat keine administrativen Kommandos'
   adminRemove: '&7Die Arena &a%ARENA% &7wurde entfernt'
   adminSetKit: '&7Das Kit für die Arena &a%ARENA% &7wurde gesetzt'
   adminSetSpawn: '&7Der Spawn für die Arena &a%ARENA% &7wurde gesetzt'
   adminSettingsReloaded: '&aDie Konfiguration wurde neugeladen'
   adminSettingsReloadedError: '&cFehler beim neu laden der Arena Konfiguration, siehe Konsole für weitere Informationen'
-  adminUnknownGamemode: '&cUnbekannter Spielmodus'
+  adminUnknownBattleMode: '&cUnbekannter Spielmodus'
   adminOpenInventoryInvalid: '&cUngültige Datei'
   adminOpenInventoryUnknownFile: '&cDatei nicht gefunden'
   modeDuelChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), auf der du gegen &e%PLAYER% &7spielen willst: '
@@ -97,7 +100,7 @@ localization:
   modeGlobalArenaLoadLog: '%ARENAS% Arenen und %KITS% Kits geladen'
   modeGlobalChooseArenaHover: 'In &l%ARENA% &rspielen'
   modeGlobalCommandsInBedDisabled: '&cDu kannst im Bett keine Kommandos benutzen'
-  modeGlobalGamemodeDisabled: '&7Dieser Spielmodus ist aktuell &cdeaktiviert'
+  modeGlobalBattleModeDisabled: '&7Dieser Spielmodus ist aktuell &cdeaktiviert'
   modeGlobalInGame: '&cDu kannst im Kampf keine Kommandos benutzen'
   modeGlobalKitArenaCustomLore: '&a%ARENA% &7(&o%MODE%&7) | &b%PLAYER%'
   modeGlobalLeftQueue: '&7Du hast die Warteschlange verlassen'

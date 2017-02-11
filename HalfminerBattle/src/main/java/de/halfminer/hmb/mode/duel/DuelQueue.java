@@ -6,7 +6,7 @@ import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.BattleState;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.HandlerType;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class DuelQueue {
 
-    private static final GameModeType MODE = GameModeType.DUEL;
+    private static final BattleModeType MODE = BattleModeType.DUEL;
 
     private static final HalfminerBattle hmb = HalfminerBattle.getInstance();
     private static final PlayerManager pm = hmb.getPlayerManager();
@@ -44,7 +44,7 @@ public class DuelQueue {
      * Called after a player uses the command /duel match.
      * Puts the player into a queue until another player uses the /duel match command,
      * somebody duel requests this player, or matches the player if another player is already waiting.
-     * It also sends broadcasts after <i>gameMode.duel.waitingForMatchRemind</i> setting
+     * It also sends broadcasts after <i>battleMode.duel.waitingForMatchRemind</i> setting
      * seconds if he is still waiting then
      *
      * @param toMatch player that wants to be matched
@@ -184,7 +184,7 @@ public class DuelQueue {
 
     private boolean hasRequestedDuelWith(Player requested, Player with) {
         Player wasRequested = pm.getFirstPartner(requested);
-        return pm.isInQueue(GameModeType.DUEL, requested)
+        return pm.isInQueue(BattleModeType.DUEL, requested)
                 && wasRequested != null
                 && wasRequested.equals(with);
     }
@@ -198,7 +198,7 @@ public class DuelQueue {
      */
     public void removeFromQueue(Player toRemove) {
 
-        if (!pm.isInQueue(GameModeType.DUEL, toRemove)) {
+        if (!pm.isInQueue(BattleModeType.DUEL, toRemove)) {
             MessageBuilder.create(hmb, "modeDuelNotInQueue", HalfminerBattle.PREFIX).sendMessage(toRemove);
             return;
         }
@@ -277,7 +277,7 @@ public class DuelQueue {
      * and when an arena becomes available. If only one arena is available no selection will be shown,
      * if none are free the players will be put into the next free arena automatically and notify them.
      *
-     * @param selector         player the selection will be sent to
+     * @param selector       player the selection will be sent to
      * @param refreshMessage if true will display message that the information has been refreshed
      *                       (only when free arena state updates, not on first send)
      */

@@ -1,6 +1,6 @@
 package de.halfminer.hmb.arena.abs;
 
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
@@ -19,8 +19,8 @@ public abstract class AbstractKitArena extends AbstractArena {
 
     private ItemStack[] kit;
 
-    protected AbstractKitArena(GameModeType gameMode, String name) {
-        super(gameMode, name);
+    protected AbstractKitArena(BattleModeType battleModeType, String name) {
+        super(battleModeType, name);
         reload();
     }
 
@@ -31,7 +31,7 @@ public abstract class AbstractKitArena extends AbstractArena {
 
     @Override
     public void reload() {
-        kit = am.getKit(gameMode, getName());
+        kit = am.getKit(battleModeType, getName());
     }
 
     protected void storeClearAndTeleportPlayers(Player... players) {
@@ -53,7 +53,7 @@ public abstract class AbstractKitArena extends AbstractArena {
         lore.add("");
         lore.add(MessageBuilder.create(hmb, "modeGlobalKitArenaCustomLore")
                 .addPlaceholderReplace("%ARENA%", getName())
-                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(gameMode.toString()))
+                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
                 .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage());
 
         lore.add(ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY

@@ -3,9 +3,10 @@ package de.halfminer.hmb.arena.abs;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
-import de.halfminer.hmb.mode.abs.GameMode;
+import de.halfminer.hmb.mode.abs.BattleMode;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -23,13 +24,13 @@ public abstract class AbstractArena implements Arena {
     protected static final ArenaManager am = hmb.getArenaManager();
 
     // Arena state
-    protected final GameModeType gameMode;
+    protected final BattleModeType battleModeType;
     protected final String name;
     protected List<Location> spawns = new ArrayList<>();
     protected final LinkedList<Player> playersInArena = new LinkedList<>();
 
-    protected AbstractArena(GameModeType gameMode, String name) {
-        this.gameMode = gameMode;
+    protected AbstractArena(BattleModeType battleModeType, String name) {
+        this.battleModeType = battleModeType;
         this.name = name;
     }
 
@@ -44,8 +45,8 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
-    public GameModeType getGameModeType() {
-        return gameMode;
+    public BattleModeType getBattleModeType() {
+        return battleModeType;
     }
 
     @Override
@@ -75,7 +76,7 @@ public abstract class AbstractArena implements Arena {
     @Override
     public boolean isCloseToSpawn(Location loc) {
 
-        GlobalMode global = (GlobalMode) hmb.getGameMode(GameModeType.GLOBAL);
+        GlobalMode global = (GlobalMode) hmb.getBattleMode(BattleModeType.GLOBAL);
         for (Location spawn : spawns) {
             if (spawn.getWorld().equals(loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance())
                 return true;
@@ -123,12 +124,12 @@ public abstract class AbstractArena implements Arena {
             toHeal.setFireTicks(0);
             for (PotionEffect effect : toHeal.getActivePotionEffects())
                 toHeal.removePotionEffect(effect.getType());
-            toHeal.setGameMode(org.bukkit.GameMode.ADVENTURE);
+            toHeal.setGameMode(GameMode.ADVENTURE);
         }
     }
 
-    protected GameMode getGameMode() {
-        return hmb.getGameMode(gameMode);
+    protected BattleMode getBattleMode() {
+        return hmb.getBattleMode(battleModeType);
     }
 
     protected List<Player> parameterToList(Player... param) {
