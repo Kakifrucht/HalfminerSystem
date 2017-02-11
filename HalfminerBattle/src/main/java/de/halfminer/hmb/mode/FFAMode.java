@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * TODO
+ * Implementing free for all games with automatic respawns in kit arenas and killstreaks
  */
 @SuppressWarnings("unused")
 public class FFAMode extends AbstractMode {
@@ -80,8 +80,12 @@ public class FFAMode extends AbstractMode {
                 MessageBuilder.create(hmb, "modeFFAArenaLeft", HalfminerBattle.PREFIX).sendMessage();
                 break;
             case "choose":
-                //TODO
-                break;
+                if (args.length > 1) {
+                    if (((FFAArena) am.getArena(type, args[1])).addPlayer(player)) {
+                        MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(player);
+                    }
+                    break;
+                }
             default:
                 MessageBuilder.create(hmb, "modeFFAUsage", HalfminerBattle.PREFIX).sendMessage(sender);
         }

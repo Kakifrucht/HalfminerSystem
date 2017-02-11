@@ -93,7 +93,8 @@ class BattlePlayer {
         if (data == null)
             throw new RuntimeException("Could not restore player " + player.getName() + " as data was not set");
 
-        if (player.isDead() && player.isOnline()) {
+        // if dead respawn with delay to prevent damage immunity loss glitch
+        if (player.isDead()) {
             try {
                 Bukkit.getScheduler().runTaskLater(hmb, () -> {
                     player.spigot().respawn();

@@ -6,9 +6,13 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.enums.GameModeType;
 import de.halfminer.hmb.mode.FFAMode;
+import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.CachingException;
+import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -17,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TODO
+ * Free for all arena used by {@link FFAMode}, implementing custom killstreaks, timeouts and auto respawns
  */
 @SuppressWarnings("unused")
 public class FFAArena extends AbstractKitArena {
@@ -35,8 +39,6 @@ public class FFAArena extends AbstractKitArena {
 
     public boolean addPlayer(Player toAdd) {
 
-        //TODO teleport delay, use HanTeleport?
-
         Long timestamp = bannedFromArena.getIfPresent(toAdd);
         if (timestamp != null) {
             long secondsLeft = (System.currentTimeMillis() / 1000) - timestamp;
@@ -46,11 +48,18 @@ public class FFAArena extends AbstractKitArena {
             return false;
         }
 
+        Location spawn = spawns.get(0);
+        HanTeleport teleportHandler = (HanTeleport) HalfminerSystem.getInstance().getHandler(HandlerType.TELEPORT);
+        teleportHandler.startTeleport(toAdd, spawn, 3, null, () -> addPlayerInternal(toAdd));
+
+        return true;
+    }
+
+    private void addPlayerInternal(Player toAdd) {
         playersInArena.add(toAdd);
         storeClearAndTeleportPlayers(toAdd);
         healAndPreparePlayers(toAdd);
         equipPlayers(toAdd);
-        return true;
     }
 
     public void removePlayer(Player toRemove) {
@@ -63,19 +72,20 @@ public class FFAArena extends AbstractKitArena {
 
         int streakDied = streaks.containsKey(hasDied) ? Math.min(streaks.get(hasDied), 0) - 1 : -1;
         streaks.put(hasDied, streakDied);
-        // respawn later
-        //TODO also remove if logout before death
-        hmb.getServer().getScheduler().runTaskLater(hmb, () -> {
-            if (hasDied.isOnline()) {
-                hasDied.spigot().respawn();
 
-                if (-streakDied == gameMode.getRemoveAfterDeaths()) {
-                    MessageBuilder.create(hmb, "modeFFADiedTooOften", HalfminerBattle.PREFIX).sendMessage(hasDied);
-                    removePlayer(hasDied);
-                    bannedFromArena.put(hasDied.getUniqueId(), System.currentTimeMillis() / 1000);
-                } else teleportIntoArena(hasDied);
-            }
-        }, 2L);
+        if (-streakDied == gameMode.getRemoveAfterDeaths()) {
+            MessageBuilder.create(hmb, "modeFFADiedTooOften", HalfminerBattle.PREFIX).sendMessage(hasDied);
+            removePlayer(hasDied);
+            bannedFromArena.put(hasDied.getUniqueId(), System.currentTimeMillis() / 1000);
+        } else {
+            // respawn later
+            hmb.getServer().getScheduler().runTaskLater(hmb, () -> {
+                if (hasDied.isOnline() && pm.getArena(hasDied).equals(this)) {
+                    hasDied.spigot().respawn();
+                    teleportIntoArena(hasDied);
+                }
+            }, 2L);
+        }
 
         Player killer = hasDied.getKiller();
         if (killer != null) {
