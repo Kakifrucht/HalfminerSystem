@@ -106,7 +106,7 @@ public class GlobalMode extends AbstractMode {
             }
 
             BattleModeType type = BattleModeType.getBattleMode(args[1]);
-            if (type == null) {
+            if (type == null || type.equals(BattleModeType.GLOBAL)) {
                 MessageBuilder.create(hmb, "adminUnknownBattleMode", HalfminerBattle.PREFIX).sendMessage(sender);
                 return true;
             }

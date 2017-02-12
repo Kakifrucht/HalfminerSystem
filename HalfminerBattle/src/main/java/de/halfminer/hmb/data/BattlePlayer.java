@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.potion.PotionEffect;
 
@@ -149,10 +150,13 @@ class BattlePlayer {
             for (ItemStack item : player.getInventory().getContents()) {
                 if (item != null) {
                     boolean keep = true;
-                    for (String str : item.getItemMeta().getLore()) {
-                        if (str.contains(arena.getName())) {
-                            keep = false;
-                            break;
+                    ItemMeta meta = item.getItemMeta();
+                    if (meta != null) {
+                        for (String str : meta.getLore()) {
+                            if (str.contains(arena.getName())) {
+                                keep = false;
+                                break;
+                            }
                         }
                     }
                     if (keep) {
