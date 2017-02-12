@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Global game mode, functionality shared by all other {@link BattleMode}
@@ -62,12 +63,6 @@ public class GlobalMode extends AbstractMode {
                     .sendMessage(sender);
         } else if (args[0].equalsIgnoreCase("openinventory")) {
 
-            if (!(sender instanceof Player)) {
-                sendNotAPlayerMessage(sender);
-                return true;
-            }
-
-            Player player = (Player) sender;
             if (args.length < 2) {
                 sendUsageInformation(sender);
                 return true;
@@ -80,17 +75,56 @@ public class GlobalMode extends AbstractMode {
 
             File fileToOpen = new File(hmb.getDataFolder() + File.separator + "inventories", fileName);
             if (fileToOpen.exists()) {
-                Inventory inventory = hmb.getServer().createInventory(player, 45);
                 YamlConfiguration yaml = YamlConfiguration.loadConfiguration(fileToOpen);
                 List<?> items = yaml.getList("inventory");
+
                 if (items != null) {
+
+                    Player toRestore = null;
+                    if (args.length > 2 && args[2].equals("-r")) {
+                        String uuidString = yaml.getString("uuid");
+                        toRestore = hmb.getServer().getPlayer(UUID.fromString(uuidString));
+                        if (toRestore == null || !toRestore.isOnline()) {
+                            MessageBuilder.create(hmb, "playerNotOnline", HalfminerBattle.PREFIX)
+                                    .sendMessage(sender);
+                            return true;
+                        }
+                        if (pm.isInBattle(type, toRestore)) {
+                            MessageBuilder.create(hmb, "adminOpenInventoryRestoredError", HalfminerBattle.PREFIX)
+                                    .addPlaceholderReplace("%PLAYER%", toRestore.getName())
+                                    .sendMessage(sender);
+                            return true;
+                        }
+                    }
+
+                    ItemStack[] contents = new ItemStack[items.size()];
                     for (int i = 0; i < 45 && i < items.size(); i++) {
                         Object item = items.get(i);
                         if (item instanceof ItemStack) {
-                            inventory.setItem(i, (ItemStack) item);
+                            contents[i] = (ItemStack) item;
                         }
                     }
-                    player.openInventory(inventory);
+
+                    if (toRestore != null) {
+                        toRestore.getInventory().setContents(contents);
+                        MessageBuilder.create(hmb, "adminOpenInventoryRestored", HalfminerBattle.PREFIX)
+                                .addPlaceholderReplace("%PLAYER%", toRestore.getName())
+                                .sendMessage(sender);
+                    } else {
+
+                        if (!(sender instanceof Player)) {
+                            sendNotAPlayerMessage(sender);
+                            return true;
+                        }
+
+                        Player player = (Player) sender;
+
+                        int modulo = contents.length % 9;
+                        int size = modulo == 0 ? contents.length : contents.length + (9 - modulo);
+                        Inventory toOpen = hmb.getServer().createInventory(player, size);
+                        toOpen.setContents(contents);
+                        player.openInventory(toOpen);
+                    }
                 } else {
                     MessageBuilder.create(hmb, "adminOpenInventoryInvalid", HalfminerBattle.PREFIX).sendMessage(sender);
                 }

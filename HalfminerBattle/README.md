@@ -13,7 +13,8 @@ Current features
     - Custom kits per arena, if battle mode wants to support kits
       - Adds lore to kits to easily identify ones that were possibly extracted from a badly secured arena
       - Can toggle inventory store to disk, to prevent any inventory data loss from ever ocurring
-        - Command */hmb openinventory* allows retrieval of said items by file name
+        - Command */hmb openinventory [filename]* allows retrieval of said items by file name
+          - Add -r flag to automatically restore while player is online
         - Automatically cleaning up old files
     - Recovers players completely after fight (position, health/status, inventory if kit was used, potion effects)
       - Sets gamemode to adventure during fight

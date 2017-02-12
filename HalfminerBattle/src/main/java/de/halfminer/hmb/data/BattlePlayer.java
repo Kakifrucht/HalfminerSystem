@@ -236,6 +236,7 @@ class BattlePlayer {
                                 if (file.createNewFile()) {
                                     YamlConfiguration configFile = new YamlConfiguration();
                                     configFile.set("inventory", inventory);
+                                    configFile.set("uuid", player.getUniqueId().toString());
                                     configFile.save(file);
                                 }
                             } catch (IOException e) {
