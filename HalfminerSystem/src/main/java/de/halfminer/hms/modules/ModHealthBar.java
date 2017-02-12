@@ -118,9 +118,8 @@ public class ModHealthBar extends HalfminerModule implements Listener {
 
         maxHealth = ((Attributable) entityToUpdate).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 
-        if (newHealth == -1) health = (int) entityToUpdate.getHealth();
-        else health = Math.max(newHealth, 0);
-        health = Math.min(health, (int) maxHealth);
+        // don't show health being higher than maxhealth and not lower than 0
+        health = Math.min(Math.max(newHealth, 0), (int) maxHealth);
 
         healthRatio = health / maxHealth;
 

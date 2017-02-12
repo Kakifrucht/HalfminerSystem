@@ -164,7 +164,7 @@ public class DuelMode extends AbstractMode {
     @EventHandler(priority = EventPriority.LOW)
     public void onDeathEndDuel(PlayerDeathEvent e) {
 
-        Player died = e.getEntity().getPlayer();
+        Player died = e.getEntity();
         if (pm.isInQueue(type, died)) queue.removeFromQueue(died);
         else if (pm.isInBattle(type, died)) queue.gameHasFinished(died, true, false);
     }

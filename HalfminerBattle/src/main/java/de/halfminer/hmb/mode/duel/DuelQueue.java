@@ -377,8 +377,8 @@ public class DuelQueue {
      */
     public void gameHasFinished(Player playerA, boolean hasWinner, boolean hasLogged) {
 
-        DuelArena arena = (DuelArena) pm.getArena(playerA);
         Player winner = pm.getFirstPartner(playerA);
+        DuelArena arena = (DuelArena) pm.getArena(playerA);
         arena.gameEnd();
 
         // Messaging
