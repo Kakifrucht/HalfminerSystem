@@ -9,9 +9,7 @@ import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
@@ -58,15 +56,24 @@ public class FFAMode extends AbstractMode {
             return true;
         }
 
+        if (pm.hasQueueCooldown(player)) {
+            MessageBuilder.create(hmb, "modeGlobalQueueCooldown", HalfminerBattle.PREFIX).sendMessage(player);
+            return true;
+        }
+
         switch (args[0].toLowerCase()) {
             case "join":
+                // recheck because ffa does not cause command blockage
+                if (pm.isNotIdle(player)) {
+                    MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(player);
+                    return true;
+                }
+
                 List<Arena> freeArenas = am.getFreeArenasFromType(type);
                 if (freeArenas.size() == 0) {
                     MessageBuilder.create(hmb, "modeGlobalBattleModeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
                 } else if (freeArenas.size() == 1) {
-                    if (((FFAArena) freeArenas.get(0)).addPlayer(player)) {
-                        MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(player);
-                    }
+                    ((FFAArena) freeArenas.get(0)).addPlayer(player);
                 } else {
                     MessageBuilder.create(hmb, "modeFFAChooseArena", HalfminerBattle.PREFIX).sendMessage(player);
                     am.sendArenaSelection(player, freeArenas, "/ffa choose ", "");
@@ -77,14 +84,19 @@ public class FFAMode extends AbstractMode {
                     MessageBuilder.create(hmb, "modeFFANotInArena", HalfminerBattle.PREFIX).sendMessage(player);
                     return true;
                 }
+
                 ((FFAArena) pm.getArena(player)).removePlayer(player);
-                MessageBuilder.create(hmb, "modeFFAArenaLeft", HalfminerBattle.PREFIX).sendMessage();
+                MessageBuilder.create(hmb, "modeFFAArenaLeft", HalfminerBattle.PREFIX).sendMessage(player);
                 break;
             case "choose":
+                if (pm.isNotIdle(player)) {
+                    MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(player);
+                    return true;
+                }
+
                 if (args.length > 1) {
-                    if (((FFAArena) am.getArena(type, args[1])).addPlayer(player)) {
-                        MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(player);
-                    }
+                    //TODO test
+                    ((FFAArena) am.getArena(type, args[1])).addPlayer(player);
                     break;
                 }
             default:
@@ -119,13 +131,6 @@ public class FFAMode extends AbstractMode {
         if (pm.isInBattle(type, p)) {
             FFAArena arena = (FFAArena) pm.getArena(p);
             arena.hasDied(p);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onCancelledCommand(PlayerCommandPreprocessEvent e) {
-        if (e.isCancelled() && pm.isInBattle(type, e.getPlayer())) {
-            e.setCancelled(e.getMessage().toLowerCase().startsWith("/ffa leave"));
         }
     }
 

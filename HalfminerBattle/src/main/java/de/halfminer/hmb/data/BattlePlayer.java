@@ -7,6 +7,7 @@ import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,6 +18,7 @@ import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -140,9 +142,29 @@ class BattlePlayer {
 
     void restoreInventory() {
         if (data != null) {
+
             Player player = getBase();
+
+            // before restoring, check if non arena items were dropped during battle and add them after restoring
+            List<ItemStack> itemStacks = new ArrayList<>();
+            for (ItemStack item : player.getInventory().getContents()) {
+                if (item != null) {
+                    boolean keep = true;
+                    for (String str : item.getItemMeta().getLore()) {
+                        if (ChatColor.stripColor(str).startsWith(arena.getName())) {
+                            keep = false;
+                            break;
+                        }
+                    }
+                    if (keep) {
+                        itemStacks.add(item);
+                    }
+                }
+            }
+
             player.closeInventory();
             player.getInventory().setContents(data.inventory);
+            player.getInventory().addItem(itemStacks.toArray(new ItemStack[itemStacks.size()]));
             player.updateInventory();
         }
     }

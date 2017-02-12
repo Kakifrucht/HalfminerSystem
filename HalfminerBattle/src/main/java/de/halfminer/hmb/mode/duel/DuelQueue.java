@@ -57,14 +57,14 @@ public class DuelQueue {
         }
 
         if (pm.isNotIdle(toMatch)) {
-            MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
+            MessageBuilder.create(hmb, "modeDuelAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
             return;
         }
 
         if (waitingForMatch == null) {
             waitingForMatch = toMatch;
             pm.addToQueue(MODE, toMatch);
-            MessageBuilder.create(hmb, "modeGlobalAddedToQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
+            MessageBuilder.create(hmb, "modeDuelAddedToQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
 
             int time;
             if ((time = duelMode.getWaitingForMatchRemind()) > 0) {
@@ -127,7 +127,7 @@ public class DuelQueue {
         }
 
         if (pm.isNotIdle(sender)) {
-            MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(hmb, "modeDuelAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
 

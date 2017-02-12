@@ -36,14 +36,11 @@ public class DuelArena extends AbstractKitArena {
     public void gameStart(Player playerA, Player playerB, boolean useKit) {
 
         addPlayers(playerA, playerB);
+        playersInArena.forEach(p -> p.setWalkSpeed(0.0f));
         this.useKit = useKit;
         // ensures that the players get their stuff back if duel is stopped
         // during 5 seconds countdown, if fighting with own stuff
         restoreInventory = true;
-
-        storeClearAndTeleportPlayers();
-        healAndPreparePlayers();
-        playersInArena.forEach(p -> p.setWalkSpeed(0.0f));
 
         task = Bukkit.getScheduler().runTaskTimerAsynchronously(hmb, new Runnable() {
 
@@ -112,7 +109,6 @@ public class DuelArena extends AbstractKitArena {
         task.cancel();
         restorePlayers(useKit || restoreInventory);
         playSound(Sound.BLOCK_ANVIL_LAND);
-        playersInArena.clear();
     }
 
     private void playSound(Sound toPlay) {

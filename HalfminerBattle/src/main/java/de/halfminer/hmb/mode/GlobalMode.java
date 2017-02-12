@@ -261,8 +261,10 @@ public class GlobalMode extends AbstractMode {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void disableCommandDuringFight(PlayerCommandPreprocessEvent e) {
 
-        if (pm.isInBattle(type, e.getPlayer()) && !e.getPlayer().hasPermission("hmb.admin")) {
-            MessageBuilder.create(hmb, "modeGlobalInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
+        if (pm.isInBattle(type, e.getPlayer())
+                && !e.getPlayer().hasPermission("hmb.mode.global.bypass.commands")
+                && !pm.isInBattle(BattleModeType.FFA, e.getPlayer())) {
+            MessageBuilder.create(hmb, "modeGlobalNoCommandInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }

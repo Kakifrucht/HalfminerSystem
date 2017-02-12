@@ -34,8 +34,9 @@ public abstract class AbstractKitArena extends AbstractArena {
         kit = am.getKit(battleModeType, getName());
     }
 
-    protected void storeClearAndTeleportPlayers(Player... players) {
-        storeAndTeleportPlayers(players);
+    @Override
+    public void addPlayers(Player... players) {
+        super.addPlayers(players);
         parameterToList(players).forEach(p -> p.getInventory().clear());
     }
 
@@ -47,17 +48,24 @@ public abstract class AbstractKitArena extends AbstractArena {
         }
     }
 
+    protected String getCustomLore(Player player) {
+        return MessageBuilder.create(hmb, "modeGlobalKitArenaCustomLore")
+                .addPlaceholderReplace("%ARENA%", getName())
+                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
+                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage();
+    }
+
+    protected String getCustomLoreID() {
+        return ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
+                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000);
+    }
+
     private ItemStack[] addPlayerInfo(Player player, ItemStack[] toModify) {
         ItemStack[] modified = new ItemStack[toModify.length];
         List<String> lore = new ArrayList<>();
         lore.add("");
-        lore.add(MessageBuilder.create(hmb, "modeGlobalKitArenaCustomLore")
-                .addPlaceholderReplace("%ARENA%", getName())
-                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
-                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage());
-
-        lore.add(ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
-                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000));
+        lore.add(getCustomLore(player));
+        lore.add(getCustomLoreID());
 
         for (int i = 0; i < modified.length; i++) {
 

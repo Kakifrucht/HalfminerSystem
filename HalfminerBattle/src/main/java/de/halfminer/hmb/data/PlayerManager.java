@@ -2,8 +2,8 @@ package de.halfminer.hmb.data;
 
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hmb.enums.BattleState;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -93,19 +93,17 @@ public class PlayerManager {
     }
 
     /**
-     * Sets the arena the given players are in.
-     * This will also set their state to {@link BattleState#IN_BATTLE} and store their state
+     * Sets the arena the given player is in.
+     * This will also set his state to {@link BattleState#IN_BATTLE} and store his current Minecraft state.
      *
-     * @param toSet Arena the player
-     * @param setTo player array to set
+     * @param setTo player that joined the arena
+     * @param wasJoined Arena that was joined
      */
-    public void setArena(Arena toSet, Player... setTo) {
-        for (Player p : setTo) {
-            BattlePlayer battlePlayer = getBattlePlayer(p);
-            battlePlayer.setState(BattleState.IN_BATTLE);
-            battlePlayer.setArena(toSet);
-            battlePlayer.storeData();
-        }
+    public void setArena(Player setTo, Arena wasJoined) {
+        BattlePlayer battlePlayer = getBattlePlayer(setTo);
+        battlePlayer.setState(BattleState.IN_BATTLE);
+        battlePlayer.setArena(wasJoined);
+        battlePlayer.storeData();
     }
 
     public Arena getArena(Player player) {
