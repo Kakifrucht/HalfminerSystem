@@ -89,15 +89,17 @@ public class FFAMode extends AbstractMode {
                 MessageBuilder.create(hmb, "modeFFAArenaLeft", HalfminerBattle.PREFIX).sendMessage(player);
                 break;
             case "choose":
-                if (pm.isNotIdle(player)) {
-                    MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(player);
-                    return true;
-                }
-
                 if (args.length > 1) {
-                    //TODO test
-                    ((FFAArena) am.getArena(type, args[1])).addPlayer(player);
-                    break;
+                    if (pm.isNotIdle(player)) {
+                        MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(player);
+                        return true;
+                    }
+
+                    Arena selected = am.getArena(type, args[1]);
+                    if (selected != null) {
+                        ((FFAArena) selected).addPlayer(player);
+                        break;
+                    }
                 }
             default:
                 MessageBuilder.create(hmb, "modeFFAUsage", HalfminerBattle.PREFIX).sendMessage(sender);

@@ -7,7 +7,6 @@ import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -151,7 +150,7 @@ class BattlePlayer {
                 if (item != null) {
                     boolean keep = true;
                     for (String str : item.getItemMeta().getLore()) {
-                        if (ChatColor.stripColor(str).startsWith(arena.getName())) {
+                        if (str.contains(arena.getName())) {
                             keep = false;
                             break;
                         }

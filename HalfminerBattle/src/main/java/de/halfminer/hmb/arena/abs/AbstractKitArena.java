@@ -35,7 +35,7 @@ public abstract class AbstractKitArena extends AbstractArena {
     }
 
     @Override
-    public void addPlayers(Player... players) {
+    protected void addPlayers(Player... players) {
         super.addPlayers(players);
         parameterToList(players).forEach(p -> p.getInventory().clear());
     }

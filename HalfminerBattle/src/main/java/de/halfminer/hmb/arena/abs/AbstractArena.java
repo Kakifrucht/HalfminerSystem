@@ -90,7 +90,7 @@ public abstract class AbstractArena implements Arena {
      *
      * @param players to be added to the arena
      */
-    public void addPlayers(Player... players) {
+    protected void addPlayers(Player... players) {
         if (!isFree()) throw new RuntimeException("Tried to add players to an occupied arena");
 
         for (Player toAdd : parameterToList(players)) {
@@ -127,8 +127,9 @@ public abstract class AbstractArena implements Arena {
      */
     protected void restorePlayers(boolean restoreInventory, Player... players) {
         pm.restorePlayers(restoreInventory, parameterToArray(players));
-        //TODO fix removal
-        parameterToList(players).forEach(playersInArena::remove);
+        for (Player player : parameterToArray(players)) {
+            playersInArena.remove(player);
+        }
     }
 
     protected BattleMode getBattleMode() {

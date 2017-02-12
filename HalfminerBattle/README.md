@@ -43,5 +43,15 @@ Current features
     - Countdown before game start
     - Set maximum game time in config
   - FFA mode
-    - TODO
+    - Teleport cooldown before teleporting into arena
+      - Players can select which arena to enter
+    - Custom kit in arena
+    - Custom killstreaks
+      - Define what should happen at which streak in *customactions.txt*
+        - Supports commands, custom item drops, messaging
+    - Logging out causes immediate death (or give kill to recently hitting player)
+    - Players get kicked from arena after configurable streak of deaths
+      - They will remain banned for configured amount of time
+    - Auto respawn in arena while keeping items
+    - Arena can be left per command
     
