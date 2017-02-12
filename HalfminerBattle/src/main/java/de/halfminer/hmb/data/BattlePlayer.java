@@ -2,8 +2,8 @@ package de.halfminer.hmb.data;
 
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
@@ -151,7 +151,7 @@ class BattlePlayer {
                 if (item != null) {
                     boolean keep = true;
                     ItemMeta meta = item.getItemMeta();
-                    if (meta != null) {
+                    if (meta != null && meta.hasLore()) {
                         for (String str : meta.getLore()) {
                             if (str.contains(arena.getName())) {
                                 keep = false;
