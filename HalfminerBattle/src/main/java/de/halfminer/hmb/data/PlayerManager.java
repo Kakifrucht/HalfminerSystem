@@ -2,8 +2,8 @@ package de.halfminer.hmb.data;
 
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
-import de.halfminer.hmb.enums.GameModeType;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -54,58 +54,56 @@ public class PlayerManager {
     }
 
     /**
-     * Check if a player is in queue for given gamemode
+     * Check if a player is in queue for given battle mode
      *
-     * @param gameMode GameModeType, can be {@link GameModeType#GLOBAL} to check every mode
+     * @param modeType BattleModeType, can be {@link BattleModeType#GLOBAL} to check every mode
      * @param toCheck Player
-     * @return true if player is in queue with given gamemode
+     * @return true if player is in queue with given battle mode
      */
-    public boolean isInQueue(GameModeType gameMode, Player toCheck) {
-        return hasState(toCheck, BattleState.IN_QUEUE) && isInGameMode(toCheck, gameMode);
+    public boolean isInQueue(BattleModeType modeType, Player toCheck) {
+        return hasState(toCheck, BattleState.IN_QUEUE) && isInBattleMode(toCheck, modeType);
     }
 
     /**
-     * Check if a player is in battle for given gamemode
+     * Check if a player is in battle for given battle mode
      *
-     * @param gameMode GameModeType, can be {@link GameModeType#GLOBAL} to check every mode
+     * @param modeType BattleModeType, can be {@link BattleModeType#GLOBAL} to check every mode
      * @param toCheck Player
-     * @return true if player is in battle with given gamemode
+     * @return true if player is in battle with given battle mode
      */
-    public boolean isInBattle(GameModeType gameMode, Player toCheck) {
-        return hasState(toCheck, BattleState.IN_BATTLE) && isInGameMode(toCheck, gameMode);
+    public boolean isInBattle(BattleModeType modeType, Player toCheck) {
+        return hasState(toCheck, BattleState.IN_BATTLE) && isInBattleMode(toCheck, modeType);
     }
 
-    private boolean isInGameMode(Player toGet, GameModeType type) {
-        GameModeType modeSet = getBattlePlayer(toGet).getGameMode();
-        return type.equals(modeSet) || (modeSet != null && type.equals(GameModeType.GLOBAL));
+    private boolean isInBattleMode(Player toGet, BattleModeType type) {
+        BattleModeType modeSet = getBattlePlayer(toGet).getBattleModeType();
+        return type.equals(modeSet) || (modeSet != null && type.equals(BattleModeType.GLOBAL));
     }
 
     /**
-     * Adds given players player to queue of given gamemode
+     * Adds given players player to queue of given battle mode
      *
-     * @param type GameModeType the player is in queue of
+     * @param type BattleModeType the player is in queue of
      * @param toAdd array of players
      */
-    public void addToQueue(GameModeType type, Player... toAdd) {
+    public void addToQueue(BattleModeType type, Player... toAdd) {
         for (Player p : toAdd) {
             getBattlePlayer(p).setState(BattleState.IN_QUEUE, type);
         }
     }
 
     /**
-     * Sets the arena the given players are in.
-     * This will also set their state to {@link BattleState#IN_BATTLE} and store their state
+     * Sets the arena the given player is in.
+     * This will also set his state to {@link BattleState#IN_BATTLE} and store his current Minecraft state.
      *
-     * @param toSet Arena the player
-     * @param setTo player array to set
+     * @param setTo player that joined the arena
+     * @param wasJoined Arena that was joined
      */
-    public void setArena(Arena toSet, Player... setTo) {
-        for (Player p : setTo) {
-            BattlePlayer battlePlayer = getBattlePlayer(p);
-            battlePlayer.setState(BattleState.IN_BATTLE);
-            battlePlayer.setArena(toSet);
-            battlePlayer.storeData();
-        }
+    public void setArena(Player setTo, Arena wasJoined) {
+        BattlePlayer battlePlayer = getBattlePlayer(setTo);
+        battlePlayer.setState(BattleState.IN_BATTLE);
+        battlePlayer.setArena(wasJoined);
+        battlePlayer.storeData();
     }
 
     public Arena getArena(Player player) {
@@ -165,7 +163,7 @@ public class PlayerManager {
     }
 
     /**
-     * Returns the first added partner, useful if only one partner is every being set for the gamemode
+     * Returns the first added partner, useful if only one partner is ever being set for the battle mode
      *
      * @param get player to get the first partner of
      * @return first set partner or null if none set

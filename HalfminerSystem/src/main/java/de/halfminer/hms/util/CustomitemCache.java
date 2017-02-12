@@ -21,7 +21,6 @@ import java.util.logging.Level;
  * Define custom id, custom name, custom lore and custom enchants, see customitems.txt for example.
  * The owner of a skull can be set aswell. Additional placeholders can be passed to the item.
  */
-@SuppressWarnings("SameParameterValue")
 public class CustomitemCache {
 
     private final JavaPlugin plugin;

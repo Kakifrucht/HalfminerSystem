@@ -6,19 +6,14 @@ import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.BattleState;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.NMSUtils;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -29,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class DuelQueue {
 
-    private static final GameModeType MODE = GameModeType.DUEL;
+    private static final BattleModeType MODE = BattleModeType.DUEL;
 
     private static final HalfminerBattle hmb = HalfminerBattle.getInstance();
     private static final PlayerManager pm = hmb.getPlayerManager();
@@ -49,7 +44,7 @@ public class DuelQueue {
      * Called after a player uses the command /duel match.
      * Puts the player into a queue until another player uses the /duel match command,
      * somebody duel requests this player, or matches the player if another player is already waiting.
-     * It also sends broadcasts after <i>gameMode.duel.waitingForMatchRemind</i> setting
+     * It also sends broadcasts after <i>battleMode.duel.waitingForMatchRemind</i> setting
      * seconds if he is still waiting then
      *
      * @param toMatch player that wants to be matched
@@ -62,14 +57,14 @@ public class DuelQueue {
         }
 
         if (pm.isNotIdle(toMatch)) {
-            MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
+            MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(toMatch);
             return;
         }
 
         if (waitingForMatch == null) {
             waitingForMatch = toMatch;
             pm.addToQueue(MODE, toMatch);
-            MessageBuilder.create(hmb, "modeGlobalAddedToQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
+            MessageBuilder.create(hmb, "modeDuelAddedToQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
 
             int time;
             if ((time = duelMode.getWaitingForMatchRemind()) > 0) {
@@ -132,7 +127,7 @@ public class DuelQueue {
         }
 
         if (pm.isNotIdle(sender)) {
-            MessageBuilder.create(hmb, "modeGlobalAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
 
@@ -189,7 +184,7 @@ public class DuelQueue {
 
     private boolean hasRequestedDuelWith(Player requested, Player with) {
         Player wasRequested = pm.getFirstPartner(requested);
-        return pm.isInQueue(GameModeType.DUEL, requested)
+        return pm.isInQueue(BattleModeType.DUEL, requested)
                 && wasRequested != null
                 && wasRequested.equals(with);
     }
@@ -203,7 +198,7 @@ public class DuelQueue {
      */
     public void removeFromQueue(Player toRemove) {
 
-        if (!pm.isInQueue(GameModeType.DUEL, toRemove)) {
+        if (!pm.isInQueue(BattleModeType.DUEL, toRemove)) {
             MessageBuilder.create(hmb, "modeDuelNotInQueue", HalfminerBattle.PREFIX).sendMessage(toRemove);
             return;
         }
@@ -282,7 +277,7 @@ public class DuelQueue {
      * and when an arena becomes available. If only one arena is available no selection will be shown,
      * if none are free the players will be put into the next free arena automatically and notify them.
      *
-     * @param selector         player the selection will be sent to
+     * @param selector       player the selection will be sent to
      * @param refreshMessage if true will display message that the information has been refreshed
      *                       (only when free arena state updates, not on first send)
      */
@@ -309,29 +304,11 @@ public class DuelQueue {
                         .sendMessage(partner);
             }
 
-            ComponentBuilder builder = new ComponentBuilder("");
-
-            for (Arena freeArena : freeArenas) {
-                String tooltipOnHover = MessageBuilder.create(hmb, "modeDuelChooseArenaHover")
-                        .addPlaceholderReplace("%ARENA%", freeArena.getName())
-                        .returnMessage();
-                builder.append(freeArena.getName())
-                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose " + freeArena.getName()))
-                        .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(tooltipOnHover).create()))
-                        .color(ChatColor.GREEN).bold(true)
-                        .append("  ").reset();
-            }
-
-            builder.append(MessageBuilder.returnMessage(hmb, "randomArena"))
-                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel choose random"))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder(MessageBuilder.returnMessage(hmb, "modeDuelChooseArenaRandom")).create()))
-                    .color(ChatColor.GRAY);
-
-            selector.playSound(selector.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.9f);
-            selector.spigot().sendMessage(builder.create());
+            am.sendArenaSelection(selector, freeArenas, "/duel choose ", "modeDuelChooseArenaRandom");
         }
     }
+
+
 
     /**
      * Called if a player that is currently selecting an arena made an input, information picked up by

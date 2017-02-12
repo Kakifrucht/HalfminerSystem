@@ -1,6 +1,6 @@
 package de.halfminer.hmb.arena.abs;
 
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
@@ -19,8 +19,8 @@ public abstract class AbstractKitArena extends AbstractArena {
 
     private ItemStack[] kit;
 
-    protected AbstractKitArena(GameModeType gameMode, String name) {
-        super(gameMode, name);
+    protected AbstractKitArena(BattleModeType battleModeType, String name) {
+        super(battleModeType, name);
         reload();
     }
 
@@ -31,11 +31,12 @@ public abstract class AbstractKitArena extends AbstractArena {
 
     @Override
     public void reload() {
-        kit = am.getKit(gameMode, getName());
+        kit = am.getKit(battleModeType, getName());
     }
 
-    protected void storeClearAndTeleportPlayers(Player... players) {
-        storeAndTeleportPlayers(players);
+    @Override
+    protected void addPlayers(Player... players) {
+        super.addPlayers(players);
         parameterToList(players).forEach(p -> p.getInventory().clear());
     }
 
@@ -47,17 +48,24 @@ public abstract class AbstractKitArena extends AbstractArena {
         }
     }
 
+    protected String getCustomLore(Player player) {
+        return MessageBuilder.create(hmb, "modeGlobalKitArenaCustomLore")
+                .addPlaceholderReplace("%ARENA%", getName())
+                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
+                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage();
+    }
+
+    protected String getCustomLoreID() {
+        return ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
+                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000);
+    }
+
     private ItemStack[] addPlayerInfo(Player player, ItemStack[] toModify) {
         ItemStack[] modified = new ItemStack[toModify.length];
         List<String> lore = new ArrayList<>();
         lore.add("");
-        lore.add(MessageBuilder.create(hmb, "modeGlobalKitArenaCustomLore")
-                .addPlaceholderReplace("%ARENA%", getName())
-                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(gameMode.toString()))
-                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage());
-
-        lore.add(ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
-                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000));
+        lore.add(getCustomLore(player));
+        lore.add(getCustomLoreID());
 
         for (int i = 0; i < modified.length; i++) {
 

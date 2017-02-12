@@ -396,7 +396,7 @@ public class Cmdhms extends HalfminerCommand {
         }
 
         try {
-            CustomAction action = new CustomAction(args[1], hms, storage);
+            CustomAction action = new CustomAction(args[1], storage);
             boolean success = action.runAction(players);
 
             MessageBuilder.create(hms, success ? "cmdHmsRunActionSuccess" : "cmdHmsRunActionExecuteError", PREFIX)

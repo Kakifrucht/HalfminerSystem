@@ -1,22 +1,23 @@
 # Halfminer Battle
-Battle Arena Bukkit/Spigot plugin with multiple game modes.
+Battle Arena Bukkit/Spigot plugin with multiple battle modes.
 
 Current features
 -------
-- Full battle arena solution allowing easy addition of new arena game modes
+- Full battle arena solution allowing easy addition of new arena battle modes
 - Seamless integration into existing Survival PvP worlds
 - Optimized for performance, battle tested and generally robust
 - Localization configurable, commands are clickable
-- **Gamemodes**
+- **Battle Modes**
   - Global functionality
     - Endless amount of arenas
-    - Custom kits per arena, if gamemode wants to support kits
+    - Custom kits per arena, if battle mode wants to support kits
       - Adds lore to kits to easily identify ones that were possibly extracted from a badly secured arena
       - Can toggle inventory store to disk, to prevent any inventory data loss from ever ocurring
         - Command */hmb openinventory* allows retrieval of said items by file name
         - Automatically cleaning up old files
     - Recovers players completely after fight (position, health/status, inventory if kit was used, potion effects)
       - Sets gamemode to adventure during fight
+      - If a player has received non battle drops during battle, the items will be added to his inventory after restoring
     - Allows hitting even if damage was cancelled, for example due to fighting a clan member
     - Prevents teleporting into arenas via tp delay glitches (Essentials */tpa*) if not fighting
     - Disables while fighting:
@@ -41,4 +42,16 @@ Current features
     - Shows current arena status with */duel list*
     - Countdown before game start
     - Set maximum game time in config
+  - FFA mode
+    - Teleport cooldown before teleporting into arena
+      - Players can select which arena to enter
+    - Custom kit in arena
+    - Custom killstreaks
+      - Define what should happen at which streak in *customactions.txt*
+        - Supports commands, custom item drops, messaging
+    - Logging out causes immediate death (or give kill to recently hitting player)
+    - Players get kicked from arena after configurable streak of deaths
+      - They will remain banned for configured amount of time
+    - Auto respawn in arena while keeping items
+    - Arena can be left per command
     

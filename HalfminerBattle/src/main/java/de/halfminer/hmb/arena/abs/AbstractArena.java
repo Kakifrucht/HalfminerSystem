@@ -3,8 +3,9 @@ package de.halfminer.hmb.arena.abs;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
+import de.halfminer.hmb.mode.abs.BattleMode;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -23,13 +24,13 @@ public abstract class AbstractArena implements Arena {
     protected static final ArenaManager am = hmb.getArenaManager();
 
     // Arena state
-    protected final GameModeType gameMode;
+    protected final BattleModeType battleModeType;
     protected final String name;
     protected List<Location> spawns = new ArrayList<>();
     protected final LinkedList<Player> playersInArena = new LinkedList<>();
 
-    protected AbstractArena(GameModeType gameMode, String name) {
-        this.gameMode = gameMode;
+    protected AbstractArena(BattleModeType battleModeType, String name) {
+        this.battleModeType = battleModeType;
         this.name = name;
     }
 
@@ -44,8 +45,8 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
-    public GameModeType getGameMode() {
-        return gameMode;
+    public BattleModeType getBattleModeType() {
+        return battleModeType;
     }
 
     @Override
@@ -75,7 +76,7 @@ public abstract class AbstractArena implements Arena {
     @Override
     public boolean isCloseToSpawn(Location loc) {
 
-        GlobalMode global = (GlobalMode) hmb.getGameMode(GameModeType.GLOBAL);
+        GlobalMode global = (GlobalMode) hmb.getBattleMode(BattleModeType.GLOBAL);
         for (Location spawn : spawns) {
             if (spawn.getWorld().equals(loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance())
                 return true;
@@ -85,14 +86,27 @@ public abstract class AbstractArena implements Arena {
     }
 
     /**
-     * Add the specified players to the arena
+     * Add the specified players to the arena, teleports and heals them while setting their GameMode to <i>ADVENTURE</i>
      *
      * @param players to be added to the arena
      */
-    public void addPlayers(Player... players) {
-        if (isFree()) {
-            Collections.addAll(playersInArena, players);
-        } else throw new RuntimeException("Tried to add players to an occupied arena");
+    protected void addPlayers(Player... players) {
+        if (!isFree()) throw new RuntimeException("Tried to add players to an occupied arena");
+
+        for (Player toAdd : parameterToList(players)) {
+            playersInArena.add(toAdd);
+            pm.setArena(toAdd, this);
+            // heal
+            toAdd.setHealth(20.0d);
+            toAdd.setFoodLevel(20);
+            toAdd.setSaturation(10);
+            toAdd.setExhaustion(0F);
+            toAdd.setFireTicks(0);
+            for (PotionEffect effect : toAdd.getActivePotionEffects())
+                toAdd.removePotionEffect(effect.getType());
+            toAdd.setGameMode(GameMode.ADVENTURE);
+        }
+        teleportIntoArena(parameterToArray(players));
     }
 
     protected void teleportIntoArena(Player... toTeleport) {
@@ -105,26 +119,21 @@ public abstract class AbstractArena implements Arena {
         }
     }
 
-    protected void storeAndTeleportPlayers(Player... players) {
-        pm.setArena(this, parameterToArray(players));
-        teleportIntoArena(players);
-    }
-
+    /**
+     * Restores given players location/inventory/state before he entered the arena while removing them from the arena
+     *
+     * @param restoreInventory true if inventory sould be restored
+     * @param players players to restore
+     */
     protected void restorePlayers(boolean restoreInventory, Player... players) {
         pm.restorePlayers(restoreInventory, parameterToArray(players));
+        for (Player player : parameterToArray(players)) {
+            playersInArena.remove(player);
+        }
     }
 
-    protected void healAndPreparePlayers(Player... players) {
-        for (Player toHeal : parameterToList(players)) {
-            toHeal.setHealth(20.0d);
-            toHeal.setFoodLevel(20);
-            toHeal.setSaturation(10);
-            toHeal.setExhaustion(0F);
-            toHeal.setFireTicks(0);
-            for (PotionEffect effect : toHeal.getActivePotionEffects())
-                toHeal.removePotionEffect(effect.getType());
-            toHeal.setGameMode(GameMode.ADVENTURE);
-        }
+    protected BattleMode getBattleMode() {
+        return hmb.getBattleMode(battleModeType);
     }
 
     protected List<Player> parameterToList(Player... param) {

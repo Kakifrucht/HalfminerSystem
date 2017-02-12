@@ -1,6 +1,6 @@
 package de.halfminer.hmb.arena.abs;
 
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import org.bukkit.Location;
 
 import java.util.List;
@@ -21,9 +21,9 @@ public interface Arena {
     String getName();
 
     /**
-     * @return the arenas gamemode
+     * @return the arenas battle mode
      */
-    GameModeType getGameMode();
+    BattleModeType getBattleModeType();
 
     /**
      * Set the spawn points of the arena

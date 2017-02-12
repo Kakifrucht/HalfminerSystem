@@ -1,7 +1,7 @@
 package de.halfminer.hmb.mode;
 
 import de.halfminer.hmb.HalfminerBattle;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.duel.DuelQueue;
 import de.halfminer.hms.util.MessageBuilder;
@@ -22,12 +22,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 @SuppressWarnings("unused")
 public class DuelMode extends AbstractMode {
 
-    private static final GameModeType MODE = GameModeType.DUEL;
-
     private final DuelQueue queue = new DuelQueue(this);
     private boolean broadcastWin;
     private int waitingForMatchRemind;
     private int duelTime;
+
+    public DuelMode() {
+        super(BattleModeType.DUEL);
+    }
 
     public DuelQueue getQueue() {
         return queue;
@@ -35,11 +37,6 @@ public class DuelMode extends AbstractMode {
 
     @Override
     public boolean onCommand(CommandSender sender, String[] args) {
-
-        if (am.getArenasFromType(GameModeType.DUEL).size() == 0) {
-            MessageBuilder.create(hmb, "modeGlobalGamemodeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
-            return true;
-        }
 
         if (!(sender instanceof Player)) {
             sendArenaList(sender);
@@ -78,7 +75,7 @@ public class DuelMode extends AbstractMode {
 
     private void sendArenaList(CommandSender sender) {
         MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(sender);
-        MessageBuilder.create(hmb, am.getStringFromGameMode(MODE)).setDirectString().sendMessage(sender);
+        MessageBuilder.create(hmb, am.getStringFromBattleMode(type)).setDirectString().sendMessage(sender);
     }
 
     @Override
@@ -90,26 +87,26 @@ public class DuelMode extends AbstractMode {
     public void onPluginDisable() {
         hmb.getServer().getOnlinePlayers()
                 .stream()
-                .filter(player -> pm.isInBattle(MODE, player))
+                .filter(player -> pm.isInBattle(type, player))
                 .forEach(p -> queue.gameHasFinished(p, false, false));
     }
 
     @Override
     public void onConfigReload() {
 
-        broadcastWin = hmb.getConfig().getBoolean("gameMode.duel.broadcastWin", false);
+        broadcastWin = hmb.getConfig().getBoolean("battleMode.duel.broadcastWin", false);
 
-        waitingForMatchRemind = hmb.getConfig().getInt("gameMode.duel.waitingForMatchRemind", Integer.MIN_VALUE);
+        waitingForMatchRemind = hmb.getConfig().getInt("battleMode.duel.waitingForMatchRemind", Integer.MIN_VALUE);
         if (waitingForMatchRemind < 0) {
             waitingForMatchRemind = 0;
-            hmb.getConfig().set("gameMode.duel.waitingForMatchRemind", 0);
+            hmb.getConfig().set("battleMode.duel.waitingForMatchRemind", 0);
             hmb.saveConfig();
         }
 
-        duelTime = hmb.getConfig().getInt("gameMode.duel.gameTime", Integer.MIN_VALUE);
+        duelTime = hmb.getConfig().getInt("battleMode.duel.gameTime", Integer.MIN_VALUE);
         if (duelTime < 20) {
             duelTime = 20;
-            hmb.getConfig().set("gameMode.duel.gameTime", 20);
+            hmb.getConfig().set("battleMode.duel.gameTime", 20);
             hmb.saveConfig();
         }
     }
@@ -135,30 +132,30 @@ public class DuelMode extends AbstractMode {
 
             if (attacker == null)
                 return;
-            if (pm.isInQueue(MODE, attacker))
+            if (pm.isInQueue(type, attacker))
                 queue.removeFromQueue(attacker);
-            if (pm.isInQueue(MODE, victim))
+            if (pm.isInQueue(type, victim))
                 queue.removeFromQueue(victim);
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void bedEnterKickFromQueue(PlayerBedEnterEvent e) {
-        if (pm.isInQueue(MODE, e.getPlayer())) queue.removeFromQueue(e.getPlayer());
+        if (pm.isInQueue(type, e.getPlayer())) queue.removeFromQueue(e.getPlayer());
     }
 
     @EventHandler
     public void disconnectKickFromQueueOrEndDuel(PlayerQuitEvent e) {
 
         Player didQuit = e.getPlayer();
-        if (pm.isInQueue(MODE, didQuit)) queue.removeFromQueue(didQuit);
-        else if (pm.isInBattle(MODE, didQuit)) queue.gameHasFinished(didQuit, true, true);
+        if (pm.isInQueue(type, didQuit)) queue.removeFromQueue(didQuit);
+        else if (pm.isInBattle(type, didQuit)) queue.gameHasFinished(didQuit, true, true);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void playerMoveDisableDuringCountdown(PlayerMoveEvent e) {
 
-        if (e.getPlayer().getWalkSpeed() == 0.0f && pm.isInBattle(MODE, e.getPlayer())) {
+        if (e.getPlayer().getWalkSpeed() == 0.0f && pm.isInBattle(type, e.getPlayer())) {
             e.getPlayer().teleport(e.getFrom());
             e.setCancelled(true);
         }
@@ -168,7 +165,7 @@ public class DuelMode extends AbstractMode {
     public void onDeathEndDuel(PlayerDeathEvent e) {
 
         Player died = e.getEntity().getPlayer();
-        if (pm.isInQueue(MODE, died)) queue.removeFromQueue(died);
-        else if (pm.isInBattle(MODE, died)) queue.gameHasFinished(died, true, false);
+        if (pm.isInQueue(type, died)) queue.removeFromQueue(died);
+        else if (pm.isInBattle(type, died)) queue.gameHasFinished(died, true, false);
     }
 }

@@ -2,7 +2,7 @@ package de.halfminer.hmb.arena;
 
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.HandlerType;
@@ -25,7 +25,7 @@ public class DuelArena extends AbstractKitArena {
     private boolean restoreInventory;
 
     public DuelArena(String name) {
-        super(GameModeType.DUEL, name);
+        super(BattleModeType.DUEL, name);
     }
 
     @Override
@@ -36,20 +36,17 @@ public class DuelArena extends AbstractKitArena {
     public void gameStart(Player playerA, Player playerB, boolean useKit) {
 
         addPlayers(playerA, playerB);
+        playersInArena.forEach(p -> p.setWalkSpeed(0.0f));
         this.useKit = useKit;
         // ensures that the players get their stuff back if duel is stopped
         // during 5 seconds countdown, if fighting with own stuff
         restoreInventory = true;
 
-        storeClearAndTeleportPlayers();
-        healAndPreparePlayers();
-        playersInArena.forEach(p -> p.setWalkSpeed(0.0f));
-
         task = Bukkit.getScheduler().runTaskTimerAsynchronously(hmb, new Runnable() {
 
             private final HanTitles titles = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);
             private final BukkitScheduler scheduler = hmb.getServer().getScheduler();
-            private final DuelMode mode = (DuelMode) hmb.getGameMode(GameModeType.DUEL);
+            private final DuelMode mode = (DuelMode) getBattleMode();
             private final int timeStart = mode.getDuelTime();
             private int timeLeft = timeStart + 6;
 
@@ -112,7 +109,6 @@ public class DuelArena extends AbstractKitArena {
         task.cancel();
         restorePlayers(useKit || restoreInventory);
         playSound(Sound.BLOCK_ANVIL_LAND);
-        playersInArena.clear();
     }
 
     private void playSound(Sound toPlay) {

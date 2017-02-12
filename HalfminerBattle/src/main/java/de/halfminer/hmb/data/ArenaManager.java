@@ -3,14 +3,19 @@ package de.halfminer.hmb.data;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -29,38 +34,38 @@ public class ArenaManager {
     private File arenaFile;
     private FileConfiguration arenaConfig;
 
-    private Map<GameModeType, Map<String, Arena>> arenas = new HashMap<>();
-    private Map<Pair<GameModeType, String>, ItemStack[]> kits = new HashMap<>();
+    private Map<BattleModeType, Map<String, Arena>> arenas = new HashMap<>();
+    private Map<Pair<BattleModeType, String>, ItemStack[]> kits = new HashMap<>();
 
-    public List<Arena> getArenasFromType(GameModeType type) {
+    public List<Arena> getArenasFromType(BattleModeType type) {
         if (arenas.containsKey(type))
             return new LinkedList<>(arenas.get(type).values());
         else return Collections.emptyList();
     }
 
-    public List<Arena> getFreeArenasFromType(GameModeType type) {
+    public List<Arena> getFreeArenasFromType(BattleModeType type) {
         List<Arena> all = getArenasFromType(type);
         all.removeIf(arena -> !arena.isFree());
         return all;
     }
 
-    public Arena getArena(GameModeType gameMode, String name) {
-        for (Arena arena : getArenasFromType(gameMode)) {
+    public Arena getArena(BattleModeType modeType, String name) {
+        for (Arena arena : getArenasFromType(modeType)) {
             if (arena.getName().equalsIgnoreCase(name))
                 return arena;
         }
         return null;
     }
 
-    private Map<String, Arena> getArenaMap(GameModeType type) {
+    private Map<String, Arena> getArenaMap(BattleModeType type) {
         if (!arenas.containsKey(type)) {
             arenas.put(type, new HashMap<>());
         }
         return arenas.get(type);
     }
 
-    public ItemStack[] getKit(GameModeType gameMode, String name) {
-        return kits.get(new Pair<>(gameMode, name));
+    public ItemStack[] getKit(BattleModeType modeType, String name) {
+        return kits.get(new Pair<>(modeType, name));
     }
 
     public void reloadConfig() throws IOException {
@@ -81,9 +86,9 @@ public class ArenaManager {
         if (kitSection != null) {
             for (String mode : kitSection.getKeys(false)) {
 
-                GameModeType type = GameModeType.getGameMode(mode);
+                BattleModeType type = BattleModeType.getBattleMode(mode);
                 if (type == null) {
-                    hmb.getLogger().warning("Invalid gamemode type while loading kit for mode kit " + mode);
+                    hmb.getLogger().warning("Invalid BattleModeType while loading kit for mode kit " + mode);
                     continue;
                 }
 
@@ -102,16 +107,16 @@ public class ArenaManager {
             }
         }
 
-        Map<GameModeType, Map<String, Arena>> oldArenas = arenas;
+        Map<BattleModeType, Map<String, Arena>> oldArenas = arenas;
         arenas = new HashMap<>();
 
         ConfigurationSection arenaSection = arenaConfig.getConfigurationSection("arenas");
         if (arenaSection != null) {
             for (String arenaName : arenaSection.getKeys(false)) {
 
-                GameModeType type = GameModeType.getGameMode(arenaSection.getString(arenaName + ".gameMode"));
+                BattleModeType type = BattleModeType.getBattleMode(arenaSection.getString(arenaName + ".battleMode"));
                 if (type == null) {
-                    hmb.getLogger().warning("Invalid gamemode type for arena " + arenaName);
+                    hmb.getLogger().warning("Invalid BattleModeType for arena " + arenaName);
                     continue;
                 }
 
@@ -146,12 +151,12 @@ public class ArenaManager {
                 .logMessage(Level.INFO);
     }
 
-    public boolean addArena(GameModeType gameMode, String name, Location... spawns) {
+    public boolean addArena(BattleModeType modeType, String name, Location... spawns) {
 
-        if (getArena(gameMode, name) != null) return false;
+        if (getArena(modeType, name) != null) return false;
 
-        Map<String, Arena> arenasMode = getArenaMap(gameMode);
-        Arena newArena = getArenaFromGamemode(gameMode, name);
+        Map<String, Arena> arenasMode = getArenaMap(modeType);
+        Arena newArena = getArenaFromBattleMode(modeType, name);
         if (newArena != null) {
             newArena.setSpawns(Arrays.asList(spawns));
             arenasMode.put(name.toLowerCase(), newArena);
@@ -160,14 +165,14 @@ public class ArenaManager {
         } else return false;
     }
 
-    public boolean delArena(GameModeType gameMode, String name) {
+    public boolean delArena(BattleModeType modeType, String name) {
 
-        Map<String, Arena> arenasMode = getArenaMap(gameMode);
+        Map<String, Arena> arenasMode = getArenaMap(modeType);
         if (arenasMode != null) {
             Arena arena = arenasMode.get(name.toLowerCase());
             if (arena != null) {
                 arenasMode.remove(name.toLowerCase());
-                kits.remove(new Pair<>(gameMode, arena.getName()));
+                kits.remove(new Pair<>(modeType, arena.getName()));
                 saveData();
                 return true;
             }
@@ -175,8 +180,8 @@ public class ArenaManager {
         return false;
     }
 
-    public boolean setSpawn(GameModeType gameMode, String arenaName, Location location, int spawnToSet) {
-        Arena setSpawn = getArena(gameMode, arenaName);
+    public boolean setSpawn(BattleModeType modeType, String arenaName, Location location, int spawnToSet) {
+        Arena setSpawn = getArena(modeType, arenaName);
         if (setSpawn != null) {
             setSpawn.setSpawn(location, spawnToSet);
             saveData();
@@ -185,8 +190,8 @@ public class ArenaManager {
         return false;
     }
 
-    public boolean removeSpawn(GameModeType gameMode, String arenaName, int spawnToRemove) {
-        Arena clearSpawns = getArena(gameMode, arenaName);
+    public boolean removeSpawn(BattleModeType modeType, String arenaName, int spawnToRemove) {
+        Arena clearSpawns = getArena(modeType, arenaName);
         if (clearSpawns != null) {
             clearSpawns.removeSpawn(spawnToRemove);
             saveData();
@@ -195,11 +200,11 @@ public class ArenaManager {
         return false;
     }
 
-    public boolean setKit(GameModeType gameMode, String arenaName, PlayerInventory setKitTo) {
-        Arena toSetKit = getArena(gameMode, arenaName);
+    public boolean setKit(BattleModeType modeType, String arenaName, PlayerInventory setKitTo) {
+        Arena toSetKit = getArena(modeType, arenaName);
         if (toSetKit instanceof AbstractKitArena) {
             ItemStack[] newKit = setKitTo.getContents();
-            kits.put(new Pair<>(gameMode, toSetKit.getName()), newKit);
+            kits.put(new Pair<>(modeType, toSetKit.getName()), newKit);
             toSetKit.reload();
             saveData();
             return true;
@@ -218,7 +223,7 @@ public class ArenaManager {
         return false;
     }
 
-    public String getStringFromGameMode(GameModeType modeType) {
+    public String getStringFromBattleMode(BattleModeType modeType) {
 
         List<Arena> arenas = getArenasFromType(modeType);
         if (arenas.isEmpty()) return "";
@@ -235,6 +240,34 @@ public class ArenaManager {
         return sb.toString();
     }
 
+
+    public void sendArenaSelection(Player selector, List<Arena> freeArenas, String command, String randomKey) {
+
+        ComponentBuilder builder = new ComponentBuilder("");
+
+        for (Arena freeArena : freeArenas) {
+            String tooltipOnHover = MessageBuilder.create(hmb, "modeGlobalChooseArenaHover")
+                    .addPlaceholderReplace("%ARENA%", freeArena.getName())
+                    .returnMessage();
+            builder.append(freeArena.getName())
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + freeArena.getName()))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(tooltipOnHover).create()))
+                    .color(net.md_5.bungee.api.ChatColor.GREEN).bold(true)
+                    .append("  ").reset();
+        }
+
+        if (randomKey.length() > 0) {
+            builder.append(MessageBuilder.returnMessage(hmb, "randomArena"))
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + "random"))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            new ComponentBuilder(MessageBuilder.returnMessage(hmb, randomKey)).create()))
+                    .color(net.md_5.bungee.api.ChatColor.GRAY);
+        }
+
+        selector.playSound(selector.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.9f);
+        selector.spigot().sendMessage(builder.create());
+    }
+
     private void saveData() {
 
         arenaConfig.set("arenas", null);
@@ -243,16 +276,16 @@ public class ArenaManager {
         for (Map<String, Arena> arenaPairs : arenas.values()) {
             for (Arena arena : arenaPairs.values()) {
                 ConfigurationSection newSection = arenaConfig.createSection("arenas." + arena.getName());
-                newSection.set("gameMode", arena.getGameMode().toString());
+                newSection.set("battleMode", arena.getBattleModeType().toString());
                 newSection.set("spawns", arena.getSpawns());
             }
         }
 
-        for (Map.Entry<Pair<GameModeType, String>, ItemStack[]> entry : kits.entrySet()) {
-            GameModeType gameMode = entry.getKey().getLeft();
+        for (Map.Entry<Pair<BattleModeType, String>, ItemStack[]> entry : kits.entrySet()) {
+            BattleModeType battleMode = entry.getKey().getLeft();
             String arenaName = entry.getKey().getRight();
             ItemStack[] stacks = entry.getValue();
-            arenaConfig.set("kits." + gameMode.toString() + '.' + arenaName, stacks);
+            arenaConfig.set("kits." + battleMode.toString() + '.' + arenaName, stacks);
         }
 
         try {
@@ -263,14 +296,14 @@ public class ArenaManager {
         }
     }
 
-    private Arena getArenaFromGamemode(GameModeType gameMode, String name) {
+    private Arena getArenaFromBattleMode(BattleModeType battleMode, String name) {
 
         try {
-            Class<?> cl = Class.forName(HalfminerBattle.PACKAGE_PATH + ".arena." + gameMode.getArenaClassName());
+            Class<?> cl = Class.forName(HalfminerBattle.PACKAGE_PATH + ".arena." + battleMode.getArenaClassName());
             Constructor<?> cons = cl.getConstructor(String.class);
             return (Arena) cons.newInstance(name);
         } catch (Exception e) {
-            hmb.getLogger().severe("Arena class for GameModeType " + gameMode + " not found");
+            hmb.getLogger().severe("Arena class for BattleModeType " + battleMode + " not found");
             e.printStackTrace();
             return null;
         }

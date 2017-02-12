@@ -1,5 +1,5 @@
 #HalfminerBattle Config
-gameMode:
+battleMode:
   global:
     #Disable hunger loss
     noHungerLoss: true
@@ -19,6 +19,14 @@ gameMode:
     gameTime: 300
     #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
     waitingForMatchRemind: 30
+  ffa:
+    #After how many deaths a player will be removed from the arena, set to 0 to disable
+    removeAfterDeaths: 4
+    #How many minutes he will be removed for
+    removeForMinutes: 3
+#Use '&' as color code
+#Lines starting with '~' will be parsed to make commands clickable, close the command with another '/'
+#Messages can be removed by simply setting the message to nothing ('')
 localization:
   prefix: '&7Battle &e>>&r '
   commandClickHover: 'Klicken, um das Kommando auszuführen'
@@ -31,17 +39,17 @@ localization:
   adminCommandUsage: 'HalfminerBattle Version &6%VERSION%\n&6&lAdmin Kommandos:\n &f/hmb <modus>\n /hmb reload\n /hmb openinventory <dateiname>\n&6&lArena Kommandos:\n &f/hmb create <mode> <name>\n /hmb remove <mode> <arenaname>\n /hmb setspawn <mode> <arenaname> [spawnnumber]\n /hmb removespawn <mode> <arenaname> [spawnnumber]\n /hmb setkit <mode> <arenaname>'
   adminCreate: '~&7Die Arena &a%ARENA% &7wurde erstellt. Verwende &e/hmb setspawn %MODE% %ARENA%/ &7um weitere Spawnpunkte setzen'
   adminCreateFailed: '&7Die Arena &c%ARENA% &7existiert bereits'
-  adminNotDefined: '&7Der Modus &c%GAMEMODE% &7hat keine administrativen Kommandos'
+  adminNotDefined: '&7Der Modus &c%BATTLEMODE% &7hat keine administrativen Kommandos'
   adminRemove: '&7Die Arena &a%ARENA% &7wurde entfernt'
   adminSetKit: '&7Das Kit für die Arena &a%ARENA% &7wurde gesetzt'
   adminSetSpawn: '&7Der Spawn für die Arena &a%ARENA% &7wurde gesetzt'
   adminSettingsReloaded: '&aDie Konfiguration wurde neugeladen'
   adminSettingsReloadedError: '&cFehler beim neu laden der Arena Konfiguration, siehe Konsole für weitere Informationen'
-  adminUnknownGamemode: '&cUnbekannter Spielmodus'
+  adminUnknownBattleMode: '&cUnbekannter Spielmodus'
   adminOpenInventoryInvalid: '&cUngültige Datei'
   adminOpenInventoryUnknownFile: '&cDatei nicht gefunden'
+  modeDuelAddedToQueue: '~&7Du bist nun in der Warteschlange, verwende &a/duel leave/ &7zum verlassen'
   modeDuelChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), auf der du gegen &e%PLAYER% &7spielen willst: '
-  modeDuelChooseArenaHover: 'In &l%ARENA% &rspielen'
   modeDuelChooseArenaRandom: 'In einer &lzufälligen &rArena spielen\n(Gegner erhält Benachrichtigung)'
   modeDuelChooseArenaInvalid: '&cUngültige Auswahl, bitte versuche es erneut'
   modeDuelChooseArenaNoneAvailable: '&7Aktuell sind alle Arenen belegt, ihr werdet automatisch in die nächste freie Arena teleportiert'
@@ -80,14 +88,22 @@ localization:
   modeDuelTitleCountdown: 'Duell startet in...\n&e&l%TIME% &rSekunden'
   modeDuelTitleStart: ' \n&6&lStart!'
   modeDuelWinBroadcast: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7gewonnen'
-  modeGlobalAddedToQueue: '~&7Du bist nun in der Warteschlange, verwende &a/duel leave/ &7zum verlassen'
-  modeGlobalAlreadyInQueue: '~&cDu bist bereits in einer Warteschlange, &7verwende &a/duel leave/ &7zum verlassen'
+  modeFFAArenaLeft: '&7Du hast die Arena &averlassen'
+  modeFFACooldown: '&7Du kannst die Arena frühestens in &c%TIMELEFT% Sekunden &7betreten'
+  modeFFADiedTooOften: '&cDu bist zu häufig am Stück gestorben und wurdest daher aus der Arena entfernt'
+  modeFFAJoined: '~&7Arena wurde betreten, verwende &a/ffa leave/ &7zum verlassen (ausloggen führt zum Tod)'
+  modeFFALoggedOutLog: '%PLAYER% hat sich in FFA Arena %ARENA% ausgeloggt'
+  modeFFANotInArena: '&cDu bist in keiner FFA Arena'
+  modeFFAUsage: '~&7Kämpfe in einer Arena gegen alle mit Kit und Killserien\n &a/ffa join/ &7- Arena betreten\n &a/ffa leave/ &7- Arena verlassen'
+  modeFFAChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), die du betreten möchtest: '
   modeGlobalArenaLoadLog: '%ARENAS% Arenen und %KITS% Kits geladen'
+  modeGlobalChooseArenaHover: 'In &l%ARENA% &rspielen'
   modeGlobalCommandsInBedDisabled: '&cDu kannst im Bett keine Kommandos benutzen'
-  modeGlobalGamemodeDisabled: '&7Dieser Spielmodus ist aktuell &cdeaktiviert'
-  modeGlobalInGame: '&cDu kannst im Kampf keine Kommandos benutzen'
-  modeGlobalKitArenaCustomLore: '&a%ARENA% &7(&o%MODE%&7) | &b%PLAYER%'
+  modeGlobalBattleModeDisabled: '&7Dieser Spielmodus ist aktuell &cdeaktiviert'
+  modeGlobalKitArenaCustomLore: '&a%ARENA% &7(&o%MODE%&7) - &b%PLAYER%'
   modeGlobalLeftQueue: '&7Du hast die Warteschlange verlassen'
-  modeGlobalQueueCooldown: '&cDu hast die Warteschlange vor kurzem erst verlassen, &7bitte warte noch etwas'
+  modeGlobalNoCommandInGame: '&cDu kannst im Kampf keine Kommandos benutzen'
+  modeGlobalNotIdle: '&cDu bereits im Spiel oder in einer Warteschlange'
+  modeGlobalQueueCooldown: '&cDu hast die Warteschlange/Arena vor kurzem erst verlassen, &7bitte warte noch etwas'
   modeGlobalShowArenaList: '&aGrüne Arenen &7sind aktuell frei, &crote Arenen &7sind belegt: '
   modeGlobalTeleportIntoArenaDenied: '&cDu kannst dich nicht in die Nähe von Arenen teleportieren'

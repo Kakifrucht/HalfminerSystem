@@ -1,13 +1,19 @@
 package de.halfminer.hmb.mode.abs;
 
+import de.halfminer.hmb.enums.BattleModeType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 
 
-public interface GameMode extends Listener {
+public interface BattleMode extends Listener {
 
     /**
-     * Called if gamemode specific command was executed
+     * @return this BattleMode's type
+     */
+    BattleModeType getType();
+
+    /**
+     * Called if battle mode specific command was executed
      *
      * @param sender    sender of  command
      * @param args      given arguments
@@ -16,7 +22,7 @@ public interface GameMode extends Listener {
     boolean onCommand(CommandSender sender, String[] args);
 
     /**
-     * Called if gamemode specific admin command was executed, such as <i>/hmb <mode> (args[])</i>
+     * Called if battle mode specific admin command was executed, such as <i>/hmb <mode> (args[])</i>
      *
      * @param sender    sender of  command
      * @param args      given arguments

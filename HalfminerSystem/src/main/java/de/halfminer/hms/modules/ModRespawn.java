@@ -197,13 +197,13 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                 .stream().map(String::toLowerCase).collect(Collectors.toList()));
 
         try {
-            action = new CustomAction(config.getString("respawn.customActionWelcomeBonus", "nothing"), hms, storage);
+            action = new CustomAction(config.getString("respawn.customActionWelcomeBonus", "nothing"), storage);
         } catch (CachingException e) {
             MessageBuilder.create(hms, "modRespawnWelcomeBonusActionError")
                     .addPlaceholderReplace("%REASON%", e.getCleanReason())
                     .logMessage(Level.WARNING);
             try {
-                action = new CustomAction("nothing", hms, storage);
+                action = new CustomAction("nothing", storage);
             } catch (CachingException ignored) {
                 // cannot happen, as CachingException's are not thrown on init of empty CustomAction
             }

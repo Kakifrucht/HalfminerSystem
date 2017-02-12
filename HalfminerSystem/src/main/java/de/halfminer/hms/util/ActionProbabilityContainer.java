@@ -54,7 +54,7 @@ public class ActionProbabilityContainer {
             probabilityTotal += probability;
 
             try {
-                CustomAction action = new CustomAction(keyValuePair.getRight(), plugin, cacheHolder);
+                CustomAction action = new CustomAction(keyValuePair.getRight(), cacheHolder);
                 actionList.add(new Pair<>(probabilityTotal, action));
             } catch (CachingException e) {
                 if (e.getReason().equals(CachingException.Reason.CHAPTER_NOT_FOUND))
@@ -65,7 +65,7 @@ public class ActionProbabilityContainer {
 
         if (actionList.size() == 0) {
             probabilityTotal = 1;
-            actionList.add(new Pair<>(1, new CustomAction("nothing", plugin, cacheHolder)));
+            actionList.add(new Pair<>(1, new CustomAction("nothing", cacheHolder)));
             MessageBuilder.create(plugin, "utilActionProbabilityContainerNoActions").logMessage(Level.WARNING);
         }
     }

@@ -1,8 +1,9 @@
 package de.halfminer.hmb.mode;
 
 import de.halfminer.hmb.HalfminerBattle;
-import de.halfminer.hmb.enums.GameModeType;
+import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
+import de.halfminer.hmb.mode.abs.BattleMode;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Global game mode, functionality shared by all other {@link de.halfminer.hmb.mode.abs.GameMode}
+ * Global game mode, functionality shared by all other {@link BattleMode}
  */
 @SuppressWarnings("unused")
 public class GlobalMode extends AbstractMode {
@@ -36,6 +37,10 @@ public class GlobalMode extends AbstractMode {
     private BukkitTask cleanupTask;
     private double teleportSpawnDistance;
 
+    public GlobalMode() {
+        super(BattleModeType.GLOBAL);
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, String[] args) {
         return false;
@@ -44,8 +49,8 @@ public class GlobalMode extends AbstractMode {
     @Override
     public boolean onAdminCommand(CommandSender sender, String[] args) {
 
-        // disregard if called via global custom gamemode /hmb glo(balmode)
-        if (args.length < 3 || args[0].toLowerCase().startsWith("glo")) {
+        // disregard if called via global custom battle mode /hmb glo(balmode)
+        if (args.length == 0 || args[0].toLowerCase().startsWith("glo")) {
             sendUsageInformation(sender);
             return true;
         }
@@ -95,9 +100,14 @@ public class GlobalMode extends AbstractMode {
 
         } else {
 
-            GameModeType type = GameModeType.getGameMode(args[1]);
+            if (args.length < 3) {
+                sendUsageInformation(sender);
+                return true;
+            }
+
+            BattleModeType type = BattleModeType.getBattleMode(args[1]);
             if (type == null) {
-                MessageBuilder.create(hmb, "adminUnknownGamemode", HalfminerBattle.PREFIX).sendMessage(sender);
+                MessageBuilder.create(hmb, "adminUnknownBattleMode", HalfminerBattle.PREFIX).sendMessage(sender);
                 return true;
             }
 
@@ -155,7 +165,7 @@ public class GlobalMode extends AbstractMode {
                 .sendMessage(sendTo);
     }
 
-    private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName, GameModeType mode) {
+    private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName, BattleModeType mode) {
         MessageBuilder.create(hmb, messageKey, HalfminerBattle.PREFIX)
                 .addPlaceholderReplace("%ARENA%", arenaName)
                 .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(mode.toString()))
@@ -180,17 +190,17 @@ public class GlobalMode extends AbstractMode {
     @Override
     public void onConfigReload() {
 
-        noHungerLossInBattle = hmb.getConfig().getBoolean("gameMode.global.noHungerLoss", true);
-        queueCooldownSeconds = hmb.getConfig().getInt("gameMode.global.queueCooldownTimeSeconds", 15);
+        noHungerLossInBattle = hmb.getConfig().getBoolean("battleMode.global.noHungerLoss", true);
+        queueCooldownSeconds = hmb.getConfig().getInt("battleMode.global.queueCooldownTimeSeconds", 15);
 
-        saveInventoryToDisk = hmb.getConfig().getBoolean("gameMode.global.saveInventoryToDisk", true);
+        saveInventoryToDisk = hmb.getConfig().getBoolean("battleMode.global.saveInventoryToDisk", true);
 
         if (cleanupTask != null) {
             cleanupTask.cancel();
             cleanupTask = null;
         }
         // only run cleanup if saveinventory is enabled and autoclean is set higher than 0
-        int cleanupAfter = hmb.getConfig().getInt("gameMode.global.saveInventoryToDiskCleanupAfterHours", 24);
+        int cleanupAfter = hmb.getConfig().getInt("battleMode.global.saveInventoryToDiskCleanupAfterHours", 24);
         if (saveInventoryToDisk && cleanupAfter > 0) {
 
             cleanupTask = hmb.getServer().getScheduler().runTaskTimerAsynchronously(hmb, () -> {
@@ -217,7 +227,7 @@ public class GlobalMode extends AbstractMode {
             }, 0L, 72000L);
         }
 
-        teleportSpawnDistance = hmb.getConfig().getDouble("gameMode.global.teleportSpawnDistance", 10.0d);
+        teleportSpawnDistance = hmb.getConfig().getDouble("battleMode.global.teleportSpawnDistance", 10.0d);
     }
 
     public int getQueueCooldownSeconds() {
@@ -234,7 +244,7 @@ public class GlobalMode extends AbstractMode {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeathKeepInventory(PlayerDeathEvent e) {
-        if (pm.isInBattle(GameModeType.GLOBAL, e.getEntity())) {
+        if (pm.isInBattle(type, e.getEntity())) {
             e.setKeepInventory(true);
         }
     }
@@ -244,15 +254,18 @@ public class GlobalMode extends AbstractMode {
         // Allow Faction members to fight
         if (e.isCancelled()
                 && e.getEntity() instanceof Player
-                && pm.isInBattle(GameModeType.GLOBAL, (Player) e.getEntity()))
+                && pm.isInBattle(type, (Player) e.getEntity()))
             e.setCancelled(false);
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void disableCommandDuringFight(PlayerCommandPreprocessEvent e) {
 
-        if (pm.isInBattle(GameModeType.GLOBAL, e.getPlayer()) && !e.getPlayer().hasPermission("hmb.admin")) {
-            MessageBuilder.create(hmb, "modeGlobalInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
+        if (pm.isInBattle(type, e.getPlayer())
+                && !e.getPlayer().hasPermission("hmb.mode.global.bypass.commands")
+                && (!pm.isInBattle(BattleModeType.FFA, e.getPlayer()) || !e.getMessage().startsWith("/ffa"))) {
+
+            MessageBuilder.create(hmb, "modeGlobalNoCommandInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }
@@ -261,24 +274,24 @@ public class GlobalMode extends AbstractMode {
     public void eatDecayDisable(FoodLevelChangeEvent e) {
 
         if (noHungerLossInBattle && e.getEntity() instanceof Player
-                && pm.isInBattle(GameModeType.GLOBAL, (Player) e.getEntity())) {
+                && pm.isInBattle(type, (Player) e.getEntity())) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void itemDropDisable(PlayerDropItemEvent e) {
-        e.setCancelled(pm.isInBattle(GameModeType.GLOBAL, e.getPlayer()));
+        e.setCancelled(pm.isInBattle(type, e.getPlayer()));
     }
 
     @EventHandler(ignoreCancelled = true)
     public void itemPickupDisable(PlayerPickupItemEvent e) {
-        e.setCancelled(pm.isInBattle(GameModeType.GLOBAL, e.getPlayer()));
+        e.setCancelled(pm.isInBattle(type, e.getPlayer()));
     }
 
     @EventHandler(ignoreCancelled = true)
     public void teleportDisable(PlayerTeleportEvent e) {
-        if (!pm.isInBattle(GameModeType.GLOBAL, e.getPlayer())
+        if (!pm.isInBattle(type, e.getPlayer())
                 && !e.getPlayer().hasPermission("hmb.global.bypass.teleportintoarena")
                 && am.isArenaSpawn(e.getTo())) {
             MessageBuilder.create(hmb, "modeGlobalTeleportIntoArenaDenied", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());

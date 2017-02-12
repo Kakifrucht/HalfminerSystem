@@ -1,0 +1,5 @@
+#ffasword
+IRON_SWORD
+name: &6FFA Sword II
+lore: &r|%TOPLINE%|%BOTTOMLINE%
+enchant: sharpness:1

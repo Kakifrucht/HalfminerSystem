@@ -37,15 +37,14 @@ public class CustomAction {
      * Create a new action. If the action name is "nothing", the action won't do anything on run.
      *
      * @param action String naming the action
-     * @param plugin plugin creating the action
      * @param holder class holding necessary caches (customactions.txt and customitems.txt)
      * @throws CachingException if the action could not be found or the caches could not be
      *                          initialized due to {@link java.io.IOException}
      */
-    public CustomAction(String action, JavaPlugin plugin, CacheHolder holder) throws CachingException {
+    public CustomAction(String action, CacheHolder holder) throws CachingException {
 
         this.actionName = action.toLowerCase();
-        this.plugin = plugin;
+        this.plugin = holder.getPlugin();
         this.itemCache = new CustomitemCache(plugin, holder.getCache("customitems.txt"));
         this.actionCache = holder.getCache("customactions.txt");
         this.lastCached = System.currentTimeMillis();
