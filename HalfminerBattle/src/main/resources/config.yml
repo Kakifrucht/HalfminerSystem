@@ -88,6 +88,7 @@ localization:
   modeDuelTitleCountdown: 'Duell startet in...\n&e&l%TIME% &rSekunden'
   modeDuelTitleStart: ' \n&6&lStart!'
   modeDuelWinBroadcast: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7gewonnen'
+  modeDuelWinBroadcastNokit: '&a%WINNER% &7hat gegen &c%LOSER% &7in der Arena &e%ARENA% &7mit eigener Ausrüstung gewonnen'
   modeFFAArenaLeft: '&7Du hast die Arena &averlassen'
   modeFFACooldown: '&7Du kannst die Arena frühestens in &c%TIMELEFT% Sekunden &7betreten'
   modeFFADiedTooOften: '&cDu bist zu häufig am Stück gestorben und wurdest daher aus der Arena entfernt'

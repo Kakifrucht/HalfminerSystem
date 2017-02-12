@@ -403,7 +403,8 @@ public class DuelQueue {
                         .filter(obj -> !(obj.equals(winner) || obj.equals(playerA)))
                         .collect(Collectors.toList());
 
-                MessageBuilder.create(hmb, "modeDuelWinBroadcast", HalfminerBattle.PREFIX)
+                MessageBuilder.create(hmb,
+                        arena.isUseKit() ? "modeDuelWinBroadcast" : "modeDuelWinBroadcastNokit", HalfminerBattle.PREFIX)
                         .addPlaceholderReplace("%WINNER%", winner.getName())
                         .addPlaceholderReplace("%LOSER%", playerA.getName())
                         .addPlaceholderReplace("%ARENA%", arena.getName())
