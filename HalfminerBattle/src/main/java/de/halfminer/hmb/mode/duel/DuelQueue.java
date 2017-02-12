@@ -57,7 +57,7 @@ public class DuelQueue {
         }
 
         if (pm.isNotIdle(toMatch)) {
-            MessageBuilder.create(hmb, "modeDuelAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(toMatch);
+            MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(toMatch);
             return;
         }
 
@@ -127,7 +127,7 @@ public class DuelQueue {
         }
 
         if (pm.isNotIdle(sender)) {
-            MessageBuilder.create(hmb, "modeDuelAlreadyInQueue", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
 

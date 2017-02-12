@@ -49,7 +49,6 @@ localization:
   adminOpenInventoryInvalid: '&cUngültige Datei'
   adminOpenInventoryUnknownFile: '&cDatei nicht gefunden'
   modeDuelAddedToQueue: '~&7Du bist nun in der Warteschlange, verwende &a/duel leave/ &7zum verlassen'
-  modeDuelAlreadyInQueue: '~&cDu bist bereits in einer Warteschlange, &7verwende &a/duel leave/ &7zum verlassen'
   modeDuelChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), auf der du gegen &e%PLAYER% &7spielen willst: '
   modeDuelChooseArenaRandom: 'In einer &lzufälligen &rArena spielen\n(Gegner erhält Benachrichtigung)'
   modeDuelChooseArenaInvalid: '&cUngültige Auswahl, bitte versuche es erneut'

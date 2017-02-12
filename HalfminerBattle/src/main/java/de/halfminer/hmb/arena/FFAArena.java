@@ -51,8 +51,11 @@ public class FFAArena extends AbstractKitArena {
             } else bannedFromArena.invalidate(toAdd.getUniqueId());
         }
 
+        pm.addToQueue(battleModeType, toAdd);
         ((HanTeleport) HalfminerSystem.getInstance().getHandler(HandlerType.TELEPORT))
-                .startTeleport(toAdd, toAdd.getLocation(), 3, () -> addPlayerInternal(toAdd), null);
+                .startTeleport(toAdd, toAdd.getLocation(), 3,
+                        () -> addPlayerInternal(toAdd),
+                        () -> pm.setState(BattleState.IDLE, toAdd));
     }
 
     private void addPlayerInternal(Player toAdd) {

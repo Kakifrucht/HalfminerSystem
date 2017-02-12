@@ -263,7 +263,8 @@ public class GlobalMode extends AbstractMode {
 
         if (pm.isInBattle(type, e.getPlayer())
                 && !e.getPlayer().hasPermission("hmb.mode.global.bypass.commands")
-                && !pm.isInBattle(BattleModeType.FFA, e.getPlayer())) {
+                && (!pm.isInBattle(BattleModeType.FFA, e.getPlayer()) || !e.getMessage().startsWith("/ffa"))) {
+
             MessageBuilder.create(hmb, "modeGlobalNoCommandInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }

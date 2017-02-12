@@ -40,7 +40,13 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
     public void startTeleport(final Player player, final Location loc,
                               final int delay, Runnable toRun, Runnable toRunIfCancelled) {
 
-        if (hasPendingTeleport(player, true)) return;
+        if (hasPendingTeleport(player, true)) {
+
+            if (toRunIfCancelled != null) {
+                toRunIfCancelled.run();
+            }
+            return;
+        }
 
         Teleport tp = new Teleport(player, loc, delay, toRun, toRunIfCancelled);
 
