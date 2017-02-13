@@ -15,6 +15,9 @@ import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +26,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
- * Free for all arena used by {@link FFAMode}, implementing custom killstreaks, timeouts and auto respawns
+ * Free for all arena used by {@link FFAMode}, implementing custom killstreaks, timeouts, scoreboard and auto respawns
  */
 @SuppressWarnings("unused")
 public class FFAArena extends AbstractKitArena {
 
     private final FFAMode battleMode = (FFAMode) getBattleMode();
+
+    private final Scoreboard scoreboard = hmb.getServer().getScoreboardManager().getNewScoreboard();
+    private Objective scoreboardObjective;
 
     private final Map<Player, Integer> streaks = new HashMap<>();
     private final Cache<UUID, Long> bannedFromArena = CacheBuilder.newBuilder()
@@ -37,6 +43,10 @@ public class FFAArena extends AbstractKitArena {
 
     public FFAArena(String name) {
         super(BattleModeType.FFA, name);
+
+        scoreboardObjective = scoreboard.registerNewObjective("streak", "dummy");
+        scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        scoreboardObjective.setDisplayName(MessageBuilder.returnMessage(hmb, "modeFFAScoreboardHeader"));
     }
 
     public void addPlayer(Player toAdd) {
@@ -63,20 +73,27 @@ public class FFAArena extends AbstractKitArena {
         MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(toAdd);
         addPlayers(toAdd);
         equipPlayers(toAdd);
+        streaks.put(toAdd, 0);
+        toAdd.setScoreboard(scoreboard);
+        scoreboardObjective.getScore(toAdd.getName()).setScore(0);
     }
 
     public void removePlayer(Player toRemove) {
         restorePlayers(true, toRemove);
         streaks.remove(toRemove);
+        // if not removed due to death ban, add queue cooldown
         if (bannedFromArena.getIfPresent(toRemove.getUniqueId()) == null) {
             pm.setState(BattleState.QUEUE_COOLDOWN, toRemove);
         }
+        scoreboard.resetScores(toRemove.getName());
+        toRemove.setScoreboard(hmb.getServer().getScoreboardManager().getMainScoreboard());
     }
 
     public void hasDied(Player hasDied) {
 
-        int streakDied = streaks.containsKey(hasDied) ? Math.min(streaks.get(hasDied), 0) - 1 : -1;
+        int streakDied = Math.min(streaks.get(hasDied) - 1, -1);
         streaks.put(hasDied, streakDied);
+        scoreboardObjective.getScore(hasDied.getName()).setScore(streakDied);
 
         if (-streakDied == battleMode.getRemoveAfterDeaths()) {
             MessageBuilder.create(hmb, "modeFFADiedTooOften", HalfminerBattle.PREFIX).sendMessage(hasDied);
@@ -100,8 +117,9 @@ public class FFAArena extends AbstractKitArena {
                 return;
             }
 
-            int streak = streaks.containsKey(killer) ? streaks.get(killer) + 1 : 1;
+            int streak = Math.max(streaks.get(killer) + 1, 1);
             streaks.put(killer, streak);
+            scoreboardObjective.getScore(killer.getName()).setScore(streak);
 
             MessageBuilder.create(hmb, "modeFFAKillLog")
                     .addPlaceholderReplace("%ARENA%", getName())

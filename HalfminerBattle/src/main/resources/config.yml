@@ -98,6 +98,7 @@ localization:
   modeFFAKillLog: '%KILLER% (%KILLSTREAK%er Killserie) hat %VICTIM% (%DEATHSTREAK%er Todesserie) in FFA Arena %ARENA% eliminiert'
   modeFFALoggedOutLog: '%PLAYER% hat sich in FFA Arena %ARENA% ausgeloggt'
   modeFFANotInArena: '&cDu bist in keiner FFA Arena'
+  modeFFAScoreboardHeader: '&6&lFFA Serien'
   modeFFAUsage: '~&7Kämpfe in einer Arena gegen alle mit Kit und Killserien\n &a/ffa join/ &7- Arena betreten\n &a/ffa leave/ &7- Arena verlassen'
   modeFFAChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), die du betreten möchtest: '
   modeGlobalArenaLoadLog: '%ARENAS% Arenen und %KITS% Kits geladen'
