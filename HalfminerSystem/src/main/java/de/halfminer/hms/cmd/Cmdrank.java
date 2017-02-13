@@ -108,8 +108,16 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     }
 
     private void execute(Player player) {
+
+        if (player.isOp()) {
+            MessageBuilder send = MessageBuilder.create(hms, "cmdRankPlayerIsOp", "Rank")
+                    .addPlaceholderReplace("%PLAYER%", player.getName());
+            sendAndLogMessageBuilder(send);
+            return;
+        }
+
         int playerLevel = 0;
-        while (player.hasPermission("hms.level." + (playerLevel + 1))) {
+        while (playerLevel < 6 && player.hasPermission("hms.level." + (playerLevel + 1))) {
             playerLevel++;
         }
 

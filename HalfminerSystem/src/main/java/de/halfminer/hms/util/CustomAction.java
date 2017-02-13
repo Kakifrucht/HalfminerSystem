@@ -150,7 +150,10 @@ public class CustomAction {
                     StringArgumentSeparator separator = new StringArgumentSeparator(parsedMessage.returnMessage());
                     int amountCheck = separator.getArgumentIntMinimum(0, 1);
                     if (separator.meetsLength(2)) {
-                        amountCheck /= separator.getArgumentIntMinimum(1, 1);
+                        int stackSize = separator.getArgumentIntMinimum(1, 1);
+                        boolean hasRemainder = (amountCheck % stackSize) != 0;
+                        amountCheck /= stackSize;
+                        if (hasRemainder) amountCheck++;
                     }
                     if (!Utils.hasRoom(players[0], amountCheck)) {
                         placeholders.clear();

@@ -302,6 +302,7 @@ localization:
   cmdRankNewLevelSameOrLower: '&e%PLAYER% &chat bereits den Rang &b%NEWRANK% &coder einen höheren'
   cmdRankNotOnline: '&7Der Spieler &e%PLAYER% &7ist aktuell nicht online, er erhält den Rang sobald er den Server betritt'
   cmdRankPersistenceDisable: 'Das Plugin wurde deaktiviert bevor dem Spieler %PLAYER% der Rang %RANK% gegeben werden konnte'
+  cmdRankPlayerIsOp: '&cDer Spieler &e%PLAYER% &cist bereits Operator'
   cmdRankUsage: '&cVerwendung: &f/rank <Spieler> <Rang|Summe an Rang Upgrades>'
   cmdRepairCooldown: '&cDu kannst erst wieder in &e%MINUTES% &cMinuten reparieren'
   cmdRepairDone: '&aGegenstand &e%NAME% &aerfolgreich repariert'
