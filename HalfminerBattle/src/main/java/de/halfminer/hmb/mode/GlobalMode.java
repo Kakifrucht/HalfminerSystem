@@ -245,16 +245,12 @@ public class GlobalMode extends AbstractMode {
                 long removeIfBefore = (System.currentTimeMillis() / 1000) - cleanupAfter * 60 * 60;
                 for (File file : files) {
                     String name = file.getName();
-                    int indexOf = name.indexOf('-');
-                    if (indexOf < 1) continue;
-                    try {
-                        long timestamp = Long.parseLong(name.substring(0, indexOf));
-                        if (removeIfBefore > timestamp) {
-                            if (!file.delete()) {
-                                hmb.getLogger().warning("Could not delete file " + name);
-                            }
+                    long timestamp = file.lastModified() / 1000;
+                    if (timestamp > 0L) {
+                        if (removeIfBefore > timestamp && !file.delete()) {
+                            hmb.getLogger().warning("Could not delete file " + name);
                         }
-                    } catch (NumberFormatException e) {
+                    } else {
                         hmb.getLogger().warning("Invalid file, could not delete " + name);
                     }
                 }
