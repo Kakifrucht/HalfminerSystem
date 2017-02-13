@@ -148,7 +148,11 @@ public class MessageBuilder {
 
                     Player pSendTo = (Player) sendTo;
                     pSendTo.spigot().sendMessage(makeCommandsClickable(messageToSend));
-                } else sendTo.sendMessage(messageToSend);
+                } else if (sendTo instanceof Player) {
+                    sendTo.sendMessage(messageToSend);
+                } else {
+                    sendTo.sendMessage(returnMessage(true));
+                }
             }
         }
     }
