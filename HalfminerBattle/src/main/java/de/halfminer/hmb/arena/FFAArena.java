@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
  * Free for all arena used by {@link FFAMode}, implementing custom killstreaks, timeouts and auto respawns
@@ -101,6 +102,14 @@ public class FFAArena extends AbstractKitArena {
 
             int streak = streaks.containsKey(killer) ? streaks.get(killer) + 1 : 1;
             streaks.put(killer, streak);
+
+            MessageBuilder.create(hmb, "modeFFAKillLog")
+                    .addPlaceholderReplace("%ARENA%", getName())
+                    .addPlaceholderReplace("%KILLER%", killer.getName())
+                    .addPlaceholderReplace("%VICTIM%", hasDied.getName())
+                    .addPlaceholderReplace("%KILLSTREAK%", String.valueOf(streak))
+                    .addPlaceholderReplace("%DEATHSTREAK%", String.valueOf(Math.abs(streakDied)))
+                    .logMessage(Level.INFO);
 
             try {
                 CustomAction action = new CustomAction("ffa-" + streak, hmb.getCacheHolder());
