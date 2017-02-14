@@ -7,7 +7,10 @@ import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.mode.FFAMode;
+import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.CachingException;
+import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
@@ -71,13 +74,16 @@ public class FFAArena extends AbstractKitArena {
     }
 
     private void addPlayerInternal(Player toAdd) {
-        MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(toAdd);
         addPlayers(toAdd);
         equipPlayers(toAdd);
         streaks.put(toAdd, 0);
         toAdd.setScoreboard(scoreboard);
         scoreboardObjective.getScore(toAdd.getName()).setScore(0);
         scoreboardTeam.addEntry(toAdd.getName());
+
+        MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(toAdd);
+        ((HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES))
+                .sendTitle(toAdd, MessageBuilder.returnMessage(hmb, "modeFFAJoinTitle"));
     }
 
     public void removePlayer(Player toRemove) {

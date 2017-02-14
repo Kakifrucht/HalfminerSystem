@@ -113,10 +113,15 @@ public abstract class AbstractArena implements Arena {
     protected void teleportIntoArena(Player... toTeleport) {
 
         int spawnNumber = 0;
-        for (Player player : parameterToList(toTeleport)) {
-            if (!player.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)))) {
-                hmb.getLogger().warning("Player " + player.getName() + " could not be teleported into the arena");
+        List<Player> toTeleportList = parameterToList(toTeleport);
+        if (toTeleportList.size() > 1) {
+            for (Player player : toTeleportList) {
+                if (!player.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)))) {
+                    hmb.getLogger().warning("Player " + player.getName() + " could not be teleported into the arena");
+                }
             }
+        } else {
+            toTeleportList.get(0).teleport(spawns.get(new Random().nextInt(spawns.size())));
         }
     }
 

@@ -48,15 +48,15 @@ public class FFAMode extends AbstractMode {
             return true;
         }
 
+        if (!sender.hasPermission("hmb.mode.ffa.use")) {
+            MessageBuilder.create(hmb, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
+            return true;
+        }
+
         Player player = (Player) sender;
 
         if (args.length < 1) {
             MessageBuilder.create(hmb, "modeFFAUsage", HalfminerBattle.PREFIX).sendMessage(sender);
-            return true;
-        }
-
-        if (!sender.hasPermission("hmb.mode.ffa.use")) {
-            MessageBuilder.create(hmb, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 

@@ -95,6 +95,7 @@ localization:
   modeFFACooldown: '&7Du kannst die Arena frühestens in &c%TIMELEFT% Sekunden &7betreten'
   modeFFADiedTooOften: '&cDu bist zu häufig am Stück gestorben und wurdest daher aus der Arena entfernt'
   modeFFAJoined: '~&7Arena wurde betreten, verwende &a/ffa leave/ &7zum verlassen (ausloggen führt zum Tod)'
+  modeFFAJoinTitle: ' \nZum verlassen: &a/ffa leave'
   modeFFAKillLog: '%KILLER% (%KILLSTREAK%er Killserie) hat %VICTIM% (%DEATHSTREAK%er Todesserie) in FFA Arena %ARENA% eliminiert'
   modeFFALoggedOutLog: '%PLAYER% hat sich in FFA Arena %ARENA% ausgeloggt'
   modeFFANotInArena: '&cDu bist in keiner FFA Arena'
