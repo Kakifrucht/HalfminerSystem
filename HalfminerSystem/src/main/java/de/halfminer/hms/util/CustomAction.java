@@ -70,7 +70,8 @@ public class CustomAction {
                 keyValuePair = Utils.getKeyValuePair(line);
             } catch (FormattingException e) {
                 logError("FORMAT", lineNumber);
-                continue;
+                parsedActionList = null;
+                return;
             }
 
             Type type = Type.getFromString(keyValuePair.getLeft());
@@ -81,10 +82,14 @@ public class CustomAction {
                         playersRequired = Math.max(playersRequired, 1);
                     } catch (NumberFormatException e) {
                         logError("PLAYERSREQUIRED", lineNumber);
+                        parsedActionList = null;
+                        return;
                     }
                 } else parsedActionList.add(new Pair<>(type, keyValuePair.getRight()));
             } else {
                 logError("ACTIONTYPE", lineNumber);
+                parsedActionList = null;
+                return;
             }
         }
     }
@@ -95,7 +100,7 @@ public class CustomAction {
         if (parsedActionList == null) return true;
 
         if (players.length < playersRequired) {
-            logError("NOTENOUGHPLAYERS", 0);
+            logError("NOTENOUGHPLAYERS", -1);
             return false;
         }
 
@@ -186,7 +191,7 @@ public class CustomAction {
     }
 
     private void logError(String type, int lineNumber) {
-        boolean addLineNumber = lineNumber > 0;
+        boolean addLineNumber = lineNumber >= 0;
         MessageBuilder builder = MessageBuilder.create(plugin,
                 addLineNumber ? "utilCustomActionParseError" : "utilCustomActionParseErrorNoLine")
                 .addPlaceholderReplace("%NAME%", actionName)
