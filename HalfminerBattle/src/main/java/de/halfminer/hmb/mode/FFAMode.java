@@ -5,6 +5,9 @@ import de.halfminer.hmb.arena.FFAArena;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
+import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -85,8 +89,10 @@ public class FFAMode extends AbstractMode {
                     return true;
                 }
 
-                ((FFAArena) pm.getArena(player)).removePlayer(player);
-                MessageBuilder.create(hmb, "modeFFAArenaLeft", HalfminerBattle.PREFIX).sendMessage(player);
+                teleportWithDelay(player, 2, () -> {
+                    ((FFAArena) pm.getArena(player)).removePlayer(player);
+                    MessageBuilder.create(hmb, "modeFFAArenaLeft", HalfminerBattle.PREFIX).sendMessage(player);
+                }, null);
                 break;
             case "choose":
                 if (args.length > 1) {
@@ -148,5 +154,11 @@ public class FFAMode extends AbstractMode {
                     .addPlaceholderReplace("%ARENA%", arena.getName())
                     .logMessage(Level.INFO);
         }
+    }
+
+    public void teleportWithDelay(Player toTeleport, int delay,
+                                  @Nullable Runnable runIfSuccess, @Nullable Runnable runIfCancelled) {
+        ((HanTeleport) HalfminerSystem.getInstance().getHandler(HandlerType.TELEPORT))
+                .startTeleport(toTeleport, toTeleport.getLocation(), delay, runIfSuccess, runIfCancelled);
     }
 }

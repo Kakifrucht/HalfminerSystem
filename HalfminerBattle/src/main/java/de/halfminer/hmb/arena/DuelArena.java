@@ -69,9 +69,9 @@ public class DuelArena extends AbstractKitArena {
                 // Battle is starting, reset walkspeed and give the kit
                 if (timeLeft == timeStart) {
                     scheduler.runTask(hmb, () -> {
+                        playSound(Sound.BLOCK_ANVIL_LAND);
                         preparePlayer(playerA);
                         preparePlayer(playerB);
-                        playSound(Sound.BLOCK_ANVIL_LAND);
                         teleportIntoArena();
                     });
                 }
@@ -102,20 +102,19 @@ public class DuelArena extends AbstractKitArena {
                 }
             }
 
+            private void playSound(Sound toPlay) {
+                playersInArena.forEach(p -> p.playSound(p.getLocation(), toPlay, 1.0f, 1.6f));
+            }
+
         }, 0L, 20L);
     }
 
     public void gameEnd() {
         task.cancel();
         restorePlayers(useKit || restoreInventory);
-        playSound(Sound.BLOCK_ANVIL_LAND);
     }
 
     public boolean isUseKit() {
         return useKit;
-    }
-
-    private void playSound(Sound toPlay) {
-        playersInArena.forEach(p -> p.playSound(p.getLocation(), toPlay, 1.0f, 1.6f));
     }
 }

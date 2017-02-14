@@ -8,6 +8,7 @@ import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
@@ -129,6 +130,7 @@ public abstract class AbstractArena implements Arena {
         pm.restorePlayers(restoreInventory, parameterToArray(players));
         for (Player player : parameterToArray(players)) {
             playersInArena.remove(player);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.6f);
         }
     }
 

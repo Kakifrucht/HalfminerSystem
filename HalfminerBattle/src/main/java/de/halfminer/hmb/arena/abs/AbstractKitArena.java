@@ -5,6 +5,7 @@ import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -45,6 +46,7 @@ public abstract class AbstractKitArena extends AbstractArena {
         for (Player equip : parameterToList(toEquip)) {
             PlayerInventory inv = equip.getInventory();
             inv.setContents(addPlayerInfo(equip, kit));
+            equip.playSound(equip.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.6f);
         }
     }
 

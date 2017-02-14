@@ -7,17 +7,16 @@ import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.mode.FFAMode;
-import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.CachingException;
-import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +33,8 @@ public class FFAArena extends AbstractKitArena {
     private final FFAMode battleMode = (FFAMode) getBattleMode();
 
     private final Scoreboard scoreboard = hmb.getServer().getScoreboardManager().getNewScoreboard();
-    private Objective scoreboardObjective;
+    private final Objective scoreboardObjective;
+    private final Team scoreboardTeam;
 
     private final Map<Player, Integer> streaks = new HashMap<>();
     private final Cache<UUID, Long> bannedFromArena = CacheBuilder.newBuilder()
@@ -47,6 +47,8 @@ public class FFAArena extends AbstractKitArena {
         scoreboardObjective = scoreboard.registerNewObjective("streak", "dummy");
         scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
         scoreboardObjective.setDisplayName(MessageBuilder.returnMessage(hmb, "modeFFAScoreboardHeader"));
+        scoreboardTeam = scoreboard.registerNewTeam("ingame");
+        scoreboardTeam.setPrefix(ChatColor.BLUE + "");
     }
 
     public void addPlayer(Player toAdd) {
@@ -63,10 +65,9 @@ public class FFAArena extends AbstractKitArena {
         }
 
         pm.addToQueue(battleModeType, toAdd);
-        ((HanTeleport) HalfminerSystem.getInstance().getHandler(HandlerType.TELEPORT))
-                .startTeleport(toAdd, toAdd.getLocation(), 3,
-                        () -> addPlayerInternal(toAdd),
-                        () -> pm.setState(BattleState.IDLE, toAdd));
+        battleMode.teleportWithDelay(toAdd, 3,
+                () -> addPlayerInternal(toAdd),
+                () -> pm.setState(BattleState.IDLE, toAdd));
     }
 
     private void addPlayerInternal(Player toAdd) {
@@ -76,6 +77,7 @@ public class FFAArena extends AbstractKitArena {
         streaks.put(toAdd, 0);
         toAdd.setScoreboard(scoreboard);
         scoreboardObjective.getScore(toAdd.getName()).setScore(0);
+        scoreboardTeam.addEntry(toAdd.getName());
     }
 
     public void removePlayer(Player toRemove) {
@@ -86,6 +88,7 @@ public class FFAArena extends AbstractKitArena {
             pm.setState(BattleState.QUEUE_COOLDOWN, toRemove);
         }
         scoreboard.resetScores(toRemove.getName());
+        scoreboardTeam.removeEntry(toRemove.getName());
         toRemove.setScoreboard(hmb.getServer().getScoreboardManager().getMainScoreboard());
     }
 

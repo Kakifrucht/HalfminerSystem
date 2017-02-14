@@ -44,9 +44,10 @@ Current features
     - Countdown before game start
     - Set maximum game time in config
   - FFA mode
-    - Teleport cooldown before teleporting into arena
+    - Teleport cooldown before teleporting into/out of arena
       - Players can select which arena to enter
     - Custom kit in arena
+    - Players in mode are colored in tablist
     - Custom killstreaks
       - Define what should happen at which streak in *customactions.txt*
         - Supports commands, custom item drops, messaging
