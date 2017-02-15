@@ -86,7 +86,10 @@ public class ModHealthBar extends HalfminerModule implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDeathRemoveFromSeen(PlayerDeathEvent e) {
-        playerSeesBar.get(e.getEntity()).cleanFromDamageableList();
+        Player died = e.getEntity();
+        if (playerSeesBar.containsKey(died)) {
+            playerSeesBar.get(died).cleanFromDamageableList();
+        }
     }
 
     private boolean isApplicableHealthChangeEvent(EntityEvent e) {
@@ -185,6 +188,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
             } else list = damageableHealthSeenBy.get(updateTo);
 
             if (!list.contains(player)) list.add(player);
+
             scheduleTask(updateTo.isDead());
         }
 
