@@ -48,14 +48,14 @@ public class ModMotd extends HalfminerModule implements Listener {
         String newsString = storage.getString("news");
         newsString = ChatColor.RESET + newsString;
 
-        String setMotd = MessageBuilder.create(hms, "modMotdLine")
+        String setMotd = MessageBuilder.create("modMotdLine", hms)
                 .addPlaceholderReplace("%REPLACE%", newsString)
                 .returnMessage();
 
         List<String> strList = hms.getConfig().getStringList("motd.randomColors");
         motd = new String[strList.size()];
         for (int i = 0; i < strList.size(); i++)
-            motd[i] = MessageBuilder.create(hms, setMotd)
+            motd[i] = MessageBuilder.create(setMotd, hms)
                     .setDirectString()
                     .addPlaceholderReplace("%COLOR%", '&' + strList.get(i))
                     .returnMessage();

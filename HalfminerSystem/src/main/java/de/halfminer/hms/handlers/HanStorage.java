@@ -138,11 +138,11 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
             }
 
             if (cacheFile.exists()) {
-                MessageBuilder.create(plugin, "hanStorageCacheCreate")
+                MessageBuilder.create("hanStorageCacheCreate")
                         .addPlaceholderReplace("%FILENAME%", cacheFile.getName())
                         .logMessage(Level.INFO);
             } else {
-                MessageBuilder.create(plugin, "hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
+                MessageBuilder.create("hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
                 throw new CachingException(fileName, CachingException.Reason.CANNOT_WRITE);
             }
         }
@@ -161,9 +161,9 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
             sysConfig.save(sysFile);
             uuidConfig.save(uuidFile);
             playerConfig.save(playerFile);
-            MessageBuilder.create(plugin, "hanStorageSaveSuccessful").logMessage(Level.INFO);
+            MessageBuilder.create("hanStorageSaveSuccessful").logMessage(Level.INFO);
         } catch (IOException e) {
-            MessageBuilder.create(plugin, "hanStorageSaveUnsuccessful").logMessage(Level.WARNING);
+            MessageBuilder.create("hanStorageSaveUnsuccessful").logMessage(Level.WARNING);
             e.printStackTrace();
         }
     }
@@ -186,7 +186,7 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
             playerConfig = YamlConfiguration.loadConfiguration(playerFile);
         }
 
-        int saveInterval = plugin.getConfig().getInt("handler.storage.autoSaveMinutes", 15) * 60 * 20;
+        int saveInterval = hms.getConfig().getInt("handler.storage.autoSaveMinutes", 15) * 60 * 20;
         if (task != null) task.cancel();
         task = scheduler.runTaskTimerAsynchronously(plugin, this::saveConfig, saveInterval, saveInterval);
     }

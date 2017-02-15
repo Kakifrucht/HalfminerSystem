@@ -38,7 +38,7 @@ public class Cmdcustomtext extends HalfminerCommand {
         try {
             cache = storage.getCache("customtext.txt");
         } catch (CachingException e) {
-            MessageBuilder.create(hms, "errorOccurred", "Info").sendMessage(sender);
+            MessageBuilder.create("errorOccurred", "Info").sendMessage(sender);
             e.printStackTrace();
             return;
         }
@@ -49,7 +49,7 @@ public class Cmdcustomtext extends HalfminerCommand {
 
             for (String rawLine : chapter) {
 
-                MessageBuilder builder = MessageBuilder.create(hms, rawLine)
+                MessageBuilder builder = MessageBuilder.create(rawLine, hms)
                         .setDirectString()
                         .toggleClickableCommands()
                         .addPlaceholderReplace("%PLAYER%", Utils.getPlayername(sender))
@@ -82,10 +82,10 @@ public class Cmdcustomtext extends HalfminerCommand {
 
             if (e.getReason().equals(CachingException.Reason.CHAPTER_NOT_FOUND)
                     || e.getReason().equals(CachingException.Reason.FILE_EMPTY)) {
-                MessageBuilder.create(hms, "cmdCustomtextNotFound", "Info").sendMessage(sender);
+                MessageBuilder.create("cmdCustomtextNotFound", hms, "Info").sendMessage(sender);
             } else {
-                MessageBuilder.create(hms, "errorOccurred", "Info").sendMessage(sender);
-                MessageBuilder.create(hms, "cmdCustomtextCacheParseError")
+                MessageBuilder.create("errorOccurred", "Info").sendMessage(sender);
+                MessageBuilder.create("cmdCustomtextCacheParseError", hms)
                         .addPlaceholderReplace("%ERROR%", e.getCleanReason())
                         .logMessage(Level.WARNING);
             }

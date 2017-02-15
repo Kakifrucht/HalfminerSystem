@@ -43,7 +43,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     protected void execute() {
 
         if (args.length < 2) {
-            MessageBuilder.create(hms, "cmdRankUsage", "Rank").sendMessage(sender);
+            MessageBuilder.create("cmdRankUsage", hms, "Rank").sendMessage(sender);
             return;
         }
 
@@ -86,7 +86,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             } catch (NumberFormatException ignored) {}
 
             if (upgradeAmount > rankNameAndMultiplierPairs.size() || upgradeAmount < 1) {
-                MessageBuilder.create(hms, "cmdRankInvalidRankCommand", "Rank").sendMessage(sender);
+                MessageBuilder.create("cmdRankInvalidRankCommand", hms, "Rank").sendMessage(sender);
                 return;
             }
         }
@@ -94,7 +94,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         if (playerToReward != null) {
             execute(playerToReward);
         } else {
-            MessageBuilder.create(hms, "cmdRankNotOnline", "Rank")
+            MessageBuilder.create("cmdRankNotOnline", hms, "Rank")
                     .addPlaceholderReplace("%PLAYER%", args[0])
                     .sendMessage(sender);
             setPersistent(PersistenceMode.EVENT_PLAYER_JOIN, uuidToReward);
@@ -110,7 +110,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     private void execute(Player player) {
 
         if (player.isOp()) {
-            MessageBuilder send = MessageBuilder.create(hms, "cmdRankPlayerIsOp", "Rank")
+            MessageBuilder send = MessageBuilder.create("cmdRankPlayerIsOp", hms, "Rank")
                     .addPlaceholderReplace("%PLAYER%", player.getName());
             sendAndLogMessageBuilder(send);
             return;
@@ -124,7 +124,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
         if (rankToGiveName == null) {
             int getFromList = playerLevel + upgradeAmount - 1;
             if (getFromList >= rankNameAndMultiplierPairs.size()) {
-                MessageBuilder send = MessageBuilder.create(hms, "cmdRankInvalidUpgradeParam", "Rank")
+                MessageBuilder send = MessageBuilder.create("cmdRankInvalidUpgradeParam", hms, "Rank")
                         .addPlaceholderReplace("%PLAYER%", player.getName())
                         .addPlaceholderReplace("%UPGRADEAMOUNT%", String.valueOf(upgradeAmount));
                 sendAndLogMessageBuilder(send);
@@ -145,7 +145,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             // check if new level is lower/same as old one
             int multiplierOfPreviousRank = rankNameAndMultiplierPairs.get(playerLevel - 1).getRight();
             if (multiplierOfPreviousRank >= rankToGiveMultiplier) {
-                MessageBuilder send = MessageBuilder.create(hms, "cmdRankNewLevelSameOrLower", "Rank")
+                MessageBuilder send = MessageBuilder.create("cmdRankNewLevelSameOrLower", hms, "Rank")
                         .addPlaceholderReplace("%PLAYER%", player.getName())
                         .addPlaceholderReplace("%NEWRANK%", rankToGiveName);
                 sendAndLogMessageBuilder(send);
@@ -190,7 +190,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
 
         String commandOnDisable = hms.getConfig().getString("command.rank.commandToExecuteOnDisable");
         if (commandOnDisable.length() > 0) {
-            String placeholderReplaced = MessageBuilder.create(hms, commandOnDisable)
+            String placeholderReplaced = MessageBuilder.create(commandOnDisable, hms)
                     .setDirectString()
                     .addPlaceholderReplace("%PLAYER%", args[0])
                     .addPlaceholderReplace("%RANK%", rankToGiveName)
@@ -198,14 +198,14 @@ public class Cmdrank extends HalfminerPersistenceCommand {
 
             server.dispatchCommand(server.getConsoleSender(), placeholderReplaced);
         }
-        MessageBuilder.create(hms, "cmdRankPersistenceDisable")
+        MessageBuilder.create("cmdRankPersistenceDisable", hms)
                 .addPlaceholderReplace("%PLAYER%", args[0])
                 .addPlaceholderReplace("%RANK%", rankToGiveName)
                 .logMessage(Level.WARNING);
     }
 
     private void sendInvalidRankConfig(String level) {
-        MessageBuilder.create(hms, "cmdRankInvalidRankConfig", "Rank")
+        MessageBuilder.create("cmdRankInvalidRankConfig", hms, "Rank")
                 .addPlaceholderReplace("%INVALIDINPUT%", level)
                 .sendMessage(sender);
     }
@@ -218,7 +218,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     }
 
     private void logActionNotFound(Player toReward, String actionName) {
-        MessageBuilder notify = MessageBuilder.create(hms, "cmdRankActionNotFound", "Rank")
+        MessageBuilder notify = MessageBuilder.create("cmdRankActionNotFound", hms, "Rank")
                 .addPlaceholderReplace("%PLAYER%", toReward.getName())
                 .addPlaceholderReplace("%ACTIONNAME%", actionName);
         sendAndLogMessageBuilder(notify);

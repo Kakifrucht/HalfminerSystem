@@ -1,6 +1,5 @@
 package de.halfminer.hmb.mode;
 
-import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.duel.DuelQueue;
@@ -45,7 +44,7 @@ public class DuelMode extends AbstractMode {
 
         Player player = (Player) sender;
         if (!sender.hasPermission("hmb.mode.duel.use")) {
-            MessageBuilder.create(null, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create("noPermission", "Battle").sendMessage(sender);
             return true;
         }
 
@@ -68,14 +67,16 @@ public class DuelMode extends AbstractMode {
                     boolean useKit = !(args.length > 1 && args[1].equalsIgnoreCase("nokit"));
                     queue.requestSend(player, hmb.getServer().getPlayer(args[0]), useKit);
             }
-        } else MessageBuilder.create(hmb, "modeDuelShowHelp", HalfminerBattle.PREFIX).sendMessage(sender);
+        } else MessageBuilder.create("modeDuelShowHelp", hmb).sendMessage(sender);
 
         return true;
     }
 
     private void sendArenaList(CommandSender sender) {
-        MessageBuilder.create(hmb, "modeGlobalShowArenaList", HalfminerBattle.PREFIX).sendMessage(sender);
-        MessageBuilder.create(hmb, am.getStringFromBattleMode(type)).setDirectString().sendMessage(sender);
+        MessageBuilder.create("modeGlobalShowArenaList", hmb).sendMessage(sender);
+        MessageBuilder.create(am.getStringFromBattleMode(type), hmb)
+                .setDirectString()
+                .sendMessage(sender);
     }
 
     @Override

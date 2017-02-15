@@ -48,11 +48,11 @@ public class Cmdnewtp extends HalfminerCommand {
         if (tp.hasPendingTeleport(player, true)) return;
 
         if (hPlayer.getBoolean(DataType.NEWTP_USED)){
-            MessageBuilder.create(hms, "cmdNewtpAlreadyUsed", "Newtp").sendMessage(player);
+            MessageBuilder.create("cmdNewtpAlreadyUsed", hms, "Newtp").sendMessage(player);
             return;
         }
 
-        MessageBuilder.create(hms, "cmdNewtpStart", "Newtp").sendMessage(player);
+        MessageBuilder.create("cmdNewtpStart", hms, "Newtp").sendMessage(player);
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));
 
@@ -88,19 +88,19 @@ public class Cmdnewtp extends HalfminerCommand {
             server.dispatchCommand(player, "sethome newtp");
 
             for (int i = 0; i < 100; i++) player.sendMessage("");
-            MessageBuilder.create(hms, "cmdNewtpTpDone", "Newtp")
+            MessageBuilder.create("cmdNewtpTpDone", hms, "Newtp")
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .sendMessage(player);
 
-            MessageBuilder.create(hms, "cmdNewtpLog")
+            MessageBuilder.create("cmdNewtpLog", hms)
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
                     .logMessage(Level.INFO);
 
             scheduler.runTaskLater(hms, () -> {
-                MessageBuilder.create(hms, "cmdNewtpDocumentation", "Newtp").sendMessage(player);
+                MessageBuilder.create("cmdNewtpDocumentation", hms, "Newtp").sendMessage(player);
                 ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR)).sendBar(player,
-                        MessageBuilder.returnMessage(hms, "cmdNewtpBossbar"), BarColor.BLUE, BarStyle.SOLID, 50);
+                        MessageBuilder.returnMessage("cmdNewtpBossbar", hms), BarColor.BLUE, BarStyle.SOLID, 50);
             }, 120L);
         }, () -> {
 

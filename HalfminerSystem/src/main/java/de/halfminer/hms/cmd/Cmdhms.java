@@ -90,13 +90,13 @@ public class Cmdhms extends HalfminerCommand {
     private void copySchematic() {
 
         if (args.length < 2) {
-            MessageBuilder.create(hms, "cmdHmsCopySchematicNotSpecified", PREFIX).sendMessage(sender);
+            MessageBuilder.create("cmdHmsCopySchematicNotSpecified", hms, PREFIX).sendMessage(sender);
             return;
         }
 
         String destinationPath = hms.getConfig().getString("command.hms.remoteSchematicPath", "");
         if (destinationPath.length() == 0 || destinationPath.equals("/put/your/path/here")) {
-            MessageBuilder.create(hms, "cmdHmsCopySchematicNotConfigured", PREFIX).sendMessage(sender);
+            MessageBuilder.create("cmdHmsCopySchematicNotConfigured", hms, PREFIX).sendMessage(sender);
             return;
         }
 
@@ -105,7 +105,7 @@ public class Cmdhms extends HalfminerCommand {
 
         // check if destination path exists first
         if (!Files.exists(new File(destinationPath).toPath())) {
-            MessageBuilder.create(hms, "cmdHmsCopySchematicNotConfigured", PREFIX).sendMessage(sender);
+            MessageBuilder.create("cmdHmsCopySchematicNotConfigured", hms, PREFIX).sendMessage(sender);
             return;
         }
 
@@ -115,12 +115,12 @@ public class Cmdhms extends HalfminerCommand {
                 scheduler.runTaskAsynchronously(hms, () -> {
                     try {
                         Files.copy(toCopy.toPath(), destination.toPath());
-                        MessageBuilder.create(hms, "cmdHmsCopySchematicCopySuccess", PREFIX).sendMessage(sender);
+                        MessageBuilder.create("cmdHmsCopySchematicCopySuccess", hms, PREFIX).sendMessage(sender);
 
                         // auto delete after 10 minutes
                         if (args.length > 2 && args[2].startsWith("auto")) {
 
-                            MessageBuilder.create(hms, "cmdHmsCopySchematicDelete", PREFIX).sendMessage(sender);
+                            MessageBuilder.create("cmdHmsCopySchematicDelete", hms, PREFIX).sendMessage(sender);
 
                             scheduler.runTaskLaterAsynchronously(hms, () -> {
                                 deleteFile(toCopy);
@@ -128,12 +128,12 @@ public class Cmdhms extends HalfminerCommand {
                             }, 12000L);
                         }
                     } catch (IOException e) {
-                        MessageBuilder.create(hms, "cmdHmsCopySchematicCopyError", PREFIX).sendMessage(sender);
+                        MessageBuilder.create("cmdHmsCopySchematicCopyError", hms, PREFIX).sendMessage(sender);
                         e.printStackTrace();
                     }
                 });
-            } else MessageBuilder.create(hms, "cmdHmsCopySchematicAlreadyExists", PREFIX).sendMessage(sender);
-        } else MessageBuilder.create(hms, "cmdHmsCopySchematicDoesntExist", PREFIX).sendMessage(sender);
+            } else MessageBuilder.create("cmdHmsCopySchematicAlreadyExists", hms, PREFIX).sendMessage(sender);
+        } else MessageBuilder.create("cmdHmsCopySchematicDoesntExist", hms, PREFIX).sendMessage(sender);
     }
 
     private void deleteFile(File toDelete) {
@@ -147,7 +147,7 @@ public class Cmdhms extends HalfminerCommand {
             e.printStackTrace();
         }
 
-        MessageBuilder.create(hms, success ? "cmdHmsCopySchematicDeleted" : "cmdHmsCopySchematicDeletedError")
+        MessageBuilder.create(success ? "cmdHmsCopySchematicDeleted" : "cmdHmsCopySchematicDeletedError", hms)
                 .addPlaceholderReplace("%PATH%", toDelete.toPath().toString())
                 .logMessage(success ? Level.INFO : Level.WARNING);
     }
@@ -159,7 +159,7 @@ public class Cmdhms extends HalfminerCommand {
             cache = storage.getCache("customitems.txt");
             cache.reCacheFile();
         } catch (CachingException e) {
-            MessageBuilder.create(hms, "cmdCustomtextCacheParseError", PREFIX)
+            MessageBuilder.create("cmdCustomtextCacheParseError", hms, PREFIX)
                     .addPlaceholderReplace("%ERROR%", e.getCleanReason())
                     .sendMessage(sender);
             return;
@@ -175,11 +175,11 @@ public class Cmdhms extends HalfminerCommand {
                 for (String itemKey : allItems) allItemString += itemKey + " ";
                 allItemString = allItemString.substring(0, allItemString.length() - 1);
 
-                MessageBuilder.create(hms, "cmdHmsGiveList", PREFIX)
+                MessageBuilder.create("cmdHmsGiveList", hms, PREFIX)
                         .addPlaceholderReplace("%LIST%", allItemString)
                         .sendMessage(sender);
 
-            } else MessageBuilder.create(hms, "cmdHmsGiveListNone", PREFIX).sendMessage(sender);
+            } else MessageBuilder.create("cmdHmsGiveListNone", hms, PREFIX).sendMessage(sender);
 
             return;
         }
@@ -187,7 +187,7 @@ public class Cmdhms extends HalfminerCommand {
         Player giveTo = server.getPlayer(args[1]);
 
         if (giveTo == null) {
-            MessageBuilder.create(null, "playerNotOnline", PREFIX).sendMessage(sender);
+            MessageBuilder.create("playerNotOnline", PREFIX).sendMessage(sender);
             return;
         }
 
@@ -202,7 +202,7 @@ public class Cmdhms extends HalfminerCommand {
         String itemName = args[2].toLowerCase();
         try {
             itemCache.giveItem(itemName, giveTo, amount);
-            MessageBuilder.create(hms, "cmdHmsGiveSuccessful", PREFIX)
+            MessageBuilder.create("cmdHmsGiveSuccessful", hms, PREFIX)
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName())
                     .addPlaceholderReplace("%ITEM%", itemName)
                     .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
@@ -215,17 +215,17 @@ public class Cmdhms extends HalfminerCommand {
                 for (ItemStack lost : e.getNotGivenItems().values()) {
                     totalLost += lost.getAmount();
                 }
-                MessageBuilder.create(hms, "cmdHmsGiveInventoryFull", PREFIX)
+                MessageBuilder.create("cmdHmsGiveInventoryFull", hms, PREFIX)
                         .addPlaceholderReplace("%PLAYER%", giveTo.getName())
                         .addPlaceholderReplace("%ITEM%", itemName)
                         .addPlaceholderReplace("%AMOUNT%", String.valueOf(totalLost))
                         .sendMessage(sender);
             } else if (e.getReason().equals(GiveItemException.Reason.ITEM_NOT_FOUND)) {
-                MessageBuilder.create(hms, "cmdHmsGiveItemNotFound", PREFIX)
+                MessageBuilder.create("cmdHmsGiveItemNotFound", hms, PREFIX)
                         .addPlaceholderReplace("%ITEM%", itemName)
                         .sendMessage(sender);
             } else {
-                MessageBuilder.create(hms, "cmdHmsGiveError", PREFIX)
+                MessageBuilder.create("cmdHmsGiveError", hms, PREFIX)
                         .addPlaceholderReplace("%REASON%", e.getCleanReason())
                         .sendMessage(sender);
             }
@@ -234,7 +234,7 @@ public class Cmdhms extends HalfminerCommand {
 
     private void reload() {
         hms.loadConfig();
-        MessageBuilder.create(hms, "cmdHmsConfigReloaded", PREFIX).sendMessage(sender);
+        MessageBuilder.create("cmdHmsConfigReloaded", hms, PREFIX).sendMessage(sender);
     }
 
     private void renameItem() {
@@ -249,7 +249,7 @@ public class Cmdhms extends HalfminerCommand {
             ItemStack item = player.getInventory().getItemInMainHand();
 
             if (item == null || item.getType() == Material.AIR) {
-                MessageBuilder.create(hms, "cmdHmsRenameFailed", PREFIX).sendMessage(player);
+                MessageBuilder.create("cmdHmsRenameFailed", hms, PREFIX).sendMessage(player);
                 return;
             }
 
@@ -303,7 +303,7 @@ public class Cmdhms extends HalfminerCommand {
 
             if (newName == null) newName = "";
 
-            MessageBuilder.create(hms, "cmdHmsRenameDone", PREFIX)
+            MessageBuilder.create("cmdHmsRenameDone", hms, PREFIX)
                     .addPlaceholderReplace("%NAME%", newName)
                     .sendMessage(player);
         } else showUsage();
@@ -320,20 +320,20 @@ public class Cmdhms extends HalfminerCommand {
         String senderName = Utils.getPlayername(sender);
 
         if (toRing == null) {
-            MessageBuilder.create(null, "playerNotOnline", PREFIX).sendMessage(sender);
+            MessageBuilder.create("playerNotOnline", PREFIX).sendMessage(sender);
             return;
         }
 
         ((HanTitles) hms.getHandler(HandlerType.TITLES)).sendTitle(toRing,
-                MessageBuilder.create(hms, "cmdHmsRingTitle")
+                MessageBuilder.create("cmdHmsRingTitle", hms)
                         .addPlaceholderReplace("%PLAYER%", senderName)
                         .returnMessage());
 
-        MessageBuilder.create(hms, "cmdHmsRingMessage", PREFIX)
+        MessageBuilder.create("cmdHmsRingMessage", hms, PREFIX)
                 .addPlaceholderReplace("%PLAYER%", senderName)
                 .sendMessage(toRing);
 
-        MessageBuilder.create(hms, "cmdHmsRingSent", PREFIX)
+        MessageBuilder.create("cmdHmsRingSent", hms, PREFIX)
                 .addPlaceholderReplace("%PLAYER%", toRing.getName())
                 .sendMessage(sender);
 
@@ -368,7 +368,7 @@ public class Cmdhms extends HalfminerCommand {
                 UUID playerUid = p.getUniqueId();
                 storage.set("vote." + playerUid, Long.MAX_VALUE);
 
-                MessageBuilder.create(hms, "cmdHmsHomeblockRemove", PREFIX)
+                MessageBuilder.create("cmdHmsHomeblockRemove", hms, PREFIX)
                         .addPlaceholderReplace("%PLAYER%", p.getName())
                         .sendMessage(sender);
             } catch (PlayerNotFoundException e) {
@@ -390,7 +390,7 @@ public class Cmdhms extends HalfminerCommand {
             Player selected = server.getPlayer(args[i]);
             if (selected != null) players[i - 2] = selected;
             else {
-                MessageBuilder.create(null, "playerNotOnline", PREFIX).sendMessage(sender);
+                MessageBuilder.create("playerNotOnline", PREFIX).sendMessage(sender);
                 return;
             }
         }
@@ -399,12 +399,12 @@ public class Cmdhms extends HalfminerCommand {
             CustomAction action = new CustomAction(args[1], storage);
             boolean success = action.runAction(players);
 
-            MessageBuilder.create(hms, success ? "cmdHmsRunActionSuccess" : "cmdHmsRunActionExecuteError", PREFIX)
+            MessageBuilder.create(success ? "cmdHmsRunActionSuccess" : "cmdHmsRunActionExecuteError", hms, PREFIX)
                     .addPlaceholderReplace("%ACTIONNAME%", args[1])
                     .sendMessage(sender);
 
         } catch (CachingException e) {
-            MessageBuilder.create(hms, "cmdHmsRunActionCacheError", PREFIX)
+            MessageBuilder.create("cmdHmsRunActionCacheError", hms, PREFIX)
                     .addPlaceholderReplace("%ACTIONNAME%", args[1])
                     .addPlaceholderReplace("%REASON%", e.getCleanReason())
                     .sendMessage(sender);
@@ -438,7 +438,7 @@ public class Cmdhms extends HalfminerCommand {
 
         scheduler.runTaskAsynchronously(hms, () -> {
 
-            MessageBuilder.create(hms, "cmdHmsSearchhomesStarted", PREFIX)
+            MessageBuilder.create("cmdHmsSearchhomesStarted", hms, PREFIX)
                     .addPlaceholderReplace("%RADIUS%", String.valueOf(checkRadius))
                     .sendMessage(player);
 
@@ -455,7 +455,7 @@ public class Cmdhms extends HalfminerCommand {
                                 && x - checkRadius < xHome && x + checkRadius > xHome
                                 && z - checkRadius < zHome && z + checkRadius > zHome) {
 
-                            homeMessages.add(MessageBuilder.create(hms, "cmdHmsSearchhomesResults")
+                            homeMessages.add(MessageBuilder.create("cmdHmsSearchhomesResults", hms)
                                     .addPlaceholderReplace("%PLAYER%", user.getName())
                                     .addPlaceholderReplace("%HOMENAME%", homeName)
                                     .returnMessage());
@@ -468,7 +468,7 @@ public class Cmdhms extends HalfminerCommand {
             }
 
             if (homeMessages.size() == 0)
-                MessageBuilder.create(hms, "cmdHmsSearchhomesNoneFound", PREFIX).sendMessage(player);
+                MessageBuilder.create("cmdHmsSearchhomesNoneFound", hms, PREFIX).sendMessage(player);
             else homeMessages.forEach(player::sendMessage);
         });
     }
@@ -476,7 +476,7 @@ public class Cmdhms extends HalfminerCommand {
     private void updateSkill() {
 
         if (args.length < 2) {
-            MessageBuilder.create(hms, "cmdHmsSkillUsage", "Skilllevel").sendMessage(sender);
+            MessageBuilder.create("cmdHmsSkillUsage", hms, "Skilllevel").sendMessage(sender);
             return;
         }
 
@@ -495,17 +495,17 @@ public class Cmdhms extends HalfminerCommand {
                 int modifier = Integer.decode(args[2]) - oldValue;
                 ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).updateSkill(p.getBase(), modifier);
 
-                MessageBuilder.create(hms, "cmdHmsSkillUpdated", "Skilllevel")
+                MessageBuilder.create("cmdHmsSkillUpdated", hms, "Skilllevel")
                         .addPlaceholderReplace("%PLAYER%", p.getName())
                         .addPlaceholderReplace("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
                         .addPlaceholderReplace("%OLDELO%", String.valueOf(oldValue))
                         .addPlaceholderReplace("%NEWELO%", p.getString(DataType.SKILL_ELO))
                         .sendMessage(sender);
             } catch (NumberFormatException e) {
-                MessageBuilder.create(hms, "cmdHmsSkillUsage", "Skilllevel").sendMessage(sender);
+                MessageBuilder.create("cmdHmsSkillUsage", hms, "Skilllevel").sendMessage(sender);
             }
         } else {
-            MessageBuilder.create(hms, "cmdHmsSkillShow", "Skilllevel")
+            MessageBuilder.create("cmdHmsSkillShow", hms, "Skilllevel")
                     .addPlaceholderReplace("%PLAYER%", p.getName())
                     .addPlaceholderReplace("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
                     .addPlaceholderReplace("%ELO%", String.valueOf(oldValue))
@@ -522,8 +522,8 @@ public class Cmdhms extends HalfminerCommand {
             OfflinePlayer p;
             try {
                 p = storage.getPlayer(args[1]).getBase();
-                MessageBuilder.create(hms, antiXray.setBypassed(p) ?
-                        "cmdHmsXrayBypassSet" : "cmdHmsXrayBypassUnset", "AntiXRay")
+                MessageBuilder.create(antiXray.setBypassed(p) ?
+                        "cmdHmsXrayBypassSet" : "cmdHmsXrayBypassUnset", hms, "AntiXRay")
                         .addPlaceholderReplace("%PLAYER%", p.getName())
                         .sendMessage(sender);
 
@@ -535,19 +535,19 @@ public class Cmdhms extends HalfminerCommand {
             String information = antiXray.getInformationString();
 
             if (information.length() > 0) {
-                MessageBuilder.create(hms, "cmdHmsXrayShow", "AntiXRay").sendMessage(sender);
-                MessageBuilder.create(hms, information)
+                MessageBuilder.create("cmdHmsXrayShow", hms, "AntiXRay").sendMessage(sender);
+                MessageBuilder.create(information, hms)
                         .setDirectString()
                         .sendMessage(sender);
-                MessageBuilder.create(hms, "cmdHmsXrayLegend").sendMessage(sender);
+                MessageBuilder.create("cmdHmsXrayLegend", hms).sendMessage(sender);
             } else {
-                MessageBuilder.create(hms, "cmdHmsXrayShowEmpty", "AntiXRay").sendMessage(sender);
+                MessageBuilder.create("cmdHmsXrayShowEmpty", hms, "AntiXRay").sendMessage(sender);
             }
         }
     }
 
     private void showUsage() {
-        MessageBuilder.create(hms, "cmdHmsUsage", PREFIX)
+        MessageBuilder.create("cmdHmsUsage", hms, PREFIX)
                 .addPlaceholderReplace("%VERSION%", hms.getDescription().getVersion())
                 .sendMessage(sender);
     }

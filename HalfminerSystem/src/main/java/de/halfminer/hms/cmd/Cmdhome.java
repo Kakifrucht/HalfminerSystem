@@ -42,11 +42,11 @@ public class Cmdhome extends HalfminerCommand {
 
         } else {
 
-            MessageBuilder.create(hms, "cmdHomeDenied", "Home")
+            MessageBuilder.create("cmdHomeDenied", hms, "Home")
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .sendMessage(player);
 
-            MessageBuilder.create(hms, "cmdHomeDeniedLog")
+            MessageBuilder.create("cmdHomeDeniedLog", hms)
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .logMessage(Level.INFO);
         }

@@ -24,7 +24,7 @@ public class ModAutoMessage extends HalfminerModule {
     public void loadConfig() {
 
         List<String> messagesList = hms.getConfig().getStringList("autoMessage.messages");
-        String separator = MessageBuilder.returnMessage(hms, "lineSeparator");
+        String separator = MessageBuilder.returnMessage("lineSeparator");
 
         // If no messages are set disable
         if (messagesList.size() == 0) {
@@ -54,7 +54,7 @@ public class ModAutoMessage extends HalfminerModule {
         running = scheduler.runTaskTimerAsynchronously(hms, () -> {
 
             String message = this.messages.get(rnd.nextInt(this.messages.size()));
-            MessageBuilder.create(hms, message)
+            MessageBuilder.create(message, hms)
                     .setDirectString()
                     .broadcastMessage(false);
         }, interval, interval);

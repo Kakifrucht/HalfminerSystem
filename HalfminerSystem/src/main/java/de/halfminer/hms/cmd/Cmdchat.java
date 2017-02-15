@@ -104,12 +104,12 @@ public class Cmdchat extends HalfminerCommand {
         }
 
         String recipientName;
-        if (sendTo == null) recipientName = MessageBuilder.returnMessage(hms, "cmdChatAll");
+        if (sendTo == null) recipientName = MessageBuilder.returnMessage("cmdChatAll", hms);
         else recipientName = sendTo.getName();
 
         String notifySender = useBossbar ? "cmdChatBossbar" : "cmdChatTitle";
 
-        MessageBuilder.create(hms, notifySender, "Chat")
+        MessageBuilder.create(notifySender, hms, "Chat")
                 .addPlaceholderReplace("%SENDTO%", recipientName)
                 .addPlaceholderReplace("%TIME%", String.valueOf(time))
                 .addPlaceholderReplace("%MESSAGE%", message)
@@ -149,11 +149,11 @@ public class Cmdchat extends HalfminerCommand {
                 .filter(p -> !p.hasPermission("hms.chat.advanced"))
                 .forEach(p -> p.sendMessage(clearMessage.toString()));
 
-        MessageBuilder.create(hms, "cmdChatCleared", "Chat")
+        MessageBuilder.create("cmdChatCleared", hms, "Chat")
                 .addPlaceholderReplace("%PLAYER%", whoCleared)
                 .broadcastMessage(false);
 
-        MessageBuilder.create(hms, "cmdChatClearedLog")
+        MessageBuilder.create("cmdChatClearedLog", hms)
                 .addPlaceholderReplace("%PLAYER%", whoCleared)
                 .logMessage(Level.INFO);
     }
@@ -176,7 +176,7 @@ public class Cmdchat extends HalfminerCommand {
         if (countdown > 30) showUsage();
         else {
 
-            MessageBuilder.create(hms, "cmdChatCountdownStarted", "Chat")
+            MessageBuilder.create("cmdChatCountdownStarted", hms, "Chat")
                     .addPlaceholderReplace("%COUNT%", String.valueOf(countdown))
                     .sendMessage(sender);
 
@@ -188,7 +188,7 @@ public class Cmdchat extends HalfminerCommand {
                 public void run() {
 
                     if (count < 0) return;
-                    bar.broadcastBar(MessageBuilder.create(hms, "cmdChatCountdown")
+                    bar.broadcastBar(MessageBuilder.create("cmdChatCountdown", hms)
                                     .addPlaceholderReplace("%COUNT%", String.valueOf(count))
                                     .returnMessage(),
                             BarColor.GREEN, BarStyle.SOLID, 35, (double) count / countdown);
@@ -215,13 +215,13 @@ public class Cmdchat extends HalfminerCommand {
         storage.set("news", message);
         hms.getModule(ModuleType.MOTD).loadConfig();
         if (sender instanceof Player) {
-            bossBar.sendBar((Player) sender, MessageBuilder.create(hms, "modTitlesNewsFormat")
+            bossBar.sendBar((Player) sender, MessageBuilder.create("modTitlesNewsFormat", hms)
                     .addPlaceholderReplace("%NEWS%", message)
                     .returnMessage(), BarColor.YELLOW, BarStyle.SOLID, 5);
             titles.sendTitle((Player) sender, " \n" + message, 10, 100, 10);
         }
 
-        MessageBuilder.create(hms, "cmdChatNewsSetTo", "Chat").sendMessage(sender);
+        MessageBuilder.create("cmdChatNewsSetTo", hms, "Chat").sendMessage(sender);
     }
 
     private void sendMessage() {
@@ -239,16 +239,16 @@ public class Cmdchat extends HalfminerCommand {
                 sendToString = player.getName();
             } else {
 
-                MessageBuilder.create(null, "playerNotOnline", "Chat").sendMessage(sender);
+                MessageBuilder.create("playerNotOnline", "Chat").sendMessage(sender);
                 return;
             }
         } else {
 
             server.broadcast(message, "hms.default");
-            sendToString = MessageBuilder.returnMessage(hms, "cmdChatAll");
+            sendToString = MessageBuilder.returnMessage("cmdChatAll", hms);
         }
 
-        MessageBuilder.create(hms, "cmdChatSend", "Chat")
+        MessageBuilder.create("cmdChatSend", hms, "Chat")
                 .addPlaceholderReplace("%SENDTO%", sendToString)
                 .sendMessage(sender);
     }
@@ -262,14 +262,14 @@ public class Cmdchat extends HalfminerCommand {
 
         Player directRecipient = server.getPlayer(args[1]);
         if (directRecipient == null) {
-            MessageBuilder.create(null, "playerNotOnline", "Chat").sendMessage(sender);
+            MessageBuilder.create("playerNotOnline", "Chat").sendMessage(sender);
             return;
         }
 
         String command = Utils.arrayToString(args, 2, false);
         if (!command.startsWith("/")) command = "/" + command;
 
-        MessageBuilder.create(hms, "cmdChatClickableCommand", Utils.getPlayername(sender))
+        MessageBuilder.create("cmdChatClickableCommand", hms, Utils.getPlayername(sender))
                 .addPlaceholderReplace("%PLAYER%", directRecipient.getName())
                 .addPlaceholderReplace("%COMMAND%", command + "/") // append slash since it will be parsed
                 .broadcastMessage(false);
@@ -287,7 +287,7 @@ public class Cmdchat extends HalfminerCommand {
         String message = Utils.arrayToString(args, 1, true).replace("\\n", "\n");
         storage.set("chatmessage", message);
         storage.set("chatmessagetime", (System.currentTimeMillis() / 1000));
-        MessageBuilder.create(hms, "cmdChatMessageSet", "Chat")
+        MessageBuilder.create("cmdChatMessageSet", hms, "Chat")
                 .addPlaceholderReplace("%MESSAGE%", message)
                 .sendMessage(sender);
     }
@@ -303,7 +303,7 @@ public class Cmdchat extends HalfminerCommand {
 
         if (message.length() == 0) {
 
-            MessageBuilder.create(hms, "cmdChatMessageNotSet", "Chat").sendMessage(sender);
+            MessageBuilder.create("cmdChatMessageNotSet", hms, "Chat").sendMessage(sender);
             return false;
         } else {
 
@@ -314,7 +314,7 @@ public class Cmdchat extends HalfminerCommand {
                 message = "";
                 storage.set("chatmessage", null);
 
-                MessageBuilder.create(hms, "cmdChatMessageNotSet", "Chat").sendMessage(sender);
+                MessageBuilder.create("cmdChatMessageNotSet", hms, "Chat").sendMessage(sender);
                 return false;
             } else return true;
         }
@@ -327,6 +327,6 @@ public class Cmdchat extends HalfminerCommand {
     }
 
     private void showUsage() {
-        MessageBuilder.create(hms, "cmdChatUsage", "Chat").sendMessage(sender);
+        MessageBuilder.create("cmdChatUsage", hms, "Chat").sendMessage(sender);
     }
 }

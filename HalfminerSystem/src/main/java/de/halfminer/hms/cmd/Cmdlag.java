@@ -34,7 +34,7 @@ public class Cmdlag extends HalfminerCommand {
             toLookup = server.getPlayer(args[0]);
 
             if (toLookup == null) {
-                MessageBuilder.create(null, "playerNotOnline", "Lag").sendMessage(sender);
+                MessageBuilder.create("playerNotOnline", "Lag").sendMessage(sender);
                 return;
             }
         }
@@ -57,7 +57,7 @@ public class Cmdlag extends HalfminerCommand {
                 }
             }
 
-            MessageBuilder.create(hms, "cmdLagPlayerInfo", "Lag")
+            MessageBuilder.create("cmdLagPlayerInfo", hms, "Lag")
                     .addPlaceholderReplace("%PLAYER%", toLookup.getName())
                     .addPlaceholderReplace("%LATENCY%", pingColored)
                     .sendMessage(sender);
@@ -75,7 +75,7 @@ public class Cmdlag extends HalfminerCommand {
             serverLagStatus = ServerStatus.UNSTABLE;
         } else tpsColored = ChatColor.GREEN + tpsColored;
 
-        MessageBuilder.create(hms, "cmdLagServerInfo", "Lag")
+        MessageBuilder.create("cmdLagServerInfo", hms, "Lag")
                 .addPlaceholderReplace("%TPS%", tpsColored)
                 .sendMessage(sender);
 
@@ -86,7 +86,7 @@ public class Cmdlag extends HalfminerCommand {
             else if (serverLagStatus == ServerStatus.UNSTABLE) messageKey = "cmdLagServerUnstable";
             else if (serverLagStatus == ServerStatus.LAGGING) messageKey = "cmdLagServerLag";
             else messageKey = "cmdLagPlayerLag";
-            MessageBuilder.create(hms, messageKey, "Lag").sendMessage(sender);
+            MessageBuilder.create(messageKey, hms, "Lag").sendMessage(sender);
         }
     }
 

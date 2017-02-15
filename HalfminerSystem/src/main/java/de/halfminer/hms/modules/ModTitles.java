@@ -39,11 +39,11 @@ public class ModTitles extends HalfminerModule implements Listener {
 
         if (!storage.getPlayer(joined).getBoolean(DataType.NEWTP_USED)) {
 
-            titleHandler.sendTitle(joined, MessageBuilder.create(hms, "modTitlesNewPlayerFormat")
+            titleHandler.sendTitle(joined, MessageBuilder.create("modTitlesNewPlayerFormat", hms)
                     .addPlaceholderReplace("%PLAYER%", joined.getName())
                     .returnMessage(), 10, 200, 10);
 
-            barHandler.sendBar(joined, MessageBuilder.create(hms, "modTitlesNewPlayerFormatBar")
+            barHandler.sendBar(joined, MessageBuilder.create("modTitlesNewPlayerFormatBar", hms)
                     .addPlaceholderReplace("%PLAYER%", joined.getName())
                     .returnMessage(), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
 
@@ -53,7 +53,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             // delay due to potential Essentials issues
             scheduler.runTaskLater(hms, () -> {
 
-                titleHandler.sendTitle(joined, MessageBuilder.create(hms, "modTitlesJoinFormat")
+                titleHandler.sendTitle(joined, MessageBuilder.create("modTitlesJoinFormat", hms)
                         .addPlaceholderReplace("%BALANCE%", String.valueOf(updateBalanceAndTablist(joined)))
                         .addPlaceholderReplace("%PLAYERCOUNT%", getPlayercountString())
                         .returnMessage(), 10, 100, 10);
@@ -61,7 +61,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                 final String news = storage.getString("news");
                 if (news.length() > 0) {
                     scheduler.runTaskLater(hms, () -> {
-                        barHandler.sendBar(joined, MessageBuilder.create(hms, "modTitlesNewsFormat")
+                        barHandler.sendBar(joined, MessageBuilder.create("modTitlesNewsFormat", hms)
                                 .addPlaceholderReplace("%NEWS%", news)
                                 .returnMessage(), BarColor.YELLOW, BarStyle.SOLID, 30);
                         titleHandler.sendTitle(joined, " \n" + news, 10, 100, 10);
@@ -118,7 +118,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private void updateTablist(Player player) {
 
-        titleHandler.setTablistHeaderFooter(player, MessageBuilder.create(hms, "modTitlesTablist")
+        titleHandler.setTablistHeaderFooter(player, MessageBuilder.create("modTitlesTablist", hms)
                 .addPlaceholderReplace("%BALANCE%", String.valueOf(balances.get(player)))
                 .addPlaceholderReplace("%PLAYERCOUNT%", getPlayercountString())
                 .returnMessage());

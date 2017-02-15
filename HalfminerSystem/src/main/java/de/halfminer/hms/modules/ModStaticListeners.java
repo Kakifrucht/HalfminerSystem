@@ -64,7 +64,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         Player player = e.getPlayer();
         if (player.hasPermission("hms.bypass.commandfilter")) return;
         if (player.isSleeping()) {
-            MessageBuilder.create(hms, "modStaticListenersCommandSleep", "Info").sendMessage(player);
+            MessageBuilder.create("modStaticListenersCommandSleep", hms, "Info").sendMessage(player);
             e.setCancelled(true);
         } else {
 
@@ -101,7 +101,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                 && ((complete.size() > 10 && complete.get(0).startsWith("/"))
                 || (complete.size() == 0 && !buffer.contains(" ")))) {
 
-            MessageBuilder.create(hms, "modStaticListenersTabHelp", "Info").sendMessage(e.getSender());
+            MessageBuilder.create("modStaticListenersTabHelp", hms, "Info").sendMessage(e.getSender());
             e.setCompletions(Collections.singletonList("/hilfe"));
         }
     }

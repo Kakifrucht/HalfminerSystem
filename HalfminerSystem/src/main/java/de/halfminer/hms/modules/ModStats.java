@@ -81,7 +81,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             } else {
                 hPlayer.set(DataType.LAST_NAMES, lastName);
             }
-            MessageBuilder.create(hms, "modStatsNameChange", "Name")
+            MessageBuilder.create("modStatsNameChange", hms, "Name")
                     .addPlaceholderReplace("%OLDNAME%", lastName)
                     .addPlaceholderReplace("%NEWNAME%", player.getName())
                     .broadcastMessage(true);
@@ -121,19 +121,19 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             hKiller.set(DataType.KD_RATIO, kdRatioKiller);
             hVictim.set(DataType.KD_RATIO, kdRatioVictim);
 
-            MessageBuilder.create(hms, "modStatsPvPKill", "PvP")
+            MessageBuilder.create("modStatsPvPKill", hms, "PvP")
                     .addPlaceholderReplace("%VICTIM%", victim.getName())
                     .addPlaceholderReplace("%KILLS%", String.valueOf(killsKiller))
                     .addPlaceholderReplace("%KDRATIO%", String.valueOf(kdRatioKiller))
                     .sendMessage(killer);
 
-            MessageBuilder.create(hms, "modStatsPvPDeath", "PvP")
+            MessageBuilder.create("modStatsPvPDeath", hms, "PvP")
                     .addPlaceholderReplace("%KILLER%", killer.getName())
                     .addPlaceholderReplace("%DEATHS%", String.valueOf(deathsVictim))
                     .addPlaceholderReplace("%KDRATIO%", String.valueOf(kdRatioVictim))
                     .sendMessage(victim);
 
-            MessageBuilder.create(hms, "modStatsPvPLog")
+            MessageBuilder.create("modStatsPvPLog", hms)
                     .addPlaceholderReplace("%KILLER%", killer.getName())
                     .addPlaceholderReplace("%VICTIM%", victim.getName())
                     .logMessage(Level.INFO);
@@ -142,11 +142,11 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             hVictim.incrementInt(DataType.DEATHS, 1);
             hVictim.set(DataType.KD_RATIO, calculateKDRatio(hVictim));
 
-            MessageBuilder.create(hms, "modStatsDeath", "PvP")
+            MessageBuilder.create("modStatsDeath", hms, "PvP")
                     .addPlaceholderReplace("%DEATHS%", hVictim.getString(DataType.DEATHS))
                     .sendMessage(victim);
 
-            MessageBuilder.create(hms, "modStatsDeathLog")
+            MessageBuilder.create("modStatsDeathLog", hms)
                     .addPlaceholderReplace("%PLAYER%", victim.getName())
                     .logMessage(Level.INFO);
         }
@@ -168,13 +168,13 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         String kills = String.valueOf(hClicked.getInt(DataType.KILLS));
         String kdratio = String.valueOf(hClicked.getDouble(DataType.KD_RATIO));
 
-        MessageBuilder.create(hms, !clicked.hasPermission("hms.bypass.statsrightclick") ?
-                "modStatsRightClick" : "modStatsRightClickExempt", clicked.getName())
+        MessageBuilder.create(!clicked.hasPermission("hms.bypass.statsrightclick") ?
+                "modStatsRightClick" : "modStatsRightClickExempt", hms, clicked.getName())
                 .addPlaceholderReplace("%SKILLGROUP%", skillgroup)
                 .addPlaceholderReplace("%KILLS%", kills)
                 .addPlaceholderReplace("%KDRATIO%", kdratio)
                 .addPlaceholderReplace("%AFK%", hookHandler.isAfk(clicked) ?
-                        MessageBuilder.returnMessage(hms, "modStatsRightClickAFKAppend") : "")
+                        MessageBuilder.returnMessage("modStatsRightClickAFKAppend", hms) : "")
                 .sendMessage(clicker);
 
         clicker.playSound(clicked.getLocation(), Sound.BLOCK_SLIME_HIT, 1.0f, 2.0f);

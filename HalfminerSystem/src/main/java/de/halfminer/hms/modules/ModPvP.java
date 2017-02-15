@@ -198,7 +198,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
             if (streak > thresholdUntilShown || streak % 5 == 0) {
                 scheduler.runTaskLater(hms, () -> titleHandler.sendActionBar(null,
-                        MessageBuilder.create(hms, "modPvPKillStreak")
+                        MessageBuilder.create("modPvPKillStreak", hms)
                                 .addPlaceholderReplace("%PLAYER%", killer.getName())
                                 .addPlaceholderReplace("%STREAK%", String.valueOf(streak))
                                 .returnMessage()), 0L);
@@ -268,8 +268,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             killer = ((EntityDamageByEntityEvent) p.getLastDamageCause()).getDamager().getName();
         }
 
-        MessageBuilder broadcast = MessageBuilder.create(hms,
-                killer.length() > 0 ? "modPvPResurrect" : "modPvPResurrectSuicide", "PvP")
+        MessageBuilder broadcast = MessageBuilder.create(killer.length() > 0 ? "modPvPResurrect" : "modPvPResurrectSuicide", hms,
+                "PvP")
                 .addPlaceholderReplace("%PLAYER%", p.getName());
 
         if (killer.length() > 0) broadcast.addPlaceholderReplace("%KILLER%", killer);

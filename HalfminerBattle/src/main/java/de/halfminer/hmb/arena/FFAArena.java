@@ -2,7 +2,6 @@ package de.halfminer.hmb.arena;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
@@ -56,7 +55,7 @@ public class FFAArena extends AbstractKitArena {
 
         scoreboardObjective = scoreboard.registerNewObjective("streak", "dummy");
         scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        scoreboardObjective.setDisplayName(MessageBuilder.returnMessage(hmb, "modeFFAScoreboardHeader"));
+        scoreboardObjective.setDisplayName(MessageBuilder.returnMessage("modeFFAScoreboardHeader", hmb, false));
         scoreboardTeam = scoreboard.registerNewTeam("ingame");
         scoreboardTeam.setPrefix(ChatColor.BLUE + "");
     }
@@ -67,7 +66,7 @@ public class FFAArena extends AbstractKitArena {
         if (timestamp != null) {
             long secondsLeft = timestamp - (System.currentTimeMillis() / 1000);
             if (secondsLeft > 0L) {
-                MessageBuilder.create(hmb, "modeFFACooldown", HalfminerBattle.PREFIX)
+                MessageBuilder.create("modeFFACooldown", hmb)
                         .addPlaceholderReplace("%TIMELEFT%", String.valueOf(secondsLeft))
                         .sendMessage(toAdd);
                 return;
@@ -97,9 +96,9 @@ public class FFAArena extends AbstractKitArena {
         scoreboardObjective.getScore(toAdd.getName()).setScore(0);
         scoreboardTeam.addEntry(toAdd.getName());
 
-        MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(toAdd);
+        MessageBuilder.create("modeFFAJoined", hmb).sendMessage(toAdd);
         ((HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES))
-                .sendTitle(toAdd, MessageBuilder.returnMessage(hmb, "modeFFAJoinTitle"));
+                .sendTitle(toAdd, MessageBuilder.returnMessage("modeFFAJoinTitle", hmb, false));
     }
 
     public void removePlayer(Player toRemove) {
@@ -124,7 +123,7 @@ public class FFAArena extends AbstractKitArena {
         scoreboardObjective.getScore(hasDied.getName()).setScore(streakDied);
 
         if (-streakDied == battleMode.getRemoveAfterDeaths()) {
-            MessageBuilder.create(hmb, "modeFFADiedTooOften", HalfminerBattle.PREFIX).sendMessage(hasDied);
+            MessageBuilder.create("modeFFADiedTooOften", hmb).sendMessage(hasDied);
             bannedFromArena.put(hasDied.getUniqueId(), System.currentTimeMillis() / 1000 + battleMode.getRemoveForMinutes() * 60);
             removePlayer(hasDied);
         } else {
@@ -150,7 +149,7 @@ public class FFAArena extends AbstractKitArena {
             streaks.put(killer, streak);
             scoreboardObjective.getScore(killer.getName()).setScore(streak);
 
-            MessageBuilder.create(hmb, "modeFFAKillLog")
+            MessageBuilder.create("modeFFAKillLog", hmb)
                     .addPlaceholderReplace("%ARENA%", getName())
                     .addPlaceholderReplace("%KILLER%", killer.getName())
                     .addPlaceholderReplace("%VICTIM%", hasDied.getName())
@@ -180,7 +179,7 @@ public class FFAArena extends AbstractKitArena {
     private void addSpawnProtection(Player toProtect) {
         spawnProtection.put(toProtect, true);
         ((HanBossBar) HalfminerSystem.getInstance().getHandler(HandlerType.BOSS_BAR))
-                .sendBar(toProtect, MessageBuilder.returnMessage(hmb, "modeFFASpawnProtectBar"),
+                .sendBar(toProtect, MessageBuilder.returnMessage("modeFFASpawnProtectBar", hmb, false),
                         BarColor.GREEN, BarStyle.SOLID, 5);
     }
 }

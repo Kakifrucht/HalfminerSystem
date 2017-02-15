@@ -59,7 +59,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         Player p = e.getPlayer();
         if (isGlobalmuted && !p.hasPermission("hms.chat.bypassglobalmute")) {
-            MessageBuilder.create(hms, "modChatManGlobalmuteDenied", "Chat").sendMessage(p);
+            MessageBuilder.create("modChatManGlobalmuteDenied", hms, "Chat").sendMessage(p);
             e.setCancelled(true);
             return;
         }
@@ -76,7 +76,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                     colorCount += 2;
 
             if ((message.length() - colorCount) < 2) {
-                MessageBuilder.create(hms, "modChatManTooShort", "Chat").sendMessage(p);
+                MessageBuilder.create("modChatManTooShort", hms, "Chat").sendMessage(p);
                 e.setCancelled(true);
                 return;
             }
@@ -102,7 +102,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 }
 
                 if (cancel) {
-                    MessageBuilder.create(hms, "modChatManRepeat", "Chat").sendMessage(p);
+                    MessageBuilder.create("modChatManRepeat", hms, "Chat").sendMessage(p);
                     e.setCancelled(true);
                     return;
                 }
@@ -123,10 +123,10 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             suffix = "";
         }
 
-        format = MessageBuilder.create(hms, format)
+        format = MessageBuilder.create(format, hms)
                 .setDirectString()
                 .addPlaceholderReplace("%PLAYER%", "%1$s")
-                .addPlaceholderReplace("%PREFIX%", prefix)
+                .addPlaceholderReplace("%CPREFIX%", prefix)
                 .addPlaceholderReplace("%SUFFIX%", suffix)
                 .addPlaceholderReplace("%MESSAGE%", "%2$s")
                 .returnMessage();
@@ -152,12 +152,12 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         for (Player wasMentioned : mentioned) {
 
             if (hookHandler.isAfk(wasMentioned)) {
-                titleHandler.sendActionBar(p, MessageBuilder.create(hms, "modChatManIsAfk")
+                titleHandler.sendActionBar(p, MessageBuilder.create("modChatManIsAfk", hms)
                                 .addPlaceholderReplace("%PLAYER%", wasMentioned.getName())
                                 .returnMessage());
             }
 
-            titleHandler.sendActionBar(wasMentioned, MessageBuilder.create(hms, "modChatManMentioned")
+            titleHandler.sendActionBar(wasMentioned, MessageBuilder.create("modChatManMentioned", hms)
                             .addPlaceholderReplace("%PLAYER%", p.getName())
                             .returnMessage());
 
@@ -174,7 +174,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     public void toggleGlobalmute() {
 
         isGlobalmuted = !isGlobalmuted;
-        MessageBuilder.create(hms, isGlobalmuted ? "modChatManGlobalmuteOn" : "modChatManGlobalmuteOff", "Chat")
+        MessageBuilder.create(isGlobalmuted ? "modChatManGlobalmuteOn" : "modChatManGlobalmuteOff", hms, "Chat")
                 .broadcastMessage(true);
     }
 

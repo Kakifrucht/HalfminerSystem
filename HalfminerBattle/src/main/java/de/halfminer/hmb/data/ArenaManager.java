@@ -145,7 +145,7 @@ public class ArenaManager {
         // log load amounts
         int totalArenas = 0;
         for (Map<String, Arena> map : arenas.values()) totalArenas += map.size();
-        MessageBuilder.create(hmb, "modeGlobalArenaLoadLog")
+        MessageBuilder.create("modeGlobalArenaLoadLog", hmb)
                 .addPlaceholderReplace("%ARENAS%", String.valueOf(totalArenas))
                 .addPlaceholderReplace("%KITS%", String.valueOf(kits.size()))
                 .logMessage(Level.INFO);
@@ -241,12 +241,13 @@ public class ArenaManager {
     }
 
 
-    public void sendArenaSelection(Player selector, List<Arena> freeArenas, String command, String randomKey) {
+    public void sendArenaSelection(Player selector, List<Arena> freeArenas, String command, String randomHoverKey) {
 
         ComponentBuilder builder = new ComponentBuilder("");
 
         for (Arena freeArena : freeArenas) {
-            String tooltipOnHover = MessageBuilder.create(hmb, "modeGlobalChooseArenaHover")
+            String tooltipOnHover = MessageBuilder.create("modeGlobalChooseArenaHover", hmb)
+                    .togglePrefix()
                     .addPlaceholderReplace("%ARENA%", freeArena.getName())
                     .returnMessage();
             builder.append(freeArena.getName())
@@ -256,11 +257,11 @@ public class ArenaManager {
                     .append("  ").reset();
         }
 
-        if (randomKey.length() > 0) {
-            builder.append(MessageBuilder.returnMessage(hmb, "modeGlobalRandomArena"))
+        if (randomHoverKey.length() > 0) {
+            builder.append(MessageBuilder.returnMessage("modeGlobalRandomArena", hmb, false))
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + "random"))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder(MessageBuilder.returnMessage(hmb, randomKey)).create()))
+                            new ComponentBuilder(MessageBuilder.returnMessage(randomHoverKey, hmb, false)).create()))
                     .color(net.md_5.bungee.api.ChatColor.GRAY);
         }
 

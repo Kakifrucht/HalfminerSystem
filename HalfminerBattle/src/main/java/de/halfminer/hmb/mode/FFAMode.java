@@ -1,6 +1,5 @@
 package de.halfminer.hmb.mode;
 
-import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.FFAArena;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleModeType;
@@ -47,24 +46,24 @@ public class FFAMode extends AbstractMode {
     public boolean onCommand(CommandSender sender, String[] args) {
 
         if (!(sender instanceof Player)) {
-            MessageBuilder.create(null, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create("notAPlayer", "Battle").sendMessage(sender);
             return true;
         }
 
         if (!sender.hasPermission("hmb.mode.ffa.use")) {
-            MessageBuilder.create(null, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create("noPermission", "Battle").sendMessage(sender);
             return true;
         }
 
         Player player = (Player) sender;
 
         if (args.length < 1) {
-            MessageBuilder.create(hmb, "modeFFAUsage", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create("modeFFAUsage", hmb).sendMessage(sender);
             return true;
         }
 
         if (pm.hasQueueCooldown(player)) {
-            MessageBuilder.create(hmb, "modeGlobalQueueCooldown", HalfminerBattle.PREFIX).sendMessage(player);
+            MessageBuilder.create("modeGlobalQueueCooldown", hmb).sendMessage(player);
             return true;
         }
 
@@ -72,35 +71,35 @@ public class FFAMode extends AbstractMode {
             case "join":
                 // recheck because ffa does not cause command blockage
                 if (pm.isNotIdle(player)) {
-                    MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(player);
+                    MessageBuilder.create("modeGlobalNotIdle", hmb).sendMessage(player);
                     return true;
                 }
 
                 List<Arena> freeArenas = am.getFreeArenasFromType(type);
                 if (freeArenas.size() == 0) {
-                    MessageBuilder.create(hmb, "modeGlobalBattleModeDisabled", HalfminerBattle.PREFIX).sendMessage(sender);
+                    MessageBuilder.create("modeGlobalBattleModeDisabled", hmb).sendMessage(sender);
                 } else if (freeArenas.size() == 1) {
                     ((FFAArena) freeArenas.get(0)).addPlayer(player);
                 } else {
-                    MessageBuilder.create(hmb, "modeFFAChooseArena", HalfminerBattle.PREFIX).sendMessage(player);
+                    MessageBuilder.create("modeFFAChooseArena", hmb).sendMessage(player);
                     am.sendArenaSelection(player, freeArenas, "/ffa choose ", "");
                 }
                 break;
             case "leave":
                 if (!pm.isInBattle(type, player)) {
-                    MessageBuilder.create(hmb, "modeFFANotInArena", HalfminerBattle.PREFIX).sendMessage(player);
+                    MessageBuilder.create("modeFFANotInArena", hmb).sendMessage(player);
                     return true;
                 }
 
                 teleportWithDelay(player, 2, () -> {
                     ((FFAArena) pm.getArena(player)).removePlayer(player);
-                    MessageBuilder.create(hmb, "modeFFAArenaLeft", HalfminerBattle.PREFIX).sendMessage(player);
+                    MessageBuilder.create("modeFFAArenaLeft", hmb).sendMessage(player);
                 }, null);
                 break;
             case "choose":
                 if (args.length > 1) {
                     if (pm.isNotIdle(player)) {
-                        MessageBuilder.create(hmb, "modeGlobalNotIdle", HalfminerBattle.PREFIX).sendMessage(player);
+                        MessageBuilder.create("modeGlobalNotIdle", hmb).sendMessage(player);
                         return true;
                     }
 
@@ -111,7 +110,7 @@ public class FFAMode extends AbstractMode {
                     }
                 }
             default:
-                MessageBuilder.create(hmb, "modeFFAUsage", HalfminerBattle.PREFIX).sendMessage(sender);
+                MessageBuilder.create("modeFFAUsage", hmb).sendMessage(sender);
         }
 
         return true;
@@ -152,7 +151,7 @@ public class FFAMode extends AbstractMode {
             FFAArena arena = (FFAArena) pm.getArena(p);
             arena.removePlayer(p);
             if (!p.isDead()) p.setHealth(0.0d);
-            MessageBuilder.create(hmb, "modeFFALoggedOutLog")
+            MessageBuilder.create("modeFFALoggedOutLog", hmb)
                     .addPlaceholderReplace("%PLAYER%", p.getName())
                     .addPlaceholderReplace("%ARENA%", arena.getName())
                     .logMessage(Level.INFO);
@@ -175,7 +174,7 @@ public class FFAMode extends AbstractMode {
             boolean victimProtected = ((FFAArena) pm.getArena(p)).hasSpawnProtection(p);
             e.setCancelled(attackerProtected || victimProtected);
             if (victimProtected) {
-                MessageBuilder.create(hmb, "modeFFASpawnProtected", HalfminerBattle.PREFIX)
+                MessageBuilder.create("modeFFASpawnProtected", hmb)
                         .addPlaceholderReplace("%PLAYER%", p.getName())
                         .sendMessage(attacker);
             }

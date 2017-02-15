@@ -56,7 +56,7 @@ public class Cmdhmstore extends HalfminerCommand {
 
                 String setTo = Utils.arrayToString(args, 2, false);
                 set(path, setTo);
-                MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
+                MessageBuilder.create("cmdHmstoreSet", hms, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", setTo)
                         .sendMessage(sender);
@@ -66,12 +66,12 @@ public class Cmdhmstore extends HalfminerCommand {
                 try {
                     setTo = Integer.decode(args[2]);
                 } catch (NumberFormatException e) {
-                    MessageBuilder.create(hms, "cmdHmstoreSetError", "Info").sendMessage(sender);
+                    MessageBuilder.create("cmdHmstoreSetError", hms, "Info").sendMessage(sender);
                     return;
                 }
 
                 set(path, setTo);
-                MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
+                MessageBuilder.create("cmdHmstoreSet", hms, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
                         .sendMessage(sender);
@@ -79,7 +79,7 @@ public class Cmdhmstore extends HalfminerCommand {
 
                 boolean setTo = Boolean.parseBoolean(args[2]);
                 set(path, setTo);
-                MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
+                MessageBuilder.create("cmdHmstoreSet", hms, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
                         .sendMessage(sender);
@@ -87,7 +87,7 @@ public class Cmdhmstore extends HalfminerCommand {
 
                 double setTo = Double.parseDouble(args[2]);
                 set(path, setTo);
-                MessageBuilder.create(hms, "cmdHmstoreSet", "Info")
+                MessageBuilder.create("cmdHmstoreSet", hms, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
                         .sendMessage(sender);
@@ -96,17 +96,17 @@ public class Cmdhmstore extends HalfminerCommand {
                 String value;
                 if (player == null) value = storage.getString(path);
                 else value = player.getString(type);
-                MessageBuilder.create(hms, "cmdHmstoreGet", "Info")
+                MessageBuilder.create("cmdHmstoreGet", hms, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", value)
                         .sendMessage(sender);
             } else if (args[0].equalsIgnoreCase("remove")) {
 
                 set(path, null);
-                MessageBuilder.create(hms, "cmdHmstoreRemove", "Info")
+                MessageBuilder.create("cmdHmstoreRemove", hms, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .sendMessage(sender);
-            } else MessageBuilder.create(hms, "cmdHmstoreUsage", "Info").sendMessage(sender);
+            } else MessageBuilder.create("cmdHmstoreUsage", hms, "Info").sendMessage(sender);
             return;
         }
 
@@ -114,9 +114,9 @@ public class Cmdhmstore extends HalfminerCommand {
 
             scheduler.runTaskAsynchronously(hms, () -> {
                 storage.saveConfig();
-                MessageBuilder.create(hms, "cmdHmstoreSave", "Info").sendMessage(sender);
+                MessageBuilder.create("cmdHmstoreSave", hms, "Info").sendMessage(sender);
             });
-        } else MessageBuilder.create(hms, "cmdHmstoreUsage", "Info").sendMessage(sender);
+        } else MessageBuilder.create("cmdHmstoreUsage", hms, "Info").sendMessage(sender);
     }
 
     private void set(String path, Object setTo) {

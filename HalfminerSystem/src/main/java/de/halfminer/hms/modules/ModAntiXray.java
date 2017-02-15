@@ -118,7 +118,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             if (counter.isBypassed()) color = ChatColor.YELLOW;
             else if (counter.isCheckedPermanently()) color = ChatColor.RED;
 
-            toReturn += MessageBuilder.create(hms, "modAntiXrayShowFormat")
+            toReturn += MessageBuilder.create("modAntiXrayShowFormat", hms)
                     .addPlaceholderReplace("%PLAYER%", color + counter.getOwnerName())
                     .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(last))
                     .addPlaceholderReplace("%WORLD%", last.getWorld().getName())
@@ -141,7 +141,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             else counter.setInformed((Player) toNotify);
         }
 
-        MessageBuilder message = MessageBuilder.create(hms, "modAntiXrayDetected", "AntiXRay")
+        MessageBuilder message = MessageBuilder.create("modAntiXrayDetected", hms, "AntiXRay")
                 .addPlaceholderReplace("%PLAYER%", counter.getOwnerName())
                 .addPlaceholderReplace("%BROKENTOTAL%", String.valueOf(counter.getBreakages()))
                 .addPlaceholderReplace("%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()))

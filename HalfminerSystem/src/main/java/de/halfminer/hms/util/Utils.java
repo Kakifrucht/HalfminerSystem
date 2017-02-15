@@ -137,7 +137,7 @@ public final class Utils {
      */
     public static String getPlayername(CommandSender toGet) {
         return toGet instanceof Player ?
-                toGet.getName() : MessageBuilder.returnMessage(HalfminerSystem.getInstance(), "consoleName");
+                toGet.getName() : MessageBuilder.returnMessage("consoleName");
     }
 
     public static Set<Material> stringListToMaterialSet(List<String> list) {
@@ -147,7 +147,7 @@ public final class Utils {
             try {
                 toReturn.add(Material.valueOf(material.toUpperCase()));
             } catch (IllegalArgumentException ignored) {
-                MessageBuilder.create(HalfminerSystem.getInstance(), "utilInvalidMaterial")
+                MessageBuilder.create("utilInvalidMaterial", HalfminerSystem.getInstance())
                         .addPlaceholderReplace("%MATERIAL%", material)
                         .logMessage(Level.WARNING);
             }

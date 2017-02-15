@@ -55,7 +55,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             // set last pvp time to 30 days in the future, to prevent additional inactivity deranks
             hPlayer.set(DataType.LAST_PVP, (System.currentTimeMillis() / 1000) + 2592000);
             updateSkill(player, derankLossAmount);
-            MessageBuilder.create(hms, "modSkillLevelDerank", "PvP").sendMessage(player);
+            MessageBuilder.create("modSkillLevelDerank", hms, "PvP").sendMessage(player);
 
         } else updateSkill(player, 0);
     }
@@ -140,15 +140,15 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             if (player instanceof Player) {
                 titleHandler.sendTitle((Player) player,
-                        MessageBuilder.create(hms, newLevel > level ?
-                                "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle")
+                        MessageBuilder.create(newLevel > level ?
+                                "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle", hms)
                                 .addPlaceholderReplace("%SKILLLEVEL%", String.valueOf(newLevel))
                                 .addPlaceholderReplace("%SKILLGROUP%", teamName)
                                 .returnMessage(),
                         10, 50, 10);
             }
 
-            MessageBuilder.create(hms, "modSkillLevelLog")
+            MessageBuilder.create("modSkillLevelLog", hms)
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .addPlaceholderReplace("%SKILLOLD%", String.valueOf(level))
                     .addPlaceholderReplace("%SKILLNEW%", String.valueOf(newLevel))
@@ -171,7 +171,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         derankLevelThreshold = hms.getConfig().getInt("skillLevel.derankThreshold", 16);
         timeUntilDerankThreshold = hms.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
-        skillgroupNameAdmin = MessageBuilder.returnMessage(hms, "modSkillLevelAdmingroupName");
+        skillgroupNameAdmin = MessageBuilder.returnMessage("modSkillLevelAdmingroupName", hms);
 
         List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
 

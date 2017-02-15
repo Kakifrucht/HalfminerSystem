@@ -112,7 +112,7 @@ public class HalfminerSystem extends JavaPlugin {
 
         if (command.hasPermission(sender)) {
             command.run(sender, label, args);
-        } else MessageBuilder.create(null, "noPermission", "Info").sendMessage(sender);
+        } else MessageBuilder.create("noPermission", "Info").sendMessage(sender);
 
         return true;
     }

@@ -48,7 +48,7 @@ public class Cmdvote extends HalfminerCommand {
                 // increment stats, broadcast
                 storage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
                 hasVoted.incrementInt(DataType.VOTES, 1);
-                MessageBuilder.create(hms, "cmdVoteVoted", "Vote")
+                MessageBuilder.create("cmdVoteVoted", hms, "Vote")
                         .addPlaceholderReplace("%PLAYER%", hasVoted.getName())
                         .broadcastMessage(true);
 
@@ -63,7 +63,7 @@ public class Cmdvote extends HalfminerCommand {
                     boolean receivedReward = giveReward(playerHasVoted);
                     if (!receivedReward) {
                         storage.incrementInt("vote.reward." + playerHasVoted.getUniqueId(), 1);
-                        MessageBuilder.create(hms, "cmdVoteRewardCouldNotExecute", "Vote").sendMessage(playerHasVoted);
+                        MessageBuilder.create("cmdVoteRewardCouldNotExecute", hms, "Vote").sendMessage(playerHasVoted);
                     }
 
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 2.0f);
@@ -88,14 +88,14 @@ public class Cmdvote extends HalfminerCommand {
                 int rewardAmount = storage.getInt(storageKey);
 
                 if (rewardAmount == 0) {
-                    MessageBuilder.create(hms, "cmdVoteRewardDeny", "Vote").sendMessage(player);
+                    MessageBuilder.create("cmdVoteRewardDeny", hms, "Vote").sendMessage(player);
                     return;
                 }
 
                 while (rewardAmount > 0) {
                     if (giveReward(player)) rewardAmount--;
                     else {
-                        MessageBuilder.create(hms, "cmdVoteRewardCouldNotExecute", "Vote").sendMessage(player);
+                        MessageBuilder.create("cmdVoteRewardCouldNotExecute", hms, "Vote").sendMessage(player);
                         break;
                     }
                 }
@@ -119,19 +119,19 @@ public class Cmdvote extends HalfminerCommand {
         int totalVotes = storage.getInt("totalvotes");
         int totalVotesThreshold = hms.getConfig().getInt("command.vote.threshold", 2000);
 
-        MessageBuilder.create(hms, "cmdVoteTop").sendMessage(sender);
-        MessageBuilder.create(hms, "cmdVoteMessage").addPlaceholderReplace("%PLAYER%", playername).sendMessage(sender);
-        MessageBuilder.create(hms, " ").setDirectString().sendMessage(sender);
+        MessageBuilder.create("cmdVoteTop", hms).sendMessage(sender);
+        MessageBuilder.create("cmdVoteMessage", hms).addPlaceholderReplace("%PLAYER%", playername).sendMessage(sender);
+        MessageBuilder.create(" ", hms).setDirectString().sendMessage(sender);
 
         boolean thresholdPassed = totalVotes < totalVotesThreshold;
-        MessageBuilder.create(hms, thresholdPassed ? "cmdVoteUntil" : "cmdVoteReached")
+        MessageBuilder.create(thresholdPassed ? "cmdVoteUntil" : "cmdVoteReached", hms)
                 .addPlaceholderReplace(thresholdPassed ?
                         "%TOTALVOTES%" : "%TOTALVOTESTHRESHOLD%", String.valueOf(totalVotes))
                 .sendMessage(sender);
 
-        if (rewardLeft > 0) MessageBuilder.create(hms, "cmdVoteGrabReward").sendMessage(sender);
+        if (rewardLeft > 0) MessageBuilder.create("cmdVoteGrabReward", hms).sendMessage(sender);
 
-        MessageBuilder.create(hms, "lineSeparator").sendMessage(sender);
+        MessageBuilder.create("lineSeparator").sendMessage(sender);
     }
 
     private boolean giveReward(Player player) {
@@ -142,7 +142,7 @@ public class Cmdvote extends HalfminerCommand {
             ActionProbabilityContainer actions = new ActionProbabilityContainer(probabilityList, hms, storage);
             return actions.getNextAction().runAction(player);
         } catch (CachingException e) {
-            MessageBuilder.create(hms, "cmdVoteActionCacheError")
+            MessageBuilder.create("cmdVoteActionCacheError", hms)
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .addPlaceholderReplace("%REASON%", e.getCleanReason())
                     .logMessage(Level.WARNING);

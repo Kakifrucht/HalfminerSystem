@@ -67,7 +67,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
         if (!joined.hasPlayedBefore()) {
 
-            message = MessageBuilder.create(hms, "modRespawnFirstJoin")
+            message = MessageBuilder.create("modRespawnFirstJoin", hms)
                     .addPlaceholderReplace("%PLAYER%", joined.getName())
                     .returnMessage();
 
@@ -78,7 +78,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                 if (firstSpawnCommand.length() > 0) {
 
                     server.dispatchCommand(server.getConsoleSender(),
-                            MessageBuilder.create(hms, firstSpawnCommand)
+                            MessageBuilder.create(firstSpawnCommand, hms)
                                     .setDirectString()
                                     .addPlaceholderReplace("%PLAYER%", joined.getName())
                                     .returnMessage());
@@ -88,7 +88,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         } else if (toTeleportOnJoin.contains(joined)) {
             scheduler.runTaskLater(hms, () -> {
                 joined.teleport(respawnLoc);
-                MessageBuilder.create(hms, "modRespawnForced", "Spawn").sendMessage(joined);
+                MessageBuilder.create("modRespawnForced", hms, "Spawn").sendMessage(joined);
                 toTeleportOnJoin.remove(joined);
             }, 1L);
         }
@@ -124,8 +124,8 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         if (containsWelcome && mentioned != null) {
 
             lastWelcome.put(p.getUniqueId(), true);
-            titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusTitle"), 10, 30, 0);
-            barHandler.sendBar(p, MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusBossbar"),
+            titleHandler.sendTitle(p, MessageBuilder.returnMessage("modRespawnWelcomeBonusTitle", hms), 10, 30, 0);
+            barHandler.sendBar(p, MessageBuilder.returnMessage("modRespawnWelcomeBonusBossbar", hms),
                     BarColor.WHITE, BarStyle.SOLID, 10, 1.0d);
 
             scheduler.runTaskLater(hms, () -> {
@@ -133,17 +133,17 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                 if (Utils.random(randomRange)) {
 
                     action.addPlaceholderForNextRun("%CUSTOM%",
-                            MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusCustom"));
+                            MessageBuilder.returnMessage("modRespawnWelcomeBonusCustom", hms));
 
                     if (action.runAction(p)) {
                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
                         titleHandler.sendTitle(p,
-                                MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusTitleYes"), 0, 60, 10);
+                                MessageBuilder.returnMessage("modRespawnWelcomeBonusTitleYes", hms), 0, 60, 10);
                         return;
                     }
                 }
 
-                titleHandler.sendTitle(p, MessageBuilder.returnMessage(hms, "modRespawnWelcomeBonusTitleNo"), 0, 30, 10);
+                titleHandler.sendTitle(p, MessageBuilder.returnMessage("modRespawnWelcomeBonusTitleNo", hms), 0, 30, 10);
                 p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT, 1.0f, 2.0f);
             }, 20L);
         }
@@ -199,7 +199,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         try {
             action = new CustomAction(config.getString("respawn.customActionWelcomeBonus", "nothing"), storage);
         } catch (CachingException e) {
-            MessageBuilder.create(hms, "modRespawnWelcomeBonusActionError")
+            MessageBuilder.create("modRespawnWelcomeBonusActionError", hms)
                     .addPlaceholderReplace("%REASON%", e.getCleanReason())
                     .logMessage(Level.WARNING);
             try {

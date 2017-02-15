@@ -65,7 +65,7 @@ public class CustomitemCache {
                 continue;
             }
 
-            MessageBuilder parameterParse = MessageBuilder.create(null, keyParamPair.getRight())
+            MessageBuilder parameterParse = MessageBuilder.create(keyParamPair.getRight())
                     .setDirectString()
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName());
 
@@ -145,13 +145,13 @@ public class CustomitemCache {
     }
 
     private void logInvalidKey(String key) {
-        MessageBuilder.create(null, "utilCustomitemCacheInvalidKey")
+        MessageBuilder.create("utilCustomitemCacheInvalidKey")
                 .addPlaceholderReplace("%KEY%", key)
                 .logMessage(Level.WARNING);
     }
 
     private void logInvalidParameter(String key, String param) {
-        MessageBuilder.create(null, "utilCustomitemCacheInvalidParameter")
+        MessageBuilder.create("utilCustomitemCacheInvalidParameter")
                 .addPlaceholderReplace("%KEY%", key)
                 .addPlaceholderReplace("%PARAMETER%", param)
                 .logMessage(Level.WARNING);

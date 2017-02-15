@@ -106,7 +106,7 @@ public class ModSell extends HalfminerModule implements Listener, Sweepable {
         } catch (HookException e) {
             // This should not happen under normal circumstances, print stacktrace just in case
             e.printStackTrace();
-            MessageBuilder.create(hms, "errorOccurred", "Sell").sendMessage(toReward);
+            MessageBuilder.create("errorOccurred", "Sell").sendMessage(toReward);
             return;
         }
 
@@ -115,13 +115,13 @@ public class ModSell extends HalfminerModule implements Listener, Sweepable {
 
         // print message
         String materialFriendly = Utils.makeStringFriendly(sold.name());
-        MessageBuilder.create(hms, "modSellSuccess", "Sell")
+        MessageBuilder.create("modSellSuccess", hms, "Sell")
                 .addPlaceholderReplace("%MATERIAL%", materialFriendly)
                 .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))
                 .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
                 .sendMessage(toReward);
 
-        MessageBuilder.create(hms, "modSellSuccessLog")
+        MessageBuilder.create("modSellSuccessLog", hms)
                 .addPlaceholderReplace("%PLAYER%", toReward.getName())
                 .addPlaceholderReplace("%MATERIAL%", materialFriendly)
                 .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))

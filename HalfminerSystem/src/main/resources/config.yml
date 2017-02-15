@@ -104,8 +104,8 @@ chat:
   #Add formats to the list, you need the permission node hms.chat.format.name
   #hms.chat.topformat always grants top format (which has highest priority)
   formats:
-  - 'owner:%PREFIX% &r- &l%PLAYER%%SUFFIX%: &7%MESSAGE%'
-  - 'default:%PREFIX% &r- %PLAYER%: &7%MESSAGE%'
+  - 'owner:%CPREFIX% &r- &l%PLAYER%%SUFFIX%: &7%MESSAGE%'
+  - 'default:%CPREFIX% &r- %PLAYER%: &7%MESSAGE%'
 combatLog:
   #Broadcast when a player logs out
   broadcastLog: true

@@ -51,7 +51,8 @@ public abstract class AbstractKitArena extends AbstractArena {
     }
 
     protected String getCustomLore(Player player) {
-        return MessageBuilder.create(hmb, "modeGlobalKitArenaCustomLore")
+        return MessageBuilder.create("modeGlobalKitArenaCustomLore", hmb)
+                .togglePrefix()
                 .addPlaceholderReplace("%ARENA%", getName())
                 .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
                 .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage();

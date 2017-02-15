@@ -1,6 +1,5 @@
 package de.halfminer.hmb.arena;
 
-import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.AbstractKitArena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.DuelMode;
@@ -55,7 +54,8 @@ public class DuelArena extends AbstractKitArena {
 
                 timeLeft -= 1;
                 if (timeLeft > timeStart) {
-                    final String toSend = MessageBuilder.create(hmb, "modeDuelTitleCountdown")
+                    final String toSend = MessageBuilder.create("modeDuelTitleCountdown", hmb)
+                            .togglePrefix()
                             .addPlaceholderReplace("%TIME%", String.valueOf(timeLeft - timeStart))
                             .returnMessage();
 
@@ -78,7 +78,7 @@ public class DuelArena extends AbstractKitArena {
 
                 if (timeLeft <= 5 && timeLeft > 0) {
                     if (timeLeft == 5) {
-                        MessageBuilder.create(hmb, "modeDuelTimeRunningOut", HalfminerBattle.PREFIX)
+                        MessageBuilder.create("modeDuelTimeRunningOut", hmb)
                                 .sendMessage(playerA, playerB);
                     }
                     playSound(Sound.BLOCK_NOTE_PLING);
@@ -92,8 +92,8 @@ public class DuelArena extends AbstractKitArena {
 
             private void preparePlayer(Player player) {
                 player.setWalkSpeed(0.2F);
-                MessageBuilder.create(hmb, "modeDuelGameStarting", HalfminerBattle.PREFIX).sendMessage(player);
-                titles.sendTitle(player, MessageBuilder.returnMessage(hmb, "modeDuelTitleStart"), 0, 30, 0);
+                MessageBuilder.create("modeDuelGameStarting", hmb).sendMessage(player);
+                titles.sendTitle(player, MessageBuilder.returnMessage("modeDuelTitleStart", hmb, false), 0, 30, 0);
 
                 if (useKit) equipPlayers();
                 else {

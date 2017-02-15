@@ -87,7 +87,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
             if (container.getAmountKilled(victim) == thresholdUntilBlock - 1) {
                 // warn players
-                MessageBuilder.create(hms, "modAntiKillfarmingWarning", "PvP").sendMessage(killer, victim);
+                MessageBuilder.create("modAntiKillfarmingWarning", hms, "PvP").sendMessage(killer, victim);
             } else if (container.getAmountKilled(victim) >= thresholdUntilBlock) blockPlayers(killer, victim);
         }
     }
@@ -114,7 +114,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         int blockTime = getBlockTime(toCheck);
         if (blockTime >= 0) {
             if (messageKey.length() > 0)
-                MessageBuilder.create(hms, messageKey, "PvP")
+                MessageBuilder.create(messageKey, hms, "PvP")
                         .addPlaceholderReplace("%PLAYER%", toCheck.getName())
                         .addPlaceholderReplace("%TIME%", String.valueOf(blockTime))
                         .sendMessage(toMessage);
@@ -143,7 +143,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         if (time > 0) {
             String command = e.getMessage().split(" ")[0].toLowerCase();
             if (!exemptCommands.contains(command.substring(1, command.length()))) {
-                MessageBuilder.create(hms, "modAntiKillfarmingNoCommand", "PvP")
+                MessageBuilder.create("modAntiKillfarmingNoCommand", hms, "PvP")
                         .addPlaceholderReplace("%TIME%", String.valueOf(time))
                         .sendMessage(e.getPlayer());
                 e.setCancelled(true);
@@ -207,17 +207,17 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         // ensure that once both blocks run out they get reblocked when trying to kill directly again
         killerCon.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
 
-        MessageBuilder.create(hms, "modAntiKillfarmingBlockedBroadcast", "PvP")
+        MessageBuilder.create("modAntiKillfarmingBlockedBroadcast", hms, "PvP")
                 .addPlaceholderReplace("%KILLER%", killer.getName())
                 .addPlaceholderReplace("%VICTIM%", victim.getName())
                 .broadcastMessage(true);
 
-        MessageBuilder.create(hms, "modAntiKillfarmingBlockedKiller", "PvP")
+        MessageBuilder.create("modAntiKillfarmingBlockedKiller", hms, "PvP")
                 .addPlaceholderReplace("%TIME%", String.valueOf(blockTimeKiller / 60))
                 .addPlaceholderReplace("%PLAYER%", victim.getName())
                 .sendMessage(killer);
 
-        MessageBuilder.create(hms, "modAntiKillfarmingBlockedVictim", "PvP")
+        MessageBuilder.create("modAntiKillfarmingBlockedVictim", hms, "PvP")
                 .addPlaceholderReplace("%TIME%", String.valueOf(blockTimeVictim / 60))
                 .addPlaceholderReplace("%PLAYER%", killer.getName())
                 .sendMessage(victim);

@@ -51,7 +51,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                 && Math.round(e.getFrom().getY()) == e.getFrom().getBlockY()
                 && lastGlitchAlert.getIfPresent(e.getPlayer()) == null) {
 
-            MessageBuilder.create(hms, "modGlitchProtectionMove", "AntiGlitch")
+            MessageBuilder.create("modGlitchProtectionMove", hms, "AntiGlitch")
                     .addPlaceholderReplace("%PREFIX%", "Warnung")
                     .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
                     .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(e.getTo()))
@@ -88,8 +88,8 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
             //e.setCancelled(true); cancelling would be better but currently not working (JIRA #1588)
             scheduler.runTaskLater(hms, () -> {
                 ((ModRespawn) hms.getModule(ModuleType.RESPAWN)).tpToSpawn(p);
-                MessageBuilder.create(hms, "modGlitchProtectionDismountTped", "AntiGlitch").sendMessage(p);
-                MessageBuilder.create(hms, "modGlitchProtectionDismountTpedNotify", "AntiGlitch")
+                MessageBuilder.create("modGlitchProtectionDismountTped", hms, "AntiGlitch").sendMessage(p);
+                MessageBuilder.create("modGlitchProtectionDismountTpedNotify", hms, "AntiGlitch")
                         .addPlaceholderReplace("%PLAYER%", p.getName())
                         .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
                         .addPlaceholderReplace("%WORLD%", w.getName())
@@ -164,8 +164,8 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                             && loc.getWorld().getEnvironment().equals(World.Environment.NETHER)
                             && loc.getBlockY() > 127) {
                         p.setHealth(0.0d);
-                        MessageBuilder.create(hms, "modGlitchProtectionNether", "AntiGlitch").sendMessage(p);
-                        MessageBuilder.create(hms, "modGlitchProtectionNetherNotify", "AntiGlitch")
+                        MessageBuilder.create("modGlitchProtectionNether", hms, "AntiGlitch").sendMessage(p);
+                        MessageBuilder.create("modGlitchProtectionNetherNotify", hms, "AntiGlitch")
                                 .addPlaceholderReplace("%PLAYER%", p.getName())
                                 .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
                                 .broadcastMessage("hms.bypass.nethercheck", true);

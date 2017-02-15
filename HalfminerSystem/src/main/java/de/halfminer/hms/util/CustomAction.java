@@ -127,7 +127,7 @@ public class CustomAction {
                     boolean success = plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
                             parsedMessage.returnMessage());
                     if (!success) {
-                        MessageBuilder.create(null, "utilCustomActionCommandNotFound")
+                        MessageBuilder.create("utilCustomActionCommandNotFound")
                                 .addPlaceholderReplace("%COMMAND%", parsedMessage.returnMessage())
                                 .logMessage(Level.WARNING);
                         return false;
@@ -141,7 +141,7 @@ public class CustomAction {
                     } catch (GiveItemException e) {
 
                         if (!e.getReason().equals(GiveItemException.Reason.INVENTORY_FULL)) {
-                            MessageBuilder.create(null, "utilCustomActionGiveItemError")
+                            MessageBuilder.create("utilCustomActionGiveItemError")
                                     .addPlaceholderReplace("%ITEM%", parsedMessage.returnMessage())
                                     .addPlaceholderReplace("%REASON%", e.getCleanReason())
                                     .logMessage(Level.WARNING);
@@ -181,7 +181,7 @@ public class CustomAction {
 
     private MessageBuilder replaceWithPlaceholders(String toReplace) {
 
-        MessageBuilder message = MessageBuilder.create(null, toReplace).setDirectString();
+        MessageBuilder message = MessageBuilder.create(toReplace).setDirectString();
 
         placeholders.entrySet()
                 .forEach(entry -> message.addPlaceholderReplace(entry.getKey(), entry.getValue()));
@@ -191,7 +191,7 @@ public class CustomAction {
 
     private void logError(String type, int lineNumber) {
         boolean addLineNumber = lineNumber >= 0;
-        MessageBuilder builder = MessageBuilder.create(null,
+        MessageBuilder builder = MessageBuilder.create(
                 addLineNumber ? "utilCustomActionParseError" : "utilCustomActionParseErrorNoLine")
                 .addPlaceholderReplace("%NAME%", actionName)
                 .addPlaceholderReplace("%TYPE%", type);

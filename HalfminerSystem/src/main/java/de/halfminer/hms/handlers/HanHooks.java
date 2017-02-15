@@ -33,9 +33,9 @@ public class HanHooks extends HalfminerHandler {
             RegisteredServiceProvider<Chat> provider = server.getServicesManager()
                     .getRegistration(net.milkbowl.vault.chat.Chat.class);
             if (provider != null) vaultChatHook = provider.getProvider();
-            else MessageBuilder.create(hms, "hanHooksLoadChatFailed").logMessage(Level.WARNING);
+            else MessageBuilder.create("hanHooksLoadChatFailed").logMessage(Level.WARNING);
 
-        } else MessageBuilder.create(hms, "hanHooksLoadChatFailed").logMessage(Level.WARNING);
+        } else MessageBuilder.create("hanHooksLoadChatFailed").logMessage(Level.WARNING);
     }
 
     public Essentials getEssentialsHook() {

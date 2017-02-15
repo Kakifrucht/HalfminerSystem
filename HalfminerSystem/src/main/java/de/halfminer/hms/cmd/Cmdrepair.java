@@ -36,7 +36,7 @@ public class Cmdrepair extends HalfminerCommand {
             doRepair(player.getInventory().getItemInOffHand(), true);
             for (ItemStack item : player.getInventory().getStorageContents()) doRepair(item, true);
             for (ItemStack item : player.getInventory().getArmorContents()) doRepair(item, true);
-            MessageBuilder.create(hms, "cmdRepairDoneAll", "Repair")
+            MessageBuilder.create("cmdRepairDoneAll", hms, "Repair")
                     .addPlaceholderReplace("%AMOUNT%", String.valueOf(totalRepairs))
                     .sendMessage(sender);
         } else {
@@ -59,7 +59,7 @@ public class Cmdrepair extends HalfminerCommand {
             long repairTime = hPlayer.getLong(DataType.LAST_REPAIR) + secondsUntil;
             long currentTime = System.currentTimeMillis() / 1000;
             if (currentTime < repairTime) {
-                MessageBuilder.create(hms, "cmdRepairCooldown", "Repair")
+                MessageBuilder.create("cmdRepairCooldown", hms, "Repair")
                         .addPlaceholderReplace("%MINUTES%", String.valueOf(((repairTime - currentTime) / 60) + 1))
                         .sendMessage(sender);
                 return;
@@ -69,10 +69,10 @@ public class Cmdrepair extends HalfminerCommand {
             if (doRepair(hand, player.hasPermission("hms.repair.stacks"))) {
 
                 hPlayer.set(DataType.LAST_REPAIR, System.currentTimeMillis() / 1000);
-                MessageBuilder.create(hms, "cmdRepairDone", "Repair")
+                MessageBuilder.create("cmdRepairDone", hms, "Repair")
                         .addPlaceholderReplace("%NAME%", Utils.makeStringFriendly(hand.getType().toString()))
                         .sendMessage(sender);
-            } else MessageBuilder.create(hms, "cmdRepairError", "Repair").sendMessage(sender);
+            } else MessageBuilder.create("cmdRepairError", hms, "Repair").sendMessage(sender);
         }
     }
 

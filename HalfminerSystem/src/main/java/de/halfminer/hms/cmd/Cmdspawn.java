@@ -34,7 +34,7 @@ public class Cmdspawn extends HalfminerCommand {
 
             if (isPlayer && args[0].equalsIgnoreCase("s") && sender.hasPermission("hms.spawn.set")) {
 
-                MessageBuilder.create(hms, "cmdSpawnSet", "Spawn").sendMessage(player);
+                MessageBuilder.create("cmdSpawnSet", hms, "Spawn").sendMessage(player);
                 respawn.setSpawn(player.getLocation());
 
             } else if (sender.hasPermission("hms.spawn.others")) {
@@ -46,7 +46,7 @@ public class Cmdspawn extends HalfminerCommand {
                     else {
 
                         teleport(toTeleport, true);
-                        MessageBuilder.create(hms, "cmdSpawnOthers", "Spawn")
+                        MessageBuilder.create("cmdSpawnOthers", hms, "Spawn")
                                 .addPlaceholderReplace("%PLAYER%", toTeleport.getName())
                                 .sendMessage(sender);
                     }
@@ -55,8 +55,8 @@ public class Cmdspawn extends HalfminerCommand {
                     try {
 
                         OfflinePlayer p = storage.getPlayer(args[0]).getBase();
-                        MessageBuilder.create(hms, respawn.teleportToSpawnOnJoin(p) ?
-                                "cmdSpawnOthersOfflineAdd" : "cmdSpawnOthersOfflineRemove", "Spawn")
+                        MessageBuilder.create(respawn.teleportToSpawnOnJoin(p) ?
+                                "cmdSpawnOthersOfflineAdd" : "cmdSpawnOthersOfflineRemove", hms, "Spawn")
                                 .addPlaceholderReplace("%PLAYER%", p.getName())
                                 .sendMessage(sender);
                     } catch (PlayerNotFoundException e) {
@@ -74,7 +74,7 @@ public class Cmdspawn extends HalfminerCommand {
             HanTeleport tp = (HanTeleport) hms.getHandler(HandlerType.TELEPORT);
 
             if (forced) {
-                MessageBuilder.create(hms, "modRespawnForced", "Spawn").sendMessage(toTeleport);
+                MessageBuilder.create("modRespawnForced", hms, "Spawn").sendMessage(toTeleport);
                 tp.startTeleport((Player) toTeleport, respawn.getSpawn(), 0);
             }
             else tp.startTeleport((Player) toTeleport, respawn.getSpawn());

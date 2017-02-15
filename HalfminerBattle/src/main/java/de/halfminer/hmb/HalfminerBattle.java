@@ -24,7 +24,6 @@ import java.util.Map;
 public class HalfminerBattle extends JavaPlugin {
 
     public final static String PACKAGE_PATH = "de.halfminer.hmb";
-    public static String PREFIX;
     private static HalfminerBattle instance;
 
     public static HalfminerBattle getInstance() {
@@ -40,7 +39,6 @@ public class HalfminerBattle extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        PREFIX = MessageBuilder.returnMessage(this, "prefix");
 
         cacheHolder = new HanStorage(this);
         playerManager = new PlayerManager(this);
@@ -103,7 +101,7 @@ public class HalfminerBattle extends JavaPlugin {
         if (cmd.getName().equalsIgnoreCase("hmb")) {
 
             if (!sender.hasPermission("hmb.admin")) {
-                MessageBuilder.create(null, "noPermission", PREFIX).sendMessage(sender);
+                MessageBuilder.create("noPermission", "Battle").sendMessage(sender);
                 return true;
             }
 
@@ -111,7 +109,7 @@ public class HalfminerBattle extends JavaPlugin {
                 BattleMode called = getBattleMode(args[0]);
                 if (called != null) {
                     if (!called.onAdminCommand(sender, args)) {
-                        MessageBuilder.create(this, "adminNotDefined", PREFIX)
+                        MessageBuilder.create("adminNotDefined", this)
                                 .addPlaceholderReplace("%BATTLEMODE%", args[0])
                                 .sendMessage(sender);
                     }
@@ -121,7 +119,7 @@ public class HalfminerBattle extends JavaPlugin {
                 return true;
             }
 
-            MessageBuilder.create(this, "adminCommandUsage", PREFIX)
+            MessageBuilder.create("adminCommandUsage", this)
                     .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
                     .sendMessage(sender);
             return true;
@@ -129,13 +127,13 @@ public class HalfminerBattle extends JavaPlugin {
 
         // no battleMode specific commands in bed, as teleports are not possible while sleeping
         if (sender instanceof Player && ((Player) sender).isSleeping()) {
-            MessageBuilder.create(this, "modeGlobalCommandsInBedDisabled", PREFIX).sendMessage(sender);
+            MessageBuilder.create("modeGlobalCommandsInBedDisabled", this).sendMessage(sender);
             return true;
         }
 
         BattleMode calledMode = getBattleMode(cmd.getName());
         if (arenaManager.getArenasFromType(calledMode.getType()).size() == 0) {
-            MessageBuilder.create(this, "modeGlobalBattleModeDisabled", PREFIX).sendMessage(sender);
+            MessageBuilder.create("modeGlobalBattleModeDisabled", this).sendMessage(sender);
             return true;
         }
 

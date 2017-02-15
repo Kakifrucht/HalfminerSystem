@@ -1,6 +1,5 @@
 package de.halfminer.hmb.mode;
 
-import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
@@ -59,7 +58,7 @@ public class GlobalMode extends AbstractMode {
         if (args[0].equalsIgnoreCase("reload")) {
 
             boolean success = hmb.saveAndReloadConfig();
-            MessageBuilder.create(hmb, success ? "adminSettingsReloaded" : "adminSettingsReloadedError", HalfminerBattle.PREFIX)
+            MessageBuilder.create(success ? "adminSettingsReloaded" : "adminSettingsReloadedError", hmb)
                     .sendMessage(sender);
         } else if (args[0].equalsIgnoreCase("openinventory")) {
 
@@ -85,12 +84,12 @@ public class GlobalMode extends AbstractMode {
                         String uuidString = yaml.getString("uuid");
                         toRestore = hmb.getServer().getPlayer(UUID.fromString(uuidString));
                         if (toRestore == null || !toRestore.isOnline()) {
-                            MessageBuilder.create(null, "playerNotOnline", HalfminerBattle.PREFIX)
+                            MessageBuilder.create("playerNotOnline", "Battle")
                                     .sendMessage(sender);
                             return true;
                         }
                         if (pm.isInBattle(type, toRestore)) {
-                            MessageBuilder.create(hmb, "adminOpenInventoryRestoredError", HalfminerBattle.PREFIX)
+                            MessageBuilder.create("adminOpenInventoryRestoredError", hmb)
                                     .addPlaceholderReplace("%PLAYER%", toRestore.getName())
                                     .sendMessage(sender);
                             return true;
@@ -107,7 +106,7 @@ public class GlobalMode extends AbstractMode {
 
                     if (toRestore != null) {
                         toRestore.getInventory().setContents(contents);
-                        MessageBuilder.create(hmb, "adminOpenInventoryRestored", HalfminerBattle.PREFIX)
+                        MessageBuilder.create("adminOpenInventoryRestored", hmb)
                                 .addPlaceholderReplace("%PLAYER%", toRestore.getName())
                                 .sendMessage(sender);
                     } else {
@@ -126,10 +125,10 @@ public class GlobalMode extends AbstractMode {
                         player.openInventory(toOpen);
                     }
                 } else {
-                    MessageBuilder.create(hmb, "adminOpenInventoryInvalid", HalfminerBattle.PREFIX).sendMessage(sender);
+                    MessageBuilder.create("adminOpenInventoryInvalid", hmb).sendMessage(sender);
                 }
             } else {
-                MessageBuilder.create(hmb, "adminOpenInventoryUnknownFile", HalfminerBattle.PREFIX).sendMessage(sender);
+                MessageBuilder.create("adminOpenInventoryUnknownFile", hmb).sendMessage(sender);
             }
 
         } else {
@@ -141,7 +140,7 @@ public class GlobalMode extends AbstractMode {
 
             BattleModeType type = BattleModeType.getBattleMode(args[1]);
             if (type == null || type.equals(BattleModeType.GLOBAL)) {
-                MessageBuilder.create(hmb, "adminUnknownBattleMode", HalfminerBattle.PREFIX).sendMessage(sender);
+                MessageBuilder.create("adminUnknownBattleMode", hmb).sendMessage(sender);
                 return true;
             }
 
@@ -194,13 +193,13 @@ public class GlobalMode extends AbstractMode {
     }
 
     private void sendUsageInformation(CommandSender sendTo) {
-        MessageBuilder.create(hmb, "adminCommandUsage", HalfminerBattle.PREFIX)
+        MessageBuilder.create("adminCommandUsage", hmb)
                 .addPlaceholderReplace("%VERSION%", hmb.getDescription().getVersion())
                 .sendMessage(sendTo);
     }
 
     private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName, BattleModeType mode) {
-        MessageBuilder.create(hmb, messageKey, HalfminerBattle.PREFIX)
+        MessageBuilder.create(messageKey, hmb)
                 .addPlaceholderReplace("%ARENA%", arenaName)
                 .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(mode.toString()))
                 .sendMessage(sendTo);
@@ -215,7 +214,7 @@ public class GlobalMode extends AbstractMode {
     }
 
     private void sendNotAPlayerMessage(CommandSender sendTo) {
-        MessageBuilder.create(null, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sendTo);
+        MessageBuilder.create("notAPlayer", "Battle").sendMessage(sendTo);
     }
 
     @Override
@@ -295,7 +294,7 @@ public class GlobalMode extends AbstractMode {
                 && !e.getPlayer().hasPermission("hmb.mode.global.bypass.commands")
                 && (!pm.isInBattle(BattleModeType.FFA, e.getPlayer()) || !e.getMessage().startsWith("/ffa"))) {
 
-            MessageBuilder.create(hmb, "modeGlobalNoCommandInGame", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
+            MessageBuilder.create("modeGlobalNoCommandInGame", hmb).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }
@@ -326,7 +325,7 @@ public class GlobalMode extends AbstractMode {
         if (!pm.isInBattle(type, e.getPlayer())
                 && !e.getPlayer().hasPermission("hmb.global.bypass.teleportintoarena")
                 && am.isArenaSpawn(e.getTo())) {
-            MessageBuilder.create(hmb, "modeGlobalTeleportIntoArenaDenied", HalfminerBattle.PREFIX).sendMessage(e.getPlayer());
+            MessageBuilder.create("modeGlobalTeleportIntoArenaDenied", hmb).sendMessage(e.getPlayer());
             e.setCancelled(true);
         }
     }

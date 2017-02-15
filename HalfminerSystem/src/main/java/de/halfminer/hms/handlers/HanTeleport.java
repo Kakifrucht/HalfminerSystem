@@ -55,7 +55,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             return;
         }
 
-        MessageBuilder.create(hms, lang.get("start")).setDirectString()
+        MessageBuilder.create(lang.get("start")).setDirectString()
                 .addPlaceholderReplace("%TIME%", String.valueOf(delay))
                 .sendMessage(player);
         ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR))
@@ -75,11 +75,11 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
 
         defaultTime = hms.getConfig().getInt("handler.teleport.cooldownSeconds", 3);
 
-        lang.put("start", MessageBuilder.create(hms, "hanTeleportStart", "Teleport").returnMessage());
-        lang.put("startbar", MessageBuilder.create(hms, "hanTeleportBar").returnMessage());
-        lang.put("pending", MessageBuilder.create(hms, "hanTeleportPending", "Teleport").returnMessage());
-        lang.put("moved", MessageBuilder.create(hms, "hanTeleportMoved", "Teleport").returnMessage());
-        lang.put("done", MessageBuilder.create(hms, "hanTeleportDone", "Teleport").returnMessage());
+        lang.put("start", MessageBuilder.create("hanTeleportStart", "Teleport").returnMessage());
+        lang.put("startbar", MessageBuilder.create("hanTeleportBar").returnMessage());
+        lang.put("pending", MessageBuilder.create("hanTeleportPending", "Teleport").returnMessage());
+        lang.put("moved", MessageBuilder.create("hanTeleportMoved", "Teleport").returnMessage());
+        lang.put("done", MessageBuilder.create("hanTeleportDone", "Teleport").returnMessage());
     }
 
     private class Teleport implements Runnable {

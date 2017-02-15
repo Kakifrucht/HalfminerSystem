@@ -45,8 +45,8 @@ public class Cmdstats extends HalfminerCommand {
         HalfminerPlayer compareWith = null;
         if (compare && !sender.equals(player.getBase())) compareWith = storage.getPlayer((Player) sender);
 
-        MessageBuilder.create(hms, "cmdStatsTop").sendMessage(sender);
-        MessageBuilder.create(hms, "cmdStatsShow")
+        MessageBuilder.create("cmdStatsTop", hms).sendMessage(sender);
+        MessageBuilder.create("cmdStatsShow", hms)
                 .addPlaceholderReplace("%PLAYER%", player.getName())
                 .addPlaceholderReplace("%SKILLGROUP%",
                         ((ModSkillLevel) hms.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(player.getBase()))
@@ -64,21 +64,21 @@ public class Cmdstats extends HalfminerCommand {
 
         String oldNames = player.getString(DataType.LAST_NAMES);
         if (oldNames.length() > 0)
-            MessageBuilder.create(hms, "cmdStatsOldnames")
+            MessageBuilder.create("cmdStatsOldnames", hms)
                     .addPlaceholderReplace("%OLDNAMES%", oldNames)
                     .sendMessage(sender);
 
         if (sender.equals(player.getBase()))
-            MessageBuilder.create(hms, "cmdStatsShowotherStats").sendMessage(sender);
+            MessageBuilder.create("cmdStatsShowotherStats", hms).sendMessage(sender);
         else if (compare)
-            MessageBuilder.create(hms, "cmdStatsCompareLegend").sendMessage(sender);
+            MessageBuilder.create("cmdStatsCompareLegend", hms).sendMessage(sender);
         else if (sender instanceof Player) {
-            MessageBuilder.create(hms, "cmdStatsCompareInfo")
+            MessageBuilder.create("cmdStatsCompareInfo", hms)
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .sendMessage(sender);
         }
 
-        MessageBuilder.create(hms, "lineSeparator").sendMessage(sender);
+        MessageBuilder.create("lineSeparator").sendMessage(sender);
     }
 
     @SuppressWarnings("Duplicates")

@@ -43,7 +43,7 @@ public class Cmdsell extends HalfminerCommand {
                 }
 
                 boolean toggledOn = sellModule.toggleAutoSell(player);
-                MessageBuilder.create(hms, toggledOn ? "cmdSellAutoOn" : "cmdSellAutoOff", "Sell")
+                MessageBuilder.create(toggledOn ? "cmdSellAutoOn" : "cmdSellAutoOff", hms, "Sell")
                         .sendMessage(player);
                 return;
             }
@@ -51,9 +51,9 @@ public class Cmdsell extends HalfminerCommand {
             this.toBeSold = Sellable.getFromString(args[0]);
 
             if (toBeSold != null) sellLoop();
-            else MessageBuilder.create(hms, "cmdSellUsage", "Sell").sendMessage(player);
+            else MessageBuilder.create("cmdSellUsage", hms, "Sell").sendMessage(player);
 
-        } else MessageBuilder.create(hms, "cmdSellUsage", "Sell").sendMessage(player);
+        } else MessageBuilder.create("cmdSellUsage", hms, "Sell").sendMessage(player);
     }
 
     private void sellLoop() {
@@ -67,7 +67,7 @@ public class Cmdsell extends HalfminerCommand {
             scheduler.runTaskLater(hms, this::sellLoop, 2L);
         else if (sellCountTotal > 0)
             sellModule.rewardPlayer(player, toBeSold, sellCountTotal);
-        else MessageBuilder.create(hms, "cmdSellNotInInv", "Sell")
+        else MessageBuilder.create("cmdSellNotInInv", hms, "Sell")
                     .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(toBeSold.name()))
                     .sendMessage(player);
     }

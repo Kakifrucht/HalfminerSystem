@@ -66,8 +66,7 @@ public class ActionProbabilityContainer {
         if (actionList.size() == 0) {
             probabilityTotal = 1;
             actionList.add(new Pair<>(1, new CustomAction("nothing", cacheHolder)));
-            MessageBuilder.create(null, "utilActionProbabilityContainerNoActions")
-                    .logMessage(Level.WARNING);
+            MessageBuilder.create("utilActionProbabilityContainerNoActions").logMessage(Level.WARNING);
         }
     }
 
@@ -82,7 +81,7 @@ public class ActionProbabilityContainer {
     }
 
     private void logError(String type, int lineNumber) {
-        MessageBuilder.create(plugin, "utilActionProbabilityContainerError")
+        MessageBuilder.create("utilActionProbabilityContainerError", plugin)
                 .addPlaceholderReplace("%TYPE%", type)
                 .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber + 1))
                 .logMessage(Level.WARNING);

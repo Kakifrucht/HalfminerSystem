@@ -23,6 +23,6 @@ public class Cmddisposal extends HalfminerCommand {
         }
 
         Player p = (Player) sender;
-        p.openInventory(server.createInventory(p, 36, MessageBuilder.returnMessage(hms, "cmdDisposalTitle")));
+        p.openInventory(server.createInventory(p, 36, MessageBuilder.returnMessage("cmdDisposalTitle", hms)));
     }
 }

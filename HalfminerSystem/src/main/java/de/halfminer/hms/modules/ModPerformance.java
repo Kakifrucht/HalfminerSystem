@@ -76,9 +76,9 @@ public class ModPerformance extends HalfminerModule implements Listener {
         Block block = e.getBlock();
         if (block.getType() == Material.HOPPER && tooManyHoppers(block.getLocation())) {
             e.setCancelled(true);
-            MessageBuilder.create(hms, "modPerformanceReachedHopper", "Info").sendMessage(e.getPlayer());
+            MessageBuilder.create("modPerformanceReachedHopper", hms, "Info").sendMessage(e.getPlayer());
             if (logHopperLimit) {
-                MessageBuilder.create(hms, "modPerformanceReachedHopperLog")
+                MessageBuilder.create("modPerformanceReachedHopperLog", hms)
                         .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
                         .addPlaceholderReplace("%LIMIT%", String.valueOf(hopperLimit))
                         .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(block.getLocation()))
