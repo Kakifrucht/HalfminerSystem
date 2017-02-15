@@ -38,17 +38,6 @@ public class MessageBuilder {
     }
 
     /**
-     * Create a new MessageBuilder
-     *
-     * @param lang either the language key, or the message directly passed
-     * @param plugin plugin calling the builder or null to use default API locale keys
-     * @return MessageBuilder that can send a parsed message
-     */
-    public static MessageBuilder create(String lang, @Nullable JavaPlugin plugin) {
-        return new MessageBuilder(plugin != null ? plugin : HalfminerSystem.getInstance(), lang);
-    }
-
-    /**
      * Create a new MessageBuilder with a given prefix
      *
      * @param lang either the language key, or the message directly passed
@@ -56,19 +45,30 @@ public class MessageBuilder {
      * @param prefix %PREFIX% placeholder to be added
      * @return MessageBuilder that can send a parsed message
      */
-    public static MessageBuilder create(String lang, @Nullable JavaPlugin plugin, String prefix) {
+    public static MessageBuilder create(String lang, JavaPlugin plugin, String prefix) {
         return create(lang, plugin).addPlaceholderReplace("PREFIX", prefix);
     }
 
+    /**
+     * Create a new MessageBuilder
+     *
+     * @param lang either the language key, or the message directly passed
+     * @param plugin plugin calling the builder or null to use default API locale keys
+     * @return MessageBuilder that can send a parsed message
+     */
+    public static MessageBuilder create(String lang, JavaPlugin plugin) {
+        return new MessageBuilder(plugin, lang);
+    }
+
     public static String returnMessage(String lang) {
-        return returnMessage(lang, HalfminerSystem.getInstance(), true);
+        return returnMessage(lang, null, true);
     }
 
     public static String returnMessage(String lang, JavaPlugin plugin) {
         return returnMessage(lang, plugin, true);
     }
 
-    public static String returnMessage(String lang, JavaPlugin plugin, boolean usePrefix) {
+    public static String returnMessage(String lang, @Nullable JavaPlugin plugin, boolean usePrefix) {
         MessageBuilder builder = create(lang, plugin);
         if (!usePrefix) builder.togglePrefix();
         return builder.returnMessage();
@@ -89,7 +89,7 @@ public class MessageBuilder {
     private boolean startsWithClickableChar = false;
 
     private MessageBuilder(JavaPlugin plugin, String lang) {
-        this.plugin = plugin;
+        this.plugin = plugin != null ? plugin : HalfminerSystem.getInstance();
         this.lang = lang;
     }
 

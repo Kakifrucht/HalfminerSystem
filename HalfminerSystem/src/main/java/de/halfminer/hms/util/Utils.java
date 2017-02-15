@@ -1,7 +1,6 @@
 package de.halfminer.hms.util;
 
 import com.google.common.cache.Cache;
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.exception.FormattingException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -147,7 +146,7 @@ public final class Utils {
             try {
                 toReturn.add(Material.valueOf(material.toUpperCase()));
             } catch (IllegalArgumentException ignored) {
-                MessageBuilder.create("utilInvalidMaterial", HalfminerSystem.getInstance())
+                MessageBuilder.create("utilInvalidMaterial")
                         .addPlaceholderReplace("%MATERIAL%", material)
                         .logMessage(Level.WARNING);
             }
