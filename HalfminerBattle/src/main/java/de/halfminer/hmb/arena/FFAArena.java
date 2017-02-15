@@ -10,10 +10,13 @@ import de.halfminer.hmb.mode.FFAMode;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.CachingException;
+import de.halfminer.hms.handlers.HanBossBar;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -42,6 +45,10 @@ public class FFAArena extends AbstractKitArena {
     private final Map<Player, Integer> streaks = new HashMap<>();
     private final Cache<UUID, Long> bannedFromArena = CacheBuilder.newBuilder()
             .expireAfterWrite(battleMode.getRemoveForMinutes(), TimeUnit.MINUTES)
+            .build();
+    private final Cache<Player, Boolean> spawnProtection = CacheBuilder.newBuilder()
+            .expireAfterWrite(5, TimeUnit.SECONDS)
+            .weakKeys()
             .build();
 
     public FFAArena(String name) {
@@ -84,6 +91,8 @@ public class FFAArena extends AbstractKitArena {
         MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(toAdd);
         ((HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES))
                 .sendTitle(toAdd, MessageBuilder.returnMessage(hmb, "modeFFAJoinTitle"));
+
+        addSpawnProtection(toAdd);
     }
 
     public void removePlayer(Player toRemove) {
@@ -111,6 +120,7 @@ public class FFAArena extends AbstractKitArena {
         } else {
             // respawn later
             BukkitScheduler scheduler = hmb.getServer().getScheduler();
+            addSpawnProtection(hasDied);
             scheduler.runTaskLater(hmb, () -> {
                 if (hasDied.isOnline() && pm.getArena(hasDied).equals(this)) {
                     hasDied.spigot().respawn();
@@ -151,5 +161,16 @@ public class FFAArena extends AbstractKitArena {
                 }
             }
         }
+    }
+
+    public boolean hasSpawnProtection(Player player) {
+        return spawnProtection.getIfPresent(player) != null;
+    }
+
+    private void addSpawnProtection(Player toProtect) {
+        spawnProtection.put(toProtect, true);
+        ((HanBossBar) HalfminerSystem.getInstance().getHandler(HandlerType.BOSS_BAR))
+                .sendBar(toProtect, MessageBuilder.returnMessage(hmb, "modeFFASpawnProtectBar"),
+                        BarColor.GREEN, BarStyle.SOLID, 5);
     }
 }

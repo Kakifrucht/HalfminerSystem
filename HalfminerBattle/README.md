@@ -23,7 +23,7 @@ Current features
     - Prevents teleporting into arenas via tp delay glitches (Essentials */tpa*) if not fighting
     - Disables while fighting:
       - Hunger loss in duel (optional)
-      - Item dropping/pickup
+      - Item dropping/pickup (dropped items will be deleted)
       - Command usage
   - Duel mode
     - Robust queue system
@@ -56,5 +56,6 @@ Current features
     - Players get kicked from arena after configurable streak of deaths
       - They will remain banned for configured amount of time
     - Auto respawn in arena while keeping items
+      - Players get spawn protected for a 5 seconds
     - Arena can be left per command
     

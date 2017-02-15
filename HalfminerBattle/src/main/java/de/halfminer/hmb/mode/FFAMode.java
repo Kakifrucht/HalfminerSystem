@@ -9,9 +9,12 @@ import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -153,6 +156,26 @@ public class FFAMode extends AbstractMode {
                     .addPlaceholderReplace("%PLAYER%", p.getName())
                     .addPlaceholderReplace("%ARENA%", arena.getName())
                     .logMessage(Level.INFO);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onHitDenyWhileProtected(EntityDamageByEntityEvent e) {
+
+        if (e.getEntity() instanceof Player) {
+            Player p = (Player) e.getEntity();
+            Player attacker = Utils.getDamagerFromEvent(e);
+
+            if (attacker == null || !pm.isInBattle(type, attacker)) return;
+
+            boolean attackerProtected = ((FFAArena) pm.getArena(p)).hasSpawnProtection(attacker);
+            boolean victimProtected = ((FFAArena) pm.getArena(p)).hasSpawnProtection(p);
+            e.setCancelled(attackerProtected || victimProtected);
+            if (victimProtected) {
+                MessageBuilder.create(hmb, "modeFFASpawnProtected", HalfminerBattle.PREFIX)
+                        .addPlaceholderReplace("%PLAYER%", p.getName())
+                        .sendMessage(attacker);
+            }
         }
     }
 

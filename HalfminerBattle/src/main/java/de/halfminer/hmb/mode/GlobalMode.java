@@ -279,7 +279,7 @@ public class GlobalMode extends AbstractMode {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPvPUncancel(EntityDamageByEntityEvent e) {
         // Allow Faction members to fight
         if (e.isCancelled()
@@ -310,8 +310,10 @@ public class GlobalMode extends AbstractMode {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void itemDropDisable(PlayerDropItemEvent e) {
-        e.setCancelled(pm.isInBattle(type, e.getPlayer()));
+    public void itemDropRemove(PlayerDropItemEvent e) {
+        if (pm.isInBattle(type, e.getPlayer())) {
+            e.getItemDrop().remove();
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

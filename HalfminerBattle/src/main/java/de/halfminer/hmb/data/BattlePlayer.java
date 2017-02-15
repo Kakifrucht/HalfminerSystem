@@ -138,6 +138,7 @@ class BattlePlayer {
                     + " could not be teleported to his original location at " + Utils.getStringFromLocation(data.loc));
         }
         data = null;
+        arena = null;
     }
 
     void restoreInventory() {
