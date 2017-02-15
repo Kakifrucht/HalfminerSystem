@@ -2,6 +2,7 @@ package de.halfminer.hmb.arena.abs;
 
 import de.halfminer.hmb.enums.BattleModeType;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -24,6 +25,11 @@ public interface Arena {
      * @return the arenas battle mode
      */
     BattleModeType getBattleModeType();
+
+    /**
+     * @return players currently in arena
+     */
+    List<Player> getPlayersInArena();
 
     /**
      * Set the spawn points of the arena

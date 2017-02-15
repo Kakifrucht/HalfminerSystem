@@ -51,6 +51,11 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
+    public List<Player> getPlayersInArena() {
+        return playersInArena;
+    }
+
+    @Override
     public void setSpawns(List<Location> newSpawns) {
         this.spawns = new ArrayList<>(newSpawns);
     }

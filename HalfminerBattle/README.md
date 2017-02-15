@@ -47,7 +47,8 @@ Current features
     - Teleport cooldown before teleporting into/out of arena
       - Players can select which arena to enter
     - Custom kit in arena
-    - Players in mode are colored in tablist
+    - Players in same arena are colored in tablist
+      - Use */ffa list* to see all arenas and currently playing players
     - Custom killstreaks
       - Define what should happen at which streak in *customactions.txt*
         - Supports commands, custom item drops, messaging

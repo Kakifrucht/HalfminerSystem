@@ -301,7 +301,7 @@ public class GlobalMode extends AbstractMode {
 
         if (pm.isInBattle(type, e.getPlayer())
                 && !e.getPlayer().hasPermission("hmb.mode.global.bypass.commands")
-                && !nonBlockedCommands.contains(e.getMessage().substring(1))
+                && !nonBlockedCommands.contains(e.getMessage().substring(1).toLowerCase())
                 && (!pm.isInBattle(BattleModeType.FFA, e.getPlayer()) || !e.getMessage().startsWith("/ffa"))) {
 
             MessageBuilder.create("modeGlobalNoCommandInGame", hmb).sendMessage(e.getPlayer());

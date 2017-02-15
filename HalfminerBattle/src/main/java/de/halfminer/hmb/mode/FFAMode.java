@@ -9,6 +9,7 @@ import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,7 +47,7 @@ public class FFAMode extends AbstractMode {
     public boolean onCommand(CommandSender sender, String[] args) {
 
         if (!(sender instanceof Player)) {
-            MessageBuilder.create("notAPlayer", "Battle").sendMessage(sender);
+            showList(sender);
             return true;
         }
 
@@ -96,6 +97,9 @@ public class FFAMode extends AbstractMode {
                     MessageBuilder.create("modeFFAArenaLeft", hmb).sendMessage(player);
                 }, null);
                 break;
+            case "list":
+                showList(sender);
+                break;
             case "choose":
                 if (args.length > 1) {
                     if (pm.isNotIdle(player)) {
@@ -114,6 +118,26 @@ public class FFAMode extends AbstractMode {
         }
 
         return true;
+    }
+
+    private void showList(CommandSender sendTo) {
+        MessageBuilder.create("modeFFAList", hmb).sendMessage(sendTo);
+        for (Arena arena : am.getArenasFromType(type)) {
+            List<Player> inArena = arena.getPlayersInArena();
+            String playerString = ChatColor.GREEN.toString();
+            if (inArena.isEmpty()) {
+                playerString = MessageBuilder.returnMessage("modeFFAListEmpty", hmb, false);
+            } else {
+                for (Player player1 : arena.getPlayersInArena()) {
+                    playerString += player1.getName() + "  ";
+                }
+            }
+            MessageBuilder.create("modeFFAListPlayers", hmb)
+                    .togglePrefix()
+                    .addPlaceholderReplace("%ARENA%", arena.getName())
+                    .addPlaceholderReplace("%PLAYERS%", playerString)
+                    .sendMessage(sendTo);
+        }
     }
 
     @Override
