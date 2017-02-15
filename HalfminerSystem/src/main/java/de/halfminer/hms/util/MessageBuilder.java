@@ -1,8 +1,10 @@
 package de.halfminer.hms.util;
 
+import de.halfminer.hms.HalfminerSystem;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,19 +19,18 @@ public class MessageBuilder {
     /**
      * Create a new MessageBuilder
      *
-     * @param plugin plugin calling the builder
+     * @param plugin plugin calling the builder or null to use default API locale keys
      * @param lang either the language key, or the message directly passed
      * @return MessageBuilder that can send a parsed message
      */
-    public static MessageBuilder create(JavaPlugin plugin, String lang) {
-        if (plugin == null) throw new IllegalArgumentException("Plugin cannot be null");
-        return new MessageBuilder(plugin, lang);
+    public static MessageBuilder create(@Nullable JavaPlugin plugin, String lang) {
+        return new MessageBuilder(plugin != null ? plugin : HalfminerSystem.getInstance(), lang);
     }
 
     /**
      * Create a new MessageBuilder with a given prefix
      *
-     * @param plugin plugin calling the builder
+     * @param plugin plugin calling the builder or null to use default API locale keys
      * @param lang either the language key, or the message directly passed
      * @param prefix prefix to be used
      * @return MessageBuilder that can send a parsed message
@@ -261,7 +262,8 @@ public class MessageBuilder {
                         currentComp.setText(command);
                         currentComp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
 
-                        String clickHoverMessage = getMessage("commandClickHover");
+                        String clickHoverMessage = HalfminerSystem.getInstance()
+                                .getConfig().getString("localization.commandClickHover", "");
                         if (clickHoverMessage.length() > 0) {
                             currentComp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                     new ComponentBuilder(clickHoverMessage).create()));

@@ -45,7 +45,7 @@ public class DuelMode extends AbstractMode {
 
         Player player = (Player) sender;
         if (!sender.hasPermission("hmb.mode.duel.use")) {
-            MessageBuilder.create(hmb, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(null, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 

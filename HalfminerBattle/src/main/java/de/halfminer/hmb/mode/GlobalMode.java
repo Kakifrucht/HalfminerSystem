@@ -85,7 +85,7 @@ public class GlobalMode extends AbstractMode {
                         String uuidString = yaml.getString("uuid");
                         toRestore = hmb.getServer().getPlayer(UUID.fromString(uuidString));
                         if (toRestore == null || !toRestore.isOnline()) {
-                            MessageBuilder.create(hmb, "playerNotOnline", HalfminerBattle.PREFIX)
+                            MessageBuilder.create(null, "playerNotOnline", HalfminerBattle.PREFIX)
                                     .sendMessage(sender);
                             return true;
                         }
@@ -215,7 +215,7 @@ public class GlobalMode extends AbstractMode {
     }
 
     private void sendNotAPlayerMessage(CommandSender sendTo) {
-        MessageBuilder.create(hmb, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sendTo);
+        MessageBuilder.create(null, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sendTo);
     }
 
     @Override
@@ -309,7 +309,7 @@ public class GlobalMode extends AbstractMode {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void itemDropRemove(PlayerDropItemEvent e) {
         if (pm.isInBattle(type, e.getPlayer())) {
             e.getItemDrop().remove();

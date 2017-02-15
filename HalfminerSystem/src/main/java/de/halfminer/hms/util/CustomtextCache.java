@@ -27,7 +27,7 @@ public class CustomtextCache {
         this.file = file;
     }
 
-    public List<String> getChapter(String chapter) throws CachingException {
+    List<String> getChapter(String chapter) throws CachingException {
         return getChapter(new String[]{chapter});
     }
 
@@ -53,7 +53,7 @@ public class CustomtextCache {
         throw new CachingException(file.getName(), CachingException.Reason.CHAPTER_NOT_FOUND);
     }
 
-    public Set<String> getAllChapters() throws CachingException {
+    Set<String> getAllChapters() throws CachingException {
         reCacheFile();
         return cache.keySet();
     }
@@ -80,7 +80,7 @@ public class CustomtextCache {
         return file.lastModified() > lastCached;
     }
 
-    public boolean wasModifiedSince(long since) {
+    boolean wasModifiedSince(long since) {
         return file.lastModified() > since;
     }
 

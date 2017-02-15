@@ -110,7 +110,7 @@ public class DuelQueue {
         }
 
         if (sendTo == null || !sender.canSee(sendTo)) {
-            MessageBuilder.create(hmb, "playerNotOnline", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(null, "playerNotOnline", HalfminerBattle.PREFIX).sendMessage(sender);
             return;
         }
 

@@ -10,7 +10,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -23,11 +22,9 @@ import java.util.logging.Level;
  */
 public class CustomitemCache {
 
-    private final JavaPlugin plugin;
     private final CustomtextCache originalCache;
 
-    public CustomitemCache(JavaPlugin plugin, CustomtextCache textCache) {
-        this.plugin = plugin;
+    public CustomitemCache(CustomtextCache textCache) {
         originalCache = textCache;
     }
 
@@ -35,7 +32,7 @@ public class CustomitemCache {
         giveItem(itemKey, giveTo, amount, null);
     }
 
-    public void giveItem(String itemKey, Player giveTo, int amount,
+    void giveItem(String itemKey, Player giveTo, int amount,
                          @Nullable Map<String, String> additionalPlaceholders) throws GiveItemException {
 
         List<String> itemUnparsed;
@@ -68,7 +65,7 @@ public class CustomitemCache {
                 continue;
             }
 
-            MessageBuilder parameterParse = MessageBuilder.create(plugin, keyParamPair.getRight())
+            MessageBuilder parameterParse = MessageBuilder.create(null, keyParamPair.getRight())
                     .setDirectString()
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName());
 
@@ -148,13 +145,13 @@ public class CustomitemCache {
     }
 
     private void logInvalidKey(String key) {
-        MessageBuilder.create(plugin, "utilCustomitemCacheInvalidKey")
+        MessageBuilder.create(null, "utilCustomitemCacheInvalidKey")
                 .addPlaceholderReplace("%KEY%", key)
                 .logMessage(Level.WARNING);
     }
 
     private void logInvalidParameter(String key, String param) {
-        MessageBuilder.create(plugin, "utilCustomitemCacheInvalidParameter")
+        MessageBuilder.create(null, "utilCustomitemCacheInvalidParameter")
                 .addPlaceholderReplace("%KEY%", key)
                 .addPlaceholderReplace("%PARAMETER%", param)
                 .logMessage(Level.WARNING);

@@ -159,13 +159,13 @@ public class Cmdhms extends HalfminerCommand {
             cache = storage.getCache("customitems.txt");
             cache.reCacheFile();
         } catch (CachingException e) {
-            MessageBuilder.create(hms, "utilCustomtextCacheParseError", PREFIX)
+            MessageBuilder.create(hms, "cmdCustomtextCacheParseError", PREFIX)
                     .addPlaceholderReplace("%ERROR%", e.getCleanReason())
                     .sendMessage(sender);
             return;
         }
 
-        CustomitemCache itemCache = new CustomitemCache(hms, cache);
+        CustomitemCache itemCache = new CustomitemCache(cache);
         if (args.length < 3) {
 
             Set<String> allItems = itemCache.getAllItems();
@@ -187,7 +187,7 @@ public class Cmdhms extends HalfminerCommand {
         Player giveTo = server.getPlayer(args[1]);
 
         if (giveTo == null) {
-            MessageBuilder.create(hms, "playerNotOnline", PREFIX).sendMessage(sender);
+            MessageBuilder.create(null, "playerNotOnline", PREFIX).sendMessage(sender);
             return;
         }
 
@@ -320,7 +320,7 @@ public class Cmdhms extends HalfminerCommand {
         String senderName = Utils.getPlayername(sender);
 
         if (toRing == null) {
-            MessageBuilder.create(hms, "playerNotOnline", PREFIX).sendMessage(sender);
+            MessageBuilder.create(null, "playerNotOnline", PREFIX).sendMessage(sender);
             return;
         }
 
@@ -390,7 +390,7 @@ public class Cmdhms extends HalfminerCommand {
             Player selected = server.getPlayer(args[i]);
             if (selected != null) players[i - 2] = selected;
             else {
-                MessageBuilder.create(hms, "playerNotOnline", PREFIX).sendMessage(sender);
+                MessageBuilder.create(null, "playerNotOnline", PREFIX).sendMessage(sender);
                 return;
             }
         }

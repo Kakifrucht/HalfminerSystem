@@ -66,7 +66,8 @@ public class ActionProbabilityContainer {
         if (actionList.size() == 0) {
             probabilityTotal = 1;
             actionList.add(new Pair<>(1, new CustomAction("nothing", cacheHolder)));
-            MessageBuilder.create(plugin, "utilActionProbabilityContainerNoActions").logMessage(Level.WARNING);
+            MessageBuilder.create(null, "utilActionProbabilityContainerNoActions")
+                    .logMessage(Level.WARNING);
         }
     }
 

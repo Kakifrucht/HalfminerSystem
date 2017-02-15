@@ -103,7 +103,7 @@ public class HalfminerBattle extends JavaPlugin {
         if (cmd.getName().equalsIgnoreCase("hmb")) {
 
             if (!sender.hasPermission("hmb.admin")) {
-                MessageBuilder.create(this, "noPermission", PREFIX).sendMessage(sender);
+                MessageBuilder.create(null, "noPermission", PREFIX).sendMessage(sender);
                 return true;
             }
 

@@ -47,12 +47,12 @@ public class FFAMode extends AbstractMode {
     public boolean onCommand(CommandSender sender, String[] args) {
 
         if (!(sender instanceof Player)) {
-            MessageBuilder.create(hmb, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(null, "notAPlayer", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 
         if (!sender.hasPermission("hmb.mode.ffa.use")) {
-            MessageBuilder.create(hmb, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
+            MessageBuilder.create(null, "noPermission", HalfminerBattle.PREFIX).sendMessage(sender);
             return true;
         }
 

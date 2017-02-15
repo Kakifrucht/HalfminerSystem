@@ -239,7 +239,7 @@ public class Cmdchat extends HalfminerCommand {
                 sendToString = player.getName();
             } else {
 
-                MessageBuilder.create(hms, "playerNotOnline", "Chat").sendMessage(sender);
+                MessageBuilder.create(null, "playerNotOnline", "Chat").sendMessage(sender);
                 return;
             }
         } else {
@@ -262,7 +262,7 @@ public class Cmdchat extends HalfminerCommand {
 
         Player directRecipient = server.getPlayer(args[1]);
         if (directRecipient == null) {
-            MessageBuilder.create(hms, "playerNotOnline", "Chat").sendMessage(sender);
+            MessageBuilder.create(null, "playerNotOnline", "Chat").sendMessage(sender);
             return;
         }
 

@@ -52,7 +52,7 @@ Current features
       - Define what should happen at which streak in *customactions.txt*
         - Supports commands, custom item drops, messaging
       - Kill (and death) streaks shown in scoreboard
-    - Logging out causes immediate death (or give kill to recently hitting player)
+    - Logging out causes immediate death (or gives kill to recently hitting player)
     - Players get kicked from arena after configurable streak of deaths
       - They will remain banned for configured amount of time
     - Auto respawn in arena while keeping items

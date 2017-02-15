@@ -257,7 +257,7 @@ public class ArenaManager {
         }
 
         if (randomKey.length() > 0) {
-            builder.append(MessageBuilder.returnMessage(hmb, "randomArena"))
+            builder.append(MessageBuilder.returnMessage(hmb, "modeGlobalRandomArena"))
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + "random"))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             new ComponentBuilder(MessageBuilder.returnMessage(hmb, randomKey)).create()))

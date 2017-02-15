@@ -42,7 +42,7 @@ public class HanHooks extends HalfminerHandler {
         return essentialsHook;
     }
 
-    public void setLastTpLocation(Player player) {
+    void setLastTpLocation(Player player) {
         essentialsHook.getUser(player).setLastLocation();
     }
 

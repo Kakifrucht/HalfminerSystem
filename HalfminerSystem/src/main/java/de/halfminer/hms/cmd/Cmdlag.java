@@ -34,7 +34,7 @@ public class Cmdlag extends HalfminerCommand {
             toLookup = server.getPlayer(args[0]);
 
             if (toLookup == null) {
-                MessageBuilder.create(hms, "playerNotOnline", "Lag").sendMessage(sender);
+                MessageBuilder.create(null, "playerNotOnline", "Lag").sendMessage(sender);
                 return;
             }
         }
