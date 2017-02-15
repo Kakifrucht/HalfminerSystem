@@ -23,7 +23,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Global game mode, functionality shared by all other {@link BattleMode}
@@ -32,6 +34,7 @@ import java.util.UUID;
 public class GlobalMode extends AbstractMode {
 
     private boolean noHungerLossInBattle;
+    private Set<String> nonBlockedCommands;
     private int queueCooldownSeconds;
     private boolean saveInventoryToDisk;
     private BukkitTask cleanupTask;
@@ -224,6 +227,12 @@ public class GlobalMode extends AbstractMode {
     public void onConfigReload() {
 
         noHungerLossInBattle = hmb.getConfig().getBoolean("battleMode.global.noHungerLoss", true);
+
+        nonBlockedCommands = hmb.getConfig().getStringList("battleMode.global.nonBlockedCommands")
+                .stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+
         queueCooldownSeconds = hmb.getConfig().getInt("battleMode.global.queueCooldownTimeSeconds", 15);
 
         saveInventoryToDisk = hmb.getConfig().getBoolean("battleMode.global.saveInventoryToDisk", true);
@@ -292,6 +301,7 @@ public class GlobalMode extends AbstractMode {
 
         if (pm.isInBattle(type, e.getPlayer())
                 && !e.getPlayer().hasPermission("hmb.mode.global.bypass.commands")
+                && !nonBlockedCommands.contains(e.getMessage().substring(1))
                 && (!pm.isInBattle(BattleModeType.FFA, e.getPlayer()) || !e.getMessage().startsWith("/ffa"))) {
 
             MessageBuilder.create("modeGlobalNoCommandInGame", hmb).sendMessage(e.getPlayer());

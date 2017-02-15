@@ -3,6 +3,10 @@ battleMode:
   global:
     #Disable hunger loss
     noHungerLoss: true
+    #These commands are not blocked while in battle, set commands shouldn't interfere with players state
+    nonBlockedCommands:
+    - ban
+    - rules
     #Time in seconds the queue cooldown will take
     queueCooldownTimeSeconds: 15
     #Save players inventories to disk before battle, to ensure absolutely no data loss

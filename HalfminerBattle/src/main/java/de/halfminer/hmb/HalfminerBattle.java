@@ -48,8 +48,6 @@ public class HalfminerBattle extends JavaPlugin {
             for (BattleModeType type : BattleModeType.values()) {
                 BattleMode mode = (BattleMode) this.getClassLoader()
                         .loadClass(PACKAGE_PATH + ".mode." + type.getModeClassName()).newInstance();
-
-                mode.onConfigReload();
                 battleModes.put(type, mode);
             }
         } catch (Exception e) {
