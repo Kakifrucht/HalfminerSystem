@@ -166,7 +166,10 @@ public class FFAMode extends AbstractMode {
             Player p = (Player) e.getEntity();
             Player attacker = Utils.getDamagerFromEvent(e);
 
-            if (attacker == null || !pm.isInBattle(type, attacker)) return;
+            if (attacker == null
+                    || !pm.isInBattle(type, attacker)
+                    || !pm.isInBattle(type, p))
+                return;
 
             boolean attackerProtected = ((FFAArena) pm.getArena(p)).hasSpawnProtection(attacker);
             boolean victimProtected = ((FFAArena) pm.getArena(p)).hasSpawnProtection(p);

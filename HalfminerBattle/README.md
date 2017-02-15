@@ -58,4 +58,5 @@ Current features
     - Auto respawn in arena while keeping items
       - Players get PvP protected for 5 seconds after (re-)spawning
     - Arena can be left per command
+    - Configurable custom permissions, that will be added during arena stay (useful for bypasses of other plugins)
     

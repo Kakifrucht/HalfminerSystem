@@ -18,15 +18,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -43,6 +42,7 @@ public class FFAArena extends AbstractKitArena {
     private final Team scoreboardTeam;
 
     private final Map<Player, Integer> streaks = new HashMap<>();
+    private final Map<Player, List<PermissionAttachment>> customPermissions = new HashMap<>();
     private final Cache<UUID, Long> bannedFromArena = CacheBuilder.newBuilder()
             .expireAfterWrite(battleMode.getRemoveForMinutes(), TimeUnit.MINUTES)
             .build();
@@ -83,7 +83,16 @@ public class FFAArena extends AbstractKitArena {
     private void addPlayerInternal(Player toAdd) {
         addPlayers(toAdd);
         equipPlayers(toAdd);
+        addSpawnProtection(toAdd);
         streaks.put(toAdd, 0);
+
+        // add custom bypass permissions
+        List<PermissionAttachment> customPermissionsPlayer = new ArrayList<>();
+        for (String permission : hmb.getConfig().getStringList("battleMode.ffa.addPermissions")) {
+            customPermissionsPlayer.add(toAdd.addAttachment(hmb, permission, true));
+        }
+        customPermissions.put(toAdd, customPermissionsPlayer);
+
         toAdd.setScoreboard(scoreboard);
         scoreboardObjective.getScore(toAdd.getName()).setScore(0);
         scoreboardTeam.addEntry(toAdd.getName());
@@ -91,8 +100,6 @@ public class FFAArena extends AbstractKitArena {
         MessageBuilder.create(hmb, "modeFFAJoined", HalfminerBattle.PREFIX).sendMessage(toAdd);
         ((HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES))
                 .sendTitle(toAdd, MessageBuilder.returnMessage(hmb, "modeFFAJoinTitle"));
-
-        addSpawnProtection(toAdd);
     }
 
     public void removePlayer(Player toRemove) {
@@ -102,6 +109,9 @@ public class FFAArena extends AbstractKitArena {
         if (bannedFromArena.getIfPresent(toRemove.getUniqueId()) == null) {
             pm.setState(BattleState.QUEUE_COOLDOWN, toRemove);
         }
+        customPermissions.get(toRemove).forEach(PermissionAttachment::remove);
+        customPermissions.remove(toRemove);
+
         scoreboard.resetScores(toRemove.getName());
         scoreboardTeam.removeEntry(toRemove.getName());
         toRemove.setScoreboard(hmb.getServer().getScoreboardManager().getMainScoreboard());

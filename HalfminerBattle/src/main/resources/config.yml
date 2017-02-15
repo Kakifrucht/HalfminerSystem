@@ -20,6 +20,9 @@ battleMode:
     #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
     waitingForMatchRemind: 30
   ffa:
+    #Custom permission that can be added for bypasses of other plugins, to prevent interferences
+    addPermissions:
+    - 'hmb.example.bypass'
     #After how many deaths a player will be removed from the arena, set to 0 to disable
     removeAfterDeaths: 4
     #How many minutes he will be removed for

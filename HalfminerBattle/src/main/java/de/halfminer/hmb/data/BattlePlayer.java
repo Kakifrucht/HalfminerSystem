@@ -9,6 +9,7 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -150,6 +151,12 @@ class BattlePlayer {
             List<ItemStack> itemStacks = new ArrayList<>();
             for (ItemStack item : player.getInventory().getContents()) {
                 if (item != null) {
+
+                    // don't ever keep glass bottles
+                    if (item.getType().equals(Material.GLASS_BOTTLE)) {
+                        continue;
+                    }
+
                     boolean keep = true;
                     ItemMeta meta = item.getItemMeta();
                     if (meta != null && meta.hasLore()) {
@@ -160,6 +167,7 @@ class BattlePlayer {
                             }
                         }
                     }
+
                     if (keep) {
                         itemStacks.add(item);
                     }
