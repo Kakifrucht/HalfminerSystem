@@ -13,10 +13,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
@@ -85,6 +82,11 @@ public class ModHealthBar extends HalfminerModule implements Listener {
             Damageable entity = (Damageable) e.getEntity();
             updateBossbars(entity, (int) Math.ceil(entity.getHealth() - e.getFinalDamage()));
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerDeathRemoveFromSeen(PlayerDeathEvent e) {
+        playerSeesBar.get(e.getEntity()).cleanFromDamageableList();
     }
 
     private boolean isApplicableHealthChangeEvent(EntityEvent e) {
