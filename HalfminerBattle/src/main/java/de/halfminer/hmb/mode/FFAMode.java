@@ -182,6 +182,6 @@ public class FFAMode extends AbstractMode {
     public void teleportWithDelay(Player toTeleport, int delay,
                                   @Nullable Runnable runIfSuccess, @Nullable Runnable runIfCancelled) {
         ((HanTeleport) HalfminerSystem.getInstance().getHandler(HandlerType.TELEPORT))
-                .startTeleport(toTeleport, toTeleport.getLocation(), delay, runIfSuccess, runIfCancelled);
+                .startTeleport(toTeleport, toTeleport.getLocation(), delay, false, runIfSuccess, runIfCancelled);
     }
 }

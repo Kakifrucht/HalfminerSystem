@@ -30,15 +30,15 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
     private final Map<Player, BukkitTask> currentTeleport = new HashMap<>();
 
     public void startTeleport(Player player, Location loc) {
-        startTeleport(player, loc, defaultTime, null, null);
+        startTeleport(player, loc, defaultTime, true, null, null);
     }
 
     public void startTeleport(Player player, Location loc, int delay) {
-        startTeleport(player, loc, delay, null, null);
+        startTeleport(player, loc, delay, true, null, null);
     }
 
-    public void startTeleport(final Player player, final Location loc,
-                              final int delay, Runnable toRun, Runnable toRunIfCancelled) {
+    public void startTeleport(final Player player, final Location loc, final int delay, boolean setLastLocation,
+                              Runnable toRun, Runnable toRunIfCancelled) {
 
         if (hasPendingTeleport(player, true)) {
 
@@ -48,7 +48,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             return;
         }
 
-        Teleport tp = new Teleport(player, loc, delay, toRun, toRunIfCancelled);
+        Teleport tp = new Teleport(player, loc, delay, setLastLocation, toRun, toRunIfCancelled);
 
         if (delay < 1 || player.hasPermission("hms.bypass.teleporttimer")) {
             tp.teleport();
@@ -87,6 +87,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
         final private Player player;
         final private Location location;
         private int seconds;
+        final private boolean setLastLocation;
 
         final private Runnable toRun;
         final private Runnable toRunIfCancelled;
@@ -96,11 +97,12 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
         final private int originalY;
         final private int originalZ;
 
-        Teleport(Player player, Location loc, int delay, Runnable toRun, Runnable toRunIfCancelled) {
+        Teleport(Player player, Location loc, int delay, boolean setLastLocation, Runnable toRun, Runnable toRunIfCancelled) {
 
             this.player = player;
             this.location = loc;
             this.seconds = delay;
+            this.setLastLocation = setLastLocation;
 
             this.toRun = toRun;
             this.toRunIfCancelled = toRunIfCancelled;
@@ -131,7 +133,10 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
 
             player.sendMessage(lang.get("done"));
             player.setFallDistance(0);
-            ((HanHooks) hms.getHandler(HandlerType.HOOKS)).setLastTpLocation(player);
+            if (setLastLocation) {
+                ((HanHooks) hms.getHandler(HandlerType.HOOKS)).setLastTpLocation(player);
+            }
+
             boolean teleportSuccessful = player.teleport(location);
             cancelTask(teleportSuccessful);
 

@@ -81,7 +81,7 @@ public class Cmdnewtp extends HalfminerCommand {
         loc.setYaw(player.getLocation().getYaw());
         loc.setPitch(player.getLocation().getPitch());
 
-        tp.startTeleport(player, loc, 5, () -> {
+        tp.startTeleport(player, loc, 5, true, () -> {
 
             hPlayer.set(DataType.NEWTP_USED, true);
 

@@ -56,6 +56,6 @@ Current features
     - Players get kicked from arena after configurable streak of deaths
       - They will remain banned for configured amount of time
     - Auto respawn in arena while keeping items
-      - Players get spawn protected for a 5 seconds
+      - Players get PvP protected for 5 seconds after (re-)spawning
     - Arena can be left per command
     
