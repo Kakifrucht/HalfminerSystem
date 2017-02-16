@@ -76,6 +76,14 @@ public class FFAMode extends AbstractMode {
                     return true;
                 }
 
+                if (args.length > 1) {
+                    Arena selected = am.getArena(type, args[1]);
+                    if (selected != null) {
+                        ((FFAArena) selected).addPlayer(player);
+                        break;
+                    }
+                }
+
                 List<Arena> freeArenas = am.getFreeArenasFromType(type);
                 if (freeArenas.size() == 0) {
                     MessageBuilder.create("modeGlobalBattleModeDisabled", hmb).sendMessage(sender);
@@ -83,7 +91,7 @@ public class FFAMode extends AbstractMode {
                     ((FFAArena) freeArenas.get(0)).addPlayer(player);
                 } else {
                     MessageBuilder.create("modeFFAChooseArena", hmb).sendMessage(player);
-                    am.sendArenaSelection(player, freeArenas, "/ffa choose ", "");
+                    am.sendArenaSelection(player, freeArenas, "/ffa join ", "");
                 }
                 break;
             case "leave":
@@ -100,19 +108,6 @@ public class FFAMode extends AbstractMode {
             case "list":
                 showList(sender);
                 break;
-            case "choose":
-                if (args.length > 1) {
-                    if (pm.isNotIdle(player)) {
-                        MessageBuilder.create("modeGlobalNotIdle", hmb).sendMessage(player);
-                        return true;
-                    }
-
-                    Arena selected = am.getArena(type, args[1]);
-                    if (selected != null) {
-                        ((FFAArena) selected).addPlayer(player);
-                        break;
-                    }
-                }
             default:
                 MessageBuilder.create("modeFFAUsage", hmb).sendMessage(sender);
         }
@@ -122,7 +117,7 @@ public class FFAMode extends AbstractMode {
 
     private void showList(CommandSender sendTo) {
         MessageBuilder.create("modeFFAList", hmb).sendMessage(sendTo);
-        for (Arena arena : am.getArenasFromType(type)) {
+        for (Arena arena : am.getFreeArenasFromType(type)) {
             List<Player> inArena = arena.getPlayersInArena();
             String playerString = ChatColor.GREEN.toString();
             if (inArena.isEmpty()) {

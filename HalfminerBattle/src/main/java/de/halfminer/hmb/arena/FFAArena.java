@@ -96,7 +96,9 @@ public class FFAArena extends AbstractKitArena {
         scoreboardObjective.getScore(toAdd.getName()).setScore(0);
         scoreboardTeam.addEntry(toAdd.getName());
 
-        MessageBuilder.create("modeFFAJoined", hmb).sendMessage(toAdd);
+        MessageBuilder.create("modeFFAJoined", hmb)
+                .addPlaceholderReplace("%ARENA%", getName())
+                .sendMessage(toAdd);
         ((HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES))
                 .sendTitle(toAdd, MessageBuilder.returnMessage("modeFFAJoinTitle", hmb, false));
     }

@@ -7,6 +7,9 @@ battleMode:
     nonBlockedCommands:
     - ban
     - rules
+    - msg
+    - m
+    - r
     #Time in seconds the queue cooldown will take
     queueCooldownTimeSeconds: 15
     #Save players inventories to disk before battle, to ensure absolutely no data loss
@@ -96,7 +99,7 @@ localization:
   modeFFAArenaLeft: '&7Du hast die Arena &averlassen'
   modeFFACooldown: '&7Du kannst die Arena frühestens in &c%TIMELEFT% Sekunden &7betreten'
   modeFFADiedTooOften: '&cDu bist zu häufig am Stück gestorben und wurdest daher aus der Arena entfernt'
-  modeFFAJoined: '~&7Arena wurde betreten, verwende &a/ffa leave/ &7zum verlassen (ausloggen führt zum Tod)'
+  modeFFAJoined: '~&e%ARENA% &7wurde betreten, verwende &a/ffa leave/ &7zum verlassen (ausloggen führt zum Tod)'
   modeFFAJoinTitle: ' \nZum verlassen: &a/ffa leave'
   modeFFAKillLog: '%KILLER% (%KILLSTREAK%er Killserie) hat %VICTIM% (%DEATHSTREAK%er Todesserie) in FFA Arena %ARENA% eliminiert'
   modeFFAList: '&7Alle FFA Arenen und deren aktuelle Belegung:'
@@ -107,7 +110,7 @@ localization:
   modeFFAScoreboardHeader: '&6&lFFA Serien'
   modeFFASpawnProtectBar: 'Spawn PvP Schutz'
   modeFFASpawnProtected: '&e%PLAYER% &chat noch Spawn PvP Schutz'
-  modeFFAUsage: '~&7Kämpfe in einer Arena gegen alle mit Kit und Killserien\n &a/ffa join/ &7- Arena betreten\n &a/ffa leave/ &7- Arena verlassen\n &a/ffa list/ &7- Arenen und Spieler auflisten'
+  modeFFAUsage: '~&7Kämpfe in einer Arena gegen alle mit Kit und Killserien\n &a/ffa join/ [Arena] &7- Arena betreten\n &a/ffa leave/ &7- Arena verlassen\n &a/ffa list/ &7- Arenen und Spieler auflisten'
   modeFFAChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), die du betreten möchtest: '
   modeGlobalArenaLoadLog: '%ARENAS% Arenen und %KITS% Kits geladen'
   modeGlobalChooseArenaHover: 'In &l%ARENA% &rspielen'
