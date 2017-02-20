@@ -90,10 +90,15 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
     }
 
     public void setUUID(OfflinePlayer player) {
+        if (uuidConfig == null)
+            throw new RuntimeException("setUUID(OfflinePlayer) called on non HalfminerSystem HanStorage instance");
         uuidConfig.set(player.getName().toLowerCase(), player.getUniqueId().toString());
     }
 
     public HalfminerPlayer getPlayer(String playerString) throws PlayerNotFoundException {
+
+        if (uuidConfig == null)
+            throw new RuntimeException("getPlayer(String) called on non HalfminerSystem HanStorage instance");
 
         UUID uuid;
         String uuidString = uuidConfig.getString(playerString.toLowerCase(), "");
@@ -108,10 +113,14 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
     }
 
     public HalfminerPlayer getPlayer(OfflinePlayer p) {
+        if (uuidConfig == null)
+            throw new RuntimeException("getPlayer(OfflinePlayer) called on non HalfminerSystem HanStorage instance");
         return new HalfminerPlayer(playerConfig, p);
     }
 
     public HalfminerPlayer getPlayer(UUID uuid) {
+        if (uuidConfig == null)
+            throw new RuntimeException("getPlayer(UUID) called on non HalfminerSystem HanStorage instance");
         return new HalfminerPlayer(playerConfig, uuid);
     }
 
@@ -176,13 +185,15 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
             sysConfig = YamlConfiguration.loadConfiguration(sysFile);
         }
 
-        if (uuidFile == null) {
-            uuidFile = new File(plugin.getDataFolder(), "uuidcache.yml");
+        // UUID and player storage is only ever part of HalfminerSystem,
+        // not of plugins who instantiate a HanStorage themselves
+        if (uuidFile == null && plugin == hms) {
+            uuidFile = new File(hms.getDataFolder(), "uuidcache.yml");
             uuidConfig = YamlConfiguration.loadConfiguration(uuidFile);
         }
 
-        if (playerFile == null) {
-            playerFile = new File(plugin.getDataFolder(), "playerdata.yml");
+        if (playerFile == null && plugin == hms) {
+            playerFile = new File(hms.getDataFolder(), "playerdata.yml");
             playerConfig = YamlConfiguration.loadConfiguration(playerFile);
         }
 

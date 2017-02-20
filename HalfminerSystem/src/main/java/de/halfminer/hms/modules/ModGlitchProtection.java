@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -32,9 +31,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class ModGlitchProtection extends HalfminerModule implements Listener, Sweepable {
 
-    private final Set<Player> waitingForChorusTP = new HashSet<>();
     private Set<Material> protectedMaterial;
-
     private final Cache<Player, Boolean> lastGlitchAlert = CacheBuilder.newBuilder()
             .concurrencyLevel(1)
             .expireAfterWrite(4, TimeUnit.SECONDS)
@@ -77,24 +74,19 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
         int y = loc.getBlockY();
         int z = loc.getBlockZ();
 
-        boolean potentialGlitch = false;
-
         for (int i = 0; i < 3; i++) {
-            potentialGlitch = protectedMaterial.contains(w.getBlockAt(x, y + i, z).getType());
-            if (potentialGlitch) break;
-        }
-
-        if (potentialGlitch) {
-            //e.setCancelled(true); cancelling would be better but currently not working (JIRA #1588)
-            scheduler.runTaskLater(hms, () -> {
-                ((ModRespawn) hms.getModule(ModuleType.RESPAWN)).tpToSpawn(p);
-                MessageBuilder.create("modGlitchProtectionDismountTped", hms, "AntiGlitch").sendMessage(p);
-                MessageBuilder.create("modGlitchProtectionDismountTpedNotify", hms, "AntiGlitch")
-                        .addPlaceholderReplace("%PLAYER%", p.getName())
-                        .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
-                        .addPlaceholderReplace("%WORLD%", w.getName())
-                        .broadcastMessage("hms.bypass.glitchcheck", true);
-            }, 0L);
+            if (protectedMaterial.contains(w.getBlockAt(x, y + i, z).getType())) {
+                //e.setCancelled(true); cancelling would be better but currently not working (JIRA #1588)
+                scheduler.runTask(hms, () -> {
+                    ((ModRespawn) hms.getModule(ModuleType.RESPAWN)).tpToSpawn(p);
+                    MessageBuilder.create("modGlitchProtectionDismountTped", hms, "AntiGlitch").sendMessage(p);
+                    MessageBuilder.create("modGlitchProtectionDismountTpedNotify", hms, "AntiGlitch")
+                            .addPlaceholderReplace("%PLAYER%", p.getName())
+                            .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
+                            .addPlaceholderReplace("%WORLD%", w.getName())
+                            .broadcastMessage("hms.bypass.glitchcheck", true);
+                });
+            }
         }
     }
 
@@ -108,7 +100,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
         if (!e.getFrom().getWorld().equals(to.getWorld())) {
 
-            // Override Spigot default teleport safety
+            // override Spigot default teleport safety between worlds
             scheduler.runTaskLater(hms, () -> {
                 if (p.getLocation().distance(to) > 1.0d) p.teleport(to);
             }, 1L);
@@ -122,24 +114,16 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
             int yValue = current.getBlockY();
             if (yValue > 255) yValue = world.getHighestBlockYAt(xValue, zValue);
             else {
-                while (world.getBlockAt(xValue, yValue, zValue).getType().equals(Material.AIR)
-                        && yValue > 0) yValue--;
+                while (world.getBlockAt(xValue, yValue, zValue).getType().equals(Material.AIR) && yValue > 0)
+                    yValue--;
             }
 
-            e.setCancelled(true);
-            final Location newLoc = new Location(world, current.getX(), yValue + 1, current.getZ()
-                    , current.getYaw(), current.getPitch());
-            if (current.distance(newLoc) < 2.0d) return;
-
-            if (!waitingForChorusTP.contains(p)) {
-
-                waitingForChorusTP.add(p);
-                scheduler.runTaskLater(hms, () -> {
-                    p.setFallDistance(0.0f);
-                    p.teleport(newLoc);
-                    waitingForChorusTP.remove(p);
-                }, 1L);
-            }
+            // set destination to next block under player
+            to.setX(current.getX());
+            to.setY(yValue + 1);
+            to.setZ(current.getZ());
+            to.setYaw(current.getYaw());
+            to.setPitch(current.getPitch());
         }
     }
 

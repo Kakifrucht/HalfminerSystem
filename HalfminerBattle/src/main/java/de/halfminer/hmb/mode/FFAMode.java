@@ -78,7 +78,7 @@ public class FFAMode extends AbstractMode {
 
                 if (args.length > 1) {
                     Arena selected = am.getArena(type, args[1]);
-                    if (selected != null) {
+                    if (selected != null && selected.isFree()) {
                         ((FFAArena) selected).addPlayer(player);
                         break;
                     }

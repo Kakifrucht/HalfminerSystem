@@ -20,6 +20,8 @@ public class ModAutoMessage extends HalfminerModule {
     private BukkitTask running;
     private List<String> messages;
 
+    private int lastRandom = Integer.MAX_VALUE;
+
     @Override
     public void loadConfig() {
 
@@ -53,7 +55,14 @@ public class ModAutoMessage extends HalfminerModule {
 
         running = scheduler.runTaskTimerAsynchronously(hms, () -> {
 
-            String message = this.messages.get(rnd.nextInt(this.messages.size()));
+            // ensure that same message is not sent twice
+            int messageIndex = rnd.nextInt(this.messages.size());
+            if (messageIndex == lastRandom) {
+                messageIndex = (messageIndex + 1) % messages.size();
+            }
+            lastRandom = messageIndex;
+
+            String message = messages.get(messageIndex);
             MessageBuilder.create(message, hms)
                     .setDirectString()
                     .broadcastMessage(false);

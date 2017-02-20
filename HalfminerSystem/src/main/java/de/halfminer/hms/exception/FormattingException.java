@@ -1,7 +1,7 @@
 package de.halfminer.hms.exception;
 
 /**
- * Exception thrown when user input causes
+ * Exception thrown when user input (config) is not in expected format
  */
 public class FormattingException extends Exception {
 
