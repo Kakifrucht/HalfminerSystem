@@ -436,11 +436,11 @@ public class Cmdhms extends HalfminerCommand {
             checkRadius = setTo;
         } else checkRadius = 5;
 
-        scheduler.runTaskAsynchronously(hms, () -> {
+        MessageBuilder.create("cmdHmsSearchhomesStarted", hms, PREFIX)
+                .addPlaceholderReplace("%RADIUS%", String.valueOf(checkRadius))
+                .sendMessage(player);
 
-            MessageBuilder.create("cmdHmsSearchhomesStarted", hms, PREFIX)
-                    .addPlaceholderReplace("%RADIUS%", String.valueOf(checkRadius))
-                    .sendMessage(player);
+        scheduler.runTaskAsynchronously(hms, () -> {
 
             for (UUID uuid : ess.getUserMap().getAllUniqueUsers()) {
 

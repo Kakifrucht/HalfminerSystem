@@ -41,7 +41,7 @@ public class DuelArena extends AbstractKitArena {
         // during 5 seconds countdown, if fighting with own stuff
         restoreInventory = true;
 
-        task = Bukkit.getScheduler().runTaskTimerAsynchronously(hmb, new Runnable() {
+        task = Bukkit.getScheduler().runTaskTimer(hmb, new Runnable() {
 
             private final HanTitles titles = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);
             private final BukkitScheduler scheduler = hmb.getServer().getScheduler();
@@ -54,26 +54,32 @@ public class DuelArena extends AbstractKitArena {
 
                 timeLeft -= 1;
                 if (timeLeft > timeStart) {
-                    final String toSend = MessageBuilder.create("modeDuelTitleCountdown", hmb)
+                    String toSend = MessageBuilder.create("modeDuelTitleCountdown", hmb)
                             .togglePrefix()
                             .addPlaceholderReplace("%TIME%", String.valueOf(timeLeft - timeStart))
                             .returnMessage();
 
-                    scheduler.runTask(hmb, () -> {
-                        titles.sendTitle(playerA, toSend, 0, 21, 0);
-                        titles.sendTitle(playerB, toSend, 0, 21, 0);
-                        playSound(Sound.BLOCK_NOTE_PLING);
-                    });
+                    titles.sendTitle(playerA, toSend, 0, 21, 0);
+                    titles.sendTitle(playerB, toSend, 0, 21, 0);
+                    playSound(Sound.BLOCK_NOTE_PLING);
                 }
 
                 // Battle is starting, reset walkspeed and give the kit
                 if (timeLeft == timeStart) {
-                    scheduler.runTask(hmb, () -> {
-                        playSound(Sound.BLOCK_ANVIL_LAND);
-                        preparePlayer(playerA);
-                        preparePlayer(playerB);
-                        teleportIntoArena();
-                    });
+                    playSound(Sound.BLOCK_ANVIL_LAND);
+                    for (Player player : playersInArena) {
+                        player.setWalkSpeed(0.2F);
+                        MessageBuilder.create("modeDuelGameStarting", hmb).sendMessage(player);
+                        titles.sendTitle(player, MessageBuilder.returnMessage("modeDuelTitleStart", hmb, false),
+                                0, 30, 0);
+
+                        if (useKit) equipPlayers();
+                        else {
+                            pm.restorePlayerInventory(player);
+                            restoreInventory = false;
+                        }
+                    }
+                    teleportIntoArena();
                 }
 
                 if (timeLeft <= 5 && timeLeft > 0) {
@@ -85,20 +91,7 @@ public class DuelArena extends AbstractKitArena {
                 }
 
                 if (timeLeft <= 0) {
-                    scheduler.runTask(hmb,
-                            () -> mode.getQueue().gameHasFinished(playerA, false, false));
-                }
-            }
-
-            private void preparePlayer(Player player) {
-                player.setWalkSpeed(0.2F);
-                MessageBuilder.create("modeDuelGameStarting", hmb).sendMessage(player);
-                titles.sendTitle(player, MessageBuilder.returnMessage("modeDuelTitleStart", hmb, false), 0, 30, 0);
-
-                if (useKit) equipPlayers();
-                else {
-                    pm.restorePlayerInventory(player);
-                    restoreInventory = false;
+                    mode.getQueue().gameHasFinished(playerA, false, false);
                 }
             }
 

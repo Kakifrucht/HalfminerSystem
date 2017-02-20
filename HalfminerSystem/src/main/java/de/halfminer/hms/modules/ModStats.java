@@ -21,9 +21,10 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitTask;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -43,7 +44,8 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class ModStats extends HalfminerModule implements Disableable, Listener, Sweepable {
 
-    private final Map<Player, Long> timeOnline = new ConcurrentHashMap<>();
+    private final Map<Player, Long> timeOnline = new HashMap<>();
+    private BukkitTask onlineTimeTask;
 
     private final Cache<Player, Player> lastInteract = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.SECONDS)
@@ -227,13 +229,15 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             }
         }
 
-        scheduler.runTaskTimerAsynchronously(hms, () -> {
-            long currentTime = System.currentTimeMillis() / 1000;
-            for (Player p : server.getOnlinePlayers()) {
-                setOnlineTime(p);
-                timeOnline.put(p, currentTime);
-            }
-        }, 1200L, 1200L);
+        if (onlineTimeTask == null) {
+            onlineTimeTask = scheduler.runTaskTimer(hms, () -> {
+                long currentTime = System.currentTimeMillis() / 1000;
+                for (Player p : server.getOnlinePlayers()) {
+                    setOnlineTime(p);
+                    timeOnline.put(p, currentTime);
+                }
+            }, 1200L, 1200L);
+        }
     }
 
     @Override

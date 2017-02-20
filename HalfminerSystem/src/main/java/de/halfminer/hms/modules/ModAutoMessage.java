@@ -53,7 +53,7 @@ public class ModAutoMessage extends HalfminerModule {
         if (running != null) running.cancel();
         int interval = hms.getConfig().getInt("autoMessage.intervalSeconds", 240) * 20;
 
-        running = scheduler.runTaskTimerAsynchronously(hms, () -> {
+        running = scheduler.runTaskTimer(hms, () -> {
 
             // ensure that same message is not sent twice
             int messageIndex = rnd.nextInt(this.messages.size());
