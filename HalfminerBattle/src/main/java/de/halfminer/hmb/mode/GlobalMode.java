@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -151,18 +152,19 @@ public class GlobalMode extends AbstractMode {
             Player player = isPlayer ? (Player) sender : null;
 
             String arg = args[0].toLowerCase();
+            boolean success = false;
             switch (arg) {
                 case "create":
                     if (!isPlayer) {
                         sendNotAPlayerMessage(sender);
                         return true;
                     }
-                    boolean successCreate = am.addArena(type, args[2], player.getLocation());
-                    sendStatusMessage(sender, successCreate ? "adminCreate" : "adminCreateFailed", args[2], type);
+                    success = am.addArena(type, args[2], Collections.singletonList(player.getLocation()));
+                    sendStatusMessage(sender, success ? "adminCreate" : "adminCreateFailed", args[2], type);
                     break;
                 case "remove":
-                    boolean successRemove = am.delArena(type, args[2]);
-                    sendStatusMessage(sender, successRemove ? "adminRemove" : "adminArenaDoesntExist", args[2], type);
+                    success = am.delArena(type, args[2]);
+                    sendStatusMessage(sender, success ? "adminRemove" : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "setspawn":
                     if (!isPlayer) {
@@ -171,26 +173,27 @@ public class GlobalMode extends AbstractMode {
                     }
                     int spawnNumber = Integer.MAX_VALUE;
                     if (args.length > 3) spawnNumber = getNumberFromString(args[3]) - 1;
-                    boolean successSetSpawn = am.setSpawn(type, args[2], player.getLocation(), spawnNumber);
-                    sendStatusMessage(sender, successSetSpawn ? "adminSetSpawn" : "adminArenaDoesntExist", args[2], type);
+                    success = am.setSpawn(type, args[2], player.getLocation(), spawnNumber);
+                    sendStatusMessage(sender, success ? "adminSetSpawn" : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "removespawn":
                     int spawnNumberToRemove = 0;
                     if (args.length > 3) spawnNumberToRemove = getNumberFromString(args[3]) - 1;
-                    boolean successClear = am.removeSpawn(type, args[2], spawnNumberToRemove);
-                    sendStatusMessage(sender, successClear ? "adminClearSpawns" : "adminArenaDoesntExist", args[2], type);
+                    success = am.removeSpawn(type, args[2], spawnNumberToRemove);
+                    sendStatusMessage(sender, success ? "adminClearSpawns" : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "setkit":
                     if (!isPlayer) {
                         sendNotAPlayerMessage(sender);
                         return true;
                     }
-                    boolean successKit = am.setKit(type, args[2], player.getInventory());
-                    sendStatusMessage(sender, successKit ? "adminSetKit" : "adminArenaDoesntExist", args[2], type);
+                    success = am.setKit(type, args[2], player.getInventory());
+                    sendStatusMessage(sender, success ? "adminSetKit" : "adminArenaDoesntExist", args[2], type);
                     break;
                 default:
                     sendUsageInformation(sender);
             }
+            if (success) am.saveData();
         }
         return true;
     }

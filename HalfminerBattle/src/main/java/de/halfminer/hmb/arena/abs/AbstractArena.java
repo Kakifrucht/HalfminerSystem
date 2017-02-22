@@ -1,7 +1,6 @@
 package de.halfminer.hmb.arena.abs;
 
 import de.halfminer.hmb.HalfminerBattle;
-import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
@@ -22,7 +21,6 @@ public abstract class AbstractArena implements Arena {
 
     protected static final HalfminerBattle hmb = HalfminerBattle.getInstance();
     protected static final PlayerManager pm = hmb.getPlayerManager();
-    protected static final ArenaManager am = hmb.getArenaManager();
 
     // Arena state
     protected final BattleModeType battleModeType;

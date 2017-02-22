@@ -58,6 +58,12 @@ public class FFAMode extends AbstractMode {
 
         Player player = (Player) sender;
 
+        List<Arena> freeArenas = am.getFreeArenasFromType(type);
+        if (freeArenas.size() == 0) {
+            MessageBuilder.create("modeGlobalBattleModeDisabled", hmb).sendMessage(sender);
+            return true;
+        }
+
         if (args.length < 1) {
             MessageBuilder.create("modeFFAUsage", hmb).sendMessage(sender);
             return true;
@@ -84,10 +90,7 @@ public class FFAMode extends AbstractMode {
                     }
                 }
 
-                List<Arena> freeArenas = am.getFreeArenasFromType(type);
-                if (freeArenas.size() == 0) {
-                    MessageBuilder.create("modeGlobalBattleModeDisabled", hmb).sendMessage(sender);
-                } else if (freeArenas.size() == 1) {
+                if (freeArenas.size() == 1) {
                     ((FFAArena) freeArenas.get(0)).addPlayer(player);
                 } else {
                     MessageBuilder.create("modeFFAChooseArena", hmb).sendMessage(player);

@@ -16,13 +16,12 @@ import java.util.List;
 /**
  * Arenas containing kits
  */
-public abstract class AbstractKitArena extends AbstractArena {
+public abstract class AbstractKitArena extends AbstractArena implements KitArena {
 
     private ItemStack[] kit;
 
     protected AbstractKitArena(BattleModeType battleModeType, String name) {
         super(battleModeType, name);
-        reload();
     }
 
     @Override
@@ -31,14 +30,19 @@ public abstract class AbstractKitArena extends AbstractArena {
     }
 
     @Override
-    public void reload() {
-        kit = am.getKit(battleModeType, getName());
-    }
-
-    @Override
     protected void addPlayers(Player... players) {
         super.addPlayers(players);
         parameterToList(players).forEach(p -> p.getInventory().clear());
+    }
+
+    @Override
+    public void setKit(ItemStack[] kit) {
+        this.kit = kit;
+    }
+
+    @Override
+    public ItemStack[] getKit() {
+        return kit;
     }
 
     protected void equipPlayers(Player... toEquip) {

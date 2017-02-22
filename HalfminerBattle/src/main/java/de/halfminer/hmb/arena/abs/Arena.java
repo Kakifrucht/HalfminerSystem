@@ -65,9 +65,4 @@ public interface Arena {
      * @return true if given location is within 10 blocks of a spawn, else false
      */
     boolean isCloseToSpawn(Location loc);
-
-    /**
-     * Called when a plugin reload has occurred
-     */
-    void reload();
 }
