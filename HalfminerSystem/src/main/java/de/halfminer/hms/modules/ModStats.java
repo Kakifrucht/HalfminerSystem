@@ -242,7 +242,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
     @Override
     public void onDisable() {
-        timeOnline.keySet().forEach(this::setOnlineTime);
+        server.getOnlinePlayers().forEach(this::setOnlineTime);
     }
 
     @Override
