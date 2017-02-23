@@ -16,7 +16,7 @@ public abstract class AbstractMode implements BattleMode {
 
     protected final BattleModeType type;
 
-    public AbstractMode(BattleModeType type) {
+    protected AbstractMode(BattleModeType type) {
         this.type = type;
     }
 

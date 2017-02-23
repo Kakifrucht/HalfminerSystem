@@ -31,11 +31,6 @@ public interface BattleMode extends Listener {
     boolean onAdminCommand(CommandSender sender, String[] args);
 
     /**
-     * Called if plugin is disabled, to gracefully reset ingame states
-     */
-    void onPluginDisable();
-
-    /**
      * Called if plugins config was reloaded
      */
     void onConfigReload();

@@ -110,4 +110,16 @@ public class DuelArena extends AbstractKitArena {
     public boolean isUseKit() {
         return useKit;
     }
+
+    @Override
+    public boolean forceGameEnd() {
+        if (playersInArena.size() > 0) {
+            MessageBuilder.create("modeDuelGameEndForced", hmb)
+                    .sendMessage(playersInArena.getFirst(), playersInArena.getLast());
+            gameEnd();
+            return true;
+        }
+
+        return false;
+    }
 }

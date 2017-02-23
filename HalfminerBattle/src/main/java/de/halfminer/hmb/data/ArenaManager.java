@@ -9,7 +9,7 @@ import de.halfminer.hms.util.Utils;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -65,7 +65,7 @@ public class ArenaManager {
         if (arenaFile == null || !arenaFile.exists()) {
             arenaFile = new File(hmb.getDataFolder(), "arenas.yml");
             if (!arenaFile.exists() && !arenaFile.createNewFile()) {
-                throw new IOException("Could not create arenas.yml");
+                throw new IOException("Could not create arenas.yml as file already exists");
             }
         }
 
@@ -90,6 +90,7 @@ public class ArenaManager {
 
             for (String arenaName : arenaSection.getKeys(false)) {
 
+                String arenaNameLowerCase = arenaName.toLowerCase();
                 // load spawns
                 List<Location> spawnLocations = new ArrayList<>();
                 arenaSection
@@ -111,13 +112,13 @@ public class ArenaManager {
                 }
 
                 // check to see if arena already exists and just update kit/spawns, else add new one
-                if (oldArenaTypeMap != null && oldArenaTypeMap.containsKey(arenaName.toLowerCase())) {
-                    Arena arenaToReload = oldArenaTypeMap.get(arenaName.toLowerCase());
+                if (oldArenaTypeMap != null && oldArenaTypeMap.containsKey(arenaNameLowerCase)) {
+                    Arena arenaToReload = oldArenaTypeMap.get(arenaNameLowerCase);
                     arenaToReload.setSpawns(spawnLocations);
                     if (kit != null && arenaToReload instanceof KitArena) {
                         ((KitArena) arenaToReload).setKit(kit);
                     }
-                    newArenaTypeMap.put(arenaName.toLowerCase(), arenaToReload);
+                    newArenaTypeMap.put(arenaNameLowerCase, arenaToReload);
                     totalArenasLoaded++;
                 } else {
                     if (addArena(type, arenaName, spawnLocations, kit)) {
@@ -234,7 +235,7 @@ public class ArenaManager {
             builder.append(freeArena.getName())
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + freeArena.getName()))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(tooltipOnHover).create()))
-                    .color(net.md_5.bungee.api.ChatColor.GREEN).bold(true)
+                    .color(ChatColor.GREEN).bold(true)
                     .append("  ").reset();
         }
 
@@ -243,7 +244,7 @@ public class ArenaManager {
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + "random"))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             new ComponentBuilder(MessageBuilder.returnMessage(randomHoverKey, hmb, false)).create()))
-                    .color(net.md_5.bungee.api.ChatColor.GRAY);
+                    .color(ChatColor.GRAY);
         }
 
         selector.playSound(selector.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.9f);
@@ -253,7 +254,7 @@ public class ArenaManager {
     public void saveData() {
 
         for (BattleModeType type : BattleModeType.values()) {
-            arenaConfig.set(type.toString(), null);
+            arenaConfig.set(Utils.makeStringFriendly(type.toString()), null);
         }
 
         for (BattleModeType type : arenas.keySet()) {
@@ -273,6 +274,12 @@ public class ArenaManager {
         } catch (IOException e) {
             e.printStackTrace();
             hmb.getLogger().severe("Arena config could not be saved");
+        }
+    }
+
+    public void endAllGames() {
+        for (Map<String, Arena> arenasPerType : arenas.values()) {
+            arenasPerType.values().forEach(Arena::forceGameEnd);
         }
     }
 

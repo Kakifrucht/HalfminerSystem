@@ -86,7 +86,7 @@ public class HalfminerBattle extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        battleModes.values().forEach(BattleMode::onPluginDisable);
+        arenaManager.endAllGames();
 
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("HalfminerBattle disabled");
@@ -103,23 +103,25 @@ public class HalfminerBattle extends JavaPlugin {
                 return true;
             }
 
-            if (args.length > 0) {
-                BattleMode called = getBattleMode(args[0]);
-                if (called != null) {
-                    if (!called.onAdminCommand(sender, args)) {
-                        MessageBuilder.create("adminNotDefined", this)
-                                .addPlaceholderReplace("%BATTLEMODE%", args[0])
-                                .sendMessage(sender);
-                    }
-                } else {
-                    getBattleMode(BattleModeType.GLOBAL).onAdminCommand(sender, args);
-                }
+            if (args.length == 0) {
+                MessageBuilder.create("adminCommandUsage", this)
+                        .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
+                        .sendMessage(sender);
                 return true;
             }
 
-            MessageBuilder.create("adminCommandUsage", this)
-                    .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
-                    .sendMessage(sender);
+            BattleMode called = getBattleMode(args[0]);
+            if (called != null) {
+                if (!called.onAdminCommand(sender, args)) {
+                    MessageBuilder.create("adminNotDefined", this)
+                            .addPlaceholderReplace("%BATTLEMODE%", args[0])
+                            .sendMessage(sender);
+                }
+            } else {
+                // by default use admin commands of GlobalMode
+                getBattleMode(BattleModeType.GLOBAL).onAdminCommand(sender, args);
+            }
+
             return true;
         }
 

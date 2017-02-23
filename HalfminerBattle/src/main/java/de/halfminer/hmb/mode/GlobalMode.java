@@ -1,5 +1,6 @@
 package de.halfminer.hmb.mode;
 
+import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
@@ -190,6 +191,14 @@ public class GlobalMode extends AbstractMode {
                     success = am.setKit(type, args[2], player.getInventory());
                     sendStatusMessage(sender, success ? "adminSetKit" : "adminArenaDoesntExist", args[2], type);
                     break;
+                case "forceend":
+                    Arena arenaToEnd = am.getArena(type, args[2]);
+                    boolean endWasForced = false;
+                    if (arenaToEnd != null) {
+                        endWasForced = arenaToEnd.forceGameEnd();
+                    }
+                    sendStatusMessage(sender, endWasForced ? "adminForcedEnd" : "adminForcedEndError", args[2], type);
+                    break;
                 default:
                     sendUsageInformation(sender);
             }
@@ -222,9 +231,6 @@ public class GlobalMode extends AbstractMode {
     private void sendNotAPlayerMessage(CommandSender sendTo) {
         MessageBuilder.create("notAPlayer", "Battle").sendMessage(sendTo);
     }
-
-    @Override
-    public void onPluginDisable() {}
 
     @Override
     public void onConfigReload() {

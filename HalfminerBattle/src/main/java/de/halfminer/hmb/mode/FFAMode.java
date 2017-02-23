@@ -144,14 +144,6 @@ public class FFAMode extends AbstractMode {
     }
 
     @Override
-    public void onPluginDisable() {
-        hmb.getServer().getOnlinePlayers()
-                .stream()
-                .filter(p -> pm.isInBattle(type, p))
-                .forEach(p -> ((FFAArena) pm.getArena(p)).removePlayer(p));
-    }
-
-    @Override
     public void onConfigReload() {
         removeAfterDeaths = hmb.getConfig().getInt("battleMode.ffa.removeAfterDeaths", 4);
         removeForMinutes = hmb.getConfig().getInt("battleMode.ffa.removeForMinutes", 3);

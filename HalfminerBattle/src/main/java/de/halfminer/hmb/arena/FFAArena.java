@@ -184,4 +184,18 @@ public class FFAArena extends AbstractKitArena {
                 .sendBar(toProtect, MessageBuilder.returnMessage("modeFFASpawnProtectBar", hmb, false),
                         BarColor.GREEN, BarStyle.SOLID, 5);
     }
+
+    @Override
+    public boolean forceGameEnd() {
+        if (playersInArena.size() > 0) {
+            List<Player> inArenaCopy = new ArrayList<>(playersInArena);
+            MessageBuilder message = MessageBuilder.create("modeFFAGameEndForced", hmb);
+            for (Player player : inArenaCopy) {
+                removePlayer(player);
+                message.sendMessage(player);
+            }
+            return true;
+        }
+        return false;
+    }
 }

@@ -65,4 +65,9 @@ public interface Arena {
      * @return true if given location is within 10 blocks of a spawn, else false
      */
     boolean isCloseToSpawn(Location loc);
+
+    /**
+     * Removes all players from the arena
+     */
+    boolean forceGameEnd();
 }

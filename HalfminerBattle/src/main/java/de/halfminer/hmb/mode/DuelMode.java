@@ -85,14 +85,6 @@ public class DuelMode extends AbstractMode {
     }
 
     @Override
-    public void onPluginDisable() {
-        hmb.getServer().getOnlinePlayers()
-                .stream()
-                .filter(player -> pm.isInBattle(type, player))
-                .forEach(p -> queue.gameHasFinished(p, false, false));
-    }
-
-    @Override
     public void onConfigReload() {
 
         broadcastWin = hmb.getConfig().getBoolean("battleMode.duel.broadcastWin", false);

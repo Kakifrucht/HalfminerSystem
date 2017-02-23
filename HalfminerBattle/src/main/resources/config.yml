@@ -1,7 +1,7 @@
 #HalfminerBattle Config
 battleMode:
   global:
-    #Disable hunger loss
+    #Disable hunger loss in all arenas
     noHungerLoss: true
     #These commands are not blocked while in battle, set commands shouldn't interfere with players state
     nonBlockedCommands:
@@ -10,7 +10,7 @@ battleMode:
     - msg
     - m
     - r
-    #Time in seconds the queue cooldown will take
+    #Time in seconds the queue cooldown will prevent a player to join a game again
     queueCooldownTimeSeconds: 15
     #Save players inventories to disk before battle, to ensure absolutely no data loss
     saveInventoryToDisk: true
@@ -22,28 +22,30 @@ battleMode:
   duel:
     #Broadcast duel wins
     broadcastWin: true
-    #Max duel time
+    #Maximum duel time in seconds
     gameTime: 300
     #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
     waitingForMatchRemind: 30
   ffa:
-    #Custom permission that can be added for bypasses of other plugins, to prevent interferences
+    #Custom permission that can be added for bypasses of other plugins while in FFA, to prevent interferences (CombatLogger?)
     addPermissions:
     - 'hmb.example.bypass'
     #After how many deaths a player will be removed from the arena, set to 0 to disable
     removeAfterDeaths: 4
-    #How many minutes he will be removed for
+    #How many minutes player will be removed for at least when removeAfterDeaths causes removal from arena
     removeForMinutes: 3
 #Use '&' as color code
-#Lines starting with '~' will be parsed to make commands clickable, close the command with another '/'
+#Lines starting with '~' will be parsed to make commands clickable, close the command with another '/' (like /help/)
 #Messages can be removed by simply setting the message to nothing ('')
 localization:
   prefix: '&7Battle &e>>&r '
   adminArenaDoesntExist: '&7Die Arena &c%ARENA% &7existiert nicht'
   adminClearSpawns: '&7Der Spawn (oder alle Spawns) für die Arena &a%ARENA% &7wurde entfernt'
-  adminCommandUsage: 'HalfminerBattle Version &6%VERSION%\n&6&lAdmin Kommandos:\n &f/hmb <modus>\n /hmb reload\n /hmb openinventory <dateiname>\n&6&lArena Kommandos:\n &f/hmb create <mode> <name>\n /hmb remove <mode> <arenaname>\n /hmb setspawn <mode> <arenaname> [spawnnumber]\n /hmb removespawn <mode> <arenaname> [spawnnumber]\n /hmb setkit <mode> <arenaname>'
+  adminCommandUsage: 'HalfminerBattle Version &6%VERSION%\n&6&lAdmin Kommandos:\n &f/hmb <modus>\n /hmb reload\n /hmb openinventory <dateiname>\n&6&lArena Kommandos:\n &f/hmb create <mode> <name>\n /hmb remove <mode> <arenaname>\n /hmb setspawn <mode> <arenaname> [spawnnumber]\n /hmb removespawn <mode> <arenaname> [spawnnumber]\n /hmb setkit <mode> <arenaname>\n /hmb forceend <mode> <arenaname>'
   adminCreate: '~&7Die Arena &a%ARENA% &7wurde erstellt. Verwende &e/hmb setspawn %MODE% %ARENA%/ &7um weitere Spawnpunkte setzen'
   adminCreateFailed: '&7Die Arena &c%ARENA% &7existiert bereits'
+  adminForcedEnd: '&7Das Spiel in &a%MODE%-Arena %ARENA% &7wurde erfolgreich beendet'
+  adminForcedEndError: '&c%MODE%-Arena %ARENA% &7existiert nicht oder ist nicht aktiv'
   adminNotDefined: '&7Der Modus &c%BATTLEMODE% &7hat keine administrativen Kommandos'
   adminRemove: '&7Die Arena &a%ARENA% &7wurde entfernt'
   adminSetKit: '&7Das Kit für die Arena &a%ARENA% &7wurde gesetzt'
@@ -63,6 +65,7 @@ localization:
   modeDuelChooseArenaRefreshed: '&7Die Auswahl wurde aktualisiert: '
   modeDuelCountdownStart: '&7Das Duell in der Arena &e%ARENA%&7 gegen &c%PLAYER%&7 startet in 5 Sekunden'
   modeDuelCountdownStartNokit: '&7Das Duell &lmit eigenen Sachen &7in der Arena &e%ARENA%&7 gegen &c%PLAYER%&7 startet in 5 Sekunden'
+  modeDuelGameEndForced: '&cDas Duell wurde durch einen Administrator beendet und ist unentschieden'
   modeDuelGameLost: '&cDu hast das Duell gegen &e%PLAYER%&c verloren'
   modeDuelGameStarting: '&aDer Kampf beginnt!'
   modeDuelGameTime: '&7Das Duell gegen &e%PLAYER%&7 ist unentschieden'
@@ -99,6 +102,7 @@ localization:
   modeFFAArenaLeft: '&7Du hast die Arena &averlassen'
   modeFFACooldown: '&7Du kannst die Arena frühestens in &c%TIMELEFT% Sekunden &7betreten'
   modeFFADiedTooOften: '&cDu bist zu häufig am Stück gestorben und wurdest daher aus der Arena entfernt'
+  modeFFAGameEndForced: '&7Das Spiel wurde durch einen Administrator beendet'
   modeFFAJoined: '~&e%ARENA% &7wurde betreten, verwende &a/ffa leave/ &7zum verlassen (ausloggen führt zum Tod)'
   modeFFAJoinTitle: ' \nZum verlassen: &a/ffa leave'
   modeFFAKillLog: '%KILLER% (%KILLSTREAK%er Killserie) hat %VICTIM% (%DEATHSTREAK%er Todesserie) in FFA Arena %ARENA% eliminiert'
