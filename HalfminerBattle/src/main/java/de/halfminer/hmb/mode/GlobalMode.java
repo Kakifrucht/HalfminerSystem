@@ -301,8 +301,10 @@ public class GlobalMode extends AbstractMode {
         // Allow Faction members to fight
         if (e.isCancelled()
                 && e.getEntity() instanceof Player
-                && pm.isInBattle(type, (Player) e.getEntity()))
+                && pm.isInBattle(type, (Player) e.getEntity())
+                && !e.getEntity().equals(Utils.getDamagerFromEvent(e))) {
             e.setCancelled(false);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
