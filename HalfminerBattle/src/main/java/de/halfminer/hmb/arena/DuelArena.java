@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.logging.Level;
+
 /**
  * Custom duel kit arena used by {@link DuelMode}, implementing countdowns and preparing fight
  */
@@ -116,6 +118,11 @@ public class DuelArena extends AbstractKitArena {
         if (playersInArena.size() > 0) {
             MessageBuilder.create("modeDuelGameEndForced", hmb)
                     .sendMessage(playersInArena.getFirst(), playersInArena.getLast());
+            MessageBuilder.create("modeDuelGameEndForcedLog", hmb)
+                    .addPlaceholderReplace("%ARENA%", getName())
+                    .addPlaceholderReplace("%PLAYERA%", playersInArena.getFirst().getName())
+                    .addPlaceholderReplace("%PLAYERB", playersInArena.getLast().getName())
+                    .logMessage(Level.INFO);
             gameEnd();
             return true;
         }

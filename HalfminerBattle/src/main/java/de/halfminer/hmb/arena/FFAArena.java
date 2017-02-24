@@ -194,6 +194,14 @@ public class FFAArena extends AbstractKitArena {
                 removePlayer(player);
                 message.sendMessage(player);
             }
+            String allPlayerNames = "";
+            for (Player player : inArenaCopy) {
+                allPlayerNames += player.getName() + ", ";
+            }
+            MessageBuilder.create("modeFFAGameEndForcedLog", hmb)
+                    .addPlaceholderReplace("%ARENA%", getName())
+                    .addPlaceholderReplace("%PLAYERLIST%", allPlayerNames.substring(0, allPlayerNames.length() - 2))
+                    .logMessage(Level.INFO);
             return true;
         }
         return false;
