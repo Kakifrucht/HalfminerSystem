@@ -63,7 +63,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     public void logoutCheckIfInCombat(PlayerQuitEvent e) {
 
         Player p = e.getPlayer();
-        if (isTagged(p)) {
+        if (isTagged(p) && !p.isDead()) {
 
             untagPlayer(p);
             Player lastOpponent = lastOpponentCache.getIfPresent(p);
@@ -80,9 +80,6 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                             .addPlaceholderReplace("%ENEMY%", lastOpponent.getName())
                             .broadcastMessage(true);
                 }
-            }
-            if (!p.isDead()) {
-                p.setHealth(0.0d);
             }
         }
     }
