@@ -101,9 +101,8 @@ class BattlePlayer {
         if (player.isDead() && !hasDisconnected) {
             try {
                 Bukkit.getScheduler().runTaskLater(hmb, () -> {
-                    // cannot restore if player disconnected, however after a
-                    // disconnect player will be immediately recovered either way
-                    if (player.isOnline()) {
+                    // don't restore if already ocurred due to logout in between death and task execution
+                    if (data != null) {
                         player.spigot().respawn();
                         restore(player, restoreInventory);
                     }

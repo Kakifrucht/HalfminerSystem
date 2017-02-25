@@ -21,6 +21,7 @@ Current features
       - If a player has received non battle drops during battle, the items will be added to his inventory after restoring
     - Allows hitting even if damage was cancelled, for example due to fighting a clan member
     - Prevents teleporting into arenas via tp delay glitches (Essentials */tpa*) if not fighting
+      - Prevents teleport of tameable mobs, such as wolves, into arenas
     - Games can be force ended with */hmb forceend*
     - Disables while fighting:
       - Hunger loss in duel (optional)

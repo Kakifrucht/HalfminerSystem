@@ -9,9 +9,12 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -349,6 +352,16 @@ public class GlobalMode extends AbstractMode {
                 && am.isArenaSpawn(e.getTo())) {
             MessageBuilder.create("modeGlobalTeleportIntoArenaDenied", hmb).sendMessage(e.getPlayer());
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void tameableTeleportDisable(EntityTeleportEvent e) {
+        if (e.getEntity() instanceof Tameable) {
+            Tameable entity = (Tameable) e.getEntity();
+            if (entity.getOwner() instanceof Player) {
+                e.setCancelled(pm.isInBattle(type, (Player) entity.getOwner()));
+            }
         }
     }
 }
