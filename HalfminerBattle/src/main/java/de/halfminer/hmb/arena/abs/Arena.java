@@ -22,6 +22,11 @@ public interface Arena {
     String getName();
 
     /**
+     * @return amount of player currently in arena
+     */
+    int getPlayerCount();
+
+    /**
      * @return the arenas battle mode
      */
     BattleModeType getBattleModeType();

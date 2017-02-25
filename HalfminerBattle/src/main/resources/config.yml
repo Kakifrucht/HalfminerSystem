@@ -120,6 +120,7 @@ localization:
   modeFFAChooseArena: '&7Klicke die Arena mit der Maus (&oChat öffnen zum anklicken&7), die du betreten möchtest: '
   modeGlobalArenaLoadLog: '%ARENAS% Arenen mit %KITS% Kits geladen'
   modeGlobalChooseArenaHover: 'In &l%ARENA% &rspielen'
+  modeGlobalChoosePlayerCount: '(%AMOUNT% Spieler)'
   modeGlobalCommandsInBedDisabled: '&cDu kannst im Bett keine Kommandos benutzen'
   modeGlobalBattleModeDisabled: '&7Dieser Spielmodus ist aktuell &cdeaktiviert'
   modeGlobalKitArenaCustomLore: '&a%ARENA% &7(&o%MODE%&7) - &b%PLAYER%'

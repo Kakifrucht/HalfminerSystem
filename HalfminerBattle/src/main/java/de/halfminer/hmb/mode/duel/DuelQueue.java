@@ -305,7 +305,7 @@ public class DuelQueue {
                         .sendMessage(partner);
             }
 
-            am.sendArenaSelection(selector, freeArenas, "/duel choose ", "modeDuelChooseArenaRandom");
+            am.sendArenaSelection(selector, freeArenas, "/duel choose ", "modeDuelChooseArenaRandom", false);
         }
     }
 

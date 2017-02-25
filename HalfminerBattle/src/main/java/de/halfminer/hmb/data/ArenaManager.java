@@ -223,7 +223,8 @@ public class ArenaManager {
     }
 
 
-    public void sendArenaSelection(Player selector, List<Arena> freeArenas, String command, String randomHoverKey) {
+    public void sendArenaSelection(Player selector, List<Arena> freeArenas,
+                                   String command, String randomHoverKey, boolean addPlayercounts) {
 
         ComponentBuilder builder = new ComponentBuilder("");
 
@@ -232,11 +233,21 @@ public class ArenaManager {
                     .togglePrefix()
                     .addPlaceholderReplace("%ARENA%", freeArena.getName())
                     .returnMessage();
+
             builder.append(freeArena.getName())
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + freeArena.getName()))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(tooltipOnHover).create()))
-                    .color(ChatColor.GREEN).bold(true)
-                    .append("  ").reset();
+                    .color(ChatColor.GREEN).bold(true);
+
+            if (addPlayercounts) {
+                String playerCount = " " + MessageBuilder.create("modeGlobalChoosePlayerCount", hmb)
+                        .togglePrefix()
+                        .addPlaceholderReplace("%AMOUNT%", String.valueOf(freeArena.getPlayerCount()))
+                        .returnMessage();
+                builder.append(playerCount).reset().color(ChatColor.GRAY);
+            }
+
+            builder.append("  ").reset();
         }
 
         if (randomHoverKey.length() > 0) {

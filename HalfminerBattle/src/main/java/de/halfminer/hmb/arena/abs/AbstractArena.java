@@ -44,6 +44,11 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
+    public int getPlayerCount() {
+        return playersInArena.size();
+    }
+
+    @Override
     public BattleModeType getBattleModeType() {
         return battleModeType;
     }

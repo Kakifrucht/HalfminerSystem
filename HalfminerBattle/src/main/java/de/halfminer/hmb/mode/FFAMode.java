@@ -94,7 +94,7 @@ public class FFAMode extends AbstractMode {
                     ((FFAArena) freeArenas.get(0)).addPlayer(player);
                 } else {
                     MessageBuilder.create("modeFFAChooseArena", hmb).sendMessage(player);
-                    am.sendArenaSelection(player, freeArenas, "/ffa join ", "");
+                    am.sendArenaSelection(player, freeArenas, "/ffa join ", "", true);
                 }
                 break;
             case "leave":
