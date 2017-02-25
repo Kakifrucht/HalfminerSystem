@@ -292,6 +292,7 @@ public class GlobalMode extends AbstractMode {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeathKeepInventory(PlayerDeathEvent e) {
         if (pm.isInBattle(type, e.getEntity())) {
+            pm.setHasDisconnected(e.getEntity());
             e.setKeepInventory(true);
         }
     }

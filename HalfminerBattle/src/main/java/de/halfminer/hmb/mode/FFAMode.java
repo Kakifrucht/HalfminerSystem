@@ -164,7 +164,6 @@ public class FFAMode extends AbstractMode {
         if (pm.isInBattle(type, p)) {
             boolean isDead = p.isDead();
             FFAArena arena = (FFAArena) pm.getArena(p);
-            pm.setHasDisconnected(p);
             arena.removePlayer(p);
             if (!isDead) p.setHealth(0.0d);
             MessageBuilder.create("modeFFALoggedOutLog", hmb)

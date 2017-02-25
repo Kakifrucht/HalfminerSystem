@@ -142,10 +142,7 @@ public class DuelMode extends AbstractMode {
 
         Player didQuit = e.getPlayer();
         if (pm.isInQueue(type, didQuit)) queue.removeFromQueue(didQuit);
-        else if (pm.isInBattle(type, didQuit)) {
-            pm.setHasDisconnected(didQuit);
-            queue.gameHasFinished(didQuit, true, true);
-        }
+        else if (pm.isInBattle(type, didQuit)) queue.gameHasFinished(didQuit, true, true);
     }
 
     @EventHandler(ignoreCancelled = true)

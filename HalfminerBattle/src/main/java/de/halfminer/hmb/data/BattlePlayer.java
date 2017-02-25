@@ -97,13 +97,12 @@ class BattlePlayer {
         if (data == null)
             throw new RuntimeException("Could not restore player " + player.getName() + " as data was not set");
 
-        // if dead respawn with delay to prevent damage immunity loss glitch
+        // if dead (and still online) respawn with delay to prevent damage immunity loss glitch
         if (player.isDead() && !hasDisconnected) {
             try {
-                // respawning immediately after dying can cause issues with hit delay, wait two ticks
                 Bukkit.getScheduler().runTaskLater(hmb, () -> {
-                    // cannot restore if player disconnected, however that shouldn't be
-                    // an issue as players should be restored immediately after respawn
+                    // cannot restore if player disconnected, however after a
+                    // disconnect player will be immediately recovered either way
                     if (player.isOnline()) {
                         player.spigot().respawn();
                         restore(player, restoreInventory);
