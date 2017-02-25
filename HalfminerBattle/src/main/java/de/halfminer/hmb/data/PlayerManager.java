@@ -119,6 +119,16 @@ public class PlayerManager {
     }
 
     /**
+     * This method must be called if a player has disconnected during battle,
+     * ensures that even if a player is dead he will be recovered immediately.
+     *
+     * @param toSet player to set disconnected
+     */
+    public void setHasDisconnected(Player toSet) {
+        getBattlePlayer(toSet).setHasDisconnected();
+    }
+
+    /**
      * Restores the given players location, health, game mode and optionally their inventory.
      * This will also set their state to {@link BattleState#IDLE}
      *
@@ -140,7 +150,7 @@ public class PlayerManager {
      */
     public void restorePlayerInventory(Player... players) {
         for (Player player : players) {
-            getBattlePlayer(player).restoreInventory();
+            getBattlePlayer(player).restoreInventory(player);
         }
     }
 

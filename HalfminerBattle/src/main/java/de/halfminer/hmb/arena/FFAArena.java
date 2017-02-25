@@ -129,11 +129,11 @@ public class FFAArena extends AbstractKitArena {
             bannedFromArena.put(hasDied.getUniqueId(), System.currentTimeMillis() / 1000 + battleMode.getRemoveForMinutes() * 60);
             removePlayer(hasDied);
         } else {
-            // respawn later
+            // respawn with delay to prevent hit delay issues with Minecraft
             BukkitScheduler scheduler = hmb.getServer().getScheduler();
             addSpawnProtection(hasDied);
             scheduler.runTaskLater(hmb, () -> {
-                if (hasDied.isOnline() && pm.getArena(hasDied).equals(this)) {
+                if (hasDied.isOnline() && this.equals(pm.getArena(hasDied))) {
                     hasDied.spigot().respawn();
                     scheduler.runTaskLater(hmb, () -> teleportIntoArena(hasDied), 1L);
                 }

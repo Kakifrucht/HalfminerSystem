@@ -39,6 +39,7 @@ class BattlePlayer {
     private BattleModeType battleModeType;
     private long lastStateChange = System.currentTimeMillis();
     private PlayerData data = null;
+    private boolean hasDisconnected = false;
 
     private Arena arena = null;
     private List<BattlePlayer> gamePartners = null;
@@ -97,11 +98,16 @@ class BattlePlayer {
             throw new RuntimeException("Could not restore player " + player.getName() + " as data was not set");
 
         // if dead respawn with delay to prevent damage immunity loss glitch
-        if (player.isDead()) {
+        if (player.isDead() && !hasDisconnected) {
             try {
+                // respawning immediately after dying can cause issues with hit delay, wait two ticks
                 Bukkit.getScheduler().runTaskLater(hmb, () -> {
-                    player.spigot().respawn();
-                    restore(player, restoreInventory);
+                    // cannot restore if player disconnected, however that shouldn't be
+                    // an issue as players should be restored immediately after respawn
+                    if (player.isOnline()) {
+                        player.spigot().respawn();
+                        restore(player, restoreInventory);
+                    }
                 }, 2L);
             } catch (IllegalPluginAccessException e) {
                 // exception is thrown when trying to respawn dead player while shutting down
@@ -132,7 +138,7 @@ class BattlePlayer {
         player.setWalkSpeed(data.walkSpeed);
         player.setGameMode(data.gameMode);
 
-        if (restoreInventory) restoreInventory();
+        if (restoreInventory) restoreInventory(player);
 
         if (!player.teleport(data.loc)) {
             hmb.getLogger().warning("Player " + player.getName()
@@ -140,12 +146,11 @@ class BattlePlayer {
         }
         data = null;
         arena = null;
+        hasDisconnected = false;
     }
 
-    void restoreInventory() {
+    void restoreInventory(Player player) {
         if (data != null) {
-
-            Player player = getBase();
 
             // before restoring, check if non arena items were dropped during battle and add them after restoring
             List<ItemStack> itemStacks = new ArrayList<>();
@@ -179,6 +184,10 @@ class BattlePlayer {
             player.getInventory().addItem(itemStacks.toArray(new ItemStack[itemStacks.size()]));
             player.updateInventory();
         }
+    }
+
+    void setHasDisconnected() {
+        hasDisconnected = true;
     }
 
     void setBattlePartners(List<BattlePlayer> players) {

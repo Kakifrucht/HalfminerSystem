@@ -162,9 +162,11 @@ public class FFAMode extends AbstractMode {
     public void onQuitKillAndRemove(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         if (pm.isInBattle(type, p)) {
+            boolean isDead = p.isDead();
             FFAArena arena = (FFAArena) pm.getArena(p);
+            pm.setHasDisconnected(p);
             arena.removePlayer(p);
-            if (!p.isDead()) p.setHealth(0.0d);
+            if (!isDead) p.setHealth(0.0d);
             MessageBuilder.create("modeFFALoggedOutLog", hmb)
                     .addPlaceholderReplace("%PLAYER%", p.getName())
                     .addPlaceholderReplace("%ARENA%", arena.getName())
