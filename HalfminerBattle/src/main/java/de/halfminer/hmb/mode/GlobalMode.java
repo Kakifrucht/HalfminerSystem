@@ -10,17 +10,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -295,8 +291,14 @@ public class GlobalMode extends AbstractMode {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeathKeepInventory(PlayerDeathEvent e) {
         if (pm.isInBattle(type, e.getEntity())) {
-            pm.setHasDisconnected(e.getEntity());
             e.setKeepInventory(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onDisconnectSetDisconnected(PlayerQuitEvent e) {
+        if (pm.isInBattle(type, e.getPlayer())) {
+            pm.setHasDisconnected(e.getPlayer());
         }
     }
 

@@ -41,7 +41,7 @@ Current features
       - Will start duel if a player duel requests a player that is waiting for a match
     - Dynamic arena selection system, only shows vacant arenas
       - Randomly selects map choosing player
-    - If player logs out while in battle, kills player and ensures that opponent gets the kill
+    - If player logs out while in battle, kills player and ensures that opponent gets the kill counted
     - Shows current arena status with */duel list*
     - Countdown before game start
     - Set maximum game time in config
@@ -55,7 +55,7 @@ Current features
       - Define what should happen at which streak in *customactions.txt*
         - Supports commands, custom item drops, messaging
       - Kill (and death) streaks shown in scoreboard
-    - Logging out causes immediate death (or gives kill to recently hitting player)
+    - Logging out causes immediate death (or counts kill towards recently hitting player)
     - Players get kicked from arena after configurable streak of deaths
       - They will remain banned for configured amount of time
     - Auto respawn in arena while keeping items
