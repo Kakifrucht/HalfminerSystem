@@ -101,6 +101,7 @@ public class FFAArena extends AbstractKitArena {
                 .sendMessage(toAdd);
         ((HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES))
                 .sendTitle(toAdd, MessageBuilder.returnMessage("modeFFAJoinTitle", hmb, false));
+        toAdd.setGlowing(battleMode.isSetGlowingInArena());
     }
 
     public void removePlayer(Player toRemove) {
@@ -117,6 +118,7 @@ public class FFAArena extends AbstractKitArena {
         scoreboard.resetScores(toRemove.getName());
         scoreboardTeam.removeEntry(toRemove.getName());
         toRemove.setScoreboard(hmb.getServer().getScoreboardManager().getMainScoreboard());
+        toRemove.setGlowing(false);
     }
 
     public void hasDied(Player hasDied) {

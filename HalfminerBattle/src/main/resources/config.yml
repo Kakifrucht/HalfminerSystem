@@ -34,6 +34,8 @@ battleMode:
     removeAfterDeaths: 4
     #How many minutes player will be removed for at least when removeAfterDeaths causes removal from arena
     removeForMinutes: 3
+    #Makes the players glow through walls while in FFA arena
+    setGlowing: true
 #Use '&' as color code
 #Lines starting with '~' will be parsed to make commands clickable, close the command with another '/' (like /help/)
 #Messages can be removed by simply setting the message to nothing ('')

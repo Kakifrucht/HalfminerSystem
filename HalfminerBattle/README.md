@@ -51,6 +51,7 @@ Current features
     - Custom kit in arena
     - Players in same arena are colored in tablist
       - Use */ffa list* to see all arenas and currently playing players
+      - Players glow while in arena (configurable)
     - Custom killstreaks
       - Define what should happen at which streak in *customactions.txt*
         - Supports commands, custom item drops, messaging

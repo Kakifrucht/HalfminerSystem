@@ -30,6 +30,7 @@ public class FFAMode extends AbstractMode {
 
     private int removeAfterDeaths;
     private int removeForMinutes;
+    private boolean setGlowingInArena;
 
     public FFAMode() {
         super(BattleModeType.FFA);
@@ -41,6 +42,10 @@ public class FFAMode extends AbstractMode {
 
     public int getRemoveForMinutes() {
         return removeForMinutes;
+    }
+
+    public boolean isSetGlowingInArena() {
+        return setGlowingInArena;
     }
 
     @Override
@@ -148,6 +153,7 @@ public class FFAMode extends AbstractMode {
     public void onConfigReload() {
         removeAfterDeaths = hmb.getConfig().getInt("battleMode.ffa.removeAfterDeaths", 4);
         removeForMinutes = hmb.getConfig().getInt("battleMode.ffa.removeForMinutes", 3);
+        setGlowingInArena = hmb.getConfig().getBoolean("battleMode.ffa.setGlowing", false);
     }
 
     @EventHandler
