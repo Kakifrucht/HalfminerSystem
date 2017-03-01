@@ -6,6 +6,7 @@ import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -16,16 +17,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -113,21 +112,23 @@ public class GlobalMode extends AbstractMode {
                         MessageBuilder.create("adminOpenInventoryRestored", hmb)
                                 .addPlaceholderReplace("%PLAYER%", toRestore.getName())
                                 .sendMessage(sender);
-                    } else {
-
-                        if (!(sender instanceof Player)) {
-                            sendNotAPlayerMessage(sender);
-                            return true;
-                        }
-
-                        Player player = (Player) sender;
-
-                        int modulo = contents.length % 9;
-                        int size = modulo == 0 ? contents.length : contents.length + (9 - modulo);
-                        Inventory toOpen = hmb.getServer().createInventory(player, size);
-                        toOpen.setContents(contents);
-                        player.openInventory(toOpen);
                     }
+
+                    if (!(sender instanceof Player)) {
+                        if (toRestore == null) {
+                            sendNotAPlayerMessage(sender);
+                        }
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+
+                    int modulo = contents.length % 9;
+                    int size = modulo == 0 ? contents.length : contents.length + (9 - modulo);
+                    Inventory toOpen = hmb.getServer().createInventory(player, size);
+                    toOpen.setContents(contents);
+                    player.openInventory(toOpen);
+
                 } else {
                     MessageBuilder.create("adminOpenInventoryInvalid", hmb).sendMessage(sender);
                 }
@@ -363,6 +364,24 @@ public class GlobalMode extends AbstractMode {
             Tameable entity = (Tameable) e.getEntity();
             if (entity.getOwner() instanceof Player) {
                 e.setCancelled(pm.isInBattle(type, (Player) entity.getOwner()));
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void inventoryCloseRestoreHeldItem(InventoryCloseEvent e) {
+
+        if (!(e.getPlayer() instanceof Player))
+            return;
+
+        Player player = (Player) e.getPlayer();
+        if (pm.isInBattle(type, player)) {
+            ItemStack cursor = e.getView().getCursor();
+            if (cursor != null && !cursor.getType().equals(Material.AIR)) {
+                HashMap<Integer, ItemStack> returned = player.getInventory().addItem(cursor);
+                if (returned.size() != 0) {
+                    player.getWorld().dropItem(player.getLocation(), cursor);
+                }
             }
         }
     }

@@ -103,7 +103,8 @@ public class FFAMode extends AbstractMode {
                     return true;
                 }
 
-                teleportWithDelay(player, 2, () -> {
+                boolean hasSpawnProtection = ((FFAArena) pm.getArena(player)).hasSpawnProtection(player);
+                teleportWithDelay(player, hasSpawnProtection ? 0 : 2, () -> {
                     ((FFAArena) pm.getArena(player)).removePlayer(player);
                     MessageBuilder.create("modeFFAArenaLeft", hmb).sendMessage(player);
                 }, null);

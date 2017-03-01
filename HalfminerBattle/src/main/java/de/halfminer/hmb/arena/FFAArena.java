@@ -112,6 +112,7 @@ public class FFAArena extends AbstractKitArena {
         }
         customPermissions.get(toRemove).forEach(PermissionAttachment::remove);
         customPermissions.remove(toRemove);
+        ((HanBossBar) HalfminerSystem.getInstance().getHandler(HandlerType.BOSS_BAR)).removeBar(toRemove);
 
         scoreboard.resetScores(toRemove.getName());
         scoreboardTeam.removeEntry(toRemove.getName());

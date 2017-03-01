@@ -151,6 +151,7 @@ class BattlePlayer {
         if (data != null) {
 
             // before restoring, check if non arena items were dropped during battle and add them after restoring
+            player.closeInventory();
             List<ItemStack> itemStacks = new ArrayList<>();
             for (ItemStack item : player.getInventory().getContents()) {
                 if (item != null) {
@@ -177,7 +178,6 @@ class BattlePlayer {
                 }
             }
 
-            player.closeInventory();
             player.getInventory().setContents(data.inventory);
             player.getInventory().addItem(itemStacks.toArray(new ItemStack[itemStacks.size()]));
             player.updateInventory();
