@@ -133,6 +133,12 @@ public class CustomitemCache {
         Map<Integer, ItemStack> notGiven = giveTo.getInventory().addItem(toGive);
         if (notGiven.size() != 0) {
             throw new GiveItemException(notGiven);
+        } else {
+            MessageBuilder.create("utilCustomitemCacheLogSuccess")
+                    .addPlaceholderReplace("%PLAYER%", giveTo.getName())
+                    .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                    .addPlaceholderReplace("%ITEMNAME%", itemKey)
+                    .logMessage(Level.INFO);
         }
     }
 

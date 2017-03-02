@@ -426,4 +426,5 @@ localization:
   utilCustomActionParseErrorNoLine: 'Fehler beim parsen der Aktion %NAME%: %TYPE%'
   utilCustomitemCacheInvalidKey: 'Der Schlüssel %KEY% ist ungültig'
   utilCustomitemCacheInvalidParameter: 'Der für den Schlüssel "%KEY%" übergebene Parameter "%PARAMETER%" ist ungültig, überspringe...'
+  utilCustomitemCacheLogSuccess: 'Gebe %PLAYER% %AMOUNT% mal %ITEMNAME%'
   utilInvalidMaterial: 'Das Material %MATERIAL% existiert nicht'
