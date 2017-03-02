@@ -378,6 +378,7 @@ public class GlobalMode extends AbstractMode {
         if (pm.isInBattle(type, player)) {
             ItemStack cursor = e.getView().getCursor();
             if (cursor != null && !cursor.getType().equals(Material.AIR)) {
+                e.getView().setCursor(null);
                 HashMap<Integer, ItemStack> returned = player.getInventory().addItem(cursor);
                 if (returned.size() != 0) {
                     player.getWorld().dropItem(player.getLocation(), cursor);
