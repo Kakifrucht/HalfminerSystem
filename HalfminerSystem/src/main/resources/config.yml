@@ -187,6 +187,8 @@ sell:
   sugarcane: 55
   wheat: 25
 skillLevel:
+  #Amount of groups for the server team (players with permission hms.bypass.skilllevel), will be shown on top of tablist
+  amountTeamGroups: 3
   #Level that has to be reached for a derank to occur
   derankThreshold: 16
   #Time until a player will be deranked when he didn't fight in the meantime

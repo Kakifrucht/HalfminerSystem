@@ -7,7 +7,7 @@
     <parent>
         <artifactId>HalfminerSystemParent</artifactId>
         <groupId>de.halfminer</groupId>
-        <version>3.23.5</version>
+        <version>3.23.6</version>
     </parent>
 
     <artifactId>HalfminerSystem</artifactId>

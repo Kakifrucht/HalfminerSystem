@@ -172,8 +172,9 @@ Dueling/PvP solution HalfminerBattle can be found [here](https://github.com/Kaki
       - Auto derank on inactivity (when rank threshold is met)
       - Doesn't count farmed kills
     - Adds level to scoreboard
-    - Colors name depending on skillgroup
+      - Colors the players name depending on skillgroup
     - Sorts tablist in descending order
+    - Support for staff members to always be on top of tablist
   - StaticListeners
     - Removes quit message
     - Keeps itemname of colored items in anvil

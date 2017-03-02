@@ -8,7 +8,7 @@
     <artifactId>HalfminerSystemParent</artifactId>
     <packaging>pom</packaging>
     <name>HalfminerSystem</name>
-    <version>3.23.5</version>
+    <version>3.23.6</version>
     <url>https://halfminer.de</url>
     <modules>
         <module>HalfminerSystem</module>

@@ -17,6 +17,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -33,8 +35,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
     private final Scoreboard scoreboard = server.getScoreboardManager().getMainScoreboard();
 
-    private Objective skillObjective = scoreboard.getObjective("skill");
-    private String[] teams;
+    private Objective scoreboardObjective;
+    private List<Team> scoreboardTeamNames;
+    private List<Team> scoreboardTeamNamesStaff;
 
     private int derankLevelThreshold;
     private int timeUntilDerankThreshold;
@@ -46,18 +49,21 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         Player player = e.getPlayer();
         HalfminerPlayer hPlayer = storage.getPlayer(player);
-        if (player.hasPermission("hms.bypass.skilllevel")) return;
+        if (player.hasPermission("hms.bypass.skilllevel")) {
+            updateSkillBypassedPlayer(player);
+        } else {
+            // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
+            if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankLevelThreshold
+                    && hPlayer.getInt(DataType.LAST_PVP) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
 
-        // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
-        if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankLevelThreshold
-                && hPlayer.getInt(DataType.LAST_PVP) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
-
-            // set last pvp time to 30 days in the future, to prevent additional inactivity deranks
-            hPlayer.set(DataType.LAST_PVP, (System.currentTimeMillis() / 1000) + 2592000);
-            updateSkill(player, derankLossAmount);
-            MessageBuilder.create("modSkillLevelDerank", hms, "PvP").sendMessage(player);
-
-        } else updateSkill(player, 0);
+                // set last pvp time to 30 days in the future, to prevent additional inactivity deranks
+                hPlayer.set(DataType.LAST_PVP, (System.currentTimeMillis() / 1000) + 2592000);
+                updateSkill(player, derankLossAmount);
+                MessageBuilder.create("modSkillLevelDerank", hms, "PvP").sendMessage(player);
+            } else {
+                updateSkill(player, 0);
+            }
+        }
     }
 
     @EventHandler
@@ -121,16 +127,13 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
            than the new level. If modifier is 0, allow both upranking and deranking, otherwise do not rank down on kill
            and do not rank up on death
         */
-        if (newLevelDown > level && modifier >= 0) newLevel = newLevelDown;     //rank up
-        else if (newLevelUp < level && modifier <= 0) newLevel = newLevelUp;    //rank down
+        if (newLevelDown > level && modifier >= 0) newLevel = newLevelDown;     // rank up
+        else if (newLevelUp < level && modifier <= 0) newLevel = newLevelUp;    // rank down
 
         // Set the new values
-        String teamName = teams[newLevel - 1];
-
-        skillObjective.getScore(player.getName()).setScore(newLevel);
-        scoreboard.getTeam(teamName).addEntry(player.getName());
-
-        teamName = teamName.substring(2); //remove sorting id
+        Team newTeam = scoreboardTeamNames.get(newLevel - 1);
+        newTeam.addEntry(player.getName());
+        scoreboardObjective.getScore(player.getName()).setScore(newLevel);
 
         hPlayer.set(DataType.SKILL_ELO, elo);
         hPlayer.set(DataType.SKILL_LEVEL, newLevel);
@@ -143,7 +146,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                         MessageBuilder.create(newLevel > level ?
                                 "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle", hms)
                                 .addPlaceholderReplace("%SKILLLEVEL%", String.valueOf(newLevel))
-                                .addPlaceholderReplace("%SKILLGROUP%", teamName)
+                                .addPlaceholderReplace("%SKILLGROUP%", newTeam.getName().substring(2))
                                 .returnMessage(),
                         10, 50, 10);
             }
@@ -157,11 +160,25 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         }
     }
 
+    private void updateSkillBypassedPlayer(Player p) {
+        HalfminerPlayer hPlayer = storage.getPlayer(p);
+        int playerLevel = hPlayer.getInt(DataType.SKILL_LEVEL);
+        if (playerLevel < 23) {
+            playerLevel = 23;
+            hPlayer.set(DataType.SKILL_LEVEL, 23);
+        }
+        scoreboardObjective.getScore(p.getName()).setScore(playerLevel);
+        // first team level is 23, set it to at least this value
+        int maxIndex = scoreboardTeamNamesStaff.size() - 1;
+        int staffArrayIndex = Math.max(0, maxIndex - (playerLevel - 23));
+        scoreboardTeamNamesStaff.get(staffArrayIndex).addEntry(p.getName());
+    }
+
     public String getSkillgroup(OfflinePlayer player) {
 
         int skillLevel = storage.getPlayer(player).getInt(DataType.SKILL_LEVEL);
 
-        if (skillLevel <= 22 && skillLevel > 0) return teams[skillLevel - 1].substring(2);
+        if (skillLevel <= 22 && skillLevel > 0) return scoreboardTeamNames.get(skillLevel - 1).getName().substring(2);
         else return skillgroupNameAdmin;
     }
 
@@ -173,55 +190,79 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         derankLossAmount = -hms.getConfig().getInt("skillLevel.derankLossAmount", 250);
         skillgroupNameAdmin = MessageBuilder.returnMessage("modSkillLevelAdmingroupName", hms);
 
-        List<String> skillGroupConfig = hms.getConfig().getStringList("skillLevel.skillGroups");
+        // if reloaded re-register everything
+        if (scoreboardObjective != null) onDisable();
 
-        // Ensure that teams are being removed on reload
-        if (teams != null) onDisable();
+        // register skilllevel objective
+        scoreboardObjective = scoreboard.getObjective("skill");
+        if (scoreboardObjective == null) {
+            scoreboardObjective = scoreboard.registerNewObjective("skill", "dummy");
+        }
+        scoreboardObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
-        teams = new String[22]; // First character of String is colorcode, second and third sorting id, rest name
+        // register player teams
+        scoreboardTeamNames = new ArrayList<>(Collections.nCopies(22, null));
         int sortId = 1;
-        for (String skillGroup : skillGroupConfig) {
+        for (String skillGroup : hms.getConfig().getStringList("skillLevel.skillGroups")) {
 
-            int levelsPerGroup = 5;
             if (sortId > 22) break;
-            if (sortId == 1 || sortId == 22) levelsPerGroup = 1;
+
+            // first character is the color code
+            String colorCode = skillGroup.substring(0, 1);
+            String groupName = skillGroup.substring(1);
+            int levelsPerGroup = sortId == 1 || sortId == 22 ? 1 : 5;
 
             for (int i = 0; i < levelsPerGroup; i++) {
                 String sortString = String.valueOf(sortId);
                 if (sortId < 10) sortString = '0' + sortString;
-                teams[22 - sortId] = skillGroup.substring(0, 1) + sortString + skillGroup.substring(1);
+
+                // add the sortstring to the team name to order the tablist
+                String teamName = sortString + groupName;
+                Team registered;
+                if ((registered = scoreboard.getTeam(teamName)) == null) {
+                    registered = scoreboard.registerNewTeam(teamName);
+                }
+                registered.setPrefix(ChatColor.COLOR_CHAR + colorCode);
+                registered.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+                scoreboardTeamNames.set(22 - sortId, registered);
                 sortId++;
             }
         }
 
-        for (int i = 0; i < teams.length; i++) {
-            String teamName = teams[i].substring(1);
-            String colorCode = teams[i].substring(0, 1);
-            if (scoreboard.getTeam(teamName) == null) {
-                Team registered = scoreboard.registerNewTeam(teamName);
-                registered.setPrefix(ChatColor.COLOR_CHAR + colorCode);
-                registered.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        // register staff teams
+        int amountTeamGroups = hms.getConfig().getInt("skillLevel.amountTeamGroups", 3);
+        scoreboardTeamNamesStaff = new ArrayList<>(Collections.nCopies(amountTeamGroups, null));
+
+        for (int i = 0; i < amountTeamGroups; i++) {
+            String indexToString = String.valueOf(i);
+            while (indexToString.length() < 3) {
+                indexToString = '0' + indexToString;
             }
-            teams[i] = teamName; // Remove color code
+            String teamName = indexToString + "Team";
+            Team registered;
+            if ((registered = scoreboard.getTeam(teamName)) == null) {
+                registered = scoreboard.registerNewTeam(teamName);
+            }
+            registered.setPrefix(ChatColor.BOLD.toString());
+            registered.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+            scoreboardTeamNamesStaff.set(i, registered);
         }
 
-        if (skillObjective == null) {
-            skillObjective = scoreboard.registerNewObjective("skill", "dummy");
-            skillObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+        // reload all online players
+        for (Player player : server.getOnlinePlayers()) {
+            if (player.hasPermission("hms.bypass.skilllevel")) {
+                updateSkillBypassedPlayer(player);
+            } else {
+                updateSkill(player, 0);
+            }
         }
-
-        server.getOnlinePlayers().stream()
-                .filter(p -> !p.hasPermission("hms.bypass.skilllevel")).forEach(p -> updateSkill(p, 0));
     }
 
     @Override
     public void onDisable() {
-        // Unregister all registered teams
-        Team currentTeam;
-        for (String team : teams) {
-            if ((currentTeam = scoreboard.getTeam(team)) != null) {
-                currentTeam.unregister();
-            }
-        }
+        // Unregister all objectives and teams
+        scoreboardObjective.unregister();
+        scoreboardTeamNames.forEach(Team::unregister);
+        scoreboardTeamNamesStaff.forEach(Team::unregister);
     }
 }
