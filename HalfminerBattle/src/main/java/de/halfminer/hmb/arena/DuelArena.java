@@ -10,7 +10,6 @@ import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -78,11 +77,7 @@ public class DuelArena extends AbstractKitArena {
 
                         // if player received drops during cooldown, restore them after battle
                         player.closeInventory();
-                        for (ItemStack itemStack : player.getInventory().getContents()) {
-                            pm.addStackToRestore(player, itemStack);
-                        }
-
-                        if (useKit) equipPlayers();
+                        if (useKit) equipPlayers(player);
                         else {
                             pm.restorePlayerInventory(player);
                             restoreInventory = false;

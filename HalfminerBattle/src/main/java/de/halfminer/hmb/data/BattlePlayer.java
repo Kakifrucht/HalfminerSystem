@@ -20,7 +20,10 @@ import org.bukkit.potion.PotionEffect;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Encapsulating player specific battle data, such as his state, inventory, survival data (inventory, health..) and
@@ -92,7 +95,8 @@ class BattlePlayer {
 
     boolean isPlayerProperty(@Nullable ItemStack toCheck) {
 
-        if (arena == null) return true;
+        if (arena == null)
+            throw new RuntimeException("isPlayerProperty() called for " + getBase().getName() + " without set arena");
 
         if (toCheck == null
                 || toCheck.getType().equals(Material.AIR)
@@ -111,7 +115,8 @@ class BattlePlayer {
     }
 
     void addStackToRestore(ItemStack stack) {
-        if (data == null) throw new RuntimeException("Called addStackToRestore() when no data was set before");
+        if (data == null)
+            throw new RuntimeException("addStackToRestore() called for " + getBase().getName() + " with no set data");
 
         if (stack != null && !stack.getType().equals(Material.AIR))
             data.extrasToRestore.add(stack);
@@ -121,7 +126,18 @@ class BattlePlayer {
 
         Player player = getBase();
         if (data == null)
-            throw new RuntimeException("Could not restore player " + player.getName() + " as data was not set");
+            throw new RuntimeException("restorePlayer() called for " + player.getName() + " with no set data");
+
+        // immediately clear inventory
+        if (restoreInventory) {
+            player.closeInventory();
+            for (ItemStack item : player.getInventory().getContents()) {
+                if (isPlayerProperty(item)) {
+                    data.extrasToRestore.add(item);
+                }
+            }
+            player.getInventory().clear();
+        }
 
         // if dead (and still online) respawn with delay to prevent damage immunity loss glitch
         if (player.isDead() && !hasDisconnected) {
@@ -174,22 +190,12 @@ class BattlePlayer {
     }
 
     void restoreInventory(Player player) {
-        if (data != null) {
+        if (data == null)
+            throw new RuntimeException("restoreInventory() called for " + player.getName() + " with no set data");
 
-            // before restoring, check if non arena items were dropped during battle and add them after restoring
-            player.closeInventory();
-            List<ItemStack> itemStacks = new ArrayList<>();
-            for (ItemStack item : player.getInventory().getContents()) {
-                if (isPlayerProperty(item)) {
-                    itemStacks.add(item);
-                }
-            }
-
-            player.getInventory().setContents(data.inventory);
-            player.getInventory().addItem(itemStacks.toArray(new ItemStack[itemStacks.size()]));
-            data.extrasToRestore.forEach(player.getInventory()::addItem);
-            player.updateInventory();
-        }
+        player.getInventory().setContents(data.inventory);
+        data.extrasToRestore.forEach(player.getInventory()::addItem);
+        player.updateInventory();
     }
 
     void setHasDisconnected() {
