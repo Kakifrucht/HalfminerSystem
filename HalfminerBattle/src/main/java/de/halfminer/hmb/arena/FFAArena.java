@@ -2,7 +2,7 @@ package de.halfminer.hmb.arena;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hmb.arena.abs.AbstractKitArena;
+import de.halfminer.hmb.arena.abs.AbstractArena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.mode.FFAMode;
@@ -32,7 +32,7 @@ import java.util.logging.Level;
  * Free for all arena used by {@link FFAMode}, implementing custom killstreaks, timeouts, scoreboard and auto respawns
  */
 @SuppressWarnings("unused")
-public class FFAArena extends AbstractKitArena {
+public class FFAArena extends AbstractArena {
 
     private final FFAMode battleMode = (FFAMode) getBattleMode();
 

@@ -1,6 +1,6 @@
 package de.halfminer.hmb.arena;
 
-import de.halfminer.hmb.arena.abs.AbstractKitArena;
+import de.halfminer.hmb.arena.abs.AbstractArena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
@@ -19,7 +19,7 @@ import java.util.logging.Level;
  * Custom duel kit arena used by {@link DuelMode}, implementing countdowns and preparing fight
  */
 @SuppressWarnings("unused")
-public class DuelArena extends AbstractKitArena {
+public class DuelArena extends AbstractArena {
 
     private BukkitTask task;
     private boolean useKit;

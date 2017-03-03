@@ -2,14 +2,13 @@ package de.halfminer.hmb.data;
 
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.arena.abs.KitArena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -115,8 +114,8 @@ public class ArenaManager {
                 if (oldArenaTypeMap != null && oldArenaTypeMap.containsKey(arenaNameLowerCase)) {
                     Arena arenaToReload = oldArenaTypeMap.get(arenaNameLowerCase);
                     arenaToReload.setSpawns(spawnLocations);
-                    if (kit != null && arenaToReload instanceof KitArena) {
-                        ((KitArena) arenaToReload).setKit(kit);
+                    if (kit != null) {
+                        arenaToReload.setKit(kit);
                     }
                     newArenaTypeMap.put(arenaNameLowerCase, arenaToReload);
                     totalArenasLoaded++;
@@ -146,8 +145,8 @@ public class ArenaManager {
         Arena newArena = getNewArenaFromBattleMode(modeType, name);
         if (newArena != null) {
             newArena.setSpawns(spawns);
-            if (kit != null && newArena instanceof KitArena) {
-                ((KitArena) newArena).setKit(kit);
+            if (kit != null) {
+                newArena.setKit(kit);
             }
             arenasMode.put(name.toLowerCase(), newArena);
             return true;
@@ -187,8 +186,8 @@ public class ArenaManager {
 
     public boolean setKit(BattleModeType modeType, String arenaName, PlayerInventory setKitTo) {
         Arena toSetKit = getArena(modeType, arenaName);
-        if (toSetKit instanceof KitArena) {
-            ((KitArena) toSetKit).setKit(setKitTo.getContents());
+        if (toSetKit != null) {
+            toSetKit.setKit(setKitTo.getContents());
             return true;
         }
         return false;
@@ -274,9 +273,7 @@ public class ArenaManager {
             for (Arena arena : arenas.get(type).values()) {
                 ConfigurationSection newArenaSection = newSection.createSection(arena.getName());
                 newArenaSection.set("spawns", arena.getSpawns());
-                if (arena instanceof KitArena) {
-                    newArenaSection.set("kit", ((KitArena) arena).getKit());
-                }
+                newArenaSection.set("kit", arena.getKit());
             }
         }
 

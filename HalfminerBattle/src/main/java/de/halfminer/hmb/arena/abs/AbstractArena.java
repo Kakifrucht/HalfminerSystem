@@ -5,10 +5,12 @@ import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
@@ -22,10 +24,11 @@ public abstract class AbstractArena implements Arena {
     protected static final HalfminerBattle hmb = HalfminerBattle.getInstance();
     protected static final PlayerManager pm = hmb.getPlayerManager();
 
-    // Arena state
     protected final BattleModeType battleModeType;
     protected final String name;
     protected List<Location> spawns = new ArrayList<>();
+    private ItemStack[] kit;
+
     protected final LinkedList<Player> playersInArena = new LinkedList<>();
 
     protected AbstractArena(BattleModeType battleModeType, String name) {
@@ -35,7 +38,7 @@ public abstract class AbstractArena implements Arena {
 
     @Override
     public boolean isFree() {
-        return !spawns.isEmpty();
+        return !spawns.isEmpty() && kit != null;
     }
 
     @Override
@@ -83,6 +86,16 @@ public abstract class AbstractArena implements Arena {
     }
 
     @Override
+    public void setKit(ItemStack[] kit) {
+        this.kit = kit;
+    }
+
+    @Override
+    public ItemStack[] getKit() {
+        return kit;
+    }
+
+    @Override
     public boolean isCloseToSpawn(Location loc) {
 
         GlobalMode global = (GlobalMode) hmb.getBattleMode(BattleModeType.GLOBAL);
@@ -114,8 +127,50 @@ public abstract class AbstractArena implements Arena {
             for (PotionEffect effect : toAdd.getActivePotionEffects())
                 toAdd.removePotionEffect(effect.getType());
             toAdd.setGameMode(GameMode.ADVENTURE);
+            toAdd.getInventory().clear();
         }
         teleportIntoArena(parameterToArray(players));
+    }
+
+    protected void equipPlayer(Player toEquip) {
+        PlayerInventory inv = toEquip.getInventory();
+        inv.setContents(addPlayerInfo(toEquip, kit));
+        toEquip.playSound(toEquip.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.6f);
+    }
+
+    protected String getCustomLore(Player player) {
+        return MessageBuilder.create("modeGlobalKitArenaCustomLore", hmb)
+                .togglePrefix()
+                .addPlaceholderReplace("%ARENA%", getName())
+                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
+                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage();
+    }
+
+    protected String getCustomLoreID() {
+        return ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
+                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000);
+    }
+
+    private ItemStack[] addPlayerInfo(Player player, ItemStack[] toModify) {
+        ItemStack[] modified = new ItemStack[toModify.length];
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add(getCustomLore(player));
+        lore.add(getCustomLoreID());
+
+        for (int i = 0; i < modified.length; i++) {
+
+            if (toModify[i] != null) {
+                ItemStack current = toModify[i].clone();
+
+                if (!current.getType().equals(Material.AIR)) {
+                    Utils.setItemLore(current, lore);
+                }
+                modified[i] = current;
+            }
+        }
+
+        return modified;
     }
 
     protected void teleportIntoArena(Player... toTeleport) {

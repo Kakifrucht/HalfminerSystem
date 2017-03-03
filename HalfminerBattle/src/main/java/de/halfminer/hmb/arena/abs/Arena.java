@@ -3,6 +3,7 @@ package de.halfminer.hmb.arena.abs;
 import de.halfminer.hmb.enums.BattleModeType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -62,6 +63,16 @@ public interface Arena {
      * @return the arenas spawn points
      */
     List<Location> getSpawns();
+
+    /**
+     * @return the arenas current kit, or null if none defined
+     */
+    ItemStack[] getKit();
+
+    /**
+     * @param kit to set for the arena
+     */
+    void setKit(ItemStack[] kit);
 
     /**
      * Determines whether given location is within 10 blocks of this arenas spawn points
