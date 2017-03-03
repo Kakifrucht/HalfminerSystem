@@ -19,6 +19,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -382,6 +383,41 @@ public class GlobalMode extends AbstractMode {
                 HashMap<Integer, ItemStack> returned = player.getInventory().addItem(cursor);
                 if (returned.size() != 0) {
                     player.getWorld().dropItem(player.getLocation(), cursor);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractCheckItem(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+        if (pm.isInBattle(type, p)) {
+            if (pm.isPlayerProperty(p, e.getItem())) {
+
+                e.setCancelled(true);
+                pm.addStackToRestore(p, e.getItem());
+                if (e.getHand().equals(EquipmentSlot.HAND)) {
+                    p.getInventory().setItemInMainHand(null);
+                } else {
+                    p.getInventory().setItemInOffHand(null);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryCloseCheckItems(InventoryCloseEvent e) {
+        // redundant instanceof?
+        if (e.getPlayer() instanceof Player) {
+            Player p = (Player) e.getPlayer();
+            if (pm.isInBattle(type, p)) {
+                Inventory inv = p.getInventory();
+                for (int i = 0; i < inv.getContents().length; i++) {
+                    ItemStack current = inv.getContents()[i];
+                    if (pm.isPlayerProperty(p, current)) {
+                        pm.addStackToRestore(p, current);
+                        inv.setItem(i, null);
+                    }
                 }
             }
         }

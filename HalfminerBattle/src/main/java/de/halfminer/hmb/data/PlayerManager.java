@@ -4,8 +4,11 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -101,9 +104,9 @@ public class PlayerManager {
      */
     public void setArena(Player setTo, Arena wasJoined) {
         BattlePlayer battlePlayer = getBattlePlayer(setTo);
-        battlePlayer.setState(BattleState.IN_BATTLE);
         battlePlayer.setArena(wasJoined);
         battlePlayer.storeData();
+        battlePlayer.setState(BattleState.IN_BATTLE);
     }
 
     public Arena getArena(Player player) {
@@ -126,6 +129,29 @@ public class PlayerManager {
      */
     public void setHasDisconnected(Player toSet) {
         getBattlePlayer(toSet).setHasDisconnected();
+    }
+
+    /**
+     * Check if a ItemStack is a players property or belongs to the arenas kit
+     *
+     * @param player Player to check
+     * @param toCheck ItemStack in question
+     * @return true if ItemStack belongs to the player, else false if itemlore contains current arenas name
+     *          or if it is null/{@link Material#AIR}
+     */
+    public boolean isPlayerProperty(Player player, @Nullable ItemStack toCheck) {
+        return getBattlePlayer(player).isPlayerProperty(toCheck);
+    }
+
+    /**
+     * Adds a given ItemStack that will be added to the players inventory after being restored
+     * by {@link #restorePlayers(boolean, Player...)}. Must be manually removed from the players inventory
+     *
+     * @param owner Player that owns the item
+     * @param toAdd ItemStack that will be restored after game
+     */
+    public void addStackToRestore(Player owner, ItemStack toAdd) {
+        getBattlePlayer(owner).addStackToRestore(toAdd);
     }
 
     /**

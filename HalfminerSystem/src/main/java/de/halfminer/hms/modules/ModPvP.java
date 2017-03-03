@@ -89,7 +89,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(setTo);
     }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAttackReduceStrengthAndLowerImmunity(EntityDamageByEntityEvent e) {
 
         if (!(e.getEntity() instanceof Player)) return;

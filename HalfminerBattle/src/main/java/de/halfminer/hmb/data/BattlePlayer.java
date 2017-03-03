@@ -17,12 +17,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.potion.PotionEffect;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Encapsulating player specific battle data, such as his state, inventory, survival data (inventory, health..) and
@@ -66,10 +64,11 @@ class BattlePlayer {
         setState(state, null);
     }
 
-    void setState(BattleState state, BattleModeType battleMode) {
+    void setState(BattleState state, BattleModeType battleModeType) {
         this.state = state;
-        this.battleModeType = battleMode;
         this.lastStateChange = System.currentTimeMillis();
+        if (battleModeType != null)
+            this.battleModeType = battleModeType;
 
         if (state.equals(BattleState.IDLE) || state.equals(BattleState.QUEUE_COOLDOWN)) {
 
@@ -89,6 +88,33 @@ class BattlePlayer {
 
     void storeData() {
         data = new PlayerData();
+    }
+
+    boolean isPlayerProperty(@Nullable ItemStack toCheck) {
+
+        if (arena == null) return true;
+
+        if (toCheck == null
+                || toCheck.getType().equals(Material.AIR)
+                || toCheck.getType().equals(Material.GLASS_BOTTLE))
+            return false;
+
+        ItemMeta meta = toCheck.getItemMeta();
+        if (meta != null && meta.hasLore()) {
+            for (String str : meta.getLore()) {
+                if (str.contains(arena.getName())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    void addStackToRestore(ItemStack stack) {
+        if (data == null) throw new RuntimeException("Called addStackToRestore() when no data was set before");
+
+        if (stack != null && !stack.getType().equals(Material.AIR))
+            data.extrasToRestore.add(stack);
     }
 
     void restorePlayer(boolean restoreInventory) {
@@ -154,32 +180,16 @@ class BattlePlayer {
             player.closeInventory();
             List<ItemStack> itemStacks = new ArrayList<>();
             for (ItemStack item : player.getInventory().getContents()) {
-                if (item != null) {
-
-                    // don't ever keep glass bottles
-                    if (item.getType().equals(Material.GLASS_BOTTLE)) {
-                        continue;
-                    }
-
-                    boolean keep = true;
-                    ItemMeta meta = item.getItemMeta();
-                    if (meta != null && meta.hasLore()) {
-                        for (String str : meta.getLore()) {
-                            if (str.contains(arena.getName())) {
-                                keep = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (keep) {
-                        itemStacks.add(item);
-                    }
+                if (isPlayerProperty(item)) {
+                    itemStacks.add(item);
                 }
             }
 
             player.getInventory().setContents(data.inventory);
             player.getInventory().addItem(itemStacks.toArray(new ItemStack[itemStacks.size()]));
+            if (data.extrasToRestore.size() > 0) {
+                player.getInventory().addItem(data.extrasToRestore.toArray(new ItemStack[data.extrasToRestore.size()]));
+            }
             player.updateInventory();
         }
     }
@@ -213,6 +223,7 @@ class BattlePlayer {
 
         private final Location loc;
         private final ItemStack[] inventory;
+        private final List<ItemStack> extrasToRestore = new ArrayList<>();
 
         private final double health;
         private final int foodLevel;
