@@ -187,9 +187,7 @@ class BattlePlayer {
 
             player.getInventory().setContents(data.inventory);
             player.getInventory().addItem(itemStacks.toArray(new ItemStack[itemStacks.size()]));
-            if (data.extrasToRestore.size() > 0) {
-                player.getInventory().addItem(data.extrasToRestore.toArray(new ItemStack[data.extrasToRestore.size()]));
-            }
+            data.extrasToRestore.forEach(player.getInventory()::addItem);
             player.updateInventory();
         }
     }

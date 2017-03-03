@@ -405,8 +405,22 @@ public class GlobalMode extends AbstractMode {
         }
     }
 
-    @EventHandler
-    public void onInventoryCloseCheckItems(InventoryCloseEvent e) {
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onDamageCheckItem(EntityDamageByEntityEvent e) {
+        Player damager = Utils.getDamagerFromEvent(e);
+        if (damager != null
+                && pm.isInBattle(type, damager)) {
+            ItemStack hand = damager.getInventory().getItemInMainHand();
+            if (pm.isPlayerProperty(damager, hand)) {
+                pm.addStackToRestore(damager, hand);
+                damager.getInventory().setItemInMainHand(null);
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onInventoryCloseCheckAllItems(InventoryCloseEvent e) {
         // redundant instanceof?
         if (e.getPlayer() instanceof Player) {
             Player p = (Player) e.getPlayer();

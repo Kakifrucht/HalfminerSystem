@@ -10,6 +10,7 @@ import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -74,6 +75,12 @@ public class DuelArena extends AbstractKitArena {
                         MessageBuilder.create("modeDuelGameStarting", hmb).sendMessage(player);
                         titles.sendTitle(player, MessageBuilder.returnMessage("modeDuelTitleStart", hmb, false),
                                 0, 30, 0);
+
+                        // if player received drops during cooldown, restore them after battle
+                        player.closeInventory();
+                        for (ItemStack itemStack : player.getInventory().getContents()) {
+                            pm.addStackToRestore(player, itemStack);
+                        }
 
                         if (useKit) equipPlayers();
                         else {
