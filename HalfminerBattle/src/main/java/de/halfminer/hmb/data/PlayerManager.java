@@ -143,13 +143,13 @@ public class PlayerManager {
      * @param toCheck ItemStack in question
      * @return true if ItemStack must be removed from the players inventory
      */
-    public boolean checkAndFilterItemStack(Player player, @Nullable ItemStack toCheck) {
-        return getBattlePlayer(player).checkAndFilterItemStack(toCheck);
+    public boolean checkAndStoreItemStack(Player player, @Nullable ItemStack toCheck) {
+        return getBattlePlayer(player).checkAndStoreItemStack(toCheck);
     }
 
     /**
      * Restores the given players inventories to be used during fight.
-     * This will also make {@link #checkAndFilterItemStack(Player, ItemStack)} always return false
+     * This will also make {@link #checkAndStoreItemStack(Player, ItemStack)} always return false
      *
      * @param players array of players to restore
      */

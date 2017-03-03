@@ -107,13 +107,13 @@ class BattlePlayer {
         data = new PlayerData();
     }
 
-    boolean checkAndFilterItemStack(@Nullable ItemStack toCheck) {
+    boolean checkAndStoreItemStack(@Nullable ItemStack toCheck) {
 
         if (arena == null)
-            throw new RuntimeException("checkAndFilterItemStack() called for " + getBase().getName() + " without set arena");
+            throw new RuntimeException("checkAndStoreItemStack() called for " + getBase().getName() + " without set arena");
 
         if (data == null)
-            throw new RuntimeException("checkAndFilterItemStack() called for " + getBase().getName() + " without set data");
+            throw new RuntimeException("checkAndStoreItemStack() called for " + getBase().getName() + " without set data");
 
         if (battleWithOwnEquipment
                 || toCheck == null
@@ -144,9 +144,7 @@ class BattlePlayer {
         if (restoreInventory) {
             player.closeInventory();
             for (ItemStack item : player.getInventory().getContents()) {
-                if (checkAndFilterItemStack(item)) {
-                    data.extrasToRestore.add(item);
-                }
+                checkAndStoreItemStack(item);
             }
             player.getInventory().clear();
         }
@@ -187,15 +185,15 @@ class BattlePlayer {
             e.printStackTrace();
         }
 
-        player.setWalkSpeed(data.walkSpeed);
-        player.setGameMode(data.gameMode);
-
         if (restoreInventory) restoreInventory(player);
 
         if (!player.teleport(data.loc)) {
             hmb.getLogger().warning("Player " + player.getName()
                     + " could not be teleported to his original location at " + Utils.getStringFromLocation(data.loc));
         }
+
+        player.setWalkSpeed(data.walkSpeed);
+        player.setGameMode(data.gameMode);
 
         data = null;
         arena = null;

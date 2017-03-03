@@ -390,7 +390,7 @@ public class GlobalMode extends AbstractMode {
 
             for (int i = 0; i < inv.getContents().length; i++) {
                 ItemStack current = inv.getContents()[i];
-                if (pm.checkAndFilterItemStack(player, current)) {
+                if (pm.checkAndStoreItemStack(player, current)) {
                     inv.setItem(i, null);
                 }
             }
@@ -401,7 +401,7 @@ public class GlobalMode extends AbstractMode {
     public void onPlayerInteractCheckItem(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (pm.isInBattle(type, p)) {
-            if (pm.checkAndFilterItemStack(p, e.getItem())) {
+            if (pm.checkAndStoreItemStack(p, e.getItem())) {
 
                 e.setCancelled(true);
                 if (e.getHand().equals(EquipmentSlot.HAND)) {
@@ -419,7 +419,7 @@ public class GlobalMode extends AbstractMode {
         if (damager != null
                 && pm.isInBattle(type, damager)) {
             ItemStack hand = damager.getInventory().getItemInMainHand();
-            if (pm.checkAndFilterItemStack(damager, hand)) {
+            if (pm.checkAndStoreItemStack(damager, hand)) {
                 damager.getInventory().setItemInMainHand(null);
                 e.setCancelled(true);
             }
