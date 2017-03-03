@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -367,6 +368,13 @@ public class GlobalMode extends AbstractMode {
                 e.setCancelled(pm.isInBattle(type, (Player) entity.getOwner()));
             }
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void inventoryOpenDeny(InventoryOpenEvent e) {
+
+        if (!(e.getPlayer() instanceof Player)) return;
+        e.setCancelled(pm.isInBattle(type, (Player) e.getPlayer()));
     }
 
     @EventHandler(ignoreCancelled = true)

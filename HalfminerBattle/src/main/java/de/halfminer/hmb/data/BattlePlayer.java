@@ -185,7 +185,9 @@ class BattlePlayer {
             e.printStackTrace();
         }
 
-        if (restoreInventory) restoreInventory(player);
+        if (restoreInventory) {
+            restoreInventory(player);
+        }
 
         if (!player.teleport(data.loc)) {
             hmb.getLogger().warning("Player " + player.getName()
@@ -205,6 +207,7 @@ class BattlePlayer {
         if (data == null)
             throw new RuntimeException("restoreInventory() called for " + player.getName() + " with no set data");
 
+        player.closeInventory();
         player.getInventory().setContents(data.inventory);
         data.extrasToRestore.forEach(player.getInventory()::addItem);
         player.updateInventory();
