@@ -23,7 +23,6 @@ public class DuelArena extends AbstractKitArena {
 
     private BukkitTask task;
     private boolean useKit;
-    private boolean restoreInventory;
 
     public DuelArena(String name) {
         super(BattleModeType.DUEL, name);
@@ -39,9 +38,6 @@ public class DuelArena extends AbstractKitArena {
         addPlayers(playerA, playerB);
         playersInArena.forEach(p -> p.setWalkSpeed(0.0f));
         this.useKit = useKit;
-        // ensures that the players get their stuff back if duel is stopped
-        // during 5 seconds countdown, if fighting with own stuff
-        restoreInventory = true;
 
         task = Bukkit.getScheduler().runTaskTimer(hmb, new Runnable() {
 
@@ -77,10 +73,10 @@ public class DuelArena extends AbstractKitArena {
 
                         // if player received drops during cooldown, restore them after battle
                         player.closeInventory();
-                        if (useKit) equipPlayer(player);
-                        else {
+                        if (useKit) {
+                            equipPlayer(player);
+                        } else {
                             pm.restoreInventoryDuringBattle(player);
-                            restoreInventory = false;
                         }
                     }
                     teleportIntoArena();
@@ -108,7 +104,7 @@ public class DuelArena extends AbstractKitArena {
 
     public void gameEnd() {
         task.cancel();
-        restorePlayers(useKit || restoreInventory);
+        restorePlayers();
     }
 
     public boolean isUseKit() {

@@ -159,7 +159,7 @@ public class PlayerManager {
                 throw new RuntimeException("restoreInventoryDuringBattle() called for " + player.getName() + " while not in battle");
             BattlePlayer battlePlayer = getBattlePlayer(player);
             battlePlayer.setBattleWithOwnEquipment();
-            battlePlayer.restoreInventory(player);
+            battlePlayer.restoreInventory();
         }
     }
 
@@ -167,13 +167,12 @@ public class PlayerManager {
      * Restores the given players location, health, game mode and optionally their inventory.
      * This will also set their state to {@link BattleState#IDLE}
      *
-     * @param restoreInventory true if the stored inventory should be recovered
      * @param players array of players to restore
      */
-    public void restorePlayers(boolean restoreInventory, Player... players) {
+    public void restorePlayers(Player... players) {
         for (Player player : players) {
             BattlePlayer battlePlayer = getBattlePlayer(player);
-            battlePlayer.restorePlayer(restoreInventory);
+            battlePlayer.restorePlayer();
             battlePlayer.setState(BattleState.IDLE);
         }
     }

@@ -136,11 +136,10 @@ public abstract class AbstractArena implements Arena {
     /**
      * Restores given players location/inventory/state before he entered the arena while removing them from the arena
      *
-     * @param restoreInventory true if inventory sould be restored
      * @param players players to restore
      */
-    protected void restorePlayers(boolean restoreInventory, Player... players) {
-        pm.restorePlayers(restoreInventory, parameterToArray(players));
+    protected void restorePlayers(Player... players) {
+        pm.restorePlayers(parameterToArray(players));
         for (Player player : parameterToArray(players)) {
             playersInArena.remove(player);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.6f);

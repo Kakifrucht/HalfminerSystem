@@ -105,7 +105,7 @@ public class FFAArena extends AbstractKitArena {
     }
 
     public void removePlayer(Player toRemove) {
-        restorePlayers(true, toRemove);
+        restorePlayers(toRemove);
         streaks.remove(toRemove);
         // if not removed due to death ban, add queue cooldown
         if (bannedFromArena.getIfPresent(toRemove.getUniqueId()) == null) {

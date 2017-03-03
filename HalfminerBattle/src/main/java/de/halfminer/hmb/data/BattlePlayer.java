@@ -41,7 +41,7 @@ class BattlePlayer {
     private long lastStateChange = System.currentTimeMillis();
     private PlayerData data = null;
     private boolean hasDisconnected = false;
-    private boolean battleWithOwnEquipment = false;
+    private boolean isUsingOwnEquipment = false;
 
     private Arena arena = null;
     private List<BattlePlayer> gamePartners = null;
@@ -115,7 +115,7 @@ class BattlePlayer {
         if (data == null)
             throw new RuntimeException("checkAndStoreItemStack() called for " + getBase().getName() + " without set data");
 
-        if (battleWithOwnEquipment
+        if (isUsingOwnEquipment
                 || toCheck == null
                 || toCheck.getType().equals(Material.AIR)
                 || toCheck.getType().equals(Material.GLASS_BOTTLE))
@@ -134,14 +134,14 @@ class BattlePlayer {
         return true;
     }
 
-    void restorePlayer(boolean restoreInventory) {
+    void restorePlayer() {
 
         Player player = getBase();
         if (data == null)
             throw new RuntimeException("restorePlayer() called for " + player.getName() + " with no set data");
 
         // immediately clear inventory
-        if (restoreInventory) {
+        if (!isUsingOwnEquipment) {
             player.closeInventory();
             for (ItemStack item : player.getInventory().getContents()) {
                 checkAndStoreItemStack(item);
@@ -156,19 +156,21 @@ class BattlePlayer {
                     // don't restore if already ocurred due to logout in between death and task execution
                     if (data != null) {
                         player.spigot().respawn();
-                        restore(player, restoreInventory);
+                        restore();
                     }
                 }, 2L);
             } catch (IllegalPluginAccessException e) {
                 // exception is thrown when trying to respawn dead player while shutting down
-                restore(player, restoreInventory);
+                restore();
             }
         } else {
-            restore(player, restoreInventory);
+            restore();
         }
     }
 
-    private void restore(Player player, boolean restoreInventory) {
+    private void restore() {
+
+        Player player = getBase();
 
         try {
             player.setHealth(data.health);
@@ -185,8 +187,8 @@ class BattlePlayer {
             e.printStackTrace();
         }
 
-        if (restoreInventory) {
-            restoreInventory(player);
+        if (!isUsingOwnEquipment) {
+            restoreInventory();
         }
 
         if (!player.teleport(data.loc)) {
@@ -200,10 +202,12 @@ class BattlePlayer {
         data = null;
         arena = null;
         hasDisconnected = false;
-        battleWithOwnEquipment = false;
+        isUsingOwnEquipment = false;
     }
 
-    void restoreInventory(Player player) {
+    void restoreInventory() {
+
+        Player player = getBase();
         if (data == null)
             throw new RuntimeException("restoreInventory() called for " + player.getName() + " with no set data");
 
@@ -218,7 +222,7 @@ class BattlePlayer {
     }
 
     void setBattleWithOwnEquipment() {
-        battleWithOwnEquipment = true;
+        isUsingOwnEquipment = true;
     }
 
     void setBattlePartners(List<BattlePlayer> players) {
