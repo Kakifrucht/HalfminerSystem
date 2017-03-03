@@ -28,6 +28,7 @@ Current features
       - Item dropping/pickup (dropped items will be deleted)
       - Command usage
       - Opening of crafting tables, anvils etc.
+      - Crafting in general
   - Duel mode
     - Robust queue system
       - Not using a per arena queue, if all arenas are in use, the next duel pair will be added automatically once it becomes free
