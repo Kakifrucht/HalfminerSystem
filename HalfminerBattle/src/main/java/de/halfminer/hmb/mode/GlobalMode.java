@@ -370,19 +370,28 @@ public class GlobalMode extends AbstractMode {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void inventoryCloseRestoreHeldItem(InventoryCloseEvent e) {
+    public void inventoryCloseRestoreHeldItemAndCheckAll(InventoryCloseEvent e) {
 
         if (!(e.getPlayer() instanceof Player))
             return;
 
         Player player = (Player) e.getPlayer();
         if (pm.isInBattle(type, player)) {
+            Inventory inv = player.getInventory();
+
             ItemStack cursor = e.getView().getCursor();
             if (cursor != null && !cursor.getType().equals(Material.AIR)) {
                 e.getView().setCursor(null);
-                HashMap<Integer, ItemStack> returned = player.getInventory().addItem(cursor);
+                HashMap<Integer, ItemStack> returned = inv.addItem(cursor);
                 if (returned.size() != 0) {
                     player.getWorld().dropItem(player.getLocation(), cursor);
+                }
+            }
+
+            for (int i = 0; i < inv.getContents().length; i++) {
+                ItemStack current = inv.getContents()[i];
+                if (pm.checkAndFilterItemStack(player, current)) {
+                    inv.setItem(i, null);
                 }
             }
         }
@@ -392,10 +401,9 @@ public class GlobalMode extends AbstractMode {
     public void onPlayerInteractCheckItem(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (pm.isInBattle(type, p)) {
-            if (pm.isPlayerProperty(p, e.getItem())) {
+            if (pm.checkAndFilterItemStack(p, e.getItem())) {
 
                 e.setCancelled(true);
-                pm.addStackToRestore(p, e.getItem());
                 if (e.getHand().equals(EquipmentSlot.HAND)) {
                     p.getInventory().setItemInMainHand(null);
                 } else {
@@ -411,28 +419,9 @@ public class GlobalMode extends AbstractMode {
         if (damager != null
                 && pm.isInBattle(type, damager)) {
             ItemStack hand = damager.getInventory().getItemInMainHand();
-            if (pm.isPlayerProperty(damager, hand)) {
-                pm.addStackToRestore(damager, hand);
+            if (pm.checkAndFilterItemStack(damager, hand)) {
                 damager.getInventory().setItemInMainHand(null);
                 e.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onInventoryCloseCheckAllItems(InventoryCloseEvent e) {
-        // redundant instanceof?
-        if (e.getPlayer() instanceof Player) {
-            Player p = (Player) e.getPlayer();
-            if (pm.isInBattle(type, p)) {
-                Inventory inv = p.getInventory();
-                for (int i = 0; i < inv.getContents().length; i++) {
-                    ItemStack current = inv.getContents()[i];
-                    if (pm.isPlayerProperty(p, current)) {
-                        pm.addStackToRestore(p, current);
-                        inv.setItem(i, null);
-                    }
-                }
             }
         }
     }

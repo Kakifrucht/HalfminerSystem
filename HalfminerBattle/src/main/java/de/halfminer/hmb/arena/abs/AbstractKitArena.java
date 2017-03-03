@@ -45,13 +45,10 @@ public abstract class AbstractKitArena extends AbstractArena implements KitArena
         return kit;
     }
 
-    protected void equipPlayers(Player... toEquip) {
-
-        for (Player equip : parameterToList(toEquip)) {
-            PlayerInventory inv = equip.getInventory();
-            inv.setContents(addPlayerInfo(equip, kit));
-            equip.playSound(equip.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.6f);
-        }
+    protected void equipPlayer(Player toEquip) {
+        PlayerInventory inv = toEquip.getInventory();
+        inv.setContents(addPlayerInfo(toEquip, kit));
+        toEquip.playSound(toEquip.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.6f);
     }
 
     protected String getCustomLore(Player player) {

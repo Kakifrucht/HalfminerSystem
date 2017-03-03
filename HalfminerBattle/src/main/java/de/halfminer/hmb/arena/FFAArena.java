@@ -81,7 +81,7 @@ public class FFAArena extends AbstractKitArena {
 
     private void addPlayerInternal(Player toAdd) {
         addPlayers(toAdd);
-        equipPlayers(toAdd);
+        equipPlayer(toAdd);
         addSpawnProtection(toAdd);
         streaks.put(toAdd, 0);
 

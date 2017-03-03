@@ -77,9 +77,9 @@ public class DuelArena extends AbstractKitArena {
 
                         // if player received drops during cooldown, restore them after battle
                         player.closeInventory();
-                        if (useKit) equipPlayers(player);
+                        if (useKit) equipPlayer(player);
                         else {
-                            pm.restorePlayerInventory(player);
+                            pm.restoreInventoryDuringBattle(player);
                             restoreInventory = false;
                         }
                     }

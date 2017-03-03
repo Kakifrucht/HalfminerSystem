@@ -132,26 +132,35 @@ public class PlayerManager {
     }
 
     /**
-     * Check if a ItemStack is a players property or belongs to the arenas kit
+     * Check if a ItemStack is a players property or belongs to the arenas kit.
+     * This method will only return true if the player is not supposed to fight with his own equipment and the
+     * ItemStack in question is his own stuff, for example through a drop mid battle. The item will then be added
+     * to the restore list after the battle, however calling functions must also remove the item from the inventory
+     * manually if the method returns true. null, {@link Material#GLASS_BOTTLE} and {@link Material#AIR} are never
+     * players property
      *
      * @param player Player to check
      * @param toCheck ItemStack in question
-     * @return true if ItemStack belongs to the player, else false if itemlore contains current arenas name
-     *          or if it is null/{@link Material#AIR}
+     * @return true if ItemStack must be removed from the players inventory
      */
-    public boolean isPlayerProperty(Player player, @Nullable ItemStack toCheck) {
-        return getBattlePlayer(player).isPlayerProperty(toCheck);
+    public boolean checkAndFilterItemStack(Player player, @Nullable ItemStack toCheck) {
+        return getBattlePlayer(player).checkAndFilterItemStack(toCheck);
     }
 
     /**
-     * Adds a given ItemStack that will be added to the players inventory after being restored
-     * by {@link #restorePlayers(boolean, Player...)}. Must be manually removed from the players inventory
+     * Restores the given players inventories to be used during fight.
+     * This will also make {@link #checkAndFilterItemStack(Player, ItemStack)} always return false
      *
-     * @param owner Player that owns the item
-     * @param toAdd ItemStack that will be restored after game
+     * @param players array of players to restore
      */
-    public void addStackToRestore(Player owner, ItemStack toAdd) {
-        getBattlePlayer(owner).addStackToRestore(toAdd);
+    public void restoreInventoryDuringBattle(Player... players) {
+        for (Player player : players) {
+            if (!hasState(player, BattleState.IN_BATTLE))
+                throw new RuntimeException("restoreInventoryDuringBattle() called for " + player.getName() + " while not in battle");
+            BattlePlayer battlePlayer = getBattlePlayer(player);
+            battlePlayer.setBattleWithOwnEquipment();
+            battlePlayer.restoreInventory(player);
+        }
     }
 
     /**
@@ -166,17 +175,6 @@ public class PlayerManager {
             BattlePlayer battlePlayer = getBattlePlayer(player);
             battlePlayer.restorePlayer(restoreInventory);
             battlePlayer.setState(BattleState.IDLE);
-        }
-    }
-
-    /**
-     * Restores the given players inventories
-     *
-     * @param players array of players to restore
-     */
-    public void restorePlayerInventory(Player... players) {
-        for (Player player : players) {
-            getBattlePlayer(player).restoreInventory(player);
         }
     }
 

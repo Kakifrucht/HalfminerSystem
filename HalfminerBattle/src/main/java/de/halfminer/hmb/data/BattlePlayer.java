@@ -41,6 +41,7 @@ class BattlePlayer {
     private long lastStateChange = System.currentTimeMillis();
     private PlayerData data = null;
     private boolean hasDisconnected = false;
+    private boolean battleWithOwnEquipment = false;
 
     private Arena arena = null;
     private List<BattlePlayer> gamePartners = null;
@@ -89,16 +90,33 @@ class BattlePlayer {
         }
     }
 
+    BattleModeType getBattleModeType() {
+        return battleModeType;
+    }
+
+    void setArena(Arena arena) {
+        this.arena = arena;
+        this.battleModeType = arena.getBattleModeType();
+    }
+
+    Arena getArena() {
+        return arena;
+    }
+
     void storeData() {
         data = new PlayerData();
     }
 
-    boolean isPlayerProperty(@Nullable ItemStack toCheck) {
+    boolean checkAndFilterItemStack(@Nullable ItemStack toCheck) {
 
         if (arena == null)
-            throw new RuntimeException("isPlayerProperty() called for " + getBase().getName() + " without set arena");
+            throw new RuntimeException("checkAndFilterItemStack() called for " + getBase().getName() + " without set arena");
 
-        if (toCheck == null
+        if (data == null)
+            throw new RuntimeException("checkAndFilterItemStack() called for " + getBase().getName() + " without set data");
+
+        if (battleWithOwnEquipment
+                || toCheck == null
                 || toCheck.getType().equals(Material.AIR)
                 || toCheck.getType().equals(Material.GLASS_BOTTLE))
             return false;
@@ -111,15 +129,9 @@ class BattlePlayer {
                 }
             }
         }
+
+        data.extrasToRestore.add(toCheck);
         return true;
-    }
-
-    void addStackToRestore(ItemStack stack) {
-        if (data == null)
-            throw new RuntimeException("addStackToRestore() called for " + getBase().getName() + " with no set data");
-
-        if (stack != null && !stack.getType().equals(Material.AIR))
-            data.extrasToRestore.add(stack);
     }
 
     void restorePlayer(boolean restoreInventory) {
@@ -132,7 +144,7 @@ class BattlePlayer {
         if (restoreInventory) {
             player.closeInventory();
             for (ItemStack item : player.getInventory().getContents()) {
-                if (isPlayerProperty(item)) {
+                if (checkAndFilterItemStack(item)) {
                     data.extrasToRestore.add(item);
                 }
             }
@@ -184,9 +196,11 @@ class BattlePlayer {
             hmb.getLogger().warning("Player " + player.getName()
                     + " could not be teleported to his original location at " + Utils.getStringFromLocation(data.loc));
         }
+
         data = null;
         arena = null;
         hasDisconnected = false;
+        battleWithOwnEquipment = false;
     }
 
     void restoreInventory(Player player) {
@@ -202,25 +216,16 @@ class BattlePlayer {
         hasDisconnected = true;
     }
 
+    void setBattleWithOwnEquipment() {
+        battleWithOwnEquipment = true;
+    }
+
     void setBattlePartners(List<BattlePlayer> players) {
         gamePartners = players;
     }
 
     List<BattlePlayer> getGamePartners() {
         return gamePartners;
-    }
-
-    void setArena(Arena arena) {
-        this.arena = arena;
-        this.battleModeType = arena.getBattleModeType();
-    }
-
-    Arena getArena() {
-        return arena;
-    }
-
-    BattleModeType getBattleModeType() {
-        return battleModeType;
     }
 
     private class PlayerData {
