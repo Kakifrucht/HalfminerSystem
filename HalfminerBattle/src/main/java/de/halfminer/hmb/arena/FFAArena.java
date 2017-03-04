@@ -96,28 +96,31 @@ public class FFAArena extends AbstractArena {
         scoreboardObjective.getScore(toAdd.getName()).setScore(0);
         scoreboardTeam.addEntry(toAdd.getName());
 
+        toAdd.setGlowing(battleMode.isSetGlowingInArena());
+
         MessageBuilder.create("modeFFAJoined", hmb)
                 .addPlaceholderReplace("%ARENA%", getName())
                 .sendMessage(toAdd);
         ((HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES))
                 .sendTitle(toAdd, MessageBuilder.returnMessage("modeFFAJoinTitle", hmb, false));
-        toAdd.setGlowing(battleMode.isSetGlowingInArena());
     }
 
     public void removePlayer(Player toRemove) {
         restorePlayers(toRemove);
+        ((HanBossBar) HalfminerSystem.getInstance().getHandler(HandlerType.BOSS_BAR)).removeBar(toRemove);
         streaks.remove(toRemove);
         // if not removed due to death ban, add queue cooldown
         if (bannedFromArena.getIfPresent(toRemove.getUniqueId()) == null) {
             pm.setState(BattleState.QUEUE_COOLDOWN, toRemove);
         }
+
         customPermissions.get(toRemove).forEach(PermissionAttachment::remove);
         customPermissions.remove(toRemove);
-        ((HanBossBar) HalfminerSystem.getInstance().getHandler(HandlerType.BOSS_BAR)).removeBar(toRemove);
 
         scoreboard.resetScores(toRemove.getName());
         scoreboardTeam.removeEntry(toRemove.getName());
         toRemove.setScoreboard(hmb.getServer().getScoreboardManager().getMainScoreboard());
+
         toRemove.setGlowing(false);
     }
 
@@ -138,6 +141,8 @@ public class FFAArena extends AbstractArena {
             scheduler.runTaskLater(hmb, () -> {
                 if (hasDied.isOnline() && this.equals(pm.getArena(hasDied))) {
                     hasDied.spigot().respawn();
+                    // temporary NoCheat shield bug workaround
+                    hasDied.getInventory().setItemInOffHand(hasDied.getInventory().getItemInOffHand());
                     scheduler.runTaskLater(hmb, () -> teleportIntoArena(hasDied), 1L);
                 }
             }, 2L);

@@ -166,7 +166,10 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         if (killer != null && killer != e.getEntity()) {
 
             // Heal and play sound
-            if (!killer.isDead()) killer.setHealth(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            if (!killer.isDead()) {
+                killer.setHealth(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            }
+
             scheduler.runTaskLaterAsynchronously(hms, () -> {
                 killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
                 try {
@@ -179,9 +182,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
             // run action on kill
             if (container != null &&
-                    ((ModAntiKillfarming) hms
-                    .getModule(ModuleType.ANTI_KILLFARMING))
-                    .isNotRepeatedKill(killer, victim)) {
+                    ((ModAntiKillfarming) hms.getModule(ModuleType.ANTI_KILLFARMING))
+                            .isNotRepeatedKill(killer, victim)) {
                 CustomAction action = container.getNextAction();
                 action.addPlaceholderForNextRun("%KILLNO%", storage.getPlayer(killer).getString(DataType.KILLS));
                 action.runAction(killer, victim);
