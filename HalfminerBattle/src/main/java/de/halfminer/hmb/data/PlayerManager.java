@@ -148,19 +148,15 @@ public class PlayerManager {
     }
 
     /**
-     * Restores the given players inventories to be used during fight.
+     * Restores the given players inventory to be used during fight.
      * This will also make {@link #checkAndStoreItemStack(Player, ItemStack)} always return false
      *
-     * @param players array of players to restore
+     * @param player player to restore the inventory from during battle
      */
-    public void restoreInventoryDuringBattle(Player... players) {
-        for (Player player : players) {
-            if (!hasState(player, BattleState.IN_BATTLE))
-                throw new RuntimeException("restoreInventoryDuringBattle() called for " + player.getName() + " while not in battle");
-            BattlePlayer battlePlayer = getBattlePlayer(player);
-            battlePlayer.setBattleWithOwnEquipment();
-            battlePlayer.restoreInventory();
-        }
+    public void restoreInventoryDuringBattle(Player player) {
+        if (!hasState(player, BattleState.IN_BATTLE))
+            throw new RuntimeException("restoreInventoryDuringBattle() called for " + player.getName() + " while not in battle");
+        getBattlePlayer(player).restoreInventory();
     }
 
     /**

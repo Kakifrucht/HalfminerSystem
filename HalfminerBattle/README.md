@@ -10,12 +10,13 @@ Current features
 - **Battle Modes**
   - Global functionality
     - Endless amount of arenas
-    - Custom kits per arena, if battle mode wants to support kits
+    - Custom kits per arena
       - Adds lore to kits to easily identify ones that were possibly extracted from a badly secured arena
       - Can toggle inventory store to disk, to prevent any inventory data loss from ever ocurring
         - Command */hmb openinventory [filename]* allows retrieval of said items by file name
           - Add -r flag to automatically restore while player is online
         - Automatically cleaning up old files
+      - Must assign kit first to activate arena, empty kit can be set via */hmb setkit mode arenaname -e*
     - Recovers players completely after fight (position, health/status, inventory if kit was used, potion effects)
       - Sets gamemode to adventure during fight
       - If a player has received non battle drops during battle, the items will be removed if used during battle and restored after

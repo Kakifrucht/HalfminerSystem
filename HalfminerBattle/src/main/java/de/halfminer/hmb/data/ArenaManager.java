@@ -16,7 +16,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.io.File;
 import java.io.IOException;
@@ -184,10 +183,10 @@ public class ArenaManager {
         return false;
     }
 
-    public boolean setKit(BattleModeType modeType, String arenaName, PlayerInventory setKitTo) {
+    public boolean setKit(BattleModeType modeType, String arenaName, ItemStack[] setKitTo) {
         Arena toSetKit = getArena(modeType, arenaName);
         if (toSetKit != null) {
-            toSetKit.setKit(setKitTo.getContents());
+            toSetKit.setKit(setKitTo);
             return true;
         }
         return false;

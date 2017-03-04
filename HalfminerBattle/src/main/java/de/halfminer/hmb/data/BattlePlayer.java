@@ -215,14 +215,11 @@ class BattlePlayer {
         player.getInventory().setContents(data.inventory);
         data.extrasToRestore.forEach(player.getInventory()::addItem);
         player.updateInventory();
+        isUsingOwnEquipment = true;
     }
 
     void setHasDisconnected() {
         hasDisconnected = true;
-    }
-
-    void setBattleWithOwnEquipment() {
-        isUsingOwnEquipment = true;
     }
 
     void setBattlePartners(List<BattlePlayer> players) {

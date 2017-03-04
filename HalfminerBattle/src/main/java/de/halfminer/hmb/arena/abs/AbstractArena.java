@@ -132,23 +132,36 @@ public abstract class AbstractArena implements Arena {
         teleportIntoArena(parameterToArray(players));
     }
 
-    protected void equipPlayer(Player toEquip) {
-        PlayerInventory inv = toEquip.getInventory();
-        inv.setContents(addPlayerInfo(toEquip, kit));
+    protected void teleportIntoArena(Player... toTeleport) {
+
+        List<Player> toTeleportList = parameterToList(toTeleport);
+        if (toTeleportList.size() > 1) {
+            int spawnNumber = 0;
+            for (Player player : toTeleportList) {
+                if (!player.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)))) {
+                    hmb.getLogger().warning("Player " + player.getName() + " could not be teleported into the arena");
+                }
+            }
+        } else {
+            toTeleportList.get(0).teleport(spawns.get(new Random().nextInt(spawns.size())));
+        }
+    }
+
+    /**
+     * Equips the players with either the arenas kit with added battle branding or with players own stuff
+     *
+     * @param useKit true to use the arenas kit, false to use the players inventory
+     * @param toEquip player to equip
+     */
+    protected void equipPlayer(boolean useKit, Player toEquip) {
+        if (useKit) {
+            PlayerInventory inv = toEquip.getInventory();
+            toEquip.closeInventory();
+            inv.setContents(addPlayerInfo(toEquip, kit));
+        } else {
+            pm.restoreInventoryDuringBattle(toEquip);
+        }
         toEquip.playSound(toEquip.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.6f);
-    }
-
-    protected String getCustomLore(Player player) {
-        return MessageBuilder.create("modeGlobalKitArenaCustomLore", hmb)
-                .togglePrefix()
-                .addPlaceholderReplace("%ARENA%", getName())
-                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
-                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage();
-    }
-
-    protected String getCustomLoreID() {
-        return ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
-                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000);
     }
 
     private ItemStack[] addPlayerInfo(Player player, ItemStack[] toModify) {
@@ -173,21 +186,6 @@ public abstract class AbstractArena implements Arena {
         return modified;
     }
 
-    protected void teleportIntoArena(Player... toTeleport) {
-
-        int spawnNumber = 0;
-        List<Player> toTeleportList = parameterToList(toTeleport);
-        if (toTeleportList.size() > 1) {
-            for (Player player : toTeleportList) {
-                if (!player.teleport(spawns.get(Math.min(spawnNumber++, spawns.size() - 1)))) {
-                    hmb.getLogger().warning("Player " + player.getName() + " could not be teleported into the arena");
-                }
-            }
-        } else {
-            toTeleportList.get(0).teleport(spawns.get(new Random().nextInt(spawns.size())));
-        }
-    }
-
     /**
      * Restores given players location/inventory/state before he entered the arena while removing them from the arena
      *
@@ -203,6 +201,19 @@ public abstract class AbstractArena implements Arena {
 
     protected BattleMode getBattleMode() {
         return hmb.getBattleMode(battleModeType);
+    }
+
+    protected String getCustomLore(Player player) {
+        return MessageBuilder.create("modeGlobalKitArenaCustomLore", hmb)
+                .togglePrefix()
+                .addPlaceholderReplace("%ARENA%", getName())
+                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
+                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage();
+    }
+
+    protected String getCustomLoreID() {
+        return ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
+                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000);
     }
 
     protected List<Player> parameterToList(Player... param) {

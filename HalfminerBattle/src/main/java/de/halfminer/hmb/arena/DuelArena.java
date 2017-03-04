@@ -59,35 +59,26 @@ public class DuelArena extends AbstractArena {
 
                     titles.sendTitle(playerA, toSend, 0, 21, 0);
                     titles.sendTitle(playerB, toSend, 0, 21, 0);
-                    playSound(Sound.BLOCK_NOTE_PLING);
+                    playPlingSound();
                 }
 
                 // Battle is starting, reset walkspeed and give the kit
                 if (timeLeft == timeStart) {
-                    playSound(Sound.BLOCK_ANVIL_LAND);
                     for (Player player : playersInArena) {
                         player.setWalkSpeed(0.2F);
                         MessageBuilder.create("modeDuelGameStarting", hmb).sendMessage(player);
                         titles.sendTitle(player, MessageBuilder.returnMessage("modeDuelTitleStart", hmb, false),
                                 0, 30, 0);
-
-                        // if player received drops during cooldown, restore them after battle
-                        player.closeInventory();
-                        if (useKit) {
-                            equipPlayer(player);
-                        } else {
-                            pm.restoreInventoryDuringBattle(player);
-                        }
+                        equipPlayer(useKit, player);
                     }
                     teleportIntoArena();
                 }
 
                 if (timeLeft <= 5 && timeLeft > 0) {
                     if (timeLeft == 5) {
-                        MessageBuilder.create("modeDuelTimeRunningOut", hmb)
-                                .sendMessage(playerA, playerB);
+                        MessageBuilder.create("modeDuelTimeRunningOut", hmb).sendMessage(playerA, playerB);
                     }
-                    playSound(Sound.BLOCK_NOTE_PLING);
+                    playPlingSound();
                 }
 
                 if (timeLeft <= 0) {
@@ -95,8 +86,8 @@ public class DuelArena extends AbstractArena {
                 }
             }
 
-            private void playSound(Sound toPlay) {
-                playersInArena.forEach(p -> p.playSound(p.getLocation(), toPlay, 1.0f, 1.6f));
+            private void playPlingSound() {
+                playersInArena.forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.6f));
             }
 
         }, 0L, 20L);

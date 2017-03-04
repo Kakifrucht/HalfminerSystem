@@ -187,12 +187,23 @@ public class GlobalMode extends AbstractMode {
                     sendStatusMessage(sender, success ? "adminClearSpawns" : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "setkit":
-                    if (!isPlayer) {
-                        sendNotAPlayerMessage(sender);
-                        return true;
+                    boolean setEmptyKit = false;
+                    ItemStack[] kit;
+                    if (args.length > 3 && args[3].equals("-e")) {
+                        kit = new ItemStack[41];
+                        setEmptyKit = true;
+                    } else {
+                        if (!isPlayer) {
+                            sendNotAPlayerMessage(sender);
+                            return true;
+                        }
+                        kit = player.getInventory().getContents();
                     }
-                    success = am.setKit(type, args[2], player.getInventory());
-                    sendStatusMessage(sender, success ? "adminSetKit" : "adminArenaDoesntExist", args[2], type);
+
+                    success = am.setKit(type, args[2], kit);
+                    sendStatusMessage(sender, success ?
+                            setEmptyKit ? "adminSetEmptyKit" : "adminSetKit"
+                            : "adminArenaDoesntExist", args[2], type);
                     break;
                 case "forceend":
                     Arena arenaToEnd = am.getArena(type, args[2]);
