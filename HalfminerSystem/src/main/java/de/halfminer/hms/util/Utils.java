@@ -12,7 +12,6 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -25,24 +24,6 @@ import java.util.logging.Level;
 public final class Utils {
 
     private Utils() {}
-
-    /**
-     * Saves default config if not yet done, reload config, copies default values into config
-     * (useful after config updates or if stuff stuff was removed), writes the file and reloads it again.
-     *
-     * @param plugin plugin of which the config should be prepared / loaded
-     */
-    public static void prepareConfig(JavaPlugin plugin) {
-        // Save default config.yml if not yet done
-        plugin.saveDefaultConfig();
-        // Make sure that if the file changed, it is reread
-        plugin.reloadConfig();
-        // If parameters are missing, add them (reload again afterwards)
-        plugin.getConfig().options().copyDefaults(true);
-        // Save config.yml to disk
-        plugin.saveConfig();
-        plugin.reloadConfig();
-    }
 
     /**
      * Returns a string representation of a location, using block coordinates (only full coords, no floats).

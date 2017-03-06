@@ -28,7 +28,8 @@ import java.util.logging.Level;
  */
 public class ArenaManager {
 
-    private static final HalfminerBattle hmb = HalfminerBattle.getInstance();
+    private final static HalfminerBattle hmb = HalfminerBattle.getInstance();
+
     private File arenaFile;
     private FileConfiguration arenaConfig;
 

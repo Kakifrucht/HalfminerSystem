@@ -1,5 +1,6 @@
 package de.halfminer.hmb.data;
 
+import de.halfminer.hmb.BattleClass;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleModeType;
@@ -29,9 +30,8 @@ import java.util.UUID;
  * Encapsulating player specific battle data, such as his state, inventory, survival data (inventory, health..) and
  * the players arena and game partners
  */
-class BattlePlayer {
+class BattlePlayer extends BattleClass {
 
-    private static final HalfminerBattle hmb = HalfminerBattle.getInstance();
     private static final Object inventoryWriteLock = new Object();
 
     private final UUID baseUUID;
@@ -47,6 +47,7 @@ class BattlePlayer {
     private List<BattlePlayer> gamePartners = null;
 
     BattlePlayer(Player p) {
+        super(false);
         this.baseUUID = p.getUniqueId();
     }
 
@@ -152,7 +153,7 @@ class BattlePlayer {
         // if dead (and still online) respawn with delay to prevent damage immunity loss glitch
         if (player.isDead() && !hasDisconnected) {
             try {
-                Bukkit.getScheduler().runTaskLater(hmb, () -> {
+                scheduler.runTaskLater(hmb, () -> {
                     // don't restore if already ocurred due to logout in between death and task execution
                     if (data != null) {
                         player.spigot().respawn();
@@ -257,7 +258,7 @@ class BattlePlayer {
 
             if (((GlobalMode) hmb.getBattleMode(BattleModeType.GLOBAL)).isSaveInventoryToDisk()) {
 
-                hmb.getServer().getScheduler().runTaskAsynchronously(hmb, () -> {
+                scheduler.runTaskAsynchronously(hmb, () -> {
 
                     synchronized (inventoryWriteLock) {
                         String fileName = String.valueOf(System.currentTimeMillis() / 1000) + "-" + player.getName() + ".yml";

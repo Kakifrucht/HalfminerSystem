@@ -7,15 +7,14 @@ import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.mode.FFAMode;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.caches.CustomAction;
+import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -33,7 +32,7 @@ public class FFAArena extends AbstractArena {
 
     private final FFAMode battleMode = (FFAMode) getBattleMode();
 
-    private final Scoreboard scoreboard = hmb.getServer().getScoreboardManager().getNewScoreboard();
+    private final Scoreboard scoreboard = server.getScoreboardManager().getNewScoreboard();
     private final Objective scoreboardObjective;
     private final Team scoreboardTeam;
 
@@ -117,7 +116,7 @@ public class FFAArena extends AbstractArena {
 
         scoreboard.resetScores(toRemove.getName());
         scoreboardTeam.removeEntry(toRemove.getName());
-        toRemove.setScoreboard(hmb.getServer().getScoreboardManager().getMainScoreboard());
+        toRemove.setScoreboard(server.getScoreboardManager().getMainScoreboard());
 
         toRemove.setGlowing(false);
     }
@@ -134,7 +133,6 @@ public class FFAArena extends AbstractArena {
             removePlayer(hasDied);
         } else {
             // respawn with delay to prevent hit delay issues with Minecraft
-            BukkitScheduler scheduler = hmb.getServer().getScheduler();
             addSpawnProtection(hasDied);
             scheduler.runTaskLater(hmb, () -> {
                 if (hasDied.isOnline() && this.equals(pm.getArena(hasDied))) {

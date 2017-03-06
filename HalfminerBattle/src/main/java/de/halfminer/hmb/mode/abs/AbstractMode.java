@@ -1,18 +1,13 @@
 package de.halfminer.hmb.mode.abs;
 
-import de.halfminer.hmb.HalfminerBattle;
-import de.halfminer.hmb.data.ArenaManager;
-import de.halfminer.hmb.data.PlayerManager;
+import de.halfminer.hmb.BattleClass;
 import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hms.interfaces.Reloadable;
 
 /**
- * Abstract game mode containing shortcuts to commonly used objects
+ * Abstract game mode
  */
-public abstract class AbstractMode implements BattleMode {
-
-    protected static final HalfminerBattle hmb = HalfminerBattle.getInstance();
-    protected static final PlayerManager pm = hmb.getPlayerManager();
-    protected static final ArenaManager am = hmb.getArenaManager();
+public abstract class AbstractMode extends BattleClass implements BattleMode, Reloadable {
 
     protected final BattleModeType type;
 

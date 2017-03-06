@@ -65,7 +65,7 @@ public class DuelMode extends AbstractMode {
                         break;
                 default:
                     boolean useKit = !(args.length > 1 && args[1].equalsIgnoreCase("nokit"));
-                    queue.requestSend(player, hmb.getServer().getPlayer(args[0]), useKit);
+                    queue.requestSend(player, server.getPlayer(args[0]), useKit);
             }
         } else MessageBuilder.create("modeDuelShowHelp", hmb).sendMessage(sender);
 
@@ -85,7 +85,7 @@ public class DuelMode extends AbstractMode {
     }
 
     @Override
-    public void onConfigReload() {
+    public void loadConfig() {
 
         broadcastWin = hmb.getConfig().getBoolean("battleMode.duel.broadcastWin", false);
 

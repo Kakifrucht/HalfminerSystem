@@ -14,6 +14,7 @@ import java.util.logging.Level;
 /**
  * Class containing a builder used for messaging players / console
  */
+@SuppressWarnings("SameParameterValue")
 public class MessageBuilder {
 
     /**

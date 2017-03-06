@@ -1,7 +1,6 @@
 package de.halfminer.hmb.arena.abs;
 
-import de.halfminer.hmb.HalfminerBattle;
-import de.halfminer.hmb.data.PlayerManager;
+import de.halfminer.hmb.BattleClass;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
@@ -19,10 +18,7 @@ import java.util.*;
  * Abstract arena implementing all in interfaces {@link Arena} defined methods
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class AbstractArena implements Arena {
-
-    protected static final HalfminerBattle hmb = HalfminerBattle.getInstance();
-    protected static final PlayerManager pm = hmb.getPlayerManager();
+public abstract class AbstractArena extends BattleClass implements Arena {
 
     protected final BattleModeType battleModeType;
     protected final String name;

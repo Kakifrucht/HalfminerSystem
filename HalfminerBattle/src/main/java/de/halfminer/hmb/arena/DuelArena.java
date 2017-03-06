@@ -6,10 +6,8 @@ import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.logging.Level;
@@ -38,10 +36,9 @@ public class DuelArena extends AbstractArena {
         playersInArena.forEach(p -> p.setWalkSpeed(0.0f));
         this.useKit = useKit;
 
-        task = Bukkit.getScheduler().runTaskTimer(hmb, new Runnable() {
+        task = scheduler.runTaskTimer(hmb, new Runnable() {
 
             private final HanTitles titles = HalfminerSystem.getInstance().getTitlesHandler();
-            private final BukkitScheduler scheduler = hmb.getServer().getScheduler();
             private final DuelMode mode = (DuelMode) getBattleMode();
             private final int timeStart = mode.getDuelTime();
             private int timeLeft = timeStart + 6;

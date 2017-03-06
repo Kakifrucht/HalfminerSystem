@@ -29,9 +29,4 @@ public interface BattleMode extends Listener {
      * @return true if command is implemented
      */
     boolean onAdminCommand(CommandSender sender, String[] args);
-
-    /**
-     * Called if plugins config was reloaded
-     */
-    void onConfigReload();
 }

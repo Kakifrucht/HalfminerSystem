@@ -88,7 +88,7 @@ public class GlobalMode extends AbstractMode {
                     Player toRestore = null;
                     if (args.length > 2 && args[2].equals("-r")) {
                         String uuidString = yaml.getString("uuid");
-                        toRestore = hmb.getServer().getPlayer(UUID.fromString(uuidString));
+                        toRestore = server.getPlayer(UUID.fromString(uuidString));
                         if (toRestore == null || !toRestore.isOnline()) {
                             MessageBuilder.create("playerNotOnline", "Battle")
                                     .sendMessage(sender);
@@ -128,7 +128,7 @@ public class GlobalMode extends AbstractMode {
 
                     int modulo = contents.length % 9;
                     int size = modulo == 0 ? contents.length : contents.length + (9 - modulo);
-                    Inventory toOpen = hmb.getServer().createInventory(player, size);
+                    Inventory toOpen = server.createInventory(player, size);
                     toOpen.setContents(contents);
                     player.openInventory(toOpen);
 
@@ -224,6 +224,7 @@ public class GlobalMode extends AbstractMode {
     private void sendUsageInformation(CommandSender sendTo) {
         MessageBuilder.create("adminCommandUsage", hmb)
                 .addPlaceholderReplace("%VERSION%", hmb.getDescription().getVersion())
+                .addPlaceholderReplace("%SYSTEMVERSION%", hms.getDescription().getVersion())
                 .sendMessage(sendTo);
     }
 
@@ -247,7 +248,7 @@ public class GlobalMode extends AbstractMode {
     }
 
     @Override
-    public void onConfigReload() {
+    public void loadConfig() {
 
         noHungerLossInBattle = hmb.getConfig().getBoolean("battleMode.global.noHungerLoss", true);
 
@@ -268,7 +269,7 @@ public class GlobalMode extends AbstractMode {
         int cleanupAfter = hmb.getConfig().getInt("battleMode.global.saveInventoryToDiskCleanupAfterHours", 24);
         if (saveInventoryToDisk && cleanupAfter > 0) {
 
-            cleanupTask = hmb.getServer().getScheduler().runTaskTimerAsynchronously(hmb, () -> {
+            cleanupTask = scheduler.runTaskTimerAsynchronously(hmb, () -> {
 
                 File[] files = new File(hmb.getDataFolder(), "inventories").listFiles();
                 if (files == null) return;

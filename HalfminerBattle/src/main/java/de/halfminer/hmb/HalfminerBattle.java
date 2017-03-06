@@ -4,10 +4,11 @@ import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.BattleMode;
+import de.halfminer.hms.HalfminerManager;
+import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handlers.HanStorage;
 import de.halfminer.hms.interfaces.CacheHolder;
 import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -30,6 +31,7 @@ public class HalfminerBattle extends JavaPlugin {
         return instance;
     }
 
+    private HalfminerManager manager;
     private CacheHolder cacheHolder;
     private PlayerManager playerManager;
     private ArenaManager arenaManager;
@@ -40,14 +42,16 @@ public class HalfminerBattle extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        manager = HalfminerSystem.getInstance().getHalfminerManager();
         cacheHolder = new HanStorage(this);
-        playerManager = new PlayerManager(this);
+        playerManager = new PlayerManager();
         arenaManager = new ArenaManager();
 
         try {
             for (BattleModeType type : BattleModeType.values()) {
                 BattleMode mode = (BattleMode) this.getClassLoader()
-                        .loadClass(PACKAGE_PATH + ".mode." + type.getModeClassName()).newInstance();
+                        .loadClass(PACKAGE_PATH + ".mode." + type.getModeClassName())
+                        .newInstance();
                 battleModes.put(type, mode);
             }
         } catch (Exception e) {
@@ -61,15 +65,13 @@ public class HalfminerBattle extends JavaPlugin {
             return;
         }
 
-        battleModes.values().forEach(mode -> getServer().getPluginManager().registerEvents(mode, this));
         getLogger().info("HalfminerBattle enabled");
     }
 
     public boolean saveAndReloadConfig() {
 
-        Utils.prepareConfig(this);
+        manager.reloadOcurred(this);
 
-        battleModes.values().forEach(BattleMode::onConfigReload);
         try {
             arenaManager.reloadConfig();
             return true;
@@ -88,7 +90,7 @@ public class HalfminerBattle extends JavaPlugin {
     public void onDisable() {
         arenaManager.endAllGames();
 
-        getServer().getScheduler().cancelTasks(this);
+        manager.pluginDisabled(this);
         getLogger().info("HalfminerBattle disabled");
     }
 
@@ -103,25 +105,20 @@ public class HalfminerBattle extends JavaPlugin {
                 return true;
             }
 
-            if (args.length == 0) {
-                MessageBuilder.create("adminCommandUsage", this)
-                        .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
-                        .sendMessage(sender);
-                return true;
-            }
-
-            BattleMode called = getBattleMode(args[0]);
-            if (called != null) {
-                if (!called.onAdminCommand(sender, args)) {
-                    MessageBuilder.create("adminNotDefined", this)
-                            .addPlaceholderReplace("%BATTLEMODE%", args[0])
-                            .sendMessage(sender);
+            if (args.length > 0) {
+                BattleMode called = getBattleMode(args[0]);
+                if (called != null) {
+                    if (!called.onAdminCommand(sender, args)) {
+                        MessageBuilder.create("adminNotDefined", this)
+                                .addPlaceholderReplace("%BATTLEMODE%", args[0])
+                                .sendMessage(sender);
+                    }
+                    return true;
                 }
-            } else {
-                // by default use admin commands of GlobalMode
-                getBattleMode(BattleModeType.GLOBAL).onAdminCommand(sender, args);
             }
 
+            // by default use admin commands of GlobalMode
+            getBattleMode(BattleModeType.GLOBAL).onAdminCommand(sender, args);
             return true;
         }
 
@@ -144,11 +141,11 @@ public class HalfminerBattle extends JavaPlugin {
         return cacheHolder;
     }
 
-    public PlayerManager getPlayerManager() {
+    PlayerManager getPlayerManager() {
         return playerManager;
     }
 
-    public ArenaManager getArenaManager() {
+    ArenaManager getArenaManager() {
         return arenaManager;
     }
 

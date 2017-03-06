@@ -1,10 +1,8 @@
 package de.halfminer.hmb.mode.duel;
 
-import de.halfminer.hmb.HalfminerBattle;
+import de.halfminer.hmb.BattleClass;
 import de.halfminer.hmb.arena.DuelArena;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.data.ArenaManager;
-import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.mode.DuelMode;
@@ -12,7 +10,6 @@ import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.NMSUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -21,21 +18,19 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-public class DuelQueue {
+public class DuelQueue extends BattleClass {
 
     private static final BattleModeType MODE = BattleModeType.DUEL;
-
-    private static final HalfminerBattle hmb = HalfminerBattle.getInstance();
-    private static final PlayerManager pm = hmb.getPlayerManager();
-    private static final ArenaManager am = hmb.getArenaManager();
-
     private final DuelMode duelMode;
+
     private final Set<Player> hasRequestedNokit = new HashSet<>();
     private final List<Player> isSelectingArena = new LinkedList<>();
     private Player waitingForMatch = null;
     private BukkitTask waitingForMatchTask;
 
+
     public DuelQueue(DuelMode duelMode) {
+        super(false);
         this.duelMode = duelMode;
     }
 
@@ -68,9 +63,9 @@ public class DuelQueue {
             int time;
             if ((time = duelMode.getWaitingForMatchRemind()) > 0) {
 
-                waitingForMatchTask = Bukkit.getScheduler().runTaskLater(hmb, () -> {
+                waitingForMatchTask = scheduler.runTaskLater(hmb, () -> {
 
-                    List<Player> sendTo = hmb.getServer().getOnlinePlayers()
+                    List<Player> sendTo = server.getOnlinePlayers()
                             .stream()
                             .filter(o -> !waitingForMatch.equals(o))
                             .collect(Collectors.toList());
@@ -399,7 +394,7 @@ public class DuelQueue {
             }
 
             if (duelMode.doWinBroadcast()) {
-                List<Player> sendTo = hmb.getServer().getOnlinePlayers().stream()
+                List<Player> sendTo = server.getOnlinePlayers().stream()
                         .filter(obj -> !(obj.equals(winner) || obj.equals(playerA)))
                         .collect(Collectors.toList());
 

@@ -25,7 +25,7 @@ public class HalfminerManager {
 
     private BukkitTask sweepTask;
 
-    void registerClass(Manageable toAdd) {
+    public void registerClass(Manageable toAdd) {
 
         JavaPlugin plugin = toAdd.getPlugin();
         if (toAdd instanceof Disableable) {
@@ -58,6 +58,7 @@ public class HalfminerManager {
                 list.add((Sweepable) toAdd);
                 toSweep.put(plugin, list);
             }
+
             if (sweepTask == null) {
                 HalfminerSystem hms = HalfminerSystem.getInstance();
                 sweepTask = hms.getServer().getScheduler().runTaskTimer(hms, () -> {

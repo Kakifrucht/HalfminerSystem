@@ -4,9 +4,12 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
+import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.interfaces.Sweepable;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -14,14 +17,13 @@ import java.util.*;
 /**
  * Manages the battle database, encapsulating player specific data in {@link BattlePlayer}, used as I/O interface
  */
-public class PlayerManager {
+public class PlayerManager implements Sweepable {
 
+    private final static HalfminerBattle hmb = HalfminerBattle.getInstance();
     private final Map<UUID, BattlePlayer> playerMap = new HashMap<>();
 
-    public PlayerManager(HalfminerBattle hmb) {
-        // cleanup playermap every 20 minutes
-        hmb.getServer().getScheduler().runTaskTimer(hmb, () ->
-                playerMap.values().removeIf(bp -> bp.getState().equals(BattleState.IDLE)), 24000L, 24000L);
+    public PlayerManager() {
+        HalfminerSystem.getInstance().getHalfminerManager().registerClass(this);
     }
 
     private BattlePlayer getBattlePlayer(Player player) {
@@ -200,5 +202,15 @@ public class PlayerManager {
     public Player getFirstPartner(Player get) {
         List<BattlePlayer> partners = getBattlePlayer(get).getGamePartners();
         return (partners != null && partners.size() > 0) ? partners.get(0).getBase() : null;
+    }
+
+    @Override
+    public JavaPlugin getPlugin() {
+        return hmb;
+    }
+
+    @Override
+    public void sweep() {
+        playerMap.values().removeIf(bp -> bp.getState().equals(BattleState.IDLE));
     }
 }

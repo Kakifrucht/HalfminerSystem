@@ -148,7 +148,7 @@ public class FFAMode extends AbstractMode {
     }
 
     @Override
-    public void onConfigReload() {
+    public void loadConfig() {
         removeAfterDeaths = hmb.getConfig().getInt("battleMode.ffa.removeAfterDeaths", 4);
         removeForMinutes = hmb.getConfig().getInt("battleMode.ffa.removeForMinutes", 3);
         setGlowingInArena = hmb.getConfig().getBoolean("battleMode.ffa.setGlowing", false);
