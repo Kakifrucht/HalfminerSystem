@@ -1,12 +1,13 @@
 package de.halfminer.hms.exception;
 
+import de.halfminer.hms.caches.CustomitemCache;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
 /**
- * Thrown when an {@link de.halfminer.hms.util.CustomitemCache} was not able to give the item, either due to
+ * Thrown when an {@link CustomitemCache} was not able to give the item, either due to
  * a syntax error in the customitems.txt, because the item does not exist or the inventory did not have enough
  * space left.
  */

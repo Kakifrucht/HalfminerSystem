@@ -1,5 +1,6 @@
 package de.halfminer.hms.handlers;
 
+import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ import javax.annotation.Nullable;
  * - Tablist titles
  */
 @SuppressWarnings("SameParameterValue")
-public class HanTitles extends HalfminerHandler {
+public class HanTitles extends HalfminerClass {
 
     /**
      * Sends a title to the given player, or broadcasts the title, if player is null.

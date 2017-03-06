@@ -5,11 +5,10 @@ import de.halfminer.hmb.arena.DuelArena;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
-import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.NMSUtils;
@@ -260,7 +259,7 @@ public class DuelQueue {
         pm.addToQueue(MODE, playerA, playerB);
 
         // send title containing name of duel partner
-        HanTitles titleHandler = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);
+        HanTitles titleHandler = HalfminerSystem.getInstance().getTitlesHandler();
         MessageBuilder titleMessage = MessageBuilder.create("modeDuelShowPartnerTitle", hmb)
                 .togglePrefix()
                 .addPlaceholderReplace("%PLAYER%", playerB.getName());

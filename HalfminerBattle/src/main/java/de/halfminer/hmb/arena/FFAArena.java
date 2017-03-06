@@ -7,11 +7,8 @@ import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.enums.BattleState;
 import de.halfminer.hmb.mode.FFAMode;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.exception.CachingException;
-import de.halfminer.hms.handlers.HanBossBar;
-import de.halfminer.hms.handlers.HanTitles;
-import de.halfminer.hms.util.CustomAction;
+import de.halfminer.hms.caches.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -101,13 +98,14 @@ public class FFAArena extends AbstractArena {
         MessageBuilder.create("modeFFAJoined", hmb)
                 .addPlaceholderReplace("%ARENA%", getName())
                 .sendMessage(toAdd);
-        ((HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES))
+        HalfminerSystem.getInstance()
+                .getTitlesHandler()
                 .sendTitle(toAdd, MessageBuilder.returnMessage("modeFFAJoinTitle", hmb, false));
     }
 
     public void removePlayer(Player toRemove) {
         restorePlayers(toRemove);
-        ((HanBossBar) HalfminerSystem.getInstance().getHandler(HandlerType.BOSS_BAR)).removeBar(toRemove);
+        HalfminerSystem.getInstance().getBarHandler().removeBar(toRemove);
         streaks.remove(toRemove);
         // if not removed due to death ban, add queue cooldown
         if (bannedFromArena.getIfPresent(toRemove.getUniqueId()) == null) {
@@ -188,8 +186,10 @@ public class FFAArena extends AbstractArena {
 
     private void addSpawnProtection(Player toProtect) {
         spawnProtection.put(toProtect, true);
-        ((HanBossBar) HalfminerSystem.getInstance().getHandler(HandlerType.BOSS_BAR))
-                .sendBar(toProtect, MessageBuilder.returnMessage("modeFFASpawnProtectBar", hmb, false),
+        HalfminerSystem.getInstance()
+                .getBarHandler()
+                .sendBar(toProtect,
+                        MessageBuilder.returnMessage("modeFFASpawnProtectBar", hmb, false),
                         BarColor.GREEN, BarStyle.SOLID, 5);
     }
 

@@ -1,7 +1,7 @@
 package de.halfminer.hms.interfaces;
 
 import de.halfminer.hms.exception.CachingException;
-import de.halfminer.hms.util.CustomtextCache;
+import de.halfminer.hms.caches.CustomtextCache;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

@@ -1,6 +1,6 @@
 package de.halfminer.hms.handlers;
 
-import de.halfminer.hms.enums.HandlerType;
+import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
@@ -22,9 +22,9 @@ import java.util.Map;
  * - Only one teleport at a time
  */
 @SuppressWarnings("SameParameterValue")
-public class HanTeleport extends HalfminerHandler implements Reloadable {
+public class HanTeleport extends HalfminerClass implements Reloadable {
 
-    private final Map<String, String> lang = new HashMap<>();
+    private Map<String, String> lang;
     private int defaultTime;
 
     private final Map<Player, BukkitTask> currentTeleport = new HashMap<>();
@@ -58,8 +58,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
         MessageBuilder.create(lang.get("start")).setDirectString()
                 .addPlaceholderReplace("%TIME%", String.valueOf(delay))
                 .sendMessage(player);
-        ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR))
-                .sendBar(player, lang.get("startbar"), BarColor.YELLOW, BarStyle.SOLID, delay);
+        hms.getBarHandler().sendBar(player, lang.get("startbar"), BarColor.YELLOW, BarStyle.SOLID, delay);
         currentTeleport.put(player, scheduler.runTaskTimer(hms, tp, 25L, 20L));
     }
 
@@ -75,6 +74,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
 
         defaultTime = hms.getConfig().getInt("handler.teleport.cooldownSeconds", 3);
 
+        lang = new HashMap<>();
         lang.put("start", MessageBuilder.create("hanTeleportStart", "Teleport").returnMessage());
         lang.put("startbar", MessageBuilder.create("hanTeleportBar").returnMessage());
         lang.put("pending", MessageBuilder.create("hanTeleportPending", "Teleport").returnMessage());
@@ -134,7 +134,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             player.sendMessage(lang.get("done"));
             player.setFallDistance(0);
             if (setLastLocation) {
-                ((HanHooks) hms.getHandler(HandlerType.HOOKS)).setLastTpLocation(player);
+                hms.getHooksHandler().setLastTpLocation(player);
             }
 
             boolean teleportSuccessful = player.teleport(location);
@@ -151,7 +151,7 @@ public class HanTeleport extends HalfminerHandler implements Reloadable {
             }
 
             if (!teleportSuccessful) {
-                ((HanBossBar) hms.getHandler(HandlerType.BOSS_BAR)).removeBar(player);
+                hms.getBarHandler().removeBar(player);
                 if (toRunIfCancelled != null) scheduler.runTaskLater(hms, toRunIfCancelled, 0L);
             }
         }

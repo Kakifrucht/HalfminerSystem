@@ -1,11 +1,12 @@
 package de.halfminer.hms.handlers;
 
+import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.interfaces.CacheHolder;
 import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Reloadable;
-import de.halfminer.hms.util.CustomtextCache;
+import de.halfminer.hms.caches.CustomtextCache;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.OfflinePlayer;
@@ -39,9 +40,7 @@ import java.util.logging.Level;
  * - Thread safe
  */
 @SuppressWarnings({"unused", "SameParameterValue"})
-public class HanStorage extends HalfminerHandler implements CacheHolder, Disableable, Reloadable {
-
-    private final JavaPlugin plugin;
+public class HanStorage extends HalfminerClass implements CacheHolder, Disableable, Reloadable {
 
     private File sysFile;
     private File uuidFile;
@@ -56,11 +55,10 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
     private BukkitTask task;
 
     public HanStorage() {
-        this.plugin = hms;
     }
 
     public HanStorage(JavaPlugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     public void set(String path, Object value) {
@@ -168,10 +166,13 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
 
         try {
             sysConfig.save(sysFile);
-            uuidConfig.save(uuidFile);
-            playerConfig.save(playerFile);
-            MessageBuilder.create("hanStorageSaveSuccessful").logMessage(Level.INFO);
-        } catch (IOException e) {
+            // only log main plugin saves
+            if (plugin == hms) {
+                uuidConfig.save(uuidFile);
+                playerConfig.save(playerFile);
+                MessageBuilder.create("hanStorageSaveSuccessful").logMessage(Level.INFO);
+            }
+        } catch (Exception e) {
             MessageBuilder.create("hanStorageSaveUnsuccessful").logMessage(Level.WARNING);
             e.printStackTrace();
         }
@@ -186,7 +187,7 @@ public class HanStorage extends HalfminerHandler implements CacheHolder, Disable
         }
 
         // UUID and player storage is only ever part of HalfminerSystem,
-        // not of plugins who instantiate a HanStorage themselves
+        // not of plugins who instantiate their own storage instance
         if (uuidFile == null && plugin == hms) {
             uuidFile = new File(hms.getDataFolder(), "uuidcache.yml");
             uuidConfig = YamlConfiguration.loadConfiguration(uuidFile);

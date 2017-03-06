@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * HalfminerBattle main class
+ * HalfminerBattle main class, battle arena Bukkit/Spigot plugin implementing various arena based game modes
  *
  * @author Fabian Prieto Wunderlich / Kakifrucht
  */

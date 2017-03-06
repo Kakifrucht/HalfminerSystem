@@ -1,0 +1,242 @@
+name: HalfminerCore
+version: ${project.version}
+description: Halfminer.de Core Plugin
+author: Kakifrucht
+website: https://halfminer.de
+
+main: de.halfminer.hmc.HalfminerCore
+depend: [HalfminerSystem, Essentials]
+
+commands:
+  chat:
+    description: Chat manipulation tools
+    aliases: [c]
+  customtext:
+    description: Show parsed customtext
+    aliases: [hmstext]
+  disposal:
+    description: Open portable disposal
+    aliases: [bin]
+  hms:
+    description: HalfminerSystem base command
+    aliases: [halfminer, halfminersystem, hsystem, hmsystem]
+  hmsapi:
+    description: Command script API
+  hmstore:
+    description: Data storage manipulation
+  home:
+    description: Teleports the player to his home
+    aliases: [h]
+  lag:
+    description: View the connection info
+    aliases: [ping]
+  newtp:
+    description: Teleports the player to a random location
+    aliases: [tpnew, neutp, tpneu]
+  rank:
+    description: Give custom ranks to players
+    aliases: [rang]
+  repair:
+    description: Repair the currently held item
+    aliases: [fix]
+  sell:
+    description: Earn money by selling farm supplies
+    aliases: [verkauf, vk]
+  signedit:
+    description: Edit the contents of a sign or copy it
+    aliases: [se]
+  spawn:
+    description: Teleport to the spawn
+    aliases: [sa]
+  stats:
+    description: View the statistics of a player
+    aliases: [st]
+  vote:
+    description: Vote for the server
+permissions:
+  hmc.*:
+    description: Access to all permissions
+    default: op
+    children:
+      hmc.antixray.notify: true
+      hmc.admin: true
+      hmc.chat: true
+      hmc.chat.advanced: true
+      hmc.customttext: true
+      hmc.default: true
+      hmc.disposal: true
+      hmc.home: true
+      hmc.lag: true
+      hmc.lag.others: true
+      hmc.lag.notify: true
+      hmc.moderator: true
+      hmc.newtp: true
+      hmc.rank: true
+      hmc.sell: true
+      hmc.sell.auto: true
+      hmc.signedit: true
+      hmc.spawn: true
+      hmc.spawn.others: true
+      hmc.spawn.set: true
+      hmc.stats: true
+      hmc.vote: true
+      hmc.bypass.*: true
+      hmc.chat.*: true
+      hmc.level.*: true
+      hmc.repair.*: true
+  hmc.bypass.*:
+    description: Access to all bypass permission
+    default: op
+    children:
+      hmc.bypass.antixray: true
+      hmc.bypass.combatlog: true
+      hmc.bypass.commandfilter: true
+      hmc.bypass.glitchcheck: true
+      hmc.bypass.hopperlimit: true
+      hmc.bypass.nethercheck: true
+      hmc.bypass.nokillfarming: true
+      hmc.bypass.pvp: true
+      hmc.bypass.skilllevel: true
+      hmc.bypass.statsrightclick: true
+      hmc.bypass.tabcomplete: true
+      hmc.bypass.teleportcheck: true
+  hmc.chat.*:
+    description: Access to all chat manager related permissions (not the command)
+    default: op
+    children:
+      hmc.chat.allowcaps: true
+      hmc.chat.allowcolor: true
+      hmc.chat.allowformatcode: true
+      hmc.chat.allowlinks: true
+      hmc.chat.bypassglobalmute: true
+      hmc.chat.spam: true
+      hmc.chat.topformat: true
+  hmc.level.*:
+    description: Access to all commands restricted by level
+    default: op
+    children:
+      hmc.level.0: true
+      hmc.level.1: true
+      hmc.level.2: true
+      hmc.level.3: true
+      hmc.level.4: true
+      hmc.level.5: true
+      hmc.level.6: true
+  hmc.repair.*:
+    description: Full access to repair command
+    default: op
+    children:
+      hmc.repair: true
+      hmc.repair.all: true
+      hmc.repair.nocooldown: true
+      hmc.repair.stacks: true
+  hmc.default:
+    default: true
+    description: Default permission
+  hmc.home:
+    default: true
+    description: Access to home command
+  hmc.level.0:
+    default: true
+    description: Access to features restricted to level 0
+  hmc.newtp:
+    default: true
+    description: Access to newtp command
+  hmc.stats:
+    default: true
+    description: Access to stats command
+  hmc.sell:
+    default: true
+    description: Access to sell command
+  hmc.vote:
+    default: true
+    description: Access to vote command
+  hmc.admin:
+    description: Access to administrative commands
+  hmc.antixray.notify:
+    description: Get notified on join if a player moved past the AntiXRay treshold
+  hmc.bypass.antixray:
+    description: Bypass antixray functionality
+  hmc.bypass.combatlog:
+    description: Bypass combat logging
+  hmc.bypass.commandfilter:
+    description: Bypass chat command filter
+  hmc.bypass.glitchcheck:
+    description: Bypass glitch movement check
+  hmc.bypass.hopperlimit:
+    description: Bypass hopper placement limit
+  hmc.bypass.nethercheck:
+    description: Bypass netherroof position check
+  hmc.bypass.nokillfarming:
+    description: Bypass killfarming check
+  hmc.bypass.pvp:
+    description: Bypass pvp modifications
+  hmc.bypass.skilllevel:
+    description: Bypass setting of skilllevel
+  hmc.bypass.statsrightclick:
+    description: Bypass stats on rightclick
+  hmc.bypass.tabcomplete:
+    description: Bypass tabcomplete
+  hmc.bypass.teleportcheck:
+    description: Bypass glitch protection teleport check
+  hmc.chat:
+    description: Access to chat clearing command
+  hmc.chat.advanced:
+    description: Access to advanced chat manipulation
+  hmc.chat.allowcaps:
+    description: Stops filtering capitalised messages
+  hmc.chat.allowcolor:
+    description: Access to color codes in chat
+  hmc.chat.allowformatcode:
+    description: Access to format codes in chat
+  hmc.chat.allowlinks:
+    description: Allows posting links
+  hmc.chat.spam:
+    description: Bypass spam check protection
+  hmc.chat.topformat:
+    description: Gives user format with highest priority
+  hmc.customttext:
+    description: Access to customtext command
+  hmc.disposal:
+    description: Access to disposal command
+  hmc.lag:
+    description: Access to lag command
+  hmc.lag.others:
+    description: View the latency of other players
+  hmc.lag.notify:
+    description: Sends lag notifications to admin
+  hmc.level.1:
+    description: Access to commands restricted to level 1
+  hmc.level.2:
+    description: Access to commands restricted to level 2
+  hmc.level.3:
+    description: Access to commands restricted to level 3
+  hmc.level.4:
+    description: Access to commands restricted to level 4
+  hmc.level.5:
+    description: Access to commands restricted to level 5
+  hmc.level.6:
+    description: Access to commands restricted to level 6
+  hmc.moderator:
+    description: Access to moderative commands
+  hmc.rank:
+    description: Access to rank command
+  hmc.repair:
+    description: Access to repair command
+  hmc.repair.all:
+    description: Access to repair all command
+  hmc.repair.nocooldown:
+    description: No repair cooldown
+  hmc.repair.stacks:
+    description: Allows single stacks to be repaired
+  hmc.sell.auto:
+    description: Access to automatic selling
+  hmc.signedit:
+    description: Access to sign editing
+  hmc.spawn:
+    default: true
+    description: Access to spawn command
+  hmc.spawn.others:
+    description: Teleport other players to spawn
+  hmc.spawn.set:
+    description: Access to spawn set command

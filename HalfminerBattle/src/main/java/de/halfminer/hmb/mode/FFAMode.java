@@ -5,8 +5,6 @@ import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.handlers.HanTeleport;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
@@ -205,7 +203,8 @@ public class FFAMode extends AbstractMode {
 
     public void teleportWithDelay(Player toTeleport, int delay,
                                   @Nullable Runnable runIfSuccess, @Nullable Runnable runIfCancelled) {
-        ((HanTeleport) HalfminerSystem.getInstance().getHandler(HandlerType.TELEPORT))
+        HalfminerSystem.getInstance()
+                .getTeleportHandler()
                 .startTeleport(toTeleport, toTeleport.getLocation(), delay, false, runIfSuccess, runIfCancelled);
     }
 }

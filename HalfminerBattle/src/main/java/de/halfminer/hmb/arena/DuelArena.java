@@ -4,7 +4,6 @@ import de.halfminer.hmb.arena.abs.AbstractArena;
 import de.halfminer.hmb.enums.BattleModeType;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Bukkit;
@@ -41,7 +40,7 @@ public class DuelArena extends AbstractArena {
 
         task = Bukkit.getScheduler().runTaskTimer(hmb, new Runnable() {
 
-            private final HanTitles titles = (HanTitles) HalfminerSystem.getInstance().getHandler(HandlerType.TITLES);
+            private final HanTitles titles = HalfminerSystem.getInstance().getTitlesHandler();
             private final BukkitScheduler scheduler = hmb.getServer().getScheduler();
             private final DuelMode mode = (DuelMode) getBattleMode();
             private final int timeStart = mode.getDuelTime();
