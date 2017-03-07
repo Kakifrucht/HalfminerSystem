@@ -13,7 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
     public HanStorage() {
     }
 
-    public HanStorage(JavaPlugin plugin) {
+    public HanStorage(Plugin plugin) {
         super(plugin);
     }
 
@@ -123,7 +123,7 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
     }
 
     @Override
-    public JavaPlugin getPlugin() {
+    public Plugin getPlugin() {
         return plugin;
     }
 

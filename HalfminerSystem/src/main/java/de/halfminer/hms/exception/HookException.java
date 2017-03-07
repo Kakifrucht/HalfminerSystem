@@ -3,7 +3,7 @@ package de.halfminer.hms.exception;
 /**
  * Thrown if a plugin wasn't hooked
  */
-public class HookException extends Exception {
+public class HookException extends RuntimeException {
 
     private final Exception parent;
 

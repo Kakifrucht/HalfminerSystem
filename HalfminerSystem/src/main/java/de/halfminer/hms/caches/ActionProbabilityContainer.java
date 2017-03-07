@@ -6,7 +6,7 @@ import de.halfminer.hms.interfaces.CacheHolder;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +21,12 @@ import java.util.logging.Level;
 @SuppressWarnings("SameParameterValue")
 public class ActionProbabilityContainer {
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final List<Pair<Integer, CustomAction>> actionList;
 
     private int probabilityTotal = 0;
 
-    public ActionProbabilityContainer(List<String> probabilityList, JavaPlugin plugin,
+    public ActionProbabilityContainer(List<String> probabilityList, Plugin plugin,
                                       CacheHolder cacheHolder) throws CachingException {
         this.plugin = plugin;
 

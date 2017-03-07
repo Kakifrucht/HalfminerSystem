@@ -1,6 +1,7 @@
 package de.halfminer.hms.handlers;
 
 import de.halfminer.hms.HalfminerClass;
+import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
@@ -134,7 +135,9 @@ public class HanTeleport extends HalfminerClass implements Reloadable {
             player.sendMessage(lang.get("done"));
             player.setFallDistance(0);
             if (setLastLocation) {
-                hms.getHooksHandler().setLastTpLocation(player);
+                try {
+                    hms.getHooksHandler().setLastTpLocation(player);
+                } catch (HookException ignored) {}
             }
 
             boolean teleportSuccessful = player.teleport(location);

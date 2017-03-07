@@ -9,6 +9,7 @@ import de.halfminer.hms.util.Utils;
 import net.ess3.api.Economy;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.math.BigDecimal;
@@ -23,35 +24,49 @@ import java.util.logging.Level;
 public class HanHooks extends HalfminerClass {
 
     private final Essentials essentialsHook;
-    private Chat vaultChatHook;
+    private final Chat vaultChatHook;
 
     public HanHooks() {
-        // Essentials is a harddepend, so we won't even check if it is properly hooked
-        essentialsHook = (Essentials) server.getPluginManager().getPlugin("Essentials");
+
+        Plugin essentials = server.getPluginManager().getPlugin("Essentials");
+        if (essentials != null) {
+            essentialsHook = (Essentials) essentials;
+        } else essentialsHook = null;
+
 
         if (server.getPluginManager().getPlugin("Vault") != null) {
 
             RegisteredServiceProvider<Chat> provider = server.getServicesManager()
                     .getRegistration(net.milkbowl.vault.chat.Chat.class);
             if (provider != null) vaultChatHook = provider.getProvider();
-            else MessageBuilder.create("hanHooksLoadChatFailed").logMessage(Level.WARNING);
+            else {
+                MessageBuilder.create("hanHooksLoadChatFailed").logMessage(Level.WARNING);
+                vaultChatHook = null;
+            }
 
-        } else MessageBuilder.create("hanHooksLoadChatFailed").logMessage(Level.WARNING);
+        } else {
+            MessageBuilder.create("hanHooksLoadChatFailed").logMessage(Level.WARNING);
+            vaultChatHook = null;
+        }
     }
 
-    public Essentials getEssentialsHook() {
+    public Essentials getEssentialsHook() throws HookException {
+        if (essentialsHook == null) throw new HookException();
         return essentialsHook;
     }
 
-    void setLastTpLocation(Player player) {
+    void setLastTpLocation(Player player) throws HookException {
+        if (essentialsHook == null) throw new HookException();
         essentialsHook.getUser(player).setLastLocation();
     }
 
-    public boolean isAfk(Player player) {
+    public boolean isAfk(Player player) throws HookException {
+        if (essentialsHook == null) throw new HookException();
         return essentialsHook.getUser(player.getUniqueId()).isAfk();
     }
 
     public double getMoney(Player player) throws HookException {
+        if (essentialsHook == null) throw new HookException();
         double balance;
         try {
             balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
@@ -62,7 +77,7 @@ public class HanHooks extends HalfminerClass {
     }
 
     public void addMoney(Player player, double amount) throws HookException {
-
+        if (essentialsHook == null) throw new HookException();
         try {
             Economy.add(player.getName(), BigDecimal.valueOf(amount));
         } catch (Exception e) {

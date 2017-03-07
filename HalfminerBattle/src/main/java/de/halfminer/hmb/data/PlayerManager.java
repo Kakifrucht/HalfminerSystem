@@ -9,7 +9,7 @@ import de.halfminer.hms.interfaces.Sweepable;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -205,7 +205,7 @@ public class PlayerManager implements Sweepable {
     }
 
     @Override
-    public JavaPlugin getPlugin() {
+    public Plugin getPlugin() {
         return hmb;
     }
 

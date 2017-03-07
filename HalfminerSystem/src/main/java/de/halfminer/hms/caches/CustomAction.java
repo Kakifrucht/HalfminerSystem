@@ -9,7 +9,7 @@ import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.logging.Level;
 public class CustomAction {
 
     private final String actionName;
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final CustomitemCache itemCache;
     private final CustomtextCache actionCache;
 

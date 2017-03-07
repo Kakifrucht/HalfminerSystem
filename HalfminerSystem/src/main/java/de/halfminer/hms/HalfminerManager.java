@@ -5,7 +5,7 @@ import de.halfminer.hms.interfaces.Manageable;
 import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.interfaces.Sweepable;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -19,15 +19,15 @@ import java.util.Map;
  */
 public class HalfminerManager {
 
-    private final Map<JavaPlugin, List<Disableable>> toDisable = new HashMap<>();
-    private final Map<JavaPlugin, List<Reloadable>> toReload = new HashMap<>();
-    private final Map<JavaPlugin, List<Sweepable>> toSweep = new HashMap<>();
+    private final Map<Plugin, List<Disableable>> toDisable = new HashMap<>();
+    private final Map<Plugin, List<Reloadable>> toReload = new HashMap<>();
+    private final Map<Plugin, List<Sweepable>> toSweep = new HashMap<>();
 
     private BukkitTask sweepTask;
 
     public void registerClass(Manageable toAdd) {
 
-        JavaPlugin plugin = toAdd.getPlugin();
+        Plugin plugin = toAdd.getPlugin();
         if (toAdd instanceof Disableable) {
             if (toDisable.containsKey(plugin)) {
                 toDisable.get(plugin).add((Disableable) toAdd);
@@ -74,7 +74,7 @@ public class HalfminerManager {
         }
     }
 
-    public void pluginDisabled(JavaPlugin pluginToDisable) {
+    public void pluginDisabled(Plugin pluginToDisable) {
 
         if (toDisable.containsKey(pluginToDisable)) {
             List<Disableable> list = toDisable.get(pluginToDisable);
@@ -94,7 +94,7 @@ public class HalfminerManager {
         pluginToDisable.getServer().getScheduler().cancelTasks(pluginToDisable);
     }
 
-    public void reloadOcurred(JavaPlugin pluginToReload) {
+    public void reloadOcurred(Plugin pluginToReload) {
 
         // Save default config.yml if not yet done
         pluginToReload.saveDefaultConfig();

@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -46,7 +46,7 @@ public class MessageBuilder {
      * @param prefix %PREFIX% placeholder to be added
      * @return MessageBuilder that can send a parsed message
      */
-    public static MessageBuilder create(String lang, JavaPlugin plugin, String prefix) {
+    public static MessageBuilder create(String lang, Plugin plugin, String prefix) {
         return create(lang, plugin).addPlaceholderReplace("PREFIX", prefix);
     }
 
@@ -57,7 +57,7 @@ public class MessageBuilder {
      * @param plugin plugin calling the builder or null to use default API locale keys
      * @return MessageBuilder that can send a parsed message
      */
-    public static MessageBuilder create(String lang, JavaPlugin plugin) {
+    public static MessageBuilder create(String lang, Plugin plugin) {
         return new MessageBuilder(plugin, lang);
     }
 
@@ -65,11 +65,11 @@ public class MessageBuilder {
         return returnMessage(lang, null, true);
     }
 
-    public static String returnMessage(String lang, JavaPlugin plugin) {
+    public static String returnMessage(String lang, Plugin plugin) {
         return returnMessage(lang, plugin, true);
     }
 
-    public static String returnMessage(String lang, @Nullable JavaPlugin plugin, boolean usePrefix) {
+    public static String returnMessage(String lang, @Nullable Plugin plugin, boolean usePrefix) {
         MessageBuilder builder = create(lang, plugin);
         if (!usePrefix) builder.togglePrefix();
         return builder.returnMessage();
@@ -79,7 +79,7 @@ public class MessageBuilder {
     private final static char CLICKABLE_PREFIX = '~';
     private final static char PLACEHOLDER_CHARACTER = '%';
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
     private final String lang;
     private final Map<String, String> placeholders = new HashMap<>();
@@ -89,7 +89,7 @@ public class MessageBuilder {
     private boolean usePrefix = true;
     private boolean startsWithClickableChar = false;
 
-    private MessageBuilder(JavaPlugin plugin, String lang) {
+    private MessageBuilder(Plugin plugin, String lang) {
         this.plugin = plugin != null ? plugin : HalfminerSystem.getInstance();
         this.lang = lang;
     }
