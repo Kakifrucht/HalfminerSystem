@@ -2,7 +2,7 @@
 Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.com/drtshock/Factions).
 
 ## Current features
-- Modular, lightweight, efficient
+- Built to be modular, lightweight and efficient
 - Messages completely, functionality mostly configurable
   - Supports clickable commands by using '~' character and encapsulating command in '/'
 - **Modules**

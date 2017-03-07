@@ -1,8 +1,54 @@
 # Halfminer System
-Base plugin API for Minecraft Server [Two and a half Miner](https://halfminer.de).
-Contains handlers and Utils that are shared within Halfminer Bukkit/Spigot plugins.
+Base Spigot plugin API for Minecraft Server [Two and a half Miner](https://halfminer.de).
+
+Contains handlers, caches and utilities that are shared between all Halfminer Bukkit/Spigot plugins in this repository.
 
 ## Current features
+- **Caches**
+  - ActionProbabilityContainer
+    - Class reading a list containing key:value pairings, where key is the probability as a number relative to other list elements and value is the action name
+      - Example: List containing "2:action1" and "1:action2" has 66,6% chance to run action1, 33,3% to run action2
+    - Returns a random CustomAction on demand
+  - CustomAction
+    - Reads customactions.txt and executes defined actions
+      - Uses CustomtextCache syntax, where chapter is action name and content is a list of actions
+    - Supports placeholders for every action
+      - Custom placeholders can be passed before execution of action
+      - %PLAYER% and %PLAYER1-N% always active
+    - Currently supported actions
+      - "players" |number|: define a minimum amount of players that must be passed to this action to execute
+      - "hasroom" |number| [stacksize]: execution flow will only continue if given amount of slots are free, optional stacksize parameter that will divide the given number
+      - "cmd" |command|: execute command as console
+      - "give" |customitem|: hands out customitem defined in customitems.txt
+      - "broadcast" |message|: broadcast a given message
+      - "tell" |message|: send a given message to main player
+    - Stops execution flow if previous action fails, for 
+      - Example: If broadcast action is below give action and item could not be given, the broadcast won't be done
+  - CustomitemCache
+    - Uses CustomtextCache syntax
+    - Chaptername is itemname
+    - First line in chapter must be Minecraft Material name
+    - Supports %PLAYER% placeholder (player name that receives item) and custom ones can be passed aswell
+    - Available item customisations
+      - itemid: data ID or durability, number as argument
+      - name: itemname, supporting '&' as color code character
+      - lore: custom item lore, lines are separated with '|' character, supports color
+      - enchant: custom enchants, separate enchantment name and level with ':', can include multiple per line
+      - skullowner: set the owner of the skull, only works if given material is "SKULL_ITEM"
+    - Will throw exception if item wasn't given to player
+  - CustomtextCache
+    - Parses a text file, splitting it into chapters
+    - Text file will only be parsed once
+      - Detects when a text file must be reparsed after modification, only when necessary
+    - The start of a new chapters is annotated with '#' character
+      - One chapter can have multiple names if separated with komma, such as "#chaptera, chapter a"
+      - If chapter name is seperated with space, '|' character can be used to alias chapters
+        - Example: "#help faction|factions" can be accessed by both "help faction" and "help factions"
+        - Supports a mix of ',' and '|' char, such as "#help faction|factions, factions"
+      - Supports wildcard with '*' character
+        - Example: "#help *" will match everything, if starting with "help "
+    - '&' character will be replaced with Minecraft color code
+    - If previous line ends with space character current line will be a continuation to it
 - **Handlers**
   - BossBar
     - Send bar to specific player or broadcast
@@ -39,15 +85,6 @@ Contains handlers and Utils that are shared within Halfminer Bukkit/Spigot plugi
     - Actionbar title
     - Tablist titles
 - **Utils**
-  - ActionProbabilityContainer
-    - Class reading a list containing key:value pairings, where key is the probability relative to other list elements and value is the action name
-    - Returns a random CustomAction
-  - CustomAction
-    - Reads customactions.txt and executes commands
-  - CustomitemCache
-    - Uses CustomtextCache syntax
-  - CustomtextCache
-    - Parses a text file, splitting it into chapters
   - HalfminerPlayer
     - Allows retrieval of player stats
     - Get object through storage handler
@@ -56,9 +93,10 @@ Contains handlers and Utils that are shared within Halfminer Bukkit/Spigot plugi
     - Supports custom placeholders
     - Supports clickable commands via '~' prefix and encapsulation of command with '/'
     - Supports colors via '&' code
-  - NMSUtil
+  - NMSUtils
     - Collection of static methods accessing NMS (net.minecraft.server) and CraftBukkit
     - References must be updated manually, as no reflection is being used
+    - Set the last killer of a player, get players ping and send title/tablist packets
   - Pair
     - Helper class implementing a pair
     - equals() and hashCode() properly implemented, allowing usage with HashMaps
@@ -67,3 +105,4 @@ Contains handlers and Utils that are shared within Halfminer Bukkit/Spigot plugi
     - Allows to easily retrieve numbers from the given String
   - Utils
     - Collection of miscellaneous static methods
+    - Object to String converters, String filters, macros etc.
