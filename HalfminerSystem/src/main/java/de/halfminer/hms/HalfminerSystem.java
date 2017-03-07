@@ -2,10 +2,15 @@ package de.halfminer.hms;
 
 import de.halfminer.hms.enums.HandlerType;
 import de.halfminer.hms.handlers.*;
+import de.halfminer.hms.util.MessageBuilder;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * HalfminerSystem main class, base API for Halfminer Bukkit/Spigot plugins
@@ -44,6 +49,52 @@ public class HalfminerSystem extends JavaPlugin {
             return;
         }
         getLogger().info("HalfminerSystem enabled");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (!sender.hasPermission("hms.command")) {
+            MessageBuilder.create("noPermission", "HMS").sendMessage(sender);
+            return true;
+        }
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+
+            boolean reloadAll = args.length > 1 && args[1].equalsIgnoreCase("-a");
+            for (Plugin plugin : manager.getManagedPlugins()) {
+                if (!reloadAll && !plugin.equals(this)) continue;
+                manager.reloadOcurred(plugin);
+                MessageBuilder.create("pluginReloaded", "HMS")
+                        .addPlaceholderReplace("%PLUGINNAME%", plugin.getName())
+                        .sendMessage(sender);
+            }
+            return true;
+        }
+
+        MessageBuilder.create("cmdHmsSystem", "HMS")
+                .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
+                .sendMessage(sender);
+
+        Set<Plugin> managedPlugins = manager.getManagedPlugins();
+        if (managedPlugins.size() <= 1) {
+            MessageBuilder.create("cmdHmsNoneHooked").sendMessage(sender);
+        } else {
+            for (Plugin plugin : managedPlugins) {
+                if (plugin == this) continue;
+
+                MessageBuilder.create("cmdHmsHooked")
+                        .addPlaceholderReplace("%NAME%", plugin.getName())
+                        .addPlaceholderReplace("%VERSION%", plugin.getDescription().getVersion())
+                        .sendMessage(sender);
+            }
+
+            if (getServer().getPluginCommand("hmc") != null) {
+                MessageBuilder.create("cmdHmsCoreCommand").sendMessage(sender);
+            }
+        }
+
+        return true;
     }
 
     public HalfminerManager getHalfminerManager() {

@@ -11,11 +11,17 @@ commands:
   ?:
     description: Bukkit override, protects from viewing all commands
     aliases: [alias]
+  hms:
+    description: HalfminerSystem base command showing version information and reloading every hooked plugin
+    aliases: [halfminer, halfminersystem, hsystem, hmsystem]
 permissions:
   hms.*:
     description: Access to all permission
     default: op
     children:
+      hms.command: true
       hms.noteleporttimer: true
+  hms.command:
+    description: Access to hms command
   hms.noteleporttimer:
     description: Access to administrative commands

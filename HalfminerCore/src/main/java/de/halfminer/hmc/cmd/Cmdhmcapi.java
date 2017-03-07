@@ -19,7 +19,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  *   - Set script vars accordingly
  */
 @SuppressWarnings("unused")
-public class Cmdhmsapi extends HalfminerCommand {
+public class Cmdhmcapi extends HalfminerCommand {
 
     @Override
     public void execute() {

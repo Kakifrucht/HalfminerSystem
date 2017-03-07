@@ -1,7 +1,7 @@
 #HalfminerCore Config
 command:
-  hms:
-    #Path to remote schematic location for /hms copyschematic
+  hmc:
+    #Path to remote schematic location for /hmc copyschematic
     remoteSchematicPath: '/put/your/path/here'
   home:
     #Time in minutes until /home will be blocked
@@ -25,7 +25,7 @@ command:
     - 5
     #Add rank name (passed as %PARAM1%) and multiplier for above base values,
     #that will be passed to the action, seperate with comma.
-    #First rank must have permission hms.level.1, second hms.level.2 etc.
+    #First rank must have permission hmc.level.1, second hmc.level.2 etc.
     #First value will be the rank parameter for /rank <Player> [rank]
     rankNamesAndMultipliers:
     - 'Premium, 1'
@@ -34,7 +34,7 @@ command:
     #True if you want to deduct already multiplied amounts of previous ranks again, useful for rank upgrades
     deductPreviousRanks: true
   repair:
-    #Base cooldown in seconds, which will be doubled per hms.level
+    #Base cooldown in seconds, which will be doubled per hmc.level
     cooldownBase: 900
     #Longest cooldown in seconds if no level has been met
     maxCooldown: 28800
@@ -94,8 +94,8 @@ autoMessage:
 chat:
   #Time in seconds until a player can get a mention notification again
   mentionDelay: 10
-  #Add formats to the list, you need the permission node hms.chat.format.name
-  #hms.chat.topformat always grants top format (which has highest priority)
+  #Add formats to the list, you need the permission node hmc.chat.format.name
+  #hmc.chat.topformat always grants top format (which has highest priority)
   formats:
   - 'owner:%CPREFIX% &r- &l%PLAYER%%SUFFIX%: &7%MESSAGE%'
   - 'default:%CPREFIX% &r- %PLAYER%: &7%MESSAGE%'
@@ -180,7 +180,7 @@ sell:
   sugarcane: 55
   wheat: 25
 skillLevel:
-  #Amount of groups for the server team (players with permission hms.bypass.skilllevel), will be shown on top of tablist
+  #Amount of groups for the server team (players with permission hmc.bypass.skilllevel), will be shown on top of tablist
   amountTeamGroups: 3
   #Level that has to be reached for a derank to occur
   derankThreshold: 16
@@ -224,45 +224,44 @@ localization:
   cmdCustomtextCacheParseError: 'Beim Parsen ist folgender Fehler aufgetreten: %ERROR%'
   cmdCustomtextNotFound: '&cUnbekanntes Thema'
   cmdDisposalTitle: 'Mülleimer'
-  cmdHmsConfigReloaded: '&aKonfiguration neugeladen'
-  cmdHmsCopySchematicAlreadyExists: '&cDie Schematic existiert bereits im Zielverzeichnis'
-  cmdHmsCopySchematicCopyError: '&cDie Schematic konnte nicht kopiert werden'
-  cmdHmsCopySchematicCopySuccess: '&7Schematic wurde &aerfolgreich &7kopiert'
-  cmdHmsCopySchematicDelete: '&7Schematics werden in 10 Minuten auf beiden Servern gelöscht'
-  cmdHmsCopySchematicDeleted: 'Datei %PATH% wurde erfolgreich gelöscht'
-  cmdHmsCopySchematicDeletedError: 'Datei %PATH% konnte nicht gelöscht werden'
-  cmdHmsCopySchematicDoesntExist: '&7Die angegebene Schematic konnte &cnicht &7gefunden werden (Groß- und Kleinschreibung?)'
-  cmdHmsCopySchematicNotConfigured: '&cEs wurde kein gültiger Zielpfad in der Konfiguration angegeben'
-  cmdHmsCopySchematicNotSpecified: '&7Gebe den Namen der zu kopierenden Schematic an'
-  cmdHmsGiveError: '&cDer Gegenstand konnte nicht gegeben werden, Grund: %REASON%'
-  cmdHmsGiveInventoryFull: '&cNicht genügend Platz im Inventar von &e%PLAYER%&c, &a%AMOUNT%&cx&e%ITEM% &cverloren'
-  cmdHmsGiveItemNotFound: '&cDer Gegenstand &e%ITEM% &cist nicht definiert'
-  cmdHmsGiveList: '&eAlle Gegenstände: &f%LIST%'
-  cmdHmsGiveListNone: '&cEs wurden keine Gegenstände definiert'
-  cmdHmsGiveSuccessful: '&7Gebe &e%PLAYER% &a%AMOUNT% &7mal &e%ITEM%'
-  cmdHmsHomeblockRemove: '&a%PLAYER% &7kann jetzt /home benutzen'
-  cmdHmsMotdFailed: '&cVerwendung: &f/hms setmotd <motd>'
-  cmdHmsMotdUpdated: '&7Die MOTD wurde geändert zu: &r&7%NEWMOTD%'
-  cmdHmsRenameDone: '&aDer Gegenstand wurde umbenannt in &r"%NAME%&r"'
-  cmdHmsRenameFailed: '&cHalte den Gegenstand, den du umbenennen willst in deiner Hand'
-  cmdHmsRingMessage: '&e%PLAYER% &cklingelt dich an, bitte antworte ihm'
-  cmdHmsRingSent: '&a%PLAYER% wurde angeklingelt'
-  cmdHmsRingTitle: '&cDu wirst angeklingelt\nBitte antworte %PLAYER%'
-  cmdHmsRunActionCacheError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht geladen werden, Grund: %REASON%'
-  cmdHmsRunActionExecuteError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht ausgeführt werden (Konditionen nicht erfüllt, oder siehe Konsole)'
-  cmdHmsRunActionSuccess: '&7Die Aktion &a%ACTIONNAME% &7wurde ausgeführt'
-  cmdHmsSearchhomesNoneFound: '&cEs wurden keine Homes gefunden'
-  cmdHmsSearchhomesResults: '&7%PLAYER% &e>> &a%HOMENAME%'
-  cmdHmsSearchhomesStarted: '&7Die Suche nach Homes in einem Radius von &e%RADIUS% &7Blöcken wurde gestartet...'
-  cmdHmsSkillShow: '&7Das Skilllevel von &e%PLAYER% &7beträgt &e%SKILLLEVEL% &7(&o%ELO%&7)'
-  cmdHmsSkillUsage: '&cVerwendung: &f/hms updateskill <spieler> [elo]'
-  cmdHmsSkillUpdated: '&7Das Skilllevel von &e%PLAYER% &7wurde auf Level &e%SKILLLEVEL% &7(&o%OLDELO% &7-> &o%NEWELO%&7) gesetzt'
-  cmdHmsUsage: 'HalfminerSystem Version &6%VERSION% &r(System: &6%SYSTEMVERSION%&r)\n&6&lKommandos:\n &f/hms reload\n &f/hms copyschematic <schematic> [auto]\n /hms give <spieler> <item> [menge]\n /hms rename <name> [-lore line1|line2|..]\n /hms updateskill <spieler> [elo]\n /hms rmhomeblock <spieler>\n /hms runaction <action> <player(s)>\n /hms ring <spieler>\n /hms searchhomes [radius]\n /hms xraybypass [spieler]'
-  cmdHmsXrayBypassSet: '&e%PLAYER% &awird nicht mehr vom AntiXRay gemeldet'
-  cmdHmsXrayBypassUnset: '&e%PLAYER% &awird wieder vom AntiXRay gemeldet'
-  cmdHmsXrayLegend: '&7Spielerfarbe Legende: &eIgnoriert &7| Unverdächtig | &cVerdächtig'
-  cmdHmsXrayShow: '&7Folgende Spieler werden vom AntiXRay beobachtet'
-  cmdHmsXrayShowEmpty: '&aAktuell sind keine Spieler unter Beobachtung'
+  cmdHmcCopySchematicAlreadyExists: '&cDie Schematic existiert bereits im Zielverzeichnis'
+  cmdHmcCopySchematicCopyError: '&cDie Schematic konnte nicht kopiert werden'
+  cmdHmcCopySchematicCopySuccess: '&7Schematic wurde &aerfolgreich &7kopiert'
+  cmdHmcCopySchematicDelete: '&7Schematics werden in 10 Minuten auf beiden Servern gelöscht'
+  cmdHmcCopySchematicDeleted: 'Datei %PATH% wurde erfolgreich gelöscht'
+  cmdHmcCopySchematicDeletedError: 'Datei %PATH% konnte nicht gelöscht werden'
+  cmdHmcCopySchematicDoesntExist: '&7Die angegebene Schematic konnte &cnicht &7gefunden werden (Groß- und Kleinschreibung?)'
+  cmdHmcCopySchematicNotConfigured: '&cEs wurde kein gültiger Zielpfad in der Konfiguration angegeben'
+  cmdHmcCopySchematicNotSpecified: '&7Gebe den Namen der zu kopierenden Schematic an'
+  cmdHmcGiveError: '&cDer Gegenstand konnte nicht gegeben werden, Grund: %REASON%'
+  cmdHmcGiveInventoryFull: '&cNicht genügend Platz im Inventar von &e%PLAYER%&c, &a%AMOUNT%&cx&e%ITEM% &cverloren'
+  cmdHmcGiveItemNotFound: '&cDer Gegenstand &e%ITEM% &cist nicht definiert'
+  cmdHmcGiveList: '&eAlle Gegenstände: &f%LIST%'
+  cmdHmcGiveListNone: '&cEs wurden keine Gegenstände definiert'
+  cmdHmcGiveSuccessful: '&7Gebe &e%PLAYER% &a%AMOUNT% &7mal &e%ITEM%'
+  cmdHmcHomeblockRemove: '&a%PLAYER% &7kann jetzt /home benutzen'
+  cmdHmcMotdFailed: '&cVerwendung: &f/hmc setmotd <motd>'
+  cmdHmcMotdUpdated: '&7Die MOTD wurde geändert zu: &r&7%NEWMOTD%'
+  cmdHmcRenameDone: '&aDer Gegenstand wurde umbenannt in &r"%NAME%&r"'
+  cmdHmcRenameFailed: '&cHalte den Gegenstand, den du umbenennen willst in deiner Hand'
+  cmdHmcRingMessage: '&e%PLAYER% &cklingelt dich an, bitte antworte ihm'
+  cmdHmcRingSent: '&a%PLAYER% wurde angeklingelt'
+  cmdHmcRingTitle: '&cDu wirst angeklingelt\nBitte antworte %PLAYER%'
+  cmdHmcRunActionCacheError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht geladen werden, Grund: %REASON%'
+  cmdHmcRunActionExecuteError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht ausgeführt werden (Konditionen nicht erfüllt, oder siehe Konsole)'
+  cmdHmcRunActionSuccess: '&7Die Aktion &a%ACTIONNAME% &7wurde ausgeführt'
+  cmdHmcSearchhomesNoneFound: '&cEs wurden keine Homes gefunden'
+  cmdHmcSearchhomesResults: '&7%PLAYER% &e>> &a%HOMENAME%'
+  cmdHmcSearchhomesStarted: '&7Die Suche nach Homes in einem Radius von &e%RADIUS% &7Blöcken wurde gestartet...'
+  cmdHmcSkillShow: '&7Das Skilllevel von &e%PLAYER% &7beträgt &e%SKILLLEVEL% &7(&o%ELO%&7)'
+  cmdHmcSkillUsage: '&cVerwendung: &f/hmc updateskill <spieler> [elo]'
+  cmdHmcSkillUpdated: '&7Das Skilllevel von &e%PLAYER% &7wurde auf Level &e%SKILLLEVEL% &7(&o%OLDELO% &7-> &o%NEWELO%&7) gesetzt'
+  cmdHmcUsage: 'HalfminerSystem Version &6%VERSION% &r(System: &6%SYSTEMVERSION%&r)\n&6&lKommandos:\n &f/hmc reload\n &f/hmc copyschematic <schematic> [auto]\n /hmc give <spieler> <item> [menge]\n /hmc rename <name> [-lore line1|line2|..]\n /hmc updateskill <spieler> [elo]\n /hmc rmhomeblock <spieler>\n /hmc runaction <action> <player(s)>\n /hmc ring <spieler>\n /hmc searchhomes [radius]\n /hmc xraybypass [spieler]'
+  cmdHmcXrayBypassSet: '&e%PLAYER% &awird nicht mehr vom AntiXRay gemeldet'
+  cmdHmcXrayBypassUnset: '&e%PLAYER% &awird wieder vom AntiXRay gemeldet'
+  cmdHmcXrayLegend: '&7Spielerfarbe Legende: &eIgnoriert &7| Unverdächtig | &cVerdächtig'
+  cmdHmcXrayShow: '&7Folgende Spieler werden vom AntiXRay beobachtet'
+  cmdHmcXrayShowEmpty: '&aAktuell sind keine Spieler unter Beobachtung'
   cmdHmstoreGet: '&7Der Wert &o%PATH% &7lautet: &r%VALUE%'
   cmdHmstoreRemove: '&7Der Wert &o%PATH% &7wurde entfernt'
   cmdHmstoreSave: '&7Die Daten wurden gespeichert'

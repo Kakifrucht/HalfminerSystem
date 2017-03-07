@@ -17,11 +17,12 @@ commands:
   disposal:
     description: Open portable disposal
     aliases: [bin]
-  hms:
-    description: HalfminerSystem base command
-    aliases: [halfminer, halfminersystem, hsystem, hmsystem, hmc, halfminercore, hcore, hmcore]
-  hmsapi:
-    description: Command script API
+  hmc:
+    description: HalfminerCore base command and toolbox
+    aliases: [halfminercore, hcore, hmcore]
+  hmcapi:
+    description: Command API
+    aliases: [hmsapi]
   hmstore:
     description: Data storage manipulation
   home:
