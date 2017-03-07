@@ -1,6 +1,6 @@
 package de.halfminer.hms.caches;
 
-import com.earth2me.essentials.Enchantments;
+import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.FormattingException;
 import de.halfminer.hms.exception.GiveItemException;
@@ -107,7 +107,8 @@ public class CustomitemCache {
                         String enchantName = separatorEnchants.getArgument(0);
                         int level = separatorEnchants.getArgumentInt(1);
 
-                        Enchantment enchant = Enchantments.getByName(enchantName);
+                        Enchantment enchant = HalfminerSystem.getInstance().getHooksHandler()
+                                .getEnchantmentFromString(enchantName);
                         if (enchant == null) {
                             logInvalidParameter(keyParamPair.getLeft(), enchantName);
                             continue;

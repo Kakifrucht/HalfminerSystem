@@ -1,13 +1,14 @@
 package de.halfminer.hms.handlers;
 
+import com.earth2me.essentials.Enchantments;
 import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.api.UserDoesNotExistException;
+import com.earth2me.essentials.api.Economy;
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
-import net.ess3.api.Economy;
 import net.milkbowl.vault.chat.Chat;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -69,9 +70,9 @@ public class HanHooks extends HalfminerClass {
         if (essentialsHook == null) throw new HookException();
         double balance;
         try {
-            balance = net.ess3.api.Economy.getMoneyExact(player.getName()).doubleValue();
+            balance = Economy.getMoneyExact(player.getName()).doubleValue();
             return Utils.roundDouble(balance);
-        } catch (UserDoesNotExistException e) {
+        } catch (Exception e) {
             throw new HookException(e);
         }
     }
@@ -82,6 +83,14 @@ public class HanHooks extends HalfminerClass {
             Economy.add(player.getName(), BigDecimal.valueOf(amount));
         } catch (Exception e) {
             throw new HookException(e);
+        }
+    }
+
+    public Enchantment getEnchantmentFromString(String enchantment) {
+        if (essentialsHook != null) {
+            return Enchantments.getByName(enchantment);
+        } else {
+            return Enchantment.getByName(enchantment.toUpperCase());
         }
     }
 

@@ -1,7 +1,5 @@
 package de.halfminer.hmc.cmd;
 
-import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.User;
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.enums.ModuleType;
 import de.halfminer.hmc.modules.ModAntiXray;
@@ -13,7 +11,11 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.GiveItemException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
-import de.halfminer.hms.util.*;
+import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
+import net.ess3.api.IEssentials;
+import net.ess3.api.IUser;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -419,7 +421,7 @@ public class Cmdhms extends HalfminerCommand {
             return;
         }
 
-        final Essentials ess = hms.getHooksHandler().getEssentialsHook();
+        final IEssentials ess = hms.getHooksHandler().getEssentialsHook();
         final ArrayList<String> homeMessages = new ArrayList<>();
 
         final World world = player.getLocation().getWorld();
@@ -445,7 +447,7 @@ public class Cmdhms extends HalfminerCommand {
 
             for (UUID uuid : ess.getUserMap().getAllUniqueUsers()) {
 
-                User user = ess.getUser(uuid);
+                IUser user = ess.getUser(uuid);
                 for (String homeName : user.getHomes()) {
 
                     try {
