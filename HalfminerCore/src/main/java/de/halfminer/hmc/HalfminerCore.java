@@ -3,7 +3,6 @@ package de.halfminer.hmc;
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.enums.ModuleType;
 import de.halfminer.hmc.modules.HalfminerModule;
-import de.halfminer.hms.HalfminerManager;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handlers.HanStorage;
 import de.halfminer.hms.util.MessageBuilder;
@@ -28,7 +27,6 @@ public class HalfminerCore extends JavaPlugin {
         return instance;
     }
 
-    private HalfminerManager manager;
     private HanStorage storage;
     private final Map<ModuleType, HalfminerModule> modules = new HashMap<>();
 
@@ -36,8 +34,7 @@ public class HalfminerCore extends JavaPlugin {
     public void onEnable() {
 
         instance = this;
-        manager = HalfminerSystem.getInstance().getHalfminerManager();
-        manager.reloadOcurred(this);
+        HalfminerSystem.getInstance().getHalfminerManager().reloadOcurred(this);
 
         storage = new HanStorage(this);
         try {
@@ -55,13 +52,6 @@ public class HalfminerCore extends JavaPlugin {
         }
 
         getLogger().info("HalfminerCore enabled");
-    }
-
-    @Override
-    public void onDisable() {
-
-        manager.pluginDisabled(this);
-        getLogger().info("HalfminerCore disabled");
     }
 
     @Override

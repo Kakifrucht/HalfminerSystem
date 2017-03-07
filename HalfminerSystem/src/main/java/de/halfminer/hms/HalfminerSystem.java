@@ -20,13 +20,14 @@ public class HalfminerSystem extends JavaPlugin {
         return instance;
     }
 
-    private final HalfminerManager manager = new HalfminerManager();
+    private HalfminerManager manager;
     private final Map<HandlerType, HalfminerClass> handlers = new HashMap<>();
 
     @Override
     public void onEnable() {
 
         instance = this;
+        manager = new HalfminerManager(this);
         manager.reloadOcurred(this);
 
         try {
@@ -43,13 +44,6 @@ public class HalfminerSystem extends JavaPlugin {
             return;
         }
         getLogger().info("HalfminerSystem enabled");
-    }
-
-    @Override
-    public void onDisable() {
-
-        manager.pluginDisabled(this);
-        getLogger().info("HalfminerSystem disabled");
     }
 
     public HalfminerManager getHalfminerManager() {

@@ -39,7 +39,7 @@ public class HalfminerWebAPI extends JavaPlugin {
     public void onDisable() {
         if (server != null) {
             server.stop();
-            getLogger().info("Disabling HalfminerWebAPI, HTTP server stopped");
+            getLogger().info("HTTP server stopped");
         }
     }
 

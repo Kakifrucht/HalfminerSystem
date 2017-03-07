@@ -4,30 +4,39 @@ import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.interfaces.Manageable;
 import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.interfaces.Sweepable;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Central hub for all {@link Manageable} classes, such as {@link HalfminerClass}, to be registered for reloads,
  * sweeps, plugin disables and as event listeners
  */
-public class HalfminerManager {
+public class HalfminerManager implements Listener {
 
+    private final Plugin plugin;
+
+    private final Set<Plugin> managedPlugins = new HashSet<>();
     private final Map<Plugin, List<Disableable>> toDisable = new HashMap<>();
     private final Map<Plugin, List<Reloadable>> toReload = new HashMap<>();
     private final Map<Plugin, List<Sweepable>> toSweep = new HashMap<>();
 
     private BukkitTask sweepTask;
 
+    HalfminerManager(Plugin pluginOwner) {
+        this.plugin = pluginOwner;
+        managedPlugins.add(plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
     public void registerClass(Manageable toAdd) {
 
         Plugin plugin = toAdd.getPlugin();
+        managedPlugins.add(plugin);
         if (toAdd instanceof Disableable) {
             if (toDisable.containsKey(plugin)) {
                 toDisable.get(plugin).add((Disableable) toAdd);
@@ -60,8 +69,7 @@ public class HalfminerManager {
             }
 
             if (sweepTask == null) {
-                HalfminerSystem hms = HalfminerSystem.getInstance();
-                sweepTask = hms.getServer().getScheduler().runTaskTimer(hms, () -> {
+                sweepTask = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> {
                     for (List<Sweepable> sweepables : toSweep.values()) {
                         sweepables.forEach(Sweepable::sweep);
                     }
@@ -74,7 +82,12 @@ public class HalfminerManager {
         }
     }
 
-    public void pluginDisabled(Plugin pluginToDisable) {
+    @EventHandler
+    public void pluginDisabled(PluginDisableEvent e) {
+
+        Plugin pluginToDisable = e.getPlugin();
+        if (!managedPlugins.contains(pluginToDisable))
+            return;
 
         if (toDisable.containsKey(pluginToDisable)) {
             List<Disableable> list = toDisable.get(pluginToDisable);
@@ -92,6 +105,7 @@ public class HalfminerManager {
         }
 
         pluginToDisable.getServer().getScheduler().cancelTasks(pluginToDisable);
+        pluginToDisable.getLogger().info(pluginToDisable.getName() + " disabled");
     }
 
     public void reloadOcurred(Plugin pluginToReload) {

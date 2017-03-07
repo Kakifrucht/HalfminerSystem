@@ -89,9 +89,6 @@ public class HalfminerBattle extends JavaPlugin {
     @Override
     public void onDisable() {
         arenaManager.endAllGames();
-
-        manager.pluginDisabled(this);
-        getLogger().info("HalfminerBattle disabled");
     }
 
     @Override
