@@ -74,33 +74,39 @@ public class HalfminerManager {
         }
     }
 
-    public void pluginDisabled(JavaPlugin toDisable) {
+    public void pluginDisabled(JavaPlugin pluginToDisable) {
 
-        if (this.toDisable.containsKey(toDisable)) {
-            List<Disableable> list = this.toDisable.get(toDisable);
+        if (toDisable.containsKey(pluginToDisable)) {
+            List<Disableable> list = toDisable.get(pluginToDisable);
             for (int i = list.size() - 1; i >= 0; i--) {
                 list.get(i).onDisable();
             }
-            this.toDisable.remove(toDisable);
-            this.toReload.remove(toDisable);
-            this.toSweep.remove(toDisable);
+            toDisable.remove(pluginToDisable);
         }
-        toDisable.getServer().getScheduler().cancelTasks(toDisable);
+
+        toReload.remove(pluginToDisable);
+        toSweep.remove(pluginToDisable);
+        if (sweepTask != null && toSweep.size() == 0) {
+            sweepTask.cancel();
+            sweepTask = null;
+        }
+
+        pluginToDisable.getServer().getScheduler().cancelTasks(pluginToDisable);
     }
 
-    public void reloadOcurred(JavaPlugin toReload) {
+    public void reloadOcurred(JavaPlugin pluginToReload) {
 
         // Save default config.yml if not yet done
-        toReload.saveDefaultConfig();
+        pluginToReload.saveDefaultConfig();
         // Make sure that if the file changed, it is reread
-        toReload.reloadConfig();
+        pluginToReload.reloadConfig();
         // If parameters are missing, add them (reload again afterwards)
-        toReload.getConfig().options().copyDefaults(true);
+        pluginToReload.getConfig().options().copyDefaults(true);
         // Save config.yml to disk
-        toReload.saveConfig();
-        toReload.reloadConfig();
-        if (this.toReload.containsKey(toReload)) {
-            this.toReload.get(toReload).forEach(Reloadable::loadConfig);
+        pluginToReload.saveConfig();
+        pluginToReload.reloadConfig();
+        if (toReload.containsKey(pluginToReload)) {
+            toReload.get(pluginToReload).forEach(Reloadable::loadConfig);
         }
     }
 }

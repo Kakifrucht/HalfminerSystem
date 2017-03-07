@@ -145,11 +145,10 @@ public class MessageBuilder {
 
         if (usePrefix && !loggingMode) {
             String prefixPlaceholder = getMessage("prefix");
-            // if placeholder is set in plugin, check if it contains a placeholder,
-            // only append if placeholder will be replaced
+            // if %PREFIX% placeholder is part of plugins prefix, check if MessageBuilder contains
+            // said placeholder, only add prefix if placeholder will be replaced
             if (prefixPlaceholder.length() > 0
-                    && (!prefixPlaceholder.contains("%PREFIX%")
-                    || placeholders.containsKey("PREFIX"))) {
+                    && (!prefixPlaceholder.contains("%PREFIX%") || placeholders.containsKey("PREFIX"))) {
                 toReturn = prefixPlaceholder + toReturn;
             }
         }

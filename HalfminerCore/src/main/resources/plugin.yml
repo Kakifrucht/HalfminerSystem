@@ -19,7 +19,7 @@ commands:
     aliases: [bin]
   hms:
     description: HalfminerSystem base command
-    aliases: [halfminer, halfminersystem, hsystem, hmsystem]
+    aliases: [halfminer, halfminersystem, hsystem, hmsystem, hmc, halfminercore, hcore, hmcore]
   hmsapi:
     description: Command script API
   hmstore:
