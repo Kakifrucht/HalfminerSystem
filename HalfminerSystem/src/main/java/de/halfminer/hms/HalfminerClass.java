@@ -20,17 +20,25 @@ public abstract class HalfminerClass implements Manageable {
 
     protected HalfminerClass() {
         this.plugin = HalfminerSystem.getInstance();
-        halfManager.registerClass(this);
+        registerClass();
     }
 
     protected HalfminerClass(Plugin plugin) {
         this.plugin = plugin;
-        halfManager.registerClass(this);
+        registerClass();
     }
 
     protected HalfminerClass(Plugin plugin, boolean register) {
         this.plugin = plugin;
-        if (register) halfManager.registerClass(this);
+        if (register) registerClass();
+    }
+
+    protected void registerClass() {
+        halfManager.registerClass(this);
+    }
+
+    protected void unregisterClass() {
+        halfManager.unregisterClass(this);
     }
 
     @Override

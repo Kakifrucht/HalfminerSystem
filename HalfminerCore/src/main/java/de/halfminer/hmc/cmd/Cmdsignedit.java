@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -59,7 +59,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
             MessageBuilder.create("cmdSigneditCopy", hmc, PREFIX)
                     .addPlaceholderReplace("%AMOUNT%", String.valueOf(amountToCopy))
                     .sendMessage(player);
-            setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT, player.getUniqueId());
+            setPersistent(player.getUniqueId());
             return;
 
         } else {
@@ -79,7 +79,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                             .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber + 1))
                             .addPlaceholderReplace("%TEXT%", setTo)
                             .sendMessage(player);
-                    setPersistent(PersistenceMode.EVENT_PLAYER_INTERACT, player.getUniqueId());
+                    setPersistent(player.getUniqueId());
                     return;
                 } else {
                     showUsage();
@@ -91,16 +91,18 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
         showUsage();
     }
 
-    @Override
-    public boolean execute(PlayerEvent e) {
+    @EventHandler(ignoreCancelled = true)
+    public void execute(PlayerInteractEvent e) {
 
         Player player = e.getPlayer();
+        if (!isPersistenceOwner(e.getPlayer()))
+            return;
 
         boolean isDone = false;
-        PlayerInteractEvent interactEvent = (PlayerInteractEvent) e;
 
-        Block block = interactEvent.getClickedBlock();
-        if (block != null && (block.getType() == Material.SIGN
+        Block block = e.getClickedBlock();
+        if (block != null
+                && (block.getType() == Material.SIGN
                         || block.getType() == Material.SIGN_POST
                         || block.getType() == Material.WALL_SIGN)) {
 
@@ -125,13 +127,12 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
 
                 sign.update();
             }
-            interactEvent.setCancelled(true);
+            e.setCancelled(true);
         }
-        return isDone;
-    }
 
-    @Override
-    public void onDisable() {
+        if (isDone) {
+            unregisterClass();
+        }
     }
 
     private void showUsage() {

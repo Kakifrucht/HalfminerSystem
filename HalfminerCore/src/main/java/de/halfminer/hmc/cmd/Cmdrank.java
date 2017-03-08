@@ -1,15 +1,17 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerPersistenceCommand;
+import de.halfminer.hms.caches.CustomAction;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
-import de.halfminer.hms.caches.CustomAction;
+import de.halfminer.hms.interfaces.Disableable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ import java.util.logging.Level;
  * - Instead of defining upgrade rank on command execution can define number of ranks that player will be upranked
  */
 @SuppressWarnings("unused")
-public class Cmdrank extends HalfminerPersistenceCommand {
+public class Cmdrank extends HalfminerPersistenceCommand implements Disableable {
 
     private final List<Pair<String, Integer>> rankNameAndMultiplierPairs = new ArrayList<>();
 
@@ -97,14 +99,16 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             MessageBuilder.create("cmdRankNotOnline", hmc, "Rank")
                     .addPlaceholderReplace("%PLAYER%", args[0])
                     .sendMessage(sender);
-            setPersistent(PersistenceMode.EVENT_PLAYER_JOIN, uuidToReward);
+            setPersistent(uuidToReward);
         }
     }
 
-    @Override
-    public boolean execute(PlayerEvent e) {
-        execute(e.getPlayer());
-        return true;
+    @EventHandler
+    public void execute(PlayerJoinEvent e) {
+        if (isPersistenceOwner(e.getPlayer())) {
+            execute(e.getPlayer());
+            unregisterClass();
+        }
     }
 
     private void execute(Player player) {
@@ -193,14 +197,14 @@ public class Cmdrank extends HalfminerPersistenceCommand {
             String placeholderReplaced = MessageBuilder.create(commandOnDisable, hmc)
                     .setDirectString()
                     .addPlaceholderReplace("%PLAYER%", args[0])
-                    .addPlaceholderReplace("%RANK%", rankToGiveName)
+                    .addPlaceholderReplace("%ARG%", args[1])
                     .returnMessage();
 
             server.dispatchCommand(server.getConsoleSender(), placeholderReplaced);
         }
         MessageBuilder.create("cmdRankPersistenceDisable", hmc)
                 .addPlaceholderReplace("%PLAYER%", args[0])
-                .addPlaceholderReplace("%RANK%", rankToGiveName)
+                .addPlaceholderReplace("%ARG%", args[1])
                 .logMessage(Level.WARNING);
     }
 
@@ -225,7 +229,7 @@ public class Cmdrank extends HalfminerPersistenceCommand {
     }
 
     private void sendAndLogMessageBuilder(MessageBuilder toSendAndLog) {
-        toSendAndLog.logMessage(Level.SEVERE);
+        toSendAndLog.logMessage(Level.WARNING);
         CommandSender originalSender = getOriginalSender();
         if (originalSender != null) toSendAndLog.sendMessage(originalSender);
     }

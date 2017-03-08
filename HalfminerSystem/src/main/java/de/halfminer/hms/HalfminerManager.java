@@ -5,6 +5,7 @@ import de.halfminer.hms.interfaces.Manageable;
 import de.halfminer.hms.interfaces.Reloadable;
 import de.halfminer.hms.interfaces.Sweepable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
@@ -68,17 +69,32 @@ public class HalfminerManager implements Listener {
                 toSweep.put(plugin, list);
             }
 
-            if (sweepTask == null) {
-                sweepTask = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> {
-                    for (List<Sweepable> sweepables : toSweep.values()) {
-                        sweepables.forEach(Sweepable::sweep);
-                    }
-                }, 12000L, 12000L);
-            }
+            checkSweepTask();
         }
 
         if (toAdd instanceof Listener) {
             plugin.getServer().getPluginManager().registerEvents((Listener) toAdd, plugin);
+        }
+    }
+
+    void unregisterClass(Manageable toUnregister) {
+        Plugin plugin = toUnregister.getPlugin();
+
+        if (toUnregister instanceof Disableable && toDisable.containsKey(plugin)) {
+            toDisable.get(plugin).remove(toUnregister);
+        }
+
+        if (toUnregister instanceof Reloadable && toReload.containsKey(plugin)) {
+            toReload.get(plugin).remove(toUnregister);
+        }
+
+        if (toUnregister instanceof Sweepable && toSweep.containsKey(plugin)) {
+            toSweep.get(plugin).remove(toUnregister);
+            checkSweepTask();
+        }
+
+        if (toUnregister instanceof Listener) {
+            HandlerList.unregisterAll((Listener) toUnregister);
         }
     }
 
@@ -99,10 +115,7 @@ public class HalfminerManager implements Listener {
 
         toReload.remove(pluginToDisable);
         toSweep.remove(pluginToDisable);
-        if (sweepTask != null && toSweep.size() == 0) {
-            sweepTask.cancel();
-            sweepTask = null;
-        }
+        checkSweepTask();
 
         pluginToDisable.getServer().getScheduler().cancelTasks(pluginToDisable);
         pluginToDisable.getLogger().info(pluginToDisable.getName() + " disabled");
@@ -124,6 +137,19 @@ public class HalfminerManager implements Listener {
         pluginToReload.reloadConfig();
         if (toReload.containsKey(pluginToReload)) {
             toReload.get(pluginToReload).forEach(Reloadable::loadConfig);
+        }
+    }
+
+    private void checkSweepTask() {
+        if (sweepTask != null && toSweep.size() == 0) {
+            sweepTask.cancel();
+            sweepTask = null;
+        } else if (sweepTask == null && toSweep.size() > 0) {
+            sweepTask = plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> {
+                for (List<Sweepable> sweepables : toSweep.values()) {
+                    sweepables.forEach(Sweepable::sweep);
+                }
+            }, 12000L, 12000L);
         }
     }
 

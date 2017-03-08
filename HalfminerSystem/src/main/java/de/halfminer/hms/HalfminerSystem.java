@@ -83,8 +83,13 @@ public class HalfminerSystem extends JavaPlugin {
             for (Plugin plugin : managedPlugins) {
                 if (plugin == this) continue;
 
+                String pluginName = plugin.getName();
+                if (pluginName.startsWith("Halfminer")) {
+                    pluginName = pluginName.substring(9);
+                }
+
                 MessageBuilder.create("cmdHmsHooked")
-                        .addPlaceholderReplace("%NAME%", plugin.getName())
+                        .addPlaceholderReplace("%NAME%", pluginName)
                         .addPlaceholderReplace("%VERSION%", plugin.getDescription().getVersion())
                         .sendMessage(sender);
             }

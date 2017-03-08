@@ -67,8 +67,6 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Taking off armor
       - Commands
       - Enderpearls
-  - CommandPersistence
-    - Stores and calls registered persistent commands to be executed when a given event is fired for a player
   - GlitchProtection
     - Notifies staff about potential wall glitching
     - Detects dismount glitches, forces player to spawn

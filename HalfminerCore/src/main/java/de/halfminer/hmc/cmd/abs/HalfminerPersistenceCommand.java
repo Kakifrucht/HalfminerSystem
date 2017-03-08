@@ -1,52 +1,23 @@
 package de.halfminer.hmc.cmd.abs;
 
-import de.halfminer.hmc.enums.ModuleType;
-import de.halfminer.hmc.modules.ModCommandPersistence;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerEvent;
 
 import java.util.UUID;
 
 /**
- * Called by {@link ModCommandPersistence} after being registered via {@link #setPersistent(PersistenceMode, UUID)}.
+ * Commands that have their own listeners
  */
 @SuppressWarnings("unused")
-public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
-
-    private final static ModCommandPersistence persistence =
-            (ModCommandPersistence) hmc.getModule(ModuleType.COMMAND_PERSISTENCE);
+public abstract class HalfminerPersistenceCommand extends HalfminerCommand implements Listener {
 
     private UUID persistenceSender;
     private UUID persistenceOwner;
-    private PersistenceMode mode;
 
-    /**
-     * Execute with event passed by {@link ModCommandPersistence}.
-     *
-     * @param e Event that causes the execution of the command
-     * @return true if it has executed successfully and should not be called anymore, false if it must be called again
-     */
-    public abstract boolean execute(PlayerEvent e);
-
-    /**
-     * Will be called if plugin is disabled while this command still persists.
-     */
-    public abstract void onDisable();
-
-    /**
-     * Get the persistence owners UUID.
-     *
-     * @return UUID of player that will trigger persistence module
-     * @throws RuntimeException when persistence was not enabled
-     */
-    public UUID getPersistenceUUID() {
-        if (persistenceOwner != null)
-            return persistenceOwner;
-        throw new RuntimeException("getPersistenceUUID() called before persistence was set");
-    }
-
-    public PersistenceMode getMode() {
-        return mode;
+    protected boolean isPersistenceOwner(Player toCheck) {
+        return toCheck.getUniqueId().equals(persistenceOwner);
     }
 
     /**
@@ -55,16 +26,14 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
      * memory leaks. They can be referenced by {@link #getOriginalSender() getOriginalSender}
      * and {@link PlayerEvent#getPlayer() getPlayer}.
      *
-     * @param mode which event will trigger this command
      * @param setTo sets the given UUID to the event trigger
      */
-    protected void setPersistent(PersistenceMode mode, UUID setTo) {
-        this.mode = mode;
+    protected void setPersistent(UUID setTo) {
         this.persistenceSender = isPlayer ? player.getUniqueId() : null;
         this.persistenceOwner = setTo;
         this.sender = null;
         this.player = null;
-        persistence.addPersistentCommand(this);
+        registerClass();
     }
 
     protected CommandSender getOriginalSender() {
@@ -73,10 +42,5 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand {
         } else {
             return sender != null ? sender : server.getConsoleSender();
         }
-    }
-
-    public enum PersistenceMode {
-        EVENT_PLAYER_INTERACT,
-        EVENT_PLAYER_JOIN
     }
 }

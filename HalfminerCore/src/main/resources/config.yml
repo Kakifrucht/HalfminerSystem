@@ -16,8 +16,8 @@ command:
     #If action cannot fully execute, execute this action, will be ignored if empty
     actionToExecuteOnFail: ''
     #Command that will be executed if a pending rank, due to the player being offline,
-    #will be discarded due to plugin disable,
-    commandToExecuteOnDisable: mail send Notch Rank %RANK% for %PLAYER% not given due to plugin disable
+    #will be discarded due to plugin disable, %ARG% placeholder is given argument in /rank player arg
+    commandToExecuteOnDisable: mail send Notch Rank %ARG% for %PLAYER% not given due to plugin disable
     #Base amounts that will be multiplied as specified by rankNamesAndMultipliers and passed as
     #parameter %PARAM2% - %PARAMX% to the supplied action names above
     baseAmountValues:
@@ -288,7 +288,7 @@ localization:
   cmdRankInvalidUpgradeParam: '&cDer Spieler &b%PLAYER% &ckann keine &a%UPGRADEAMOUNT% &cRänge mehr hochgestuft werden'
   cmdRankNewLevelSameOrLower: '&e%PLAYER% &chat bereits den Rang &b%NEWRANK% &coder einen höheren'
   cmdRankNotOnline: '&7Der Spieler &e%PLAYER% &7ist aktuell nicht online, er erhält den Rang sobald er den Server betritt'
-  cmdRankPersistenceDisable: 'Das Plugin wurde deaktiviert bevor dem Spieler %PLAYER% der Rang %RANK% gegeben werden konnte'
+  cmdRankPersistenceDisable: 'Das Plugin wurde deaktiviert bevor dem Spieler %PLAYER% der Rang %ARG% gegeben werden konnte'
   cmdRankPlayerIsOp: '&cDer Spieler &e%PLAYER% &cist bereits Operator'
   cmdRankUsage: '&cVerwendung: &f/rank <Spieler> <Rang|Summe an Rang Upgrades>'
   cmdRepairCooldown: '&cDu kannst erst wieder in &e%MINUTES% &cMinuten reparieren'
