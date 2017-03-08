@@ -4,8 +4,8 @@ import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
-import net.ess3.api.events.UserBalanceUpdateEvent;
 import net.ess3.api.UserDoesNotExistException;
+import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
 
-    private final Map<Player, Double> balances = new ConcurrentHashMap<>();
+    private Map<Player, Double> balances;
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void joinTitles(PlayerJoinEvent e) {
@@ -130,6 +130,9 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     @Override
     public void loadConfig() {
+        if (balances == null) {
+            balances = new ConcurrentHashMap<>();
+        }
         server.getOnlinePlayers().forEach(this::updateBalanceAndTablist);
     }
 }

@@ -4,6 +4,7 @@ import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -57,14 +58,11 @@ public class Cmdhmcapi extends HalfminerCommand {
             if (args[0].equalsIgnoreCase("takecase")) {
 
                 ItemStack hand = player.getInventory().getItemInMainHand();
-
-                if (hand != null && hand.getType().equals(Material.DRAGON_EGG) && hand.getItemMeta().hasDisplayName()) {
+                if (stackNameContains(hand, "kiste")
+                        && reduceHandAmountOrRemove(Material.DRAGON_EGG, 1)) {
 
                     server.dispatchCommand(consoleInstance, "vt setstr temp casename_"
                             + sender.getName() + " " + hand.getItemMeta().getDisplayName());
-                    int amount = hand.getAmount();
-                    if (amount > 1) hand.setAmount(hand.getAmount() - 1);
-                    else player.getInventory().setItemInMainHand(null);
                     server.dispatchCommand(consoleInstance, "vt run casino:caseopen " + player.getName());
 
                 } else server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
@@ -72,7 +70,8 @@ public class Cmdhmcapi extends HalfminerCommand {
             } else if (args[0].equalsIgnoreCase("takehead")) {
 
                 ItemStack hand = player.getInventory().getItemInMainHand();
-                if (hand != null && hand.getType().equals(Material.SKULL_ITEM)) {
+                if (hand != null && hand.hasItemMeta()
+                        && reduceHandAmountOrRemove(Material.SKULL_ITEM, 1)) {
 
                     SkullMeta skull = (SkullMeta) hand.getItemMeta();
 
@@ -94,17 +93,45 @@ public class Cmdhmcapi extends HalfminerCommand {
                             "vt setstr temp headname_" + player.getName() + " " + skullOwner);
                     server.dispatchCommand(consoleInstance,
                             "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
-
-                    // Remove the skull
-                    int amount = hand.getAmount();
-                    if (amount > 1) hand.setAmount(amount - 1);
-                    else player.getInventory().setItemInMainHand(null);
-                    // proceed with next step
                     server.dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
 
                 } else server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
+            } else if (args[0].equalsIgnoreCase("tradeup")) {
+
+                ItemStack hand = player.getInventory().getItemInMainHand();
+                if (stackNameContains(hand, "Votekiste")
+                        && reduceHandAmountOrRemove(Material.DRAGON_EGG, 4)) {
+                    server.dispatchCommand(consoleInstance, "vt run casino:tradeupcases " + player.getName());
+                } else {
+                    server.dispatchCommand(consoleInstance, "vt run casino:tradeupcaseserror " + player.getName());
+                }
             }
         }
+    }
+
+    private boolean reduceHandAmountOrRemove(Material toMatch, int reduceBy) {
+
+        ItemStack hand = player.getInventory().getItemInMainHand();
+        if (hand == null || !hand.getType().equals(toMatch))
+            return false;
+
+        int amount = hand.getAmount();
+        int deducted = amount - reduceBy;
+        if (deducted < 0) {
+            return false;
+        } else if (deducted > 0) {
+            hand.setAmount(deducted);
+        } else {
+            player.getInventory().setItemInMainHand(null);
+        }
+        return true;
+    }
+
+    private boolean stackNameContains(ItemStack toCompare, String toContain) {
+        return toCompare != null
+                && toCompare.hasItemMeta()
+                && toCompare.getItemMeta().hasDisplayName()
+                && ChatColor.stripColor(toCompare.getItemMeta().getDisplayName()).contains(toContain);
     }
 
     private void setHasRoomBoolean(String playerName, boolean value) {

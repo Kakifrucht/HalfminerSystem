@@ -256,7 +256,7 @@ localization:
   cmdHmcSkillShow: '&7Das Skilllevel von &e%PLAYER% &7beträgt &e%SKILLLEVEL% &7(&o%ELO%&7)'
   cmdHmcSkillUsage: '&cVerwendung: &f/hmc updateskill <spieler> [elo]'
   cmdHmcSkillUpdated: '&7Das Skilllevel von &e%PLAYER% &7wurde auf Level &e%SKILLLEVEL% &7(&o%OLDELO% &7-> &o%NEWELO%&7) gesetzt'
-  cmdHmcUsage: 'HalfminerSystem Version &6%VERSION% &r(System: &6%SYSTEMVERSION%&r)\n&6&lKommandos:\n &f/hmc reload\n &f/hmc copyschematic <schematic> [auto]\n /hmc give <spieler> <item> [menge]\n /hmc rename <name> [-lore line1|line2|..]\n /hmc updateskill <spieler> [elo]\n /hmc rmhomeblock <spieler>\n /hmc runaction <action> <player(s)>\n /hmc ring <spieler>\n /hmc searchhomes [radius]\n /hmc xraybypass [spieler]'
+  cmdHmcUsage: 'HalfminerCore Version &6%VERSION% &r(System: &6%SYSTEMVERSION%&r)\n&6&lKommandos:\n &f/hmc reload\n &f/hmc copyschematic <schematic> [auto]\n /hmc give <spieler> <item> [menge]\n /hmc rename <name> [-lore line1|line2|..]\n /hmc updateskill <spieler> [elo]\n /hmc rmhomeblock <spieler>\n /hmc runaction <action> <player(s)>\n /hmc ring <spieler>\n /hmc searchhomes [radius]\n /hmc xraybypass [spieler]'
   cmdHmcXrayBypassSet: '&e%PLAYER% &awird nicht mehr vom AntiXRay gemeldet'
   cmdHmcXrayBypassUnset: '&e%PLAYER% &awird wieder vom AntiXRay gemeldet'
   cmdHmcXrayLegend: '&7Spielerfarbe Legende: &eIgnoriert &7| Unverdächtig | &cVerdächtig'
