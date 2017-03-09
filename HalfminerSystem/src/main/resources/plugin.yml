@@ -8,9 +8,6 @@ main: de.halfminer.hms.HalfminerSystem
 softdepend: [Essentials, Vault]
 
 commands:
-  ?:
-    description: Bukkit override, protects from viewing all commands
-    aliases: [alias]
   hms:
     description: HalfminerSystem base command showing version information and reloading every hooked plugin
     aliases: [halfminer, halfminersystem, hsystem, hmsystem]

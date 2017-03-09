@@ -8,6 +8,9 @@ main: de.halfminer.hmc.HalfminerCore
 depend: [HalfminerSystem, Essentials]
 
 commands:
+  ?:
+    description: Bukkit override, protects from viewing all commands
+    aliases: [alias]
   chat:
     description: Chat manipulation tools
     aliases: [c]

@@ -54,8 +54,6 @@ public class HalfminerSystem extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (command.getName().equals("?")) return true;
-
         if (!sender.hasPermission("hms.command")) {
             MessageBuilder.create("noPermission", "HMS").sendMessage(sender);
             return true;

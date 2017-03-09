@@ -57,6 +57,8 @@ public class HalfminerCore extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
+        if (cmd.getName().equals("?")) return true;
+
         HalfminerCommand command;
         try {
             command = (HalfminerCommand) this.getClassLoader()
