@@ -13,7 +13,7 @@ commands:
     aliases: [c]
   customtext:
     description: Show parsed customtext
-    aliases: [hmstext]
+    aliases: [hmctext, hmstext]
   disposal:
     description: Open portable disposal
     aliases: [bin]
