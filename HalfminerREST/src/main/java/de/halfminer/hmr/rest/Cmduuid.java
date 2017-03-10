@@ -28,13 +28,13 @@ public class Cmduuid extends APICommand implements GETCommand {
                 }
                 return returnOK(new Response(hPlayer.getName(), hPlayer.getUniqueId()));
             } catch (PlayerNotFoundException e) {
-                return returnOK(new Response(arguments.getArgument(0)));
+                return returnBadRequest(new Response(arguments.getArgument(0)));
             } catch (IllegalArgumentException e) {
-                return returnOK(new Response());
+                return returnBadRequest(new Response());
             }
         }
 
-        return returnInvalidParam();
+        return returnBadRequestDefault();
     }
 
     private class Response {
@@ -59,7 +59,6 @@ public class Cmduuid extends APICommand implements GETCommand {
                 this.name = name;
                 this.uuid = uuid.toString();
             }
-
         }
     }
 }

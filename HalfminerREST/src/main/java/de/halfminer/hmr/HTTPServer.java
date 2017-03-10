@@ -1,10 +1,11 @@
 package de.halfminer.hmr;
 
-import de.halfminer.hms.util.StringArgumentSeparator;
 import de.halfminer.hmr.rest.APICommand;
+import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,7 +25,14 @@ class HTTPServer extends NanoHTTPD {
     @Override
     public NanoHTTPD.Response serve(IHTTPSession session) {
 
-        String ipAddress = session.getHeaders().get("remote-addr");
+        Map<String, String> headers = session.getHeaders();
+        String ipAddress;
+        if (headers.containsKey("x-real-ip")) {
+            ipAddress = headers.get("x-real-ip");
+        } else {
+            ipAddress = headers.get("remote-addr");
+        }
+
         if (!whitelistedIPs.contains(ipAddress)) {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "", "");
         }

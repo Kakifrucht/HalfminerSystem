@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * HalfminerWebAPI main class
+ * HalfminerREST main class, Bukkit plugin running a lightweight REST HTTP server responding in JSON
  *
  * @author Fabian Prieto Wunderlich - Kakifrucht
  */

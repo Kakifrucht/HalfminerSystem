@@ -6,8 +6,8 @@ Bukkit plugin containing a REST HTTP server, responding in JSON.
 - Define port and whitelisted IP's via config
 - Returns JSON messages
 - **Commands**
-  - GET /status/
-    - Allows polling minecraft server status
-  - GET /uuid/<uuid>
+  - GET /status/<playercount>
+    - Get current player count
+  - GET /uuid/<uuid|playername>
     - Get a players last known name from UUID or vice versa
     

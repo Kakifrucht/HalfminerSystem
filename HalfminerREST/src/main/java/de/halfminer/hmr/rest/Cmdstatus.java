@@ -4,7 +4,7 @@ import de.halfminer.hmr.interfaces.GETCommand;
 import fi.iki.elonen.NanoHTTPD;
 
 /**
- * - Allows polling minecraft server status
+ * - Get current player count
  */
 @SuppressWarnings("unused")
 public class Cmdstatus extends APICommand implements GETCommand {
@@ -17,6 +17,6 @@ public class Cmdstatus extends APICommand implements GETCommand {
                         hmw.getServer().getOnlinePlayers().size() + "\"}");
             }
         }
-        return returnInvalidParam();
+        return returnBadRequestDefault();
     }
 }

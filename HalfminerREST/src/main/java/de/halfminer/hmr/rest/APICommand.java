@@ -8,7 +8,7 @@ import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
 
 /**
- * Base class for all answers for HTTP API requests, in JSON format.
+ * Base class for all answers to HTTP REST API requests, in JSON format, producing a {@link NanoHTTPD.Response Response}.
  */
 public abstract class APICommand extends HalfminerClass {
 
@@ -39,20 +39,24 @@ public abstract class APICommand extends HalfminerClass {
 
     private NanoHTTPD.Response returnMethodNotAllowed() {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED,
-                "text/plain", "{\"status\": \"method not allowed\"}");
+                "application/json", "{\"status\": \"method not allowed\"}");
     }
 
     NanoHTTPD.Response returnOK(Object toSerialize) {
         return returnOK(new Gson().toJson(toSerialize));
     }
 
-    NanoHTTPD.Response returnOK(String toReturn) {
-        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK,
-                "application/json", toReturn);
+    NanoHTTPD.Response returnOK(String jsonToReturn) {
+        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "application/json", jsonToReturn);
     }
 
-    NanoHTTPD.Response returnInvalidParam() {
+    NanoHTTPD.Response returnBadRequest(Object toSerialize) {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.BAD_REQUEST,
-                "text/plain", "{\"status\": \"invalid parameter\"}");
+                "application/json", new Gson().toJson(toSerialize));
+    }
+
+    NanoHTTPD.Response returnBadRequestDefault() {
+        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.BAD_REQUEST,
+                "application/json", "{\"status\": \"invalid parameter\"}");
     }
 }
