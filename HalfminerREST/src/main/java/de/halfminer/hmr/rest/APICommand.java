@@ -1,8 +1,10 @@
 package de.halfminer.hmr.rest;
 
+import com.google.gson.Gson;
+import de.halfminer.hmr.HalfminerREST;
+import de.halfminer.hmr.interfaces.GETCommand;
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.util.StringArgumentSeparator;
-import de.halfminer.hmr.HalfminerREST;
 import fi.iki.elonen.NanoHTTPD;
 
 /**
@@ -10,27 +12,46 @@ import fi.iki.elonen.NanoHTTPD;
  */
 public abstract class APICommand extends HalfminerClass {
 
-    protected final static HalfminerREST hmw = HalfminerREST.getInstance();
+    final static HalfminerREST hmw = HalfminerREST.getInstance();
 
-    protected StringArgumentSeparator arguments;
+    StringArgumentSeparator arguments;
 
-    public APICommand() {
+    APICommand() {
         super(hmw, false);
     }
 
-    public NanoHTTPD.Response execute(StringArgumentSeparator parsedRequest) {
+    public NanoHTTPD.Response execute(NanoHTTPD.Method method, StringArgumentSeparator parsedRequest) {
+
         this.arguments = parsedRequest.removeFirstElement();
-        return execute();
+        switch (method) {
+            case GET:
+                if (this instanceof GETCommand) {
+                    return ((GETCommand) this).doOnGET();
+                } else return returnMethodNotAllowed();
+            case POST:
+                return returnMethodNotAllowed();
+            case PUT:
+                return returnMethodNotAllowed();
+            default:
+                return returnMethodNotAllowed();
+        }
     }
 
-    protected abstract NanoHTTPD.Response execute();
+    private NanoHTTPD.Response returnMethodNotAllowed() {
+        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED,
+                "text/plain", "{\"status\": \"method not allowed\"}");
+    }
 
-    protected NanoHTTPD.Response returnOKJson(String toReturn) {
+    NanoHTTPD.Response returnOK(Object toSerialize) {
+        return returnOK(new Gson().toJson(toSerialize));
+    }
+
+    NanoHTTPD.Response returnOK(String toReturn) {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK,
                 "application/json", toReturn);
     }
 
-    protected NanoHTTPD.Response returnInvalidParam() {
+    NanoHTTPD.Response returnInvalidParam() {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.BAD_REQUEST,
                 "text/plain", "{\"status\": \"invalid parameter\"}");
     }

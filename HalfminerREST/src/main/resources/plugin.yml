@@ -4,19 +4,19 @@ description: Halfminer.de HTTP API
 author: Kakifrucht
 website: https://halfminer.de
 
-main: de.halfminer.hmrlfminerWebAPI
+main: de.halfminer.hmr.HalfminerREST
 depend: [HalfminerSystem]
 
 commands:
-  hmwapi:
+  hmr:
     description: Base command
-    aliases: [hmw]
+    aliases: [hmrapi]
 
 permissions:
-  hmwapi.*:
+  hmr.*:
     description: Access to all permissions
     default: op
     children:
-      hmwapi.command: true
-  hmwapi.command:
+      hmr.command: true
+  hmr.command:
     description: Access to hmr command

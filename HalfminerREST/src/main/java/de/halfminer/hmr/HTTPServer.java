@@ -11,7 +11,7 @@ import java.util.Set;
  * Running HTTP server powered by {@link NanoHTTPD}. Calls {@link APICommand} instances after receiving a request.
  * Port and whitelisted IP's must be set via config.
  */
-public class HTTPServer extends NanoHTTPD {
+class HTTPServer extends NanoHTTPD {
 
     private final Set<String> whitelistedIPs;
 
@@ -29,13 +29,12 @@ public class HTTPServer extends NanoHTTPD {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "", "");
         }
 
-        String methodLowercase = session.getMethod().toString().toLowerCase();
-        StringArgumentSeparator parsedRequest = new StringArgumentSeparator(session.getUri().substring(1), '/');
         APICommand command;
+        StringArgumentSeparator parsedRequest = new StringArgumentSeparator(session.getUri().substring(1), '/');
         try {
             command = (APICommand) this.getClass()
                     .getClassLoader()
-                    .loadClass("de.halfminer.hmr.rest." + methodLowercase + ".Cmd" + parsedRequest.getArgument(0).toLowerCase())
+                    .loadClass("de.halfminer.hmr.rest.Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
             return newFixedLengthResponse(Response.Status.BAD_REQUEST, "", "");
@@ -45,6 +44,6 @@ public class HTTPServer extends NanoHTTPD {
                     "text/plain", "An internal error has occurred");
         }
 
-        return command.execute(parsedRequest);
+        return command.execute(session.getMethod(), parsedRequest);
     }
 }

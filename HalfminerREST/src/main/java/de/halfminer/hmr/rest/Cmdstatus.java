@@ -1,19 +1,19 @@
-package de.halfminer.hmr.rest.get;
+package de.halfminer.hmr.rest;
 
-import de.halfminer.hmr.rest.APICommand;
+import de.halfminer.hmr.interfaces.GETCommand;
 import fi.iki.elonen.NanoHTTPD;
 
 /**
  * - Allows polling minecraft server status
  */
 @SuppressWarnings("unused")
-public class Cmdstatus extends APICommand {
+public class Cmdstatus extends APICommand implements GETCommand {
     @Override
-    protected NanoHTTPD.Response execute() {
+    public NanoHTTPD.Response doOnGET() {
         
         if (arguments.meetsLength(1)) {
-            if (arguments.getArgument(0).equals("get")) {
-                return returnOKJson("{\"minecraft\": \"" +
+            if (arguments.getArgument(0).equals("playercount")) {
+                return returnOK("{\"minecraft\": \"" +
                         hmw.getServer().getOnlinePlayers().size() + "\"}");
             }
         }

@@ -9,5 +9,5 @@ Bukkit plugin containing a REST HTTP server, responding in JSON.
   - GET /status/
     - Allows polling minecraft server status
   - GET /uuid/<uuid>
-    - Resolve a UUID to username
+    - Get a players last known name from UUID or vice versa
     
