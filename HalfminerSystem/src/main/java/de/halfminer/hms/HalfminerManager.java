@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class HalfminerManager implements Listener {
 
-    private final Plugin plugin;
+    private final Plugin basePlugin;
 
     private final Set<Plugin> managedPlugins = new HashSet<>();
     private final Map<Plugin, List<Disableable>> toDisable = new HashMap<>();
@@ -29,9 +29,9 @@ public class HalfminerManager implements Listener {
     private BukkitTask sweepTask;
 
     HalfminerManager(Plugin pluginOwner) {
-        this.plugin = pluginOwner;
-        managedPlugins.add(plugin);
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.basePlugin = pluginOwner;
+        managedPlugins.add(basePlugin);
+        basePlugin.getServer().getPluginManager().registerEvents(this, basePlugin);
     }
 
     public void registerClass(Manageable toAdd) {
@@ -117,6 +117,7 @@ public class HalfminerManager implements Listener {
         toSweep.remove(pluginToDisable);
         checkSweepTask();
 
+        managedPlugins.remove(pluginToDisable);
         pluginToDisable.getServer().getScheduler().cancelTasks(pluginToDisable);
         pluginToDisable.getLogger().info(pluginToDisable.getName() + " disabled");
     }
@@ -145,7 +146,7 @@ public class HalfminerManager implements Listener {
             sweepTask.cancel();
             sweepTask = null;
         } else if (sweepTask == null && toSweep.size() > 0) {
-            sweepTask = plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> {
+            sweepTask = basePlugin.getServer().getScheduler().runTaskTimer(this.basePlugin, () -> {
                 for (List<Sweepable> sweepables : toSweep.values()) {
                     sweepables.forEach(Sweepable::sweep);
                 }
