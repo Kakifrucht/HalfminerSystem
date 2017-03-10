@@ -1,7 +1,7 @@
-package de.halfminer.hmwapi;
+package de.halfminer.hmr;
 
 import de.halfminer.hms.util.StringArgumentSeparator;
-import de.halfminer.hmwapi.cmd.APICommand;
+import de.halfminer.hmr.rest.APICommand;
 import fi.iki.elonen.NanoHTTPD;
 
 import java.io.IOException;
@@ -29,12 +29,13 @@ public class HTTPServer extends NanoHTTPD {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "", "");
         }
 
+        String methodLowercase = session.getMethod().toString().toLowerCase();
         StringArgumentSeparator parsedRequest = new StringArgumentSeparator(session.getUri().substring(1), '/');
         APICommand command;
         try {
             command = (APICommand) this.getClass()
                     .getClassLoader()
-                    .loadClass("de.halfminer.hmwapi.cmd.Cmd" + parsedRequest.getArgument(0).toLowerCase())
+                    .loadClass("de.halfminer.hmr.rest." + methodLowercase + ".Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
             return newFixedLengthResponse(Response.Status.BAD_REQUEST, "", "");
@@ -44,6 +45,6 @@ public class HTTPServer extends NanoHTTPD {
                     "text/plain", "An internal error has occurred");
         }
 
-        return command.execute(session, parsedRequest);
+        return command.execute(parsedRequest);
     }
 }

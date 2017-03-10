@@ -1,10 +1,10 @@
-name: HalfminerWebAPI
+name: HalfminerREST
 version: ${project.version}
 description: Halfminer.de HTTP API
 author: Kakifrucht
 website: https://halfminer.de
 
-main: de.halfminer.hmwapi.HalfminerWebAPI
+main: de.halfminer.hmrlfminerWebAPI
 depend: [HalfminerSystem]
 
 commands:
@@ -19,4 +19,4 @@ permissions:
     children:
       hmwapi.command: true
   hmwapi.command:
-    description: Access to hmwapi command
+    description: Access to hmr command

@@ -1,4 +1,4 @@
-package de.halfminer.hmwapi;
+package de.halfminer.hmr;
 
 import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.ChatColor;
@@ -15,11 +15,11 @@ import java.util.Set;
  *
  * @author Fabian Prieto Wunderlich - Kakifrucht
  */
-public class HalfminerWebAPI extends JavaPlugin {
+public class HalfminerREST extends JavaPlugin {
 
-    private static HalfminerWebAPI instance;
+    private static HalfminerREST instance;
 
-    public static HalfminerWebAPI getInstance() {
+    public static HalfminerREST getInstance() {
         return instance;
     }
 
@@ -29,9 +29,9 @@ public class HalfminerWebAPI extends JavaPlugin {
     public void onEnable() {
         instance = this;
         if (load()) {
-            getLogger().info("HalfminerWebAPI enabled");
+            getLogger().info("HalfminerREST enabled");
         } else {
-            getLogger().severe("HalfminerWebAPI was not enabled properly");
+            getLogger().severe("HalfminerREST was not enabled properly");
         }
     }
 
@@ -46,8 +46,8 @@ public class HalfminerWebAPI extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (command.getName().equalsIgnoreCase("hmwapi")
-                && sender.hasPermission("hmwapi.command")) {
+        if (command.getName().equalsIgnoreCase("hmr")
+                && sender.hasPermission("hmr.command")) {
 
             if (args.length < 1) {
                 sendUsage(sender);
@@ -63,7 +63,7 @@ public class HalfminerWebAPI extends JavaPlugin {
                     }
                     break;
                 case "status":
-                    sender.sendMessage("HalfminerWebAPI version " + ChatColor.GOLD + getDescription().getVersion());
+                    sender.sendMessage("HalfminerREST version " + ChatColor.GOLD + getDescription().getVersion());
                     sender.sendMessage("HTTP server running? " +
                             (server != null ?
                                     ChatColor.GREEN + "Yes, on port " + server.getListeningPort()
@@ -78,7 +78,7 @@ public class HalfminerWebAPI extends JavaPlugin {
     }
 
     private void sendUsage(CommandSender sendTo) {
-        sendTo.sendMessage(ChatColor.RED + "Usage: " + ChatColor.RESET + "/hmwapi <reload|status>");
+        sendTo.sendMessage(ChatColor.RED + "Usage: " + ChatColor.RESET + "/hmr <reload|status>");
     }
 
     private boolean load() {
