@@ -61,6 +61,10 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
         super(plugin);
     }
 
+    public HanStorage(Plugin plugin, boolean register) {
+        super(plugin, register);
+    }
+
     public void set(String path, Object value) {
         sysConfig.set(path, value);
     }

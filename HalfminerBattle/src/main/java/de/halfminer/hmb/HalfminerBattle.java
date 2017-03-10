@@ -43,7 +43,7 @@ public class HalfminerBattle extends JavaPlugin {
         instance = this;
 
         manager = HalfminerSystem.getInstance().getHalfminerManager();
-        cacheHolder = new HanStorage(this);
+        cacheHolder = new HanStorage(this, false);
         playerManager = new PlayerManager();
         arenaManager = new ArenaManager();
 
