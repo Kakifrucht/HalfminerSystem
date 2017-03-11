@@ -39,7 +39,7 @@ public abstract class APICommand extends HalfminerClass {
 
     private NanoHTTPD.Response returnMethodNotAllowed() {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED,
-                "application/json", "{\"status\": \"method not allowed\"}");
+                "application/json", "{\"status\":\"method not allowed\"}");
     }
 
     NanoHTTPD.Response returnOK(Object toSerialize) {
@@ -57,6 +57,6 @@ public abstract class APICommand extends HalfminerClass {
 
     NanoHTTPD.Response returnBadRequestDefault() {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.BAD_REQUEST,
-                "application/json", "{\"status\": \"invalid parameter\"}");
+                "application/json", "{\"status\":\"invalid parameter\"}");
     }
 }

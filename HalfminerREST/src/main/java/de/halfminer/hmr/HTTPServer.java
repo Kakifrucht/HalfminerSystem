@@ -48,10 +48,19 @@ class HTTPServer extends NanoHTTPD {
             return newFixedLengthResponse(Response.Status.BAD_REQUEST, "", "");
         } catch (Exception e) {
             e.printStackTrace();
-            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR,
-                    "text/plain", "An internal error has occurred");
+            return internalError();
         }
 
-        return command.execute(session.getMethod(), parsedRequest);
+        try {
+            return command.execute(session.getMethod(), parsedRequest);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return internalError();
+        }
+    }
+
+    private NanoHTTPD.Response internalError() {
+        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR,
+                "text/plain", "An internal error has occurred");
     }
 }

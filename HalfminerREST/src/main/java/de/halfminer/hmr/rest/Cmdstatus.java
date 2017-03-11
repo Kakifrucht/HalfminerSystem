@@ -13,7 +13,7 @@ public class Cmdstatus extends APICommand implements GETCommand {
         
         if (arguments.meetsLength(1)) {
             if (arguments.getArgument(0).equals("playercount")) {
-                return returnOK("{\"minecraft\": \"" +
+                return returnOK("{\"minecraft\":\"" +
                         hmw.getServer().getOnlinePlayers().size() + "\"}");
             }
         }

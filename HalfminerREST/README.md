@@ -10,4 +10,5 @@ Bukkit plugin containing a REST HTTP server, responding in JSON.
     - Get current player count
   - GET /uuid/<uuid|playername>
     - Get a players last known name from UUID or vice versa
+    - Adds dashes to UUID's, if not supplied
     
