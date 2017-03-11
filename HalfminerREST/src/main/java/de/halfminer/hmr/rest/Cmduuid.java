@@ -33,7 +33,6 @@ public class Cmduuid extends APICommand implements GETCommand {
                         + param.substring(12, 16) + "-"
                         + param.substring(16, 20) + "-"
                         + param.substring(20, 32);
-                System.out.println(converted);
                 toResolve = UUID.fromString(converted);
             } else if (param.length() > 16) {
                 return returnBadRequestDefault();

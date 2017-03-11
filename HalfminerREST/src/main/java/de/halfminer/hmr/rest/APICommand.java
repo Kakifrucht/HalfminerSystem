@@ -1,8 +1,9 @@
 package de.halfminer.hmr.rest;
 
-import com.google.gson.Gson;
 import de.halfminer.hmr.HalfminerREST;
+import de.halfminer.hmr.gson.GsonUtils;
 import de.halfminer.hmr.interfaces.GETCommand;
+import de.halfminer.hmr.interfaces.PUTCommand;
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
@@ -31,7 +32,9 @@ public abstract class APICommand extends HalfminerClass {
             case POST:
                 return returnMethodNotAllowed();
             case PUT:
-                return returnMethodNotAllowed();
+                if (this instanceof PUTCommand) {
+                    return ((PUTCommand) this).doOnPUT();
+                } else return returnMethodNotAllowed();
             default:
                 return returnMethodNotAllowed();
         }
@@ -39,24 +42,21 @@ public abstract class APICommand extends HalfminerClass {
 
     private NanoHTTPD.Response returnMethodNotAllowed() {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED,
-                "application/json", "{\"status\":\"method not allowed\"}");
+                "application/json", GsonUtils.returnErrorJson("method not allowed"));
     }
 
     NanoHTTPD.Response returnOK(Object toSerialize) {
-        return returnOK(new Gson().toJson(toSerialize));
-    }
-
-    NanoHTTPD.Response returnOK(String jsonToReturn) {
-        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "application/json", jsonToReturn);
+        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "application/json",
+                GsonUtils.returnPrettyJson(toSerialize));
     }
 
     NanoHTTPD.Response returnBadRequest(Object toSerialize) {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.BAD_REQUEST,
-                "application/json", new Gson().toJson(toSerialize));
+                "application/json", GsonUtils.returnPrettyJson(toSerialize));
     }
 
     NanoHTTPD.Response returnBadRequestDefault() {
         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.BAD_REQUEST,
-                "application/json", "{\"status\":\"invalid parameter\"}");
+                "application/json", GsonUtils.returnErrorJson("invalid parameters"));
     }
 }

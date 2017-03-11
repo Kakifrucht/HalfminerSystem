@@ -1,5 +1,6 @@
 package de.halfminer.hmr;
 
+import de.halfminer.hmr.gson.GsonUtils;
 import de.halfminer.hmr.rest.APICommand;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
@@ -45,7 +46,8 @@ class HTTPServer extends NanoHTTPD {
                     .loadClass("de.halfminer.hmr.rest.Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
-            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "", "");
+            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json",
+                    GsonUtils.returnErrorJson("unsupported"));
         } catch (Exception e) {
             e.printStackTrace();
             return internalError();

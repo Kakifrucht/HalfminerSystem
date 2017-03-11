@@ -10,13 +10,10 @@ import fi.iki.elonen.NanoHTTPD;
 public class Cmdstatus extends APICommand implements GETCommand {
     @Override
     public NanoHTTPD.Response doOnGET() {
-        
-        if (arguments.meetsLength(1)) {
-            if (arguments.getArgument(0).equals("playercount")) {
-                return returnOK("{\"minecraft\":\"" +
-                        hmw.getServer().getOnlinePlayers().size() + "\"}");
-            }
-        }
-        return returnBadRequestDefault();
+        return returnOK(new Status());
+    }
+
+    private class Status {
+        int playercount = hmw.getServer().getOnlinePlayers().size();
     }
 }
