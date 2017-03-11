@@ -59,7 +59,7 @@ public class CustomtextCache {
         return cache.keySet();
     }
 
-    public void reCacheFile() throws CachingException {
+    private void reCacheFile() throws CachingException {
 
         if (!wasModified()) return;
 
@@ -72,7 +72,6 @@ public class CustomtextCache {
         } catch (CachingException e) {
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new CachingException(file.getName(), CachingException.Reason.CANNOT_READ);
         }
     }

@@ -178,7 +178,7 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
             }
         } catch (Exception e) {
             MessageBuilder.create("hanStorageSaveUnsuccessful").logMessage(Level.WARNING);
-            e.printStackTrace();
+            plugin.getLogger().log(Level.WARNING, "Could not save storage for " + plugin.getName(), e);
         }
     }
 

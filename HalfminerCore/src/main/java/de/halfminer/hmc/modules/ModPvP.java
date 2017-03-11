@@ -174,9 +174,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
                 try {
                     Thread.sleep(300L);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
+                } catch (InterruptedException ignored) {}
                 killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
             }, 5);
 

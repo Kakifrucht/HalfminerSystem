@@ -171,8 +171,8 @@ public class FFAArena extends AbstractArena {
             } catch (CachingException e) {
                 if (!e.getReason().equals(CachingException.Reason.CHAPTER_NOT_FOUND)
                     && !e.getReason().equals(CachingException.Reason.FILE_EMPTY)) {
-                    hmb.getLogger().warning("Error reading FFA killstreaks, Reason: " + e.getCleanReason());
-                    e.printStackTrace();
+                    hmb.getLogger().log(Level.WARNING,
+                            "Error reading FFA killstreaks, Reason: " + e.getCleanReason(), e);
                 }
             }
         }

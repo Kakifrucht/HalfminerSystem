@@ -39,7 +39,7 @@ public class Cmdcustomtext extends HalfminerCommand {
             cache = coreStorage.getCache("customtext.txt");
         } catch (CachingException e) {
             MessageBuilder.create("errorOccurred", "Info").sendMessage(sender);
-            e.printStackTrace();
+            hmc.getLogger().log(Level.WARNING, "An error has occurred: " + e.getCleanReason(), e);
             return;
         }
 

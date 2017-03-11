@@ -131,7 +131,7 @@ public class Cmdhmc extends HalfminerCommand {
                         }
                     } catch (IOException e) {
                         MessageBuilder.create("cmdHmcCopySchematicCopyError", hmc, PREFIX).sendMessage(sender);
-                        e.printStackTrace();
+                        hmc.getLogger().log(Level.WARNING, "Could not copy schematic due", e);
                     }
                 });
             } else MessageBuilder.create("cmdHmcCopySchematicAlreadyExists", hmc, PREFIX).sendMessage(sender);
@@ -146,7 +146,7 @@ public class Cmdhmc extends HalfminerCommand {
             Files.delete(toDelete.toPath());
             success = true;
         } catch (Exception e) {
-            e.printStackTrace();
+            hmc.getLogger().log(Level.WARNING, "Could not delete file", e);
         }
 
         MessageBuilder.create(success ? "cmdHmcCopySchematicDeleted" : "cmdHmcCopySchematicDeletedError", hmc)
@@ -159,7 +159,6 @@ public class Cmdhmc extends HalfminerCommand {
         CustomtextCache cache;
         try {
             cache = coreStorage.getCache("customitems.txt");
-            cache.reCacheFile();
         } catch (CachingException e) {
             MessageBuilder.create("cmdCustomtextCacheParseError", hmc, PREFIX)
                     .addPlaceholderReplace("%ERROR%", e.getCleanReason())
@@ -356,9 +355,7 @@ public class Cmdhmc extends HalfminerCommand {
 
                 try {
                     Thread.sleep(110L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                } catch (InterruptedException ignored) {}
             }
         });
     }
@@ -464,9 +461,8 @@ public class Cmdhmc extends HalfminerCommand {
                                     .addPlaceholderReplace("%HOMENAME%", homeName)
                                     .returnMessage());
                         }
-                    } catch (Exception e) {
-                        // Should not happen, as we know the home will exist
-                        e.printStackTrace();
+                    } catch (Exception ignored) {
+                        // Should not occur, as we know the home will exist
                     }
                 }
             }

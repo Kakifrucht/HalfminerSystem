@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * HalfminerBattle main class, battle arena Bukkit/Spigot plugin implementing various arena based game modes
@@ -55,13 +56,11 @@ public class HalfminerBattle extends JavaPlugin {
                 battleModes.put(type, mode);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            setDisabledAfterException();
+            setDisabledAfterException(e);
             return;
         }
 
         if (!saveAndReloadConfig()) {
-            setDisabledAfterException();
             return;
         }
 
@@ -76,13 +75,14 @@ public class HalfminerBattle extends JavaPlugin {
             arenaManager.reloadConfig();
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            setDisabledAfterException(e);
             return false;
         }
     }
 
-    private void setDisabledAfterException() {
-        getLogger().severe("An error occurred while enabling HalfminerBattle, see stacktrace for information");
+    private void setDisabledAfterException(Exception caught) {
+        getLogger().log(Level.SEVERE,
+                "An error occurred while enabling HalfminerBattle, see stacktrace for information", caught);
         setEnabled(false);
     }
 

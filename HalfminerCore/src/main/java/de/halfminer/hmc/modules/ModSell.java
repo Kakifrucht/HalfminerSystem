@@ -105,7 +105,9 @@ public class ModSell extends HalfminerModule implements Listener, Sweepable {
             hookHandler.addMoney(toReward, revenue);
         } catch (HookException e) {
             // This should not happen under normal circumstances, print stacktrace just in case
-            e.printStackTrace();
+            Exception toPrint = e;
+            if (e.hasParentException()) toPrint = e.getParentException();
+            hmc.getLogger().log(Level.WARNING, "Could not add money to player " + toReward.getName(), toPrint);
             MessageBuilder.create("errorOccurred", "Sell").sendMessage(toReward);
             return;
         }

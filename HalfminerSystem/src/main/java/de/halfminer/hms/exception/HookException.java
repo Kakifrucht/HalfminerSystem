@@ -27,10 +27,4 @@ public class HookException extends RuntimeException {
     public Exception getParentException() {
         return parent;
     }
-
-    @Override
-    public void printStackTrace() {
-        if (parent != null) parent.printStackTrace();
-        else super.printStackTrace();
-    }
 }

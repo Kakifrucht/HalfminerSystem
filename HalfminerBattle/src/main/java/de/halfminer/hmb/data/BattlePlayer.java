@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Encapsulating player specific battle data, such as his state, inventory, survival data (inventory, health..) and
@@ -183,9 +184,8 @@ class BattlePlayer extends BattleClass {
                 player.removePotionEffect(effect.getType());
             player.addPotionEffects(data.potionEffects);
         } catch (Exception e) {
-            hmb.getLogger().warning("Player " + player.getName()
-                    + " could not be healed properly, see stacktrace for information");
-            e.printStackTrace();
+            hmb.getLogger().log(Level.WARNING, "Player " + player.getName()
+                    + " could not be healed properly, see stacktrace for information", e);
         }
 
         if (!isUsingOwnEquipment) {
@@ -279,8 +279,8 @@ class BattlePlayer extends BattleClass {
                                     configFile.save(file);
                                 }
                             } catch (IOException e) {
-                                hmb.getLogger().warning("Could not write inventory to disk with filename " + fileName);
-                                e.printStackTrace();
+                                hmb.getLogger().log(Level.WARNING,
+                                        "Could not write inventory to disk with filename " + fileName, e);
                             }
                         } else hmb.getLogger().warning("Could not create sub folder in plugin directory");
                     }

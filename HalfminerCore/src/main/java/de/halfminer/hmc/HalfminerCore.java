@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * HalfminerCore main class, core Bukkit/Spigot plugin containing most server side functionality for Halfminer
@@ -45,8 +46,7 @@ public class HalfminerCore extends JavaPlugin {
                 modules.put(module, mod);
             }
         } catch (Exception e) {
-            getLogger().severe("An error has occurred, see stacktrace for information");
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "An error has occurred, see stacktrace for information", e);
             setEnabled(false);
             return;
         }
@@ -64,8 +64,7 @@ public class HalfminerCore extends JavaPlugin {
             command = (HalfminerCommand) this.getClassLoader()
                     .loadClass(PACKAGE_PATH + ".cmd.Cmd" + cmd.getName()).newInstance();
         } catch (Exception e) {
-            getLogger().severe("An error has occured executing " + cmd.getName() + ":");
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "An error has occured executing " + cmd.getName(), e);
             return true;
         }
 

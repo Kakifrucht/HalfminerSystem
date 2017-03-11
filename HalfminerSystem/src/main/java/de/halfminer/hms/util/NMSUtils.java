@@ -1,10 +1,12 @@
 package de.halfminer.hms.util;
 
+import de.halfminer.hms.HalfminerSystem;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
+import java.util.logging.Level;
 
 /**
  * Helper methods that access minecraft server / craftbukkit internals.
@@ -66,7 +68,8 @@ public final class NMSUtils {
             footerField.set(packet, IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + footer + "\"}"));
             footerField.setAccessible(false);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace(); //this should not happen
+            HalfminerSystem.getInstance().getLogger().log(Level.SEVERE,
+                    "Error occurred during tablist packet send", e);
         }
 
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);

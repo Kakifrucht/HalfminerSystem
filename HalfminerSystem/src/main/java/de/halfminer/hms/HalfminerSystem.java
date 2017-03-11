@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * HalfminerSystem main class, base API for Halfminer Bukkit/Spigot plugins
@@ -43,8 +44,7 @@ public class HalfminerSystem extends JavaPlugin {
                         .newInstance());
             }
         } catch (Exception e) {
-            getLogger().severe("An error has occurred, see stacktrace for information");
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "An error has occurred, see stacktrace for information", e);
             setEnabled(false);
             return;
         }

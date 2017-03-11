@@ -280,8 +280,7 @@ public class ArenaManager {
         try {
             arenaConfig.save(arenaFile);
         } catch (IOException e) {
-            e.printStackTrace();
-            hmb.getLogger().severe("Arena config could not be saved");
+            hmb.getLogger().log(Level.SEVERE, "Arena config could not be saved", e);
         }
     }
 
@@ -298,8 +297,7 @@ public class ArenaManager {
             Constructor<?> cons = cl.getConstructor(String.class);
             return (Arena) cons.newInstance(name);
         } catch (Exception e) {
-            hmb.getLogger().severe("Arena class for BattleModeType " + battleMode + " not found");
-            e.printStackTrace();
+            hmb.getLogger().log(Level.SEVERE, "Arena class for BattleModeType " + battleMode + " not found", e);
             return null;
         }
     }
