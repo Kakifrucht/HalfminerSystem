@@ -17,10 +17,10 @@ public class Cmduuid extends APICommand implements GETCommand {
     @Override
     public NanoHTTPD.Response doOnGET() {
 
-        if (this.arguments.meetsLength(1)) {
+        if (this.uriParsed.meetsLength(1)) {
 
             UUID toResolve = null;
-            String param = arguments.getArgument(0);
+            String param = uriParsed.getArgument(0);
             if (param.length() == 36) {
                 try {
                     toResolve = UUID.fromString(param);
@@ -47,7 +47,7 @@ public class Cmduuid extends APICommand implements GETCommand {
                 }
                 return returnOK(new Response(hPlayer.getName(), hPlayer.getUniqueId()));
             } catch (PlayerNotFoundException e) {
-                return returnBadRequest(new Response(arguments.getArgument(0)));
+                return returnBadRequest(new Response(uriParsed.getArgument(0)));
             }
         }
 

@@ -6,6 +6,7 @@ import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,6 +39,17 @@ class HTTPServer extends NanoHTTPD {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "", "");
         }
 
+        Map<String, String> body = new HashMap<>();
+        Method method = session.getMethod();
+        if (Method.PUT.equals(method) || Method.POST.equals(method)) {
+            try {
+                session.parseBody(body);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return getBadRequestResponse("invalid arguments");
+            }
+        }
+
         APICommand command;
         StringArgumentSeparator parsedRequest = new StringArgumentSeparator(session.getUri().substring(1), '/');
         try {
@@ -46,22 +58,26 @@ class HTTPServer extends NanoHTTPD {
                     .loadClass("de.halfminer.hmr.rest.Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
-            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json",
-                    GsonUtils.returnErrorJson("unsupported"));
+            return getBadRequestResponse("unsupported");
         } catch (Exception e) {
             e.printStackTrace();
-            return internalError();
+            return getInternalErrorResponse();
         }
 
         try {
-            return command.execute(session.getMethod(), parsedRequest);
+            return command.execute(method, body, parsedRequest);
         } catch (Throwable e) {
             e.printStackTrace();
-            return internalError();
+            return getInternalErrorResponse();
         }
     }
 
-    private NanoHTTPD.Response internalError() {
+    private NanoHTTPD.Response getBadRequestResponse(String message) {
+        return newFixedLengthResponse(Response.Status.BAD_REQUEST,
+                "application/json", GsonUtils.returnErrorJson(message));
+    }
+
+    private NanoHTTPD.Response getInternalErrorResponse() {
         return newFixedLengthResponse(Response.Status.INTERNAL_ERROR,
                 "text/plain", "An internal error has occurred");
     }

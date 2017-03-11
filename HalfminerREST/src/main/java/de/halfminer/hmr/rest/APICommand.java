@@ -8,6 +8,8 @@ import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
 
+import java.util.Map;
+
 /**
  * Base class for all answers to HTTP REST API requests, in JSON format, producing a {@link NanoHTTPD.Response Response}.
  */
@@ -15,15 +17,17 @@ public abstract class APICommand extends HalfminerClass {
 
     final static HalfminerREST hmw = HalfminerREST.getInstance();
 
-    StringArgumentSeparator arguments;
+    Map<String, String> body;
+    StringArgumentSeparator uriParsed;
 
     APICommand() {
         super(hmw, false);
     }
 
-    public NanoHTTPD.Response execute(NanoHTTPD.Method method, StringArgumentSeparator parsedRequest) {
-
-        this.arguments = parsedRequest.removeFirstElement();
+    public NanoHTTPD.Response execute(NanoHTTPD.Method method,
+                                      Map<String, String> body, StringArgumentSeparator parsedRequest) {
+        this.body = body;
+        this.uriParsed = parsedRequest.removeFirstElement();
         switch (method) {
             case GET:
                 if (this instanceof GETCommand) {
