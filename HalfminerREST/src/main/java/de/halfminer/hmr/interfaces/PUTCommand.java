@@ -1,9 +1,11 @@
 package de.halfminer.hmr.interfaces;
 
+import de.halfminer.hmr.rest.RESTCommand;
 import fi.iki.elonen.NanoHTTPD;
 
 /**
- * Created by fabpw on 11.03.2017.
+ * {@link RESTCommand REST commands's} supporting {@link NanoHTTPD.Method#PUT HTTP PUT}.
+ * Meant for data creation and updating.
  */
 public interface PUTCommand {
 

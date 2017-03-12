@@ -3,6 +3,7 @@ package de.halfminer.hmr.rest;
 import de.halfminer.hmr.HalfminerREST;
 import de.halfminer.hmr.gson.GsonUtils;
 import de.halfminer.hmr.interfaces.GETCommand;
+import de.halfminer.hmr.interfaces.POSTCommand;
 import de.halfminer.hmr.interfaces.PUTCommand;
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.util.StringArgumentSeparator;
@@ -13,20 +14,20 @@ import java.util.Map;
 /**
  * Base class for all answers to HTTP REST API requests, in JSON format, producing a {@link NanoHTTPD.Response Response}.
  */
-public abstract class APICommand extends HalfminerClass {
+public abstract class RESTCommand extends HalfminerClass {
 
     final static HalfminerREST hmw = HalfminerREST.getInstance();
 
-    Map<String, String> body;
+    Map<String, String> bodyParsed;
     StringArgumentSeparator uriParsed;
 
-    APICommand() {
+    RESTCommand() {
         super(hmw, false);
     }
 
     public NanoHTTPD.Response execute(NanoHTTPD.Method method,
                                       Map<String, String> body, StringArgumentSeparator parsedRequest) {
-        this.body = body;
+        this.bodyParsed = body;
         this.uriParsed = parsedRequest.removeFirstElement();
         switch (method) {
             case GET:
@@ -34,7 +35,9 @@ public abstract class APICommand extends HalfminerClass {
                     return ((GETCommand) this).doOnGET();
                 } else return returnMethodNotAllowed();
             case POST:
-                return returnMethodNotAllowed();
+                if (this instanceof POSTCommand) {
+                    return ((POSTCommand) this).doOnPOST();
+                } else return returnMethodNotAllowed();
             case PUT:
                 if (this instanceof PUTCommand) {
                     return ((PUTCommand) this).doOnPUT();

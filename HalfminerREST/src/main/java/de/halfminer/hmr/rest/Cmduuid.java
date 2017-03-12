@@ -12,7 +12,7 @@ import java.util.UUID;
  * - Adds dashes to UUID's, if not supplied
  */
 @SuppressWarnings("unused")
-public class Cmduuid extends APICommand implements GETCommand {
+public class Cmduuid extends RESTCommand implements GETCommand {
 
     @Override
     public NanoHTTPD.Response doOnGET() {
@@ -33,7 +33,12 @@ public class Cmduuid extends APICommand implements GETCommand {
                         + param.substring(12, 16) + "-"
                         + param.substring(16, 20) + "-"
                         + param.substring(20, 32);
-                toResolve = UUID.fromString(converted);
+                try {
+                    toResolve = UUID.fromString(converted);
+                } catch (IllegalArgumentException e) {
+                    return returnBadRequest(new Response());
+                }
+
             } else if (param.length() > 16) {
                 return returnBadRequestDefault();
             }

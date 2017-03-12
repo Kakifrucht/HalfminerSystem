@@ -73,7 +73,7 @@ public class HalfminerREST extends JavaPlugin {
                     sendUsage(sender);
             }
             return true;
-        }
+        } else sender.sendMessage(ChatColor.RED + "You don't have permission");
         return false;
     }
 
@@ -83,13 +83,13 @@ public class HalfminerREST extends JavaPlugin {
 
     private boolean load() {
 
+        HalfminerSystem.getInstance().getHalfminerManager().reloadOcurred(this);
+
         if (server != null) {
             getLogger().info("Reloading HTTP server, stopping old instance...");
             server.stop();
             server = null;
         }
-
-        HalfminerSystem.getInstance().getHalfminerManager().reloadOcurred(this);
 
         int port = getConfig().getInt("server.port");
         if (port < 1 || port > 65535) {
@@ -104,11 +104,12 @@ public class HalfminerREST extends JavaPlugin {
         }
 
         try {
-            server = new HTTPServer(port, whitelist);
+            server = new HTTPServer(getLogger(), port, whitelist);
         } catch (IOException e) {
             getLogger().severe("Couldn't bind port " + port + ", disabling");
             return false;
         }
+
         return true;
     }
 }

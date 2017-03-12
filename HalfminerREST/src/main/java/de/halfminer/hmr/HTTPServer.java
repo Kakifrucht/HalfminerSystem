@@ -1,7 +1,7 @@
 package de.halfminer.hmr;
 
 import de.halfminer.hmr.gson.GsonUtils;
-import de.halfminer.hmr.rest.APICommand;
+import de.halfminer.hmr.rest.RESTCommand;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
 
@@ -9,17 +9,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Running HTTP server powered by {@link NanoHTTPD}. Calls {@link APICommand} instances after receiving a request.
+ * Running HTTP server powered by {@link NanoHTTPD}. Calls {@link RESTCommand} instances after receiving a request.
  * Port and whitelisted IP's must be set via config.
  */
 class HTTPServer extends NanoHTTPD {
 
+    private final Logger logger;
     private final Set<String> whitelistedIPs;
 
-    HTTPServer(int port, Set<String> whitelistedIPs) throws IOException {
+    HTTPServer(Logger logger, int port, Set<String> whitelistedIPs) throws IOException {
         super(port);
+        this.logger = logger;
         this.whitelistedIPs = whitelistedIPs;
         this.start();
     }
@@ -39,35 +43,67 @@ class HTTPServer extends NanoHTTPD {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "", "");
         }
 
-        Map<String, String> body = new HashMap<>();
+        Map<String, String> bodyParsed = null;
         Method method = session.getMethod();
         if (Method.PUT.equals(method) || Method.POST.equals(method)) {
+
+            bodyParsed = new HashMap<>();
+
+            int contentLength;
             try {
-                session.parseBody(body);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return getBadRequestResponse("invalid arguments");
+                contentLength = Integer.parseInt(headers.get("content-length"));
+            } catch (NumberFormatException e) {
+                return getBadRequestResponse("invalid header");
+            }
+
+            byte[] buffer = new byte[contentLength];
+            try {
+                //noinspection ResultOfMethodCallIgnored
+                session.getInputStream().read(buffer, 0, contentLength);
+            } catch (IOException e) {
+                logger.log(Level.WARNING, "InputStream could not be read", e);
+                return getInternalErrorResponse();
+            }
+
+            // parse content body
+            int lastSubstring = 0;
+            String currentKey = "";
+            String toParse = new String(buffer);
+            for (int i = 0; i < toParse.length(); i++) {
+                if (toParse.charAt(i) == '=' || toParse.charAt(i) == '&') {
+                    if (currentKey.length() > 0) {
+                        bodyParsed.put(currentKey, toParse.substring(lastSubstring, i));
+                        currentKey = "";
+                    } else {
+                        currentKey = toParse.substring(lastSubstring, i);
+                    }
+                    lastSubstring = i + 1;
+                }
+            }
+
+            if (currentKey.length() > 0) {
+                bodyParsed.put(currentKey, toParse.substring(lastSubstring, toParse.length()));
             }
         }
 
-        APICommand command;
+        RESTCommand command;
         StringArgumentSeparator parsedRequest = new StringArgumentSeparator(session.getUri().substring(1), '/');
         try {
-            command = (APICommand) this.getClass()
+            command = (RESTCommand) this.getClass()
                     .getClassLoader()
                     .loadClass("de.halfminer.hmr.rest.Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
             return getBadRequestResponse("unsupported");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "Internal error during command instantiation", e);
             return getInternalErrorResponse();
         }
 
         try {
-            return command.execute(method, body, parsedRequest);
+            return command.execute(method, bodyParsed, parsedRequest);
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "Catch all exception during command execution", e);
             return getInternalErrorResponse();
         }
     }
@@ -79,6 +115,6 @@ class HTTPServer extends NanoHTTPD {
 
     private NanoHTTPD.Response getInternalErrorResponse() {
         return newFixedLengthResponse(Response.Status.INTERNAL_ERROR,
-                "text/plain", "An internal error has occurred");
+                MIME_PLAINTEXT, "An internal error has occurred");
     }
 }
