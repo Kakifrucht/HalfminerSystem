@@ -5,7 +5,7 @@ import fi.iki.elonen.NanoHTTPD;
 
 /**
  * {@link RESTCommand REST commands's} supporting {@link NanoHTTPD.Method#PUT HTTP PUT}.
- * Meant for data creation and updating.
+ * Meant to be used for data update/replace or in some cases to create.
  */
 public interface PUTCommand {
 

@@ -16,7 +16,9 @@ import java.util.logging.Logger;
  * Running HTTP server powered by {@link NanoHTTPD}. Calls {@link RESTCommand} instances after receiving a request.
  * Port and whitelisted IP's must be set via config.
  */
-class HTTPServer extends NanoHTTPD {
+public class HTTPServer extends NanoHTTPD {
+
+    public static String lastHOST;
 
     private final Logger logger;
     private final Set<String> whitelistedIPs;
@@ -100,6 +102,7 @@ class HTTPServer extends NanoHTTPD {
             return getInternalErrorResponse();
         }
 
+        lastHOST = headers.get("HOST") + session.getUri();
         try {
             return command.execute(method, bodyParsed, parsedRequest);
         } catch (Throwable e) {

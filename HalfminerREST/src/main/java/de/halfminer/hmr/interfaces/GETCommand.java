@@ -5,7 +5,7 @@ import fi.iki.elonen.NanoHTTPD;
 
 /**
  * {@link RESTCommand REST commands's} supporting {@link NanoHTTPD.Method#GET HTTP GET}.
- * Only for data retrieval.
+ * Meant to be used for data retrieval.
  */
 public interface GETCommand {
 

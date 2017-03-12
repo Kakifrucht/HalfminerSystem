@@ -25,7 +25,7 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                 try {
                     toResolve = UUID.fromString(param);
                 } catch (IllegalArgumentException e) {
-                    return returnBadRequest(new Response());
+                    return returnNotFound(new Response());
                 }
             } else if (param.length() == 32 && !param.contains("-")) {
                 String converted = param.substring(0, 8) + "-"
@@ -36,11 +36,11 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                 try {
                     toResolve = UUID.fromString(converted);
                 } catch (IllegalArgumentException e) {
-                    return returnBadRequest(new Response());
+                    return returnNotFound(new Response());
                 }
 
             } else if (param.length() > 16) {
-                return returnBadRequestDefault();
+                return returnNotFoundDefault();
             }
 
             try {
@@ -52,11 +52,11 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                 }
                 return returnOK(new Response(hPlayer.getName(), hPlayer.getUniqueId()));
             } catch (PlayerNotFoundException e) {
-                return returnBadRequest(new Response(uriParsed.getArgument(0)));
+                return returnNotFound(new Response(uriParsed.getArgument(0)));
             }
         }
 
-        return returnBadRequestDefault();
+        return returnNotFoundDefault();
     }
 
     private class Response {
