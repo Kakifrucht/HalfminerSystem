@@ -24,6 +24,7 @@ import java.util.Set;
  *   - Add data to the given path, supplied via content body as *application/x-www-form-urlencoded*
  *     - POST only for creation, not modification, PUT for both
  *   - Expiry timestamp can be passed as part of the content body, otherwise default of one hour will be used
+ *     - Timestamp always refers to whole section, even if only a single key was updated, pass 0 for no expiry
  */
 @SuppressWarnings("unused")
 public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand, POSTCommand, PUTCommand {
@@ -113,19 +114,22 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
 
     @Override
     public NanoHTTPD.Response doOnPOST() {
-        //TODO disallow editing, only on PUT
-        return doOnPUT();
+        return addData(false);
     }
 
     @Override
     public NanoHTTPD.Response doOnPUT() {
+        return addData(true);
+    }
 
+    private NanoHTTPD.Response addData(boolean create) {
         if (bodyParsed.size() > 0) {
             Map<String, String> toReturn = new HashMap<>();
 
             // default expiry of value in one hour
             long expiryTimestamp = (System.currentTimeMillis() / 1000) + 3600;
             boolean hasCreated = false;
+            boolean returnConflict = false;
 
             for (Map.Entry<String, String> pairToSet : bodyParsed.entrySet()) {
 
@@ -142,13 +146,19 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
                 toReturn.put(currentPath, currentValue);
                 hasCreated = currentValue.length() == 0;
 
-                storage.set(currentPath, pairToSet.getValue());
+                // if POST and value already exists, return conflict
+                if (!create && currentValue.length() > 0) {
+                    returnConflict = true;
+                } else {
+                    storage.set(currentPath, pairToSet.getValue());
+                }
             }
 
             storage.set(basePath + ".expiry", expiryTimestamp);
 
-            NanoHTTPD.Response response = returnAnyStatus(hasCreated ?
-                    NanoHTTPD.Response.Status.CREATED : NanoHTTPD.Response.Status.OK, toReturn);
+            NanoHTTPD.Response.Status status = returnConflict ? NanoHTTPD.Response.Status.CONFLICT :
+                    hasCreated ? NanoHTTPD.Response.Status.CREATED : NanoHTTPD.Response.Status.OK;
+            NanoHTTPD.Response response = returnAnyStatus(status, toReturn);
             response.addHeader("Location", HTTPServer.lastHOST);
             return response;
         }
