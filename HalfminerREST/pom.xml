@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>HalfminerREST</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>1.0</version>
 
     <dependencies>
         <dependency>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.nanohttpd</groupId>
             <artifactId>nanohttpd</artifactId>
-            <version>2.2.0</version>
+            <version>2.3.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

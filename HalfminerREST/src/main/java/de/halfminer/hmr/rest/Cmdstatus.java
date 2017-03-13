@@ -4,7 +4,8 @@ import de.halfminer.hmr.interfaces.GETCommand;
 import fi.iki.elonen.NanoHTTPD;
 
 /**
- * - Get current player count
+ * - *GET*
+ *   - Get current player count
  */
 @SuppressWarnings("unused")
 public class Cmdstatus extends RESTCommand implements GETCommand {

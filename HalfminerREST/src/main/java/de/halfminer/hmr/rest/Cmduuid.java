@@ -8,8 +8,9 @@ import fi.iki.elonen.NanoHTTPD;
 import java.util.UUID;
 
 /**
- * - Get a players last known name from UUID or vice versa
- * - Adds dashes to UUID's, if not supplied
+ * - *GET* /< uuid|playername>
+ *   - Get a players last known name from UUID or vice versa
+ *   - Adds dashes to UUID's, if not supplied
  */
 @SuppressWarnings("unused")
 public class Cmduuid extends RESTCommand implements GETCommand {

@@ -1,6 +1,7 @@
 package de.halfminer.hmr.rest;
 
 import de.halfminer.hmr.HTTPServer;
+import de.halfminer.hmr.gson.GsonUtils;
 import de.halfminer.hmr.interfaces.DELETECommand;
 import de.halfminer.hmr.interfaces.GETCommand;
 import de.halfminer.hmr.interfaces.POSTCommand;
@@ -11,29 +12,103 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Created by fabpw on 11.03.2017.
+ * - Data creation/modification/retrieval, where URI is the path to the given resource
+ * - *DELETE* /< path[/...]>[content:key&...]
+ *   - Delete a whole section or just the values at the supplied keys
+ * - *GET* /< path[/...]>[?:key&...]
+ *   - Get the whole section or just the values at the supplied keys
+ * - *PUT/POST* /< path[/...]>[content:key=value&...&expiry=seconds]
+ *   - Add data to the given path, supplied via content body as *application/x-www-form-urlencoded*
+ *     - POST only for creation, not modification, PUT for both
+ *   - Expiry timestamp can be passed as part of the content body, otherwise default of one hour will be used
  */
 @SuppressWarnings("unused")
 public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand, POSTCommand, PUTCommand {
 
+    private String basePath = "";
+
+    @Override
+    protected boolean doForAll() {
+        if (uriParsed.meetsLength(1)) {
+
+            for (String uriPart : uriParsed.getArguments()) {
+                basePath += uriPart + '.';
+            }
+
+            basePath = basePath.substring(0, basePath.length() - 1);
+
+            long expiryStamp = storage.getLong(basePath + ".expiry");
+            if (expiryStamp > 0 && expiryStamp < System.currentTimeMillis() / 1000) {
+                storage.set(basePath, null);
+            }
+            return true;
+        } else return false;
+    }
+
     @Override
     public NanoHTTPD.Response doOnDELETE() {
-        //TODO implement deletion
-        return returnNotFoundDefault();
+
+        // delete whole section or supplied keys
+        if (bodyParsed.size() == 0) {
+            if (storage.get(basePath) instanceof ConfigurationSection) {
+                storage.set(basePath, null);
+                return returnOK(Collections.singletonMap(basePath, "section deleted"));
+            } else {
+                return returnNotFound(GsonUtils.getErrorMap("path is not a section and no keys were specified"));
+            }
+        } else {
+            boolean hasDeleted = false;
+            Map<String, String> deleted = new HashMap<>();
+            for (String key : bodyParsed.keySet()) {
+                String currentPath = basePath + '.' + key;
+                String oldVal = storage.getString(currentPath);
+
+                hasDeleted = oldVal.length() > 0;
+                storage.set(currentPath, null);
+                deleted.put(currentPath, oldVal);
+            }
+            return returnAnyStatus(hasDeleted ?
+                    NanoHTTPD.Response.Status.OK : NanoHTTPD.Response.Status.NOT_FOUND, deleted);
+        }
     }
 
     @Override
     public NanoHTTPD.Response doOnGET() {
-        if (uriParsed.meetsLength(1)) {
-            String yamlPath = getYamlPathFromUri();
-            //TODO remove from one parent up, (fix path)
-            removeExpiredValues(yamlPath);
-            return returnOK(Collections.singletonMap(uriParsed.getArgument(uriParsed.getLength()), storage.getString(yamlPath)));
+
+        // try to iterate over a section if no GET parameters were supplied
+        Set<String> keysToIterate;
+        if (paramsParsed.size() > 0) {
+            keysToIterate = paramsParsed.keySet();
+        } else {
+            Object get = storage.get(basePath);
+            if (get instanceof ConfigurationSection) {
+                keysToIterate = ((ConfigurationSection) get).getKeys(false);
+            } else {
+                return returnNotFound(GsonUtils.getErrorMap("path is not a section, specify keys to get"));
+            }
         }
 
-        return returnNotFoundDefault();
+        boolean hasFoundValue = false;
+        Map<String, String> toReturn = new HashMap<>();
+        for (String key : keysToIterate) {
+
+            if (key.equals("expiry")) continue;
+            String currentPath = basePath + '.' + key;
+
+            Object get = storage.get(currentPath);
+            if (get != null && !(get instanceof ConfigurationSection)) {
+                String value = get.toString();
+                hasFoundValue = value.length() > 0;
+                toReturn.put(currentPath, value);
+            }
+        }
+
+        return returnAnyStatus(
+                hasFoundValue ? NanoHTTPD.Response.Status.OK : NanoHTTPD.Response.Status.NOT_FOUND,
+                toReturn.size() > 0 ? toReturn : GsonUtils.getErrorMap("not found"));
     }
 
     @Override
@@ -44,12 +119,9 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
 
     @Override
     public NanoHTTPD.Response doOnPUT() {
-        if (uriParsed.meetsLength(1) && bodyParsed.size() > 0) {
 
-            String yamlPath = getYamlPathFromUri();
-            removeExpiredValues(yamlPath);
-
-            Map<String, String> oldValues = new HashMap<>();
+        if (bodyParsed.size() > 0) {
+            Map<String, String> toReturn = new HashMap<>();
 
             // default expiry of value in one hour
             long expiryTimestamp = (System.currentTimeMillis() / 1000) + 3600;
@@ -59,49 +131,28 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
 
                 if (pairToSet.getKey().equals("expiry")) {
                     try {
-                        expiryTimestamp = Long.parseLong(pairToSet.getValue());
+                        expiryTimestamp = (System.currentTimeMillis() / 1000) + Long.parseLong(pairToSet.getValue());
+                        continue;
                     } catch (NumberFormatException ignored) {}
                 }
 
-                String path = yamlPath + pairToSet.getKey();
-                String currentValue = storage.getString(path);
-                oldValues.put(pairToSet.getKey(), currentValue);
+                String currentPath = basePath + '.' + pairToSet.getKey();
+                String currentValue = storage.getString(currentPath);
+
+                toReturn.put(currentPath, currentValue);
                 hasCreated = currentValue.length() == 0;
-                storage.set(path, pairToSet.getValue());
+
+                storage.set(currentPath, pairToSet.getValue());
             }
 
-            storage.set(yamlPath + ".expiry", expiryTimestamp);
-            NanoHTTPD.Response.Status responseStatus = hasCreated ?
-                    NanoHTTPD.Response.Status.CREATED : NanoHTTPD.Response.Status.OK;
+            storage.set(basePath + ".expiry", expiryTimestamp);
 
-            oldValues.put("success", "true");
-            NanoHTTPD.Response response = returnAnyStatus(responseStatus, oldValues);
+            NanoHTTPD.Response response = returnAnyStatus(hasCreated ?
+                    NanoHTTPD.Response.Status.CREATED : NanoHTTPD.Response.Status.OK, toReturn);
             response.addHeader("Location", HTTPServer.lastHOST);
             return response;
         }
 
         return returnNotFoundDefault();
-    }
-
-    private String getYamlPathFromUri() {
-        String yamlPath = "";
-        for (String uriPart : uriParsed.getArguments()) {
-            yamlPath += uriPart + '.';
-        }
-        return yamlPath;
-    }
-
-    private void removeExpiredValues(String path) {
-        Object obj = storage.get(path);
-        if (obj instanceof ConfigurationSection) {
-            //TODO make recursive?
-            ConfigurationSection sectionToCheck = (ConfigurationSection) obj;
-            if (sectionToCheck.contains(path + ".expiry")) {
-                long stamp = sectionToCheck.getLong(path + ".expiry");
-                if (stamp < System.currentTimeMillis() / 1000) {
-                    storage.set(path, null);
-                }
-            }
-        }
     }
 }

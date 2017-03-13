@@ -11,6 +11,7 @@ import de.halfminer.hms.handlers.HanStorage;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,17 +22,20 @@ public abstract class RESTCommand extends HalfminerClass {
     final static HalfminerREST hmw = HalfminerREST.getInstance();
     final static HanStorage storage = hms.getStorageHandler();
 
-    Map<String, String> bodyParsed;
     StringArgumentSeparator uriParsed;
+    Map<String, List<String>> paramsParsed;
+    Map<String, String> bodyParsed;
 
     RESTCommand() {
         super(hmw, false);
     }
 
-    public NanoHTTPD.Response execute(NanoHTTPD.Method method,
-                                      Map<String, String> body, StringArgumentSeparator parsedRequest) {
-        this.bodyParsed = body;
-        this.uriParsed = parsedRequest.removeFirstElement();
+    public NanoHTTPD.Response execute(NanoHTTPD.Method method, StringArgumentSeparator uriParsed,
+                                      Map<String, List<String>> paramsParsed, Map<String, String> bodyParsed) {
+        this.uriParsed = uriParsed;
+        this.paramsParsed = paramsParsed;
+        this.bodyParsed = bodyParsed;
+        if (!doForAll()) returnNotFoundDefault();
         switch (method) {
             case GET:
                 if (this instanceof GETCommand) {
@@ -54,9 +58,17 @@ public abstract class RESTCommand extends HalfminerClass {
         }
     }
 
+    /**
+     * Will be called before method specific calls are made.
+     *
+     * @return true to continue exection, false to stop
+     */
+    boolean doForAll() {
+        return true;
+    }
+
     private NanoHTTPD.Response returnMethodNotAllowed() {
-        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED,
-                "application/json", GsonUtils.returnErrorJson("method not allowed"));
+        return returnAnyStatus(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED, GsonUtils.getErrorMap("method not allowed"));
     }
 
     NanoHTTPD.Response returnOK(Object toSerialize) {
@@ -68,12 +80,11 @@ public abstract class RESTCommand extends HalfminerClass {
     }
 
     NanoHTTPD.Response returnNotFoundDefault() {
-        return returnAnyStatus(NanoHTTPD.Response.Status.NOT_FOUND,
-                GsonUtils.returnErrorJson("invalid parameters"));
+        return returnAnyStatus(NanoHTTPD.Response.Status.NOT_FOUND, GsonUtils.getErrorMap("invalid request"));
     }
 
     NanoHTTPD.Response returnAnyStatus(NanoHTTPD.Response.Status status, Object toSerialize) {
-        return NanoHTTPD
-                .newFixedLengthResponse(status, "application/json", GsonUtils.returnPrettyJson(toSerialize));
+        return NanoHTTPD.newFixedLengthResponse(status,
+                        "application/json", GsonUtils.returnPrettyJson(toSerialize));
     }
 }

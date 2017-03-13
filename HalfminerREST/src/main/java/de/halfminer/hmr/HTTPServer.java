@@ -38,7 +38,7 @@ public class HTTPServer extends NanoHTTPD {
         if (headers.containsKey("x-real-ip")) {
             ipAddress = headers.get("x-real-ip");
         } else {
-            ipAddress = headers.get("remote-addr");
+            ipAddress = session.getRemoteIpAddress();
         }
 
         if (!whitelistedIPs.contains(ipAddress)) {
@@ -47,7 +47,15 @@ public class HTTPServer extends NanoHTTPD {
 
         Map<String, String> bodyParsed = null;
         Method method = session.getMethod();
-        if (Method.PUT.equals(method) || Method.POST.equals(method)) {
+
+        // read body for POST/PUT/DELETE
+        if (!Method.GET.equals(method)) {
+
+            // only parse application/x-www-form-urlencoded, disallow different body types for the time being
+            if (!headers.containsKey("content-type")
+                    || !headers.get("content-type").equals("application/x-www-form-urlencoded")) {
+                return getNotFoundErrorResponse("content-type must be application/x-www-form-urlencoded");
+            }
 
             bodyParsed = new HashMap<>();
 
@@ -55,7 +63,7 @@ public class HTTPServer extends NanoHTTPD {
             try {
                 contentLength = Integer.parseInt(headers.get("content-length"));
             } catch (NumberFormatException e) {
-                return getBadRequestResponse("invalid header");
+                return getNotFoundErrorResponse("invalid header");
             }
 
             byte[] buffer = new byte[contentLength];
@@ -96,24 +104,24 @@ public class HTTPServer extends NanoHTTPD {
                     .loadClass("de.halfminer.hmr.rest.Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
-            return getBadRequestResponse("unsupported");
+            return getNotFoundErrorResponse("unsupported");
         } catch (Exception e) {
             logger.log(Level.WARNING, "Internal error during command instantiation", e);
             return getInternalErrorResponse();
         }
 
-        lastHOST = headers.get("HOST") + session.getUri();
+        lastHOST = headers.get("host") + session.getUri();
         try {
-            return command.execute(method, bodyParsed, parsedRequest);
+            return command.execute(method, parsedRequest.removeFirstElement(), session.getParameters(), bodyParsed);
         } catch (Throwable e) {
-            logger.log(Level.WARNING, "Catch all exception during command execution", e);
+            logger.log(Level.WARNING, "Catch-all caught exception during command execution", e);
             return getInternalErrorResponse();
         }
     }
 
-    private NanoHTTPD.Response getBadRequestResponse(String message) {
-        return newFixedLengthResponse(Response.Status.BAD_REQUEST,
-                "application/json", GsonUtils.returnErrorJson(message));
+    private NanoHTTPD.Response getNotFoundErrorResponse(String message) {
+        return newFixedLengthResponse(Response.Status.NOT_FOUND,
+                "application/json", GsonUtils.returnPrettyJson(GsonUtils.getErrorMap(message)));
     }
 
     private NanoHTTPD.Response getInternalErrorResponse() {
