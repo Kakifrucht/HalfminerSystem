@@ -26,4 +26,5 @@ To use SSL it is recommended to setup a reverse proxy pointing to the API, such 
     - *GET* /\<uuid|playername>
       - Get a players last known name from UUID or vice versa
       - Adds dashes to UUID's, if not supplied
+      - Returns namechanged boolean, true if supplied username is not current one
     

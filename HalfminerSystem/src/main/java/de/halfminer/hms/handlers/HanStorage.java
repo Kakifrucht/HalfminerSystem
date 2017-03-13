@@ -120,7 +120,7 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
         return new HalfminerPlayer(playerConfig, p);
     }
 
-    public HalfminerPlayer getPlayer(UUID uuid) {
+    public HalfminerPlayer getPlayer(UUID uuid) throws PlayerNotFoundException {
         if (uuidConfig == null)
             throw new RuntimeException("getPlayer(UUID) called on non HalfminerSystem HanStorage instance");
         return new HalfminerPlayer(playerConfig, uuid);

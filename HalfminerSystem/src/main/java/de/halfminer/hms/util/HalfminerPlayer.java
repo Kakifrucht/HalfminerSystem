@@ -2,6 +2,7 @@ package de.halfminer.hms.util;
 
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.exception.PlayerNotFoundException;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -28,12 +29,16 @@ public class HalfminerPlayer {
         this.path = uuid + ".";
     }
 
-    public HalfminerPlayer(FileConfiguration storage, UUID uuid) {
+    public HalfminerPlayer(FileConfiguration storage, UUID uuid) throws PlayerNotFoundException {
 
         this.storage = storage;
 
         this.uuid = uuid;
         this.path = uuid + ".";
+
+        if (getName().length() == 0) {
+            throw new PlayerNotFoundException();
+        }
     }
 
     public OfflinePlayer getBase() {

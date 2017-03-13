@@ -1,5 +1,6 @@
 package de.halfminer.hmc.modules;
 
+import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
@@ -197,7 +198,11 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
         }
 
         String getOwnerName() {
-            return storage.getPlayer(uuid).getName();
+            try {
+                return storage.getPlayer(uuid).getName();
+            } catch (PlayerNotFoundException e) {
+                return "Error";
+            }
         }
 
         int getBreakages() {

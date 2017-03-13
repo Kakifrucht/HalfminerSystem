@@ -1,5 +1,6 @@
 package de.halfminer.hmr.rest;
 
+import de.halfminer.hmr.gson.GsonUtils;
 import de.halfminer.hmr.interfaces.GETCommand;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
@@ -11,6 +12,7 @@ import java.util.UUID;
  * - *GET* /< uuid|playername>
  *   - Get a players last known name from UUID or vice versa
  *   - Adds dashes to UUID's, if not supplied
+ *   - Returns namechanged boolean, true if supplied username is not current one
  */
 @SuppressWarnings("unused")
 public class Cmduuid extends RESTCommand implements GETCommand {
@@ -26,7 +28,7 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                 try {
                     toResolve = UUID.fromString(param);
                 } catch (IllegalArgumentException e) {
-                    return returnNotFound(new Response());
+                    return returnNotFound(GsonUtils.getErrorMap("invalid uuid"));
                 }
             } else if (param.length() == 32 && !param.contains("-")) {
                 String converted = param.substring(0, 8) + "-"
@@ -37,7 +39,7 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                 try {
                     toResolve = UUID.fromString(converted);
                 } catch (IllegalArgumentException e) {
-                    return returnNotFound(new Response());
+                    return returnNotFound(GsonUtils.getErrorMap("invalid uuid"));
                 }
 
             } else if (param.length() > 16) {
@@ -45,15 +47,18 @@ public class Cmduuid extends RESTCommand implements GETCommand {
             }
 
             try {
+                boolean nameChanged;
                 HalfminerPlayer hPlayer;
                 if (toResolve != null) {
                     hPlayer = hms.getStorageHandler().getPlayer(toResolve);
+                    nameChanged = false;
                 } else {
                     hPlayer = hms.getStorageHandler().getPlayer(param);
+                    nameChanged = !hPlayer.getName().equalsIgnoreCase(param);
                 }
-                return returnOK(new Response(hPlayer.getName(), hPlayer.getUniqueId()));
+                return returnOK(new Response(hPlayer.getName(), hPlayer.getUniqueId(), nameChanged));
             } catch (PlayerNotFoundException e) {
-                return returnNotFound(new Response(uriParsed.getArgument(0)));
+                return returnNotFound(GsonUtils.getErrorMap("unknown player"));
             }
         }
 
@@ -62,26 +67,14 @@ public class Cmduuid extends RESTCommand implements GETCommand {
 
     private class Response {
 
-        String name = null;
-        String uuid = null;
-        String error = null;
+        final String name;
+        final String uuid;
+        final boolean namechanged;
 
-        Response() {
-            error = "UUID not found";
-        }
-
-        Response(String name) {
+        Response(String name, UUID uuid, boolean nameChanged) {
             this.name = name;
-            this.error = "unknown player";
-        }
-
-        Response(String name, UUID uuid) {
-            if (name.isEmpty() || uuid == null) {
-                error = "unknown player";
-            } else {
-                this.name = name;
-                this.uuid = uuid.toString();
-            }
+            this.uuid = uuid.toString();
+            this.namechanged = nameChanged;
         }
     }
 }
