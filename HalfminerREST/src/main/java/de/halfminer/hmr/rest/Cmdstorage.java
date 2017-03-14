@@ -6,20 +6,21 @@ import de.halfminer.hmr.interfaces.DELETECommand;
 import de.halfminer.hmr.interfaces.GETCommand;
 import de.halfminer.hmr.interfaces.POSTCommand;
 import de.halfminer.hmr.interfaces.PUTCommand;
+import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.util.HalfminerPlayer;
 import fi.iki.elonen.NanoHTTPD;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * - Data creation/modification/retrieval, where URI is the path to the given resource
  * - *DELETE* /< path[/...]>[content:key&...]
  *   - Delete a whole section or just the values at the supplied keys
- * - *GET* /< path[/...]>[?:key&...]
+ * - *GET* /< path[/...]|player/< uuid>>[?:key&...]
  *   - Get the whole section or just the values at the supplied keys
+ *   - Get all recorded stats of player with subcommand /player
  * - *PUT/POST* /< path[/...]>[content:key=value&...&expiry=seconds]
  *   - Add data to the given path, supplied via content body as *application/x-www-form-urlencoded*
  *     - POST only for creation, not modification, PUT for both
@@ -78,6 +79,25 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
 
     @Override
     public NanoHTTPD.Response doOnGET() {
+
+        if (uriParsed.meetsLength(2) && uriParsed.getArgument(0).equals("player")) {
+            try {
+                UUID toGrab = UUID.fromString(uriParsed.getArgument(1));
+                HalfminerPlayer hPlayer = storage.getPlayer(toGrab);
+                Map<String, String> toReturn = new HashMap<>();
+                for (DataType dataType : DataType.values()) {
+                    String value = hPlayer.getString(dataType);
+                    if (value.length() > 0) {
+                        toReturn.put(dataType.toString(), value);
+                    }
+                }
+                return returnOK(toReturn);
+            } catch (IllegalArgumentException e) {
+                return returnNotFound(GsonUtils.getErrorMap("invalid uuid"));
+            } catch (PlayerNotFoundException e) {
+                return returnNotFound(GsonUtils.getErrorMap("player not found"));
+            }
+        }
 
         // try to iterate over a section if no GET parameters were supplied
         Set<String> keysToIterate;

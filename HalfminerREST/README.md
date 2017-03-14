@@ -15,8 +15,9 @@ To use SSL it is recommended to setup a reverse proxy pointing to the API, such 
     - Data creation/modification/retrieval, where URI is the path to the given resource
     - *DELETE* /\<path[/...]>[content:key&...]
       - Delete a whole section or just the values at the supplied keys
-    - *GET* /\<path[/...]>[?:key&...]
+    - *GET* /\<path[/...]|player/< uuid>>[?:key&...]
       - Get the whole section or just the values at the supplied keys
+      - Get all recorded stats of player with subcommand /player
     - *POST/PUT* /\<path[/...]>[content:key=value&...&expiry=seconds]
       - Add data to the given path, supplied via content body as *application/x-www-form-urlencoded*
         - POST only for creation, not modification, PUT for both
