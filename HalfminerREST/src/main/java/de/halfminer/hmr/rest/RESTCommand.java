@@ -1,7 +1,7 @@
 package de.halfminer.hmr.rest;
 
 import de.halfminer.hmr.HalfminerREST;
-import de.halfminer.hmr.gson.GsonUtils;
+import de.halfminer.hmr.http.ResponseBuilder;
 import de.halfminer.hmr.interfaces.DELETECommand;
 import de.halfminer.hmr.interfaces.GETCommand;
 import de.halfminer.hmr.interfaces.POSTCommand;
@@ -68,23 +68,13 @@ public abstract class RESTCommand extends HalfminerClass {
     }
 
     private NanoHTTPD.Response returnMethodNotAllowed() {
-        return returnAnyStatus(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED, GsonUtils.getErrorMap("method not allowed"));
-    }
-
-    NanoHTTPD.Response returnOK(Object toSerialize) {
-        return returnAnyStatus(NanoHTTPD.Response.Status.OK, toSerialize);
-    }
-
-    NanoHTTPD.Response returnNotFound(Object toSerialize) {
-        return returnAnyStatus(NanoHTTPD.Response.Status.NOT_FOUND, toSerialize);
+        return ResponseBuilder.create()
+                .setStatus(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED)
+                .setError("method not allowed")
+                .returnResponse();
     }
 
     NanoHTTPD.Response returnNotFoundDefault() {
-        return returnAnyStatus(NanoHTTPD.Response.Status.NOT_FOUND, GsonUtils.getErrorMap("invalid request"));
-    }
-
-    NanoHTTPD.Response returnAnyStatus(NanoHTTPD.Response.Status status, Object toSerialize) {
-        return NanoHTTPD.newFixedLengthResponse(status,
-                        "application/json", GsonUtils.returnPrettyJson(toSerialize));
+        return ResponseBuilder.getNotFoundResponse("invalid request");
     }
 }

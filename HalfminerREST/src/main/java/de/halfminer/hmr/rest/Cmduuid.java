@@ -1,6 +1,6 @@
 package de.halfminer.hmr.rest;
 
-import de.halfminer.hmr.gson.GsonUtils;
+import de.halfminer.hmr.http.ResponseBuilder;
 import de.halfminer.hmr.interfaces.GETCommand;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
@@ -28,7 +28,7 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                 try {
                     toResolve = UUID.fromString(param);
                 } catch (IllegalArgumentException e) {
-                    return returnNotFound(GsonUtils.getErrorMap("invalid uuid"));
+                    return ResponseBuilder.getNotFoundResponse("invalid uuid");
                 }
             } else if (param.length() == 32 && !param.contains("-")) {
                 String converted = param.substring(0, 8) + "-"
@@ -39,7 +39,7 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                 try {
                     toResolve = UUID.fromString(converted);
                 } catch (IllegalArgumentException e) {
-                    return returnNotFound(GsonUtils.getErrorMap("invalid uuid"));
+                    return ResponseBuilder.getNotFoundResponse("invalid uuid");
                 }
 
             } else if (param.length() > 16) {
@@ -56,9 +56,9 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                     hPlayer = hms.getStorageHandler().getPlayer(param);
                     nameChanged = !hPlayer.getName().equalsIgnoreCase(param);
                 }
-                return returnOK(new Response(hPlayer.getName(), hPlayer.getUniqueId(), nameChanged));
+                return ResponseBuilder.getOKResponse(new Response(hPlayer.getName(), hPlayer.getUniqueId(), nameChanged));
             } catch (PlayerNotFoundException e) {
-                return returnNotFound(GsonUtils.getErrorMap("unknown player"));
+                return ResponseBuilder.getNotFoundResponse("unknown player");
             }
         }
 

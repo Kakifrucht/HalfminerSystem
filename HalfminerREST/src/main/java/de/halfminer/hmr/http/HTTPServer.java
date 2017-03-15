@@ -1,6 +1,5 @@
-package de.halfminer.hmr;
+package de.halfminer.hmr.http;
 
-import de.halfminer.hmr.gson.GsonUtils;
 import de.halfminer.hmr.rest.RESTCommand;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
@@ -23,7 +22,7 @@ public class HTTPServer extends NanoHTTPD {
     private final Logger logger;
     private final Set<String> whitelistedIPs;
 
-    HTTPServer(Logger logger, int port, Set<String> whitelistedIPs) throws IOException {
+    public HTTPServer(Logger logger, int port, Set<String> whitelistedIPs) throws IOException {
         super(port);
         this.logger = logger;
         this.whitelistedIPs = whitelistedIPs;
@@ -54,7 +53,8 @@ public class HTTPServer extends NanoHTTPD {
             // only parse application/x-www-form-urlencoded, disallow different body types for the time being
             if (!headers.containsKey("content-type")
                     || !headers.get("content-type").equals("application/x-www-form-urlencoded")) {
-                return getNotFoundErrorResponse("content-type must be application/x-www-form-urlencoded");
+                return ResponseBuilder
+                        .getNotFoundResponse("content-type must be application/x-www-form-urlencoded");
             }
 
             bodyParsed = new HashMap<>();
@@ -63,7 +63,7 @@ public class HTTPServer extends NanoHTTPD {
             try {
                 contentLength = Integer.parseInt(headers.get("content-length"));
             } catch (NumberFormatException e) {
-                return getNotFoundErrorResponse("invalid header");
+                return ResponseBuilder.getNotFoundResponse("invalid header");
             }
 
             byte[] buffer = new byte[contentLength];
@@ -104,7 +104,7 @@ public class HTTPServer extends NanoHTTPD {
                     .loadClass("de.halfminer.hmr.rest.Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
-            return getNotFoundErrorResponse("unsupported");
+            return ResponseBuilder.getNotFoundResponse("unsupported");
         } catch (Exception e) {
             logger.log(Level.WARNING, "Internal error during command instantiation", e);
             return getInternalErrorResponse();
@@ -119,13 +119,10 @@ public class HTTPServer extends NanoHTTPD {
         }
     }
 
-    private NanoHTTPD.Response getNotFoundErrorResponse(String message) {
-        return newFixedLengthResponse(Response.Status.NOT_FOUND,
-                "application/json", GsonUtils.returnPrettyJson(GsonUtils.getErrorMap(message)));
-    }
-
     private NanoHTTPD.Response getInternalErrorResponse() {
-        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR,
-                MIME_PLAINTEXT, "An internal error has occurred");
+        return ResponseBuilder.create()
+                .setMimeType(MIME_PLAINTEXT)
+                .setObjectToSerialize("An internal error has occurred")
+                .returnResponse();
     }
 }

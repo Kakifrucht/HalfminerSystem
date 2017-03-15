@@ -1,7 +1,7 @@
 package de.halfminer.hmr.rest;
 
-import de.halfminer.hmr.HTTPServer;
-import de.halfminer.hmr.gson.GsonUtils;
+import de.halfminer.hmr.http.HTTPServer;
+import de.halfminer.hmr.http.ResponseBuilder;
 import de.halfminer.hmr.interfaces.DELETECommand;
 import de.halfminer.hmr.interfaces.GETCommand;
 import de.halfminer.hmr.interfaces.POSTCommand;
@@ -12,7 +12,10 @@ import de.halfminer.hms.util.HalfminerPlayer;
 import fi.iki.elonen.NanoHTTPD;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * - Data creation/modification/retrieval, where URI is the path to the given resource
@@ -57,9 +60,9 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
         if (bodyParsed.size() == 0) {
             if (storage.get(basePath) instanceof ConfigurationSection) {
                 storage.set(basePath, null);
-                return returnOK(Collections.singletonMap(basePath, "section deleted"));
+                return ResponseBuilder.create().setSingleton(basePath, "section deleted").returnResponse();
             } else {
-                return returnNotFound(GsonUtils.getErrorMap("path is not a section and no keys were specified"));
+                return ResponseBuilder.getNotFoundResponse("path is not a section and no keys were specified");
             }
         } else {
             boolean hasDeleted = false;
@@ -72,8 +75,10 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
                 storage.set(currentPath, null);
                 deleted.put(currentPath, oldVal);
             }
-            return returnAnyStatus(hasDeleted ?
-                    NanoHTTPD.Response.Status.OK : NanoHTTPD.Response.Status.NOT_FOUND, deleted);
+            return ResponseBuilder.create()
+                    .setStatus(hasDeleted ? NanoHTTPD.Response.Status.OK : NanoHTTPD.Response.Status.NOT_FOUND)
+                    .setObjectToSerialize(deleted)
+                    .returnResponse();
         }
     }
 
@@ -91,11 +96,11 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
                         toReturn.put(dataType.toString(), value);
                     }
                 }
-                return returnOK(toReturn);
+                return ResponseBuilder.getOKResponse(toReturn);
             } catch (IllegalArgumentException e) {
-                return returnNotFound(GsonUtils.getErrorMap("invalid uuid"));
+                return ResponseBuilder.getNotFoundResponse("invalid uuid");
             } catch (PlayerNotFoundException e) {
-                return returnNotFound(GsonUtils.getErrorMap("player not found"));
+                return ResponseBuilder.getNotFoundResponse("player not found");
             }
         }
 
@@ -108,7 +113,7 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
             if (get instanceof ConfigurationSection) {
                 keysToIterate = ((ConfigurationSection) get).getKeys(false);
             } else {
-                return returnNotFound(GsonUtils.getErrorMap("path is not a section, specify keys to get"));
+                return ResponseBuilder.getNotFoundResponse("path is not a section, specify keys to get");
             }
         }
 
@@ -127,9 +132,16 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
             }
         }
 
-        return returnAnyStatus(
-                hasFoundValue ? NanoHTTPD.Response.Status.OK : NanoHTTPD.Response.Status.NOT_FOUND,
-                toReturn.size() > 0 ? toReturn : GsonUtils.getErrorMap("not found"));
+        ResponseBuilder response = ResponseBuilder.create()
+                .setStatus(hasFoundValue ? NanoHTTPD.Response.Status.OK : NanoHTTPD.Response.Status.NOT_FOUND);
+
+        if (toReturn.size() > 0) {
+            response.setObjectToSerialize(toReturn);
+        } else {
+            response.setError("not found");
+        }
+
+        return response.returnResponse();
     }
 
     @Override
@@ -178,7 +190,7 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
 
             NanoHTTPD.Response.Status status = returnConflict ? NanoHTTPD.Response.Status.CONFLICT :
                     hasCreated ? NanoHTTPD.Response.Status.CREATED : NanoHTTPD.Response.Status.OK;
-            NanoHTTPD.Response response = returnAnyStatus(status, toReturn);
+            NanoHTTPD.Response response = ResponseBuilder.getAnyResponse(status, toReturn);
             response.addHeader("Location", HTTPServer.lastHOST);
             return response;
         }

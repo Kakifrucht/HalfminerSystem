@@ -1,5 +1,6 @@
 package de.halfminer.hmr;
 
+import de.halfminer.hmr.http.HTTPServer;
 import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
