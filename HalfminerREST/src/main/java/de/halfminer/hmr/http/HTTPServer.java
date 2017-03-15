@@ -41,7 +41,7 @@ public class HTTPServer extends NanoHTTPD {
         }
 
         if (!whitelistedIPs.contains(ipAddress)) {
-            return newFixedLengthResponse(Response.Status.FORBIDDEN, "", "");
+            return ResponseBuilder.create().setStatus(Response.Status.FORBIDDEN).setMimeType("").returnResponse();
         }
 
         Map<String, String> bodyParsed = null;

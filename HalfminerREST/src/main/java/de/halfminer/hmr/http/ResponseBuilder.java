@@ -33,7 +33,7 @@ public class ResponseBuilder {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private NanoHTTPD.Response.Status status = NanoHTTPD.Response.Status.OK;
-    private Object toSerialize;
+    private Object toSerialize = "";
     private String mimeType = "application/json";
 
     private ResponseBuilder() {}
@@ -63,9 +63,6 @@ public class ResponseBuilder {
     }
 
     public NanoHTTPD.Response returnResponse() {
-        if (toSerialize == null)
-            throw new RuntimeException("No object to serialize was specified");
-
         String toSend = toSerialize instanceof String ? (String) toSerialize : gson.toJson(toSerialize);
         return NanoHTTPD.newFixedLengthResponse(status, mimeType, toSend);
     }

@@ -2,20 +2,24 @@ package de.halfminer.hmr.rest;
 
 import de.halfminer.hmr.http.ResponseBuilder;
 import de.halfminer.hmr.interfaces.GETCommand;
+import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
 import fi.iki.elonen.NanoHTTPD;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
- * - *GET* /< uuid|playername>
+ * - *GET* /< uuid|playername>[/stats]
  *   - Get a players last known name from UUID or vice versa
  *   - Adds dashes to UUID's, if not supplied
  *   - Returns namechanged boolean, true if supplied username is not current one
+ *   - If /stats argument supplied via URI, will append all recorded stats about player
  */
 @SuppressWarnings("unused")
-public class Cmduuid extends RESTCommand implements GETCommand {
+public class Cmdplayer extends RESTCommand implements GETCommand {
 
     @Override
     public NanoHTTPD.Response doOnGET() {
@@ -56,7 +60,23 @@ public class Cmduuid extends RESTCommand implements GETCommand {
                     hPlayer = hms.getStorageHandler().getPlayer(param);
                     nameChanged = !hPlayer.getName().equalsIgnoreCase(param);
                 }
-                return ResponseBuilder.getOKResponse(new Response(hPlayer.getName(), hPlayer.getUniqueId(), nameChanged));
+
+                Map<String, String> stats = null;
+                if (uriParsed.meetsLength(2)
+                        && uriParsed.getArgument(1).equalsIgnoreCase("stats")) {
+
+                    stats = new HashMap<>();
+                    for (DataType dataType : DataType.values()) {
+                        String value = hPlayer.getString(dataType);
+                        if (value.length() > 0) {
+                            stats.put(dataType.toString(), value);
+                        }
+                    }
+                }
+
+                return ResponseBuilder
+                        .getOKResponse(new Response(hPlayer.getName(), hPlayer.getUniqueId(), nameChanged, stats));
+
             } catch (PlayerNotFoundException e) {
                 return ResponseBuilder.getNotFoundResponse("unknown player");
             }
@@ -70,11 +90,13 @@ public class Cmduuid extends RESTCommand implements GETCommand {
         final String name;
         final String uuid;
         final boolean namechanged;
+        final Map<String, String> stats;
 
-        Response(String name, UUID uuid, boolean nameChanged) {
+        Response(String name, UUID uuid, boolean nameChanged, Map<String, String> stats) {
             this.name = name;
             this.uuid = uuid.toString();
             this.namechanged = nameChanged;
+            this.stats = stats;
         }
     }
 }
