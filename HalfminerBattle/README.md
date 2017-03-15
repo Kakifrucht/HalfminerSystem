@@ -24,12 +24,13 @@ Current features
     - Prevents teleporting into arenas via tp delay glitches (Essentials */tpa*) if not fighting
       - Prevents teleport of tameable mobs, such as wolves, into arenas
     - Games can be force ended with */hmb forceend*
-    - Disables while fighting:
+    - Disables while in battle:
       - Hunger loss in duel (optional)
       - Item dropping/pickup (dropped items will be deleted)
       - Command usage
       - Opening of crafting tables, anvils etc.
       - Crafting in general
+      - Entering a bed
   - Duel mode
     - Robust queue system
       - Not using a per arena queue, if all arenas are in use, the next duel pair will be added automatically once it becomes free

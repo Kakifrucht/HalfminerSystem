@@ -453,4 +453,9 @@ public class GlobalMode extends AbstractMode {
             }
         }
     }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void denyBedEnter(PlayerBedEnterEvent e) {
+        e.setCancelled(pm.isInBattle(type, e.getPlayer()));
+    }
 }
