@@ -53,9 +53,26 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
 
         // delete whole section or supplied keys
         if (bodyParsed.size() == 0) {
-            if (storage.get(basePath) instanceof ConfigurationSection) {
+            Object obj = storage.get(basePath);
+            if (obj instanceof ConfigurationSection) {
+
+                ConfigurationSection section = (ConfigurationSection) obj;
+                Map<String, String> deleted = new HashMap<>();
+
+                for (String key : section.getKeys(false)) {
+                    if (key.equalsIgnoreCase("expiry")) continue;
+                    Object val = section.get(key);
+                    if (val instanceof String) {
+                        deleted.put(key, (String) val);
+                    } else if (val instanceof ConfigurationSection) {
+                        deleted.put(key, "section");
+                    } else {
+                        deleted.put(key, "?");
+                    }
+                }
+
                 storage.set(basePath, null);
-                return ResponseBuilder.create().setSingleton(basePath, "section deleted").returnResponse();
+                return ResponseBuilder.create().setObjectToSerialize(deleted).returnResponse();
             } else {
                 return ResponseBuilder.getNotFoundResponse("path is not a section and no keys were specified");
             }
@@ -135,7 +152,8 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
             Map<String, String> toReturn = new HashMap<>();
 
             // default expiry of value in one hour
-            long expiryTimestamp = (System.currentTimeMillis() / 1000) + 3600;
+            long currentTime = System.currentTimeMillis() / 1000;
+            long expiryTimestamp = currentTime + 3600;
             boolean hasCreated = false;
             boolean returnConflict = false;
 
@@ -143,7 +161,8 @@ public class Cmdstorage extends RESTCommand implements DELETECommand, GETCommand
 
                 if (pairToSet.getKey().equals("expiry")) {
                     try {
-                        expiryTimestamp = (System.currentTimeMillis() / 1000) + Long.parseLong(pairToSet.getValue());
+                        long timestamp = Long.parseLong(pairToSet.getValue());
+                        expiryTimestamp = timestamp != 0 ? timestamp + currentTime : 0;
                         continue;
                     } catch (NumberFormatException ignored) {}
                 }
