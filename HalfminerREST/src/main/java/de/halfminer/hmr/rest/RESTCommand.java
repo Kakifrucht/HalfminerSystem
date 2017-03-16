@@ -22,6 +22,7 @@ public abstract class RESTCommand extends HalfminerClass {
     final static HalfminerREST hmw = HalfminerREST.getInstance();
     final static HanStorage storage = hms.getStorageHandler();
 
+    String url;
     StringArgumentSeparator uriParsed;
     Map<String, List<String>> paramsParsed;
     Map<String, String> bodyParsed;
@@ -30,8 +31,9 @@ public abstract class RESTCommand extends HalfminerClass {
         super(hmw, false);
     }
 
-    public NanoHTTPD.Response execute(NanoHTTPD.Method method, StringArgumentSeparator uriParsed,
+    public ResponseBuilder execute(NanoHTTPD.Method method, String url, StringArgumentSeparator uriParsed,
                                       Map<String, List<String>> paramsParsed, Map<String, String> bodyParsed) {
+        this.url = url;
         this.uriParsed = uriParsed;
         this.paramsParsed = paramsParsed;
         this.bodyParsed = bodyParsed;
@@ -61,20 +63,19 @@ public abstract class RESTCommand extends HalfminerClass {
     /**
      * Will be called before method specific calls are made.
      *
-     * @return true to continue exection, false to stop
+     * @return true to continue method specific execution of command, false to stop
      */
     boolean doForAll() {
         return true;
     }
 
-    private NanoHTTPD.Response returnMethodNotAllowed() {
+    private ResponseBuilder returnMethodNotAllowed() {
         return ResponseBuilder.create()
                 .setStatus(NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED)
-                .setError("method not allowed")
-                .returnResponse();
+                .setError("method not allowed");
     }
 
-    NanoHTTPD.Response returnNotFoundDefault() {
+    ResponseBuilder returnNotFoundDefault() {
         return ResponseBuilder.getNotFoundResponse("invalid request");
     }
 }

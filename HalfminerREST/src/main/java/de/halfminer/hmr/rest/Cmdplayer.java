@@ -5,7 +5,6 @@ import de.halfminer.hmr.interfaces.GETCommand;
 import de.halfminer.hms.enums.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
-import fi.iki.elonen.NanoHTTPD;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ import java.util.UUID;
 public class Cmdplayer extends RESTCommand implements GETCommand {
 
     @Override
-    public NanoHTTPD.Response doOnGET() {
+    public ResponseBuilder doOnGET() {
 
         if (this.uriParsed.meetsLength(1)) {
 

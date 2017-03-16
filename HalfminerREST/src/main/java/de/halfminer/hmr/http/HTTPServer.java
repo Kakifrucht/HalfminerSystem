@@ -17,8 +17,6 @@ import java.util.logging.Logger;
  */
 public class HTTPServer extends NanoHTTPD {
 
-    public static String lastHOST;
-
     private final Logger logger;
     private final Set<String> whitelistedIPs;
 
@@ -54,7 +52,8 @@ public class HTTPServer extends NanoHTTPD {
             if (!headers.containsKey("content-type")
                     || !headers.get("content-type").equals("application/x-www-form-urlencoded")) {
                 return ResponseBuilder
-                        .getNotFoundResponse("content-type must be application/x-www-form-urlencoded");
+                        .getNotFoundResponse("content-type must be application/x-www-form-urlencoded")
+                        .returnResponse();
             }
 
             bodyParsed = new HashMap<>();
@@ -63,7 +62,7 @@ public class HTTPServer extends NanoHTTPD {
             try {
                 contentLength = Integer.parseInt(headers.get("content-length"));
             } catch (NumberFormatException e) {
-                return ResponseBuilder.getNotFoundResponse("invalid header");
+                return ResponseBuilder.getNotFoundResponse("invalid header").returnResponse();
             }
 
             byte[] buffer = new byte[contentLength];
@@ -104,15 +103,19 @@ public class HTTPServer extends NanoHTTPD {
                     .loadClass("de.halfminer.hmr.rest.Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
-            return ResponseBuilder.getNotFoundResponse("unsupported");
+            return ResponseBuilder.getNotFoundResponse("unsupported").returnResponse();
         } catch (Exception e) {
             logger.log(Level.WARNING, "Internal error during command instantiation", e);
             return getInternalErrorResponse();
         }
 
-        lastHOST = headers.get("host") + session.getUri();
         try {
-            return command.execute(method, parsedRequest.removeFirstElement(), session.getParameters(), bodyParsed);
+            return command
+                    .execute(method,
+                            "http://" + headers.get("host") + session.getUri(), // determine if https behind proxy?
+                            parsedRequest.removeFirstElement(),
+                            session.getParameters(), bodyParsed)
+                    .returnResponse();
         } catch (Throwable e) {
             logger.log(Level.WARNING, "Catch-all caught exception during command execution", e);
             return getInternalErrorResponse();

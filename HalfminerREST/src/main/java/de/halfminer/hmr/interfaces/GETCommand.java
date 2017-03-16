@@ -1,5 +1,6 @@
 package de.halfminer.hmr.interfaces;
 
+import de.halfminer.hmr.http.ResponseBuilder;
 import de.halfminer.hmr.rest.RESTCommand;
 import fi.iki.elonen.NanoHTTPD;
 
@@ -9,5 +10,5 @@ import fi.iki.elonen.NanoHTTPD;
  */
 public interface GETCommand {
 
-    NanoHTTPD.Response doOnGET();
+    ResponseBuilder doOnGET();
 }

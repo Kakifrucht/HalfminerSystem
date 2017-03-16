@@ -2,7 +2,6 @@ package de.halfminer.hmr.rest;
 
 import de.halfminer.hmr.http.ResponseBuilder;
 import de.halfminer.hmr.interfaces.GETCommand;
-import fi.iki.elonen.NanoHTTPD;
 
 /**
  * - *GET*
@@ -11,7 +10,7 @@ import fi.iki.elonen.NanoHTTPD;
 @SuppressWarnings("unused")
 public class Cmdstatus extends RESTCommand implements GETCommand {
     @Override
-    public NanoHTTPD.Response doOnGET() {
+    public ResponseBuilder doOnGET() {
         return ResponseBuilder.getOKResponse(new Status());
     }
 
