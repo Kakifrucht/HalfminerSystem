@@ -174,6 +174,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Send clickable command message to all players
     - Title broadcast
     - Bossbar broadcast
+    - Ring players to get their attention
     - Countdown via bossbar
     - Send custom messages to player or broadcast
     - Set news and motd message
@@ -195,7 +196,6 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Give a custom item defined in customitems.txt to a player (give)
     - Reload config (reload)
     - Rename items, supports lore (rename)
-    - Ring players to get their attention (ring)
     - Remove a players /home block (rmhomeblock)
     - Run an action defined in customactions.txt (runaction)
     - Search for homes in a given radius, hooking into Essentials (searchhomes)

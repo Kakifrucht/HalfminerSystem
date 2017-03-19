@@ -100,14 +100,6 @@ public class CustomAction {
 
     public boolean runAction(Player... players) {
 
-        // support empty action
-        if (parsedActionList == null) return true;
-
-        if (players.length < playersRequired) {
-            logError("NOTENOUGHPLAYERS", -1);
-            return false;
-        }
-
         // reparse if cache was modified
         if (actionCache.wasModifiedSince(lastCached)) {
             try {
@@ -115,6 +107,14 @@ public class CustomAction {
                 lastCached = System.currentTimeMillis();
             } catch (CachingException ignored) {
             }
+        }
+
+        // support empty action
+        if (parsedActionList == null) return true;
+
+        if (players.length < playersRequired) {
+            logError("NOTENOUGHPLAYERS", -1);
+            return false;
         }
 
         placeholders.put("%PLAYER%", players[0].getName());

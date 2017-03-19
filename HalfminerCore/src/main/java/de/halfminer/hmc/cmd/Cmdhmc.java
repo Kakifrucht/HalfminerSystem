@@ -32,7 +32,6 @@ import java.util.logging.Level;
  * - Give a custom item defined in customitems.txt to a player (give)
  * - Reload config (reload)
  * - Rename items, supports lore (rename)
- * - Ring players to get their attention (ring)
  * - Remove a players /home block (rmhomeblock)
  * - Run an action defined in customactions.txt (runaction)
  * - Search for homes in a given radius, hooking into Essentials (searchhomes)
@@ -65,9 +64,6 @@ public class Cmdhmc extends HalfminerCommand {
                     return;
                 case "rename":
                     renameItem();
-                    return;
-                case "ring":
-                    ringPlayer();
                     return;
                 case "rmhomeblock":
                     rmHomeBlock();
@@ -310,54 +306,6 @@ public class Cmdhmc extends HalfminerCommand {
                     .addPlaceholderReplace("%NAME%", newName)
                     .sendMessage(player);
         } else showUsage();
-    }
-
-    private void ringPlayer() {
-
-        if (args.length < 2) {
-            showUsage();
-            return;
-        }
-
-        final Player toRing = server.getPlayer(args[1]);
-        String senderName = Utils.getPlayername(sender);
-
-        if (toRing == null) {
-            MessageBuilder.create("playerNotOnline", PREFIX).sendMessage(sender);
-            return;
-        }
-
-        hms.getTitlesHandler().sendTitle(toRing,
-                MessageBuilder.create("cmdHmcRingTitle", hmc)
-                        .addPlaceholderReplace("%PLAYER%", senderName)
-                        .returnMessage());
-
-        MessageBuilder.create("cmdHmcRingMessage", hmc, PREFIX)
-                .addPlaceholderReplace("%PLAYER%", senderName)
-                .sendMessage(toRing);
-
-        MessageBuilder.create("cmdHmcRingSent", hmc, PREFIX)
-                .addPlaceholderReplace("%PLAYER%", toRing.getName())
-                .sendMessage(sender);
-
-        scheduler.runTaskAsynchronously(hmc, () -> {
-            float ringHeight = 2.0f;
-            boolean drop = true;
-            for (int i = 0; i < 19; i++) {
-
-                toRing.playSound(toRing.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, ringHeight);
-
-                if (ringHeight == 2.0f) drop = true;
-                else if (ringHeight == 0.5f) drop = false;
-
-                if (drop) ringHeight -= 0.5f;
-                else ringHeight += 0.5f;
-
-                try {
-                    Thread.sleep(110L);
-                } catch (InterruptedException ignored) {}
-            }
-        });
     }
 
     private void rmHomeBlock() {

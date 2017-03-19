@@ -22,6 +22,7 @@ import java.util.logging.Level;
  * - Send clickable command message to all players
  * - Title broadcast
  * - Bossbar broadcast
+ * - Ring players to get their attention
  * - Countdown via bossbar
  * - Send custom messages to player or broadcast
  * - Set news and motd message
@@ -62,6 +63,9 @@ public class Cmdchat extends HalfminerCommand {
                 case "news":
                     if (!hasAdvancedPermission()) return;
                     setNews();
+                    break;
+                case "ring":
+                    ringPlayer();
                     break;
                 case "send":
                     if (!hasAdvancedPermission()) return;
@@ -205,6 +209,54 @@ public class Cmdchat extends HalfminerCommand {
                 bar.removeBar();
             }, 20 * (countdown + 4));
         }
+    }
+
+    private void ringPlayer() {
+
+        if (args.length < 2) {
+            showUsage();
+            return;
+        }
+
+        final Player toRing = server.getPlayer(args[1]);
+        String senderName = Utils.getPlayername(sender);
+
+        if (toRing == null) {
+            MessageBuilder.create("playerNotOnline", "Chat").sendMessage(sender);
+            return;
+        }
+
+        hms.getTitlesHandler().sendTitle(toRing,
+                MessageBuilder.create("cmdChatRingTitle", hmc)
+                        .addPlaceholderReplace("%PLAYER%", senderName)
+                        .returnMessage());
+
+        MessageBuilder.create("cmdChatRingMessage", hmc, "Chat")
+                .addPlaceholderReplace("%PLAYER%", senderName)
+                .sendMessage(toRing);
+
+        MessageBuilder.create("cmdChatRingSent", hmc, "Chat")
+                .addPlaceholderReplace("%PLAYER%", toRing.getName())
+                .sendMessage(sender);
+
+        scheduler.runTaskAsynchronously(hmc, () -> {
+            float ringHeight = 2.0f;
+            boolean drop = true;
+            for (int i = 0; i < 19; i++) {
+
+                toRing.playSound(toRing.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, ringHeight);
+
+                if (ringHeight == 2.0f) drop = true;
+                else if (ringHeight == 0.5f) drop = false;
+
+                if (drop) ringHeight -= 0.5f;
+                else ringHeight += 0.5f;
+
+                try {
+                    Thread.sleep(110L);
+                } catch (InterruptedException ignored) {}
+            }
+        });
     }
 
     private void setNews() {
