@@ -2,6 +2,7 @@ package de.halfminer.hmc.modules;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.halfminer.hms.exception.FormattingException;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.interfaces.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
@@ -249,12 +250,11 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         chatFormats = new ArrayList<>();
         for (String formatUnparsed : hmc.getConfig().getStringList("chat.formats")) {
-
-            int indexSeparator = formatUnparsed.indexOf(":");
-            if (indexSeparator < 0) continue;
-            String key = formatUnparsed.substring(0, indexSeparator);
-            String format = formatUnparsed.substring(indexSeparator + 1, formatUnparsed.length());
-            chatFormats.add(new Pair<>(key, format));
+            try {
+                Pair<String, String> keyValue = Utils.getKeyValuePair(formatUnparsed);
+                keyValue.setLeft(keyValue.getLeft().toLowerCase());
+                chatFormats.add(keyValue);
+            } catch (FormattingException ignored) {}
         }
 
         if (chatFormats.size() == 0) {

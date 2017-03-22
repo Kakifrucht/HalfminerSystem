@@ -145,7 +145,7 @@ public class FFAArena extends AbstractArena {
         }
 
         Player killer = hasDied.getKiller();
-        if (killer != null) {
+        if (killer != null && !killer.equals(hasDied)) {
             if (!playersInArena.contains(killer)) {
                 hmb.getLogger().severe("Killer of " + hasDied.getName() + " " + killer.getName() + " not in Arena");
                 return;

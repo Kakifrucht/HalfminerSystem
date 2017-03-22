@@ -8,23 +8,35 @@ import java.util.Arrays;
 @SuppressWarnings("ALL")
 public class StringArgumentSeparator {
 
+    private final String concatenated;
     private String[] arguments;
     private int startingPoint = 0;
 
     public StringArgumentSeparator(String string) {
+        this.concatenated = string;
         arguments = string.split(" ");
     }
 
     public StringArgumentSeparator(String string, char separator) {
+        this.concatenated = string;
         arguments = string.split(separator + "");
     }
 
     public StringArgumentSeparator(String[] strings) {
+        String concat = "";
+        for (String str : strings) {
+            concat += str;
+        }
+        this.concatenated = concat;
         arguments = strings;
     }
 
     public String[] getArguments() {
         return arguments;
+    }
+
+    public String getConcatenatedString() {
+        return concatenated;
     }
 
     public int getLength() {
