@@ -59,7 +59,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 // set last pvp time to 30 days in the future, to prevent additional inactivity deranks
                 hPlayer.set(DataType.LAST_PVP, (System.currentTimeMillis() / 1000) + 2592000);
                 updateSkill(player, derankLossAmount);
-                MessageBuilder.create("modSkillLevelDerank", hmc, "PvP").sendMessage(player);
+                MessageBuilder.create("modSkillLevelDerank", hmc, "PvP")
+                        .addPlaceholderReplace("%DAYS%", String.valueOf(timeUntilDerankThreshold / 86400))
+                        .sendMessage(player);
             } else {
                 updateSkill(player, 0);
             }

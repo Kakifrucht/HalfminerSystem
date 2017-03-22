@@ -370,7 +370,7 @@ localization:
   modSellSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
   modSellSuccessLog: 'Sell: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
   modSkillLevelAdmingroupName: '&lServerteam'
-  modSkillLevelDerank: '&cDein Skilllevel wurde reduziert, weil du seit 4 Tagen kein PvP mehr betrieben hast'
+  modSkillLevelDerank: '&cDein Skilllevel wurde reduziert, weil du seit mindestens %DAYS% Tagen kein PvP mehr betrieben hast'
   modSkillLevelDerankTitle: ' \n&cDu wurdest degradiert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modSkillLevelLog: 'Skilllevel: %PLAYER% Level %SKILLOLD% -> %SKILLNEW% (%SKILLNO%)'
   modSkillLevelUprankTitle: ' \n&aDu wurdest befördert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
