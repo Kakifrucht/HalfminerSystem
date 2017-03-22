@@ -99,6 +99,7 @@ permissions:
       hmc.bypass.hopperlimit: true
       hmc.bypass.nethercheck: true
       hmc.bypass.nokillfarming: true
+      hmc.bypass.nokillfarmingrepeat: true
       hmc.bypass.pvp: true
       hmc.bypass.skilllevel: true
       hmc.bypass.statsrightclick: true
@@ -173,6 +174,8 @@ permissions:
     description: Bypass netherroof position check
   hmc.bypass.nokillfarming:
     description: Bypass killfarming check
+  hmc.bypass.nokillfarmingrepeat:
+    description: Bypass killfarming kill repeat check, used by other modules to determine if kill is grinded
   hmc.bypass.pvp:
     description: Bypass pvp modifications
   hmc.bypass.skilllevel:

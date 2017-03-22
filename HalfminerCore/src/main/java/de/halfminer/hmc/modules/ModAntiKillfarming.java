@@ -60,16 +60,16 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
             Player killer = e.getEntity().getKiller();
             Player victim = e.getEntity().getPlayer();
 
-            if (killer.equals(victim)
-                    || killer.hasPermission("hmc.bypass.nokillfarming")
-                    || victim.hasPermission("hmc.bypass.nokillfarming"))
-                return;
-
             // store information to not allow grinding, on next tick
             scheduler.runTaskLater(hmc, () -> {
                 Pair<UUID, UUID> bothPlayers = new Pair<>(killer.getUniqueId(), victim.getUniqueId());
                 if (hasKilled.getIfPresent(bothPlayers) == null) hasKilled.put(bothPlayers, true);
             }, 1L);
+
+            if (killer.equals(victim)
+                    || killer.hasPermission("hmc.bypass.nokillfarming")
+                    || victim.hasPermission("hmc.bypass.nokillfarming"))
+                return;
 
             // remove the killer from the victims map, to reset the killfarm counter
             if (containerMap.containsKey(victim.getUniqueId())) {
@@ -168,7 +168,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     }
 
     boolean isNotRepeatedKill(Player killer, Player victim) {
-        return hasKilled.getIfPresent(new Pair<>(killer.getUniqueId(), victim.getUniqueId())) == null;
+        return killer.hasPermission("hmc.bypass.nokillfarmingrepeat")
+                || hasKilled.getIfPresent(new Pair<>(killer.getUniqueId(), victim.getUniqueId())) == null;
     }
 
     /**
