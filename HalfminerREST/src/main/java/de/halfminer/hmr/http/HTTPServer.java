@@ -100,7 +100,7 @@ public class HTTPServer extends NanoHTTPD {
         try {
             command = (RESTCommand) this.getClass()
                     .getClassLoader()
-                    .loadClass("de.halfminer.hmr.rest.Cmd" + parsedRequest.getArgument(0).toLowerCase())
+                    .loadClass("de.halfminer.hmr.rest.cmd.Cmd" + parsedRequest.getArgument(0).toLowerCase())
                     .newInstance();
         } catch (ClassNotFoundException e) {
             return ResponseBuilder.getNotFoundResponse("unsupported").returnResponse();
