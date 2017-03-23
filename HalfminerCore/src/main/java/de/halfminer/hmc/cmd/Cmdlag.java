@@ -2,7 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.enumerator.ModuleType;
-import de.halfminer.hmc.modules.ModTps;
+import de.halfminer.hmc.module.ModTps;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.ChatColor;

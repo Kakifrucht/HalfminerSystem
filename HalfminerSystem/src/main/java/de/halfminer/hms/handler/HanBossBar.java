@@ -1,7 +1,7 @@
 package de.halfminer.hms.handler;
 
 import de.halfminer.hms.HalfminerClass;
-import de.halfminer.hms.manageable.Disableable;
+import de.halfminer.hms.manageables.Disableable;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;

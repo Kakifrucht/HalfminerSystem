@@ -2,8 +2,8 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.enumerator.ModuleType;
-import de.halfminer.hmc.modules.ModAntiXray;
-import de.halfminer.hmc.modules.ModSkillLevel;
+import de.halfminer.hmc.module.ModAntiXray;
+import de.halfminer.hmc.module.ModSkillLevel;
 import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.cache.CustomitemCache;
 import de.halfminer.hms.cache.CustomtextCache;

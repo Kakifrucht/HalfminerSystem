@@ -1,7 +1,7 @@
 package de.halfminer.hmb.mode.abs;
 
 import de.halfminer.hmb.BattleClass;
-import de.halfminer.hms.manageable.Reloadable;
+import de.halfminer.hms.manageables.Reloadable;
 
 /**
  * Abstract game mode

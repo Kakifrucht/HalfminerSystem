@@ -2,7 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.enumerator.ModuleType;
-import de.halfminer.hmc.modules.ModChatManager;
+import de.halfminer.hmc.module.ModChatManager;
 import de.halfminer.hms.handler.HanBossBar;
 import de.halfminer.hms.handler.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;

@@ -1,6 +1,6 @@
 package de.halfminer.hmr.http;
 
-import de.halfminer.hmr.rest.RESTCommand;
+import de.halfminer.hmr.rest.cmd.RESTCommand;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
 
