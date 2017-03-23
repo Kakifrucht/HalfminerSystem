@@ -1,10 +1,10 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerPersistenceCommand;
-import de.halfminer.hms.caches.CustomAction;
+import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.PlayerNotFoundException;
-import de.halfminer.hms.interfaces.Disableable;
+import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;

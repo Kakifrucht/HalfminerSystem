@@ -1,6 +1,5 @@
 package de.halfminer.hmb.mode.abs;
 
-import de.halfminer.hmb.enums.BattleModeType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 

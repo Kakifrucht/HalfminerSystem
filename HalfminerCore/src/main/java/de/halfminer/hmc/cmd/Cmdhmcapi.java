@@ -1,7 +1,7 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.handler.type.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;

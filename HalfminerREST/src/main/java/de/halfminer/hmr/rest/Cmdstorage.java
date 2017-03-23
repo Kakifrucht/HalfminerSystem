@@ -1,10 +1,10 @@
 package de.halfminer.hmr.rest;
 
 import de.halfminer.hmr.http.ResponseBuilder;
-import de.halfminer.hmr.interfaces.DELETECommand;
-import de.halfminer.hmr.interfaces.GETCommand;
-import de.halfminer.hmr.interfaces.POSTCommand;
-import de.halfminer.hmr.interfaces.PUTCommand;
+import de.halfminer.hmr.method.DELETECommand;
+import de.halfminer.hmr.method.GETCommand;
+import de.halfminer.hmr.method.POSTCommand;
+import de.halfminer.hmr.method.PUTCommand;
 import fi.iki.elonen.NanoHTTPD;
 import org.bukkit.configuration.ConfigurationSection;
 

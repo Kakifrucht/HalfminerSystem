@@ -2,10 +2,10 @@ package de.halfminer.hmc.modules;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hms.enums.DataType;
-import de.halfminer.hmc.enums.ModuleType;
-import de.halfminer.hms.interfaces.Disableable;
-import de.halfminer.hms.interfaces.Sweepable;
+import de.halfminer.hms.handler.type.DataType;
+import de.halfminer.hmc.enumerator.ModuleType;
+import de.halfminer.hms.manageable.Disableable;
+import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;

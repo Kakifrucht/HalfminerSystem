@@ -1,7 +1,7 @@
 package de.halfminer.hmc.modules;
 
 import de.halfminer.hms.exception.PlayerNotFoundException;
-import de.halfminer.hms.interfaces.Sweepable;
+import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;

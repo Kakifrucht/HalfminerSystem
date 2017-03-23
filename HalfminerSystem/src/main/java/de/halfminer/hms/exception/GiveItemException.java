@@ -1,6 +1,6 @@
 package de.halfminer.hms.exception;
 
-import de.halfminer.hms.caches.CustomitemCache;
+import de.halfminer.hms.cache.CustomitemCache;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.inventory.ItemStack;
 

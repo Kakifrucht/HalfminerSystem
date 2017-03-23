@@ -1,8 +1,8 @@
 package de.halfminer.hmc.modules;
 
-import de.halfminer.hms.enums.DataType;
-import de.halfminer.hmc.enums.ModuleType;
-import de.halfminer.hms.interfaces.Disableable;
+import de.halfminer.hms.handler.type.DataType;
+import de.halfminer.hmc.enumerator.ModuleType;
+import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;

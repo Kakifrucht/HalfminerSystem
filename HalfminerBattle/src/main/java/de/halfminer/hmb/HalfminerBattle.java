@@ -2,12 +2,12 @@ package de.halfminer.hmb;
 
 import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
-import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.abs.BattleMode;
-import de.halfminer.hms.HalfminerManager;
+import de.halfminer.hms.manageable.HalfminerManager;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.handlers.HanStorage;
-import de.halfminer.hms.interfaces.CacheHolder;
+import de.halfminer.hms.handler.HanStorage;
+import de.halfminer.hms.cache.CacheHolder;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

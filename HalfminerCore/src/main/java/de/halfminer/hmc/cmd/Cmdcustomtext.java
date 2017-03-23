@@ -2,7 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.exception.CachingException;
-import de.halfminer.hms.caches.CustomtextCache;
+import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Player;

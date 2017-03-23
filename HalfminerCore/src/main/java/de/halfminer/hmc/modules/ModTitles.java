@@ -1,6 +1,6 @@
 package de.halfminer.hmc.modules;
 
-import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.handler.type.DataType;
 import de.halfminer.hms.exception.HookException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;

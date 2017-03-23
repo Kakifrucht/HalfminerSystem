@@ -37,18 +37,14 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
       - skullowner: set the owner of the skull, only works if given material is "SKULL_ITEM"
     - Will throw exception if item wasn't given to player
   - CustomtextCache
-    - Parses a text file, splitting it into chapters
-    - Text file will only be parsed once
-      - Detects when a text file must be reparsed after modification, only when necessary
-    - The start of a new chapters is annotated with '#' character
-      - One chapter can have multiple names if separated with komma, such as "#chaptera, chapter a"
-      - If chapter name is seperated with space, '|' character can be used to alias chapters
-        - Example: "#help faction|factions" can be accessed by both "help faction" and "help factions"
-        - Supports a mix of ',' and '|' char, such as "#help faction|factions, factions"
-      - Supports wildcard with '*' character
-        - Example: "#help *" will match everything, if starting with "help "
-    - '&' character will be replaced with Minecraft color code
-    - If previous line ends with space character current line will be a continuation to it
+    - Autosaves configuration
+    - Stores as flatfile(s) in YAML format
+      - UUID storage/cache
+      - Player data storage
+      - Storage for other types of data
+    - Can easily be queried via Bukkit API
+    - Holds customtext caches
+    - Thread safe
 - **Handlers**
   - BossBar
     - Send bar to specific player or broadcast

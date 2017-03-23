@@ -1,10 +1,10 @@
 package de.halfminer.hmb.arena;
 
 import de.halfminer.hmb.arena.abs.AbstractArena;
-import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.handlers.HanTitles;
+import de.halfminer.hms.handler.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

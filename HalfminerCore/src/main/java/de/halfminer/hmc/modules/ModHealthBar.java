@@ -1,6 +1,6 @@
 package de.halfminer.hmc.modules;
 
-import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.handler.type.DataType;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;

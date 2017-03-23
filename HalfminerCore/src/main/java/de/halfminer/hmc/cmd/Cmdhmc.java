@@ -1,13 +1,13 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hmc.enums.ModuleType;
+import de.halfminer.hmc.enumerator.ModuleType;
 import de.halfminer.hmc.modules.ModAntiXray;
 import de.halfminer.hmc.modules.ModSkillLevel;
-import de.halfminer.hms.caches.CustomAction;
-import de.halfminer.hms.caches.CustomitemCache;
-import de.halfminer.hms.caches.CustomtextCache;
-import de.halfminer.hms.enums.DataType;
+import de.halfminer.hms.cache.CustomAction;
+import de.halfminer.hms.cache.CustomitemCache;
+import de.halfminer.hms.cache.CustomtextCache;
+import de.halfminer.hms.handler.type.DataType;
 import de.halfminer.hms.exception.CachingException;
 import de.halfminer.hms.exception.GiveItemException;
 import de.halfminer.hms.exception.PlayerNotFoundException;

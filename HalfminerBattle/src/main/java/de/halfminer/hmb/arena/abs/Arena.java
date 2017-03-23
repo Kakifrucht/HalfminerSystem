@@ -1,6 +1,6 @@
 package de.halfminer.hmb.arena.abs;
 
-import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

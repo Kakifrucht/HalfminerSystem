@@ -1,8 +1,8 @@
 package de.halfminer.hmr.rest;
 
 import de.halfminer.hmr.http.ResponseBuilder;
-import de.halfminer.hmr.interfaces.GETCommand;
-import de.halfminer.hms.enums.DataType;
+import de.halfminer.hmr.method.GETCommand;
+import de.halfminer.hms.handler.type.DataType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
 

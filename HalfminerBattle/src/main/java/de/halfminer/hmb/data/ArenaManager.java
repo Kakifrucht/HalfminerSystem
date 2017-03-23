@@ -2,7 +2,7 @@ package de.halfminer.hmb.data;
 
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import net.md_5.bungee.api.ChatColor;

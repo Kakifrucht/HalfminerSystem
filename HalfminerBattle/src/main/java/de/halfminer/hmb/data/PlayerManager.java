@@ -2,10 +2,9 @@ package de.halfminer.hmb.data;
 
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.enums.BattleModeType;
-import de.halfminer.hmb.enums.BattleState;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.interfaces.Sweepable;
+import de.halfminer.hms.manageable.Sweepable;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

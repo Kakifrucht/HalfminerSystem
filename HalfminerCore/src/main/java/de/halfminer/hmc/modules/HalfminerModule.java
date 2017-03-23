@@ -1,11 +1,11 @@
 package de.halfminer.hmc.modules;
 
 import de.halfminer.hmc.CoreClass;
-import de.halfminer.hms.handlers.HanBossBar;
-import de.halfminer.hms.handlers.HanHooks;
-import de.halfminer.hms.handlers.HanStorage;
-import de.halfminer.hms.handlers.HanTitles;
-import de.halfminer.hms.interfaces.Reloadable;
+import de.halfminer.hms.handler.HanBossBar;
+import de.halfminer.hms.handler.HanHooks;
+import de.halfminer.hms.handler.HanStorage;
+import de.halfminer.hms.handler.HanTitles;
+import de.halfminer.hms.manageable.Reloadable;
 
 /**
  * HalfminerModules are instantiated once. They may include Listeners.

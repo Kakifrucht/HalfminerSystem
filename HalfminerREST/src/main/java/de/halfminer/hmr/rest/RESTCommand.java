@@ -2,12 +2,12 @@ package de.halfminer.hmr.rest;
 
 import de.halfminer.hmr.HalfminerREST;
 import de.halfminer.hmr.http.ResponseBuilder;
-import de.halfminer.hmr.interfaces.DELETECommand;
-import de.halfminer.hmr.interfaces.GETCommand;
-import de.halfminer.hmr.interfaces.POSTCommand;
-import de.halfminer.hmr.interfaces.PUTCommand;
+import de.halfminer.hmr.method.DELETECommand;
+import de.halfminer.hmr.method.GETCommand;
+import de.halfminer.hmr.method.POSTCommand;
+import de.halfminer.hmr.method.PUTCommand;
 import de.halfminer.hms.HalfminerClass;
-import de.halfminer.hms.handlers.HanStorage;
+import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import fi.iki.elonen.NanoHTTPD;
 

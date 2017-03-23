@@ -1,7 +1,7 @@
 package de.halfminer.hmb.mode;
 
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.enums.BattleModeType;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
 import de.halfminer.hms.util.MessageBuilder;

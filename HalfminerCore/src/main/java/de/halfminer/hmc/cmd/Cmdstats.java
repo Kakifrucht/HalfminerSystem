@@ -1,8 +1,8 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hms.enums.DataType;
-import de.halfminer.hmc.enums.ModuleType;
+import de.halfminer.hms.handler.type.DataType;
+import de.halfminer.hmc.enumerator.ModuleType;
 import de.halfminer.hms.exception.PlayerNotFoundException;
 import de.halfminer.hmc.modules.ModSkillLevel;
 import de.halfminer.hms.util.HalfminerPlayer;

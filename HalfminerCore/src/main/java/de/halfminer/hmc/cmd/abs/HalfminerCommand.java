@@ -1,7 +1,7 @@
 package de.halfminer.hmc.cmd.abs;
 
 import de.halfminer.hmc.CoreClass;
-import de.halfminer.hms.handlers.HanStorage;
+import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

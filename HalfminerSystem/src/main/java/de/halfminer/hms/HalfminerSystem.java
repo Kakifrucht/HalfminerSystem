@@ -1,7 +1,8 @@
 package de.halfminer.hms;
 
-import de.halfminer.hms.enums.HandlerType;
-import de.halfminer.hms.handlers.*;
+import de.halfminer.hms.handler.type.HandlerType;
+import de.halfminer.hms.handler.*;
+import de.halfminer.hms.manageable.HalfminerManager;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

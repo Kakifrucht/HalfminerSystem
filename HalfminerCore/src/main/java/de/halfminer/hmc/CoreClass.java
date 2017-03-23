@@ -1,7 +1,7 @@
 package de.halfminer.hmc;
 
 import de.halfminer.hms.HalfminerClass;
-import de.halfminer.hms.handlers.HanStorage;
+import de.halfminer.hms.handler.HanStorage;
 
 /**
  * Modules and commands of HalfminerCore
