@@ -1,4 +1,4 @@
-package de.halfminer.hms.exception;
+package de.halfminer.hms.exceptions;
 
 import de.halfminer.hms.util.Utils;
 

@@ -1,6 +1,6 @@
 package de.halfminer.hms.cache;
 
-import de.halfminer.hms.exception.CachingException;
+import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;

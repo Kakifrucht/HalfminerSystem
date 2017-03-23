@@ -1,8 +1,8 @@
 package de.halfminer.hms.handler;
 
 import de.halfminer.hms.HalfminerClass;
-import de.halfminer.hms.exception.HookException;
-import de.halfminer.hms.manageables.Reloadable;
+import de.halfminer.hms.exceptions.HookException;
+import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;

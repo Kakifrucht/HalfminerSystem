@@ -2,11 +2,11 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hmc.enumerator.AttackSpeed;
-import de.halfminer.hms.handler.type.DataType;
-import de.halfminer.hmc.enumerator.ModuleType;
-import de.halfminer.hms.exception.CachingException;
-import de.halfminer.hms.manageables.Sweepable;
+import de.halfminer.hmc.enums.AttackSpeed;
+import de.halfminer.hms.handler.types.DataType;
+import de.halfminer.hmc.enums.ModuleType;
+import de.halfminer.hms.exceptions.CachingException;
+import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.cache.ActionProbabilityContainer;
 import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;

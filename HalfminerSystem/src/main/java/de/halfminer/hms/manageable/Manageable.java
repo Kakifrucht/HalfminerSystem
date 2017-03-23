@@ -1,4 +1,4 @@
-package de.halfminer.hms.manageables;
+package de.halfminer.hms.manageable;
 
 import org.bukkit.plugin.Plugin;
 

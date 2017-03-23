@@ -1,7 +1,7 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.handler.type.DataType;
-import de.halfminer.hms.exception.HookException;
+import de.halfminer.hms.handler.types.DataType;
+import de.halfminer.hms.exceptions.HookException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.UserDoesNotExistException;

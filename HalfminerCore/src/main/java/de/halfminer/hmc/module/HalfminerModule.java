@@ -5,7 +5,7 @@ import de.halfminer.hms.handler.HanBossBar;
 import de.halfminer.hms.handler.HanHooks;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.handler.HanTitles;
-import de.halfminer.hms.manageables.Reloadable;
+import de.halfminer.hms.manageable.Reloadable;
 
 /**
  * HalfminerModules are instantiated once. They may include Listeners.

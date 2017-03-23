@@ -1,7 +1,7 @@
 package de.halfminer.hms;
 
-import de.halfminer.hms.manageables.HalfminerManager;
-import de.halfminer.hms.manageables.Manageable;
+import de.halfminer.hms.manageable.HalfminerManager;
+import de.halfminer.hms.manageable.Manageable;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;

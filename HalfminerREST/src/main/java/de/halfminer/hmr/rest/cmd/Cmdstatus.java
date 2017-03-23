@@ -1,7 +1,7 @@
 package de.halfminer.hmr.rest.cmd;
 
 import de.halfminer.hmr.http.ResponseBuilder;
-import de.halfminer.hmr.rest.method.MethodGET;
+import de.halfminer.hmr.rest.methods.MethodGET;
 
 /**
  * - *GET*

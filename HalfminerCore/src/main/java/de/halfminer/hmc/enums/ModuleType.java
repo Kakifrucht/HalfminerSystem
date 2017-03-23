@@ -1,4 +1,4 @@
-package de.halfminer.hmc.enumerator;
+package de.halfminer.hmc.enums;
 
 /**
  * Contains references to all modules

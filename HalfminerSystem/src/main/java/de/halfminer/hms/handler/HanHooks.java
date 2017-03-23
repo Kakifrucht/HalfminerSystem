@@ -4,7 +4,7 @@ import com.earth2me.essentials.Enchantments;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import de.halfminer.hms.HalfminerClass;
-import de.halfminer.hms.exception.HookException;
+import de.halfminer.hms.exceptions.HookException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import net.milkbowl.vault.chat.Chat;

@@ -1,4 +1,4 @@
-package de.halfminer.hmc.enumerator;
+package de.halfminer.hmc.enums;
 
 import org.bukkit.Material;
 

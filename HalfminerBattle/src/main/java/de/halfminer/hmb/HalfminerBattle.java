@@ -4,7 +4,7 @@ import de.halfminer.hmb.data.ArenaManager;
 import de.halfminer.hmb.data.PlayerManager;
 import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.abs.BattleMode;
-import de.halfminer.hms.manageables.HalfminerManager;
+import de.halfminer.hms.manageable.HalfminerManager;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.cache.CacheHolder;

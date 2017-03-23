@@ -1,4 +1,4 @@
-package de.halfminer.hms.manageables;
+package de.halfminer.hms.manageable;
 
 /**
  * Implementing class must be called before plugin disables in order to shut down properly

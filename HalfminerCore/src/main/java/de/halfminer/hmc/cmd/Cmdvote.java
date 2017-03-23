@@ -1,9 +1,9 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hms.handler.type.DataType;
-import de.halfminer.hms.exception.CachingException;
-import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.handler.types.DataType;
+import de.halfminer.hms.exceptions.CachingException;
+import de.halfminer.hms.exceptions.PlayerNotFoundException;
 import de.halfminer.hms.cache.ActionProbabilityContainer;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;

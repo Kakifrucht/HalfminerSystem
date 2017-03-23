@@ -1,7 +1,7 @@
 package de.halfminer.hmc;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hmc.enumerator.ModuleType;
+import de.halfminer.hmc.enums.ModuleType;
 import de.halfminer.hmc.module.HalfminerModule;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;

@@ -2,9 +2,9 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hms.exception.FormattingException;
-import de.halfminer.hms.exception.HookException;
-import de.halfminer.hms.manageables.Sweepable;
+import de.halfminer.hms.exceptions.FormattingException;
+import de.halfminer.hms.exceptions.HookException;
+import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;

@@ -1,4 +1,4 @@
-package de.halfminer.hms.exception;
+package de.halfminer.hms.exceptions;
 
 /**
  * Exception thrown when user input (config) is not in expected format

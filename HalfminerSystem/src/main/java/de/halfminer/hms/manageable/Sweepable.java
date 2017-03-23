@@ -1,4 +1,4 @@
-package de.halfminer.hms.manageables;
+package de.halfminer.hms.manageable;
 
 /**
  * Implementing classes have collections that should be sweeped to prevent memory leaks

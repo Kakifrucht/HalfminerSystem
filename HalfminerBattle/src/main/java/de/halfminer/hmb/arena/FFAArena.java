@@ -8,7 +8,7 @@ import de.halfminer.hmb.data.BattleState;
 import de.halfminer.hmb.mode.FFAMode;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.cache.CustomAction;
-import de.halfminer.hms.exception.CachingException;
+import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;

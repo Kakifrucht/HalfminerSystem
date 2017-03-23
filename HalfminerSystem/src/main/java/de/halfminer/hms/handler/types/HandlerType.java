@@ -1,4 +1,4 @@
-package de.halfminer.hms.handler.type;
+package de.halfminer.hms.handler.types;
 
 /**
  * Contains references to all handlers

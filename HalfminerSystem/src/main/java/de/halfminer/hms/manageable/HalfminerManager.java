@@ -1,4 +1,4 @@
-package de.halfminer.hms.manageables;
+package de.halfminer.hms.manageable;
 
 import de.halfminer.hms.HalfminerClass;
 import org.bukkit.event.EventHandler;

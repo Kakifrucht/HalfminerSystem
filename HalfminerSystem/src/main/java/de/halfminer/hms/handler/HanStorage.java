@@ -1,11 +1,11 @@
 package de.halfminer.hms.handler;
 
 import de.halfminer.hms.HalfminerClass;
-import de.halfminer.hms.exception.CachingException;
-import de.halfminer.hms.exception.PlayerNotFoundException;
+import de.halfminer.hms.exceptions.CachingException;
+import de.halfminer.hms.exceptions.PlayerNotFoundException;
 import de.halfminer.hms.cache.CacheHolder;
-import de.halfminer.hms.manageables.Disableable;
-import de.halfminer.hms.manageables.Reloadable;
+import de.halfminer.hms.manageable.Disableable;
+import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;

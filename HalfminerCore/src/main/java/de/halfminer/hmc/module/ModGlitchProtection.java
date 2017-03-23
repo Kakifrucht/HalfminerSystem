@@ -2,8 +2,8 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hmc.enumerator.ModuleType;
-import de.halfminer.hms.manageables.Sweepable;
+import de.halfminer.hmc.enums.ModuleType;
+import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;

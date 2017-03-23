@@ -4,7 +4,7 @@ import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.manageables.Sweepable;
+import de.halfminer.hms.manageable.Sweepable;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
