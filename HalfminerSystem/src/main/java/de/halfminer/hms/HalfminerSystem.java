@@ -41,7 +41,7 @@ public class HalfminerSystem extends JavaPlugin {
             // Load handlers
             for (HandlerType handler : HandlerType.values()) {
                 handlers.put(handler, (HalfminerClass) this.getClassLoader()
-                        .loadClass("de.halfminer.hms.handlers." + handler.getClassName())
+                        .loadClass("de.halfminer.hms.handler." + handler.getClassName())
                         .newInstance());
             }
         } catch (Exception e) {

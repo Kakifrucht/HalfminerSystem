@@ -41,7 +41,7 @@ public class HalfminerCore extends JavaPlugin {
         try {
             for (ModuleType module : ModuleType.values()) {
                 HalfminerModule mod = (HalfminerModule) this.getClassLoader()
-                        .loadClass(PACKAGE_PATH + ".modules." + module.getClassName()).newInstance();
+                        .loadClass(PACKAGE_PATH + ".module." + module.getClassName()).newInstance();
 
                 modules.put(module, mod);
             }
