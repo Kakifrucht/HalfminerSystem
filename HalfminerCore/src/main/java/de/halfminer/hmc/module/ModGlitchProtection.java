@@ -102,7 +102,10 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
             // override Spigot default teleport safety between worlds
             scheduler.runTaskLater(hmc, () -> {
-                if (p.getLocation().distance(to) > 1.0d) p.teleport(to);
+                if (p.getLocation().getWorld().equals(to.getWorld())
+                        && p.getLocation().distance(to) > 1.0d) {
+                    p.teleport(to);
+                }
             }, 1L);
         } else if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT)) {
 
