@@ -150,19 +150,19 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             public void run() {
                 // build the progressbar
                 int timePercentage = (int) Math.round((time / (double) tagTime) * 10);
-                String progressBar = "" + ChatColor.DARK_RED + ChatColor.STRIKETHROUGH;
+                StringBuilder progressBar = new StringBuilder("" + ChatColor.DARK_RED + ChatColor.STRIKETHROUGH);
                 boolean switchedColors = false;
                 for (int i = 0; i < 10; i++) {
                     if (timePercentage-- < 1 && !switchedColors) {
-                        progressBar += "" + ChatColor.GRAY + ChatColor.STRIKETHROUGH;
-                        switchedColors = true; //only append color code once
+                        progressBar.append(ChatColor.GRAY).append(ChatColor.STRIKETHROUGH);
+                        switchedColors = true; // only append color code once
                     }
-                    progressBar += symbols;
+                    progressBar.append(symbols);
                 }
 
                 if (time-- > 0) titleHandler.sendActionBar(p, MessageBuilder.create("modCombatLogCountdown", hmc)
                         .addPlaceholderReplace("%TIME%", String.valueOf(time + 1))
-                        .addPlaceholderReplace("%PROGRESSBAR%", progressBar)
+                        .addPlaceholderReplace("%PROGRESSBAR%", progressBar.toString())
                         .returnMessage());
                 else untagPlayer(p);
             }

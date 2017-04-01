@@ -126,18 +126,18 @@ public class FFAMode extends AbstractMode {
         MessageBuilder.create("modeFFAList", hmb).sendMessage(sendTo);
         for (Arena arena : am.getFreeArenasFromType(type)) {
             List<Player> inArena = arena.getPlayersInArena();
-            String playerString = ChatColor.GREEN.toString();
+            StringBuilder playerString = new StringBuilder(ChatColor.GREEN.toString());
             if (inArena.isEmpty()) {
-                playerString = MessageBuilder.returnMessage("modeFFAListEmpty", hmb, false);
+                playerString = new StringBuilder(MessageBuilder.returnMessage("modeFFAListEmpty", hmb, false));
             } else {
                 for (Player player1 : arena.getPlayersInArena()) {
-                    playerString += player1.getName() + "  ";
+                    playerString.append(player1.getName()).append("  ");
                 }
             }
             MessageBuilder.create("modeFFAListPlayers", hmb)
                     .togglePrefix()
                     .addPlaceholderReplace("%ARENA%", arena.getName())
-                    .addPlaceholderReplace("%PLAYERS%", playerString)
+                    .addPlaceholderReplace("%PLAYERS%", playerString.toString())
                     .sendMessage(sendTo);
         }
     }

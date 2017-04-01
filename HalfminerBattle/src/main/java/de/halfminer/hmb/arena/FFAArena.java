@@ -200,9 +200,9 @@ public class FFAArena extends AbstractArena {
                 removePlayer(player);
                 message.sendMessage(player);
             }
-            String allPlayerNames = "";
+            StringBuilder allPlayerNames = new StringBuilder();
             for (Player player : inArenaCopy) {
-                allPlayerNames += player.getName() + ", ";
+                allPlayerNames.append(player.getName()).append(", ");
             }
             MessageBuilder.create("modeFFAGameEndForcedLog", hmb)
                     .addPlaceholderReplace("%ARENA%", getName())

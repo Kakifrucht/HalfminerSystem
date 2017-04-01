@@ -111,7 +111,7 @@ public class MessageBuilder {
     }
 
     /**
-     * Adds a placeholder and what to replace it with to the message. The placeholder character % will be stripped.
+     * Adds a placeholder and what to replace it with to the message. The {@link #PLACEHOLDER_CHARACTER} will be stripped.
      *
      * @param placeholder String to replace
      * @param replaceWith String with what to replace with

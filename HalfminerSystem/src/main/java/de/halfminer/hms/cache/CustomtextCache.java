@@ -98,7 +98,6 @@ public class CustomtextCache {
         ParseHelper(BufferedReader reader) throws CachingException {
 
             try {
-
                 String line;
                 while ((line = reader.readLine()) != null) {
 
@@ -189,16 +188,16 @@ public class CustomtextCache {
                 allArgumentsSplit.add(new Pair<>(0, splitAtSpace.split("\\|")));
 
             do {
-                String addToList = "";
+                StringBuilder addToList = new StringBuilder();
                 for (Pair<Integer, String[]> currentPair : allArgumentsSplit) {
                     int index = currentPair.getLeft();
-                    addToList += currentPair.getRight()[index] + " ";
+                    addToList.append(currentPair.getRight()[index]).append(" ");
                 }
 
                 if (addToList.length() > 0) {
                     // cut last space char
-                    addToList = addToList.substring(0, addToList.length() - 1);
-                    toReturn.add(addToList);
+                    addToList = new StringBuilder(addToList.substring(0, addToList.length() - 1));
+                    toReturn.add(addToList.toString());
                 }
 
             } while (incrementCounter(allArgumentsSplit));

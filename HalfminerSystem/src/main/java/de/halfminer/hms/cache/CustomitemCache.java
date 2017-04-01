@@ -74,8 +74,7 @@ public class CustomitemCache {
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName());
 
             if (additionalPlaceholders != null) {
-                additionalPlaceholders.entrySet()
-                        .forEach(entry -> parameterParse.addPlaceholderReplace(entry.getKey(), entry.getValue()));
+                additionalPlaceholders.forEach(parameterParse::addPlaceholderReplace);
             }
             // get the actual parameter and replace player placeholder
             String parameter = parameterParse.returnMessage();

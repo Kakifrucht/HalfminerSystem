@@ -168,12 +168,12 @@ public class Cmdhmc extends HalfminerCommand {
             Set<String> allItems = itemCache.getAllItems();
             if (!allItems.isEmpty()) {
 
-                String allItemString = "";
-                for (String itemKey : allItems) allItemString += itemKey + " ";
-                allItemString = allItemString.substring(0, allItemString.length() - 1);
+                StringBuilder allItemString = new StringBuilder();
+                for (String itemKey : allItems) allItemString.append(itemKey).append(" ");
+                allItemString = new StringBuilder(allItemString.substring(0, allItemString.length() - 1));
 
                 MessageBuilder.create("cmdHmcGiveList", hmc, PREFIX)
-                        .addPlaceholderReplace("%LIST%", allItemString)
+                        .addPlaceholderReplace("%LIST%", allItemString.toString())
                         .sendMessage(sender);
 
             } else MessageBuilder.create("cmdHmcGiveListNone", hmc, PREFIX).sendMessage(sender);

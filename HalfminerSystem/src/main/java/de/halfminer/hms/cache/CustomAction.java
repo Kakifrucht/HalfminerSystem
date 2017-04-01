@@ -185,10 +185,7 @@ public class CustomAction {
     private MessageBuilder replaceWithPlaceholders(String toReplace) {
 
         MessageBuilder message = MessageBuilder.create(toReplace).setDirectString();
-
-        placeholders.entrySet()
-                .forEach(entry -> message.addPlaceholderReplace(entry.getKey(), entry.getValue()));
-
+        placeholders.forEach(message::addPlaceholderReplace);
         return message;
     }
 

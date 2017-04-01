@@ -104,7 +104,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
 
     public String getInformationString() {
 
-        String toReturn = "";
+        StringBuilder toReturn = new StringBuilder();
 
         // cleanup junk
         sweep();
@@ -119,18 +119,18 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             if (counter.isBypassed()) color = ChatColor.YELLOW;
             else if (counter.isCheckedPermanently()) color = ChatColor.RED;
 
-            toReturn += MessageBuilder.create("modAntiXrayShowFormat", hmc)
+            toReturn.append(MessageBuilder.create("modAntiXrayShowFormat", hmc)
                     .addPlaceholderReplace("%PLAYER%", color + counter.getOwnerName())
                     .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(last))
                     .addPlaceholderReplace("%WORLD%", last.getWorld().getName())
                     .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()))
                     .addPlaceholderReplace("%PROTECTED%", String.valueOf(counter.getProtectedBreakages()))
                     .addPlaceholderReplace("%BROKEN%", String.valueOf(counter.getBreakages()))
-                    .returnMessage() + "\n";
+                    .returnMessage()).append("\n");
         }
 
-        if (toReturn.length() > 0) toReturn = toReturn.substring(0, toReturn.length() - 1);
-        return toReturn;
+        if (toReturn.length() > 0) toReturn = new StringBuilder(toReturn.substring(0, toReturn.length() - 1));
+        return toReturn.toString();
     }
 
     private void notify(@Nullable CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotified) {

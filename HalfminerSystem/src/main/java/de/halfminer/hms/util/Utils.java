@@ -62,12 +62,12 @@ public final class Utils {
         if (!(startIndex <= endIndex)) throw new IllegalArgumentException
                 ("startIndex (" + startIndex + ") must be smaller or equal to endIndex(" + endIndex + ")");
 
-        String toReturn = "";
-        if (array.length == 0) return toReturn;
+        StringBuilder toReturn = new StringBuilder();
+        if (array.length == 0) return toReturn.toString();
         for (int i = startIndex; i < array.length && i < endIndex; i++) {
-            toReturn += array[i] + ' ';
+            toReturn.append(array[i]).append(' ');
         }
-        if (translateColor) toReturn = ChatColor.translateAlternateColorCodes('&', toReturn);
+        if (translateColor) toReturn = new StringBuilder(ChatColor.translateAlternateColorCodes('&', toReturn.toString()));
         return toReturn.substring(0, toReturn.length() - 1);
     }
 
