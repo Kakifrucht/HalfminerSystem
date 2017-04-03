@@ -103,6 +103,8 @@ public class Cmdhmstore extends HalfminerCommand {
             } else if (args[0].equalsIgnoreCase("remove")) {
 
                 set(path, null);
+                // also clear storage of HalfminerSystem
+                storage.set(path, null);
                 MessageBuilder.create("cmdHmstoreRemove", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .sendMessage(sender);

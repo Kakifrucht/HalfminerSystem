@@ -86,13 +86,13 @@ public class ModSell extends HalfminerModule implements Listener, Sweepable {
 
         if (amount == 0) return;
 
-        // get rank multiplier
+        // get rank multiplier (shame on the hardcode though)
         double multiplier = 1.0d;
-        if (toReward.hasPermission("hmc.level.5")) multiplier = 2.5d;
-        else if (toReward.hasPermission("hmc.level.4")) multiplier = 2.0d;
-        else if (toReward.hasPermission("hmc.level.3")) multiplier = 1.75d;
-        else if (toReward.hasPermission("hmc.level.2")) multiplier = 1.5d;
-        else if (toReward.hasPermission("hmc.level.1")) multiplier = 1.25d;
+        if (toReward.hasPermission("hms.level.5")) multiplier = 2.5d;
+        else if (toReward.hasPermission("hms.level.4")) multiplier = 2.0d;
+        else if (toReward.hasPermission("hms.level.3")) multiplier = 1.75d;
+        else if (toReward.hasPermission("hms.level.2")) multiplier = 1.5d;
+        else if (toReward.hasPermission("hms.level.1")) multiplier = 1.25d;
 
         int baseValue = 1000;
         if (prices.containsKey(sold.getClearText()))

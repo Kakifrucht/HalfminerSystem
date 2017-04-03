@@ -120,10 +120,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
             return;
         }
 
-        int playerLevel = 0;
-        while (playerLevel < 6 && player.hasPermission("hmc.level." + (playerLevel + 1))) {
-            playerLevel++;
-        }
+        int playerLevel = storage.getPlayer(player).getLevel();
 
         if (rankToGiveName == null) {
             int getFromList = playerLevel + upgradeAmount - 1;

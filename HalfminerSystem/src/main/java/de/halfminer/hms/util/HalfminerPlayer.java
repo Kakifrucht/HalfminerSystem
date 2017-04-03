@@ -1,10 +1,11 @@
 package de.halfminer.hms.util;
 
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.handler.types.DataType;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
+import de.halfminer.hms.handler.types.DataType;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -55,6 +56,19 @@ public class HalfminerPlayer {
 
     public String getName() {
         return getString(DataType.LAST_NAME);
+    }
+
+    public int getLevel() {
+        if (!player.isOnline())
+            throw new RuntimeException("Player " + getName() + " is not online, cannot get level");
+
+        Player p = player.getPlayer();
+
+        int playerLevel = 0;
+        while (playerLevel < 6 && p.hasPermission("hms.level." + (playerLevel + 1))) {
+            playerLevel++;
+        }
+        return playerLevel;
     }
 
     public void set(DataType type, Object setTo) {

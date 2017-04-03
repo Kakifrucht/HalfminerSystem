@@ -10,6 +10,14 @@ command:
     #Bounds in which the random position will lie in
     boundMin: 1000
     boundMax: 10000
+  pin:
+    #Which rank name to associate with which HMC level (permission hmc.level.1-6)
+    #Highest will be default for players with higher hmc.level
+    - 'Legend'
+    - 'VIP'
+    - 'Elite'
+    - 'Premium'
+    - 'Player'
   rank:
     #Custom action that will be executed if/once player is online
     actionToExecute: 'examplerank'
@@ -282,6 +290,7 @@ localization:
   cmdNewtpLog: 'Newtp: %PLAYER% wurde zu %LOCATION% teleportiert'
   cmdNewtpStart: '&aDu wirst an einen eigenen Ort teleportiert'
   cmdNewtpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'
+  cmdPinShow: '&7Deine aktuelle PIN lautet &a%PIN%&7, sie läuft in einer Stunde ab'
   cmdRankActionNotFound: '&cDie Aktion &e%ACTIONNAME% &cfür &b%PLAYER% &ckonnte nicht ausgeführt werden'
   cmdRankInvalidRankCommand: '&cUnbekannter Rang'
   cmdRankInvalidRankConfig: '&cUngültige Konfiguration: &r%INVALIDINPUT%'

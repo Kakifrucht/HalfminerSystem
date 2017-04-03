@@ -228,6 +228,11 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Checks for safe teleport location
     - Sets home automatically
     - Gives some information about the server via chat and bossbar
+  - /pin
+    - Generates a PIN that can be used to temporarily identify a player
+    - PIN's are only valid for up to an hour after command execution
+    - Stores the current rank name with the pin
+      - Sets boolean to check if player is upgraded
   - /repair
     - Repair the held item or whole inventory
       - Permissions for access restriction

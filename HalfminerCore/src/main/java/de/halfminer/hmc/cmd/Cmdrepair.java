@@ -48,7 +48,7 @@ public class Cmdrepair extends HalfminerCommand {
             else {
                 int lowestMultiplier = hmc.getConfig().getInt("command.repair.cooldownBase", 900);
                 for (int i = 6; i > 0; i--) {
-                    if (player.hasPermission("hmc.level." + i)) {
+                    if (player.hasPermission("hms.level." + i)) {
                         secondsUntil = lowestMultiplier;
                         break;
                     } else lowestMultiplier *= 2;
