@@ -13,6 +13,7 @@ import java.util.UUID;
  * - PIN's are only valid for up to an hour after command execution
  * - Stores the current rank name with the pin
  *   - Sets boolean to check if player is upgraded
+ *   - Sets IP address, to deny sharing of PIN codes
  */
 @SuppressWarnings("unused")
 public class Cmdpin extends HalfminerCommand {
@@ -50,7 +51,7 @@ public class Cmdpin extends HalfminerCommand {
         }
 
         if (pinCode.isEmpty()) {
-            pinCode = String.valueOf(new Random().nextInt(1000000));
+            pinCode = String.valueOf(new Random().nextInt(10000));
         }
 
         StringBuilder sb = new StringBuilder(String.valueOf(pinCode));
@@ -69,10 +70,12 @@ public class Cmdpin extends HalfminerCommand {
             rankName = rankNames.get(rankNames.size() - 1 - level);
         }
 
+        String ipAddress = player.getAddress().getAddress().toString().substring(1);
         String path = "pins." + pinCode + '.';
         storage.set(path + "expiry", (System.currentTimeMillis() / 1000) + 3600);
         storage.set(path + "uuid", player.getUniqueId().toString());
         storage.set(path + "rank", rankName);
+        storage.set(path + "ip", ipAddress);
         storage.set(path + "isUpgraded", level > 0);
 
         MessageBuilder.create("cmdPinShow", hmc, "PIN")

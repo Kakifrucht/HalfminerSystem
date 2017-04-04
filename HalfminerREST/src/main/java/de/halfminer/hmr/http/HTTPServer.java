@@ -50,7 +50,7 @@ public class HTTPServer extends NanoHTTPD {
 
             // only parse application/x-www-form-urlencoded, disallow different body types for the time being
             if (!headers.containsKey("content-type")
-                    || !headers.get("content-type").equals("application/x-www-form-urlencoded")) {
+                    || !headers.get("content-type").startsWith("application/x-www-form-urlencoded")) {
                 return ResponseBuilder
                         .getNotFoundResponse("content-type must be application/x-www-form-urlencoded")
                         .returnResponse();
