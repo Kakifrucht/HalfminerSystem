@@ -57,7 +57,7 @@ public class Cmdvote extends HalfminerCommand {
                 if (hasVoted.getBase() instanceof Player) {
 
                     Player playerHasVoted = (Player) hasVoted.getBase();
-                    String address = playerHasVoted.getAddress().getAddress().toString().replace('.', 'i').substring(1);
+                    String address = hasVoted.getIPAddress().replace('.', 'i');
                     coreStorage.incrementInt("vote.ip" + address, 1);
 
                     boolean receivedReward = giveReward(playerHasVoted);

@@ -70,12 +70,11 @@ public class Cmdpin extends HalfminerCommand {
             rankName = rankNames.get(rankNames.size() - 1 - level);
         }
 
-        String ipAddress = player.getAddress().getAddress().toString().substring(1);
         String path = "pins." + pinCode + '.';
         storage.set(path + "expiry", (System.currentTimeMillis() / 1000) + 3600);
         storage.set(path + "uuid", player.getUniqueId().toString());
         storage.set(path + "rank", rankName);
-        storage.set(path + "ip", ipAddress);
+        storage.set(path + "ip", storage.getPlayer(player).getIPAddress());
         storage.set(path + "isUpgraded", level > 0);
 
         MessageBuilder.create("cmdPinShow", hmc, "PIN")

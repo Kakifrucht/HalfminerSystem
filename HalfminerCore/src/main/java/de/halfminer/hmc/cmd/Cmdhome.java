@@ -35,7 +35,7 @@ public class Cmdhome extends HalfminerCommand {
         else if (coreStorage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
                 || storage.getPlayer(player).getInt(DataType.TIME_ONLINE) < 18000
                 || coreStorage.getInt("vote.ip"
-                + player.getAddress().getAddress().toString().replace('.', 'i').substring(1)) > 1) {
+                + storage.getPlayer(player).getIPAddress().replace('.', 'i')) > 1) {
 
             player.addAttachment(hmc, "essentials.home", true, 0);
             server.dispatchCommand(player, command);

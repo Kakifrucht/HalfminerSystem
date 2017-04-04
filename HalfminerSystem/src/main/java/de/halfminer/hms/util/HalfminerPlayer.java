@@ -71,6 +71,14 @@ public class HalfminerPlayer {
         return playerLevel;
     }
 
+    public String getIPAddress() {
+        if (!player.isOnline())
+            throw new RuntimeException("Player " + getName() + " is not online, cannot get IP address");
+
+        // look stupid, but seems to be the most basic way to grab the IP via Bukkit
+        return player.getPlayer().getAddress().getAddress().toString().substring(1);
+    }
+
     public void set(DataType type, Object setTo) {
         storage.set(path + type, setTo);
     }
