@@ -9,11 +9,12 @@ To use SSL it is recommended to setup a reverse proxy pointing to the API, such 
 - Returns JSON messages
 - **REST Commands**
   - /player
-    - *GET* /\<uuid|playername>\[/stats]
+    - *GET* /\<uuid|playername>\[/stats|/nodashes]
       - Get a players last known name from UUID or vice versa
       - Adds dashes to UUID's, if not supplied
       - Returns namechanged boolean, true if supplied username is not current one
       - If /stats argument supplied via URI, will append all recorded stats about player
+      - If /nodashes argument supplied, will remove dashes from returned UUID
   - /status
     - *GET*
       - Get current player count

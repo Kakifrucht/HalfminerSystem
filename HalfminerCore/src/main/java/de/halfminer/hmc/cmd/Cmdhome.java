@@ -2,6 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.handler.types.DataType;
+import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 
@@ -28,27 +29,29 @@ public class Cmdhome extends HalfminerCommand {
             return;
         }
 
-        String command = "ehome" + ' ' + Utils.arrayToString(args, 0, false);
+        String command = "ehome " + Utils.arrayToString(args, 0, false);
 
-        if (player.hasPermission("hmc.moderator") || player.hasPermission("essentials.home"))
+        if (player.hasPermission("hmc.moderator") || player.hasPermission("essentials.home")) {
             server.dispatchCommand(player, command);
-        else if (coreStorage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
-                || storage.getPlayer(player).getInt(DataType.TIME_ONLINE) < 18000
-                || coreStorage.getInt("vote.ip"
-                + storage.getPlayer(player).getIPAddress().replace('.', 'i')) > 1) {
-
-            player.addAttachment(hmc, "essentials.home", true, 0);
-            server.dispatchCommand(player, command);
-
         } else {
+            HalfminerPlayer hPlayer = storage.getPlayer(player);
+            // add temporary permission if player has voted, is new or the IP has already voted twice
+            if (coreStorage.getLong("vote." + player.getUniqueId().toString()) > (System.currentTimeMillis() / 1000)
+                    || hPlayer.getInt(DataType.TIME_ONLINE) < 18000
+                    || coreStorage.getInt("vote.ip" + hPlayer.getIPAddress().replace('.', 'i')) > 1) {
 
-            MessageBuilder.create("cmdHomeDenied", hmc, "Home")
-                    .addPlaceholderReplace("%PLAYER%", player.getName())
-                    .sendMessage(player);
+                player.addAttachment(hmc, "essentials.home", true, 0);
+                server.dispatchCommand(player, command);
+            } else {
 
-            MessageBuilder.create("cmdHomeDeniedLog", hmc)
-                    .addPlaceholderReplace("%PLAYER%", player.getName())
-                    .logMessage(Level.INFO);
+                MessageBuilder.create("cmdHomeDenied", hmc, "Home")
+                        .addPlaceholderReplace("%PLAYER%", player.getName())
+                        .sendMessage(player);
+
+                MessageBuilder.create("cmdHomeDeniedLog", hmc)
+                        .addPlaceholderReplace("%PLAYER%", player.getName())
+                        .logMessage(Level.INFO);
+            }
         }
     }
 }

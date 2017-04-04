@@ -11,11 +11,12 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * - *GET* /< uuid|playername>[/stats]
+ * - *GET* /< uuid|playername>[/stats|/nodashes]
  *   - Get a players last known name from UUID or vice versa
  *   - Adds dashes to UUID's, if not supplied
  *   - Returns namechanged boolean, true if supplied username is not current one
  *   - If /stats argument supplied via URI, will append all recorded stats about player
+ *   - If /nodashes argument supplied, will remove dashes from returned UUID
  */
 @SuppressWarnings("unused")
 public class Cmdplayer extends RESTCommand implements MethodGET {
@@ -60,21 +61,26 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
                     nameChanged = !hPlayer.getName().equalsIgnoreCase(param);
                 }
 
+                String uuid = hPlayer.getUniqueId().toString();
                 Map<String, String> stats = null;
-                if (uriParsed.meetsLength(2)
-                        && uriParsed.getArgument(1).equalsIgnoreCase("stats")) {
+                if (uriParsed.meetsLength(2)) {
 
-                    stats = new HashMap<>();
-                    for (DataType dataType : DataType.values()) {
-                        String value = hPlayer.getString(dataType);
-                        if (value.length() > 0) {
-                            stats.put(dataType.toString(), value);
+                    String argument = uriParsed.getArgument(1).toLowerCase();
+                    if (argument.equals("stats")) {
+                        stats = new HashMap<>();
+                        for (DataType dataType : DataType.values()) {
+                            String value = hPlayer.getString(dataType);
+                            if (value.length() > 0) {
+                                stats.put(dataType.toString(), value);
+                            }
                         }
+                    } else if (argument.equals("nodashes")) {
+                        uuid = uuid.replaceAll("-", "");
                     }
                 }
 
                 return ResponseBuilder
-                        .getOKResponse(new Response(hPlayer.getName(), hPlayer.getUniqueId(), nameChanged, stats));
+                        .getOKResponse(new Response(hPlayer.getName(), uuid, nameChanged, stats));
 
             } catch (PlayerNotFoundException e) {
                 return ResponseBuilder.getNotFoundResponse("unknown player");
@@ -91,9 +97,9 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
         final boolean namechanged;
         final Map<String, String> stats;
 
-        Response(String name, UUID uuid, boolean nameChanged, Map<String, String> stats) {
+        Response(String name, String uuid, boolean nameChanged, Map<String, String> stats) {
             this.name = name;
-            this.uuid = uuid.toString();
+            this.uuid = uuid;
             this.namechanged = nameChanged;
             this.stats = stats;
         }
