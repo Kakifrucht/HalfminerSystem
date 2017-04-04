@@ -55,7 +55,7 @@ public class Cmdpin extends HalfminerCommand {
         }
 
         StringBuilder sb = new StringBuilder(String.valueOf(pinCode));
-        while (sb.length() < 6) {
+        while (sb.length() < 4) {
             sb.insert(0, '0');
         }
         pinCode = sb.toString();
