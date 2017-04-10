@@ -351,10 +351,16 @@ public class GlobalMode extends AbstractMode {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void itemDropRemove(PlayerDropItemEvent e) {
-        if (pm.isInBattle(type, e.getPlayer())) {
-            e.getItemDrop().remove();
+
+        Player p = e.getPlayer();
+        if (pm.isInBattle(type, p)) {
+            if (pm.isUsingOwnEquipment(p)) {
+                e.setCancelled(true);
+            } else {
+                e.getItemDrop().remove();
+            }
         }
     }
 

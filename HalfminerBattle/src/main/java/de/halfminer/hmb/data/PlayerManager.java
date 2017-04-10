@@ -58,6 +58,16 @@ public class PlayerManager implements Sweepable {
     }
 
     /**
+     * Check if a player
+     *
+     * @param toCheck player to check
+     * @return true if player is using his own equipment, else false
+     */
+    public boolean isUsingOwnEquipment(Player toCheck) {
+        return getBattlePlayer(toCheck).isUsingOwnEquipment();
+    }
+
+    /**
      * Check if a player is in queue for given battle mode
      *
      * @param modeType BattleModeType, can be {@link BattleModeType#GLOBAL} to check every mode

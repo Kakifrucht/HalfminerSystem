@@ -26,7 +26,7 @@ Current features
     - Games can be force ended with */hmb forceend*
     - Disables while in battle:
       - Hunger loss in duel (optional)
-      - Item dropping/pickup (dropped items will be deleted)
+      - Item dropping/pickup (dropped items will be deleted if not using own equipment)
       - Command usage
       - Opening of crafting tables, anvils etc.
       - Crafting in general

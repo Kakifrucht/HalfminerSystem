@@ -135,6 +135,10 @@ class BattlePlayer extends BattleClass {
         return true;
     }
 
+    boolean isUsingOwnEquipment() {
+        return isUsingOwnEquipment;
+    }
+
     void restorePlayer() {
 
         Player player = getBase();
