@@ -351,7 +351,7 @@ public class GlobalMode extends AbstractMode {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void itemDropRemove(PlayerDropItemEvent e) {
 
         Player p = e.getPlayer();

@@ -11,6 +11,7 @@ import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -168,6 +169,7 @@ public class FFAArena extends AbstractArena {
                 action.addPlaceholderForNextRun("%TOPLINE%", getCustomLore(killer));
                 action.addPlaceholderForNextRun("%BOTTOMLINE%", getCustomLoreID());
                 action.runAction(killer, hasDied);
+                killer.playSound(killer.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.3f);
             } catch (CachingException e) {
                 if (!e.getReason().equals(CachingException.Reason.CHAPTER_NOT_FOUND)
                     && !e.getReason().equals(CachingException.Reason.FILE_EMPTY)) {
