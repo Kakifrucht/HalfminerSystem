@@ -24,7 +24,7 @@ import java.util.Set;
  *   - Expiry timestamp can be passed as part of the content body, otherwise default of one hour will be used
  *     - Timestamp always refers to whole section, even if only a single key was updated, pass 0 for no expiry
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "StringConcatenationInLoop"})
 public class Cmdstorage extends RESTCommand implements MethodDELETE, MethodGET, MethodPOST, MethodPUT {
 
     private String basePath = "";
@@ -84,7 +84,7 @@ public class Cmdstorage extends RESTCommand implements MethodDELETE, MethodGET, 
 
                 hasDeleted = oldVal.length() > 0;
                 storage.set(currentPath, null);
-                deleted.put(currentPath, oldVal);
+                deleted.put(key, oldVal);
             }
             return ResponseBuilder.create()
                     .setStatus(hasDeleted ? NanoHTTPD.Response.Status.OK : NanoHTTPD.Response.Status.NOT_FOUND)
@@ -119,7 +119,7 @@ public class Cmdstorage extends RESTCommand implements MethodDELETE, MethodGET, 
             if (get != null && !(get instanceof ConfigurationSection)) {
                 String value = get.toString();
                 hasFoundValue = value.length() > 0;
-                toReturn.put(currentPath, value);
+                toReturn.put(key, value);
             }
         }
 
@@ -155,7 +155,8 @@ public class Cmdstorage extends RESTCommand implements MethodDELETE, MethodGET, 
 
             for (Map.Entry<String, String> pairToSet : bodyParsed.entrySet()) {
 
-                if (pairToSet.getKey().equals("expiry")) {
+                String key = pairToSet.getKey();
+                if (key.equals("expiry")) {
                     try {
                         long timestamp = Long.parseLong(pairToSet.getValue());
                         expiryTimestamp = timestamp != 0 ? timestamp + currentTime : 0;
@@ -166,7 +167,7 @@ public class Cmdstorage extends RESTCommand implements MethodDELETE, MethodGET, 
                 String currentPath = basePath + '.' + pairToSet.getKey();
                 String currentValue = storage.getString(currentPath);
 
-                toReturn.put(currentPath, currentValue);
+                toReturn.put(key, currentValue);
                 hasCreated = currentValue.length() == 0;
 
                 // if POST and value already exists, return conflict
