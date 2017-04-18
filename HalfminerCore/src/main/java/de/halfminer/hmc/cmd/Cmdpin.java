@@ -34,6 +34,7 @@ public class Cmdpin extends HalfminerCommand {
 
         // check if player has valid pin code already, remove old ones
         Object pins = storage.get("pins");
+        boolean alreadyHadPin = false;
         if (pins instanceof ConfigurationSection) {
             ConfigurationSection pinSection = (ConfigurationSection) pins;
             for (String pin : pinSection.getKeys(false)) {
@@ -46,19 +47,19 @@ public class Cmdpin extends HalfminerCommand {
                 UUID owner = UUID.fromString(pinSection.getString(pin + ".uuid"));
                 if (owner.equals(player.getUniqueId())) {
                     pinCode = pin;
+                    alreadyHadPin = true;
                 }
             }
         }
 
-        if (pinCode.isEmpty()) {
+        while (pinCode.isEmpty() || (!alreadyHadPin && storage.get("pins." + pinCode) != null)) {
             pinCode = String.valueOf(new Random().nextInt(10000));
+            StringBuilder sb = new StringBuilder(pinCode);
+            while (sb.length() < 4) {
+                sb.insert(0, '0');
+            }
+            pinCode = sb.toString();
         }
-
-        StringBuilder sb = new StringBuilder(String.valueOf(pinCode));
-        while (sb.length() < 4) {
-            sb.insert(0, '0');
-        }
-        pinCode = sb.toString();
 
         List<String> rankNames = hmc.getConfig().getStringList("command.pin");
         String rankName;
