@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  * - Teleport player to spawn
  * - Teleport other players to spawn with permission
  * - Teleport offline players to spawn once they login
- * - Set the spawnpoint (Command /spawn s, only with permission)
+ * - Set the spawnpoint with /setspawn
  */
 @SuppressWarnings("unused")
 public class Cmdspawn extends HalfminerCommand {
@@ -28,41 +28,38 @@ public class Cmdspawn extends HalfminerCommand {
     @Override
     public void execute() {
 
-        if (args.length == 0) teleport(sender, false);
-        else {
+        if (isPlayer && label.equals("setspawn") && sender.hasPermission("hmc.spawn.set")) {
+            respawn.setSpawn(player.getLocation());
+            MessageBuilder.create("cmdSpawnSet", hmc, "Spawn").sendMessage(player);
+            return;
+        }
 
-            if (isPlayer && args[0].equalsIgnoreCase("s") && sender.hasPermission("hmc.spawn.set")) {
+        if (args.length > 0 && sender.hasPermission("hmc.spawn.others")) {
+            Player toTeleport = server.getPlayer(args[0]);
+            if (toTeleport != null) {
 
-                MessageBuilder.create("cmdSpawnSet", hmc, "Spawn").sendMessage(player);
-                respawn.setSpawn(player.getLocation());
-
-            } else if (sender.hasPermission("hmc.spawn.others")) {
-
-                Player toTeleport = server.getPlayer(args[0]);
-                if (toTeleport != null) {
-
-                    if (toTeleport.equals(sender)) teleport(toTeleport, false);
-                    else {
-
-                        teleport(toTeleport, true);
-                        MessageBuilder.create("cmdSpawnOthers", hmc, "Spawn")
-                                .addPlaceholderReplace("%PLAYER%", toTeleport.getName())
-                                .sendMessage(sender);
-                    }
-                }
+                if (toTeleport.equals(sender)) teleport(toTeleport, false);
                 else {
-                    try {
 
-                        OfflinePlayer p = storage.getPlayer(args[0]).getBase();
-                        MessageBuilder.create(respawn.teleportToSpawnOnJoin(p) ?
-                                "cmdSpawnOthersOfflineAdd" : "cmdSpawnOthersOfflineRemove", hmc, "Spawn")
-                                .addPlaceholderReplace("%PLAYER%", p.getName())
-                                .sendMessage(sender);
-                    } catch (PlayerNotFoundException e) {
-                        e.sendNotFoundMessage(sender, "Spawn");
-                    }
+                    teleport(toTeleport, true);
+                    MessageBuilder.create("cmdSpawnOthers", hmc, "Spawn")
+                            .addPlaceholderReplace("%PLAYER%", toTeleport.getName())
+                            .sendMessage(sender);
                 }
-            } else teleport(sender, false);
+            } else {
+                try {
+
+                    OfflinePlayer p = storage.getPlayer(args[0]).getBase();
+                    MessageBuilder.create(respawn.teleportToSpawnOnJoin(p) ?
+                            "cmdSpawnOthersOfflineAdd" : "cmdSpawnOthersOfflineRemove", hmc, "Spawn")
+                            .addPlaceholderReplace("%PLAYER%", p.getName())
+                            .sendMessage(sender);
+                } catch (PlayerNotFoundException e) {
+                    e.sendNotFoundMessage(sender, "Spawn");
+                }
+            }
+        } else {
+            teleport(sender, false);
         }
     }
 

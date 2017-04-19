@@ -234,6 +234,15 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Stores the current rank name with the pin
       - Sets boolean to check if player is upgraded
       - Sets IP address, to deny sharing of PIN codes
+  - /rank
+    - Give out ranks to players
+    - Executes a custom action to give out rewards and run custom commands
+      - If player is offline waits until he is back online to execute action
+      - If action fails executes custom fallback action
+      - Add custom parameters that will be multiplied by a custom amount per rank (see config)
+        - Possibility to deduct reward multipliers for previous ranks
+    - Prevents giving out same or lower rank
+    - Instead of defining upgrade rank on command execution can define number of ranks that player will be upranked
   - /repair
     - Repair the held item or whole inventory
       - Permissions for access restriction
@@ -244,15 +253,6 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Sell sellable items via command
     - Uses ModSell for the actual sale
     - Possibility to sell multiple inventories at once
-  - /rank
-    - Give out ranks to players
-    - Executes a custom action to give out rewards and run custom commands
-      - If player is offline waits until he is back online to execute action
-      - If action fails executes custom fallback action
-      - Add custom parameters that will be multiplied by a custom amount per rank (see config)
-        - Possibility to deduct reward multipliers for previous ranks
-    - Prevents giving out same or lower rank
-    - Instead of defining upgrade rank on command execution can define number of ranks that player will be upranked
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number
@@ -260,7 +260,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Teleport player to spawn
     - Teleport other players to spawn with permission
     - Teleport offline players to spawn once they login
-    - Set the spawnpoint (Command /spawn s, only with permission)
+    Set the spawnpoint with /setspawn
   - /stats
     - View own / other players stats
     - Allows to compare statistics easily

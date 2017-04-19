@@ -54,7 +54,7 @@ commands:
     aliases: [se]
   spawn:
     description: Teleport to the spawn
-    aliases: [sa]
+    aliases: [sa, setspawn]
   stats:
     description: View the statistics of a player
     aliases: [st]
