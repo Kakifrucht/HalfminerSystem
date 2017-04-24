@@ -187,8 +187,8 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
         - A line must be started with '~' to be parsed
         - Commands will be printed in italic
       - Support for command execution
-        - Lines starting with "~>" will make the player execute following text
-        - Lines starting with "~~>" will make the console execute following text as command
+        - Lines starting with "->" will make the player execute following text
+        - Lines starting with "-->" will make the console execute following text as command
   - /disposal
     - Opens portable disposal
   - /hmc
@@ -260,7 +260,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Teleport player to spawn
     - Teleport other players to spawn with permission
     - Teleport offline players to spawn once they login
-    Set the spawnpoint with /setspawn
+    - Set the spawnpoint with /setspawn
   - /stats
     - View own / other players stats
     - Allows to compare statistics easily

@@ -85,7 +85,6 @@ public class MessageBuilder {
     private final Map<String, String> placeholders = new HashMap<>();
 
     private boolean getFromLocale = true;
-    private boolean makeCommandsClickable = true;
     private boolean usePrefix = true;
     private boolean startsWithClickableChar = false;
 
@@ -97,11 +96,6 @@ public class MessageBuilder {
     public MessageBuilder setDirectString() {
         getFromLocale = false;
         usePrefix = false;
-        return this;
-    }
-
-    public MessageBuilder toggleClickableCommands() {
-        makeCommandsClickable = !makeCommandsClickable;
         return this;
     }
 
@@ -138,7 +132,7 @@ public class MessageBuilder {
             toReturn = lang;
         }
 
-        if (makeCommandsClickable && toReturn.startsWith("" + CLICKABLE_PREFIX)) {
+        if (toReturn.startsWith("" + CLICKABLE_PREFIX)) {
             toReturn = toReturn.substring(1);
             startsWithClickableChar = true;
         }

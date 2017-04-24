@@ -19,8 +19,8 @@ import java.util.logging.Level;
  *     - A line must be started with '~' to be parsed
  *     - Commands will be printed in italic
  *   - Support for command execution
- *     - Lines starting with "~>" will make the player execute following text
- *     - Lines starting with "~~>" will make the console execute following text as command
+ *     - Lines starting with "->" will make the player execute following text
+ *     - Lines starting with "-->" will make the console execute following text as command
  */
 @SuppressWarnings("unused")
 public class Cmdcustomtext extends HalfminerCommand {
@@ -51,21 +51,20 @@ public class Cmdcustomtext extends HalfminerCommand {
 
                 MessageBuilder builder = MessageBuilder.create(rawLine, hmc)
                         .setDirectString()
-                        .toggleClickableCommands()
                         .addPlaceholderReplace("%PLAYER%", Utils.getPlayername(sender))
                         .addPlaceholderReplace("%ARGS%", Utils.arrayToString(args, 0, false));
 
-                // check for command (only for players)
+                // check for command execution (only for players)
                 if (isPlayer) {
 
                     String message = builder.returnMessage();
 
                     Player player = (Player) sender;
-                    if (message.startsWith("~>")) {
+                    if (message.startsWith("->")) {
 
                         player.chat(message.substring(2).trim());
                         continue;
-                    } else if (message.startsWith("~~>")) {
+                    } else if (message.startsWith("-->")) {
 
                         String command = message.substring(3).trim();
                         if (command.startsWith("/")) command = command.substring(1);
@@ -75,7 +74,7 @@ public class Cmdcustomtext extends HalfminerCommand {
                     }
                 }
 
-                builder.toggleClickableCommands().sendMessage(sender);
+                builder.sendMessage(sender);
             }
 
         } catch (CachingException e) {

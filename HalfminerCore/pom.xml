@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>HalfminerCore</artifactId>
-    <version>3.24.1</version>
+    <version>3.24.2</version>
 
     <dependencies>
         <dependency>

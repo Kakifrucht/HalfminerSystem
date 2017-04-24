@@ -2,8 +2,8 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hms.handler.types.DataType;
 import de.halfminer.hmc.enums.ModuleType;
+import de.halfminer.hms.handler.types.DataType;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.HalfminerPlayer;
@@ -21,6 +21,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
@@ -129,11 +130,22 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
                     .addPlaceholderReplace("%KDRATIO%", String.valueOf(kdRatioKiller))
                     .sendMessage(killer);
 
-            MessageBuilder.create("modStatsPvPDeath", hmc, "PvP")
-                    .addPlaceholderReplace("%KILLER%", killer.getName())
-                    .addPlaceholderReplace("%DEATHS%", String.valueOf(deathsVictim))
-                    .addPlaceholderReplace("%KDRATIO%", String.valueOf(kdRatioVictim))
-                    .sendMessage(victim);
+
+
+            ItemStack weapon = killer.getInventory().getItemInMainHand();
+            boolean addKillingWeapon = weapon != null
+                    && weapon.hasItemMeta()
+                    && weapon.getItemMeta().hasDisplayName();
+
+            MessageBuilder victimMessage = MessageBuilder.create(
+                    addKillingWeapon ? "modStatsPvPDeathWeapon" : "modStatsPvPDeath", hmc, "PvP")
+                    .addPlaceholderReplace("%KILLER%", killer.getName());
+
+            if (addKillingWeapon) {
+                victimMessage.addPlaceholderReplace("%WEAPON%", weapon.getItemMeta().getDisplayName());
+            }
+
+            victimMessage.sendMessage(victim);
 
             MessageBuilder.create("modStatsPvPLog", hmc)
                     .addPlaceholderReplace("%KILLER%", killer.getName())
