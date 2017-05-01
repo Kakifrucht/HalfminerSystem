@@ -86,7 +86,7 @@ public class SellableMap extends CoreClass {
                 }
 
                 Material material = Material.matchMaterial(separator.getArgument(1));
-                short durability = (short) separator.getArgumentIntMinimum(2, 0);
+                short durability = (short) separator.getArgumentInt(2);
                 String messageName = separator.getArgument(0);
                 int baseUnitAmount = separator.getArgumentIntMinimum(3, 1);
 

@@ -97,10 +97,17 @@ public class Sellable extends CoreClass {
         return messageName;
     }
 
+    /**
+     * Stack is matching if it is the same Material, has the same durability or any durability if this Sellable's
+     * durability is lower than 0 and has no ItemMeta.
+     *
+     * @param itemStack item to compare
+     * @return true if stacks match, false else
+     */
     public boolean isMatchingStack(ItemStack itemStack) {
         return itemStack != null
                 && material.equals(itemStack.getType())
-                && durability == itemStack.getDurability()
+                && (durability < 0 || durability == itemStack.getDurability())
                 && !itemStack.hasItemMeta();
     }
 

@@ -188,7 +188,7 @@ sell:
   #a new cycle starts will be between 0.8 and 1.2, multiplied with amountPerCurrency of given sellable, set to 0 to disable
   priceVarianceFactor: 0.2
   #Subkeys are numbers that dictate how many of the given items in child list are put into the next cycle
-  #Items are defined as such: messageName, material, durability (item data), amountPerCurrency
+  #Items are defined as such: messageName, material, durability (item data) or -1 for any, amountPerCurrency
   sellables:
     '1':
     - Rote Beete, BEETROOT, 0, 30
