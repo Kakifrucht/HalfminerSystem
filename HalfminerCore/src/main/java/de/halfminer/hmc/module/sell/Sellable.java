@@ -1,7 +1,10 @@
 package de.halfminer.hmc.module.sell;
 
+import de.halfminer.hmc.CoreClass;
+import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
@@ -10,7 +13,7 @@ import java.util.Random;
  * Class encapsulating an item that is up for sale, and it's necessary metadata, managed by {@link SellableMap}.
  * Also handles it's current unit price and returns revenue from given sell amount.
  */
-public class Sellable {
+public class Sellable extends CoreClass {
 
     // cyclic dependency alert
     private final SellableMap sellableMap;
@@ -30,6 +33,7 @@ public class Sellable {
 
     Sellable(SellableMap sellableMap, int groupId, int idInGroup,
              Material material, short durability, String messageName, int baseUnitAmount) {
+        super(false);
 
         this.sellableMap = sellableMap;
 
@@ -108,13 +112,18 @@ public class Sellable {
         return amountUntilNextIncrease;
     }
 
-    public double getRevenue(int amountSold) {
+    public double getRevenue(Player hasSold, int amountSold) {
 
         double revenue = amountSold / (double) currentUnitAmount;
         amountUntilNextIncrease -= amountSold;
         if (amountUntilNextIncrease < 0) {
+
             currentUnitAmount *= sellableMap.getPriceAdjustMultiplier();
             amountUntilNextIncrease += (currentUnitAmount * sellableMap.getUnitsUntilIncrease());
+
+            MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
+                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(currentUnitAmount))
+                    .sendMessage(hasSold);
         }
         return revenue;
     }

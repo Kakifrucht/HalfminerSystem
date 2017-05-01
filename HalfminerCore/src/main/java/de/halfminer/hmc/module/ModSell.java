@@ -89,20 +89,8 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             if (menuCommands.containsKey(slot)) {
                 player.chat(menuCommands.get(slot));
                 player.closeInventory();
-            } else if (slot >= 18) {
-
-                Sellable toSell = sellableMap.getSellableAtSlot(slot - 18);
-                if (toSell != null) {
-                    int amountSold = sellMaterial(toSell, player.getInventory());
-                    if (amountSold > 0) {
-                        rewardPlayer(player, toSell, amountSold);
-                    } else {
-                        MessageBuilder.create("modSellNotInInv", hmc, "Sell")
-                                .addPlaceholderReplace("%NAME%", toSell.getMessageName())
-                                .sendMessage(player);
-                    }
-                    player.closeInventory();
-                }
+            } else if (slot >= 18 && sellMaterialAndReward(slot - 18, player)) {
+                player.closeInventory();
             }
         }
     }
@@ -219,6 +207,21 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         sellableMap.startNewCycle();
     }
 
+    public boolean sellMaterialAndReward(int index, Player toReward) {
+
+        Sellable toSell = sellableMap.getSellableAtSlot(index);
+        if (toSell != null) {
+            int sold = sellMaterial(toSell, toReward.getInventory());
+            if (sold == 0) {
+                MessageBuilder.create("modSellNotInInv", hmc, "Sell")
+                        .addPlaceholderReplace("%NAME%", toSell.getMessageName())
+                        .sendMessage(toReward);
+            }
+            rewardPlayer(toReward, toSell, sold);
+            return true;
+        } return false;
+    }
+
     private int sellMaterial(Sellable toSell, Inventory inventory) {
 
         int sellCount = 0;
@@ -239,7 +242,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
 
         double multiplier = getMultiplier(toReward);
-        double revenue = sold.getRevenue(amount) * multiplier;
+        double revenue = sold.getRevenue(toReward, amount) * multiplier;
 
         try {
             hookHandler.addMoney(toReward, revenue);

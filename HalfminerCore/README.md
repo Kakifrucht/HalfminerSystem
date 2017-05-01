@@ -262,6 +262,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - If repairing single item, checks if it is a stack (permission required)
   - /sell
     - Show sell menu
+    - Allows selling item at position in menu with */sell itemposition*, first item with /sell 1
     - Toggle automatic selling
     - /clearcycle alias forces a new sell cycle
   - /signedit

@@ -16,4 +16,4 @@ lore: &7Nächster Zyklus in &a%CYCLEMINUTES% &7Minuten|&r|&7Die Gegenstände wer
 #sellmenu-9
 CHEST
 name: &a&lAutomatischer Kistenverkauf
-lore: &r|Automatischen Kistenverkauf|&7an/aus schalten, öffne und schließe|&7die Kiste die du verkaufen möchtest|&r|&7Ab &bVIP &7verfügbar
+lore: &r|&7Automatischen Kistenverkauf|&7an/aus schalten, öffne und schließe|&7die Kiste die du verkaufen möchtest|&r|&7Ab &bVIP &7verfügbar

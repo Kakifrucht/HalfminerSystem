@@ -43,7 +43,7 @@ public class SellableMap extends CoreClass {
     }
 
     public Sellable getSellableAtSlot(int slotId) {
-        return slotId < cycleSellables.size() ? cycleSellables.get(slotId) : null;
+        return slotId < cycleSellables.size() && slotId >= 0 ? cycleSellables.get(slotId) : null;
     }
 
     public Sellable getSellableFromItemStack(ItemStack item) {
