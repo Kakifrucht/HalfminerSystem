@@ -1,7 +1,7 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hmc.enums.ModuleType;
+import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModSell;
 import de.halfminer.hms.util.MessageBuilder;
 

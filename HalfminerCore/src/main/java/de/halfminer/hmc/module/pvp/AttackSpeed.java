@@ -1,9 +1,9 @@
-package de.halfminer.hmc.enums;
+package de.halfminer.hmc.module.pvp;
 
 import org.bukkit.Material;
 
 /**
- * Helper class containing Minecraft attackspeed values
+ * Helper class containing Minecraft attackspeed values.
  */
 @SuppressWarnings("unused")
 public enum AttackSpeed {
