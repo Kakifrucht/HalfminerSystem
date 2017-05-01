@@ -1,4 +1,4 @@
-package de.halfminer.hms.handler.types;
+package de.halfminer.hms.handler.storage;
 
 /**
  * Contains references to all stats type, usable with {@link de.halfminer.hms.util.HalfminerPlayer}

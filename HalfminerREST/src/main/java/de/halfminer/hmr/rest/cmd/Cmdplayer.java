@@ -3,7 +3,7 @@ package de.halfminer.hmr.rest.cmd;
 import de.halfminer.hmr.http.ResponseBuilder;
 import de.halfminer.hmr.rest.methods.MethodGET;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
-import de.halfminer.hms.handler.types.DataType;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.util.HalfminerPlayer;
 
 import java.util.HashMap;

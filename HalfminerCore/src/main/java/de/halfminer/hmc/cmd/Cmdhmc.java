@@ -7,7 +7,7 @@ import de.halfminer.hmc.module.ModSkillLevel;
 import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.cache.CustomitemCache;
 import de.halfminer.hms.cache.CustomtextCache;
-import de.halfminer.hms.handler.types.DataType;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.exceptions.ItemCacheException;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;

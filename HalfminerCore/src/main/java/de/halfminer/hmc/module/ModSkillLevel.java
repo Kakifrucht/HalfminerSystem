@@ -1,6 +1,6 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.handler.types.DataType;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hmc.enums.ModuleType;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.util.HalfminerPlayer;
@@ -240,9 +240,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         scoreboardTeamNamesStaff = new ArrayList<>(Collections.nCopies(amountTeamGroups, null));
 
         for (int i = 0; i < amountTeamGroups; i++) {
-            String indexToString = String.valueOf(i);
+            StringBuilder indexToString = new StringBuilder(String.valueOf(i));
             while (indexToString.length() < 3) {
-                indexToString = '0' + indexToString;
+                indexToString.insert(0, '0');
             }
             String teamName = indexToString + "Team";
             Team registered;

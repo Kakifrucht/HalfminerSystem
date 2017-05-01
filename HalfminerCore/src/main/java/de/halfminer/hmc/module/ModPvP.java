@@ -3,7 +3,7 @@ package de.halfminer.hmc.module;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hmc.enums.AttackSpeed;
-import de.halfminer.hms.handler.types.DataType;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hmc.enums.ModuleType;
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.manageable.Sweepable;
