@@ -11,8 +11,8 @@ command:
     boundMin: 1000
     boundMax: 10000
   pin:
-    #Which rank name to associate with which HMC level (permission hmc.level.1-6)
-    #Highest will be default for players with higher hmc.level
+    #Which rank name to associate with which HMC level (permission hms.level.1-6)
+    #Highest will be default for players with higher hms.level
     - 'Legend'
     - 'VIP'
     - 'Elite'
@@ -33,7 +33,7 @@ command:
     - 5
     #Add rank name (passed as %PARAM1%) and multiplier for above base values,
     #that will be passed to the action, seperate with comma.
-    #First rank must have permission hmc.level.1, second hmc.level.2 etc.
+    #First rank must have permission hms.level.1, second hms.level.2 etc.
     #First value will be the rank parameter for /rank <Player> [rank]
     rankNamesAndMultipliers:
     - 'Premium, 1'
@@ -42,7 +42,7 @@ command:
     #True if you want to deduct already multiplied amounts of previous ranks again, useful for rank upgrades
     deductPreviousRanks: true
   repair:
-    #Base cooldown in seconds, which will be doubled per hmc.level
+    #Base cooldown in seconds, which will be doubled per hms.level
     cooldownBase: 900
     #Longest cooldown in seconds if no level has been met
     maxCooldown: 28800
@@ -174,19 +174,41 @@ respawn:
   - 'willkommen,'
   - 'hallo'
 sell:
-  #Base amount for 1 HalfCoin
-  beetroot: 30
-  brownmushroom: 20
-  cactus: 110
-  carrot: 30
-  cocoa: 45
-  melon: 110
-  netherwart: 40
-  potato: 30
-  pumpkin: 40
-  redmushroom: 30
-  sugarcane: 55
-  wheat: 25
+  #Time in minutes until new sell cycle starts
+  cycleTimeMinutes: 210
+  #Key is the slot and value is the command without leading slash
+  menuCommands:
+    '0': 'menu'
+    '8': 'sell auto'
+  #hms.level.0-5 permission, hms.level.0 omitted, separate numbers with comma and use '.' as decimal seperator
+  multipliersPerLevel: '1.25, 1.5, 1.75, 2.0, 2.5'
+  #Multiplier for amountPerCurrency that will be applied for every unitsUntilIncrease
+  priceAdjustMultiplier: 1.5
+  #A random range of the given factor will be added to 1, for example if the factor is 0.2, the price multiplier when
+  #a new cycle starts will be between 0.8 and 1.2, multiplied with amountPerCurrency of given sellable, set to 0 to disable
+  priceVarianceFactor: 0.2
+  #Subkeys are numbers that dictate how many of the given items in child list are put into the next cycle
+  #Items are defined as such: messageName, material, durability (item data), amountPerCurrency
+  sellables:
+    '1':
+    - Rote Beete, BEETROOT, 0, 30
+    - Braune Pilze, BROWN_MUSHROOM, 0, 20
+    - Kakteen, CACTUS, 0, 220
+    - Karotten, CARROT_ITEM, 0, 30
+    - Kakaobohnen, INK_SACK, 3, 45
+    - Melonen, MELON, 0, 110
+    - Nether Warzen, NETHER_STALK, 0, 40
+    - Kartoffeln, POTATO_ITEM, 0, 30
+    - Kürbisse, PUMPKIN, 0, 40
+    - Rote Pilze, RED_MUSHROOM, 0, 30
+    - Zuckerrohre, SUGAR_CANE, 0, 55
+    - Weizen, WHEAT, 0, 25
+    '2':
+    - Gräser, GRASS, 0, 200
+    - Steine, STONE, 0, 400
+    - Bruchsteine, COBBLESTONE, 0, 600
+  #How many amountPerCurrency must be passed until the price will be adjusted
+  unitsUntilIncrease: 100
 skillLevel:
   #Amount of groups for the server team (players with permission hmc.bypass.skilllevel), will be shown on top of tablist
   amountTeamGroups: 3
@@ -304,10 +326,8 @@ localization:
   cmdRepairDone: '&aGegenstand &e%NAME% &aerfolgreich repariert'
   cmdRepairDoneAll: '&7Es wurden &e%AMOUNT% &7Gegenstände repariert'
   cmdRepairError: '&cDieser Gegenstand kann nicht repariert werden'
-  cmdSellNotInInv: '&cDu hast kein &e%MATERIAL% &cin deinem Inventar'
   cmdSellAutoOff: '&7Die Inhalte von Kisten, die du schließt, werden von nun an &cnicht mehr automatisch &7verkauft'
   cmdSellAutoOn: '&7Die Inhalte von Kisten, die du schließt, werden von nun an &aautomatisch &7verkauft'
-  cmdSellUsage: '&cVerwendung: &f/verkauf <auto|beetroot|brownmushroom|cactus|carrot|cocoa|melon|netherwart|potato|pumpkin|redmushroom|sugarcane|wheat>'
   cmdSigneditCopy: '&7Klicke das Schild, welches du kopieren möchtest, erstelle &e%AMOUNT% &7Kopien'
   cmdSigneditLinePasted: '&aSchild editiert'
   cmdSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu ändern'
@@ -376,6 +396,18 @@ localization:
   modRespawnWelcomeBonusTitle: ' \n&6Willkommens Kopfdrop: &0&l&k||||'
   modRespawnWelcomeBonusTitleNo: ' \n&6Willkommens Kopfdrop: &7&l&c:('
   modRespawnWelcomeBonusTitleYes: ' \n&6Willkommens Kopfdrop: &7&l&a:)'
+  modSellMapLogCycleInvalidFormat: 'Der aktuell gespeicherte Verkaufszyklus ist in einem ungültigen Format'
+  modSellMapLogCycleNotLoaded: 'Konnte den gespeicherten Verkaufszyklus nicht wiederherstellen, da die Konfiguration verändert wurde oder die gespeicherten Daten ungültig sind'
+  modSellMapLogGroupInvalid: 'Verkaufsgruppe "%GROUP%" ist ungültig und wurde ignoriert, sie muss eine Zahl sein'
+  modSellMapLogMaterialNotExists: 'Das Material %MATERIAL% in der Verkaufsliste existiert nicht, überspringe...'
+  modSellMapLogSellableInvalidFormat: 'Verkaufbarer Gegenstand ist in ungültigem Format: "%SELLABLE%"'
+  modSellMapNewCycleBroadcast: '~&7Ein neuer Verkaufszyklus wurde gestartet, verwende &a/verkauf/ &7um ihn einzusehen'
+  modSellMenuCustomItemsError: 'Konnte für das Verkaufsmenü die Datei customitems.txt nicht lesen'
+  modSellMenuInvalidCommandFormat: 'Konnte in der Konfiguration bei sell.menuCommands Schlüssel "%KEY%" nicht lesen, er muss eine Zahl zwischen 0 und 8 sein'
+  modSellMenuStack: '&6&l%NAME% &fverkaufen|&7Du erhälst &a%MULTIPLIER% &7HC''s je &e%AMOUNT% &7Stück|&7&oNächste Erhöhnung nach &8%NEXTINCREASE% &7&overkäufen'
+  modSellMenuSyntaxError: 'Der Gegenstand "%ITEM%" konnte nicht gelesen werden'
+  modSellMenuTitle: '&4&lVerkaufsshop'
+  modSellNotInInv: '&cDu hast keine &e%NAME% &cin deinem Inventar'
   modSellSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
   modSellSuccessLog: 'Sell: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
   modSkillLevelAdmingroupName: '&lServerteam'

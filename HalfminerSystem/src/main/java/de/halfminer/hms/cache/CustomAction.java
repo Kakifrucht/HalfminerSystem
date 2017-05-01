@@ -2,7 +2,7 @@ package de.halfminer.hms.cache;
 
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.exceptions.FormattingException;
-import de.halfminer.hms.exceptions.GiveItemException;
+import de.halfminer.hms.exceptions.ItemCacheException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
@@ -141,9 +141,9 @@ public class CustomAction {
                         StringArgumentSeparator separator = new StringArgumentSeparator(parsedMessage.returnMessage());
                         itemCache.giveItem(separator.getArgument(0), players[0],
                                 separator.getArgumentIntMinimum(1, 1), placeholders);
-                    } catch (GiveItemException e) {
+                    } catch (ItemCacheException e) {
 
-                        if (!e.getReason().equals(GiveItemException.Reason.INVENTORY_FULL)) {
+                        if (!e.getReason().equals(ItemCacheException.Reason.INVENTORY_FULL)) {
                             MessageBuilder.create("cacheCustomActionGiveItemError")
                                     .addPlaceholderReplace("%ITEM%", parsedMessage.returnMessage())
                                     .addPlaceholderReplace("%REASON%", e.getCleanReason())

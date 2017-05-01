@@ -90,7 +90,6 @@ permissions:
       hmc.vote: true
       hmc.bypass.*: true
       hmc.chat.*: true
-      hmc.level.*: true
       hmc.repair.*: true
   hmc.bypass.*:
     description: Access to all bypass permission

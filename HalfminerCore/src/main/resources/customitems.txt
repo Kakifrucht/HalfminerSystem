@@ -5,3 +5,15 @@ itemid: 0
 name: &6&lDiamond Sword
 lore: &7Owner: &6%PLAYER%|&7Another line
 enchant: sharpness:6 unbreaking:4d
+#sellmenu-1
+BOOK
+name: &2&lZurück zum Menü
+lore: &r|&7Öffne das Hauptmenü
+#sellmenu-5
+WATCH
+name: &6&lVerkaufs Zyklus
+lore: &7Nächster Zyklus in &a%CYCLEMINUTES% &7Minuten|&r|&7Die Gegenstände werden zurückgesetzt|&7und es werden zufällig neue ausgewählt
+#sellmenu-9
+CHEST
+name: &a&lAutomatischer Kistenverkauf
+lore: &r|Automatischen Kistenverkauf|&7an/aus schalten, öffne und schließe|&7die Kiste die du verkaufen möchtest|&r|&7Ab &bVIP &7verfügbar

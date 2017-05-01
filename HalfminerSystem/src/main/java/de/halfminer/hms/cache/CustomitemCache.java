@@ -3,7 +3,7 @@ package de.halfminer.hms.cache;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.exceptions.FormattingException;
-import de.halfminer.hms.exceptions.GiveItemException;
+import de.halfminer.hms.exceptions.ItemCacheException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
@@ -32,31 +32,27 @@ public class CustomitemCache {
         originalCache = textCache;
     }
 
-    public void giveItem(String itemKey, Player giveTo, int amount) throws GiveItemException {
-        giveItem(itemKey, giveTo, amount, null);
-    }
-
-    void giveItem(String itemKey, Player giveTo, int amount,
-                         @Nullable Map<String, String> additionalPlaceholders) throws GiveItemException {
+    public ItemStack getItem(String itemKey, Player owner, int amount,
+                             @Nullable Map<String, String> additionalPlaceholders) throws ItemCacheException {
 
         List<String> itemUnparsed;
         try {
             itemUnparsed = originalCache.getChapter(itemKey);
         } catch (CachingException e) {
-            throw new GiveItemException(GiveItemException.Reason.ITEM_NOT_FOUND);
+            throw new ItemCacheException(ItemCacheException.Reason.ITEM_NOT_FOUND);
         }
 
-        ItemStack toGive;
+        ItemStack itemStack;
 
         Material itemMaterial;
         try {
             itemMaterial = Material.valueOf(itemUnparsed.get(0));
         } catch (IllegalArgumentException e) {
-            throw new GiveItemException(GiveItemException.Reason.ITEM_SYNTAX_ERROR);
+            throw new ItemCacheException(ItemCacheException.Reason.ITEM_SYNTAX_ERROR);
         }
 
-        toGive = new ItemStack(itemMaterial);
-        toGive.setAmount(amount);
+        itemStack = new ItemStack(itemMaterial);
+        itemStack.setAmount(amount);
 
         for (int i = 1; i < itemUnparsed.size(); i++) {
 
@@ -71,7 +67,7 @@ public class CustomitemCache {
 
             MessageBuilder parameterParse = MessageBuilder.create(keyParamPair.getRight())
                     .setDirectString()
-                    .addPlaceholderReplace("%PLAYER%", giveTo.getName());
+                    .addPlaceholderReplace("%PLAYER%", owner.getName());
 
             if (additionalPlaceholders != null) {
                 additionalPlaceholders.forEach(parameterParse::addPlaceholderReplace);
@@ -83,16 +79,16 @@ public class CustomitemCache {
                 case "itemid":
                     try {
                         short itemId = Short.parseShort(parameter);
-                        toGive.setDurability(itemId);
+                        itemStack.setDurability(itemId);
                     } catch (NumberFormatException e) {
                         logInvalidParameter(keyParamPair.getLeft(), parameter);
                     }
                     break;
                 case "name":
-                    Utils.setDisplayName(toGive, ChatColor.translateAlternateColorCodes('&', parameter));
+                    Utils.setDisplayName(itemStack, ChatColor.translateAlternateColorCodes('&', parameter));
                     break;
                 case "lore":
-                    Utils.setItemLore(toGive, Arrays.asList(parameter.split("[|]")));
+                    Utils.setItemLore(itemStack, Arrays.asList(parameter.split("[|]")));
                     break;
                 case "enchant":
                     StringArgumentSeparator separator = new StringArgumentSeparator(parameter);
@@ -112,19 +108,19 @@ public class CustomitemCache {
                             logInvalidParameter(keyParamPair.getLeft(), enchantName);
                             continue;
                         }
-                        if (level > 0) toGive.addUnsafeEnchantment(enchant, level);
+                        if (level > 0) itemStack.addUnsafeEnchantment(enchant, level);
                         else logInvalidParameter(keyParamPair.getLeft(), separatorEnchants.getArgument(1));
                     }
                     break;
                 case "skullowner":
-                    if (!toGive.getType().equals(Material.SKULL_ITEM)) {
+                    if (!itemStack.getType().equals(Material.SKULL_ITEM)) {
                         logInvalidParameter(keyParamPair.getLeft(), parameter);
                         continue;
                     }
-                    SkullMeta meta = (SkullMeta) toGive.getItemMeta();
+                    SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
                     boolean success = meta.setOwner(parameter);
                     if (success) {
-                        toGive.setItemMeta(meta);
+                        itemStack.setItemMeta(meta);
                     } else {
                         logInvalidParameter(keyParamPair.getLeft(), parameter);
                     }
@@ -134,9 +130,20 @@ public class CustomitemCache {
             }
         }
 
+        return itemStack;
+    }
+
+    public void giveItem(String itemKey, Player giveTo, int amount) throws ItemCacheException {
+        giveItem(itemKey, giveTo, amount, null);
+    }
+
+    void giveItem(String itemKey, Player giveTo, int amount,
+                  @Nullable Map<String, String> additionalPlaceholders) throws ItemCacheException {
+
+        ItemStack toGive = getItem(itemKey, giveTo, amount, additionalPlaceholders);
         Map<Integer, ItemStack> notGiven = giveTo.getInventory().addItem(toGive);
         if (notGiven.size() != 0) {
-            throw new GiveItemException(notGiven);
+            throw new ItemCacheException(notGiven);
         } else {
             MessageBuilder.create("cacheCustomitemCacheLogSuccess")
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName())

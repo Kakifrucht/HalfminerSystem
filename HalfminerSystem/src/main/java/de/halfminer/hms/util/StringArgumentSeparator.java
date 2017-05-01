@@ -66,7 +66,7 @@ public class StringArgumentSeparator {
 
     public String getArgument(int arg) {
         if (!meetsLength(arg + 1)) return "";
-        return arguments[arg];
+        return arguments[arg].trim();
     }
 
     /**
@@ -85,7 +85,19 @@ public class StringArgumentSeparator {
     }
 
     public int getArgumentIntMinimum(int arg, int minimum) {
-        if (!meetsLength(arg + 1)) return minimum;
         return Math.max(minimum, getArgumentInt(arg));
+    }
+
+    public double getArgumentDouble(int arg) {
+        String str = getArgument(arg).replaceAll(" ", "");
+        try {
+            return Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return Double.MIN_VALUE;
+        }
+    }
+
+    public double getArgumentDoubleMinimum(int arg, double minimum) {
+        return Math.max(minimum, getArgumentDouble(arg));
     }
 }

@@ -121,12 +121,22 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Custom probability
       - Uses (sub)title and bossbar for information and plays sounds
   - Sell
+    - Full dynamic sell system
+      - Cycle based selling, every given minutes new items will be chosen and all prices will reset
+        - Cycles are persistent through restarts
+        - Broadcast message when new cycle starts
+      - Reads items to sell from config: Their Material, durability/id, base price per unit and name of item
+        - Items need to be grouped, group name determines how many of given items will land in a given cycle
+          - For example out of 20 items in group '5', 5 will be randomly selected
+        - Variance can be added to base price of items via config for more dynamic pricing 
+      - Includes GUI, must be accessed via /sell command
+        - First line in GUI can be fully configured via customitems.txt and config to set a custom command per slot
+          - By default line will be filled with stained glass pane
+          - For example a custom button to toggle auto selling can be added
+      - Price will be adjusted by a configurable amount every given amount (also configurable)
+      - Custom revenue multiplier per player level (hms.level)
     - Auto sells chests on inventory close
       - Needs to be toggled
-    - Sell items that are sellable
-      - Custom multiplier per permission
-      - Price settable via config
-    - Can be accessed via command
   - SkillLevel
     - PvP based skilllevel system / ELO
     - Dynamic ELO determination
@@ -250,9 +260,8 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Will only apply cooldown if item was actually repaired
     - If repairing single item, checks if it is a stack (permission required)
   - /sell
-    - Sell sellable items via command
-    - Uses ModSell for the actual sale
-    - Possibility to sell multiple inventories at once
+    - Show sell menu
+    - Toggle automatic selling
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number

@@ -9,7 +9,7 @@ import de.halfminer.hms.cache.CustomitemCache;
 import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.handler.types.DataType;
 import de.halfminer.hms.exceptions.CachingException;
-import de.halfminer.hms.exceptions.GiveItemException;
+import de.halfminer.hms.exceptions.ItemCacheException;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
@@ -204,9 +204,9 @@ public class Cmdhmc extends HalfminerCommand {
                     .addPlaceholderReplace("%ITEM%", itemName)
                     .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
                     .sendMessage(sender);
-        } catch (GiveItemException e) {
+        } catch (ItemCacheException e) {
 
-            if (e.getReason().equals(GiveItemException.Reason.INVENTORY_FULL)) {
+            if (e.getReason().equals(ItemCacheException.Reason.INVENTORY_FULL)) {
 
                 int totalLost = 0;
                 for (ItemStack lost : e.getNotGivenItems().values()) {
@@ -217,7 +217,7 @@ public class Cmdhmc extends HalfminerCommand {
                         .addPlaceholderReplace("%ITEM%", itemName)
                         .addPlaceholderReplace("%AMOUNT%", String.valueOf(totalLost))
                         .sendMessage(sender);
-            } else if (e.getReason().equals(GiveItemException.Reason.ITEM_NOT_FOUND)) {
+            } else if (e.getReason().equals(ItemCacheException.Reason.ITEM_NOT_FOUND)) {
                 MessageBuilder.create("cmdHmcGiveItemNotFound", hmc, PREFIX)
                         .addPlaceholderReplace("%ITEM%", itemName)
                         .sendMessage(sender);
