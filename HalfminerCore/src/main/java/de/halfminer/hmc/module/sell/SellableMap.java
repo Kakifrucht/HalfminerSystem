@@ -156,10 +156,6 @@ public class SellableMap extends CoreClass {
         }
 
         if (nextCycleTask == null || cycleSellables.isEmpty()) {
-            // we have a task but no cycle, cancel task and set new cycle
-            if (cycleSellables.isEmpty() && nextCycleTask != null) {
-                nextCycleTask.cancel();
-            }
             checkNextCycle();
         }
     }
@@ -181,7 +177,7 @@ public class SellableMap extends CoreClass {
     }
 
     public void startNewCycle() {
-        cycleExpiry = 0;
+        cycleExpiry = 0L;
         checkNextCycle();
     }
 
@@ -194,7 +190,8 @@ public class SellableMap extends CoreClass {
         if (timeUntilNextCycle <= 0 || cycleSellables.isEmpty()) {
 
             clearCurrentCycle();
-            cycleExpiry = currentTime + cycleTimeSeconds;
+            timeUntilNextCycle = cycleTimeSeconds;
+            cycleExpiry = currentTime + timeUntilNextCycle;
 
             Random rnd = new Random();
             for (Integer amount : sellables.keySet()) {
@@ -207,9 +204,9 @@ public class SellableMap extends CoreClass {
 
                     Iterator<Sellable> iterator = group.iterator();
                     while (iterator.hasNext()) {
+                        Sellable current = iterator.next();
                         if (elementToGet == currentElement) {
-                            Sellable toAdd = iterator.next();
-                            addSellableToCurrentCycle(toAdd);
+                            addSellableToCurrentCycle(current);
                             iterator.remove();
                             break;
                         }
@@ -222,7 +219,11 @@ public class SellableMap extends CoreClass {
             MessageBuilder.create("modSellMapNewCycleBroadcast", hmc, "Sell").broadcastMessage(true);
         }
 
-        nextCycleTask = scheduler.runTaskLater(hmc, this::checkNextCycle, cycleTimeSeconds * 20);
+        if (nextCycleTask != null) {
+            nextCycleTask.cancel();
+        }
+
+        nextCycleTask = scheduler.runTaskLater(hmc, this::checkNextCycle, timeUntilNextCycle * 20);
     }
 
     public long getCycleTimeLeft() {
