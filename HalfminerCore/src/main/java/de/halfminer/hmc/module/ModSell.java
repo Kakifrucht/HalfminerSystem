@@ -86,11 +86,16 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
             Player player = (Player) e.getWhoClicked();
 
+            boolean closeInventory = false;
             if (menuCommands.containsKey(slot)) {
                 player.chat(menuCommands.get(slot));
-                player.closeInventory();
+                closeInventory = true;
             } else if (slot >= 18 && sellMaterialAndReward(slot - 18, player)) {
-                player.closeInventory();
+                closeInventory = true;
+            }
+
+            if (closeInventory) {
+                scheduler.runTask(hmc, player::closeInventory);
             }
         }
     }
