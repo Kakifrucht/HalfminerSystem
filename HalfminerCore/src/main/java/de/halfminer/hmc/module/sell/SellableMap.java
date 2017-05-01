@@ -180,6 +180,11 @@ public class SellableMap extends CoreClass {
         }
     }
 
+    public void startNewCycle() {
+        cycleExpiry = 0;
+        checkNextCycle();
+    }
+
     private void checkNextCycle() {
 
         long currentTime = System.currentTimeMillis() / 1000;

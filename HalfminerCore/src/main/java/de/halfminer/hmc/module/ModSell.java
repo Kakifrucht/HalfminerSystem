@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
  *   - Custom revenue multiplier per player level (hms.level)
  * - Auto sells chests on inventory close
  *   - Needs to be toggled
+ * - Items with any item meta won't be sold
  */
 @SuppressWarnings("unused")
 public class ModSell extends HalfminerModule implements Disableable, Listener, Sweepable {
@@ -149,7 +150,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         try {
             CustomtextCache cache = coreStorage.getCache("customitems.txt");
             CustomitemCache itemCache = new CustomitemCache(cache);
-            int timeLeftCycle = Math.max(1, (int) (sellableMap.getCycleTimeLeft() / 60));
+            long timeLeftCycle = (sellableMap.getCycleTimeLeft() / 60) + 1;
             Map<String, String> placeholders = Collections.singletonMap("%CYCLEMINUTES%", String.valueOf(timeLeftCycle));
 
             for (int i = 0; i < 9; i++) {
@@ -212,6 +213,10 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
 
         return !contains;
+    }
+
+    public void startNewCycle() {
+        sellableMap.startNewCycle();
     }
 
     private int sellMaterial(Sellable toSell, Inventory inventory) {

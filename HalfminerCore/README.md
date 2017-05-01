@@ -137,6 +137,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Custom revenue multiplier per player level (hms.level)
     - Auto sells chests on inventory close
       - Needs to be toggled
+    - Items with any item meta won't be sold
   - SkillLevel
     - PvP based skilllevel system / ELO
     - Dynamic ELO determination
@@ -262,6 +263,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
   - /sell
     - Show sell menu
     - Toggle automatic selling
+    - /clearcycle alias forces a new sell cycle
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number

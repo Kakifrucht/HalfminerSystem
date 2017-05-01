@@ -48,7 +48,7 @@ commands:
     aliases: [fix]
   sell:
     description: Earn money by selling farm supplies
-    aliases: [verkauf, vk]
+    aliases: [verkauf, vk, clearcycle]
   signedit:
     description: Edit the contents of a sign or copy it
     aliases: [se]
@@ -82,6 +82,7 @@ permissions:
       hmc.rank: true
       hmc.sell: true
       hmc.sell.auto: true
+      hmc.sell.clearcycle: true
       hmc.signedit: true
       hmc.spawn: true
       hmc.spawn.others: true
@@ -217,6 +218,8 @@ permissions:
     description: Allows single stacks to be repaired
   hmc.sell.auto:
     description: Access to automatic selling
+  hmc.sell.clearcycle:
+    description: Access to /clearcycle command to force a new sell cycle
   hmc.signedit:
     description: Access to sign editing
   hmc.spawn:

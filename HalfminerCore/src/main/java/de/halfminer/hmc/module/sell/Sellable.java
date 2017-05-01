@@ -94,7 +94,10 @@ public class Sellable {
     }
 
     public boolean isMatchingStack(ItemStack itemStack) {
-        return itemStack != null && material.equals(itemStack.getType()) && durability == itemStack.getDurability();
+        return itemStack != null
+                && material.equals(itemStack.getType())
+                && durability == itemStack.getDurability()
+                && !itemStack.hasItemMeta();
     }
 
     public int getCurrentUnitAmount() {
@@ -111,7 +114,7 @@ public class Sellable {
         amountUntilNextIncrease -= amountSold;
         if (amountUntilNextIncrease < 0) {
             currentUnitAmount *= sellableMap.getPriceAdjustMultiplier();
-            amountUntilNextIncrease = (currentUnitAmount * sellableMap.getUnitsUntilIncrease()) + amountUntilNextIncrease;
+            amountUntilNextIncrease += (currentUnitAmount * sellableMap.getUnitsUntilIncrease());
         }
         return revenue;
     }

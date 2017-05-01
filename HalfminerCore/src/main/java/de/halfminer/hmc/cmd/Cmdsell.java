@@ -8,6 +8,7 @@ import de.halfminer.hms.util.MessageBuilder;
 /**
  * - Show sell menu
  * - Toggle automatic selling
+ * - /clearcycle alias forces a new sell cycle
  */
 @SuppressWarnings("unused")
 public class Cmdsell extends HalfminerCommand {
@@ -20,6 +21,11 @@ public class Cmdsell extends HalfminerCommand {
 
     @Override
     public void execute() {
+
+        if (label.equals("clearcycle") && sender.hasPermission("hmc.sell.clearcycle")) {
+            sellModule.startNewCycle();
+            return;
+        }
 
         if (!isPlayer) {
             sendNotAPlayerMessage("Sell");
