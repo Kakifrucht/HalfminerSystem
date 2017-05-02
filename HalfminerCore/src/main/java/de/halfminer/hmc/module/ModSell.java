@@ -323,7 +323,10 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             try {
                 int slotInt = Integer.parseInt(slot);
                 if (slotInt >= 0 && slotInt < 9) {
-                    menuCommands.put(slotInt, "/" + commandSection.getString(slot));
+                    String command = commandSection.getString(slot, "");
+                    if (command.length() > 0) {
+                        menuCommands.put(slotInt, "/" + command);
+                    }
                 } else {
                     MessageBuilder.create("modSellMenuInvalidCommandFormat", hmc)
                             .addPlaceholderReplace("%KEY%", slot)

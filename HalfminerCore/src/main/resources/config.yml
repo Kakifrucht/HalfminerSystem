@@ -177,6 +177,7 @@ sell:
   #Time in minutes until new sell cycle starts
   cycleTimeMinutes: 210
   #Key is the slot and value is the command without leading slash
+  #To remove default commands 0 and 8, set their contents to empty string, for example '0': ''
   menuCommands:
     '0': 'menu'
     '8': 'sell auto'
@@ -189,6 +190,7 @@ sell:
   priceVarianceFactor: 0.2
   #Subkeys are numbers that dictate how many of the given items in child list are put into the next cycle
   #Items are defined as such: messageName, material, durability (item data) or -1 for any, amountPerCurrency
+  #To remove default groups 1 and 2, set their contents to null, for example '1': []
   sellables:
     '1':
     - Rote Beete, BEETROOT, 0, 30
