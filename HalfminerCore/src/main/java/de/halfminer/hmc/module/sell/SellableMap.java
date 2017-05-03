@@ -133,14 +133,27 @@ public class SellableMap extends CoreClass {
                     }
 
                     int groupId = cycleSection.getInt(key + ".groupId");
-                    int idInGroup = cycleSection.getInt(key + ".idInGroup");
+                    Material material = Material.matchMaterial(cycleSection.getString(key + ".material", ""));
+                    short durability = (short) cycleSection.getInt(key + ".durability");
                     String stateString = cycleSection.getString(key + ".state");
 
                     List<Sellable> sellablesInGroup = sellables.get(groupId);
-                    if (sellablesInGroup != null && sellablesInGroup.size() > idInGroup) {
-                        Sellable sellable = sellablesInGroup.get(idInGroup);
-                        sellable.setState(stateString);
-                        addSellableToCurrentCycle(sellable);
+                    if (sellablesInGroup != null && material != null) {
+
+                        boolean foundSellable = false;
+                        for (Sellable sellable : sellablesInGroup) {
+                            if (sellable.getMaterial().equals(material) && sellable.getDurability() == durability) {
+                                sellable.setState(stateString);
+                                addSellableToCurrentCycle(sellable);
+                                foundSellable = true;
+                                break;
+                            }
+                        }
+
+                        if (!foundSellable) {
+                            clearCurrentCycle();
+                            break;
+                        }
                     } else {
                         clearCurrentCycle();
                         break;
@@ -178,7 +191,8 @@ public class SellableMap extends CoreClass {
                 Sellable sellable = cycleSellables.get(i);
                 String basePath = "sellcycle." + i + ".";
                 coreStorage.set(basePath + "groupId", sellable.getGroupId());
-                coreStorage.set(basePath + "idInGroup", sellable.getIdInGroup());
+                coreStorage.set(basePath + "material", sellable.getMaterial().toString());
+                coreStorage.set(basePath + "durability", sellable.getDurability());
                 coreStorage.set(basePath + "state", sellable.getStateString());
             }
         }
