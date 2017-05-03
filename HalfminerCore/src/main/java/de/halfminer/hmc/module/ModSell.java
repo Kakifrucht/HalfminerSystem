@@ -44,12 +44,13 @@ import java.util.regex.Pattern;
  *   - Reads items to sell from config: Their Material, durability/id, base price per unit and name of item
  *     - Items need to be grouped, group name determines how many of given items will land in a given cycle
  *       - For example out of 20 items in group '5', 5 will be randomly selected
- *     - Variance can be added to base price of items via config for more dynamic pricing
  *   - Includes GUI, must be accessed via /sell command
  *     - First line in GUI can be fully configured via customitems.txt and config to set a custom command per slot
  *       - By default line will be filled with stained glass pane
  *       - For example a custom button to toggle auto selling can be added
  *   - Price will be adjusted by a configurable amount every given amount (also configurable)
+ *     - Shows original base price
+ *     - Variance can be added to base price of items via config for more dynamic pricing
  *   - Custom revenue multiplier per player level (hms.level)
  * - Auto sells chests on inventory close
  *   - Needs to be toggled
@@ -172,12 +173,24 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             ItemStack currentItem = sellable.getItemStack();
 
             int amountUntilNextIncrease = sellable.getAmountUntilNextIncrease();
+            int currentUnitAmount = sellable.getCurrentUnitAmount();
+            int baseUnitAmount = sellable.getBaseUnitAmount();
+
+            String unitAmount;
+            if (currentUnitAmount != baseUnitAmount) {
+                unitAmount = MessageBuilder.create("modSellMenuStackAmountFormat", hmc)
+                        .addPlaceholderReplace("%CURRENT%", String.valueOf(currentUnitAmount))
+                        .addPlaceholderReplace("%BASE%", String.valueOf(baseUnitAmount))
+                        .returnMessage();
+            } else {
+                unitAmount = String.valueOf(currentUnitAmount);
+            }
 
             String stackData = MessageBuilder.create("modSellMenuStack", hmc)
                     .addPlaceholderReplace("%NAME%", sellable.getMessageName())
                     .addPlaceholderReplace("%MULTIPLIER%", multiplier)
-                    .addPlaceholderReplace("%AMOUNT%", String.valueOf(sellable.getCurrentUnitAmount()))
-                    .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(sellable.getAmountUntilNextIncrease()))
+                    .addPlaceholderReplace("%AMOUNT%", unitAmount)
+                    .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(amountUntilNextIncrease))
                     .returnMessage();
 
             // itemname - revenue lore - increase lore
@@ -248,7 +261,11 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
 
         double multiplier = getMultiplier(toReward);
-        double revenue = sold.getRevenue(toReward, amount) * multiplier;
+        double highestMutliplier = levelRewardMultipliers.get(levelRewardMultipliers.size() - 1);
+
+        double baseRevenue = sold.getRevenue(toReward, amount);
+        double revenue = baseRevenue * multiplier;
+        double highestRevenue = baseRevenue * highestMutliplier;
 
         try {
             hookHandler.addMoney(toReward, revenue);
@@ -279,6 +296,23 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                 .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))
                 .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
                 .logMessage(Level.INFO);
+
+        /*
+        //TODO accumulate amounts, do it more interestingly
+        // messaging about possible sell revenue
+        if (highestRevenue - revenue > 10.0d && Utils.random(100)) {
+            String revenueStr = String.valueOf(revenue);
+
+            scheduler.runTaskLater(hmc, () -> {
+                if (toReward.isOnline()) {
+                    MessageBuilder.create("modSellSuccessPossibleAmount")
+                            .addPlaceholderReplace("%ORIGINALREVENUE%", revenueStr)
+                            .addPlaceholderReplace("%POSSIBLEREVENUE%", String.valueOf(highestRevenue))
+                            .sendMessage(toReward);
+                }
+            }, 300L);
+        }
+        */
     }
 
     private double getMultiplier(Player player) {
@@ -286,10 +320,9 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     }
 
     private void closeActiveInventories() {
-        for (Map.Entry<Inventory, Player> inventoryPlayerEntry : activeMenus.entrySet()) {
+        for (Map.Entry<Inventory, Player> inventoryPlayerEntry : new HashSet<>(activeMenus.entrySet())) {
             inventoryPlayerEntry.getValue().closeInventory();
         }
-        activeMenus.clear();
     }
 
     @Override

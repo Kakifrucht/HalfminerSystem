@@ -60,9 +60,9 @@ public class SellableMap extends CoreClass {
         this.unitsUntilIncrease = unitsUntilIncrease;
 
         storeCurrentCycle();
+
         sellables = new HashMap<>();
-        cycleSellables = new ArrayList<>();
-        cycleSellablesLookup = new HashMap<>();
+        clearCurrentCycle();
 
         for (String group : sellableSection.getKeys(false)) {
             int groupAsInt;
@@ -164,6 +164,7 @@ public class SellableMap extends CoreClass {
 
         if (cycleSellables != null && !cycleSellables.isEmpty()) {
 
+            coreStorage.set("sellcycle", null);
             coreStorage.set("sellcycle.expires", cycleExpiry);
 
             for (int i = 0; i < cycleSellables.size(); i++) {
@@ -239,7 +240,11 @@ public class SellableMap extends CoreClass {
 
     private void clearCurrentCycle() {
         cycleExpiry = 0L;
-        cycleSellables.forEach(Sellable::doRandomReset);
+        
+        if (cycleSellables != null) {
+            cycleSellables.forEach(Sellable::doRandomReset);
+        }
+
         cycleSellables = new ArrayList<>();
         cycleSellablesLookup = new HashMap<>();
     }

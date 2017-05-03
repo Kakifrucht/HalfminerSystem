@@ -85,7 +85,7 @@ public class Sellable extends CoreClass {
         }
 
         priceVarianceFactor = 1.0d + factorRandomized;
-        this.currentUnitAmount = (int) (priceVarianceFactor * (double) baseUnitAmount);
+        this.currentUnitAmount = (int) Math.round(priceVarianceFactor * (double) baseUnitAmount);
         this.amountUntilNextIncrease = currentUnitAmount * sellableMap.getUnitsUntilIncrease();
     }
 
@@ -115,6 +115,10 @@ public class Sellable extends CoreClass {
         return currentUnitAmount;
     }
 
+    public int getBaseUnitAmount() {
+        return baseUnitAmount;
+    }
+
     public int getAmountUntilNextIncrease() {
         return amountUntilNextIncrease;
     }
@@ -123,9 +127,14 @@ public class Sellable extends CoreClass {
 
         double revenue = amountSold / (double) currentUnitAmount;
         amountUntilNextIncrease -= amountSold;
-        if (amountUntilNextIncrease < 0) {
+        while (amountUntilNextIncrease < 0) {
 
-            currentUnitAmount *= sellableMap.getPriceAdjustMultiplier();
+            int newUnitAmount = (int) Math.round((double) currentUnitAmount * sellableMap.getPriceAdjustMultiplier());
+            if (newUnitAmount == currentUnitAmount) {
+                newUnitAmount++;
+            }
+
+            currentUnitAmount = newUnitAmount;
             amountUntilNextIncrease += (currentUnitAmount * sellableMap.getUnitsUntilIncrease());
 
             MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")

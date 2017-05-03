@@ -128,12 +128,13 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Reads items to sell from config: Their Material, durability/id, base price per unit and name of item
         - Items need to be grouped, group name determines how many of given items will land in a given cycle
           - For example out of 20 items in group '5', 5 will be randomly selected
-        - Variance can be added to base price of items via config for more dynamic pricing 
       - Includes GUI, must be accessed via /sell command
         - First line in GUI can be fully configured via customitems.txt and config to set a custom command per slot
           - By default line will be filled with stained glass pane
           - For example a custom button to toggle auto selling can be added
       - Price will be adjusted by a configurable amount every given amount (also configurable)
+        - Shows original base price
+        - Variance can be added to base price of items via config for more dynamic pricing
       - Custom revenue multiplier per player level (hms.level)
     - Auto sells chests on inventory close
       - Needs to be toggled
