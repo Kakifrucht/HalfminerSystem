@@ -92,7 +92,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void execute(PlayerInteractEvent e) {
+    public void onSignInteract(PlayerInteractEvent e) {
 
         Player player = e.getPlayer();
         if (!isPersistenceOwner(e.getPlayer()))

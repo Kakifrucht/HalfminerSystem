@@ -140,20 +140,14 @@ public class SellableMap extends CoreClass {
                     List<Sellable> sellablesInGroup = sellables.get(groupId);
                     if (sellablesInGroup != null && material != null) {
 
-                        boolean foundSellable = false;
                         for (Sellable sellable : sellablesInGroup) {
                             if (sellable.getMaterial().equals(material) && sellable.getDurability() == durability) {
                                 sellable.setState(stateString);
                                 addSellableToCurrentCycle(sellable);
-                                foundSellable = true;
                                 break;
                             }
                         }
 
-                        if (!foundSellable) {
-                            clearCurrentCycle();
-                            break;
-                        }
                     } else {
                         clearCurrentCycle();
                         break;
