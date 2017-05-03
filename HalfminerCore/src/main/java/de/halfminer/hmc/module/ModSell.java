@@ -132,6 +132,12 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
     public void showSellMenu(Player player) {
 
+        List<Sellable> sellables = sellableMap.getCycleSellables();
+        if (sellables.isEmpty()) {
+            MessageBuilder.create("modSellDisabled", hmc, "Sell").sendMessage(player);
+            return;
+        }
+
         Inventory inv = server.createInventory(player, 45, MessageBuilder.returnMessage("modSellMenuTitle", hmc));
 
         // top line (menu controls), first prefill first line with stained glass
@@ -166,7 +172,6 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         // sellables section (starts in 3rd menu row)
         String multiplier = String.valueOf(getMultiplier(player));
-        List<Sellable> sellables = sellableMap.getCycleSellables();
         for (int i = 0; i < sellables.size(); i++) {
 
             Sellable sellable = sellables.get(i);
@@ -223,7 +228,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     }
 
     public void startNewCycle() {
-        sellableMap.startNewCycle();
+        sellableMap.forceNewCycle();
     }
 
     public boolean sellMaterialAndReward(int index, Player toReward) {

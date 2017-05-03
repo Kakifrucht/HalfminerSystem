@@ -111,6 +111,13 @@ public class SellableMap extends CoreClass {
             }
         }
 
+        if (sellables.isEmpty()) {
+            if (nextCycleTask != null) {
+                nextCycleTask.cancel();
+            }
+            return;
+        }
+
         // read sellables from storage, if old cycle is stored (persistance after full reloads/restarts)
         Object cycleSectionObject = coreStorage.get("sellcycle");
         if (cycleSectionObject instanceof ConfigurationSection) {
@@ -177,7 +184,7 @@ public class SellableMap extends CoreClass {
         }
     }
 
-    public void startNewCycle() {
+    public void forceNewCycle() {
         cycleExpiry = 0L;
         checkNextCycle();
     }
@@ -214,6 +221,8 @@ public class SellableMap extends CoreClass {
                         currentElement++;
                     }
                 }
+
+                storeCurrentCycle();
             }
 
             server.getPluginManager().callEvent(new SellCycleRefreshEvent());
@@ -240,7 +249,7 @@ public class SellableMap extends CoreClass {
 
     private void clearCurrentCycle() {
         cycleExpiry = 0L;
-        
+
         if (cycleSellables != null) {
             cycleSellables.forEach(Sellable::doRandomReset);
         }
