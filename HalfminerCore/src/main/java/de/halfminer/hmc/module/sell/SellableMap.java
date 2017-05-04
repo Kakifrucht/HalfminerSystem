@@ -54,10 +54,10 @@ public class SellableMap extends CoreClass {
     public void configReloaded(ConfigurationSection sellableSection, int cycleTimeSeconds,
                                double priceAdjustMultiplier, double priceVarianceFactor, int unitsUntilIncrease) {
 
-        this.cycleTimeSeconds = cycleTimeSeconds;
-        this.priceAdjustMultiplier = priceAdjustMultiplier;
-        this.priceVarianceFactor = priceVarianceFactor;
-        this.unitsUntilIncrease = unitsUntilIncrease;
+        this.cycleTimeSeconds = Math.max(cycleTimeSeconds, 10);
+        this.priceAdjustMultiplier = Math.max(priceAdjustMultiplier, 0.01d);
+        this.priceVarianceFactor = Math.max(priceVarianceFactor, 0.0d);
+        this.unitsUntilIncrease = Math.max(unitsUntilIncrease, 1);
 
         storeCurrentCycle();
 
@@ -234,7 +234,6 @@ public class SellableMap extends CoreClass {
             }
 
             server.getPluginManager().callEvent(new SellCycleRefreshEvent());
-            MessageBuilder.create("modSellMapNewCycleBroadcast", hmc, "Sell").broadcastMessage(true);
         }
 
         if (nextCycleTask != null) {

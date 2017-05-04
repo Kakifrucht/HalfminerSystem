@@ -16,7 +16,7 @@
         <dependency>
             <groupId>de.halfminer</groupId>
             <artifactId>HalfminerSystem</artifactId>
-            <version>4.0</version>
+            <version>${hms.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

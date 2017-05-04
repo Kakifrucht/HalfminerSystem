@@ -18,6 +18,7 @@ import de.halfminer.hms.util.StringArgumentSeparator;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.ConfigurationSection;
@@ -30,6 +31,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -66,6 +68,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             .build();
 
     private Map<Inventory, Player> activeMenus;
+    private BukkitTask menuRefreshTask;
 
     private Map<Integer, String> menuCommands;
     private SellableMap sellableMap;
@@ -127,7 +130,11 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
     @EventHandler
     public void onCycleRefresh(SellCycleRefreshEvent e) {
-        closeActiveInventories();
+
+        refreshActiveInventories();
+
+        server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 0.4f, 1.3f));
+        MessageBuilder.create("modSellMapNewCycleBroadcast", hmc, "Sell").broadcastMessage(true);
     }
 
     public void showSellMenu(Player player) {
@@ -324,6 +331,11 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         return levelRewardMultipliers.get(Math.min(storage.getPlayer(player).getLevel(), levelRewardMultipliers.size() - 1));
     }
 
+    private void refreshActiveInventories() {
+        Set<Player> playersViewing = new HashSet<>(activeMenus.values());
+        playersViewing.forEach(this::showSellMenu);
+    }
+
     private void closeActiveInventories() {
         for (Map.Entry<Inventory, Player> inventoryPlayerEntry : new HashSet<>(activeMenus.entrySet())) {
             inventoryPlayerEntry.getValue().closeInventory();
@@ -384,6 +396,11 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         if (sellableMap == null) {
             sellableMap = new SellableMap();
+        }
+
+        if (menuRefreshTask == null) {
+            // refresh inventories every minute
+            scheduler.runTaskTimer(hmc, this::refreshActiveInventories, 1200L, 1200L);
         }
 
         sellableMap.configReloaded(config.getConfigurationSection("sell.sellables"),
