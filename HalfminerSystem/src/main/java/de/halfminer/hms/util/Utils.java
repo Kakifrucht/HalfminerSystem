@@ -125,7 +125,7 @@ public final class Utils {
 
         for (String material : list) {
             try {
-                toReturn.add(Material.valueOf(material.toUpperCase()));
+                toReturn.add(Material.matchMaterial(material));
             } catch (IllegalArgumentException ignored) {
                 MessageBuilder.create("utilInvalidMaterial")
                         .addPlaceholderReplace("%MATERIAL%", material)

@@ -138,8 +138,6 @@ public class FFAArena extends AbstractArena {
             scheduler.runTaskLater(hmb, () -> {
                 if (hasDied.isOnline() && this.equals(pm.getArena(hasDied))) {
                     hasDied.spigot().respawn();
-                    // temporary NoCheat shield bug workaround
-                    hasDied.getInventory().setItemInOffHand(hasDied.getInventory().getItemInOffHand());
                     scheduler.runTaskLater(hmb, () -> teleportIntoArena(hasDied), 1L);
                 }
             }, 2L);

@@ -46,7 +46,7 @@ public class CustomitemCache {
 
         Material itemMaterial;
         try {
-            itemMaterial = Material.valueOf(itemUnparsed.get(0));
+            itemMaterial = Material.matchMaterial(itemUnparsed.get(0));
         } catch (IllegalArgumentException e) {
             throw new ItemCacheException(ItemCacheException.Reason.ITEM_SYNTAX_ERROR);
         }
