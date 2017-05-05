@@ -135,7 +135,8 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Price will be adjusted by a configurable amount every given amount (also configurable)
         - Shows original base price
         - Variance can be added to base price of items via config for more dynamic pricing
-      - Custom revenue multiplier per player level (hms.level)
+    - Custom revenue multiplier per player level (hms.level)
+      - Randomly (depending on revenue) sends message about how much more revenue could have been made with higher rank
     - Auto sells chests on inventory close
       - Needs to be toggled
     - Items with any item meta won't be sold

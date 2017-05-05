@@ -47,8 +47,7 @@ public class SellableMap extends CoreClass {
     }
 
     public Sellable getSellableFromItemStack(ItemStack item) {
-        Pair<Material, Short> itemPair = new Pair<>(item.getType(), item.getDurability());
-        return cycleSellablesLookup.get(itemPair);
+        return cycleSellablesLookup.get(new Pair<>(item.getType(), item.getDurability()));
     }
 
     public void configReloaded(ConfigurationSection sellableSection, int cycleTimeSeconds,
@@ -75,7 +74,6 @@ public class SellableMap extends CoreClass {
                 continue;
             }
 
-            int idInGroup = 0;
             for (String sellable : sellableSection.getStringList(group)) {
                 StringArgumentSeparator separator = new StringArgumentSeparator(sellable, ',');
                 if (!separator.meetsLength(4)) {
@@ -92,7 +90,7 @@ public class SellableMap extends CoreClass {
 
                 if (material != null) {
                     Sellable currentSellable = new Sellable(
-                            this, groupAsInt, idInGroup, material, durability, messageName, baseUnitAmount
+                            this, groupAsInt, material, durability, messageName, baseUnitAmount
                     );
 
                     if (sellables.containsKey(currentSellable.getGroupId())) {
@@ -107,7 +105,6 @@ public class SellableMap extends CoreClass {
                             .addPlaceholderReplace("%MATERIAL%", separator.getArgument(1))
                             .logMessage(Level.WARNING);
                 }
-                idInGroup++;
             }
         }
 
@@ -229,10 +226,9 @@ public class SellableMap extends CoreClass {
                         currentElement++;
                     }
                 }
-
-                storeCurrentCycle();
             }
 
+            storeCurrentCycle();
             server.getPluginManager().callEvent(new SellCycleRefreshEvent());
         }
 

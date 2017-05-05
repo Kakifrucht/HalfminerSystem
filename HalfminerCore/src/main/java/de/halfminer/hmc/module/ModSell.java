@@ -53,7 +53,8 @@ import java.util.regex.Pattern;
  *   - Price will be adjusted by a configurable amount every given amount (also configurable)
  *     - Shows original base price
  *     - Variance can be added to base price of items via config for more dynamic pricing
- *   - Custom revenue multiplier per player level (hms.level)
+ * - Custom revenue multiplier per player level (hms.level)
+ *   - Randomly (depending on revenue) sends message about how much more revenue could have been made with higher rank
  * - Auto sells chests on inventory close
  *   - Needs to be toggled
  * - Items with any item meta won't be sold
@@ -61,18 +62,23 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class ModSell extends HalfminerModule implements Disableable, Listener, Sweepable {
 
+    private Map<Integer, String> menuCommands;
+    private SellableMap sellableMap;
+    private List<Double> levelRewardMultipliers;
+
+    private Map<Inventory, Player> activeMenus;
+    private BukkitTask menuRefreshTask;
+
+    private Cache<UUID, Double> potentialRevenueLostCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(20, TimeUnit.MINUTES)
+            .concurrencyLevel(1)
+            .build();
+
     private final Cache<Player, Boolean> autoSellingCache = CacheBuilder.newBuilder()
             .expireAfterAccess(10, TimeUnit.MINUTES)
             .weakKeys()
             .concurrencyLevel(1)
             .build();
-
-    private Map<Inventory, Player> activeMenus;
-    private BukkitTask menuRefreshTask;
-
-    private Map<Integer, String> menuCommands;
-    private SellableMap sellableMap;
-    private List<Double> levelRewardMultipliers;
 
 
     @EventHandler(ignoreCancelled = true)
@@ -158,7 +164,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         try {
             CustomtextCache cache = coreStorage.getCache("customitems.txt");
             CustomitemCache itemCache = new CustomitemCache(cache);
-            long timeLeftCycle = (sellableMap.getCycleTimeLeft() / 60) + 1;
+            long timeLeftCycle = Math.max(sellableMap.getCycleTimeLeft() / 60, 1);
             Map<String, String> placeholders = Collections.singletonMap("%CYCLEMINUTES%", String.valueOf(timeLeftCycle));
 
             for (int i = 0; i < 9; i++) {
@@ -184,7 +190,6 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             Sellable sellable = sellables.get(i);
             ItemStack currentItem = sellable.getItemStack();
 
-            int amountUntilNextIncrease = sellable.getAmountUntilNextIncrease();
             int currentUnitAmount = sellable.getCurrentUnitAmount();
             int baseUnitAmount = sellable.getBaseUnitAmount();
 
@@ -202,7 +207,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                     .addPlaceholderReplace("%NAME%", sellable.getMessageName())
                     .addPlaceholderReplace("%MULTIPLIER%", multiplier)
                     .addPlaceholderReplace("%AMOUNT%", unitAmount)
-                    .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(amountUntilNextIncrease))
+                    .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(sellable.getAmountUntilNextIncrease()))
                     .returnMessage();
 
             // itemname - revenue lore - increase lore
@@ -273,11 +278,11 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
 
         double multiplier = getMultiplier(toReward);
-        double highestMutliplier = levelRewardMultipliers.get(levelRewardMultipliers.size() - 1);
+        double highestMultiplier = levelRewardMultipliers.get(levelRewardMultipliers.size() - 1);
 
         double baseRevenue = sold.getRevenue(toReward, amount);
         double revenue = baseRevenue * multiplier;
-        double highestRevenue = baseRevenue * highestMutliplier;
+        double potentialRevenueLost = (highestMultiplier * baseRevenue) - revenue;
 
         try {
             hookHandler.addMoney(toReward, revenue);
@@ -309,22 +314,37 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                 .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
                 .logMessage(Level.INFO);
 
-        /*
-        //TODO accumulate amounts, do it more interestingly
         // messaging about possible sell revenue
-        if (highestRevenue - revenue > 10.0d && Utils.random(100)) {
-            String revenueStr = String.valueOf(revenue);
+        if (potentialRevenueLost > 0.0d) {
 
-            scheduler.runTaskLater(hmc, () -> {
-                if (toReward.isOnline()) {
-                    MessageBuilder.create("modSellSuccessPossibleAmount")
-                            .addPlaceholderReplace("%ORIGINALREVENUE%", revenueStr)
-                            .addPlaceholderReplace("%POSSIBLEREVENUE%", String.valueOf(highestRevenue))
-                            .sendMessage(toReward);
+            UUID uuid = toReward.getUniqueId();
+            Double revenueLostBoxed = potentialRevenueLostCache.getIfPresent(uuid);
+
+            double revenueLostTotal = potentialRevenueLost;
+            if (revenueLostBoxed != null) {
+
+                if (revenueLostBoxed == Double.MIN_VALUE) {
+                    return;
                 }
-            }, 300L);
+
+                revenueLostTotal += revenueLostBoxed;
+            }
+
+            if (Utils.random(Math.min((int) revenueLostTotal, 300))) {
+                String amountLostString = String.valueOf(Utils.roundDouble(revenueLostTotal));
+                scheduler.runTaskLater(hmc, () -> {
+                    if (toReward.isOnline()) {
+                        MessageBuilder.create("modSellSuccessPossibleAmount", hmc, "Sell")
+                                .addPlaceholderReplace("%REVENUELOST%", amountLostString)
+                                .sendMessage(toReward);
+                        toReward.playSound(toReward.getLocation(), Sound.BLOCK_NOTE_PLING, 0.7f, 1.4f);
+                    }
+                }, 300L);
+                potentialRevenueLostCache.put(uuid, Double.MIN_VALUE);
+            } else {
+                potentialRevenueLostCache.put(uuid, revenueLostTotal);
+            }
         }
-        */
     }
 
     private double getMultiplier(Player player) {
@@ -409,6 +429,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
     @Override
     public void sweep() {
+        potentialRevenueLostCache.cleanUp();
         autoSellingCache.cleanUp();
     }
 }

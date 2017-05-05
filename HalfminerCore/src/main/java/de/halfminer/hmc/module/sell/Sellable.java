@@ -18,9 +18,7 @@ public class Sellable extends CoreClass {
     // cyclic dependency alert
     private final SellableMap sellableMap;
 
-    // current configuration dependant on SellableMap's loaded state
     private final int groupId;
-    private int idInGroup;
 
     private final Material material;
     private final short durability;
@@ -31,14 +29,13 @@ public class Sellable extends CoreClass {
     private int amountUntilNextIncrease;
 
 
-    Sellable(SellableMap sellableMap, int groupId, int idInGroup,
+    Sellable(SellableMap sellableMap, int groupId,
              Material material, short durability, String messageName, int baseUnitAmount) {
         super(false);
 
         this.sellableMap = sellableMap;
 
         this.groupId = groupId;
-        this.idInGroup = idInGroup;
 
         this.material = material;
         this.durability = durability;
@@ -50,10 +47,6 @@ public class Sellable extends CoreClass {
 
     int getGroupId() {
         return groupId;
-    }
-
-    int getIdInGroup() {
-        return idInGroup;
     }
 
     Material getMaterial() {
@@ -90,7 +83,7 @@ public class Sellable extends CoreClass {
     }
 
     public ItemStack getItemStack() {
-        return new ItemStack(material, 1, durability);
+        return new ItemStack(material, 1, (short) Math.max(durability, 0));
     }
 
     public String getMessageName() {
@@ -138,6 +131,7 @@ public class Sellable extends CoreClass {
             amountUntilNextIncrease += (currentUnitAmount * sellableMap.getUnitsUntilIncrease());
 
             MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
+                    .addPlaceholderReplace("%NAME%", messageName)
                     .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(currentUnitAmount))
                     .sendMessage(hasSold);
         }
