@@ -17,6 +17,7 @@ import org.bukkit.ChatColor;
 @SuppressWarnings("unused")
 public class Cmdhmstore extends HalfminerCommand {
 
+    private String path;
     private HalfminerPlayer player = null;
     private DataType type = null;
 
@@ -27,35 +28,51 @@ public class Cmdhmstore extends HalfminerCommand {
     @Override
     public void execute() {
 
+        if (args.length == 0) {
+            MessageBuilder.create("cmdHmstoreUsage", hmc, "Info").sendMessage(sender);
+            return;
+        }
+
+        if (args.length == 1 && args[0].equalsIgnoreCase("save")) {
+            scheduler.runTaskAsynchronously(hmc, () -> {
+                coreStorage.saveConfig();
+                storage.saveConfig();
+                MessageBuilder.create("cmdHmstoreSave", hmc, "Info").sendMessage(sender);
+            });
+            return;
+        }
+
         if (args.length > 1) {
 
-            String path = args[1].toLowerCase();
-            String[] split = path.split("[.]");
+            path = args[1];
 
-            // Check if we edit/view a player
-            if (split.length > 1) {
+            // check if we edit/read a player
+            String[] playerSplit = path.toLowerCase().split("[.]");
+            if (playerSplit.length > 1) {
 
                 try {
-
-                    player = storage.getPlayer(split[0]);
+                    player = storage.getPlayer(playerSplit[0]);
                     for (DataType typeQuery : DataType.values()) {
-                        if (typeQuery.toString().equalsIgnoreCase(split[1])) {
+                        if (typeQuery.toString().equalsIgnoreCase(playerSplit[1])) {
                             type = typeQuery;
                             break;
                         }
                     }
-                    if (type == null) player = null;
-                    else path = ChatColor.GOLD.toString()
-                            + ChatColor.ITALIC + split[0] + ChatColor.GRAY + ChatColor.ITALIC + '.' + split[1];
 
-                } catch (PlayerNotFoundException ignored) {
-                }
+                    if (type == null) {
+                        player = null;
+                    } else {
+                        path = "" + ChatColor.GOLD + ChatColor.ITALIC + playerSplit[0]
+                                + ChatColor.GRAY + ChatColor.ITALIC + '.' + playerSplit[1];
+                    }
+
+                } catch (PlayerNotFoundException ignored) {}
             }
 
             if (args.length > 2 && args[0].equalsIgnoreCase("set")) {
 
                 String setTo = Utils.arrayToString(args, 2, false);
-                set(path, setTo);
+                set(setTo);
                 MessageBuilder.create("cmdHmstoreSet", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", setTo)
@@ -70,7 +87,7 @@ public class Cmdhmstore extends HalfminerCommand {
                     return;
                 }
 
-                set(path, setTo);
+                set(setTo);
                 MessageBuilder.create("cmdHmstoreSet", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
@@ -78,7 +95,7 @@ public class Cmdhmstore extends HalfminerCommand {
             } else if (args.length > 2 && args[0].equalsIgnoreCase("setbool")) {
 
                 boolean setTo = Boolean.parseBoolean(args[2]);
-                set(path, setTo);
+                set(setTo);
                 MessageBuilder.create("cmdHmstoreSet", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
@@ -86,7 +103,7 @@ public class Cmdhmstore extends HalfminerCommand {
             } else if (args.length > 2 && args[0].equalsIgnoreCase("setdouble")) {
 
                 double setTo = Double.parseDouble(args[2]);
-                set(path, setTo);
+                set(setTo);
                 MessageBuilder.create("cmdHmstoreSet", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", String.valueOf(setTo))
@@ -94,36 +111,40 @@ public class Cmdhmstore extends HalfminerCommand {
             } else if (args[0].equalsIgnoreCase("get")) {
 
                 String value;
-                if (player == null) value = coreStorage.getString(path);
-                else value = player.getString(type);
+                if (player == null) {
+                    value = coreStorage.getString(path);
+                } else {
+                    value = player.getString(type);
+                }
                 MessageBuilder.create("cmdHmstoreGet", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .addPlaceholderReplace("%VALUE%", value)
                         .sendMessage(sender);
             } else if (args[0].equalsIgnoreCase("remove")) {
 
-                set(path, null);
-                // also clear storage of HalfminerSystem
-                storage.set(path, null);
+                if (player != null) {
+                    showUsage();
+                    return;
+                }
+
+                set(null);
+                storage.set(path, null); // also clear central storage of HalfminerSystem
                 MessageBuilder.create("cmdHmstoreRemove", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .sendMessage(sender);
-            } else MessageBuilder.create("cmdHmstoreUsage", hmc, "Info").sendMessage(sender);
-            return;
-        }
-
-        if (args.length > 0 && args[0].equalsIgnoreCase("save")) {
-
-            scheduler.runTaskAsynchronously(hmc, () -> {
-                coreStorage.saveConfig();
-                storage.saveConfig();
-                MessageBuilder.create("cmdHmstoreSave", hmc, "Info").sendMessage(sender);
-            });
-        } else MessageBuilder.create("cmdHmstoreUsage", hmc, "Info").sendMessage(sender);
+            } else showUsage();
+        } else showUsage();
     }
 
-    private void set(String path, Object setTo) {
-        if (player != null) player.set(type, setTo);
-        else coreStorage.set(path, setTo);
+    private void showUsage() {
+        MessageBuilder.create("cmdHmstoreUsage", hmc, "Info").sendMessage(sender);
+    }
+
+    private void set(Object setTo) {
+        if (player != null) {
+            player.set(type, setTo);
+        } else {
+            coreStorage.set(path, setTo);
+        }
     }
 }
