@@ -10,7 +10,14 @@ public class SellCycleRefreshEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    SellCycleRefreshEvent() {
+    private final long timeUntilNextCycle;
+
+    SellCycleRefreshEvent(long timeUntilNextCycle) {
+        this.timeUntilNextCycle = timeUntilNextCycle;
+    }
+
+    public long getTimeUntilNextCycle() {
+        return timeUntilNextCycle;
     }
 
     @Override

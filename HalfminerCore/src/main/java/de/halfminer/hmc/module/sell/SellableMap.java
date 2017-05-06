@@ -18,23 +18,26 @@ import java.util.logging.Level;
  */
 public class SellableMap extends CoreClass {
 
-    private int cycleTimeSeconds;
+    // cycle length vars
+    private int cycleTimeSecondsMax;
+    private int cycleTimeSecondsMin;
+    private int cycleMinPlayerCount;
+
+    // sell data and price determination
     private double priceAdjustMultiplier;
     private double priceVarianceFactor;
     private int unitsUntilIncrease;
     private Map<Integer, List<Sellable>> sellables = new HashMap<>();
 
+    // current cycle data
     private List<Sellable> cycleSellables;
     private Map<Pair<Material, Short>, Sellable> cycleSellablesLookup;
-
     private long cycleExpiry;
     private BukkitTask nextCycleTask;
 
 
     public SellableMap() {
         super(false);
-
-        // store current cycle every 15 minutes
         scheduler.runTaskTimerAsynchronously(hmc, this::storeCurrentCycle, 18000L, 18000L);
     }
 
@@ -50,19 +53,22 @@ public class SellableMap extends CoreClass {
         return cycleSellablesLookup.get(new Pair<>(item.getType(), item.getDurability()));
     }
 
-    public void configReloaded(ConfigurationSection sellableSection, int cycleTimeSeconds,
+    public void configReloaded(ConfigurationSection sellableSection,
+                               int cycleTimeSecondsMax, int cycleTimeSecondsMin, int cycleMinPlayerCount,
                                double priceAdjustMultiplier, double priceVarianceFactor, int unitsUntilIncrease) {
 
-        this.cycleTimeSeconds = Math.max(cycleTimeSeconds, 10);
         this.priceAdjustMultiplier = Math.max(priceAdjustMultiplier, 0.01d);
         this.priceVarianceFactor = Math.max(priceVarianceFactor, 0.0d);
         this.unitsUntilIncrease = Math.max(unitsUntilIncrease, 1);
 
-        storeCurrentCycle();
+        this.cycleTimeSecondsMax = Math.max(cycleTimeSecondsMax, 10);
+        this.cycleTimeSecondsMin = Math.max(cycleTimeSecondsMin, 10);
+        this.cycleMinPlayerCount = Math.max(cycleMinPlayerCount, 0);
 
-        sellables = new HashMap<>();
+        storeCurrentCycle();
         clearCurrentCycle();
 
+        sellables = new HashMap<>();
         for (String group : sellableSection.getKeys(false)) {
             int groupAsInt;
             try {
@@ -203,7 +209,18 @@ public class SellableMap extends CoreClass {
         if (timeUntilNextCycle <= 0 || cycleSellables.isEmpty()) {
 
             clearCurrentCycle();
-            timeUntilNextCycle = cycleTimeSeconds;
+            // dynamically determine time until next cycle
+            int currentPlayerCount = server.getOnlinePlayers().size();
+            if (currentPlayerCount == 0) {
+                timeUntilNextCycle = cycleTimeSecondsMax;
+            } else if (currentPlayerCount >= cycleMinPlayerCount) {
+                timeUntilNextCycle = cycleTimeSecondsMin;
+            } else {
+                int difference = cycleTimeSecondsMax - cycleTimeSecondsMin;
+                int toTakeFromMax = (int) (difference * ((double) currentPlayerCount / cycleMinPlayerCount));
+                timeUntilNextCycle = cycleTimeSecondsMax - toTakeFromMax;
+            }
+
             cycleExpiry = currentTime + timeUntilNextCycle;
 
             Random rnd = new Random();
@@ -229,7 +246,7 @@ public class SellableMap extends CoreClass {
             }
 
             storeCurrentCycle();
-            server.getPluginManager().callEvent(new SellCycleRefreshEvent());
+            server.getPluginManager().callEvent(new SellCycleRefreshEvent(timeUntilNextCycle));
         }
 
         if (nextCycleTask != null) {

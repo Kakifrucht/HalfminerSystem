@@ -43,6 +43,8 @@ import java.util.regex.Pattern;
  *   - Cycle based selling, every given minutes new items will be chosen and all prices will reset
  *     - Cycles are persistent through restarts
  *     - Broadcast message when new cycle starts
+ *     - Cycle time is dependent on current player count on server, more players - more cycles
+ *       - Define a max/min time and playercount for min time in config
  *   - Reads items to sell from config: Their Material, durability/id, base price per unit and name of item
  *     - Items need to be grouped, group name determines how many of given items will land in a given cycle
  *       - For example out of 20 items in group '5', 5 will be randomly selected
@@ -140,7 +142,9 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         refreshActiveInventories();
 
         server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 0.4f, 1.3f));
-        MessageBuilder.create("modSellMapNewCycleBroadcast", hmc, "Sell").broadcastMessage(true);
+        MessageBuilder.create("modSellNewCycleBroadcast", hmc, "Sell")
+                .addPlaceholderReplace("%TIME%", String.valueOf(e.getTimeUntilNextCycle() / 60))
+                .broadcastMessage(true);
     }
 
     public void showSellMenu(Player player) {
@@ -409,7 +413,13 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             }
         }
 
-        int cycleTimeSeconds = config.getInt("sell.cycleTimeMinutes", 180) * 60;
+        int cycleTimeSecondsMax = config.getInt("sell.cycleTime.maxMinutes", 200) * 60;
+        int cycleTimeSecondsMin = config.getInt("sell.cycleTime.minMinutes", 50) * 60;
+        int cycleMinPlayerCount = config.getInt("sell.cycleTime.minPlayerCount", 40);
+        if (cycleTimeSecondsMax < cycleTimeSecondsMin) {
+            cycleTimeSecondsMax = cycleTimeSecondsMin;
+        }
+
         double priceAdjustMultiplier = config.getDouble("sell.priceAdjustMultiplier", 1.5d);
         double priceVarianceFactor = config.getDouble("sell.priceVarianceFactor", 0.1d);
         int unitsUntilIncrease = config.getInt("sell.unitsUntilIncrease");
@@ -424,7 +434,8 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
 
         sellableMap.configReloaded(config.getConfigurationSection("sell.sellables"),
-                cycleTimeSeconds, priceAdjustMultiplier, priceVarianceFactor, unitsUntilIncrease);
+                cycleTimeSecondsMax, cycleTimeSecondsMin, cycleMinPlayerCount,
+                priceAdjustMultiplier, priceVarianceFactor, unitsUntilIncrease);
     }
 
     @Override

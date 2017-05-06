@@ -12,7 +12,7 @@ lore: &r|&7Öffne das Hauptmenü
 #sellmenu-5
 WATCH
 name: &6&lVerkaufs Zyklus
-lore: &7Nächster Zyklus in &a%CYCLEMINUTES% &7Minuten|&r|&7Die Gegenstände werden zurückgesetzt|&7und es werden zufällig neue ausgewählt
+lore: &7Nächster Zyklus in &a%CYCLEMINUTES% &7Minuten|&r|&7Die Gegenstände werden zurückgesetzt|&7und es werden zufällig neue ausgewählt|&r|&7&oMehr Spieler online &8-> &7&oKürzere Zyklen
 #sellmenu-9
 CHEST
 name: &a&lAutomatischer Kistenverkauf

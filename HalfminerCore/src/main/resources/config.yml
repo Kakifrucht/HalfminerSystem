@@ -175,7 +175,13 @@ respawn:
   - 'hallo'
 sell:
   #Time in minutes until new sell cycle starts
-  cycleTimeMinutes: 210
+  cycleTime:
+    #Value at 0 players, proportional scaling, must be higher than minMinutes
+    maxMinutes: 200
+    #Value at minPlayerCount
+    minMinutes: 50
+    #How many players must be online to meet the minMinutes value
+    minPlayerCount: 40
   #Key is the slot and value is the command without leading slash
   #To remove default commands 0 and 8, set their contents to empty string, for example '0': ''
   menuCommands:
@@ -405,13 +411,13 @@ localization:
   modSellMapLogGroupInvalid: 'Verkaufsgruppe "%GROUP%" ist ungültig und wurde ignoriert, sie muss eine Zahl sein'
   modSellMapLogMaterialNotExists: 'Das Material %MATERIAL% in der Verkaufsliste existiert nicht, überspringe...'
   modSellMapLogSellableInvalidFormat: 'Verkaufbarer Gegenstand ist in ungültigem Format: "%SELLABLE%"'
-  modSellMapNewCycleBroadcast: '~&7Ein neuer Verkaufszyklus wurde gestartet, verwende &a/verkauf/ &7um ihn einzusehen'
   modSellMenuCustomItemsError: 'Konnte für das Verkaufsmenü die Datei customitems.txt nicht lesen'
   modSellMenuInvalidCommandFormat: 'Konnte in der Konfiguration bei sell.menuCommands Schlüssel "%KEY%" nicht lesen, er muss eine Zahl zwischen 0 und 8 sein'
   modSellMenuStack: '&6&l%NAME% &fverkaufen|&7Du erhälst &a%MULTIPLIER% &7HC''s je &e%AMOUNT% &7Stück|&7&oNächste Anpassung nach &8%NEXTINCREASE% &7&overkäufen'
   modSellMenuStackAmountFormat: '%CURRENT% &7(&8&m%BASE%&7)'
   modSellMenuSyntaxError: 'Der Gegenstand "%ITEM%" konnte nicht gelesen werden'
   modSellMenuTitle: '&4&lVerkaufsshop'
+  modSellNewCycleBroadcast: '~&7Ein neuer Verkaufszyklus wurde gestartet, verwende &a/verkauf/ &7um ihn einzusehen (nächster Zyklus in &e%TIME% &7Minuten)'
   modSellNotInInv: '&cDu hast kein*e &e%NAME% &cin deinem Inventar'
   modSellSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
   modSellSuccessLog: 'Sell: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
