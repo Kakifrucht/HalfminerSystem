@@ -121,7 +121,7 @@ public class Sellable extends CoreClass {
 
         double revenue = amountSold / (double) currentUnitAmount;
         amountUntilNextIncrease -= amountSold;
-        while (amountUntilNextIncrease < 0) {
+        while (amountUntilNextIncrease <= 0) {
 
             int newUnitAmount = (int) Math.round((double) currentUnitAmount * sellableMap.getPriceAdjustMultiplier());
             if (newUnitAmount == currentUnitAmount) {
