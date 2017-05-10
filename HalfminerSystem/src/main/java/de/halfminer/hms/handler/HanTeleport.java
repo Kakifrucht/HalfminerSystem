@@ -51,7 +51,7 @@ public class HanTeleport extends HalfminerClass implements Reloadable {
 
         Teleport tp = new Teleport(player, loc, delay, setLastLocation, toRun, toRunIfCancelled);
 
-        if (delay < 1 || player.hasPermission("hms.bypass.teleporttimer")) {
+        if (delay < 1 || player.hasPermission("hms.noteleporttimer")) {
             tp.teleport();
             return;
         }

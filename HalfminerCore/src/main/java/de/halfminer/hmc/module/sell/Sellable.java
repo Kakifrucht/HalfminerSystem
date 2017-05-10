@@ -4,6 +4,7 @@ import de.halfminer.hmc.CoreClass;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -130,6 +131,7 @@ public class Sellable extends CoreClass {
             currentUnitAmount = newUnitAmount;
             amountUntilNextIncrease += (currentUnitAmount * sellableMap.getUnitsUntilIncrease());
 
+            hasSold.playSound(hasSold.getLocation(), Sound.BLOCK_NOTE_HARP, 1.0f, 1.2f);
             MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
                     .addPlaceholderReplace("%NAME%", messageName)
                     .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(currentUnitAmount))
