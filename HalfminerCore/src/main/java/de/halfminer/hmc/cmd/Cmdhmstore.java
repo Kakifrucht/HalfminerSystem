@@ -18,8 +18,9 @@ import org.bukkit.ChatColor;
 public class Cmdhmstore extends HalfminerCommand {
 
     private String path;
-    private HalfminerPlayer player = null;
-    private DataType type = null;
+
+    private HalfminerPlayer playerLookup = null;
+    private DataType typeLookup = null;
 
     public Cmdhmstore() {
         this.permission = "hmc.admin";
@@ -47,20 +48,20 @@ public class Cmdhmstore extends HalfminerCommand {
             path = args[1];
 
             // check if we edit/read a player
-            String[] playerSplit = path.toLowerCase().split("[.]");
+            String[] playerSplit = path.split("[.]");
             if (playerSplit.length > 1) {
 
                 try {
-                    player = storage.getPlayer(playerSplit[0]);
+                    playerLookup = storage.getPlayer(playerSplit[0]);
                     for (DataType typeQuery : DataType.values()) {
                         if (typeQuery.toString().equalsIgnoreCase(playerSplit[1])) {
-                            type = typeQuery;
+                            typeLookup = typeQuery;
                             break;
                         }
                     }
 
-                    if (type == null) {
-                        player = null;
+                    if (typeLookup == null) {
+                        playerLookup = null;
                     } else {
                         path = "" + ChatColor.GOLD + ChatColor.ITALIC + playerSplit[0]
                                 + ChatColor.GRAY + ChatColor.ITALIC + '.' + playerSplit[1];
@@ -111,10 +112,10 @@ public class Cmdhmstore extends HalfminerCommand {
             } else if (args[0].equalsIgnoreCase("get")) {
 
                 String value;
-                if (player == null) {
+                if (playerLookup == null) {
                     value = coreStorage.getString(path);
                 } else {
-                    value = player.getString(type);
+                    value = playerLookup.getString(typeLookup);
                 }
                 MessageBuilder.create("cmdHmstoreGet", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
@@ -122,16 +123,15 @@ public class Cmdhmstore extends HalfminerCommand {
                         .sendMessage(sender);
             } else if (args[0].equalsIgnoreCase("remove")) {
 
-                if (player != null) {
-                    showUsage();
-                    return;
+                set(null);
+                if (playerLookup == null) {
+                    storage.set(path, null); // also clear central storage of HalfminerSystem
                 }
 
-                set(null);
-                storage.set(path, null); // also clear central storage of HalfminerSystem
                 MessageBuilder.create("cmdHmstoreRemove", hmc, "Info")
                         .addPlaceholderReplace("%PATH%", path)
                         .sendMessage(sender);
+
             } else showUsage();
         } else showUsage();
     }
@@ -141,8 +141,8 @@ public class Cmdhmstore extends HalfminerCommand {
     }
 
     private void set(Object setTo) {
-        if (player != null) {
-            player.set(type, setTo);
+        if (playerLookup != null) {
+            playerLookup.set(typeLookup, setTo);
         } else {
             coreStorage.set(path, setTo);
         }
