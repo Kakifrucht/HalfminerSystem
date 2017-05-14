@@ -42,6 +42,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private int timeUntilDerankThreshold;
     private int derankLossAmount;
     private String skillgroupNameAdmin;
+    private String skillgroupNameNone;
 
     @EventHandler
     public void joinRecalculate(PlayerJoinEvent e) {
@@ -179,8 +180,13 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         int skillLevel = storage.getPlayer(player).getInt(DataType.SKILL_LEVEL);
 
-        if (skillLevel <= 22 && skillLevel > 0) return scoreboardTeamNames.get(skillLevel - 1).getName().substring(2);
-        else return skillgroupNameAdmin;
+        if (skillLevel <= 22 && skillLevel > 0) {
+            return scoreboardTeamNames.get(skillLevel - 1).getName().substring(2);
+        } else if (skillLevel < 1) {
+            return skillgroupNameNone;
+        } else {
+            return skillgroupNameAdmin;
+        }
     }
 
     @Override
@@ -190,6 +196,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         timeUntilDerankThreshold = hmc.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
         derankLossAmount = -hmc.getConfig().getInt("skillLevel.derankLossAmount", 250);
         skillgroupNameAdmin = MessageBuilder.returnMessage("modSkillLevelAdmingroupName", hmc);
+        skillgroupNameNone = MessageBuilder.returnMessage("modSkillLevelNoGroup", hmc);
 
         if (scoreboard == null) {
             scoreboard = server.getScoreboardManager().getMainScoreboard();

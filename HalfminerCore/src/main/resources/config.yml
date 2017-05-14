@@ -426,6 +426,7 @@ localization:
   modSkillLevelDerank: '&cDein Skilllevel wurde reduziert, weil du seit mindestens %DAYS% Tagen kein PvP mehr betrieben hast'
   modSkillLevelDerankTitle: ' \n&cDu wurdest degradiert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modSkillLevelLog: 'Skilllevel: %PLAYER% Level %SKILLOLD% -> %SKILLNEW% (%SKILLNO%)'
+  modSkillLevelNoGroup: '&oKeine'
   modSkillLevelUprankTitle: ' \n&aDu wurdest befördert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
   modStaticListenersTabHelp: '~&cVerwende &a/hilfe/ &cfür eine Übersicht über alle Kommandos'
