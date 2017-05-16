@@ -112,6 +112,11 @@ combatLog:
   broadcastLog: true
   #Time in seconds until untag
   tagTime: 15
+crafting:
+  #List with pairs, key is Material, value the required amount per item on crafting field
+  #Example: "TNT 8" would make crafting of TNT 8 times more expensive, by requiring 8 sand/gunpowder per crafting field
+  materialAmounts:
+  - TNT 8
 glitchProtection:
   #Material that will be checked
   protectedMaterial:
@@ -385,6 +390,8 @@ localization:
   modCombatLogNoEnderpearl: '&cDu kannst im Kampf keine Enderperlen benutzen'
   modCombatLogProgressSymbols: '-'
   modCombatLogUntagged: '&aDu bist nicht mehr im Kampf'
+  modCraftingInvalidLog: 'Ungültiges Format beim lesen der crafting.materialMultipliers Liste bei "%INVALID%", überspringe...'
+  modCraftingRemoved: '&cUm &e%MATERIAL% &czu craften muss jeder Gegenstand im Rezept &a%AMOUNT% &cmal vorkommen'
   modGlitchProtectionDismountTped: '&cDu wurdest zum Spawn teleportiert, um potentielles Glitching zu unterbinden, das Team wurde informiert'
   modGlitchProtectionDismountTpedNotify: '&e%PLAYER%&c wurde zum Spawn teleportiert, da er bei &e%LOCATION% &c(&7%WORLD%&c) versucht hat ein Fahrzeug zu verlassen'
   modGlitchProtectionMove: '&cEventuelles Glitching durch &e%PLAYER%&c am Ort &e%LOCATION% &c(&e%WORLD%&c, &e%MATERIAL%&c)'

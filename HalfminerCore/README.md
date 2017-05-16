@@ -67,6 +67,9 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Taking off armor
       - Commands
       - Enderpearls
+  - Crafting
+    - Add minimum required amounts per item on a crafting field for vanilla recipes
+      - For example, amount set for tnt at 8 requires at least 8 sand/gunpowder on every field in recipe
   - GlitchProtection
     - Notifies staff about potential wall glitching
     - Detects dismount glitches, forces player to spawn

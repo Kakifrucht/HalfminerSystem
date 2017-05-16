@@ -10,6 +10,7 @@ public enum ModuleType {
     AUTO_MESSAGE        ("AutoMessage"),
     CHAT_MANAGER        ("ChatManager"),
     COMBAT_LOG          ("CombatLog"),
+    CRAFTING            ("Crafting"),
     GLITCH_PROTECTION   ("GlitchProtection"),
     HEALTH_BAR          ("HealthBar"),
     MOTD                ("Motd"),
