@@ -270,6 +270,8 @@ localization:
   cmdCustomtextCacheParseError: 'Beim Parsen ist folgender Fehler aufgetreten: %ERROR%'
   cmdCustomtextNotFound: '&cUnbekanntes Thema'
   cmdDisposalTitle: 'Mülleimer'
+  cmdGemsShow: '&7Du hast &a&l%GEMS% &7Gems, Spendenwaren Gegenwert je Gem beträgt &e1 Euro'
+  cmdGemsHasNone: '&cDu hast keine Gems'
   cmdHmcCopySchematicAlreadyExists: '&cDie Schematic existiert bereits im Zielverzeichnis'
   cmdHmcCopySchematicCopyError: '&cDie Schematic konnte nicht kopiert werden'
   cmdHmcCopySchematicCopySuccess: '&7Schematic wurde &aerfolgreich &7kopiert'

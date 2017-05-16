@@ -8,6 +8,7 @@ public enum DataType {
     BLOCKS_BROKEN   ("blocksbroken"),
     BLOCKS_PLACED   ("blocksplaced"),
     DEATHS          ("deaths"),
+    GEMS            ("gems"),
     KD_RATIO        ("kdratio"),
     KILLS           ("kills"),
     LAST_PVP        ("lastpvp"),

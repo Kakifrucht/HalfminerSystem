@@ -209,6 +209,8 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
         - Lines starting with "-->" will make the console execute following text as command
   - /disposal
     - Opens portable disposal
+  - /gems
+    - Shows the players gem account
   - /hmc
     - Copy a WorldEdit schematic to another directory (copyschematic)
     - Give a custom item defined in customitems.txt to a player (give)

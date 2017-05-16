@@ -20,6 +20,9 @@ commands:
   disposal:
     description: Open portable disposal
     aliases: [bin]
+  gems:
+    description: Shows the users gem account
+    aliases: [gem]
   hmc:
     description: HalfminerCore base command and toolbox
     aliases: [halfminercore, hcore, hmcore]
@@ -72,6 +75,7 @@ permissions:
       hmc.customttext: true
       hmc.default: true
       hmc.disposal: true
+      hmc.gems: true
       hmc.home: true
       hmc.lag: true
       hmc.lag.others: true
@@ -131,6 +135,9 @@ permissions:
   hmc.default:
     default: true
     description: Default permission
+  hmc.gems:
+    default: true
+    description: Access to gems command
   hmc.home:
     default: true
     description: Access to home command
