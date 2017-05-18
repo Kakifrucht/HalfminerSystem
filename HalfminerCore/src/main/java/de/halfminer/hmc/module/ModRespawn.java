@@ -3,6 +3,7 @@ package de.halfminer.hmc.module;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.exceptions.CachingException;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.util.MessageBuilder;
@@ -67,7 +68,9 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
         if (!joined.hasPlayedBefore()) {
 
-            message = MessageBuilder.create("modRespawnFirstJoin", hmc)
+            // send different message if player already has online time in his stats (if played longer than 15 minutes)
+            boolean hasActuallyPlayedBefore = storage.getPlayer(joined).getInt(DataType.TIME_ONLINE) > 15 * 60;
+            message = MessageBuilder.create(hasActuallyPlayedBefore ? "modRespawnFirstJoinHasPlayed" : "modRespawnFirstJoin", hmc)
                     .addPlaceholderReplace("%PLAYER%", joined.getName())
                     .returnMessage();
 
@@ -194,7 +197,9 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
         welcomeWords = new HashSet<>();
         welcomeWords.addAll(config.getStringList("respawn.welcomeWords")
-                .stream().map(String::toLowerCase).collect(Collectors.toList()));
+                .stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toList()));
 
         try {
             action = new CustomAction(config.getString("respawn.customActionWelcomeBonus", "nothing"), coreStorage);

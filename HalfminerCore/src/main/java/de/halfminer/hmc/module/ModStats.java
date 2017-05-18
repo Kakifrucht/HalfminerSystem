@@ -100,7 +100,9 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void updatePlayerTimeLeave(PlayerQuitEvent e) {
-        setOnlineTime(e.getPlayer());
+        Player player = e.getPlayer();
+        setOnlineTime(player);
+        timeOnline.remove(player);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -196,8 +198,9 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void mobkillStats(EntityDeathEvent e) {
-        if (!(e.getEntity() instanceof Player) && e.getEntity().getKiller() != null)
+        if (!(e.getEntity() instanceof Player) && e.getEntity().getKiller() != null) {
             storage.getPlayer(e.getEntity().getKiller()).incrementInt(DataType.MOB_KILLS, 1);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -213,18 +216,24 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
     private double calculateKDRatio(HalfminerPlayer player) {
 
         int deaths = player.getInt(DataType.DEATHS);
-        if (deaths == 0) return 999999.99d;
+        if (deaths == 0) {
+            return 999999.99d;
+        }
+
         double calc = player.getInt(DataType.KILLS) / (double) deaths;
         return Utils.roundDouble(calc);
     }
 
     private void setOnlineTime(Player player) {
 
-        if (!timeOnline.containsKey(player)) return;
+        if (timeOnline.containsKey(player)) {
+            long lastTime = timeOnline.get(player);
+            long currentTime = System.currentTimeMillis() / 1000;
+            int time = (int) (currentTime - lastTime);
 
-        int time = (int) ((System.currentTimeMillis() / 1000) - timeOnline.get(player));
-        storage.getPlayer(player).incrementInt(DataType.TIME_ONLINE, time);
-        timeOnline.remove(player);
+            storage.getPlayer(player).incrementInt(DataType.TIME_ONLINE, time);
+            timeOnline.put(player, currentTime);
+        }
     }
 
     @Override
@@ -234,10 +243,6 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
         if (timeOnline == null) {
             timeOnline = new HashMap<>();
-        }
-
-        // if full plugin reload ocurred while the server ran, add players to list
-        if (timeOnline.size() == 0) {
             long time = System.currentTimeMillis() / 1000;
             for (Player player : server.getOnlinePlayers()) {
                 timeOnline.put(player, time);
@@ -245,13 +250,8 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         }
 
         if (onlineTimeTask == null) {
-            onlineTimeTask = scheduler.runTaskTimer(hmc, () -> {
-                long currentTime = System.currentTimeMillis() / 1000;
-                for (Player p : server.getOnlinePlayers()) {
-                    setOnlineTime(p);
-                    timeOnline.put(p, currentTime);
-                }
-            }, 1200L, 1200L);
+            onlineTimeTask = scheduler.runTaskTimer(hmc, () ->
+                    server.getOnlinePlayers().forEach(this::setOnlineTime), 1200L, 1200L);
         }
     }
 
