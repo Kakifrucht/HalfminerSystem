@@ -379,6 +379,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
             sellableString.setLength(sellableString.length() - 2);
             MessageBuilder.create("modSellCurrentCycleLog", hmc)
+                    .addPlaceholderReplace("%TIMELEFT%", String.valueOf(sellableMap.getCycleTimeLeft() / 60))
                     .addPlaceholderReplace("%SELLABLES%", sellableString.toString())
                     .logMessage(Level.INFO);
         }

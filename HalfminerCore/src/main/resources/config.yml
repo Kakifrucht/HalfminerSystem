@@ -415,7 +415,7 @@ localization:
   modRespawnWelcomeBonusTitleNo: ' \n&6Willkommens Kopfdrop: &7&l&c:('
   modRespawnWelcomeBonusTitleYes: ' \n&6Willkommens Kopfdrop: &7&l&a:)'
   modSellAmountIncreased: '&7Der Verkaufspreis für &e%NAME% &7wurde angepasst, neuer Basiswert: &a%NEWAMOUNT% &7Stück'
-  modSellCurrentCycleLog: 'Aktueller Verkaufszyklus: %SELLABLES%'
+  modSellCurrentCycleLog: 'Aktueller Verkaufszyklus (noch %TIMELEFT% Minuten): %SELLABLES%'
   modSellDisabled: '&cAktuell stehen keine Gegenstände zum Verkauf'
   modSellMapLogCycleInvalidFormat: 'Der aktuell gespeicherte Verkaufszyklus ist in einem ungültigen Format'
   modSellMapLogCycleNotLoaded: 'Konnte den gespeicherten Verkaufszyklus nicht wiederherstellen, da die Konfiguration verändert wurde oder die gespeicherten Daten ungültig sind'
