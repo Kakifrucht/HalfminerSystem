@@ -145,6 +145,8 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         MessageBuilder.create("modSellNewCycleBroadcast", hmc, "Sell")
                 .addPlaceholderReplace("%TIME%", String.valueOf(e.getTimeUntilNextCycle() / 60))
                 .broadcastMessage(true);
+
+        logCurrentCycle();
     }
 
     public void showSellMenu(Player player) {
@@ -366,6 +368,22 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
     }
 
+    private void logCurrentCycle() {
+
+        List<Sellable> currentCycle = sellableMap.getCycleSellables();
+        if (!currentCycle.isEmpty()) {
+            StringBuilder sellableString = new StringBuilder();
+            for (Sellable sellable : currentCycle) {
+                sellableString.append(sellable.toString()).append(", ");
+            }
+
+            sellableString.setLength(sellableString.length() - 2);
+            MessageBuilder.create("modSellCurrentCycleLog", hmc)
+                    .addPlaceholderReplace("%SELLABLES%", sellableString.toString())
+                    .logMessage(Level.INFO);
+        }
+    }
+
     @Override
     public void onDisable() {
         closeActiveInventories();
@@ -424,18 +442,19 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         double priceVarianceFactor = config.getDouble("sell.priceVarianceFactor", 0.1d);
         int unitsUntilIncrease = config.getInt("sell.unitsUntilIncrease");
 
-        if (sellableMap == null) {
+        boolean isReload = sellableMap != null;
+        if (!isReload) {
             sellableMap = new SellableMap();
-        }
-
-        if (menuRefreshTask == null) {
-            // refresh inventories every minute
             scheduler.runTaskTimer(hmc, this::refreshActiveInventories, 1200L, 1200L);
         }
 
         sellableMap.configReloaded(config.getConfigurationSection("sell.sellables"),
                 cycleTimeSecondsMax, cycleTimeSecondsMin, cycleMinPlayerCount,
                 priceAdjustMultiplier, priceVarianceFactor, unitsUntilIncrease);
+
+        if (!isReload) {
+            logCurrentCycle();
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
+import java.util.logging.Level;
 
 /**
  * Class encapsulating an item that is up for sale, and it's necessary metadata, managed by {@link SellableMap}.
@@ -132,11 +133,18 @@ public class Sellable extends CoreClass {
             amountUntilNextIncrease += (currentUnitAmount * sellableMap.getUnitsUntilIncrease());
 
             hasSold.playSound(hasSold.getLocation(), Sound.BLOCK_NOTE_HARP, 1.0f, 1.2f);
-            MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
+
+            MessageBuilder mb = MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
                     .addPlaceholderReplace("%NAME%", messageName)
-                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(currentUnitAmount))
-                    .sendMessage(hasSold);
+                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(currentUnitAmount));
+            mb.sendMessage(hasSold);
+            mb.logMessage(Level.INFO);
         }
         return revenue;
+    }
+
+    @Override
+    public String toString() {
+        return messageName + " (" + material.toString() + ") - " + currentUnitAmount + "/" + amountUntilNextIncrease;
     }
 }

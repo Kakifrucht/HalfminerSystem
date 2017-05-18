@@ -68,6 +68,7 @@ public class SellableMap extends CoreClass {
         storeCurrentCycle();
         clearCurrentCycle();
 
+        // read sellables from config
         sellables = new HashMap<>();
         for (String group : sellableSection.getKeys(false)) {
             int groupAsInt;
@@ -114,6 +115,7 @@ public class SellableMap extends CoreClass {
             }
         }
 
+        // only proceed if sellables were loaded
         if (sellables.isEmpty()) {
             if (nextCycleTask != null) {
                 nextCycleTask.cancel();
@@ -121,7 +123,7 @@ public class SellableMap extends CoreClass {
             return;
         }
 
-        // read sellables from storage, if old cycle is stored (persistance after full reloads/restarts)
+        // read old cycle from storage if possible (persistance after full reloads/restarts)
         Object cycleSectionObject = coreStorage.get("sellcycle");
         if (cycleSectionObject instanceof ConfigurationSection) {
 
