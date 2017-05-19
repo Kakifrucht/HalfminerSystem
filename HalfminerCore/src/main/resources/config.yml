@@ -428,7 +428,7 @@ localization:
   modSellMenuStackAmountFormat: '%CURRENT% &7(&8&m%BASE%&7)'
   modSellMenuSyntaxError: 'Der Gegenstand "%ITEM%" konnte nicht gelesen werden'
   modSellMenuTitle: '&4&lVerkaufsshop'
-  modSellMostSoldBroadcast: '&7Im letzten Verkaufszyklus wurde der Gegenstand &b%ITEMNAME% &7von &e%PLAYER% &7mit &a%ITEMAMOUNT% Verkäufen &7am meisten verkauft'
+  modSellMostSoldBroadcast: '&7Im letzten Verkaufszyklus wurde*n &b%ITEMNAME% &7von &e%PLAYER% &7mit &a%ITEMAMOUNT% Verkäufen &7am häufigsten verkauft'
   modSellNewCycleBroadcast: '~&7Ein neuer Verkaufszyklus wurde gestartet, verwende &a/verkauf/ &7um ihn einzusehen (nächster Zyklus in &e%TIME% &7Minuten)'
   modSellNotInInv: '&cDu hast kein*e &e%NAME% &cin deinem Inventar'
   modSellSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'

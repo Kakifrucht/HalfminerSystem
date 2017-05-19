@@ -93,9 +93,10 @@ public class Sellable extends CoreClass {
     }
 
     void copyStateFromSellable(Sellable toCopy) {
-        this.baseUnitAmount = toCopy.getBaseUnitAmount();
-        this.currentUnitAmount = toCopy.getCurrentUnitAmount();
-        this.amountUntilNextIncrease = toCopy.getAmountUntilNextIncrease();
+        this.baseUnitAmount = toCopy.baseUnitAmount;
+        this.amountSoldBy = toCopy.amountSoldBy;
+        this.currentUnitAmount = toCopy.currentUnitAmount;
+        this.amountUntilNextIncrease = toCopy.amountUntilNextIncrease;
     }
 
     public ItemStack getItemStack() {
