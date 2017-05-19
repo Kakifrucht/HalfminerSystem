@@ -10,6 +10,7 @@ import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.exceptions.HookException;
 import de.halfminer.hms.exceptions.ItemCacheException;
+import de.halfminer.hms.exceptions.PlayerNotFoundException;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Sweepable;
@@ -43,6 +44,7 @@ import java.util.regex.Pattern;
  *   - Cycle based selling, every given minutes new items will be chosen and all prices will reset
  *     - Cycles are persistent through restarts
  *     - Broadcast message when new cycle starts
+ *       - Broadcasts player that sold most of a single item, and which it was
  *     - Cycle time is dependent on current player count on server, more players - more cycles
  *       - Define a max/min time and playercount for min time in config
  *   - Reads items to sell from config: Their Material, durability/id, base price per unit and name of item
@@ -147,6 +149,27 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                 .broadcastMessage(true);
 
         logCurrentCycle();
+
+        // broadcast player who sold most in last cycle (with delay)
+        Sellable mostSoldLastCycle = e.getSellableSoldMost();
+        if (mostSoldLastCycle != null) {
+            Map.Entry<UUID, Integer> mostSoldEntry = mostSoldLastCycle.soldMostBy();
+
+            // only broadcast if he sold at least 1k units of the item
+            int amountSold = mostSoldEntry.getValue();
+            if (amountSold > 1000) {
+
+                scheduler.runTaskLater(hmc, () -> {
+                    try {
+                        MessageBuilder.create("modSellMostSoldBroadcast", hmc, "Sell")
+                                .addPlaceholderReplace("%PLAYER%", storage.getPlayer(mostSoldEntry.getKey()).getName())
+                                .addPlaceholderReplace("%ITEMNAME%", mostSoldLastCycle.getMessageName())
+                                .addPlaceholderReplace("%ITEMAMOUNT%", String.valueOf(amountSold))
+                                .broadcastMessage(true);
+                    } catch (PlayerNotFoundException ignored) {}
+                }, 500L);
+            }
+        }
     }
 
     public void showSellMenu(Player player) {

@@ -128,6 +128,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Cycle based selling, every given minutes new items will be chosen and all prices will reset
         - Cycles are persistent through restarts
         - Broadcast message when new cycle starts
+          - Broadcasts player that sold most of a single item, and which it was
         - Cycle time is dependent on current player count on server, more players - more cycles
           - Define a max/min time and playercount for min time in config
       - Reads items to sell from config: Their Material, durability/id, base price per unit and name of item

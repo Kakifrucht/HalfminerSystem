@@ -8,7 +8,10 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -21,12 +24,13 @@ public class Sellable extends CoreClass {
     private final SellableMap sellableMap;
 
     private final int groupId;
-
     private final Material material;
     private final short durability;
     private final String messageName;
-    private final int baseUnitAmount;
 
+    private int baseUnitAmount;
+
+    private Map<UUID, Integer> amountSoldBy = new HashMap<>();
     private int currentUnitAmount;
     private int amountUntilNextIncrease;
 
@@ -84,6 +88,16 @@ public class Sellable extends CoreClass {
         this.amountUntilNextIncrease = currentUnitAmount * sellableMap.getUnitsUntilIncrease();
     }
 
+    boolean isSimiliar(Sellable sellable) {
+        return sellable.getMaterial().equals(material) && sellable.getDurability() == durability;
+    }
+
+    void copyStateFromSellable(Sellable toCopy) {
+        this.baseUnitAmount = toCopy.getBaseUnitAmount();
+        this.currentUnitAmount = toCopy.getCurrentUnitAmount();
+        this.amountUntilNextIncrease = toCopy.getAmountUntilNextIncrease();
+    }
+
     public ItemStack getItemStack() {
         return new ItemStack(material, 1, (short) Math.max(durability, 0));
     }
@@ -121,6 +135,8 @@ public class Sellable extends CoreClass {
     public double getRevenue(Player hasSold, int amountSold) {
 
         double revenue = amountSold / (double) currentUnitAmount;
+
+        // update price if necessary
         amountUntilNextIncrease -= amountSold;
         while (amountUntilNextIncrease <= 0) {
 
@@ -140,7 +156,31 @@ public class Sellable extends CoreClass {
             mb.sendMessage(hasSold);
             mb.logMessage(Level.INFO);
         }
+
+        // update non persistent storage that holds information who sold how much of this sellable
+        if (amountSoldBy.containsKey(hasSold.getUniqueId())) {
+            int newAmount = amountSoldBy.get(hasSold.getUniqueId()) + amountSold;
+            amountSoldBy.put(hasSold.getUniqueId(), newAmount);
+        } else {
+            amountSoldBy.put(hasSold.getUniqueId(), amountSold);
+        }
+
         return revenue;
+    }
+
+    /**
+     * Gets the player and amount who sold most. This information is not persistent across restarts.
+     *
+     * @return {@link Map.Entry}, where key is {@link UUID} of player who sold most and value the amount as {@link Integer}
+     */
+    public Map.Entry<UUID, Integer> soldMostBy() {
+        Map.Entry<UUID, Integer> soldMost = null;
+        for (Map.Entry<UUID, Integer> uuidIntegerEntry : amountSoldBy.entrySet()) {
+            if (soldMost == null || uuidIntegerEntry.getValue() > soldMost.getValue()) {
+                soldMost = uuidIntegerEntry;
+            }
+        }
+        return soldMost;
     }
 
     @Override

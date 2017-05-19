@@ -27,6 +27,7 @@ public class SellableMap extends CoreClass {
     private double priceAdjustMultiplier;
     private double priceVarianceFactor;
     private int unitsUntilIncrease;
+
     private Map<Integer, List<Sellable>> sellables = new HashMap<>();
 
     // current cycle data
@@ -64,9 +65,6 @@ public class SellableMap extends CoreClass {
         this.cycleTimeSecondsMax = Math.max(cycleTimeSecondsMax, 10);
         this.cycleTimeSecondsMin = Math.max(cycleTimeSecondsMin, 10);
         this.cycleMinPlayerCount = Math.max(cycleMinPlayerCount, 0);
-
-        storeCurrentCycle();
-        clearCurrentCycle();
 
         // read sellables from config
         sellables = new HashMap<>();
@@ -117,61 +115,91 @@ public class SellableMap extends CoreClass {
 
         // only proceed if sellables were loaded
         if (sellables.isEmpty()) {
-            if (nextCycleTask != null) {
-                nextCycleTask.cancel();
-            }
+            clearCurrentCycle();
             return;
         }
 
-        // read old cycle from storage if possible (persistance after full reloads/restarts)
-        Object cycleSectionObject = coreStorage.get("sellcycle");
-        if (cycleSectionObject instanceof ConfigurationSection) {
+        if (cycleSellables == null) {
 
-            ConfigurationSection cycleSection = (ConfigurationSection) cycleSectionObject;
-            long cycleExpiry = cycleSection.getLong("expires");
-            if ((System.currentTimeMillis() / 1000) < cycleExpiry) {
+            clearCurrentCycle(); // initial list and map instantiation
 
-                for (String key : cycleSection.getKeys(false)) {
+            // read old cycle from storage if possible (persistance after full reloads/restarts)
+            Object cycleSectionObject = coreStorage.get("sellcycle");
+            if (cycleSectionObject instanceof ConfigurationSection) {
 
-                    if (key.equals("expires")) {
-                        continue;
-                    }
+                ConfigurationSection cycleSection = (ConfigurationSection) cycleSectionObject;
+                long cycleExpiry = cycleSection.getLong("expires");
+                if ((System.currentTimeMillis() / 1000) < cycleExpiry) {
 
-                    int groupId = cycleSection.getInt(key + ".groupId");
-                    Material material = Material.matchMaterial(cycleSection.getString(key + ".material", ""));
-                    short durability = (short) cycleSection.getInt(key + ".durability");
-                    String stateString = cycleSection.getString(key + ".state");
+                    for (String key : cycleSection.getKeys(false)) {
 
-                    List<Sellable> sellablesInGroup = sellables.get(groupId);
-                    if (sellablesInGroup != null && material != null) {
-
-                        for (Sellable sellable : sellablesInGroup) {
-                            if (sellable.getMaterial().equals(material) && sellable.getDurability() == durability) {
-                                sellable.setState(stateString);
-                                addSellableToCurrentCycle(sellable);
-                                break;
-                            }
+                        if (key.equals("expires")) {
+                            continue;
                         }
 
+                        int groupId = cycleSection.getInt(key + ".groupId");
+                        Material material = Material.matchMaterial(cycleSection.getString(key + ".material", ""));
+                        short durability = (short) cycleSection.getInt(key + ".durability");
+                        String stateString = cycleSection.getString(key + ".state");
+
+                        List<Sellable> sellablesInGroup = sellables.get(groupId);
+                        if (sellablesInGroup != null && material != null) {
+
+                            for (Sellable sellable : sellablesInGroup) {
+                                if (sellable.getMaterial().equals(material) && sellable.getDurability() == durability) {
+                                    sellable.setState(stateString);
+                                    addSellableToCurrentCycle(sellable);
+                                    break;
+                                }
+                            }
+
+                        } else {
+                            clearCurrentCycle();
+                            break;
+                        }
+                    }
+
+                    if (cycleSellables.isEmpty()) {
+                        MessageBuilder.create("modSellMapLogCycleNotLoaded", hmc).logMessage(Level.WARNING);
                     } else {
-                        clearCurrentCycle();
+                        this.cycleExpiry = cycleExpiry;
+                    }
+
+                } else {
+                    // cycle expired already
+                    coreStorage.set("sellcycle", null);
+                }
+
+            } else if (cycleSectionObject != null) {
+                MessageBuilder.create("modSellMapLogCycleInvalidFormat", hmc).logMessage(Level.WARNING);
+            }
+
+        } else if (!cycleSellables.isEmpty()) {
+
+            // if cycle was already loaded, update with new values or discard if sellables are no longer available
+            List<Sellable> newCycleSellables = new ArrayList<>();
+            for (Sellable sellableCurrentCycle : cycleSellables) {
+
+                boolean foundSimiliar = false;
+                for (Sellable sellable : sellables.get(sellableCurrentCycle.getGroupId())) {
+                    if (sellable.isSimiliar(sellableCurrentCycle)) {
+                        foundSimiliar = true;
+                        sellable.copyStateFromSellable(sellableCurrentCycle);
+                        newCycleSellables.add(sellable);
                         break;
                     }
                 }
 
-                if (cycleSellables.isEmpty()) {
-                    MessageBuilder.create("modSellMapLogCycleNotLoaded", hmc).logMessage(Level.WARNING);
-                } else {
-                    this.cycleExpiry = cycleExpiry;
+                if (!foundSimiliar) {
+                    clearCurrentCycle();
+                    newCycleSellables = null;
+                    break;
                 }
-
-            } else {
-                // cycle expired already
-                coreStorage.set("sellcycle", null);
             }
 
-        } else if (cycleSectionObject != null) {
-            MessageBuilder.create("modSellMapLogCycleInvalidFormat", hmc).logMessage(Level.WARNING);
+            if (newCycleSellables != null) {
+                this.cycleSellables = newCycleSellables;
+            }
         }
 
         if (nextCycleTask == null || cycleSellables.isEmpty()) {
@@ -210,7 +238,9 @@ public class SellableMap extends CoreClass {
         // kick off next cycle
         if (timeUntilNextCycle <= 0 || cycleSellables.isEmpty()) {
 
+            List<Sellable> oldCycle = cycleSellables;
             clearCurrentCycle();
+
             // dynamically determine time until next cycle
             int currentPlayerCount = server.getOnlinePlayers().size();
             if (currentPlayerCount == 0) {
@@ -248,11 +278,7 @@ public class SellableMap extends CoreClass {
             }
 
             storeCurrentCycle();
-            server.getPluginManager().callEvent(new SellCycleRefreshEvent(timeUntilNextCycle));
-        }
-
-        if (nextCycleTask != null) {
-            nextCycleTask.cancel();
+            server.getPluginManager().callEvent(new SellCycleRefreshEvent(timeUntilNextCycle, oldCycle));
         }
 
         nextCycleTask = scheduler.runTaskLater(hmc, this::checkNextCycle, timeUntilNextCycle * 20);
@@ -274,6 +300,10 @@ public class SellableMap extends CoreClass {
 
         if (cycleSellables != null) {
             cycleSellables.forEach(Sellable::doRandomReset);
+        }
+
+        if (nextCycleTask != null) {
+            nextCycleTask.cancel();
         }
 
         cycleSellables = new ArrayList<>();
