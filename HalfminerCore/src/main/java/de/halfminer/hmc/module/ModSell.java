@@ -363,6 +363,12 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                 String amountLostString = String.valueOf(Utils.roundDouble(revenueLostTotal));
                 scheduler.runTaskLater(hmc, () -> {
                     if (toReward.isOnline()) {
+
+                        MessageBuilder.create("modSellSuccessPossibleAmountLog", hmc)
+                                .addPlaceholderReplace("%PLAYER%", toReward.getName())
+                                .addPlaceholderReplace("%REVENUELOST%", amountLostString)
+                                .logMessage(Level.INFO);
+
                         MessageBuilder.create("modSellSuccessPossibleAmount", hmc, "Sell")
                                 .addPlaceholderReplace("%REVENUELOST%", amountLostString)
                                 .sendMessage(toReward);

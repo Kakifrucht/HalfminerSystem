@@ -434,6 +434,7 @@ localization:
   modSellSuccess: '&7Du hast &e%AMOUNT% %MATERIAL% &7für &a%MONEY% HCs &7verkauft'
   modSellSuccessLog: 'Sell: %PLAYER% hat %AMOUNT% %MATERIAL% für %MONEY% HCs verkauft'
   modSellSuccessPossibleAmount: '~&7Du hättest für deine letzten Verkäufe bis zu &a%REVENUELOST% HC''s &7mehr verdienen können, weitere Informationen: &6/spenden ränge/'
+  modSellSuccessPossibleAmountLog: '%PLAYER% wurde informiert, dass er %REVENUELOST% HC''s mehr verdienen hätte können'
   modSkillLevelAdmingroupName: '&lServerteam'
   modSkillLevelDerank: '&cDein Skilllevel wurde reduziert, weil du seit mindestens %DAYS% Tagen kein PvP mehr betrieben hast'
   modSkillLevelDerankTitle: ' \n&cDu wurdest degradiert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
