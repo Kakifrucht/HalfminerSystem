@@ -372,7 +372,7 @@ public class GlobalMode extends AbstractMode {
     @EventHandler(ignoreCancelled = true)
     public void teleportDisable(PlayerTeleportEvent e) {
         if (!pm.isInBattle(type, e.getPlayer())
-                && !e.getPlayer().hasPermission("hmb.global.bypass.teleportintoarena")
+                && !e.getPlayer().hasPermission("hmb.mode.global.bypass.teleportintoarena")
                 && am.isArenaSpawn(e.getTo())) {
             MessageBuilder.create("modeGlobalTeleportIntoArenaDenied", hmb).sendMessage(e.getPlayer());
             e.setCancelled(true);
