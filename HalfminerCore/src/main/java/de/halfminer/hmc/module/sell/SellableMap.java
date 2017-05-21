@@ -51,7 +51,14 @@ public class SellableMap extends CoreClass {
     }
 
     public Sellable getSellableFromItemStack(ItemStack item) {
-        return cycleSellablesLookup.get(new Pair<>(item.getType(), item.getDurability()));
+        Pair<Material, Short> lookupPair = new Pair<>(item.getType(), item.getDurability());
+        if (cycleSellablesLookup.containsKey(lookupPair)) {
+            return cycleSellablesLookup.get(lookupPair);
+        } else if (lookupPair.getRight() >= 0) {
+            lookupPair.setRight((short) -1);
+            return cycleSellablesLookup.get(lookupPair);
+        }
+        return null;
     }
 
     public void configReloaded(ConfigurationSection sellableSection,
@@ -89,7 +96,7 @@ public class SellableMap extends CoreClass {
                 }
 
                 Material material = Material.matchMaterial(separator.getArgument(1));
-                short durability = (short) separator.getArgumentInt(2);
+                short durability = (short) separator.getArgumentIntMinimum(2, -1);
                 String messageName = separator.getArgument(0);
                 int baseUnitAmount = separator.getArgumentIntMinimum(3, 1);
 
