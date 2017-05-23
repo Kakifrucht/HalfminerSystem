@@ -237,6 +237,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                     .addPlaceholderReplace("%MULTIPLIER%", multiplier)
                     .addPlaceholderReplace("%AMOUNT%", unitAmount)
                     .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(sellable.getAmountUntilNextIncrease()))
+                    .addPlaceholderReplace("%SOLDTOTAL%", String.valueOf(sellable.getAmountSoldTotal()))
                     .returnMessage();
 
             // itemname - revenue lore - increase lore

@@ -33,6 +33,7 @@ public class Sellable extends CoreClass {
     private Map<UUID, Integer> amountSoldBy = new HashMap<>();
     private int currentUnitAmount;
     private int amountUntilNextIncrease;
+    private int amountSoldTotal;
 
 
     Sellable(SellableMap sellableMap, int groupId,
@@ -64,13 +65,14 @@ public class Sellable extends CoreClass {
     }
 
     String getStateString() {
-        return currentUnitAmount + " " + amountUntilNextIncrease;
+        return currentUnitAmount + " " + amountUntilNextIncrease + " " + amountSoldTotal;
     }
 
     void setState(String state) {
         StringArgumentSeparator separator = new StringArgumentSeparator(state);
         currentUnitAmount = separator.getArgumentInt(0);
         amountUntilNextIncrease = separator.getArgumentInt(1);
+        amountSoldTotal = separator.getArgumentInt(2);
     }
 
     void doRandomReset() {
@@ -86,6 +88,7 @@ public class Sellable extends CoreClass {
         priceVarianceFactor = 1.0d + factorRandomized;
         this.currentUnitAmount = (int) Math.round(priceVarianceFactor * (double) baseUnitAmount);
         this.amountUntilNextIncrease = currentUnitAmount * sellableMap.getUnitsUntilIncrease();
+        amountSoldTotal = 0;
     }
 
     boolean isSimiliar(Sellable sellable) {
@@ -97,6 +100,7 @@ public class Sellable extends CoreClass {
         this.amountSoldBy = toCopy.amountSoldBy;
         this.currentUnitAmount = toCopy.currentUnitAmount;
         this.amountUntilNextIncrease = toCopy.amountUntilNextIncrease;
+        this.amountSoldTotal = toCopy.amountSoldTotal;
     }
 
     public ItemStack getItemStack() {
@@ -133,12 +137,17 @@ public class Sellable extends CoreClass {
         return amountUntilNextIncrease;
     }
 
+    public int getAmountSoldTotal() {
+        return amountSoldTotal;
+    }
+
     public double getRevenue(Player hasSold, int amountSold) {
 
         double revenue = amountSold / (double) currentUnitAmount;
 
         // update price if necessary
         amountUntilNextIncrease -= amountSold;
+        amountSoldTotal += amountSold;
         while (amountUntilNextIncrease <= 0) {
 
             int newUnitAmount = (int) Math.round((double) currentUnitAmount * sellableMap.getPriceAdjustMultiplier());
