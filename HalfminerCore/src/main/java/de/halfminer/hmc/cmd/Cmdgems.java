@@ -178,7 +178,7 @@ public class Cmdgems extends HalfminerCommand {
             return false;
         }
 
-        hPlayer.set(DataType.GEMS, currentAmount);
+        hPlayer.set(DataType.GEMS, currentAmount != 0 ? currentAmount : null);
 
         MessageBuilder.create("cmdGemsLog", hmc)
                 .addPlaceholderReplace("%PLAYER%", hPlayer.getName())

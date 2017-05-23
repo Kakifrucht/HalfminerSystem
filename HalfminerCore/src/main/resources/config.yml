@@ -438,7 +438,7 @@ localization:
   modSellMapLogSellableInvalidFormat: 'Verkaufbarer Gegenstand ist in ungültigem Format: "%SELLABLE%"'
   modSellMenuCustomItemsError: 'Konnte für das Verkaufsmenü die Datei customitems.txt nicht lesen'
   modSellMenuInvalidCommandFormat: 'Konnte in der Konfiguration bei sell.menuCommands Schlüssel "%KEY%" nicht lesen, er muss eine Zahl zwischen 0 und 8 sein'
-  modSellMenuStack: '&6&l%NAME% &fverkaufen|&7Du erhälst &a%MULTIPLIER% &7HC''s je &e%AMOUNT% &7Stück|&7&oNächste Anpassung nach: &8%NEXTINCREASE% &7&overkäufen|&7&oBereits verkauft: &8%SOLDTOTAL% &7&oStück'
+  modSellMenuStack: '&6&l%NAME% &fverkaufen|&7Du erhälst &a%MULTIPLIER% &7HC''s je &e%AMOUNT% &7Stück|&7Nächste Anpassung nach: &8%NEXTINCREASE% &7&overkäufen|&7Bereits verkauft: &8%SOLDTOTAL% &7&oStück'
   modSellMenuStackAmountFormat: '%CURRENT% &7(&8&m%BASE%&7)'
   modSellMenuSyntaxError: 'Der Gegenstand "%ITEM%" konnte nicht gelesen werden'
   modSellMenuTitle: '&4&lVerkaufsshop'
