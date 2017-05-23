@@ -1,8 +1,8 @@
 package de.halfminer.hms.util;
 
-import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
 import de.halfminer.hms.handler.storage.DataType;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -45,7 +45,7 @@ public class HalfminerPlayer {
     public OfflinePlayer getBase() {
 
         if (player == null) {
-            player = HalfminerSystem.getInstance().getServer().getOfflinePlayer(uuid);
+            player = Bukkit.getOfflinePlayer(uuid);
         }
         return player;
     }

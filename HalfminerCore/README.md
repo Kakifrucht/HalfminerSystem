@@ -212,6 +212,11 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Opens portable disposal
   - /gems
     - Shows the players gem account
+    - Allows players to pay gems via /gems pay command
+      - Executes custom action with amount as placeholder (optional)
+    - View and modify players gem accounts, if permission was granted
+      - Notifies edited players if they are online
+    - All account changes are being logged
   - /hmc
     - Copy a WorldEdit schematic to another directory (copyschematic)
     - Give a custom item defined in customitems.txt to a player (give)

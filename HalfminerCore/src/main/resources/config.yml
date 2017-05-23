@@ -1,5 +1,9 @@
 #HalfminerCore Config
 command:
+  gems:
+    #Custom action in customactions.txt to execute when a player successfully paid gems with /gems pay <amount>
+    #Placeholders include %AMOUNT%, leave empty to not execute an action
+    payCustomAction: ''
   hmc:
     #Path to remote schematic location for /hmc copyschematic
     remoteSchematicPath: '/put/your/path/here'
@@ -270,8 +274,18 @@ localization:
   cmdCustomtextCacheParseError: 'Beim Parsen ist folgender Fehler aufgetreten: %ERROR%'
   cmdCustomtextNotFound: '&cUnbekanntes Thema'
   cmdDisposalTitle: 'Mülleimer'
-  cmdGemsShow: '&7Du hast &a&l%GEMS% &7Gems, Spendenwaren Gegenwert je Gem beträgt &e1 Euro'
+  cmdGemsAdminAccountChangedGive: '&7Dir wurden &a%AMOUNT% &7Gems gutgeschrieben, aktueller Kontostand: &e%TOTALAMOUNT% &7Gems'
+  cmdGemsAdminAccountChangedTake: '&7Dir wurden &c%AMOUNT% &7Gems entzogen, aktueller Kontostand: &e%TOTALAMOUNT% &7Gems'
+  cmdGemsAdminNotEnough: '&cDer Spieler &e%PLAYER% &chat nur &a%TOTALAMOUNT% &cGems übrig'
+  cmdGemsAdminGive: '&e%PLAYER% &7wurden erfolgreich &a%AMOUNT% &7Gems gutgeschrieben, aktueller Kontostand: &e%TOTALAMOUNT% &7Gems'
+  cmdGemsAdminTake: '&e%PLAYER% &7wurden erfolgreich &c%AMOUNT% &7Gems entzogen, aktueller Kontostand: &e%TOTALAMOUNT% &7Gems'
   cmdGemsHasNone: '&cDu hast keine Gems'
+  cmdGemsLog: 'Gems: Der neue Kontostand für %PLAYER% lautet: %TOTALAMOUNT% Gems (%CHANGEDBY% Gems)'
+  cmdGemsPayActionInvalidLog: 'Die Aktion %ACTIONNAME% konnte nicht ausgeführt werden, Grund: %REASON%'
+  cmdGemsPayInvalidParam: '&cBitte gebe eine gültige Zahl ein'
+  cmdGemsPayNotEnoughGems: '&cDu hast nicht genügend Gems'
+  cmdGemsPaySuccess: '&7Du hast &a%AMOUNT% &7Gems bezahlt, dir verbleiben &e%TOTALAMOUNT% &7Stück'
+  cmdGemsShow: '&7Du hast &a&l%GEMS% &7Gems, Spendenwaren Gegenwert je Gem beträgt &e1 Euro'
   cmdHmcCopySchematicAlreadyExists: '&cDie Schematic existiert bereits im Zielverzeichnis'
   cmdHmcCopySchematicCopyError: '&cDie Schematic konnte nicht kopiert werden'
   cmdHmcCopySchematicCopySuccess: '&7Schematic wurde &aerfolgreich &7kopiert'

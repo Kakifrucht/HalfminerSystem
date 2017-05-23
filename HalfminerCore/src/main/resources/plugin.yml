@@ -203,6 +203,8 @@ permissions:
     description: Access to customtext command
   hmc.disposal:
     description: Access to disposal command
+  hmc.gems.admin:
+    description: View and modify players gems accounts
   hmc.lag:
     description: Access to lag command
   hmc.lag.others:
