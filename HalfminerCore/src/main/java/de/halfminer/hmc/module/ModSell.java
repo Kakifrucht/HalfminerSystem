@@ -360,7 +360,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                 revenueLostTotal += revenueLostBoxed;
             }
 
-            if (Utils.random(Math.min((int) revenueLostTotal * 5, 500))) {
+            if (revenueLostTotal > 20.0d && Utils.random(Math.min((int) revenueLostTotal * 5, 500))) {
                 String amountLostString = String.valueOf(Utils.roundDouble(revenueLostTotal));
                 scheduler.runTaskLater(hmc, () -> {
                     if (toReward.isOnline()) {
