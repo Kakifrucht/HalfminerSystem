@@ -224,8 +224,13 @@ public class DuelQueue extends BattleClass {
             }
 
         } else {
-            clearWaitingForMatch();
-            MessageBuilder.create("modeGlobalLeftQueue", hmb).sendMessage(toRemove);
+            if (waitingForMatch == toRemove) {
+                clearWaitingForMatch();
+                MessageBuilder.create("modeGlobalLeftQueue", hmb).sendMessage(toRemove);
+            } else {
+                // if not waiting for match, the duel requested player has already left
+                MessageBuilder.create("modeDuelRequestCancel", hmb).sendMessage(toRemove);
+            }
         }
 
         pm.setState(BattleState.QUEUE_COOLDOWN, toRemove);

@@ -129,7 +129,7 @@ localization:
   modeGlobalKitArenaCustomLore: '&a%ARENA% &7(&o%MODE%&7) - &b%PLAYER%'
   modeGlobalLeftQueue: '&7Du hast die Warteschlange verlassen'
   modeGlobalNoCommandInGame: '&cDu kannst im Kampf keine Kommandos benutzen'
-  modeGlobalNotIdle: '&cDu bereits im Spiel oder in einer Warteschlange'
+  modeGlobalNotIdle: '&cDu bist bereits im Spiel oder in einer Warteschlange'
   modeGlobalQueueCooldown: '&cDu hast die Warteschlange/Arena vor kurzem erst verlassen, &7bitte warte noch etwas'
   modeGlobalRandomArena: 'Zufall'
   modeGlobalShowArenaList: '&aGrüne Arenen &7sind aktuell frei, &crote Arenen &7sind belegt: '

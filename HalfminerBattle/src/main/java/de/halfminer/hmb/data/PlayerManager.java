@@ -206,11 +206,25 @@ public class PlayerManager implements Sweepable {
      * Returns the first added partner, useful if only one partner is ever being set for the battle mode
      *
      * @param get player to get the first partner of
-     * @return first set partner or null if none set
+     * @return first set partner or null if none set or offline
      */
     public Player getFirstPartner(Player get) {
-        List<BattlePlayer> partners = getBattlePlayer(get).getGamePartners();
-        return (partners != null && partners.size() > 0) ? partners.get(0).getBase() : null;
+        BattlePlayer bPlayer = getBattlePlayer(get);
+        List<BattlePlayer> partners = bPlayer.getGamePartners();
+        if (partners != null && partners.size() > 0) {
+            Player firstPartner = partners.get(0).getBase();
+            if (firstPartner != null && firstPartner.isOnline()) {
+                return firstPartner;
+            } else {
+                if (partners.size() > 1) {
+                    partners.remove(0);
+                } else {
+                    bPlayer.setBattlePartners(null);
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override
