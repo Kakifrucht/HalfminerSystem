@@ -215,12 +215,6 @@ public class PlayerManager implements Sweepable {
             Player firstPartner = partners.get(0).getBase();
             if (firstPartner != null && firstPartner.isOnline()) {
                 return firstPartner;
-            } else {
-                if (partners.size() > 1) {
-                    partners.remove(0);
-                } else {
-                    bPlayer.setBattlePartners(null);
-                }
             }
         }
 
