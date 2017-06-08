@@ -85,7 +85,7 @@ public class DefaultSellable extends CoreClass implements Sellable {
 
     @Override
     public Map<UUID, Integer> getAmountSoldBy() {
-        return null;
+        return amountSoldBy;
     }
 
     @Override
