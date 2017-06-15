@@ -46,7 +46,7 @@ public class ModStatsTop extends HalfminerModule {
         Map<DataType, TopBoard> boardsOld = boards;
         boards = new HashMap<>();
 
-        Set<TopBoard> insertAllPlayerTo = new HashSet<>();
+        Set<TopBoard> insertAllPlayersTo = new HashSet<>();
         for (String line : hmc.getConfig().getStringList("statsTop.trackedStats")) {
             StringArgumentSeparator argumentSeparator = new StringArgumentSeparator(line, ',');
 
@@ -82,18 +82,18 @@ public class ModStatsTop extends HalfminerModule {
 
                 boolean needsInsert = board.updateConfig(name, maxEntriesPerBoard, minimumValue);
                 if (needsInsert) {
-                    insertAllPlayerTo.add(board);
+                    insertAllPlayersTo.add(board);
                 }
             } else {
                 board = new DefaultTopBoard(type, name, maxEntriesPerBoard, minimumValue);
-                insertAllPlayerTo.add(board);
+                insertAllPlayersTo.add(board);
             }
             boards.put(type, board);
         }
 
-        if (!insertAllPlayerTo.isEmpty()) {
+        if (!insertAllPlayersTo.isEmpty()) {
             List<HalfminerPlayer> allPlayers = storage.getAllPlayers();
-            insertAllPlayerTo.forEach(board -> board.insertOrUpdatePlayers(allPlayers));
+            insertAllPlayersTo.forEach(board -> board.insertOrUpdatePlayers(allPlayers));
         }
 
         if (refreshTask != null) {
@@ -109,11 +109,7 @@ public class ModStatsTop extends HalfminerModule {
                     .collect(Collectors.toList());
 
             // do actual update asynchronously
-            new Thread(() -> {
-                for (TopBoard board : boards.values()) {
-                    board.insertOrUpdatePlayers(players);
-                }
-            }).start();
+            new Thread(() -> boards.values().forEach(board -> board.insertOrUpdatePlayers(players))).start();
 
         }, intervalSeconds * 20, intervalSeconds * 20);
     }

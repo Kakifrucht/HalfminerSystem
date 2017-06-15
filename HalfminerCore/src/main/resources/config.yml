@@ -244,9 +244,9 @@ skillLevel:
   - 8Eisen
   - 7Noob
 statsTop:
-  #Maximum amount of entries per board, setting this value to high will increase plugin load times significantly
+  #Maximum amount of entries per board, setting this value too high will increase plugin load times significantly
   maxPerBoard: 100
-  #Time in seconds until boards refreshes online players
+  #Time in seconds until boards refresh online players (refresh after logout still happens regardless)
   refreshIntervalSeconds: 180
   #Three values seperated via comma for every separate board
   #Values: Readable list name, datatype as string, minimum to appear on board
@@ -388,7 +388,7 @@ localization:
   cmdStatsHeader: '&e&m-------------------&c&l Statistiken &e&m-------------------'
   cmdStatsOldnames: '&fAlte Namen: &e%OLDNAMES%'
   cmdStatsShow: '&3Statistiken von %PLAYER% &e>>\n&rSkillgruppe: &e%SKILLGROUP% &7| &rSkilllevel: &e%SKILLLEVEL%&7&o/22\n&rZeit Online: &e%ONLINETIME% &7Minuten | &rGeld: &e%REVENUE% &7HCs verdient\n&rKills: &e%KILLS% &7Mord(e) | &rDeaths: &e%DEATHS% &7Tod(e) | &rK/D: &e%KDRATIO%\n&rGevotet: &e%VOTES% &7mal | &rMobs: &e%MOBKILLS% &7Mobs getötet\n&rBlöcke: &e%BLOCKSPLACED% &7platziert | &e%BLOCKSBROKEN% &7gebrochen'
-  cmdStatsShowotherStats: '&7Statistiken zu anderen Spielern: &e/stats <Spieler>'
+  cmdStatsShowotherStats: '~&7Bestenlisten: &e/statstop/\n&7Statistiken zu anderen Spielern: &e/stats <Spieler>'
   cmdStatstopDoesntExist: '&cDiese Bestenliste existiert nicht'
   cmdStatstopHeader: '&3&l%BOARDNAME%'
   cmdStatstopHeaderPaged: '&3&l%BOARDNAME%&7 | Seite %PAGE%'

@@ -79,7 +79,6 @@ public class Cmdstatstop extends HalfminerCommand {
                     }
 
                     if (startingAt + 10 < topBoardList.size()) {
-
                         messageQueue.add(MessageBuilder.create("cmdStatstopPageNext", hmc)
                                 .addPlaceholderReplace("%TYPE%", type.toString())
                                 .addPlaceholderReplace("%PAGE%", String.valueOf(page + 1)));
@@ -115,8 +114,10 @@ public class Cmdstatstop extends HalfminerCommand {
                         }
                     }
 
-                    messageQueue.add(MessageBuilder.create("cmdStatstopPageInfo", hmc)
-                            .addPlaceholderReplace("%TYPE%", type.toString()));
+                    if (topBoardList.size() > 5) {
+                        messageQueue.add(MessageBuilder.create("cmdStatstopPageInfo", hmc)
+                                .addPlaceholderReplace("%TYPE%", type.toString()));
+                    }
                 }
 
                 // send collected messages synchronously
