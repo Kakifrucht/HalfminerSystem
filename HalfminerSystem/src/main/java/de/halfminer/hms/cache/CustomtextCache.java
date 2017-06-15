@@ -123,6 +123,7 @@ public class CustomtextCache {
 
                         String lineTranslated = ChatColor.translateAlternateColorCodes('&', line);
                         if (line.endsWith(" ")) {
+                            //noinspection StringConcatenationInLoop
                             currentLine += lineTranslated;
                         } else {
 

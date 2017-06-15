@@ -1,6 +1,5 @@
 package de.halfminer.hms;
 
-import de.halfminer.hms.handler.HandlerType;
 import de.halfminer.hms.handler.*;
 import de.halfminer.hms.manageable.HalfminerManager;
 import de.halfminer.hms.util.MessageBuilder;

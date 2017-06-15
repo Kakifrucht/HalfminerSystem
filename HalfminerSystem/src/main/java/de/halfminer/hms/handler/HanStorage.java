@@ -1,12 +1,12 @@
 package de.halfminer.hms.handler;
 
 import de.halfminer.hms.HalfminerClass;
+import de.halfminer.hms.cache.CacheHolder;
+import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
-import de.halfminer.hms.cache.CacheHolder;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.OfflinePlayer;
@@ -18,9 +18,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -86,15 +84,17 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
     }
 
     public void setUUID(OfflinePlayer player) {
-        if (uuidConfig == null)
+        if (uuidConfig == null) {
             throw new RuntimeException("setUUID(OfflinePlayer) called on non HalfminerSystem HanStorage instance");
+        }
         uuidConfig.set(player.getName().toLowerCase(), player.getUniqueId().toString());
     }
 
     public HalfminerPlayer getPlayer(String playerString) throws PlayerNotFoundException {
 
-        if (uuidConfig == null)
+        if (uuidConfig == null) {
             throw new RuntimeException("getPlayer(String) called on non HalfminerSystem HanStorage instance");
+        }
 
         UUID uuid;
         String uuidString = uuidConfig.getString(playerString.toLowerCase(), "");
@@ -109,15 +109,32 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
     }
 
     public HalfminerPlayer getPlayer(OfflinePlayer p) {
-        if (uuidConfig == null)
+        if (uuidConfig == null) {
             throw new RuntimeException("getPlayer(OfflinePlayer) called on non HalfminerSystem HanStorage instance");
+        }
         return new HalfminerPlayer(playerConfig, p);
     }
 
     public HalfminerPlayer getPlayer(UUID uuid) throws PlayerNotFoundException {
-        if (uuidConfig == null)
+        if (uuidConfig == null) {
             throw new RuntimeException("getPlayer(UUID) called on non HalfminerSystem HanStorage instance");
+        }
         return new HalfminerPlayer(playerConfig, uuid);
+    }
+
+    public List<HalfminerPlayer> getAllPlayers() {
+
+        if (playerConfig != null) {
+            throw new RuntimeException("getAllPlayers() called on non HalfminerSystem HanStorage instance");
+        }
+
+        List<HalfminerPlayer> list = new ArrayList<>();
+        for (String uuidStr : playerConfig.getKeys(false)) {
+            try {
+                list.add(getPlayer(UUID.fromString(uuidStr)));
+            } catch (PlayerNotFoundException ignored) {}
+        }
+        return list;
     }
 
     @Override

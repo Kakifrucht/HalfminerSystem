@@ -45,7 +45,7 @@ public class Cmdstats extends HalfminerCommand {
         HalfminerPlayer compareWith = null;
         if (compare && !sender.equals(player.getBase())) compareWith = storage.getPlayer((Player) sender);
 
-        MessageBuilder.create("cmdStatsTop", hmc).sendMessage(sender);
+        MessageBuilder.create("cmdStatsHeader", hmc).sendMessage(sender);
         MessageBuilder.create("cmdStatsShow", hmc)
                 .addPlaceholderReplace("%PLAYER%", player.getName())
                 .addPlaceholderReplace("%SKILLGROUP%",

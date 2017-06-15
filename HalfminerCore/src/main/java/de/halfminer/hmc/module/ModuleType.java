@@ -21,6 +21,7 @@ public enum ModuleType {
     SKILL_LEVEL         ("SkillLevel"),
     STATIC_LISTENERS    ("StaticListeners"),
     STATS               ("Stats"),
+    STATS_TOP           ("StatsTop"),
     TITLES              ("Titles"),
     TPS                 ("Tps");
 

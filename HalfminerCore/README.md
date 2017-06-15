@@ -174,6 +174,11 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - View stats on rightclicking a player
       - Exempt permission
       - Show if player is AFK
+  - StatsTop
+    - Manages ordered player stat scoreboards
+      - Define which stats to track via config (integer based), set minimum value per stat
+      - Define max amount per board
+    - Optimized for performance, does updates asynchronously
   - Titles
     - Shows join title
       - Players online / money
@@ -291,6 +296,12 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
   - /stats
     - View own / other players stats
     - Allows to compare statistics easily
+  - /statstop
+    - View the leaderboards configured via ModStatsTop
+    - Shows all available leaderboards in a list
+    - By default, shows top 5 of selected board and the players position, plus the next and previous one to the player
+      - If executing player is not on board, shows last player and his own stat
+      - Specfify page number to scroll through the board
   - /vote
     - Shows vote links (custom per player) and current votecount
     - Execute custom actions when vote is received (configure Votifier to "/vote voted %PLAYER%")

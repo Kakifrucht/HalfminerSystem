@@ -61,6 +61,9 @@ commands:
   stats:
     description: View the statistics of a player
     aliases: [st]
+  statstop:
+    description: View the servers leaderboards
+    aliases: [sttop, top]
   vote:
     description: Vote for the server
 permissions:
@@ -92,6 +95,7 @@ permissions:
       hmc.spawn.others: true
       hmc.spawn.set: true
       hmc.stats: true
+      hmc.statstop: true
       hmc.vote: true
       hmc.bypass.*: true
       hmc.chat.*: true
@@ -147,6 +151,9 @@ permissions:
   hmc.stats:
     default: true
     description: Access to stats command
+  hmc.statstop:
+    default: true
+    description: Access to statstop command
   hmc.sell:
     default: true
     description: Access to sell command
