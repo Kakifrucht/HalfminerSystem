@@ -124,7 +124,7 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
 
     public List<HalfminerPlayer> getAllPlayers() {
 
-        if (playerConfig != null) {
+        if (playerConfig == null) {
             throw new RuntimeException("getAllPlayers() called on non HalfminerSystem HanStorage instance");
         }
 
