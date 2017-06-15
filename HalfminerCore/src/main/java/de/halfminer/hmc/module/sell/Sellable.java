@@ -1,115 +1,47 @@
 package de.halfminer.hmc.module.sell;
 
-import de.halfminer.hmc.CoreClass;
-import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /**
  * Class encapsulating an item that is up for sale, and it's necessary metadata, managed by {@link SellableMap}.
  * Also handles it's current unit price and returns revenue from given sell amount.
  */
-public class Sellable extends CoreClass {
+public interface Sellable {
 
-    // cyclic dependency alert
-    private final SellableMap sellableMap;
+    int getGroupId();
 
-    private final int groupId;
-    private final Material material;
-    private final short durability;
-    private final String messageName;
+    Material getMaterial();
 
-    private int baseUnitAmount;
+    short getDurability();
 
-    private Map<UUID, Integer> amountSoldBy = new HashMap<>();
-    private int currentUnitAmount;
-    private int amountUntilNextIncrease;
-    private int amountSoldTotal;
+    String getStateString();
 
+    int getBaseUnitAmount();
 
-    Sellable(SellableMap sellableMap, int groupId,
-             Material material, short durability, String messageName, int baseUnitAmount) {
-        super(false);
+    Map<UUID, Integer> getAmountSoldBy();
 
-        this.sellableMap = sellableMap;
+    int getCurrentUnitAmount();
 
-        this.groupId = groupId;
+    int getAmountUntilNextIncrease();
 
-        this.material = material;
-        this.durability = durability;
-        this.messageName = messageName;
+    int getAmountSoldTotal();
 
-        this.baseUnitAmount = baseUnitAmount;
-        doRandomReset();
-    }
+    void setState(String state);
 
-    int getGroupId() {
-        return groupId;
-    }
+    void doRandomReset();
 
-    Material getMaterial() {
-        return material;
-    }
+    boolean isSimiliar(Sellable sellable);
 
-    short getDurability() {
-        return durability;
-    }
+    void copyStateFromSellable(Sellable toCopy);
 
-    String getStateString() {
-        return currentUnitAmount + " " + amountUntilNextIncrease + " " + amountSoldTotal;
-    }
+    ItemStack getItemStack();
 
-    void setState(String state) {
-        StringArgumentSeparator separator = new StringArgumentSeparator(state);
-        currentUnitAmount = separator.getArgumentInt(0);
-        amountUntilNextIncrease = separator.getArgumentInt(1);
-        amountSoldTotal = separator.getArgumentInt(2);
-    }
-
-    void doRandomReset() {
-
-        Random rnd = new Random();
-        double priceVarianceFactor = sellableMap.getPriceVarianceFactor();
-
-        double factorRandomized = rnd.nextDouble() * priceVarianceFactor;
-        if (rnd.nextBoolean()) {
-            factorRandomized = -factorRandomized;
-        }
-
-        priceVarianceFactor = 1.0d + factorRandomized;
-        this.currentUnitAmount = (int) Math.round(priceVarianceFactor * (double) baseUnitAmount);
-        this.amountUntilNextIncrease = currentUnitAmount * sellableMap.getUnitsUntilIncrease();
-        amountSoldTotal = 0;
-    }
-
-    boolean isSimiliar(Sellable sellable) {
-        return sellable.getMaterial().equals(material) && sellable.getDurability() == durability;
-    }
-
-    void copyStateFromSellable(Sellable toCopy) {
-        this.baseUnitAmount = toCopy.baseUnitAmount;
-        this.amountSoldBy = toCopy.amountSoldBy;
-        this.currentUnitAmount = toCopy.currentUnitAmount;
-        this.amountUntilNextIncrease = toCopy.amountUntilNextIncrease;
-        this.amountSoldTotal = toCopy.amountSoldTotal;
-    }
-
-    public ItemStack getItemStack() {
-        return new ItemStack(material, 1, (short) Math.max(durability, 0));
-    }
-
-    public String getMessageName() {
-        return messageName;
-    }
+    String getMessageName();
 
     /**
      * Stack is matching if it is the same Material, has the same durability or any durability if this Sellable's
@@ -118,83 +50,14 @@ public class Sellable extends CoreClass {
      * @param itemStack item to compare
      * @return true if stacks match, false else
      */
-    public boolean isMatchingStack(ItemStack itemStack) {
-        return itemStack != null
-                && material.equals(itemStack.getType())
-                && (durability < 0 || durability == itemStack.getDurability())
-                && !itemStack.hasItemMeta();
-    }
+    boolean isMatchingStack(ItemStack itemStack);
 
-    public int getCurrentUnitAmount() {
-        return currentUnitAmount;
-    }
-
-    public int getBaseUnitAmount() {
-        return baseUnitAmount;
-    }
-
-    public int getAmountUntilNextIncrease() {
-        return amountUntilNextIncrease;
-    }
-
-    public int getAmountSoldTotal() {
-        return amountSoldTotal;
-    }
-
-    public double getRevenue(Player hasSold, int amountSold) {
-
-        double revenue = amountSold / (double) currentUnitAmount;
-
-        // update price if necessary
-        amountUntilNextIncrease -= amountSold;
-        amountSoldTotal += amountSold;
-        while (amountUntilNextIncrease <= 0) {
-
-            int newUnitAmount = (int) Math.round((double) currentUnitAmount * sellableMap.getPriceAdjustMultiplier());
-            if (newUnitAmount == currentUnitAmount) {
-                newUnitAmount++;
-            }
-
-            currentUnitAmount = newUnitAmount;
-            amountUntilNextIncrease += (currentUnitAmount * sellableMap.getUnitsUntilIncrease());
-
-            hasSold.playSound(hasSold.getLocation(), Sound.BLOCK_NOTE_HARP, 1.0f, 1.2f);
-
-            MessageBuilder mb = MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
-                    .addPlaceholderReplace("%NAME%", messageName)
-                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(currentUnitAmount));
-            mb.sendMessage(hasSold);
-            mb.logMessage(Level.INFO);
-        }
-
-        // update non persistent storage that holds information who sold how much of this sellable
-        if (amountSoldBy.containsKey(hasSold.getUniqueId())) {
-            int newAmount = amountSoldBy.get(hasSold.getUniqueId()) + amountSold;
-            amountSoldBy.put(hasSold.getUniqueId(), newAmount);
-        } else {
-            amountSoldBy.put(hasSold.getUniqueId(), amountSold);
-        }
-
-        return revenue;
-    }
+    double getRevenue(Player hasSold, int amountSold);
 
     /**
      * Gets the player and amount who sold most. This information is not persistent across restarts.
      *
      * @return {@link Map.Entry}, where key is {@link UUID} of player who sold most and value the amount as {@link Integer}
      */
-    public Map.Entry<UUID, Integer> soldMostBy() {
-        Map.Entry<UUID, Integer> soldMost = null;
-        for (Map.Entry<UUID, Integer> uuidIntegerEntry : amountSoldBy.entrySet()) {
-            if (soldMost == null || uuidIntegerEntry.getValue() > soldMost.getValue()) {
-                soldMost = uuidIntegerEntry;
-            }
-        }
-        return soldMost;
-    }
-
-    @Override
-    public String toString() {
-        return messageName + " (" + material.toString() + ") - " + currentUnitAmount + "/" + amountUntilNextIncrease;
-    }
+    Map.Entry<UUID, Integer> soldMostBy();
 }

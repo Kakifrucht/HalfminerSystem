@@ -2,6 +2,7 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.halfminer.hmc.module.sell.DefaultSellableMap;
 import de.halfminer.hmc.module.sell.SellCycleRefreshEvent;
 import de.halfminer.hmc.module.sell.Sellable;
 import de.halfminer.hmc.module.sell.SellableMap;
@@ -151,18 +152,18 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         logCurrentCycle();
 
         // broadcast player who sold most in last cycle (with delay)
-        Sellable mostSoldLastCycle = e.getSellableSoldMost();
+        Sellable mostSoldLastCycle = e.getSellableMostSoldLastCycle();
         if (mostSoldLastCycle != null) {
-            Map.Entry<UUID, Integer> mostSoldEntry = mostSoldLastCycle.soldMostBy();
 
-            // only broadcast if he sold at least 1k units of the item
-            int amountSold = mostSoldEntry.getValue();
-            if (amountSold > 1000) {
+            // only broadcast if player sold at least 1k units of the item
+            int amountSold = e.getAmountSoldMostLastCycle();
+            if (amountSold >= 1000) {
 
+                UUID uuidMostSoldLastCycle = e.getUuidSoldMostLastCycle();
                 scheduler.runTaskLater(hmc, () -> {
                     try {
                         MessageBuilder.create("modSellMostSoldBroadcast", hmc, "Sell")
-                                .addPlaceholderReplace("%PLAYER%", storage.getPlayer(mostSoldEntry.getKey()).getName())
+                                .addPlaceholderReplace("%PLAYER%", storage.getPlayer(uuidMostSoldLastCycle).getName())
                                 .addPlaceholderReplace("%ITEMNAME%", mostSoldLastCycle.getMessageName())
                                 .addPlaceholderReplace("%ITEMAMOUNT%", String.valueOf(amountSold))
                                 .broadcastMessage(true);
@@ -475,7 +476,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         boolean isReload = sellableMap != null;
         if (!isReload) {
-            sellableMap = new SellableMap();
+            sellableMap = new DefaultSellableMap();
             scheduler.runTaskTimer(hmc, this::refreshActiveInventories, 1200L, 1200L);
         }
 
