@@ -243,6 +243,22 @@ skillLevel:
   - 6Gold
   - 8Eisen
   - 7Noob
+statsTop:
+  #Maximum amount of entries per board, setting this value to high will increase plugin load times significantly
+  maxPerBoard: 100
+  #Time in seconds until boards refreshes online players
+  refreshIntervalSeconds: 180
+  #Three values seperated via comma for every separate board
+  #Values: Readable list name, datatype as string, minimum to appear on board
+  trackedStats:
+  - Blöcke gebrochen, blocksbroken, 100
+  - Blöcke platziert, blocksplaced, 100
+  - Kills, kills, 1
+  - Mobs getötet, mobkills, 10
+  - Geld verdient, revenue, 10
+  - Skilllevel, skilllevel, 1
+  - Zeit Online in Sekunden, timeonline, 1200
+  - Gevotet, votes, 1
 tps:
   #The higher, the more precise, however the tps will update slower
   ticksBetweenUpdate: 100
@@ -341,7 +357,7 @@ localization:
   cmdNewtpLog: 'Newtp: %PLAYER% wurde zu %LOCATION% teleportiert'
   cmdNewtpStart: '&aDu wirst an einen eigenen Ort teleportiert'
   cmdNewtpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'
-  cmdPinShow: '&7Deine aktuelle PIN lautet &a%PIN%&7, sie läuft in einer Stunde ab und ist nur über deine Internet Leitung gültig'
+  cmdPinShow: '~&7Deine aktuelle PIN läuft in einer Stunde ab und ist nur über deine Internet Leitung im Teamspeak und Forum gültig\n&3Teamspeak Freischaltung (&a/hilfe teamspeak/&3) &e>>\n&7Antworte dem &oHalfminer.de TSBot&7, nachdem du den Server betreten hast, mit dem Kommando &a&o!pin %PIN%\n&3Forum Freischaltung (&a/forum/&3) &e>>\n&a&l&ohttps://halfminer.de/rank.php?pin=%PIN%'
   cmdRankActionNotFound: '&cDie Aktion &e%ACTIONNAME% &cfür &b%PLAYER% &ckonnte nicht ausgeführt werden'
   cmdRankInvalidRankCommand: '&cUnbekannter Rang'
   cmdRankInvalidRankConfig: '&cUngültige Konfiguration: &r%INVALIDINPUT%'
@@ -369,10 +385,21 @@ localization:
   cmdSpawnSet: '&aSpawnpunkt wurde gesetzt'
   cmdStatsCompareInfo: '~&7Verwende &e/stats %PLAYER% compare/ &7zum vergleichen'
   cmdStatsCompareLegend: '&7Dein Wert ist &ahöher&7, Werte sind &egleich&7, dein Wert ist &cgeringer'
+  cmdStatsHeader: '&e&m-------------------&c&l Statistiken &e&m-------------------'
   cmdStatsOldnames: '&fAlte Namen: &e%OLDNAMES%'
   cmdStatsShow: '&3Statistiken von %PLAYER% &e>>\n&rSkillgruppe: &e%SKILLGROUP% &7| &rSkilllevel: &e%SKILLLEVEL%&7&o/22\n&rZeit Online: &e%ONLINETIME% &7Minuten | &rGeld: &e%REVENUE% &7HCs verdient\n&rKills: &e%KILLS% &7Mord(e) | &rDeaths: &e%DEATHS% &7Tod(e) | &rK/D: &e%KDRATIO%\n&rGevotet: &e%VOTES% &7mal | &rMobs: &e%MOBKILLS% &7Mobs getötet\n&rBlöcke: &e%BLOCKSPLACED% &7platziert | &e%BLOCKSBROKEN% &7gebrochen'
   cmdStatsShowotherStats: '&7Statistiken zu anderen Spielern: &e/stats <Spieler>'
-  cmdStatsTop: '&e&m-------------------&c&l Statistiken &e&m-------------------'
+  cmdStatstopDoesntExist: '&cDiese Bestenliste existiert nicht'
+  cmdStatstopHeader: '&3&l%BOARDNAME%'
+  cmdStatstopHeaderPaged: '&3&l%BOARDNAME%&7 | Seite %PAGE%'
+  cmdStatstopInvalidPage: '&cUngültige Seitenzahl, gebe eine Zahl zwischen &a1 &cund &a%MAXPAGE% &cein'
+  cmdStatstopListEntry: '~&7%NAME%: &a/statstop %TYPE%/'
+  cmdStatstopListHeader: '&e&m------------------&c&l Bestenlisten &e&m------------------'
+  cmdStatstopPageInfo: '~&7Blättern: &a/statstop %TYPE% 1/'
+  cmdStatstopPageNext: '~&7Nächste Seite: &a/statstop %TYPE% %PAGE%/'
+  cmdStatstopPosition: '&e%RANK%. &f%SELFPREFIX%&l%PLAYER%&7 - &a%VALUE%'
+  cmdStatstopSelfPrefix: '&6'
+  cmdStatstopSelfUnranked: 'Unranked'
   cmdVoteActionCacheError: 'Fehler beim lesen des Aktions Caches für %PLAYER%, Grund: %ERROR%'
   cmdVoteGrabReward: '~&7Hole dir deine Belohnung jetzt mit &a/vote getreward/'
   cmdVoteMessage: '&3Klicke folgenden Link zum Voten (kostenlos) &e>>\n&6&ohttps://halfminer.de/?name=%PLAYER%#voten'
@@ -467,6 +494,9 @@ localization:
   modStatsRightClick: '&fSkillgruppe: &6%SKILLGROUP% &7| &fKills: &6%KILLS% &7| &fK/D: &6%KDRATIO% %AFK%'
   modStatsRightClickAFKAppend: '&7(&cAbwesend&7)'
   modStatsRightClickExempt: '&fist ein Serverteammitglied und nimmt am Spiel nicht teil'
+  modStatsTopInvalidLine: 'StatsTop: Die angegebene Zeile "%LINE%" ist ungültig'
+  modStatsTopInvalidType: 'StatsTop: Der angegebene Statistiken Typ "%TYPE%" existiert nicht'
+  modStatsTopTypeAlreadyUsed: 'StatsTop: Es existiert bereits eine Liste vom Typ "%TYPE%"'
   modTitlesJoinFormat: '&7<<<< &6Halfminer&7 >>>>\n&7Kontostand: &a$%BALANCE%&f - &7Online: &a%PLAYERCOUNT% &7&oSpieler'
   modTitlesNewPlayerFormat: '&4Willkommen, %PLAYER%!\n&7Verwende &e&l/neutp &7zum loslegen!'
   modTitlesNewPlayerFormatBar: '&7Verwende &e&l/neutp &7zum starten!'

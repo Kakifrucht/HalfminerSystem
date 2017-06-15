@@ -73,7 +73,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     private Map<Inventory, Player> activeMenus;
     private BukkitTask menuRefreshTask;
 
-    private Cache<UUID, Double> potentialRevenueLostCache = CacheBuilder.newBuilder()
+    private final Cache<UUID, Double> potentialRevenueLostCache = CacheBuilder.newBuilder()
             .expireAfterWrite(20, TimeUnit.MINUTES)
             .concurrencyLevel(1)
             .build();

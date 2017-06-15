@@ -32,4 +32,16 @@ public enum DataType {
     public String toString() {
         return name;
     }
+
+    public static DataType getFromString(String string) {
+
+        String lowercase = string.toLowerCase();
+        for (DataType dataType : values()) {
+            if (dataType.toString().equals(lowercase)) {
+                return dataType;
+            }
+        }
+
+        return null;
+    }
 }
