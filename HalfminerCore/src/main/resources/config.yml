@@ -375,6 +375,7 @@ localization:
   cmdSellAutoOn: '&7Die Inhalte von Kisten, die du schließt, werden von nun an &aautomatisch &7verkauft'
   cmdSigneditCopy: '&7Klicke das Schild, welches du kopieren möchtest, erstelle &e%AMOUNT% &7Kopien'
   cmdSigneditLinePasted: '&aSchild editiert'
+  cmdSigneditLinePastedWarn: '&aSchild editiert&7, die Eingabe ist eventuell zu lang um korrekt angezeigt zu werden'
   cmdSigneditSet: '&7Klicke ein Schild, um Zeile &e%LINE% &7zu ''&r%TEXT%&7'' zu ändern'
   cmdSigneditSignCopied: '&7Schild kopiert, klicke auf das Schild, auf welches die Kopie angewandt werden soll'
   cmdSigneditSignPasted: '&aText eingefügt, es verbleiben &e%AMOUNT% &aKopien'

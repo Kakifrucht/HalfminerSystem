@@ -21,7 +21,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
 
     // Single line editing data
     private int lineNumber;
-    private String lineText;
+    private String lineText = "";
 
     // Sign copy data
     private int amountToCopy;
@@ -67,17 +67,14 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
             try {
                 lineNumber = Integer.parseInt(args[0]) - 1;
                 if (lineNumber >= 0 && lineNumber < 4) {
-                    String setTo = "";
-                    if (args.length > 1) {
-                        setTo = Utils.arrayToString(args, 1, true);
-                        if (setTo.length() > 15) setTo = setTo.substring(0, 15); // truncate if necessary
-                    }
 
-                    this.lineText = setTo;
+                    if (args.length > 1) {
+                        lineText = Utils.arrayToString(args, 1, true);
+                    }
 
                     MessageBuilder.create("cmdSigneditSet", hmc, PREFIX)
                             .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber + 1))
-                            .addPlaceholderReplace("%TEXT%", setTo)
+                            .addPlaceholderReplace("%TEXT%", lineText)
                             .sendMessage(player);
                     setPersistent(player.getUniqueId());
                     return;
@@ -121,7 +118,8 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                             .sendMessage(player);
                 } else {
                     sign.setLine(lineNumber, lineText);
-                    MessageBuilder.create("cmdSigneditLinePasted", hmc, PREFIX).sendMessage(player);
+                    String messageKey = lineText.length() > 15 ? "cmdSigneditLinePastedWarn" : "cmdSigneditLinePasted";
+                    MessageBuilder.create(messageKey, hmc, PREFIX).sendMessage(player);
                     isDone = true;
                 }
 
