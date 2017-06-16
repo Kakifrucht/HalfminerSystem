@@ -248,15 +248,15 @@ statsTop:
   maxPerBoard: 100
   #Time in seconds until boards refresh online players (refresh after logout still happens regardless)
   refreshIntervalSeconds: 180
-  #Three values seperated via comma for every separate board
-  #Values: Readable list name, datatype as string, minimum to appear on board
+  #Three (optionally four) values seperated via comma for every separate board
+  #Values: Readable list name, datatype as string, minimum to appear on board[, maximum to appear on board]
   trackedStats:
   - Blöcke gebrochen, blocksbroken, 100
   - Blöcke platziert, blocksplaced, 100
   - Kills, kills, 1
   - Mobs getötet, mobkills, 10
   - Geld verdient, revenue, 10
-  - Skilllevel, skilllevel, 1
+  - Skilllevel, skilllevel, 1, 22
   - Zeit Online in Sekunden, timeonline, 1200
   - Gevotet, votes, 1
 tps:

@@ -176,8 +176,9 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Show if player is AFK
   - StatsTop
     - Manages ordered player stat scoreboards
-      - Define which stats to track via config (integer based), set minimum value per stat
-      - Define max amount per board
+      - Define which stats to track via config (integer based)
+      - Define max board size
+      - Define min and max amount to be on on board
     - Optimized for performance, does updates asynchronously
   - Titles
     - Shows join title

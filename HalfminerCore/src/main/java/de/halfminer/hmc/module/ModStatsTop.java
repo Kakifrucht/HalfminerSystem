@@ -16,8 +16,9 @@ import java.util.stream.Collectors;
 
 /**
  * - Manages ordered player stat scoreboards
- *   - Define which stats to track via config (integer based), set minimum value per stat
- *   - Define max amount per board
+ *   - Define which stats to track via config (integer based)
+ *   - Define max board size
+ *   - Define min and max amount to be on on board
  * - Optimized for performance, does updates asynchronously
  */
 @SuppressWarnings("unused")
@@ -60,6 +61,7 @@ public class ModStatsTop extends HalfminerModule {
             String name = argumentSeparator.getArgument(0);
             DataType type = DataType.getFromString(argumentSeparator.getArgument(1));
             int minimumValue = argumentSeparator.getArgumentIntMinimum(2, 1);
+            int maximumValue = Integer.MAX_VALUE;
 
             if (type == null) {
                 MessageBuilder.create("modStatsTopInvalidType", hmc)
@@ -76,16 +78,20 @@ public class ModStatsTop extends HalfminerModule {
                 continue;
             }
 
+            if (argumentSeparator.meetsLength(4)) {
+                maximumValue = argumentSeparator.getArgumentIntMinimum(3, minimumValue);
+            }
+
             TopBoard board;
             if (boardsOld != null && boardsOld.containsKey(type)) {
                 board = boardsOld.get(type);
 
-                boolean needsInsert = board.updateConfig(name, maxEntriesPerBoard, minimumValue);
+                boolean needsInsert = board.updateConfig(name, maxEntriesPerBoard, minimumValue, maximumValue);
                 if (needsInsert) {
                     insertAllPlayersTo.add(board);
                 }
             } else {
-                board = new DefaultTopBoard(type, name, maxEntriesPerBoard, minimumValue);
+                board = new DefaultTopBoard(type, name, maxEntriesPerBoard, minimumValue, maximumValue);
                 insertAllPlayersTo.add(board);
             }
             boards.put(type, board);
@@ -93,7 +99,7 @@ public class ModStatsTop extends HalfminerModule {
 
         if (!insertAllPlayersTo.isEmpty()) {
             List<HalfminerPlayer> allPlayers = storage.getAllPlayers();
-            insertAllPlayersTo.forEach(board -> board.insertOrUpdatePlayers(allPlayers));
+            insertAllPlayersTo.forEach(board -> board.insertOrUpdatePlayers(allPlayers, true));
         }
 
         if (refreshTask != null) {

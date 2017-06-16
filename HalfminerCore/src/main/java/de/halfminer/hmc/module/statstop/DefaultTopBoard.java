@@ -23,12 +23,13 @@ public class DefaultTopBoard implements TopBoard {
     private String name;
     private int maxEntriesPerBoard;
     private int minimumValue;
+    private int maximumValue;
 
 
-    public DefaultTopBoard(DataType dataType, String name, int maxEntriesPerBoard, int minimumValue) {
+    public DefaultTopBoard(DataType dataType, String name, int maxEntriesPerBoard, int minimumValue, int maximumValue) {
         this.dataType = dataType;
         board = Collections.synchronizedList(new ArrayList<>(maxEntriesPerBoard));
-        updateConfig(name, maxEntriesPerBoard, minimumValue);
+        updateConfig(name, maxEntriesPerBoard, minimumValue, maximumValue);
     }
 
     @Override
@@ -47,20 +48,24 @@ public class DefaultTopBoard implements TopBoard {
     }
 
     @Override
-    public boolean updateConfig(String name, int maxEntriesPerBoard, int minimumValue) {
+    public boolean updateConfig(String name, int maxEntriesPerBoard, int minimumValue, int maximumValue) {
 
         this.name = name;
         int maxEntriesPerBoardOld = this.maxEntriesPerBoard;
         int minimumValueOld = this.minimumValue;
+        int maximumValueOld = this.maximumValue;
         this.maxEntriesPerBoard = maxEntriesPerBoard;
         this.minimumValue = minimumValue;
+        this.maximumValue = maximumValue;
 
         synchronized (board) {
             doBoardTrim();
         }
 
-        // if board was made bigger or minimum value was lowered, return true to ask for reinsert of players
-        return maxEntriesPerBoardOld < maxEntriesPerBoard || minimumValueOld > minimumValue;
+        // if board was made bigger or min/max value was lowered/increased, return true to ask for reinsert of players
+        return maxEntriesPerBoardOld < maxEntriesPerBoard
+                || minimumValueOld > minimumValue
+                || maximumValueOld < maximumValue;
     }
 
     @Override
@@ -87,8 +92,8 @@ public class DefaultTopBoard implements TopBoard {
 
         int currentIndex = getIndex(toUpdate);
         int value = toUpdate.getInt(dataType);
-        if (value < minimumValue) {
-            // below threshold, remove if currently on board
+        if (value < minimumValue || value > maximumValue) {
+            // remove if currently on board
             if (currentIndex >= 0) {
                 board.remove(currentIndex);
             }
@@ -151,7 +156,19 @@ public class DefaultTopBoard implements TopBoard {
 
     @Override
     public void insertOrUpdatePlayers(List<HalfminerPlayer> toUpdate) {
+        insertOrUpdatePlayers(toUpdate, false);
+    }
+
+    @Override
+    public void insertOrUpdatePlayers(List<HalfminerPlayer> toUpdate, boolean clearFill) {
+
+        if (clearFill) {
+            board.clear();
+            hasInitialLoad = false;
+        }
+
         toUpdate.forEach(this::insertOrUpdatePlayer);
+
         if (!hasInitialLoad) {
             hasInitialLoad = true;
         }
@@ -167,6 +184,9 @@ public class DefaultTopBoard implements TopBoard {
 
     private void doBoardTrim() {
         if (!board.isEmpty()) {
+            while (board.get(0).getRight() > maximumValue) {
+                board.remove(0);
+            }
             while (board.size() > maxEntriesPerBoard || (getLowestValue() < minimumValue)) {
                 board.remove(board.size() - 1);
             }

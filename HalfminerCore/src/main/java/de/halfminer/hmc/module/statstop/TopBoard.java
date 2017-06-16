@@ -24,14 +24,22 @@ public interface TopBoard {
      * @param name clean and readable name for this board
      * @param maxEntriesPerBoard new value for how many entries are allowed on it
      * @param minimumValue new value for lowest amount on board
-     * @return true if maxEntriesPerBoard value was increased or minimumValue value was reduced to indicate that it
-     *         should be tried to refill the board
+     * @param maximumValue new value for highest amount on board
+     * @return true if settings were changed in a way a refill of all players should be done, for example
+     *          due to increasing of maxEntriesOnBoard
      */
-    boolean updateConfig(String name, int maxEntriesPerBoard, int minimumValue);
+    boolean updateConfig(String name, int maxEntriesPerBoard, int minimumValue, int maximumValue);
 
     int getIndex(HalfminerPlayer player);
 
     void insertOrUpdatePlayer(HalfminerPlayer toUpdate);
 
     void insertOrUpdatePlayers(List<HalfminerPlayer> toUpdate);
+
+    /**
+     * Insert or update players on board
+     * @param toUpdate list of players to insert/update
+     * @param clearFill will clear current board if true, increases performance when readding every player
+     */
+    void insertOrUpdatePlayers(List<HalfminerPlayer> toUpdate, boolean clearFill);
 }
