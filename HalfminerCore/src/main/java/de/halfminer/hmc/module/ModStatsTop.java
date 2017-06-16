@@ -7,6 +7,7 @@ import de.halfminer.hms.util.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  * - Optimized for performance, does updates asynchronously
  */
 @SuppressWarnings("unused")
-public class ModStatsTop extends HalfminerModule {
+public class ModStatsTop extends HalfminerModule implements Listener {
 
     private Map<DataType, TopBoard> boards;
 
