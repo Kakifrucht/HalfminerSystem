@@ -67,7 +67,7 @@ public class Cmdstatstop extends HalfminerCommand {
                     return;
                 }
 
-                boolean doCompare = isPlayer && thisPlayer != toLookup;
+                boolean doCompare = isPlayer && !toLookup.equals(thisPlayer);
 
                 scheduler.runTaskAsynchronously(hmc, () -> {
 
