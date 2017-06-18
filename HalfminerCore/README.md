@@ -303,6 +303,8 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - By default, shows top 5 of selected board and the players position, plus the next and previous one to the player
       - If executing player is not on board, shows last player and his own stat
       - Specfify page number to scroll through the board
+    - View position on every board at once
+      - Specify player to compare ranks easily
   - /vote
     - Shows vote links (custom per player) and current votecount
     - Execute custom actions when vote is received (configure Votifier to "/vote voted %PLAYER%")
