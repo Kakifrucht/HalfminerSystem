@@ -67,7 +67,7 @@ public class Cmdstatstop extends HalfminerCommand {
                     return;
                 }
 
-                boolean doCompare = thisPlayer != null && thisPlayer != toLookup;
+                boolean doCompare = isPlayer && thisPlayer != toLookup;
 
                 scheduler.runTaskAsynchronously(hmc, () -> {
 
@@ -77,16 +77,15 @@ public class Cmdstatstop extends HalfminerCommand {
 
                     for (TopBoard board : topBoardMap.values()) {
 
-                        int index = board.getIndex(toLookup);
+                        int index = board.getIndex(toLookup) + 1;
                         String indexStr;
-                        if (index != Integer.MIN_VALUE) {
-                            index++;
+                        if (index > 0) {
                             indexStr = MessageBuilder.create("cmdStatstopPlayerEntryRank", hmc)
                                     .addPlaceholderReplace("%RANK%", String.valueOf(index))
                                     .returnMessage();
                         } else {
                             indexStr = getUnrankedString();
-                            index = Integer.MAX_VALUE;
+                            index = Integer.MAX_VALUE; // to compare easily
                         }
 
                         int indexCompare = Integer.MIN_VALUE;
@@ -96,10 +95,11 @@ public class Cmdstatstop extends HalfminerCommand {
                         }
 
                         String messageKey = "cmdStatstopPlayerEntry";
-                        // comparison takes place if our index is higher than 1
-                        if (doCompare && indexCompare >= 0) {
+                        // comparison only takes place if we are not unranked
+                        if (doCompare && indexCompare > 0) {
                             messageKey += "Compare";
 
+                            // green if we are ranked higher, else red
                             ChatColor color = indexCompare < index ? ChatColor.GREEN : ChatColor.RED;
                             indexCompareStr = MessageBuilder.create("cmdStatstopPlayerEntryRank", hmc)
                                     .addPlaceholderReplace("%RANK%", color.toString() + indexCompare)
@@ -119,8 +119,9 @@ public class Cmdstatstop extends HalfminerCommand {
                 });
 
                 return;
-            } // player scoreboard lookup and comparison end
+            } // -- end player scoreboard lookup and comparison
 
+            // we are trying to get the specified board
             DataType type = DataType.getFromString(args[0]);
             if (type == null || !topBoardMap.containsKey(type)) {
                 MessageBuilder.create("cmdStatstopDoesntExist", hmc, "Statstop").sendMessage(sender);
