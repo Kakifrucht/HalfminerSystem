@@ -2,7 +2,7 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hms.exceptions.CachingException;
+import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.cache.CustomAction;

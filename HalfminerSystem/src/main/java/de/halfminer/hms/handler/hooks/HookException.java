@@ -1,4 +1,4 @@
-package de.halfminer.hms.exceptions;
+package de.halfminer.hms.handler.hooks;
 
 /**
  * Thrown if a plugin wasn't hooked

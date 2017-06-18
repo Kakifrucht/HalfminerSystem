@@ -3,7 +3,7 @@ package de.halfminer.hmc.cmd;
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModRespawn;
-import de.halfminer.hms.exceptions.PlayerNotFoundException;
+import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.handler.HanTeleport;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.OfflinePlayer;

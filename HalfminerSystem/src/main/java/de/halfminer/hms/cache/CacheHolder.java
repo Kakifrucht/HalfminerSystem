@@ -1,6 +1,6 @@
 package de.halfminer.hms.cache;
 
-import de.halfminer.hms.exceptions.CachingException;
+import de.halfminer.hms.cache.exceptions.CachingException;
 import org.bukkit.plugin.Plugin;
 
 /**

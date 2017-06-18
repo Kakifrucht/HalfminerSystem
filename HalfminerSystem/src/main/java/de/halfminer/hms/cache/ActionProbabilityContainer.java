@@ -1,7 +1,7 @@
 package de.halfminer.hms.cache;
 
-import de.halfminer.hms.exceptions.CachingException;
-import de.halfminer.hms.exceptions.FormattingException;
+import de.halfminer.hms.cache.exceptions.CachingException;
+import de.halfminer.hms.util.FormattingException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;

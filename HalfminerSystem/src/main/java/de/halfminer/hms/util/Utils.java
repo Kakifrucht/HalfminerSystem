@@ -1,7 +1,6 @@
 package de.halfminer.hms.util;
 
 import com.google.common.cache.Cache;
-import de.halfminer.hms.exceptions.FormattingException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

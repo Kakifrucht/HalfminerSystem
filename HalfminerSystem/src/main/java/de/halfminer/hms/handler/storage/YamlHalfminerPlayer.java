@@ -1,6 +1,5 @@
 package de.halfminer.hms.handler.storage;
 
-import de.halfminer.hms.exceptions.PlayerNotFoundException;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

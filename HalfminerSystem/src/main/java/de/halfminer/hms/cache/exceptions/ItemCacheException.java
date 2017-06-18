@@ -1,4 +1,4 @@
-package de.halfminer.hms.exceptions;
+package de.halfminer.hms.cache.exceptions;
 
 import de.halfminer.hms.cache.CustomitemCache;
 import de.halfminer.hms.util.Utils;

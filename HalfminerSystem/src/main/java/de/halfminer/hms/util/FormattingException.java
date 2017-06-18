@@ -1,4 +1,4 @@
-package de.halfminer.hms.exceptions;
+package de.halfminer.hms.util;
 
 /**
  * Exception thrown when user input (config) is not in expected format
@@ -7,7 +7,7 @@ public class FormattingException extends Exception {
 
     private final String message;
 
-    public FormattingException(String message) {
+    FormattingException(String message) {
         this.message = message;
     }
 

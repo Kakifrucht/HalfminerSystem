@@ -2,7 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hms.exceptions.PlayerNotFoundException;
+import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

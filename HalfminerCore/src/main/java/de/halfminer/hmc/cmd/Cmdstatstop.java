@@ -4,7 +4,7 @@ import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.module.ModStatsTop;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.statstop.TopBoard;
-import de.halfminer.hms.exceptions.PlayerNotFoundException;
+import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
