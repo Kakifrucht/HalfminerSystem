@@ -80,8 +80,9 @@ public class Cmdstatstop extends HalfminerCommand {
                         int index = board.getIndex(toLookup);
                         String indexStr;
                         if (index != Integer.MIN_VALUE) {
+                            index++;
                             indexStr = MessageBuilder.create("cmdStatstopPlayerEntryRank", hmc)
-                                    .addPlaceholderReplace("%RANK%", String.valueOf(index + 1))
+                                    .addPlaceholderReplace("%RANK%", String.valueOf(index))
                                     .returnMessage();
                         } else {
                             indexStr = getUnrankedString();
@@ -91,13 +92,11 @@ public class Cmdstatstop extends HalfminerCommand {
                         int indexCompare = Integer.MIN_VALUE;
                         String indexCompareStr = "";
                         if (doCompare) {
-                            indexCompare = board.getIndex(thisPlayer);
-                            indexCompareStr = (indexCompare >
-                                    index ? ChatColor.GREEN.toString()
-                                    : ChatColor.RED.toString()) + indexCompare;
+                            indexCompare = board.getIndex(thisPlayer) + 1;
                         }
 
                         String messageKey = "cmdStatstopPlayerEntry";
+                        // comparison takes place if our index is higher than 1
                         if (doCompare && indexCompare >= 0) {
                             messageKey += "Compare";
 

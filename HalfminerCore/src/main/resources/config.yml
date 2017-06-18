@@ -400,7 +400,7 @@ localization:
   cmdStatstopPageInfo: '~&7Blättern: &a/statstop %TYPE% 1/'
   cmdStatstopPageNext: '~&7Nächste Seite: &a/statstop %TYPE% %PAGE%/'
   cmdStatstopPlayerEntry: '&f%BOARD% &7- %RANK%'
-  cmdStatstopPlayerEntryCompare: '&f%BOARD% &7- %RANK% &7(Du: &o%RANKCOMP%&7)'
+  cmdStatstopPlayerEntryCompare: '&f%BOARD% &7- %RANK%&7 | Du: &o%RANKCOMP%'
   cmdStatstopPlayerEntryRank: 'Rang &e%RANK%'
   cmdStatstopPlayerFooter: '~&7Bestenlisten einsehen: &a/statstop/'
   cmdStatstopPlayerHeader: '&3&lRänge von %PLAYER%'
