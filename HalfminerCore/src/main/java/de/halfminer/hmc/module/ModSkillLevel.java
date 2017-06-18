@@ -2,7 +2,7 @@ package de.halfminer.hmc.module;
 
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.manageable.Disableable;
-import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;

@@ -1,7 +1,7 @@
-package de.halfminer.hms.util;
+package de.halfminer.hms.handler.storage;
 
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
-import de.halfminer.hms.handler.storage.DataType;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,10 +10,9 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 /**
- * Object to access stored player information
+ * Implementation via {@link FileConfiguration Bukkit's Yaml config API}.
  */
-@SuppressWarnings({"SameParameterValue", "UnusedReturnValue"})
-public class HalfminerPlayer {
+public class YamlHalfminerPlayer implements HalfminerPlayer {
 
     private final UUID uuid;
     private OfflinePlayer player = null;
@@ -21,7 +20,7 @@ public class HalfminerPlayer {
     private final FileConfiguration storage;
     private final String path;
 
-    public HalfminerPlayer(FileConfiguration storage, OfflinePlayer p) {
+    public YamlHalfminerPlayer(FileConfiguration storage, OfflinePlayer p) {
 
         this.storage = storage;
 
@@ -30,7 +29,7 @@ public class HalfminerPlayer {
         this.path = uuid + ".";
     }
 
-    public HalfminerPlayer(FileConfiguration storage, UUID uuid) throws PlayerNotFoundException {
+    public YamlHalfminerPlayer(FileConfiguration storage, UUID uuid) throws PlayerNotFoundException {
 
         this.storage = storage;
 
@@ -123,6 +122,6 @@ public class HalfminerPlayer {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof HalfminerPlayer && this.uuid.equals(((HalfminerPlayer) o).uuid);
+        return o instanceof YamlHalfminerPlayer && this.uuid.equals(((YamlHalfminerPlayer) o).uuid);
     }
 }

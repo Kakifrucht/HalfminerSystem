@@ -5,9 +5,10 @@ import de.halfminer.hms.cache.CacheHolder;
 import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
+import de.halfminer.hms.handler.storage.YamlHalfminerPlayer;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -112,14 +113,14 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
         if (uuidConfig == null) {
             throw new RuntimeException("getPlayer(OfflinePlayer) called on non HalfminerSystem HanStorage instance");
         }
-        return new HalfminerPlayer(playerConfig, p);
+        return new YamlHalfminerPlayer(playerConfig, p);
     }
 
     public HalfminerPlayer getPlayer(UUID uuid) throws PlayerNotFoundException {
         if (uuidConfig == null) {
             throw new RuntimeException("getPlayer(UUID) called on non HalfminerSystem HanStorage instance");
         }
-        return new HalfminerPlayer(playerConfig, uuid);
+        return new YamlHalfminerPlayer(playerConfig, uuid);
     }
 
     public List<HalfminerPlayer> getAllPlayers() {

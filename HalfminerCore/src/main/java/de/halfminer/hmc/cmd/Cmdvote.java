@@ -5,7 +5,7 @@ import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.exceptions.CachingException;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
 import de.halfminer.hms.cache.ActionProbabilityContainer;
-import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

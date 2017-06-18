@@ -3,7 +3,7 @@ package de.halfminer.hmc.cmd;
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.HanTeleport;
-import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;

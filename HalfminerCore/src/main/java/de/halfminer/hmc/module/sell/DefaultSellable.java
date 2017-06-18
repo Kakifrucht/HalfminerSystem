@@ -26,7 +26,7 @@ public class DefaultSellable extends CoreClass implements Sellable {
     private final short durability;
     private final String messageName;
 
-    private int baseUnitAmount;
+    private final int baseUnitAmount;
 
     private Map<UUID, Integer> amountSoldBy;
     private int currentUnitAmount;

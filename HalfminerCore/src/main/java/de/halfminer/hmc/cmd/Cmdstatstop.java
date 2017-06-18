@@ -6,7 +6,7 @@ import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.statstop.TopBoard;
 import de.halfminer.hms.exceptions.PlayerNotFoundException;
 import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.ChatColor;

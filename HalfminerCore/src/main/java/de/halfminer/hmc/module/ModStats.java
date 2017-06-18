@@ -5,7 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;

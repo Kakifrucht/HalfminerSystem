@@ -1,7 +1,7 @@
 package de.halfminer.hmc.module.statstop;
 
 import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.Pair;
 
 import java.util.ArrayList;

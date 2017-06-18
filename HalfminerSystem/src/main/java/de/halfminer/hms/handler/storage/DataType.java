@@ -1,7 +1,7 @@
 package de.halfminer.hms.handler.storage;
 
 /**
- * Contains references to all stats type, usable with {@link de.halfminer.hms.util.HalfminerPlayer}
+ * Contains references to all stats type, usable with {@link HalfminerPlayer}
  */
 public enum DataType {
 

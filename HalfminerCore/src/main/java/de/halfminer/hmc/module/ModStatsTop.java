@@ -3,7 +3,7 @@ package de.halfminer.hmc.module;
 import de.halfminer.hmc.module.statstop.DefaultTopBoard;
 import de.halfminer.hmc.module.statstop.TopBoard;
 import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hms.util.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.event.EventHandler;
