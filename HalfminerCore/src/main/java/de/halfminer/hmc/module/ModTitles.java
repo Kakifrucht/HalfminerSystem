@@ -2,6 +2,7 @@ package de.halfminer.hmc.module;
 
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.hooks.HookException;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.UserDoesNotExistException;
@@ -36,8 +37,10 @@ public class ModTitles extends HalfminerModule implements Listener {
     public void joinTitles(PlayerJoinEvent e) {
 
         final Player joined = e.getPlayer();
+        final HalfminerPlayer hJoined = storage.getPlayer(joined);
 
-        if (!storage.getPlayer(joined).getBoolean(DataType.NEWTP_USED)) {
+        // if player hasn't used newtp and didn't pass 5000 minutes gametime, show newtp info instead of server news
+        if (!hJoined.getBoolean(DataType.NEWTP_USED) && hJoined.getInt(DataType.TIME_ONLINE) < 300000) {
 
             titleHandler.sendTitle(joined, MessageBuilder.create("modTitlesNewPlayerFormat", hmc)
                     .addPlaceholderReplace("%PLAYER%", joined.getName())
