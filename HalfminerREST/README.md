@@ -1,11 +1,12 @@
 # Halfminer REST Server
 Bukkit plugin containing a REST HTTP server, responding in JSON.
 
-To use SSL it is recommended to setup a reverse proxy pointing to the API, such as [nginx](https://nginx.org/en/).
+To use SSL it is recommended to setup a reverse proxy pointing to the configured port, such as [nginx](https://nginx.org/en/), while blocking direct access via firewall.
 
 ## Current features
 - Includes very light HTTP server ([nanohttpd](https://github.com/NanoHttpd/nanohttpd))
 - Define port and whitelisted IP's via config
+  - Toggle proxy mode to read real IP from header if running behind reverse proxy
 - Returns JSON messages
 - **REST Commands**
   - /player

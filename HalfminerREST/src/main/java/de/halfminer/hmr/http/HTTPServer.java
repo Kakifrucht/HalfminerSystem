@@ -19,11 +19,13 @@ public class HTTPServer extends NanoHTTPD {
 
     private final Logger logger;
     private final Set<String> whitelistedIPs;
+    private final boolean proxyMode;
 
-    public HTTPServer(Logger logger, int port, Set<String> whitelistedIPs) throws IOException {
+    public HTTPServer(Logger logger, int port, Set<String> whitelistedIPs, boolean proxyMode) throws IOException {
         super(port);
         this.logger = logger;
         this.whitelistedIPs = whitelistedIPs;
+        this.proxyMode = proxyMode;
         this.start();
     }
 
@@ -32,7 +34,7 @@ public class HTTPServer extends NanoHTTPD {
 
         Map<String, String> headers = session.getHeaders();
         String ipAddress;
-        if (headers.containsKey("x-real-ip")) {
+        if (proxyMode && headers.containsKey("x-real-ip")) {
             ipAddress = headers.get("x-real-ip");
         } else {
             ipAddress = session.getRemoteIpAddress();
@@ -127,5 +129,9 @@ public class HTTPServer extends NanoHTTPD {
                 .setMimeType(MIME_PLAINTEXT)
                 .setObjectToSerialize("An internal error has occurred")
                 .returnResponse();
+    }
+
+    public boolean isProxyMode() {
+        return proxyMode;
     }
 }

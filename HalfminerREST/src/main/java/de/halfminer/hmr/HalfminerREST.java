@@ -69,6 +69,8 @@ public class HalfminerREST extends JavaPlugin {
                             (server != null ?
                                     ChatColor.GREEN + "Yes, on port " + server.getListeningPort()
                                     : ChatColor.RED + "No"));
+                    sender.sendMessage("Proxy mode enabled? " + (server.isProxyMode() ?
+                            ChatColor.GREEN + "Yes" : ChatColor.RED + "No"));
                     break;
                 default:
                     sendUsage(sender);
@@ -104,8 +106,9 @@ public class HalfminerREST extends JavaPlugin {
             return false;
         }
 
+        boolean proxyMode = getConfig().getBoolean("server.proxyMode", false);
         try {
-            server = new HTTPServer(getLogger(), port, whitelist);
+            server = new HTTPServer(getLogger(), port, whitelist, proxyMode);
         } catch (IOException e) {
             getLogger().severe("Couldn't bind port " + port + ", disabling");
             return false;
