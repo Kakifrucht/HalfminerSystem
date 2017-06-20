@@ -176,8 +176,7 @@ public class Cmdstatstop extends HalfminerCommand {
                         HalfminerPlayer hPlayer = storage.getPlayer(player);
                         int indexOnBoard = topBoard.getIndex(hPlayer);
                         if (indexOnBoard > 3) {
-                            int startAt = indexOnBoard == 4 ? 5 : indexOnBoard - 1;
-                            for (int i = startAt; i <= indexOnBoard + 1 && i < topBoardList.size(); i++) {
+                            for (int i = Math.max(5, indexOnBoard - 1); i <= indexOnBoard + 1 && i < topBoardList.size(); i++) {
                                 addEntryMessageToQueue(i);
                             }
                         } else if (indexOnBoard < 0) {
