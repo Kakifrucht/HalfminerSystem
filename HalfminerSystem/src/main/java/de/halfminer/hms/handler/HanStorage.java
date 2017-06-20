@@ -23,14 +23,15 @@ import java.util.*;
 import java.util.logging.Level;
 
 /**
- * - Autosaves configuration
- * - Stores as flatfile(s) in YAML format
+ * - Data stored in YAML flatfiles
  *   - UUID storage/cache
  *   - Player data storage
  *   - Storage for other types of data
+ *   - Changes are being autosaved
  * - Can easily be queried via Bukkit API
+ *   - Get HalfminerPlayer object to grab stored user data
+ *   - Thread safe
  * - Holds customtext caches
- * - Thread safe
  */
 @SuppressWarnings({"unused", "SameParameterValue"})
 public class HanStorage extends HalfminerClass implements CacheHolder, Disableable, Reloadable {

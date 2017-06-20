@@ -4,6 +4,13 @@ Base Spigot plugin API for Minecraft Server [Two and a half Miner](https://halfm
 Contains handlers, caches and utilities that are shared between all Halfminer Bukkit/Spigot plugins in this repository.
 
 ## Current features
+- Central HalfminerManager serves as hub for persistence across plugins
+  - Manages configuration file updates
+  - (Un)Registers classes implementing Listener interface
+  - Registered classes may implement additional interfaces...
+    - Disableable interface, to be called when the parent plugin shuts down
+    - Reloadable interface, to be called when the plugins config was reloaded
+    - Sweepable interface, to be called in a set interval for cleanup
 - **Caches**
   - ActionProbabilityContainer
     - Class reading a list containing key:value pairings, where key is the probability as a number relative to other list elements and value is the action name
@@ -37,14 +44,13 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
       - skullowner: set the owner of the skull, only works if given material is "SKULL_ITEM"
     - Will throw exception if item wasn't given to player
   - CustomtextCache
-    - Autosaves configuration
-    - Stores as flatfile(s) in YAML format
-      - UUID storage/cache
-      - Player data storage
-      - Storage for other types of data
-    - Can easily be queried via Bukkit API
-    - Holds customtext caches
-    - Thread safe
+    - Flatfile based text cache, segmented in chapters
+    - To mark a chapter, use "#chaptername argument" (argument optional and not limited, case insensitive)
+       - Supports aliases via comma such as "#chaptername argument,alias argument"
+       - Supports wildcards, such as "#chaptername argument *" or "#chaptername *"
+       - Supports aliases in between via '|' char, such as #chapter subchapter|subchapteralias
+    - Automatic replacement of '&' with Minecraft color code
+    - If line ends with space char, add next line to current line
 - **Handlers**
   - BossBar
     - Send bar to specific player or broadcast
@@ -55,20 +61,15 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
     - Checks if plugins are loaded
     - Shortcuts to external api
   - Storage
-    - Autosave
-    - Flatfiles in .yml format
+    - Data stored in YAML flatfiles
       - Own UUID storage/cache
       - Player data storage
       - Storage for other types of data
-    - Can easily be queried with YAML API
-    - Caches customtext files
-      - To mark a chapter, use "#chaptername argument" (argument optional and not limited, case insensitive)
-        - Supports aliases via comma such as "#chaptername argument,alias argument"
-        - Supports wildcards, such as "#chaptername argument *" or "#chaptername *"
-        - Supports aliases in between via '|' char, such as #chapter subchapter|subchapteralias
-      - Automatic replacement of '&' with Bukkit color code
-      - If line ends with space char, add next line to current line
-    - Thread safe
+      - Changes are being autosaved
+    - Can easily be queried via Bukkit YAML API
+      - Get HalfminerPlayer object to grab stored user data
+      - Thread safe
+    - Holds CustomtextCaches
   - Teleport
     - Disallows movement
     - Change default time in config
@@ -81,9 +82,6 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
     - Actionbar title
     - Tablist titles
 - **Utils**
-  - HalfminerPlayer
-    - Allows retrieval of player stats
-    - Get object through storage handler
   - MessageBuilder
     - Used for messaging, broadcasting and logging of messages
     - Supports custom placeholders
