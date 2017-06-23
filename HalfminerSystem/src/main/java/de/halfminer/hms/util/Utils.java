@@ -5,9 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -211,7 +209,8 @@ public final class Utils {
     }
 
     /**
-     * Get the {@link Player} that made damage the damage, either by direct hit, bow or primed tnt
+     * Get the {@link Player} that made damage the damage,
+     * either by direct hit, bow, potions, effect cloud or primed tnt.
      *
      * @param e {@link EntityDamageByEntityEvent event} whose attacker should be extracted
      * @return player if attacker found or null
@@ -223,11 +222,18 @@ public final class Utils {
             return (Player) e.getDamager();
         } else if (e.getDamager() instanceof Projectile) {
             Projectile projectile = (Projectile) e.getDamager();
-            if (projectile.getShooter() instanceof Player) return (Player) projectile.getShooter();
+            if (projectile.getShooter() instanceof Player) {
+                return (Player) projectile.getShooter();
+            }
         } else if (e.getDamager() instanceof TNTPrimed) {
             TNTPrimed tnt = (TNTPrimed) e.getDamager();
             if (tnt.getSource() instanceof Player) {
                 return (Player) tnt.getSource();
+            }
+        } else if (e.getDamager() instanceof AreaEffectCloud) {
+            AreaEffectCloud cloud = (AreaEffectCloud) e.getDamager();
+            if (cloud.getSource() instanceof Player) {
+                return (Player) cloud.getSource();
             }
         }
         return null;

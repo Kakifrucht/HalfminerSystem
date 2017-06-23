@@ -1,9 +1,9 @@
 package de.halfminer.hmb.mode;
 
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
@@ -13,10 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityTeleportEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -36,12 +33,18 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class GlobalMode extends AbstractMode {
 
+    // config settings
     private boolean noHungerLossInBattle;
     private Set<String> nonBlockedCommands;
     private int queueCooldownSeconds;
     private boolean saveInventoryToDisk;
     private BukkitTask cleanupTask;
     private double teleportSpawnDistance;
+
+    /**
+     * Allow friendly fire via potions in arenas
+     */
+    private boolean uncancelNextPotionSplashEvent = false;
 
     public GlobalMode() {
         super(BattleModeType.GLOBAL);
@@ -320,12 +323,32 @@ public class GlobalMode extends AbstractMode {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPvPUncancel(EntityDamageByEntityEvent e) {
-        // Allow Faction members to fight
+        // Allow Faction members to do damage
         if (e.isCancelled()
                 && e.getEntity() instanceof Player
                 && pm.isInBattle(type, (Player) e.getEntity())
                 && !e.getEntity().equals(Utils.getDamagerFromEvent(e))) {
             e.setCancelled(false);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onSplashUncancelStore(PotionSplashEvent e) {
+        // to prevent factions/others from removing players from affectedEntities collection do cancel/uncancelling
+        if (e.getEntity().getShooter() instanceof Player) {
+            Player shooter = (Player) e.getEntity().getShooter();
+            if (pm.isInBattle(type, shooter)) {
+                uncancelNextPotionSplashEvent = true;
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onSplashUncancelRecover(PotionSplashEvent e) {
+        if (e.isCancelled() && uncancelNextPotionSplashEvent) {
+            e.setCancelled(false);
+            uncancelNextPotionSplashEvent = false;
         }
     }
 

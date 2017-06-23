@@ -20,7 +20,7 @@ Current features
     - Recovers players completely after fight (position, health/status, inventory if kit was used, potion effects)
       - Sets gamemode to adventure during fight
       - If a player has received non battle drops during battle, the items will be removed if used during battle and restored after
-    - Allows hitting even if damage was cancelled, for example due to fighting a clan member
+    - Allows damage dealing even if event was cancelled, for example due to fighting a clan member
     - Prevents teleporting into arenas via tp delay glitches (Essentials */tpa*) if not fighting
       - Prevents teleport of tameable mobs, such as wolves, into arenas
     - Games can be force ended with */hmb forceend*

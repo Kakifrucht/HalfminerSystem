@@ -93,7 +93,7 @@ localization:
   modeDuelRequestWasAccepted: '&7Deine Anfrage wurde von &e%PLAYER% &aakzeptiert'
   modeDuelRequestWasWaitingForMatch: '&e%PLAYER% &7hat auf einen Partner gewartet, deine Anfrage wurde daher akzeptiert'
   modeDuelRequestYourself: '&cDu kannst dir selber keine Anfrage schicken'
-  modeDuelShowHelp: '~&7Faire Duelle mit gleicher Ausrüstung in Arenen\n &e/&eduel <Spielername> - &7&oDuellanfrage schicken\n &e/&eduel <Spielername> nokit - &7&oDuellanfrage mit eigenen Sachen\n &a/duel match/ - &7&oDuellpartner finden\n &a/duel leave/ - &7&oWarteschlange verlassen\n &a/duel list/ - &7&oArenaliste anzeigen'
+  modeDuelShowHelp: '~&7Faire Duelle mit gleicher Ausrüstung in Arenen\n &e/&eduel <Spielername> &a- &7&oDuellanfrage schicken\n &e/&eduel <Spielername> nokit &a- &7&oDuellanfrage mit eigenen Sachen\n &a/duel match/ - &7&oDuellpartner finden\n &a/duel leave/ - &7&oWarteschlange verlassen\n &a/duel list/ - &7&oArenaliste anzeigen'
   modeDuelShowPartnerTitle: ' \n&fDuellpartner: &6&l%PLAYER%'
   modeDuelStartingLog: 'Duell startet zwischen %PLAYERA% und %PLAYERB% in Arena %ARENA%'
   modeDuelStartingLogNokit: 'Duell mit eigenen Sachen startet zwischen %PLAYERA% und %PLAYERB% in Arena %ARENA%'
