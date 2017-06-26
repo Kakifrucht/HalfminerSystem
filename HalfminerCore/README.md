@@ -85,6 +85,8 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Only shows one bar at a time
       - Shows bar and updates for 8 seconds max, or until other entity was hit
       - When entity was killed, shows bar in green and only for 2 seconds
+  - InventorySave
+    - Only drop non enchanted items on death if enabled
   - Motd
     - Configurable Serverlist Motd
       - Can be set via command

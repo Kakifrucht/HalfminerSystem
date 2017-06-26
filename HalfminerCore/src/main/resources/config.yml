@@ -126,6 +126,9 @@ glitchProtection:
   protectedMaterial:
   - BEDROCK
   - OBSIDIAN
+inventorySave:
+  #If enabled, will enable keep inventory on death and drop all non enchanted items
+  enable: false
 motd:
   #Minimum shown slot count
   playerCountThreshold: 50

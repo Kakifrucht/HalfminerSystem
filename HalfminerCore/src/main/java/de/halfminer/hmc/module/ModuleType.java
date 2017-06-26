@@ -13,6 +13,7 @@ public enum ModuleType {
     CRAFTING            ("Crafting"),
     GLITCH_PROTECTION   ("GlitchProtection"),
     HEALTH_BAR          ("HealthBar"),
+    INVENTORY_SAVE      ("InventorySave"),
     MOTD                ("Motd"),
     PERFORMANCE         ("Performance"),
     PVP                 ("PvP"),

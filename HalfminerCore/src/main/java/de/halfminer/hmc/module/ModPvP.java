@@ -186,12 +186,16 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 action.runAction(killer, victim);
             }
 
+            // killstreaks
             UUID killerUid = killer.getUniqueId();
             killStreak.remove(victim.getUniqueId());
 
             final int streak;
-            if (killStreak.containsKey(killerUid)) streak = this.killStreak.get(killerUid) + 1;
-            else streak = 1;
+            if (killStreak.containsKey(killerUid)) {
+                streak = this.killStreak.get(killerUid) + 1;
+            } else {
+                streak = 1;
+            }
 
             killStreak.put(killerUid, streak);
 
