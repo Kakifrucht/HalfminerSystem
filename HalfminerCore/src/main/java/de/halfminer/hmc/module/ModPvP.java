@@ -91,7 +91,9 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAttackReduceStrengthAndLowerImmunity(EntityDamageByEntityEvent e) {
 
-        if (!(e.getEntity() instanceof Player)) return;
+        if (!(e.getEntity() instanceof Player)) {
+            return;
+        }
 
         final Player damagee = (Player) e.getEntity();
         Player damager = Utils.getDamagerFromEvent(e);
@@ -102,17 +104,21 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         }
 
         if ((damager != null && damager.hasPermission("hmc.bypass.pvp"))
-                || damagee.hasPermission("hmc.bypass.pvp")) return;
+                || damagee.hasPermission("hmc.bypass.pvp")) {
+            return;
+        }
 
         // half damage immunity on next tick, else overwritten
         scheduler.runTaskLater(hmc, () -> {
-            // damage immunity passes when 10/20 has been reached
-            if (!e.isCancelled()) damagee.setNoDamageTicks(15);
+            // damage immunity passes when 10/20 has been reached (weird), 15 would be halving it
+            if (!e.isCancelled()) {
+                damagee.setNoDamageTicks(15);
+            }
         }, 0L);
 
         if (damager != null) {
 
-            // nerf strength potions
+            // nerf strength potions, DamageModifier API was deprecated, needs to be replaced sooner or later
             for (PotionEffect effect : damager.getActivePotionEffects()) {
                 if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
 
