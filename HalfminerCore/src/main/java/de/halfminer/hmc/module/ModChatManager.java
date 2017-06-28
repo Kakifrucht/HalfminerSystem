@@ -162,7 +162,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                             .addPlaceholderReplace("%PLAYER%", p.getName())
                             .returnMessage());
 
-            wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.2f, 1.8f);
+            wasMentioned.playSound(wasMentioned.getLocation(), Sound.BLOCK_NOTE_CHIME, 0.2f, 1.6f);
             this.wasMentioned.put(wasMentioned, true);
         }
 

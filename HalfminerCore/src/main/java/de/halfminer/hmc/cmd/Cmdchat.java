@@ -190,7 +190,10 @@ public class Cmdchat extends HalfminerCommand {
                 @Override
                 public void run() {
 
-                    if (count < 0) return;
+                    if (count < 0) {
+                        return;
+                    }
+
                     bar.broadcastBar(MessageBuilder.create("cmdChatCountdown", hmc)
                                     .addPlaceholderReplace("%COUNT%", String.valueOf(count))
                                     .returnMessage(),
@@ -325,7 +328,7 @@ public class Cmdchat extends HalfminerCommand {
                 .addPlaceholderReplace("%COMMAND%", command + "/") // append slash since it will be parsed
                 .broadcastMessage(false);
 
-        directRecipient.playSound(directRecipient.getLocation(), Sound.BLOCK_NOTE_HARP, 0.5f, 1.7f);
+        directRecipient.playSound(directRecipient.getLocation(), Sound.BLOCK_NOTE_BELL, 0.5f, 1.0f);
     }
 
     private void setMessage() {

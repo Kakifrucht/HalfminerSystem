@@ -144,7 +144,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         refreshActiveInventories();
 
-        server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 0.4f, 1.3f));
+        server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_FLUTE, 0.7f, 0.6f));
         MessageBuilder.create("modSellNewCycleBroadcast", hmc, "Sell")
                 .addPlaceholderReplace("%TIME%", String.valueOf(e.getTimeUntilNextCycle() / 60))
                 .broadcastMessage(true);

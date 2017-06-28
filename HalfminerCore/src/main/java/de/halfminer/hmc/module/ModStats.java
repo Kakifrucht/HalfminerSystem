@@ -192,7 +192,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
                         MessageBuilder.returnMessage("modStatsRightClickAFKAppend", hmc) : "")
                 .sendMessage(clicker);
 
-        clicker.playSound(clicked.getLocation(), Sound.BLOCK_SLIME_HIT, 1.0f, 2.0f);
+        clicker.playSound(clicked.getLocation(), Sound.BLOCK_NOTE_XYLOPHONE, 1.0f, 1.9f);
         lastInteract.put(clicker, clicked);
     }
 

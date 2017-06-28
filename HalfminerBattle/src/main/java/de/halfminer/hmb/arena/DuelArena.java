@@ -83,7 +83,7 @@ public class DuelArena extends AbstractArena {
             }
 
             private void playPlingSound() {
-                playersInArena.forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.6f));
+                playersInArena.forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_CHIME, 1.0f, 1.0f));
             }
 
         }, 0L, 20L);
