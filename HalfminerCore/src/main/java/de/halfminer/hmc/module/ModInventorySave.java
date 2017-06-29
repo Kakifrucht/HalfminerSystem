@@ -1,30 +1,39 @@
 package de.halfminer.hmc.module;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * - Only drop non enchanted items on death if enabled
+ * - Toggle EXP drop
  */
 @SuppressWarnings("unused")
 public class ModInventorySave extends HalfminerModule implements Listener {
 
     private boolean isEnabled;
+    private boolean keepLevel;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDeathKeepEnchantedItems(PlayerDeathEvent e) {
 
-        if (!isEnabled) {
+        Player player = e.getEntity();
+
+        // if player has inventory bypass permission and keepInventory is not set
+        if (!isEnabled
+                || (player.hasPermission("hmc.bypass.inventorysave") && e.getKeepInventory())) {
             return;
         }
 
         e.setKeepInventory(true);
+        e.setKeepLevel(keepLevel);
 
-        ItemStack[] inventory = e.getEntity().getInventory().getContents();
-        Location playerLocation = e.getEntity().getLocation();
+        ItemStack[] inventory = player.getInventory().getContents();
+        Location playerLocation = player.getLocation();
         for (int i = 0; i < inventory.length; i++) {
             ItemStack itemStack = inventory[i];
             if (itemStack != null
@@ -35,11 +44,18 @@ public class ModInventorySave extends HalfminerModule implements Listener {
                 inventory[i] = null;
             }
         }
-        e.getEntity().getInventory().setContents(inventory);
+
+        player.getInventory().setContents(inventory);
+
+        if (!keepLevel) {
+            e.setDroppedExp(Math.min(player.getLevel() * 7, 100));
+            player.setLevel(0);
+        }
     }
 
     @Override
     public void loadConfig() {
-        isEnabled = hmc.getConfig().getBoolean("inventorySave.enable", true);
+        isEnabled = hmc.getConfig().getBoolean("inventorySave.enable", false);
+        keepLevel = hmc.getConfig().getBoolean("inventorySave.keepLevel", false);
     }
 }

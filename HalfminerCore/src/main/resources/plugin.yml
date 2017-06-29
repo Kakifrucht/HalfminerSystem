@@ -108,6 +108,7 @@ permissions:
       hmc.bypass.combatlog: true
       hmc.bypass.commandfilter: true
       hmc.bypass.glitchcheck: true
+      hmc.bypass.inventorysave: true
       hmc.bypass.hopperlimit: true
       hmc.bypass.nethercheck: true
       hmc.bypass.nokillfarming: true
@@ -172,6 +173,8 @@ permissions:
     description: Bypass chat command filter
   hmc.bypass.glitchcheck:
     description: Bypass glitch movement check
+  hmc.bypass.inventorysave:
+    description: Bypass inventory dropping if keep inventory is set
   hmc.bypass.hopperlimit:
     description: Bypass hopper placement limit
   hmc.bypass.nethercheck:

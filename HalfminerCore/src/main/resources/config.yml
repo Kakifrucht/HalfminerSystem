@@ -129,6 +129,8 @@ glitchProtection:
 inventorySave:
   #If enabled, will enable keep inventory on death and drop all non enchanted items
   enable: false
+  #Keep levels on death, enable must be set to true
+  keepLevel: false
 motd:
   #Minimum shown slot count
   playerCountThreshold: 50

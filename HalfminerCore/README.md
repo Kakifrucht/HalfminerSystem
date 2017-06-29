@@ -87,6 +87,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - When entity was killed, shows bar in green and only for 2 seconds
   - InventorySave
     - Only drop non enchanted items on death if enabled
+    - Toggle EXP drop
   - Motd
     - Configurable Serverlist Motd
       - Can be set via command
