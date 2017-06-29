@@ -206,29 +206,26 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
 
         } else if (!cycleSellables.isEmpty()) {
 
-            // if cycle was already loaded, update with new values or discard if sellables are no longer available
-            List<Sellable> newCycleSellables = new ArrayList<>();
-            for (Sellable sellableCurrentCycle : cycleSellables) {
+            // if cycle was already loaded, update newly loaded sellables with old cycle data and add to cycle
+            List<Sellable> oldCycle = cycleSellables;
+            cycleSellables = new ArrayList<>();
+            cycleSellablesLookup.clear();
+            for (Sellable sellableCurrentCycle : oldCycle) {
 
                 boolean foundSimiliar = false;
                 for (Sellable sellable : sellables.get(sellableCurrentCycle.getGroupId())) {
                     if (sellable.isSimiliar(sellableCurrentCycle)) {
                         foundSimiliar = true;
                         sellable.copyStateFromSellable(sellableCurrentCycle);
-                        newCycleSellables.add(sellable);
+                        addSellableToCurrentCycle(sellable);
                         break;
                     }
                 }
 
                 if (!foundSimiliar) {
                     clearCurrentCycle();
-                    newCycleSellables = null;
                     break;
                 }
-            }
-
-            if (newCycleSellables != null) {
-                this.cycleSellables = newCycleSellables;
             }
         }
 
