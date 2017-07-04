@@ -3,11 +3,9 @@ package de.halfminer.hmc.module.sell;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 /**
- * Class managing {@link Sellable Sellables} read from config and the current cycle they are in,
- * aswell as storing/reading current cycle from cold storage and kicking off new cycles on demand.
+ * Class managing {@link Sellable Sellables} read from config and the current {@link SellCycle} they are being used in,
+ * aswell as reading current cycle from cold storage and kicking off/constructing new {@link SellCycle}'s.
  */
 public interface SellableMap {
 
@@ -17,9 +15,9 @@ public interface SellableMap {
 
     int getUnitsUntilIncrease();
 
-    long getCycleTimeLeft();
+    boolean hasCycle();
 
-    List<Sellable> getCycleSellables();
+    SellCycle getCurrentCycle();
 
     Sellable getSellableAtSlot(int slotId);
 
@@ -31,5 +29,5 @@ public interface SellableMap {
 
     void storeCurrentCycle();
 
-    void forceNewCycle();
+    void createNewCycle();
 }

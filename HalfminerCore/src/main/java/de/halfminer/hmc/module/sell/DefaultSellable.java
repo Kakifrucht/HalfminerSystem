@@ -17,7 +17,7 @@ import java.util.logging.Level;
 /**
  * Default implementation of {@link Sellable}.
  */
-public class DefaultSellable extends CoreClass implements Sellable {
+class DefaultSellable extends CoreClass implements Sellable {
 
     private final SellableMap sellableMap;
 
@@ -186,7 +186,6 @@ public class DefaultSellable extends CoreClass implements Sellable {
         } else {
             amountSoldBy.put(hasSold.getUniqueId(), amountSold);
         }
-
         return revenue;
     }
 

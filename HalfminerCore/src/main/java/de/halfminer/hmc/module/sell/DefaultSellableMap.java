@@ -2,12 +2,10 @@ package de.halfminer.hmc.module.sell;
 
 import de.halfminer.hmc.CoreClass;
 import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -17,28 +15,45 @@ import java.util.logging.Level;
  */
 public class DefaultSellableMap extends CoreClass implements SellableMap {
 
-    // cycle length vars
+    // integers used to determine the dynamic cycle time
     private int cycleTimeSecondsMax;
     private int cycleTimeSecondsMin;
     private int cycleMinPlayerCount;
 
-    // sell data and price determination
+    // sell data and price determination, passed to sellables
     private double priceAdjustMultiplier;
     private double priceVarianceFactor;
     private int unitsUntilIncrease;
 
     private Map<Integer, List<Sellable>> sellables = new HashMap<>();
-
-    // current cycle data
-    private List<Sellable> cycleSellables;
-    private Map<Pair<Material, Short>, Sellable> cycleSellablesLookup;
-    private long cycleExpiry;
-    private BukkitTask nextCycleTask;
+    private SellCycle currentCycle;
 
 
     public DefaultSellableMap() {
         super(false);
-        scheduler.runTaskTimerAsynchronously(hmc, this::storeCurrentCycle, 18000L, 18000L);
+
+        // dispatch task to run every minute for storing and cycle expiry checking
+        scheduler.runTaskTimer(hmc, new Runnable() {
+
+            private long lastCycleStoreTimestamp = System.currentTimeMillis();
+
+            @Override
+            public void run() {
+
+                if (!hasCycle()) {
+                    return;
+                }
+
+                checkNextCycle();
+
+                // store cycle every ~15 minutes
+                long currentTimeStamp = System.currentTimeMillis();
+                if (lastCycleStoreTimestamp + 900000 < currentTimeStamp) {
+                    lastCycleStoreTimestamp = currentTimeStamp;
+                    scheduler.runTaskAsynchronously(hmc, () -> storeCurrentCycle());
+                }
+            }
+        }, 1200L, 1200L);
     }
 
     @Override
@@ -57,30 +72,23 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
     }
 
     @Override
-    public long getCycleTimeLeft() {
-        return cycleExpiry - (System.currentTimeMillis() / 1000);
+    public SellCycle getCurrentCycle() {
+        return currentCycle;
     }
 
     @Override
-    public List<Sellable> getCycleSellables() {
-        return cycleSellables;
+    public boolean hasCycle() {
+        return currentCycle != null && !currentCycle.isEmpty();
     }
 
     @Override
     public Sellable getSellableAtSlot(int slotId) {
-        return slotId < cycleSellables.size() && slotId >= 0 ? cycleSellables.get(slotId) : null;
+        return hasCycle() ? currentCycle.getSellableAtSlot(slotId) : null;
     }
 
     @Override
     public Sellable getSellableFromItemStack(ItemStack item) {
-        Pair<Material, Short> lookupPair = new Pair<>(item.getType(), item.getDurability());
-        if (cycleSellablesLookup.containsKey(lookupPair)) {
-            return cycleSellablesLookup.get(lookupPair);
-        } else if (lookupPair.getRight() >= 0) {
-            lookupPair.setRight((short) -1);
-            return cycleSellablesLookup.get(lookupPair);
-        }
-        return null;
+        return currentCycle.getMatchingSellable(item.getType(), item.getDurability());
     }
 
     @Override
@@ -143,15 +151,13 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
             }
         }
 
-        // only proceed if sellables were loaded
+        // only proceed if any sellables were loaded
         if (sellables.isEmpty()) {
-            clearCurrentCycle();
+            currentCycle = null;
             return;
         }
 
-        if (cycleSellables == null) {
-
-            clearCurrentCycle(); // initial list and map instantiation
+        if (!hasCycle()) {
 
             // read old cycle from storage if possible (persistance after full reloads/restarts)
             Object cycleSectionObject = coreStorage.get("sellcycle");
@@ -159,7 +165,9 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
 
                 ConfigurationSection cycleSection = (ConfigurationSection) cycleSectionObject;
                 long cycleExpiry = cycleSection.getLong("expires");
-                if ((System.currentTimeMillis() / 1000) < cycleExpiry) {
+                currentCycle = new DefaultSellCycle(cycleExpiry);
+
+                if (currentCycle.getSecondsTillExpiry() > 0) {
 
                     for (String key : cycleSection.getKeys(false)) {
 
@@ -178,100 +186,54 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
                             for (Sellable sellable : sellablesInGroup) {
                                 if (sellable.getMaterial().equals(material) && sellable.getDurability() == durability) {
                                     sellable.setState(stateString);
-                                    addSellableToCurrentCycle(sellable);
+                                    currentCycle.addSellableToCycle(sellable);
                                     break;
                                 }
                             }
-
-                        } else {
-                            clearCurrentCycle();
-                            break;
                         }
                     }
-
-                    if (cycleSellables.isEmpty()) {
-                        MessageBuilder.create("modSellMapLogCycleNotLoaded", hmc).logMessage(Level.WARNING);
-                    } else {
-                        this.cycleExpiry = cycleExpiry;
-                    }
-
-                } else {
-                    // cycle expired already
-                    coreStorage.set("sellcycle", null);
                 }
 
             } else if (cycleSectionObject != null) {
                 MessageBuilder.create("modSellMapLogCycleInvalidFormat", hmc).logMessage(Level.WARNING);
             }
 
-        } else if (!cycleSellables.isEmpty()) {
+            checkNextCycle();
 
-            // if cycle was already loaded, update newly loaded sellables with old cycle data and add to cycle
-            List<Sellable> oldCycle = cycleSellables;
-            cycleSellables = new ArrayList<>();
-            cycleSellablesLookup.clear();
-            for (Sellable sellableCurrentCycle : oldCycle) {
+        } else /* if (hasCycle()) */ {
 
-                boolean foundSimiliar = false;
-                for (Sellable sellable : sellables.get(sellableCurrentCycle.getGroupId())) {
-                    if (sellable.isSimiliar(sellableCurrentCycle)) {
-                        foundSimiliar = true;
-                        sellable.copyStateFromSellable(sellableCurrentCycle);
-                        addSellableToCurrentCycle(sellable);
+            // cycle was already loaded, update newly loaded sellables with old cycle data and create new cycle
+            long expiryOldCycle = currentCycle.getExpiryTimestamp();
+            List<Sellable> oldCycle = currentCycle.getSellables();
+
+            currentCycle = new DefaultSellCycle(expiryOldCycle);
+            for (Sellable sellableOldCycle : oldCycle) {
+
+                for (Sellable sellable : sellables.get(sellableOldCycle.getGroupId())) {
+                    if (sellable.isSimiliar(sellableOldCycle)) {
+                        sellable.copyStateFromSellable(sellableOldCycle);
+                        currentCycle.addSellableToCycle(sellable);
                         break;
                     }
                 }
-
-                if (!foundSimiliar) {
-                    clearCurrentCycle();
-                    break;
-                }
             }
-        }
-
-        if (nextCycleTask == null || cycleSellables.isEmpty()) {
-            checkNextCycle();
         }
     }
 
     @Override
     public void storeCurrentCycle() {
-
-        if (cycleSellables != null && !cycleSellables.isEmpty()) {
-
-            coreStorage.set("sellcycle", null);
-            coreStorage.set("sellcycle.expires", cycleExpiry);
-
-            for (int i = 0; i < cycleSellables.size(); i++) {
-                Sellable sellable = cycleSellables.get(i);
-                String basePath = "sellcycle." + i + ".";
-                coreStorage.set(basePath + "groupId", sellable.getGroupId());
-                coreStorage.set(basePath + "material", sellable.getMaterial().toString());
-                coreStorage.set(basePath + "durability", sellable.getDurability());
-                coreStorage.set(basePath + "state", sellable.getStateString());
-            }
-        }
+        currentCycle.storeCurrentCycle(coreStorage);
     }
 
     @Override
-    public void forceNewCycle() {
-        cycleExpiry = 0L;
-        checkNextCycle();
-    }
+    public void createNewCycle() {
 
-    private void checkNextCycle() {
-
-        long currentTime = System.currentTimeMillis() / 1000;
-        long timeUntilNextCycle = cycleExpiry - currentTime;
-
-        // kick off next cycle
-        if (timeUntilNextCycle <= 0 || cycleSellables.isEmpty()) {
-
-            // determine top seller and amount in last cycle, will be passed via event
-            Sellable sellableSoldMost = null;
-            UUID uuidSoldMost = null;
-            int amountSoldMost = 0;
-            for (Sellable sellable : cycleSellables) {
+        // determine top seller and amount in last cycle, will be passed via event
+        Sellable sellableSoldMost = null;
+        UUID uuidSoldMost = null;
+        int amountSoldMost = 0;
+        if (hasCycle()) {
+            for (Sellable sellable : currentCycle.getSellables()) {
                 Map.Entry<UUID, Integer> playerAmountPair = sellable.soldMostBy();
                 if (playerAmountPair != null
                         && (sellableSoldMost == null
@@ -282,72 +244,70 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
                 }
             }
 
-            clearCurrentCycle();
+            currentCycle.getSellables().forEach(Sellable::doRandomReset);
+        }
 
-            // dynamically determine time until next cycle
-            int currentPlayerCount = server.getOnlinePlayers().size();
-            if (currentPlayerCount == 0) {
-                timeUntilNextCycle = cycleTimeSecondsMax;
-            } else if (currentPlayerCount >= cycleMinPlayerCount) {
-                timeUntilNextCycle = cycleTimeSecondsMin;
-            } else {
-                int difference = cycleTimeSecondsMax - cycleTimeSecondsMin;
-                int toTakeFromMax = (int) (difference * ((double) currentPlayerCount / cycleMinPlayerCount));
-                timeUntilNextCycle = cycleTimeSecondsMax - toTakeFromMax;
-            }
+        // dynamically determine time until next cycle
+        long timeUntilNextCycle;
+        int currentPlayerCount = server.getOnlinePlayers().size();
+        if (currentPlayerCount == 0) {
+            timeUntilNextCycle = cycleTimeSecondsMax;
+        } else if (currentPlayerCount >= cycleMinPlayerCount) {
+            timeUntilNextCycle = cycleTimeSecondsMin;
+        } else {
+            int difference = cycleTimeSecondsMax - cycleTimeSecondsMin;
+            int toTakeFromMax = (int) (difference * ((double) currentPlayerCount / cycleMinPlayerCount));
+            timeUntilNextCycle = cycleTimeSecondsMax - toTakeFromMax;
+        }
 
-            cycleExpiry = currentTime + timeUntilNextCycle;
+        currentCycle = new DefaultSellCycle((System.currentTimeMillis() / 1000) + timeUntilNextCycle);
 
-            Random rnd = new Random();
-            for (Integer amount : sellables.keySet()) {
+        // randomly determine cycle items
+        Random rnd = new Random();
+        for (Integer amount : sellables.keySet()) {
 
-                Set<Sellable> group = new HashSet<>(sellables.get(amount));
-                for (int leftToAdd = Math.min(amount, group.size()); leftToAdd > 0; leftToAdd--) {
+            Set<Sellable> group = new HashSet<>(sellables.get(amount));
+            for (int leftToAdd = Math.min(amount, group.size()); leftToAdd > 0; leftToAdd--) {
 
-                    int currentElement = 0;
-                    int elementToGet = rnd.nextInt(group.size());
+                int currentElement = 0;
+                int elementToGet = rnd.nextInt(group.size());
 
-                    Iterator<Sellable> iterator = group.iterator();
-                    while (iterator.hasNext()) {
-                        Sellable current = iterator.next();
-                        if (elementToGet == currentElement) {
-                            addSellableToCurrentCycle(current);
-                            iterator.remove();
-                            break;
-                        }
-                        currentElement++;
+                Iterator<Sellable> iterator = group.iterator();
+                while (iterator.hasNext()) {
+                    Sellable current = iterator.next();
+                    if (elementToGet == currentElement) {
+                        currentCycle.addSellableToCycle(current);
+                        iterator.remove();
+                        break;
                     }
+                    currentElement++;
                 }
             }
-
-            storeCurrentCycle();
-            server.getPluginManager().callEvent(
-                    new SellCycleRefreshEvent(timeUntilNextCycle, sellableSoldMost, uuidSoldMost, amountSoldMost)
-            );
         }
 
-        nextCycleTask = scheduler.runTaskLater(hmc, this::checkNextCycle, timeUntilNextCycle * 20);
+        storeCurrentCycle();
+        server.getPluginManager().callEvent(
+                new SellCycleRefreshEvent(timeUntilNextCycle, sellableSoldMost, uuidSoldMost, amountSoldMost)
+        );
     }
 
-    private void addSellableToCurrentCycle(Sellable toAdd) {
-        if (cycleSellables.size() < 27) {
-            cycleSellables.add(toAdd);
-            cycleSellablesLookup.put(new Pair<>(toAdd.getMaterial(), toAdd.getDurability()), toAdd);
+    private void checkNextCycle() {
+        if (hasCycle()) {
+            long expiresInSeconds = currentCycle.getSecondsTillExpiry();
+            if (expiresInSeconds < 1) {
+                createNewCycle();
+            } else if (expiresInSeconds < 60) {
+                runTaskLater(this::createNewCycle, expiresInSeconds);
+            } else if (expiresInSeconds < 120 && expiresInSeconds >= 60) {
+                runTaskLater(() -> MessageBuilder.create("modSellMapCycleMinuteLeftBroadcast", hmc, "Sell")
+                        .broadcastMessage(false), expiresInSeconds - 60);
+            }
+        } else {
+            createNewCycle();
         }
     }
 
-    private void clearCurrentCycle() {
-        cycleExpiry = 0L;
-
-        if (cycleSellables != null) {
-            cycleSellables.forEach(Sellable::doRandomReset);
-        }
-
-        if (nextCycleTask != null) {
-            nextCycleTask.cancel();
-        }
-
-        cycleSellables = new ArrayList<>();
-        cycleSellablesLookup = new HashMap<>();
+    private void runTaskLater(Runnable runnable, long seconds) {
+        scheduler.runTaskLater(hmc, runnable, seconds * 20L);
     }
 }

@@ -59,6 +59,7 @@ public class ArenaManager {
         return getArenaMap(modeType).get(name.toLowerCase());
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void reloadConfig() throws IOException {
 
         if (arenaFile == null || !arenaFile.exists()) {

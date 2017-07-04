@@ -8,8 +8,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Class encapsulating an item that is up for sale, and it's necessary metadata, managed by {@link SellableMap}.
- * Also handles it's current unit price and returns revenue from given sell amount.
+ * Class encapsulating an item that is up for sale, an it's necessary metadata,
+ * managed by {@link SellableMap}. Also handles it's current cycle based data, as
+ * stored in current {@link SellCycle} and determines revenue from given sell amount.
  */
 public interface Sellable {
 

@@ -2,17 +2,14 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hmc.module.sell.DefaultSellableMap;
-import de.halfminer.hmc.module.sell.SellCycleRefreshEvent;
-import de.halfminer.hmc.module.sell.Sellable;
-import de.halfminer.hmc.module.sell.SellableMap;
+import de.halfminer.hmc.module.sell.*;
 import de.halfminer.hms.cache.CustomitemCache;
 import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.cache.exceptions.CachingException;
-import de.halfminer.hms.handler.hooks.HookException;
 import de.halfminer.hms.cache.exceptions.ItemCacheException;
-import de.halfminer.hms.handler.storage.PlayerNotFoundException;
+import de.halfminer.hms.handler.hooks.HookException;
 import de.halfminer.hms.handler.storage.DataType;
+import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
@@ -33,7 +30,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -72,7 +68,6 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     private List<Double> levelRewardMultipliers;
 
     private Map<Inventory, Player> activeMenus;
-    private BukkitTask menuRefreshTask;
 
     private final Cache<UUID, Double> potentialRevenueLostCache = CacheBuilder.newBuilder()
             .expireAfterWrite(20, TimeUnit.MINUTES)
@@ -121,6 +116,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         activeMenus.remove(e.getInventory());
 
+        // auto selling of chests
         if (e.getPlayer() instanceof Player
                 && autoSellingCache.getIfPresent(e.getPlayer()) != null
                 && (e.getInventory().getHolder() instanceof Chest
@@ -144,7 +140,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         refreshActiveInventories();
 
-        server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_FLUTE, 0.7f, 0.6f));
+        server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_FLUTE, 1.0f, 0.8f));
         MessageBuilder.create("modSellNewCycleBroadcast", hmc, "Sell")
                 .addPlaceholderReplace("%TIME%", String.valueOf(e.getTimeUntilNextCycle() / 60))
                 .broadcastMessage(true);
@@ -175,12 +171,12 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
     public void showSellMenu(Player player) {
 
-        List<Sellable> sellables = sellableMap.getCycleSellables();
-        if (sellables.isEmpty()) {
+        if (!sellableMap.hasCycle()) {
             MessageBuilder.create("modSellDisabled", hmc, "Sell").sendMessage(player);
             return;
         }
 
+        SellCycle currentCycle = sellableMap.getCurrentCycle();
         Inventory inv = server.createInventory(player, 45, MessageBuilder.returnMessage("modSellMenuTitle", hmc));
 
         // top line (menu controls), first prefill first line with stained glass
@@ -194,7 +190,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         try {
             CustomtextCache cache = coreStorage.getCache("customitems.txt");
             CustomitemCache itemCache = new CustomitemCache(cache);
-            long timeLeftCycle = Math.max(sellableMap.getCycleTimeLeft() / 60, 1);
+            long timeLeftCycle = Math.max(currentCycle.getSecondsTillExpiry() / 60, 0);
             Map<String, String> placeholders = Collections.singletonMap("%CYCLEMINUTES%", String.valueOf(timeLeftCycle));
 
             for (int i = 0; i < 9; i++) {
@@ -214,6 +210,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
 
         // sellables section (starts in 3rd menu row)
+        List<Sellable> sellables = currentCycle.getSellables();
         String multiplier = String.valueOf(getMultiplier(player));
         for (int i = 0; i < sellables.size(); i++) {
 
@@ -271,7 +268,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     }
 
     public void startNewCycle() {
-        sellableMap.forceNewCycle();
+        sellableMap.createNewCycle();
     }
 
     public boolean sellMaterialAndReward(int index, Player toReward) {
@@ -389,6 +386,10 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     }
 
     private void refreshActiveInventories() {
+        if (activeMenus.isEmpty()) {
+            return;
+        }
+        // copy to set to prevent concurrentmodex (closing inventory causes removal from activeMenus)
         Set<Player> playersViewing = new HashSet<>(activeMenus.values());
         playersViewing.forEach(this::showSellMenu);
     }
@@ -401,16 +402,17 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
     private void logCurrentCycle() {
 
-        List<Sellable> currentCycle = sellableMap.getCycleSellables();
-        if (!currentCycle.isEmpty()) {
+        if (sellableMap.hasCycle()) {
+
+            SellCycle currentCycle = sellableMap.getCurrentCycle();
             StringBuilder sellableString = new StringBuilder();
-            for (Sellable sellable : currentCycle) {
+            for (Sellable sellable : currentCycle.getSellables()) {
                 sellableString.append(sellable.toString()).append(", ");
             }
 
             sellableString.setLength(sellableString.length() - 2);
             MessageBuilder.create("modSellCurrentCycleLog", hmc)
-                    .addPlaceholderReplace("%TIMELEFT%", String.valueOf(sellableMap.getCycleTimeLeft() / 60))
+                    .addPlaceholderReplace("%TIMELEFT%", String.valueOf(currentCycle.getSecondsTillExpiry() / 60))
                     .addPlaceholderReplace("%SELLABLES%", sellableString.toString())
                     .logMessage(Level.INFO);
         }
@@ -432,6 +434,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         FileConfiguration config = hmc.getConfig();
 
+        // read sell multipliers
         StringArgumentSeparator multipliers =
                 new StringArgumentSeparator(config.getString("sell.multipliersPerLevel"), ',');
 
@@ -441,6 +444,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             levelRewardMultipliers.add(multipliers.getArgumentDoubleMinimum(i, 1.0d));
         }
 
+        // read sell menu commands
         menuCommands = new HashMap<>();
         ConfigurationSection commandSection = config.getConfigurationSection("sell.menuCommands");
         for (String slot : commandSection.getKeys(false)) {
@@ -463,6 +467,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             }
         }
 
+        // read cycle times and values for price determination
         int cycleTimeSecondsMax = config.getInt("sell.cycleTime.maxMinutes", 200) * 60;
         int cycleTimeSecondsMin = config.getInt("sell.cycleTime.minMinutes", 50) * 60;
         int cycleMinPlayerCount = config.getInt("sell.cycleTime.minPlayerCount", 40);
