@@ -76,8 +76,8 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         if (killer != null
                 && killer != victim
-                && !killer.hasPermission("hmc.bypass.skilllevel")
-                && !victim.hasPermission("hmc.bypass.skilllevel")) {
+                && !killer.hasPermission("hmc.bypass.skilllevel.update")
+                && !victim.hasPermission("hmc.bypass.skilllevel.update")) {
 
             HalfminerPlayer hKiller = storage.getPlayer(killer);
             HalfminerPlayer hVictim = storage.getPlayer(victim);

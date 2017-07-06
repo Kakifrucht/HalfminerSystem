@@ -186,7 +186,11 @@ permissions:
   hmc.bypass.pvp:
     description: Bypass pvp modifications
   hmc.bypass.skilllevel:
-    description: Bypass setting of skilllevel
+    description: Bypass setting and updating of skilllevel
+    children:
+    - hmc.bypass.skilllevel.update
+  hmc.bypass.skilllevel.update:
+    description: Bypass updating of skilllevel
   hmc.bypass.statsrightclick:
     description: Bypass stats on rightclick
   hmc.bypass.tabcomplete:
