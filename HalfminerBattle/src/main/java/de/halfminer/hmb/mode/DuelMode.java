@@ -92,9 +92,8 @@ public class DuelMode extends AbstractMode {
         waitingForMatchRemind = hmb.getConfig().getInt("battleMode.duel.waitingForMatchRemind", Integer.MIN_VALUE);
         waitingForMatchRemind = Math.max(waitingForMatchRemind, 0);
 
-        duelTime = hmb.getConfig().getInt("battleMode.duel.duel.gameTime", Integer.MIN_VALUE);
+        duelTime = hmb.getConfig().getInt("battleMode.duel.gameTime", Integer.MIN_VALUE);
         duelTime = Math.max(duelTime, 20);
-
     }
 
     public boolean doWinBroadcast() {
