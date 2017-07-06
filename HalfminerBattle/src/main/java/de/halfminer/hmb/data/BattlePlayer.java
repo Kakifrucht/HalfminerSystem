@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.potion.PotionEffect;
 
@@ -27,8 +28,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 /**
- * Encapsulating player specific battle data, such as his state, inventory, survival data (inventory, health..) and
- * the players arena and game partners
+ * Class encapsulating player specific battle data, such as his state, inventory, survival
+ * data (inventory, health..) and the players arena and game partners.
  */
 class BattlePlayer extends BattleClass {
 
@@ -42,6 +43,7 @@ class BattlePlayer extends BattleClass {
     private PlayerData data = null;
     private boolean hasDisconnected = false;
     private boolean isUsingOwnEquipment = false;
+    private List<PermissionAttachment> permissions;
 
     private Arena arena = null;
     private List<BattlePlayer> gamePartners = null;
@@ -72,8 +74,9 @@ class BattlePlayer extends BattleClass {
     void setState(BattleState state, BattleModeType battleModeType) {
         this.state = state;
         this.lastStateChange = System.currentTimeMillis();
-        if (battleModeType != null)
+        if (battleModeType != null) {
             this.battleModeType = battleModeType;
+        }
 
         if (state.equals(BattleState.IDLE) || state.equals(BattleState.QUEUE_COOLDOWN)) {
 
@@ -98,6 +101,17 @@ class BattlePlayer extends BattleClass {
     void setArena(Arena arena) {
         this.arena = arena;
         this.battleModeType = arena.getBattleModeType();
+
+        // add custom permissions
+        String path = "battleMode." + arena.getBattleMode().getType().getConfigNode() + ".addPermissions";
+        List<String> permissionsString = hmb.getConfig().getStringList(path);
+        if (!permissionsString.isEmpty()) {
+            Player player = getBase();
+            permissions = new ArrayList<>();
+            for (String permission : permissionsString) {
+                permissions.add(player.addAttachment(hmb, permission, true));
+            }
+        }
     }
 
     Arena getArena() {
@@ -110,17 +124,20 @@ class BattlePlayer extends BattleClass {
 
     boolean checkAndStoreItemStack(@Nullable ItemStack toCheck) {
 
-        if (arena == null)
+        if (arena == null) {
             throw new RuntimeException("checkAndStoreItemStack() called for " + getBase().getName() + " without set arena");
+        }
 
-        if (data == null)
+        if (data == null) {
             throw new RuntimeException("checkAndStoreItemStack() called for " + getBase().getName() + " without set data");
+        }
 
         if (isUsingOwnEquipment
                 || toCheck == null
                 || toCheck.getType().equals(Material.AIR)
-                || toCheck.getType().equals(Material.GLASS_BOTTLE))
+                || toCheck.getType().equals(Material.GLASS_BOTTLE)) {
             return false;
+        }
 
         ItemMeta meta = toCheck.getItemMeta();
         if (meta != null && meta.hasLore()) {
@@ -142,8 +159,9 @@ class BattlePlayer extends BattleClass {
     void restorePlayer() {
 
         Player player = getBase();
-        if (data == null)
+        if (data == null) {
             throw new RuntimeException("restorePlayer() called for " + player.getName() + " with no set data");
+        }
 
         // immediately clear inventory
         if (!isUsingOwnEquipment) {
@@ -200,6 +218,11 @@ class BattlePlayer extends BattleClass {
                     + " could not be teleported to his original location at " + Utils.getStringFromLocation(data.loc));
         }
 
+        if (permissions != null) {
+            permissions.forEach(PermissionAttachment::remove);
+            permissions = null;
+        }
+
         player.setWalkSpeed(data.walkSpeed);
         player.setGameMode(data.gameMode);
 
@@ -212,8 +235,9 @@ class BattlePlayer extends BattleClass {
     void restoreInventory() {
 
         Player player = getBase();
-        if (data == null)
+        if (data == null) {
             throw new RuntimeException("restoreInventory() called for " + player.getName() + " with no set data");
+        }
 
         player.closeInventory();
         player.getInventory().setContents(data.inventory);

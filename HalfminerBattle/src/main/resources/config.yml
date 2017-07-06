@@ -20,6 +20,9 @@ battleMode:
     #Distance in blocks from all spawn points in all arenas that must be met to allow the teleport
     teleportSpawnDistance: 10
   duel:
+    #Custom permission that can be added for bypasses of other plugins while in duel, to prevent interferences (CombatLogger?)
+    addPermissions:
+    - 'hmb.example.bypass'
     #Broadcast duel wins
     broadcastWin: true
     #Maximum duel time in seconds
@@ -27,7 +30,6 @@ battleMode:
     #Time in seconds until server will broadcast that a dueling player is waiting to be dueled, 0 to disable
     waitingForMatchRemind: 30
   ffa:
-    #Custom permission that can be added for bypasses of other plugins while in FFA, to prevent interferences (CombatLogger?)
     addPermissions:
     - 'hmb.example.bypass'
     #After how many deaths a player will be removed from the arena, set to 0 to disable

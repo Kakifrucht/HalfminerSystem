@@ -24,6 +24,8 @@ Current features
     - Prevents teleporting into arenas via tp delay glitches (Essentials */tpa*) if not fighting
       - Prevents teleport of tameable mobs, such as wolves, into arenas
     - Games can be force ended with */hmb forceend*
+    - Configurable custom permissions, that will be added during arena stay (useful for bypasses of other plugins)
+      - Individual permissions per battle mode
     - Disables while in battle:
       - Hunger loss in duel (optional)
       - Item dropping/pickup (dropped items will be deleted if not using own equipment)
@@ -67,5 +69,4 @@ Current features
       - Players get PvP protected for 5 seconds after (re-)spawning
     - Arena can be left per command
     - Arena selection screen (only shown when more than one arenas are available) shows players currently in arena
-    - Configurable custom permissions, that will be added during arena stay (useful for bypasses of other plugins)
     

@@ -1,5 +1,6 @@
 package de.halfminer.hmb.arena.abs;
 
+import de.halfminer.hmb.mode.abs.BattleMode;
 import de.halfminer.hmb.mode.abs.BattleModeType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -26,6 +27,8 @@ public interface Arena {
      * @return amount of player currently in arena
      */
     int getPlayerCount();
+
+    BattleMode getBattleMode();
 
     /**
      * @return the arenas battle mode

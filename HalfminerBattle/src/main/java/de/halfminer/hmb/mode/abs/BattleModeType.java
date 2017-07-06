@@ -4,16 +4,18 @@ package de.halfminer.hmb.mode.abs;
  * Contains a list of included battle modes and their classnames, needed for reflection
  */
 public enum BattleModeType {
-    GLOBAL  ("GlobalMode", null),
-    DUEL    ("DuelMode", "DuelArena"),
-    FFA     ("FFAMode", "FFAArena");
+    GLOBAL  ("GlobalMode", null, "global"),
+    DUEL    ("DuelMode", "DuelArena", "duel"),
+    FFA     ("FFAMode", "FFAArena", "ffa");
 
     private final String modeClassName;
     private final String arenaClassName;
+    private final String configNode;
 
-    BattleModeType(String classNameMode, String classNameArena) {
+    BattleModeType(String classNameMode, String classNameArena, String configNode) {
         this.modeClassName = classNameMode;
         this.arenaClassName = classNameArena;
+        this.configNode = configNode;
     }
 
     public String getModeClassName() {
@@ -22,6 +24,10 @@ public enum BattleModeType {
 
     public String getArenaClassName() {
         return arenaClassName;
+    }
+
+    public String getConfigNode() {
+        return configNode;
     }
 
     public static BattleModeType getBattleMode(String toResolve) {

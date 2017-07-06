@@ -29,6 +29,8 @@ public class ModInventorySave extends HalfminerModule implements Listener {
             return;
         }
 
+        boolean keepInventoryGameruleEnabled = e.getKeepInventory();
+
         e.setKeepInventory(true);
         e.setKeepLevel(keepLevel);
 
@@ -47,9 +49,12 @@ public class ModInventorySave extends HalfminerModule implements Listener {
 
         player.getInventory().setContents(inventory);
 
-        if (!keepLevel) {
+        if (!e.getKeepLevel()) {
             e.setDroppedExp(Math.min(player.getLevel() * 7, 100));
             player.setLevel(0);
+            player.setExp(0.0f);
+        } else if (!keepInventoryGameruleEnabled) {
+            e.setDroppedExp(0);
         }
     }
 

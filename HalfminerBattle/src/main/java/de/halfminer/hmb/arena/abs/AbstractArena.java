@@ -1,9 +1,9 @@
 package de.halfminer.hmb.arena.abs;
 
 import de.halfminer.hmb.BattleClass;
-import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.*;
@@ -27,6 +27,7 @@ public abstract class AbstractArena extends BattleClass implements Arena {
 
     protected final LinkedList<Player> playersInArena = new LinkedList<>();
 
+
     protected AbstractArena(BattleModeType battleModeType, String name) {
         this.battleModeType = battleModeType;
         this.name = name;
@@ -48,6 +49,11 @@ public abstract class AbstractArena extends BattleClass implements Arena {
     }
 
     @Override
+    public BattleMode getBattleMode() {
+        return hmb.getBattleMode(battleModeType);
+    }
+
+    @Override
     public BattleModeType getBattleModeType() {
         return battleModeType;
     }
@@ -64,16 +70,20 @@ public abstract class AbstractArena extends BattleClass implements Arena {
 
     @Override
     public void setSpawn(Location spawn, int spawnNumber) {
-        if (spawnNumber < 0 || spawnNumber > spawns.size() - 1)
+        if (spawnNumber < 0 || spawnNumber > spawns.size() - 1) {
             spawns.add(spawn);
-        else spawns.set(spawnNumber, spawn);
+        } else {
+            spawns.set(spawnNumber, spawn);
+        }
     }
 
     @Override
     public void removeSpawn(int spawnNumber) {
-        if (spawnNumber >= 0 && spawnNumber < spawns.size())
+        if (spawnNumber >= 0 && spawnNumber < spawns.size()) {
             spawns.remove(spawnNumber);
-        else spawns.clear();
+        } else {
+            spawns.clear();
+        }
     }
 
     @Override
@@ -96,8 +106,9 @@ public abstract class AbstractArena extends BattleClass implements Arena {
 
         GlobalMode global = (GlobalMode) hmb.getBattleMode(BattleModeType.GLOBAL);
         for (Location spawn : spawns) {
-            if (spawn.getWorld().equals(loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance())
+            if (spawn.getWorld().equals(loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance()) {
                 return true;
+            }
         }
 
         return false;
@@ -109,7 +120,9 @@ public abstract class AbstractArena extends BattleClass implements Arena {
      * @param players to be added to the arena
      */
     protected void addPlayers(Player... players) {
-        if (!isFree()) throw new RuntimeException("Tried to add players to an occupied arena");
+        if (!isFree()) {
+            throw new RuntimeException("Tried to add players to an occupied arena");
+        }
 
         for (Player toAdd : parameterToList(players)) {
             playersInArena.add(toAdd);
@@ -120,11 +133,14 @@ public abstract class AbstractArena extends BattleClass implements Arena {
             toAdd.setSaturation(10);
             toAdd.setExhaustion(0F);
             toAdd.setFireTicks(0);
-            for (PotionEffect effect : toAdd.getActivePotionEffects())
+            for (PotionEffect effect : toAdd.getActivePotionEffects()) {
                 toAdd.removePotionEffect(effect.getType());
+            }
+
             toAdd.setGameMode(GameMode.ADVENTURE);
             toAdd.getInventory().clear();
         }
+
         teleportIntoArena(parameterToArray(players));
     }
 
@@ -193,10 +209,6 @@ public abstract class AbstractArena extends BattleClass implements Arena {
             playersInArena.remove(player);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.6f);
         }
-    }
-
-    protected BattleMode getBattleMode() {
-        return hmb.getBattleMode(battleModeType);
     }
 
     protected String getCustomLore(Player player) {
