@@ -30,6 +30,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -64,10 +65,11 @@ import java.util.regex.Pattern;
 public class ModSell extends HalfminerModule implements Disableable, Listener, Sweepable {
 
     private Map<Integer, String> menuCommands;
-    private SellableMap sellableMap;
     private List<Double> levelRewardMultipliers;
+    private SellableMap sellableMap = new DefaultSellableMap();
 
     private Map<Inventory, Player> activeMenus = new HashMap<>();
+    private BukkitTask menuRefreshTask;
 
     private final Cache<UUID, Double> potentialRevenueLostCache = CacheBuilder.newBuilder()
             .expireAfterWrite(20, TimeUnit.MINUTES)
@@ -444,26 +446,9 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             }
         }
 
-        // read cycle times and values for price determination
-        int cycleTimeSecondsMax = config.getInt("sell.cycleTime.maxMinutes", 200) * 60;
-        int cycleTimeSecondsMin = config.getInt("sell.cycleTime.minMinutes", 50) * 60;
-        int cycleMinPlayerCount = config.getInt("sell.cycleTime.minPlayerCount", 40);
-        if (cycleTimeSecondsMax < cycleTimeSecondsMin) {
-            cycleTimeSecondsMax = cycleTimeSecondsMin;
-        }
-
-        double priceAdjustMultiplier = config.getDouble("sell.priceAdjustMultiplier", 1.5d);
-        double priceVarianceFactor = config.getDouble("sell.priceVarianceFactor", 0.1d);
-        int unitsUntilIncrease = config.getInt("sell.unitsUntilIncrease");
-
-        if (sellableMap == null) {
-            sellableMap = new DefaultSellableMap();
+        if (menuRefreshTask == null) {
             scheduler.runTaskTimer(hmc, this::refreshActiveMenus, 1200L, 1200L);
         }
-
-        sellableMap.configReloaded(config.getConfigurationSection("sell.sellables"),
-                cycleTimeSecondsMax, cycleTimeSecondsMin, cycleMinPlayerCount,
-                priceAdjustMultiplier, priceVarianceFactor, unitsUntilIncrease);
     }
 
     @Override

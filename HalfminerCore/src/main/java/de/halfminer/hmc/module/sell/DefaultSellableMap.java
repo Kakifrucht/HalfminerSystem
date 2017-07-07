@@ -1,10 +1,12 @@
 package de.halfminer.hmc.module.sell;
 
 import de.halfminer.hmc.CoreClass;
+import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -13,7 +15,7 @@ import java.util.logging.Level;
 /**
  * Default implementation of {@link SellableMap}.
  */
-public class DefaultSellableMap extends CoreClass implements SellableMap {
+public class DefaultSellableMap extends CoreClass implements Reloadable, SellableMap {
 
     // integers used to determine the dynamic cycle time
     private int cycleTimeSecondsMax;
@@ -30,8 +32,6 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
 
 
     public DefaultSellableMap() {
-        super(false);
-
         // dispatch task to run every minute for storing and cycle expiry checking
         scheduler.runTaskTimer(hmc, new Runnable() {
 
@@ -57,49 +57,26 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
     }
 
     @Override
-    public double getPriceAdjustMultiplier() {
-        return priceAdjustMultiplier;
-    }
+    public void loadConfig() {
 
-    @Override
-    public double getPriceVarianceFactor() {
-        return priceVarianceFactor;
-    }
+        FileConfiguration config = hmc.getConfig();
+        ConfigurationSection sellableSection = config.getConfigurationSection("sell.sellables");
 
-    @Override
-    public int getUnitsUntilIncrease() {
-        return unitsUntilIncrease;
-    }
-
-    @Override
-    public SellCycle getCurrentCycle() {
-        return currentCycle;
-    }
-
-    @Override
-    public boolean hasCycle() {
-        return currentCycle != null && !currentCycle.isEmpty();
-    }
-
-    @Override
-    public Sellable getSellableAtSlot(int slotId) {
-        return hasCycle() ? currentCycle.getSellableAtSlot(slotId) : null;
-    }
-
-    @Override
-    public Sellable getSellableFromItemStack(ItemStack item) {
-        return currentCycle.getMatchingSellable(item.getType(), item.getDurability());
-    }
-
-    @Override
-    public void configReloaded(ConfigurationSection sellableSection,
-                               int cycleTimeSecondsMax, int cycleTimeSecondsMin, int cycleMinPlayerCount,
-                               double priceAdjustMultiplier, double priceVarianceFactor, int unitsUntilIncrease) {
-
+        // read price adjust multipliers
+        this.priceAdjustMultiplier = config.getDouble("sell.priceAdjustMultiplier", 1.5d);
+        this.priceVarianceFactor = config.getDouble("sell.priceVarianceFactor", 0.1d);
+        this.unitsUntilIncrease = config.getInt("sell.unitsUntilIncrease");
         this.priceAdjustMultiplier = Math.max(priceAdjustMultiplier, 0.01d);
         this.priceVarianceFactor = Math.max(priceVarianceFactor, 0.0d);
         this.unitsUntilIncrease = Math.max(unitsUntilIncrease, 1);
 
+        // read cycle times and values for price determination
+        this.cycleTimeSecondsMax = config.getInt("sell.cycleTime.maxMinutes", 200) * 60;
+        this.cycleTimeSecondsMin = config.getInt("sell.cycleTime.minMinutes", 50) * 60;
+        this.cycleMinPlayerCount = config.getInt("sell.cycleTime.minPlayerCount", 40);
+        if (cycleTimeSecondsMax < cycleTimeSecondsMin) {
+            cycleTimeSecondsMax = cycleTimeSecondsMin;
+        }
         this.cycleTimeSecondsMax = Math.max(cycleTimeSecondsMax, 10);
         this.cycleTimeSecondsMin = Math.max(cycleTimeSecondsMin, 10);
         this.cycleMinPlayerCount = Math.max(cycleMinPlayerCount, 0);
@@ -220,6 +197,41 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
                 }
             }
         }
+    }
+
+    @Override
+    public double getPriceAdjustMultiplier() {
+        return priceAdjustMultiplier;
+    }
+
+    @Override
+    public double getPriceVarianceFactor() {
+        return priceVarianceFactor;
+    }
+
+    @Override
+    public int getUnitsUntilIncrease() {
+        return unitsUntilIncrease;
+    }
+
+    @Override
+    public SellCycle getCurrentCycle() {
+        return currentCycle;
+    }
+
+    @Override
+    public boolean hasCycle() {
+        return currentCycle != null && !currentCycle.isEmpty();
+    }
+
+    @Override
+    public Sellable getSellableAtSlot(int slotId) {
+        return hasCycle() ? currentCycle.getSellableAtSlot(slotId) : null;
+    }
+
+    @Override
+    public Sellable getSellableFromItemStack(ItemStack item) {
+        return currentCycle.getMatchingSellable(item.getType(), item.getDurability());
     }
 
     @Override

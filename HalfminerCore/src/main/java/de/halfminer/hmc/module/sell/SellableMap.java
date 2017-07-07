@@ -1,6 +1,5 @@
 package de.halfminer.hmc.module.sell;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -22,10 +21,6 @@ public interface SellableMap {
     Sellable getSellableAtSlot(int slotId);
 
     Sellable getSellableFromItemStack(ItemStack item);
-
-    void configReloaded(ConfigurationSection sellableSection,
-                        int cycleTimeSecondsMax, int cycleTimeSecondsMin, int cycleMinPlayerCount,
-                        double priceAdjustMultiplier, double priceVarianceFactor, int unitsUntilIncrease);
 
     void storeCurrentCycle();
 

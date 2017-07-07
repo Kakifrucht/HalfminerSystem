@@ -46,12 +46,11 @@ public class HalfminerManager implements Listener {
         }
 
         if (toAdd instanceof Reloadable) {
-            Reloadable reloadable = (Reloadable) toAdd;
             if (toReload.containsKey(plugin)) {
-                toReload.get(plugin).add(reloadable);
+                toReload.get(plugin).add((Reloadable) toAdd);
             } else {
                 List<Reloadable> list = new ArrayList<>();
-                list.add(reloadable);
+                list.add((Reloadable) toAdd);
                 toReload.put(plugin, list);
             }
         }
