@@ -47,6 +47,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
     private Cache<Pair<UUID, UUID>, Boolean> hasKilled;
     private final Map<UUID, AntiKillfarmingContainer> containerMap = new HashMap<>();
 
+
     /**
      * Called when a player dies, check if PvP and update anti killfarming variables
      *

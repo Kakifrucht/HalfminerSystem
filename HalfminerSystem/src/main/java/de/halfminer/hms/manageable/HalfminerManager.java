@@ -47,7 +47,6 @@ public class HalfminerManager implements Listener {
 
         if (toAdd instanceof Reloadable) {
             Reloadable reloadable = (Reloadable) toAdd;
-            reloadable.loadConfig();
             if (toReload.containsKey(plugin)) {
                 toReload.get(plugin).add(reloadable);
             } else {
@@ -99,8 +98,9 @@ public class HalfminerManager implements Listener {
     public void pluginDisabled(PluginDisableEvent e) {
 
         Plugin pluginToDisable = e.getPlugin();
-        if (!managedPlugins.contains(pluginToDisable))
+        if (!managedPlugins.contains(pluginToDisable)) {
             return;
+        }
 
         if (toDisable.containsKey(pluginToDisable)) {
             List<Disableable> list = toDisable.get(pluginToDisable);
@@ -124,6 +124,7 @@ public class HalfminerManager implements Listener {
         if (!managedPlugins.contains(pluginToReload)) {
             managedPlugins.add(pluginToReload);
         }
+
         // Save default config.yml if not yet done
         pluginToReload.saveDefaultConfig();
         // Make sure that if the file changed, it is reread
@@ -133,6 +134,7 @@ public class HalfminerManager implements Listener {
         // Save config.yml to disk
         pluginToReload.saveConfig();
         pluginToReload.reloadConfig();
+
         if (toReload.containsKey(pluginToReload)) {
             toReload.get(pluginToReload).forEach(Reloadable::loadConfig);
         }

@@ -37,6 +37,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
     private final Map<Player, BarUpdateContainer> playerSeesBar = new HashMap<>();
     private final Map<Damageable, List<Player>> damageableHealthSeenBy = new HashMap<>();
 
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityHit(EntityDamageByEntityEvent e) {
 

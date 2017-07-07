@@ -22,8 +22,9 @@ public class ModTps extends HalfminerModule {
     private int historySize;
     private double alertStaff;
 
+
     /**
-     * Returns average TPS over last 10 polled values
+     * Returns average TPS over configured amount of last values.
      *
      * @return Double, average in tpsHistory
      */
@@ -38,12 +39,17 @@ public class ModTps extends HalfminerModule {
         historySize = hmc.getConfig().getInt("tps.historySize", 6);
         alertStaff = hmc.getConfig().getDouble("tps.alertThreshold", 17.0d);
 
-        tpsHistory = new LinkedList<>();
-        tpsHistory.add(20.0);
-        lastAverageTps = 20.0;
-        lastTaskTimestamp = System.currentTimeMillis();
+        if (tpsHistory == null) {
+            tpsHistory = new LinkedList<>();
+            tpsHistory.add(20.0);
+            lastAverageTps = 20.0;
+            lastTaskTimestamp = System.currentTimeMillis();
+        }
 
-        if (task != null) task.cancel();
+        if (task != null) {
+            task.cancel();
+        }
+
         task = scheduler.runTaskTimer(hmc, () -> {
             long now = System.currentTimeMillis();
             long lastUpdate = now - lastTaskTimestamp; // time in milliseconds since last check
@@ -51,23 +57,26 @@ public class ModTps extends HalfminerModule {
 
             double currentTps = ticksBetweenUpdate * 1000.0 / lastUpdate;
 
-            // disregard peaks due to fluctuations
-            if (currentTps > 21.0d) return;
+            if (tpsHistory.size() >= historySize) {
+                tpsHistory.removeFirst();
+            }
 
-            if (tpsHistory.size() >= historySize) tpsHistory.removeFirst();
-            tpsHistory.add(currentTps);
+            tpsHistory.add(Math.min(currentTps, 21.0d));
 
-            // Get average value
+            // calculate average
             lastAverageTps = 0.0;
-            for (Double val : tpsHistory) lastAverageTps += val;
+            for (Double val : tpsHistory) {
+                lastAverageTps += val;
+            }
             lastAverageTps /= tpsHistory.size();
-            lastAverageTps = Utils.roundDouble(lastAverageTps); // round value to two decimals
+            lastAverageTps = Utils.roundDouble(lastAverageTps);
 
-            // send message if server is unstable
-            if (lastAverageTps < alertStaff && tpsHistory.size() == historySize)
+            // send alert broadcast if server is unstable
+            if (lastAverageTps < alertStaff && tpsHistory.size() == historySize) {
                 MessageBuilder.create("modTpsServerUnstable", hmc, "Lag")
                         .addPlaceholderReplace("%TPS%", String.valueOf(lastAverageTps))
                         .broadcastMessage("hmc.lag.notify", true);
+            }
         }, ticksBetweenUpdate, ticksBetweenUpdate);
     }
 }

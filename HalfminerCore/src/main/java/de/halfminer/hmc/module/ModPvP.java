@@ -62,6 +62,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     private final Map<UUID, Integer> killStreak = new HashMap<>();
     private ActionProbabilityContainer container;
 
+
     @EventHandler
     public void onInteractSetAttackSpeed(PlayerInteractEvent e) {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND))
@@ -291,12 +292,12 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         strengthReducePerLevel = hmc.getConfig().getDouble("pvp.strengthEffectReducePerLevel", 1.5d);
         strengthReducePerLevel = Math.min(3.0d, strengthReducePerLevel);
         thresholdUntilShown = hmc.getConfig().getInt("pvp.streakThreshold", 30);
-        container = null;
 
         try {
             List<String> actionList = hmc.getConfig().getStringList("pvp.actionsOnKill");
             container = new ActionProbabilityContainer(actionList, hmc, coreStorage);
-        } catch (CachingException ignored) {
+        } catch (CachingException e) {
+            container = null;
         }
     }
 

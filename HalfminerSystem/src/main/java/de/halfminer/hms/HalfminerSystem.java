@@ -34,7 +34,6 @@ public class HalfminerSystem extends JavaPlugin {
 
         instance = this;
         manager = new HalfminerManager(this);
-        manager.reloadOcurred(this);
 
         try {
             // Load handlers
@@ -48,6 +47,8 @@ public class HalfminerSystem extends JavaPlugin {
             setEnabled(false);
             return;
         }
+
+        manager.reloadOcurred(this);
         getLogger().info("HalfminerSystem enabled");
     }
 

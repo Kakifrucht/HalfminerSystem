@@ -55,6 +55,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
     private CustomAction action;
     private int randomRange;
 
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawn(PlayerRespawnEvent e) {
         e.setRespawnLocation(respawnLoc);

@@ -192,6 +192,8 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
                             }
                         }
                     }
+
+                    logCurrentCycle();
                 }
 
             } else if (cycleSectionObject != null) {
@@ -285,6 +287,7 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
             }
         }
 
+        logCurrentCycle();
         storeCurrentCycle();
         server.getPluginManager().callEvent(
                 new SellCycleRefreshEvent(timeUntilNextCycle, sellableSoldMost, uuidSoldMost, amountSoldMost)
@@ -304,6 +307,23 @@ public class DefaultSellableMap extends CoreClass implements SellableMap {
             }
         } else {
             createNewCycle();
+        }
+    }
+
+    private void logCurrentCycle() {
+
+        if (hasCycle()) {
+
+            StringBuilder sellableString = new StringBuilder();
+            for (Sellable sellable : currentCycle.getSellables()) {
+                sellableString.append(sellable.toString()).append(", ");
+            }
+
+            sellableString.setLength(sellableString.length() - 2);
+            MessageBuilder.create("modSellCurrentCycleLog", hmc)
+                    .addPlaceholderReplace("%TIMELEFT%", String.valueOf(currentCycle.getSecondsTillExpiry() / 60))
+                    .addPlaceholderReplace("%SELLABLES%", sellableString.toString())
+                    .logMessage(Level.INFO);
         }
     }
 

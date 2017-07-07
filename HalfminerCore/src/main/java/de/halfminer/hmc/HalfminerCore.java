@@ -1,8 +1,8 @@
 package de.halfminer.hmc;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.HalfminerModule;
+import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.util.MessageBuilder;
@@ -35,7 +35,6 @@ public class HalfminerCore extends JavaPlugin {
     public void onEnable() {
 
         instance = this;
-        HalfminerSystem.getInstance().getHalfminerManager().reloadOcurred(this);
 
         storage = new HanStorage(this);
         try {
@@ -51,6 +50,7 @@ public class HalfminerCore extends JavaPlugin {
             return;
         }
 
+        HalfminerSystem.getInstance().getHalfminerManager().reloadOcurred(this);
         getLogger().info("HalfminerCore enabled");
     }
 

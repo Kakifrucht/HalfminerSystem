@@ -39,17 +39,21 @@ public class ModPerformance extends HalfminerModule implements Listener {
     private BukkitTask clearTask;
     private final Map<Location, Integer> firedAt = new HashMap<>();
     private int pistonCount = 0;
+
     // Redstone and pistons config
     private int howMuchRedstoneAllowed;
     private int howManyPistonsAllowed;
+
     // Hopper limit config
     private int hopperLimit;
     private int hopperLimitRadius;
     private boolean logHopperLimit;
+
     // Entity limits
     private int entityLimitLiving;
     private int entityLimitSame;
     private int boxSize;
+
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void countPistonExtend(BlockPistonExtendEvent e) {

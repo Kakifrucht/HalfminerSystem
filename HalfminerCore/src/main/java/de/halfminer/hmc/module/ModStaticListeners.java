@@ -31,6 +31,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
 
+
     @EventHandler
     public void quitNoMessage(PlayerQuitEvent e) {
         e.setQuitMessage("");

@@ -39,6 +39,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
     private BukkitTask checkIfOverNether;
 
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMoveGlitchCheck(PlayerMoveEvent e) {
 

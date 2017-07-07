@@ -3,9 +3,9 @@ package de.halfminer.hmc.module;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.handler.storage.DataType;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
@@ -21,7 +21,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +44,6 @@ import java.util.logging.Level;
 public class ModStats extends HalfminerModule implements Disableable, Listener, Sweepable {
 
     private Map<Player, Long> timeOnline;
-    private BukkitTask onlineTimeTask;
 
     private final Cache<Player, Player> lastInteract = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.SECONDS)
@@ -55,6 +53,7 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             .build();
 
     private int timeUntilHomeBlockSeconds;
+
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void joinInitializeStatsAndRename(PlayerJoinEvent e) {
@@ -247,11 +246,8 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
             for (Player player : server.getOnlinePlayers()) {
                 timeOnline.put(player, time);
             }
-        }
 
-        if (onlineTimeTask == null) {
-            onlineTimeTask = scheduler.runTaskTimer(hmc, () ->
-                    server.getOnlinePlayers().forEach(this::setOnlineTime), 1200L, 1200L);
+            scheduler.runTaskTimer(hmc, () -> server.getOnlinePlayers().forEach(this::setOnlineTime), 1200L, 1200L);
         }
     }
 

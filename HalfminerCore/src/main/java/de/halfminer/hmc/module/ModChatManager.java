@@ -55,6 +55,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
     private boolean isGlobalmuted = false;
 
+
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent e) {
 

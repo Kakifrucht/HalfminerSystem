@@ -30,6 +30,7 @@ public class HanTeleport extends HalfminerClass implements Reloadable {
 
     private final Map<Player, BukkitTask> currentTeleport = new HashMap<>();
 
+
     public void startTeleport(Player player, Location loc) {
         startTeleport(player, loc, defaultTime, true, null, null);
     }

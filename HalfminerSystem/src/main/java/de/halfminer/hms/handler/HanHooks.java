@@ -34,7 +34,6 @@ public class HanHooks extends HalfminerClass {
             essentialsHook = (Essentials) essentials;
         } else essentialsHook = null;
 
-
         if (server.getPluginManager().getPlugin("Vault") != null) {
 
             RegisteredServiceProvider<Chat> provider = server.getServicesManager()

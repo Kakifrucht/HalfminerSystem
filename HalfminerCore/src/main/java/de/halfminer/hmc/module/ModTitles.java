@@ -33,6 +33,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private Map<Player, Double> balances;
 
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void joinTitles(PlayerJoinEvent e) {
 
@@ -135,7 +136,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     public void loadConfig() {
         if (balances == null) {
             balances = new ConcurrentHashMap<>();
+            server.getOnlinePlayers().forEach(this::updateBalanceAndTablist);
         }
-        server.getOnlinePlayers().forEach(this::updateBalanceAndTablist);
     }
 }

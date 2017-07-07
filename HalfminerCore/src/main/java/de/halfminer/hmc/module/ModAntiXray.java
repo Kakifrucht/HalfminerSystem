@@ -41,6 +41,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
     private final Set<UUID> observedPermanently = new HashSet<>();
     private Set<Material> protectedMaterial;
 
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
 

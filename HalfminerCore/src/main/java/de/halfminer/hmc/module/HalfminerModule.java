@@ -18,6 +18,7 @@ public abstract class HalfminerModule extends CoreClass implements Reloadable {
     final static HanStorage storage = hms.getStorageHandler();
     final static HanTitles titleHandler = hms.getTitlesHandler();
 
+
     @Override
     public void loadConfig() {
         /* does nothing on default, although we don't want to force

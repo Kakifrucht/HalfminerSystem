@@ -48,6 +48,7 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
 
     private BukkitTask task;
 
+
     public HanStorage() {
     }
 

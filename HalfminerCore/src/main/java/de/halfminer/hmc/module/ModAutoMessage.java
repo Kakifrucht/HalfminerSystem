@@ -22,6 +22,7 @@ public class ModAutoMessage extends HalfminerModule {
 
     private int lastRandom = Integer.MAX_VALUE;
 
+
     @Override
     public void loadConfig() {
 

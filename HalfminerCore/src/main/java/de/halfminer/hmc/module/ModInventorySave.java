@@ -18,6 +18,7 @@ public class ModInventorySave extends HalfminerModule implements Listener {
     private boolean isEnabled;
     private boolean keepLevel;
 
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeathKeepEnchantedItems(PlayerDeathEvent e) {
 

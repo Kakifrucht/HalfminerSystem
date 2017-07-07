@@ -67,7 +67,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     private SellableMap sellableMap;
     private List<Double> levelRewardMultipliers;
 
-    private Map<Inventory, Player> activeMenus;
+    private Map<Inventory, Player> activeMenus = new HashMap<>();
 
     private final Cache<UUID, Double> potentialRevenueLostCache = CacheBuilder.newBuilder()
             .expireAfterWrite(20, TimeUnit.MINUTES)
@@ -138,14 +138,12 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     @EventHandler
     public void onCycleRefresh(SellCycleRefreshEvent e) {
 
-        refreshActiveInventories();
+        refreshActiveMenus();
 
         server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_FLUTE, 1.0f, 0.8f));
         MessageBuilder.create("modSellNewCycleBroadcast", hmc, "Sell")
                 .addPlaceholderReplace("%TIME%", String.valueOf(e.getTimeUntilNextCycle() / 60))
                 .broadcastMessage(true);
-
-        logCurrentCycle();
 
         // broadcast player who sold most in last cycle (with delay)
         Sellable mostSoldLastCycle = e.getSellableMostSoldLastCycle();
@@ -385,7 +383,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         return levelRewardMultipliers.get(Math.min(storage.getPlayer(player).getLevel(), levelRewardMultipliers.size() - 1));
     }
 
-    private void refreshActiveInventories() {
+    private void refreshActiveMenus() {
         if (activeMenus.isEmpty()) {
             return;
         }
@@ -394,43 +392,22 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         playersViewing.forEach(this::showSellMenu);
     }
 
-    private void closeActiveInventories() {
+    private void closeActiveMenus() {
         for (Map.Entry<Inventory, Player> inventoryPlayerEntry : new HashSet<>(activeMenus.entrySet())) {
             inventoryPlayerEntry.getValue().closeInventory();
         }
     }
 
-    private void logCurrentCycle() {
-
-        if (sellableMap.hasCycle()) {
-
-            SellCycle currentCycle = sellableMap.getCurrentCycle();
-            StringBuilder sellableString = new StringBuilder();
-            for (Sellable sellable : currentCycle.getSellables()) {
-                sellableString.append(sellable.toString()).append(", ");
-            }
-
-            sellableString.setLength(sellableString.length() - 2);
-            MessageBuilder.create("modSellCurrentCycleLog", hmc)
-                    .addPlaceholderReplace("%TIMELEFT%", String.valueOf(currentCycle.getSecondsTillExpiry() / 60))
-                    .addPlaceholderReplace("%SELLABLES%", sellableString.toString())
-                    .logMessage(Level.INFO);
-        }
-    }
-
     @Override
     public void onDisable() {
-        closeActiveInventories();
+        closeActiveMenus();
         sellableMap.storeCurrentCycle();
     }
 
     @Override
     public void loadConfig() {
 
-        if (activeMenus == null) {
-            activeMenus = new HashMap<>();
-        }
-        closeActiveInventories();
+        closeActiveMenus();
 
         FileConfiguration config = hmc.getConfig();
 
@@ -479,19 +456,14 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         double priceVarianceFactor = config.getDouble("sell.priceVarianceFactor", 0.1d);
         int unitsUntilIncrease = config.getInt("sell.unitsUntilIncrease");
 
-        boolean isReload = sellableMap != null;
-        if (!isReload) {
+        if (sellableMap == null) {
             sellableMap = new DefaultSellableMap();
-            scheduler.runTaskTimer(hmc, this::refreshActiveInventories, 1200L, 1200L);
+            scheduler.runTaskTimer(hmc, this::refreshActiveMenus, 1200L, 1200L);
         }
 
         sellableMap.configReloaded(config.getConfigurationSection("sell.sellables"),
                 cycleTimeSecondsMax, cycleTimeSecondsMin, cycleMinPlayerCount,
                 priceAdjustMultiplier, priceVarianceFactor, unitsUntilIncrease);
-
-        if (!isReload) {
-            logCurrentCycle();
-        }
     }
 
     @Override

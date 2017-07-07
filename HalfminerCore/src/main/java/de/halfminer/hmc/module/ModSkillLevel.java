@@ -44,6 +44,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private String skillgroupNameAdmin;
     private String skillgroupNameNone;
 
+
     @EventHandler
     public void joinRecalculate(PlayerJoinEvent e) {
 

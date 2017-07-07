@@ -26,6 +26,7 @@ public class HanBossBar extends HalfminerClass implements Disableable {
 
     private final Map<Player, Pair<BossBar, BukkitTask>> currentBar = new HashMap<>();
 
+
     /**
      * Broadcast the bossbar to every player. There can only be one broadcast bossbar at a time.
      * The progression is proportional to the time left.
