@@ -12,6 +12,7 @@ public class CoreClass extends HalfminerClass {
     protected final static HalfminerCore hmc = HalfminerCore.getInstance();
     protected final static HanStorage coreStorage = hmc.getStorage();
 
+
     protected CoreClass() {
         super(hmc);
     }

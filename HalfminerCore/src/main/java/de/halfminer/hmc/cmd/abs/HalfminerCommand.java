@@ -21,6 +21,7 @@ public abstract class HalfminerCommand extends CoreClass {
     protected Player player;
     protected boolean isPlayer = false;
 
+
     public HalfminerCommand() {
         super(false);
     }

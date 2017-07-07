@@ -5,11 +5,11 @@ package de.halfminer.hms.handler;
  */
 public enum HandlerType {
 
-    BOSS_BAR    ("BossBar"),
-    HOOKS       ("Hooks"),
-    STORAGE     ("Storage"),
-    TELEPORT    ("Teleport"),
-    TITLES      ("Titles");
+    BOSS_BAR("BossBar"),
+    HOOKS("Hooks"),
+    STORAGE("Storage"),
+    TELEPORT("Teleport"),
+    TITLES("Titles");
 
     private final String className;
 

@@ -24,8 +24,8 @@ public interface SellableMap {
     Sellable getSellableFromItemStack(ItemStack item);
 
     void configReloaded(ConfigurationSection sellableSection,
-                               int cycleTimeSecondsMax, int cycleTimeSecondsMin, int cycleMinPlayerCount,
-                               double priceAdjustMultiplier, double priceVarianceFactor, int unitsUntilIncrease);
+                        int cycleTimeSecondsMax, int cycleTimeSecondsMin, int cycleMinPlayerCount,
+                        double priceAdjustMultiplier, double priceVarianceFactor, int unitsUntilIncrease);
 
     void storeCurrentCycle();
 

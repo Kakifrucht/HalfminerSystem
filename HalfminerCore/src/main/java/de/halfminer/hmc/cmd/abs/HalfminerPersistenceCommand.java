@@ -16,6 +16,7 @@ public abstract class HalfminerPersistenceCommand extends HalfminerCommand imple
     private UUID persistenceSender;
     private UUID persistenceOwner;
 
+
     protected boolean isPersistenceOwner(Player toCheck) {
         return toCheck.getUniqueId().equals(persistenceOwner);
     }

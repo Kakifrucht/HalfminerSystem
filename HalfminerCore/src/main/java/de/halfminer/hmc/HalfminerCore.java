@@ -21,7 +21,7 @@ import java.util.logging.Level;
  */
 public class HalfminerCore extends JavaPlugin {
 
-    private final static String PACKAGE_PATH = "de.halfminer.hmc";
+    private static final String PACKAGE_PATH = "de.halfminer.hmc";
     private static HalfminerCore instance;
 
     static HalfminerCore getInstance() {
@@ -30,6 +30,7 @@ public class HalfminerCore extends JavaPlugin {
 
     private HanStorage storage;
     private final Map<ModuleType, HalfminerModule> modules = new HashMap<>();
+
 
     @Override
     public void onEnable() {
