@@ -135,7 +135,8 @@ public class HalfminerManager implements Listener {
         pluginToReload.reloadConfig();
 
         if (toReload.containsKey(pluginToReload)) {
-            toReload.get(pluginToReload).forEach(Reloadable::loadConfig);
+            List<Reloadable> toReloadCopy = new ArrayList<>(toReload.get(pluginToReload));
+            toReloadCopy.forEach(Reloadable::loadConfig);
         }
     }
 

@@ -447,7 +447,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
 
         if (menuRefreshTask == null) {
-            scheduler.runTaskTimer(hmc, this::refreshActiveMenus, 1200L, 1200L);
+            menuRefreshTask = scheduler.runTaskTimer(hmc, this::refreshActiveMenus, 1200L, 1200L);
         }
     }
 
