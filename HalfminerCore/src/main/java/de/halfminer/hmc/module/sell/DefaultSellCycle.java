@@ -77,7 +77,7 @@ class DefaultSellCycle implements SellCycle {
             for (int i = 0; i < cycleSellables.size(); i++) {
                 Sellable sellable = cycleSellables.get(i);
                 String basePath = "sellcycle." + i + ".";
-                storage.set(basePath + "groupId", sellable.getGroupId());
+                storage.set(basePath + "group", sellable.getGroup().getGroupName());
                 storage.set(basePath + "material", sellable.getMaterial().toString());
                 storage.set(basePath + "durability", sellable.getDurability());
                 storage.set(basePath + "state", sellable.getStateString());

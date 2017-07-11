@@ -19,9 +19,7 @@ import java.util.logging.Level;
  */
 class DefaultSellable extends CoreClass implements Sellable {
 
-    private final SellableMap sellableMap;
-
-    private final int groupId;
+    private final SellableGroup group;
     private final Material material;
     private final short durability;
     private final String messageName;
@@ -34,13 +32,10 @@ class DefaultSellable extends CoreClass implements Sellable {
     private int amountSoldTotal;
 
 
-    DefaultSellable(SellableMap sellableMap, int groupId,
-             Material material, short durability, String messageName, int baseUnitAmount) {
+    DefaultSellable(SellableGroup group, Material material, short durability, String messageName, int baseUnitAmount) {
         super(false);
 
-        this.sellableMap = sellableMap;
-
-        this.groupId = groupId;
+        this.group = group;
 
         this.material = material;
         this.durability = durability;
@@ -51,8 +46,8 @@ class DefaultSellable extends CoreClass implements Sellable {
     }
 
     @Override
-    public int getGroupId() {
-        return groupId;
+    public SellableGroup getGroup() {
+        return group;
     }
 
     @Override
@@ -107,7 +102,7 @@ class DefaultSellable extends CoreClass implements Sellable {
     public void doRandomReset() {
 
         Random rnd = new Random();
-        double priceVarianceFactor = sellableMap.getPriceVarianceFactor();
+        double priceVarianceFactor = group.getPriceVarianceFactor();
 
         double factorRandomized = rnd.nextDouble() * priceVarianceFactor;
         if (rnd.nextBoolean()) {
@@ -116,7 +111,7 @@ class DefaultSellable extends CoreClass implements Sellable {
 
         priceVarianceFactor = 1.0d + factorRandomized;
         this.currentUnitAmount = (int) Math.round(priceVarianceFactor * (double) baseUnitAmount);
-        this.amountUntilNextIncrease = currentUnitAmount * sellableMap.getUnitsUntilIncrease();
+        this.amountUntilNextIncrease = currentUnitAmount * group.getUnitsUntilIncrease();
         amountSoldTotal = 0;
         amountSoldBy = new HashMap<>();
     }
@@ -162,13 +157,13 @@ class DefaultSellable extends CoreClass implements Sellable {
         amountSoldTotal += amountSold;
         while (amountUntilNextIncrease <= 0) {
 
-            int newUnitAmount = (int) Math.round((double) currentUnitAmount * sellableMap.getPriceAdjustMultiplier());
+            int newUnitAmount = (int) Math.round((double) currentUnitAmount * group.getPriceAdjustMultiplier());
             if (newUnitAmount == currentUnitAmount) {
                 newUnitAmount++;
             }
 
             currentUnitAmount = newUnitAmount;
-            amountUntilNextIncrease += (currentUnitAmount * sellableMap.getUnitsUntilIncrease());
+            amountUntilNextIncrease += (currentUnitAmount * group.getUnitsUntilIncrease());
 
             hasSold.playSound(hasSold.getLocation(), Sound.BLOCK_NOTE_HARP, 1.0f, 1.2f);
 

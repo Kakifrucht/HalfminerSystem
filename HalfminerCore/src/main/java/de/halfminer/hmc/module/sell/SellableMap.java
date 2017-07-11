@@ -8,12 +8,6 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface SellableMap {
 
-    double getPriceAdjustMultiplier();
-
-    double getPriceVarianceFactor();
-
-    int getUnitsUntilIncrease();
-
     boolean hasCycle();
 
     SellCycle getCurrentCycle();

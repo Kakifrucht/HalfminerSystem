@@ -108,28 +108,22 @@ public class HalfminerSystem extends JavaPlugin {
     }
 
     public HanBossBar getBarHandler() {
-        return (HanBossBar) getHandler(HandlerType.BOSS_BAR);
+        return (HanBossBar) handlers.get(HandlerType.BOSS_BAR);
     }
 
     public HanHooks getHooksHandler() {
-        return (HanHooks) getHandler(HandlerType.HOOKS);
+        return (HanHooks) handlers.get(HandlerType.HOOKS);
     }
 
     public HanStorage getStorageHandler() {
-        return (HanStorage) getHandler(HandlerType.STORAGE);
+        return (HanStorage) handlers.get(HandlerType.STORAGE);
     }
 
     public HanTeleport getTeleportHandler() {
-        return (HanTeleport) getHandler(HandlerType.TELEPORT);
+        return (HanTeleport) handlers.get(HandlerType.TELEPORT);
     }
 
     public HanTitles getTitlesHandler() {
-        return (HanTitles) getHandler(HandlerType.TITLES);
-    }
-
-    private HalfminerClass getHandler(HandlerType type) {
-        if (handlers.size() != HandlerType.values().length)
-            throw new RuntimeException("Illegal call to getHandler before all handlers were initialized");
-        return handlers.get(type);
+        return (HanTitles) handlers.get(HandlerType.TITLES);
     }
 }

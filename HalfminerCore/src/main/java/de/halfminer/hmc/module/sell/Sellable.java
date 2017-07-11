@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public interface Sellable {
 
-    int getGroupId();
+    SellableGroup getGroup();
 
     Material getMaterial();
 

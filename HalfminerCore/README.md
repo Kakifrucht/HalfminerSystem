@@ -131,20 +131,20 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Full dynamic sell system
       - Cycle based selling, every given minutes new items will be chosen and all prices will reset
         - Cycles are persistent through restarts
-        - Broadcast message when new cycle starts
+        - Broadcast message one minute before and when a new cycle starts
           - Broadcasts player that sold most of a single item, and which it was
         - Cycle time is dependent on current player count on server, more players - more cycles
           - Define a max/min time and playercount for min time in config
-      - Reads items to sell from config: Their Material, durability/id, base price per unit and name of item
-        - Items need to be grouped, group name determines how many of given items will land in a given cycle
-          - For example out of 20 items in group '5', 5 will be randomly selected
+      - Reads items and their groups from config
+        - Items are defined by their Material, durability/id, base price per unit and name of item
+        - Items must be put into groups, which define how many items of said group will be put into a cycle
+          - Price will be adjusted by a configurable amount every given amount (also configurable per group)
+            - Shows original base price
+            - Variance can be added to base price for more dynamic pricing
       - Includes GUI, must be accessed via /sell command
         - First line in GUI can be fully configured via customitems.txt and config to set a custom command per slot
           - By default line will be filled with stained glass pane
           - For example a custom button to toggle auto selling can be added
-      - Price will be adjusted by a configurable amount every given amount (also configurable)
-        - Shows original base price
-        - Variance can be added to base price of items via config for more dynamic pricing
     - Custom revenue multiplier per player level (hms.level)
       - Randomly (depending on revenue) sends message about how much more revenue could have been made with higher rank
     - Auto sells chests on inventory close

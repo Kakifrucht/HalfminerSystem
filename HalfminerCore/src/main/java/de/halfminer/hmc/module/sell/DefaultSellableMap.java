@@ -22,12 +22,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
     private int cycleTimeSecondsMin;
     private int cycleMinPlayerCount;
 
-    // sell data and price determination, passed to sellables
-    private double priceAdjustMultiplier;
-    private double priceVarianceFactor;
-    private int unitsUntilIncrease;
-
-    private Map<Integer, List<Sellable>> sellables = new HashMap<>();
+    private Map<SellableGroup, List<Sellable>> sellables = new HashMap<>();
     private SellCycle currentCycle;
 
 
@@ -60,15 +55,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
     public void loadConfig() {
 
         FileConfiguration config = hmc.getConfig();
-        ConfigurationSection sellableSection = config.getConfigurationSection("sell.sellables");
-
-        // read price adjust multipliers
-        this.priceAdjustMultiplier = config.getDouble("sell.priceAdjustMultiplier", 1.5d);
-        this.priceVarianceFactor = config.getDouble("sell.priceVarianceFactor", 0.1d);
-        this.unitsUntilIncrease = config.getInt("sell.unitsUntilIncrease");
-        this.priceAdjustMultiplier = Math.max(priceAdjustMultiplier, 0.01d);
-        this.priceVarianceFactor = Math.max(priceVarianceFactor, 0.0d);
-        this.unitsUntilIncrease = Math.max(unitsUntilIncrease, 1);
+        sellables = new HashMap<>();
 
         // read cycle times and values for price determination
         this.cycleTimeSecondsMax = config.getInt("sell.cycleTime.maxMinutes", 200) * 60;
@@ -81,20 +68,56 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
         this.cycleTimeSecondsMin = Math.max(cycleTimeSecondsMin, 10);
         this.cycleMinPlayerCount = Math.max(cycleMinPlayerCount, 0);
 
-        // read sellables from config
-        sellables = new HashMap<>();
-        for (String group : sellableSection.getKeys(false)) {
-            int groupAsInt;
-            try {
-                groupAsInt = Integer.parseInt(group);
-            } catch (NumberFormatException e) {
+        Map<String, SellableGroup> groups = new HashMap<>();
+        for (String groupString : config.getStringList("sell.groups")) {
+
+            StringArgumentSeparator separator = new StringArgumentSeparator(groupString, ',');
+            if (!separator.meetsLength(2)) {
                 MessageBuilder.create("modSellMapLogGroupInvalid", hmc)
-                        .addPlaceholderReplace("%GROUP%", group)
+                        .addPlaceholderReplace("%GROUP%", groupString)
                         .logMessage(Level.WARNING);
                 continue;
             }
 
-            for (String sellable : sellableSection.getStringList(group)) {
+            String groupName = separator.getArgument(0).toLowerCase();
+            int amountPerCycle = separator.getArgumentIntMinimum(1, 1);
+            int unitsUntilIncrease = 100;
+            double priceAdjustMultiplier = 1.5d;
+            double priceVarianceFactor = 0.0d;
+
+            if (separator.meetsLength(3)) {
+                unitsUntilIncrease = separator.getArgumentIntMinimum(2, 1);
+                if (separator.meetsLength(4)) {
+                    priceAdjustMultiplier = separator.getArgumentDoubleMinimum(3, 1.0d);
+                    if (separator.meetsLength(5)) {
+                        priceVarianceFactor = Math.min(separator.getArgumentDoubleMinimum(4, 0.0d), 0.9d);
+                    }
+                }
+            }
+
+            SellableGroup newGroup = new DefaultSellableGroup(
+                    groupName, amountPerCycle, unitsUntilIncrease, priceAdjustMultiplier, priceVarianceFactor
+            );
+            groups.put(groupName, newGroup);
+        }
+
+        if (groups.isEmpty()) {
+            currentCycle = null;
+            return;
+        }
+
+        // read sellables from config
+        for (String groupString : config.getConfigurationSection("sell.sellables").getKeys(false)) {
+            String groupStringLower = groupString.toLowerCase();
+
+            SellableGroup group;
+            if (groups.containsKey(groupStringLower)) {
+                group = groups.get(groupStringLower);
+            } else {
+                continue;
+            }
+
+            for (String sellable : config.getStringList("sell.sellables." + groupString)) {
                 StringArgumentSeparator separator = new StringArgumentSeparator(sellable, ',');
                 if (!separator.meetsLength(4)) {
                     MessageBuilder.create("modSellMapLogSellableInvalidFormat", hmc)
@@ -110,15 +133,15 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
                 if (material != null) {
                     Sellable currentSellable = new DefaultSellable(
-                            this, groupAsInt, material, durability, messageName, baseUnitAmount
+                            group, material, durability, messageName, baseUnitAmount
                     );
 
-                    if (sellables.containsKey(currentSellable.getGroupId())) {
-                        sellables.get(currentSellable.getGroupId()).add(currentSellable);
+                    if (sellables.containsKey(group)) {
+                        sellables.get(group).add(currentSellable);
                     } else {
                         List<Sellable> newList = new ArrayList<>();
                         newList.add(currentSellable);
-                        sellables.put(currentSellable.getGroupId(), newList);
+                        sellables.put(group, newList);
                     }
                 } else {
                     MessageBuilder.create("modSellMapLogMaterialNotExists", hmc)
@@ -128,7 +151,6 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             }
         }
 
-        // only proceed if any sellables were loaded
         if (sellables.isEmpty()) {
             currentCycle = null;
             return;
@@ -152,14 +174,13 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
                             continue;
                         }
 
-                        int groupId = cycleSection.getInt(key + ".groupId");
+                        String group = cycleSection.getString(key + ".group");
                         Material material = Material.matchMaterial(cycleSection.getString(key + ".material", ""));
                         short durability = (short) cycleSection.getInt(key + ".durability");
                         String stateString = cycleSection.getString(key + ".state");
 
-                        List<Sellable> sellablesInGroup = sellables.get(groupId);
-                        if (sellablesInGroup != null && material != null) {
-
+                        if (material != null && groups.containsKey(group)) {
+                            List<Sellable> sellablesInGroup = sellables.get(groups.get(group));
                             for (Sellable sellable : sellablesInGroup) {
                                 if (sellable.getMaterial().equals(material) && sellable.getDurability() == durability) {
                                     sellable.setState(stateString);
@@ -188,30 +209,18 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             currentCycle = new DefaultSellCycle(expiryOldCycle);
             for (Sellable sellableOldCycle : oldCycle) {
 
-                for (Sellable sellable : sellables.get(sellableOldCycle.getGroupId())) {
-                    if (sellable.isSimiliar(sellableOldCycle)) {
-                        sellable.copyStateFromSellable(sellableOldCycle);
-                        currentCycle.addSellableToCycle(sellable);
-                        break;
+                if (sellables.containsKey(sellableOldCycle.getGroup())) {
+
+                    for (Sellable sellable : sellables.get(sellableOldCycle.getGroup())) {
+                        if (sellable.isSimiliar(sellableOldCycle)) {
+                            sellable.copyStateFromSellable(sellableOldCycle);
+                            currentCycle.addSellableToCycle(sellable);
+                            break;
+                        }
                     }
                 }
             }
         }
-    }
-
-    @Override
-    public double getPriceAdjustMultiplier() {
-        return priceAdjustMultiplier;
-    }
-
-    @Override
-    public double getPriceVarianceFactor() {
-        return priceVarianceFactor;
-    }
-
-    @Override
-    public int getUnitsUntilIncrease() {
-        return unitsUntilIncrease;
     }
 
     @Override
@@ -236,11 +245,17 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
     @Override
     public void storeCurrentCycle() {
-        currentCycle.storeCurrentCycle(coreStorage);
+        if (hasCycle()) {
+            currentCycle.storeCurrentCycle(coreStorage);
+        }
     }
 
     @Override
     public void createNewCycle() {
+
+        if (sellables.isEmpty()) {
+            return;
+        }
 
         // determine top seller and amount in last cycle, will be passed via event
         Sellable sellableSoldMost = null;
@@ -278,15 +293,15 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
         // randomly determine cycle items
         Random rnd = new Random();
-        for (Integer amount : sellables.keySet()) {
+        for (SellableGroup group : sellables.keySet()) {
 
-            Set<Sellable> group = new HashSet<>(sellables.get(amount));
-            for (int leftToAdd = Math.min(amount, group.size()); leftToAdd > 0; leftToAdd--) {
+            Set<Sellable> sellablesInGroup = new HashSet<>(sellables.get(group));
+            for (int leftToAdd = Math.min(group.getAmountPerCycle(), sellablesInGroup.size()); leftToAdd > 0; leftToAdd--) {
 
                 int currentElement = 0;
-                int elementToGet = rnd.nextInt(group.size());
+                int elementToGet = rnd.nextInt(sellablesInGroup.size());
 
-                Iterator<Sellable> iterator = group.iterator();
+                Iterator<Sellable> iterator = sellablesInGroup.iterator();
                 while (iterator.hasNext()) {
                     Sellable current = iterator.next();
                     if (elementToGet == currentElement) {

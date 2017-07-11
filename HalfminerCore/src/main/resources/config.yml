@@ -196,6 +196,17 @@ sell:
     minMinutes: 50
     #How many players must be online to meet the minMinutes value
     minPlayerCount: 40
+  #Per group, put [up to] 5 values separated via comma
+  #Values:
+  # 1. String (required) - name of group: to be defined below in the list
+  # 2. Integer (required) - amount per cycle: amount of sellables in this group that will be included per cycle
+  # 3. Integer (default: 100) - units until increase: one unit is the base price of the sellable, so selling
+  #                             it (base price * unit) times will cause a decrease in value
+  # 4. Double (default 1.5) - price adjust multiplier: multiplier of base price once units until increased is met
+  # 5. Double (default 0.0, max. 0.9) - price variance factor: randomness in percent applied to base price upon cycle start, for example
+  #                                     if an item has a base price of 300 and price variance is 0.2, it will be multiplied by 0.8-1.2 randomly
+  groups:
+  - farmitems, 4, 100, 1.5, 0.2
   #Key is the slot and value is the command without leading slash
   #To remove default commands 0 and 8, set their contents to empty string, for example '0': ''
   menuCommands:
@@ -203,16 +214,10 @@ sell:
     '8': 'sell auto'
   #hms.level.0-5 permission, hms.level.0 omitted, separate numbers with comma and use '.' as decimal seperator
   multipliersPerLevel: '1.25, 1.5, 1.75, 2.0, 2.5'
-  #Multiplier for amountPerCurrency that will be applied for every unitsUntilIncrease
-  priceAdjustMultiplier: 1.5
-  #A random range of the given factor will be added to 1, for example if the factor is 0.2, the price multiplier when
-  #a new cycle starts will be between 0.8 and 1.2, multiplied with amountPerCurrency of given sellable, set to 0 to disable
-  priceVarianceFactor: 0.2
-  #Subkeys are numbers that dictate how many of the given items in child list are put into the next cycle
-  #Items are defined as such: messageName, material, durability (item data) or -1 for any, amountPerCurrency
-  #To remove default groups 1 and 2, set their contents to null, for example '1': []
+  #Sellables and which group they belong in, put the group name as subkey and the items for this group in a list
+  #Items are defined as such: messageName, material, durability (item data) or -1 for any, base price (x for 1 currency, higher -> lower value)
   sellables:
-    '1':
+    farmitems:
     - Rote Beete, BEETROOT, 0, 30
     - Braune Pilze, BROWN_MUSHROOM, 0, 20
     - Kakteen, CACTUS, 0, 220
@@ -225,12 +230,6 @@ sell:
     - Rote Pilze, RED_MUSHROOM, 0, 30
     - Zuckerrohre, SUGAR_CANE, 0, 55
     - Weizen, WHEAT, 0, 25
-    '2':
-    - Gräser, GRASS, 0, 200
-    - Steine, STONE, 0, 400
-    - Bruchsteine, COBBLESTONE, 0, 600
-  #How many amountPerCurrency must be passed until the price will be adjusted
-  unitsUntilIncrease: 100
 skillLevel:
   #Amount of groups for the server team (players with permission hmc.bypass.skilllevel), will be shown on top of tablist
   amountTeamGroups: 3
