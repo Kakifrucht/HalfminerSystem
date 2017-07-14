@@ -66,9 +66,9 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
     private Map<Integer, String> menuCommands;
     private List<Double> levelRewardMultipliers;
-    private SellableMap sellableMap = new DefaultSellableMap();
+    private final SellableMap sellableMap = new DefaultSellableMap();
 
-    private Map<Inventory, Player> activeMenus = new HashMap<>();
+    private final Map<Inventory, Player> activeMenus = new HashMap<>();
     private BukkitTask menuRefreshTask;
 
     private final Cache<UUID, Double> potentialRevenueLostCache = CacheBuilder.newBuilder()

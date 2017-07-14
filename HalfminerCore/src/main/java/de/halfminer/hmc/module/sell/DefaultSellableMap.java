@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -24,6 +25,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
     private Map<SellableGroup, List<Sellable>> sellables = new HashMap<>();
     private SellCycle currentCycle;
+    private BukkitTask currentTask;
 
 
     public DefaultSellableMap() {
@@ -314,6 +316,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             }
         }
 
+        cancelCurrentTask();
         logCurrentCycle();
         storeCurrentCycle();
         server.getPluginManager().callEvent(
@@ -355,6 +358,14 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
     }
 
     private void runTaskLater(Runnable runnable, long seconds) {
-        scheduler.runTaskLater(hmc, runnable, seconds * 20L);
+        cancelCurrentTask();
+        currentTask = scheduler.runTaskLater(hmc, runnable, seconds * 20L);
+    }
+
+    private void cancelCurrentTask() {
+        if (currentTask != null) {
+            currentTask.cancel();
+            currentTask = null;
+        }
     }
 }

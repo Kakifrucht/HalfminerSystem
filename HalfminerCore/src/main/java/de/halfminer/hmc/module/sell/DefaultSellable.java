@@ -163,7 +163,7 @@ class DefaultSellable extends CoreClass implements Sellable {
             }
 
             currentUnitAmount = newUnitAmount;
-            amountUntilNextIncrease += (currentUnitAmount * group.getUnitsUntilIncrease());
+            amountUntilNextIncrease += (baseUnitAmount * group.getUnitsUntilIncrease());
 
             hasSold.playSound(hasSold.getLocation(), Sound.BLOCK_NOTE_HARP, 1.0f, 1.2f);
 
