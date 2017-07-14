@@ -3,8 +3,8 @@ package de.halfminer.hmb.data;
 import de.halfminer.hmb.BattleClass;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.GlobalMode;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -219,8 +219,12 @@ class BattlePlayer extends BattleClass {
         }
 
         if (permissions != null) {
-            permissions.forEach(PermissionAttachment::remove);
-            permissions = null;
+            if (hasDisconnected) {
+                // remove with delay on disconnect, as we might kill the player after restoring
+                scheduler.runTaskLater(hmb, this::removePermissionAttachments, 1L);
+            } else {
+                removePermissionAttachments();
+            }
         }
 
         player.setWalkSpeed(data.walkSpeed);
@@ -256,6 +260,11 @@ class BattlePlayer extends BattleClass {
 
     List<BattlePlayer> getGamePartners() {
         return gamePartners;
+    }
+
+    private void removePermissionAttachments() {
+        permissions.forEach(PermissionAttachment::remove);
+        permissions = null;
     }
 
     private class PlayerData {
