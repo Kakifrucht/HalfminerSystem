@@ -70,11 +70,5 @@
             <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>19.0</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>

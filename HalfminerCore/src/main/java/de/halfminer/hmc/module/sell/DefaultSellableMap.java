@@ -331,7 +331,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
                 createNewCycle();
             } else if (expiresInSeconds < 60) {
                 runTaskLater(this::createNewCycle, expiresInSeconds);
-            } else if (expiresInSeconds < 120 && expiresInSeconds >= 60) {
+            } else if (expiresInSeconds < 120) {
                 runTaskLater(() -> MessageBuilder.create("modSellMapCycleMinuteLeftBroadcast", hmc, "Sell")
                         .broadcastMessage(false), expiresInSeconds - 60);
             }
