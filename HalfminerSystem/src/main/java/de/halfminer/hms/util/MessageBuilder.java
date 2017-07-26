@@ -261,9 +261,7 @@ public class MessageBuilder {
      */
     private TextComponent makeCommandsClickable(String text) {
 
-        TextComponent parsedComponent = new TextComponent();
         List<BaseComponent> components = new ArrayList<>();
-
         for (BaseComponent baseComp : TextComponent.fromLegacyText(text)) {
 
             if (!(baseComp instanceof TextComponent)) {
@@ -274,10 +272,15 @@ public class MessageBuilder {
             TextComponent currentComponent = (TextComponent) baseComp;
 
             // init new textcomponent with same attributes as original one
-            TextComponent currentComp = new TextComponent(currentComponent);
+            TextComponent newComponent = new TextComponent(currentComponent);
             int currentLowerBound = 0;
 
             StringBuilder originalText = new StringBuilder(currentComponent.getText());
+            if (originalText.toString().startsWith("http")) {
+                components.add(newComponent);
+                continue;
+            }
+
             boolean readingCommand = false;
 
             for (int i = 0; i < originalText.length(); i++) {
@@ -288,37 +291,38 @@ public class MessageBuilder {
 
                         String command = originalText.substring(currentLowerBound, i);
 
-                        currentComp.setText(command);
-                        currentComp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+                        newComponent.setText(command);
+                        newComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
 
                         String clickHoverMessage = MessageBuilder.returnMessage("commandClickHover");
                         if (clickHoverMessage.length() > 0) {
-                            currentComp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            newComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                     new ComponentBuilder(clickHoverMessage).create()));
                         }
 
                         // every command is italic
-                        currentComp.setItalic(true);
+                        newComponent.setItalic(true);
                         // remove closing slash from text
                         originalText.deleteCharAt(i);
 
-                    } else currentComp.setText(originalText.substring(currentLowerBound, i));
+                    } else newComponent.setText(originalText.substring(currentLowerBound, i));
 
                     readingCommand = !readingCommand;
-                    components.add(currentComp);
-                    currentComp = new TextComponent(currentComponent);
+                    components.add(newComponent);
+                    newComponent = new TextComponent(currentComponent);
                     currentLowerBound = i;
                 }
             }
 
             // add last component to list
             if (currentLowerBound != originalText.length()) {
-                currentComp.setText(originalText.substring(currentLowerBound, originalText.length()));
-                components.add(currentComp);
+                newComponent.setText(originalText.substring(currentLowerBound, originalText.length()));
+                components.add(newComponent);
             }
         }
 
-        components.forEach(parsedComponent::addExtra);
-        return parsedComponent;
+        TextComponent newParsedComponent = new TextComponent();
+        components.forEach(newParsedComponent::addExtra);
+        return newParsedComponent;
     }
 }

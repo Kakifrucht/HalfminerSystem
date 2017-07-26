@@ -19,7 +19,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hms.version>4.0.2</hms.version>
+        <hms.version>4.0.3</hms.version>
     </properties>
 
     <build>
