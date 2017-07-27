@@ -27,7 +27,7 @@ class DefaultSellable extends CoreClass implements Sellable {
     private final int baseUnitAmount;
 
     private Map<UUID, Integer> amountSoldBy;
-    private int currentUnitAmount;
+    private long currentUnitAmount;
     private int amountUntilNextIncrease;
     private int amountSoldTotal;
 
@@ -84,7 +84,7 @@ class DefaultSellable extends CoreClass implements Sellable {
     }
 
     @Override
-    public int getCurrentUnitAmount() {
+    public long getCurrentUnitAmount() {
         return currentUnitAmount;
     }
 
@@ -111,7 +111,7 @@ class DefaultSellable extends CoreClass implements Sellable {
 
         priceVarianceFactor = 1.0d + factorRandomized;
         this.currentUnitAmount = (int) Math.round(priceVarianceFactor * (double) baseUnitAmount);
-        this.amountUntilNextIncrease = currentUnitAmount * group.getUnitsUntilIncrease();
+        this.amountUntilNextIncrease = (int) currentUnitAmount * group.getUnitsUntilIncrease();
         amountSoldTotal = 0;
         amountSoldBy = new HashMap<>();
     }
@@ -157,7 +157,7 @@ class DefaultSellable extends CoreClass implements Sellable {
         amountSoldTotal += amountSold;
         while (amountUntilNextIncrease <= 0) {
 
-            int newUnitAmount = (int) Math.round((double) currentUnitAmount * group.getPriceAdjustMultiplier());
+            long newUnitAmount = Math.round((double) currentUnitAmount * group.getPriceAdjustMultiplier());
             if (newUnitAmount == currentUnitAmount) {
                 newUnitAmount++;
             }

@@ -217,7 +217,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             Sellable sellable = sellables.get(i);
             ItemStack currentItem = sellable.getItemStack();
 
-            int currentUnitAmount = sellable.getCurrentUnitAmount();
+            long currentUnitAmount = sellable.getCurrentUnitAmount();
             int baseUnitAmount = sellable.getBaseUnitAmount();
 
             String unitAmount;

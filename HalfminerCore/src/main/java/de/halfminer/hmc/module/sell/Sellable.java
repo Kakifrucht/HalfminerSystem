@@ -26,7 +26,7 @@ public interface Sellable {
 
     Map<UUID, Integer> getAmountSoldBy();
 
-    int getCurrentUnitAmount();
+    long getCurrentUnitAmount();
 
     int getAmountUntilNextIncrease();
 
