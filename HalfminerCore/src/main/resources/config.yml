@@ -144,12 +144,12 @@ motd:
   - 9
   - b
 performance:
-  #Delay in ticks until the blocks will be lifted
+  #Delay in ticks until redstone and piston limits will be reset
   ticksDelayUntilClear: 160
   #Number in events until redstone will be blocked, ticksDelayUntilClear clears this
   howMuchRedstoneAllowed: 32
-  #How many pistons are allowed to extend, ticksDelayUntilClear clears this
-  howManyPistonsAllowed: 200
+  #How many pistons are allowed to extend in a region, ticksDelayUntilClear clears this
+  howManyPistonsAllowed: 32
   #How many hoppers are allowed
   hopperLimit: 64
   #Radius around hopper that will be checked, changing this value may introduce lag

@@ -1,6 +1,7 @@
 package de.halfminer.hmc.module;
 
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,7 +27,7 @@ import java.util.logging.Level;
  * - Limits redstone usage
  *   - Redstone will not work if triggered too often
  * - Limits piston usage
- *   - Only a given amount of pistons can be extended in a given time
+ *   - Only a given amount of pistons can be extended in a given time in the pistons region
  * - Limits hopper placement
  *   - Checks radius, if too many hoppers denies placement
  * - Limits mobspawns
@@ -38,7 +39,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
     // Storage for limitations
     private BukkitTask clearTask;
     private final Map<Location, Integer> firedAt = new HashMap<>();
-    private int pistonCount = 0;
+    private final Map<Pair<Integer, Integer>, Integer> pistonCount = new HashMap<>();
 
     // Redstone and pistons config
     private int howMuchRedstoneAllowed;
@@ -58,8 +59,19 @@ public class ModPerformance extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void countPistonExtend(BlockPistonExtendEvent e) {
 
-        if (pistonCount > howManyPistonsAllowed) e.setCancelled(true);
-        else pistonCount++;
+        int xIndex = e.getBlock().getX() / 256;
+        int zIndex = e.getBlock().getZ() / 256;
+        Pair<Integer, Integer> pair = new Pair<>(xIndex, zIndex);
+        if (pistonCount.containsKey(pair)) {
+            int countInRegion = pistonCount.get(pair);
+            if (++countInRegion > howManyPistonsAllowed) {
+                e.setCancelled(true);
+            } else {
+                pistonCount.put(pair, countInRegion);
+            }
+        } else {
+            pistonCount.put(pair, 1);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -153,7 +165,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
         if (clearTask != null) clearTask.cancel();
         clearTask = scheduler.runTaskTimer(hmc, () -> {
             firedAt.clear();
-            pistonCount = 0;
+            pistonCount.clear();
         }, ticksDelayUntilClear, ticksDelayUntilClear);
     }
 }

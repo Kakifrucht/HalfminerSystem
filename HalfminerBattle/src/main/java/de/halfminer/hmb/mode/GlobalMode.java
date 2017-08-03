@@ -388,8 +388,10 @@ public class GlobalMode extends AbstractMode {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void itemPickupDisable(PlayerPickupItemEvent e) {
-        e.setCancelled(pm.isInBattle(type, e.getPlayer()));
+    public void itemPickupDisable(EntityPickupItemEvent e) {
+        if (e.getEntity() instanceof Player) {
+            e.setCancelled(pm.isInBattle(type, (Player) e.getEntity()));
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

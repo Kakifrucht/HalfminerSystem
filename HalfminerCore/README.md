@@ -97,7 +97,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Limits redstone usage
       - Redstone will not work if triggered to often
     - Limits piston usage
-      - Only a given amount of pistons can be extended in a given time
+      - Only a given amount of pistons can be extended in a given time in the pistons region
     - Limits hopper placement
       - Checks radius, if too many hoppers denies placement
     - Limits mobspawns
