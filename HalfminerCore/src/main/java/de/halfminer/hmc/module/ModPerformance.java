@@ -42,7 +42,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
     private final Map<Pair<Integer, Integer>, Integer> pistonCount = new HashMap<>();
 
     // Redstone and pistons config
-    private int howMuchRedstoneAllowed;
+    private int howManyRedstoneUpdatesAllowed;
     private int howManyPistonsAllowed;
 
     // Hopper limit config
@@ -79,9 +79,14 @@ public class ModPerformance extends HalfminerModule implements Listener {
         Location redstoneLoc = e.getBlock().getLocation();
         if (firedAt.containsKey(redstoneLoc)) {
             int amount = firedAt.get(redstoneLoc);
-            if (amount > howMuchRedstoneAllowed) e.setNewCurrent(0);
-            else firedAt.put(redstoneLoc, amount + 1);
-        } else firedAt.put(redstoneLoc, 1);
+            if (amount > howManyRedstoneUpdatesAllowed) {
+                e.setNewCurrent(0);
+            } else {
+                firedAt.put(redstoneLoc, amount + 1);
+            }
+        } else {
+            firedAt.put(redstoneLoc, 1);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -153,7 +158,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
     public void loadConfig() {
 
         int ticksDelayUntilClear = hmc.getConfig().getInt("performance.ticksDelayUntilClear", 160);
-        howMuchRedstoneAllowed = hmc.getConfig().getInt("performance.howMuchRedstoneAllowed", 32);
+        howManyRedstoneUpdatesAllowed = hmc.getConfig().getInt("performance.howManyRedstoneUpdatesAllowed", 32);
         howManyPistonsAllowed = hmc.getConfig().getInt("performance.howManyPistonsAllowed", 200);
         hopperLimit = hmc.getConfig().getInt("performance.hopperLimit", 64);
         hopperLimitRadius = hmc.getConfig().getInt("performance.hopperLimitRadius", 7);

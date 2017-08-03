@@ -4,6 +4,7 @@ import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Deque;
 import java.util.LinkedList;
 
 /**
@@ -12,7 +13,7 @@ import java.util.LinkedList;
  */
 public class ModTps extends HalfminerModule {
 
-    private LinkedList<Double> tpsHistory;
+    private Deque<Double> tpsHistory;
     private BukkitTask task;
     private double lastAverageTps;
     private long lastTaskTimestamp;

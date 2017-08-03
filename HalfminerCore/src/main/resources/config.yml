@@ -146,8 +146,8 @@ motd:
 performance:
   #Delay in ticks until redstone and piston limits will be reset
   ticksDelayUntilClear: 160
-  #Number in events until redstone will be blocked, ticksDelayUntilClear clears this
-  howMuchRedstoneAllowed: 32
+  #Number in block updates until redstone will be blocked, ticksDelayUntilClear clears this
+  howManyRedstoneUpdatesAllowed: 32
   #How many pistons are allowed to extend in a region, ticksDelayUntilClear clears this
   howManyPistonsAllowed: 32
   #How many hoppers are allowed
