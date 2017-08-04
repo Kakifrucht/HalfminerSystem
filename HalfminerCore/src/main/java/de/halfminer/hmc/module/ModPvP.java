@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -99,8 +100,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         final Player damagee = (Player) e.getEntity();
         Player damager = Utils.getDamagerFromEvent(e);
 
-        // prevent self hit with bow
-        if (damagee.equals(damager)) {
+        // prevent self hitting, do not prevent damage from AreaEffectClouds
+        if (damagee.equals(damager) && !(e.getDamager() instanceof AreaEffectCloud)) {
             e.setCancelled(true);
         }
 
