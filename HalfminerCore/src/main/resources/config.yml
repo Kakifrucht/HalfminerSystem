@@ -150,6 +150,8 @@ performance:
   howManyRedstoneUpdatesAllowed: 32
   #How many pistons are allowed to extend in a region, ticksDelayUntilClear clears this
   howManyPistonsAllowed: 32
+  #Region size for piston checks. If value is 64, region will be 64*64 blocks, for example from x64-x127, z64-z127
+  pistonLimitRegionSize: 64
   #How many hoppers are allowed
   hopperLimit: 64
   #Radius around hopper that will be checked, changing this value may introduce lag

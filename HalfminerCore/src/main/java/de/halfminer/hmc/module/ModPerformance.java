@@ -1,11 +1,12 @@
 package de.halfminer.hmc.module;
 
 import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -21,6 +22,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -39,11 +41,12 @@ public class ModPerformance extends HalfminerModule implements Listener {
     // Storage for limitations
     private BukkitTask clearTask;
     private final Map<Location, Integer> firedAt = new HashMap<>();
-    private final Map<Pair<Integer, Integer>, Integer> pistonCount = new HashMap<>();
+    private final Map<PistonRegion, Integer> pistonCount = new HashMap<>();
 
     // Redstone and pistons config
     private int howManyRedstoneUpdatesAllowed;
     private int howManyPistonsAllowed;
+    private int pistonLimitRegionSize;
 
     // Hopper limit config
     private int hopperLimit;
@@ -59,18 +62,19 @@ public class ModPerformance extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void countPistonExtend(BlockPistonExtendEvent e) {
 
-        int xIndex = e.getBlock().getX() / 256;
-        int zIndex = e.getBlock().getZ() / 256;
-        Pair<Integer, Integer> pair = new Pair<>(xIndex, zIndex);
-        if (pistonCount.containsKey(pair)) {
-            int countInRegion = pistonCount.get(pair);
+        World world = e.getBlock().getWorld();
+        int xIndex = e.getBlock().getX() / pistonLimitRegionSize;
+        int zIndex = e.getBlock().getZ() / pistonLimitRegionSize;
+        PistonRegion region = new PistonRegion(world, xIndex, zIndex);
+        if (pistonCount.containsKey(region)) {
+            int countInRegion = pistonCount.get(region);
             if (++countInRegion > howManyPistonsAllowed) {
                 e.setCancelled(true);
             } else {
-                pistonCount.put(pair, countInRegion);
+                pistonCount.put(region, countInRegion);
             }
         } else {
-            pistonCount.put(pair, 1);
+            pistonCount.put(region, 1);
         }
     }
 
@@ -157,20 +161,58 @@ public class ModPerformance extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        int ticksDelayUntilClear = hmc.getConfig().getInt("performance.ticksDelayUntilClear", 160);
-        howManyRedstoneUpdatesAllowed = hmc.getConfig().getInt("performance.howManyRedstoneUpdatesAllowed", 32);
-        howManyPistonsAllowed = hmc.getConfig().getInt("performance.howManyPistonsAllowed", 200);
-        hopperLimit = hmc.getConfig().getInt("performance.hopperLimit", 64);
-        hopperLimitRadius = hmc.getConfig().getInt("performance.hopperLimitRadius", 7);
-        logHopperLimit = hmc.getConfig().getBoolean("performance.hopperLimitLog", false);
-        entityLimitLiving = hmc.getConfig().getInt("performance.entitiyLimitLiving", 100);
-        entityLimitSame = hmc.getConfig().getInt("performance.entityLimitSame", 25);
-        boxSize = hmc.getConfig().getInt("performance.boxSize", 16);
+        ConfigurationSection config = hmc.getConfig().getConfigurationSection("performance");
 
-        if (clearTask != null) clearTask.cancel();
+        int ticksDelayUntilClear = config.getInt("ticksDelayUntilClear", 160);
+        howManyRedstoneUpdatesAllowed = config.getInt("howManyRedstoneUpdatesAllowed", 32);
+        howManyPistonsAllowed = config.getInt("howManyPistonsAllowed", 200);
+        pistonLimitRegionSize = config.getInt("pistonLimitRegionSize", 64);
+        hopperLimit = config.getInt("hopperLimit", 64);
+        hopperLimitRadius = config.getInt("hopperLimitRadius", 7);
+        logHopperLimit = config.getBoolean("hopperLimitLog", false);
+        entityLimitLiving = config.getInt("entitiyLimitLiving", 100);
+        entityLimitSame = config.getInt("entityLimitSame", 25);
+        boxSize = config.getInt("boxSize", 16);
+
+        if (clearTask != null) {
+            clearTask.cancel();
+        }
+
         clearTask = scheduler.runTaskTimer(hmc, () -> {
             firedAt.clear();
             pistonCount.clear();
         }, ticksDelayUntilClear, ticksDelayUntilClear);
+    }
+
+    private class PistonRegion {
+
+        private final World world;
+        private final int x;
+        private final int z;
+
+
+        PistonRegion(World world, int x, int z) {
+            this.world = world;
+            this.x = x;
+            this.z = z;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            PistonRegion otherRegion = (PistonRegion) o;
+            return x == otherRegion.x && z == otherRegion.z && world.equals(otherRegion.world);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(world, x, z);
+        }
     }
 }
