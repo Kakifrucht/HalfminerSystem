@@ -395,6 +395,11 @@ public class GlobalMode extends AbstractMode {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void arrowPickupDisable(PlayerPickupArrowEvent e) {
+        e.setCancelled(pm.isInBattle(type, e.getPlayer()));
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void teleportDisable(PlayerTeleportEvent e) {
         if (!pm.isInBattle(type, e.getPlayer())
                 && !e.getPlayer().hasPermission("hmb.mode.global.bypass.teleportintoarena")
