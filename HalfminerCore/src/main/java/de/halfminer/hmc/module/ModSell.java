@@ -321,7 +321,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                 toPrint = e.getParentException();
             }
 
-            hmc.getLogger().log(Level.WARNING, "Could not add money to player " + toReward.getName(), toPrint);
+            hmc.getLogger().log(Level.WARNING, "Could not add money to player " + toReward.getName() + ", amount " + revenue, toPrint);
             MessageBuilder.create("errorOccurred", "Sell").sendMessage(toReward);
             return;
         }
