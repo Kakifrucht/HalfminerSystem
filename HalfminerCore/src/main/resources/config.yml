@@ -307,7 +307,7 @@ localization:
   cmdGemsPayInvalidParam: '&cBitte gebe eine gültige Zahl ein'
   cmdGemsPayNotEnoughGems: '&cDu hast nicht genügend Gems'
   cmdGemsPaySuccess: '&7Du hast &a%AMOUNT% &7Gems bezahlt, dir verbleiben &e%TOTALAMOUNT% &7Stück'
-  cmdGemsShow: '&7Du hast &a&l%GEMS% &7Gems, Spendenwaren Gegenwert je Gem beträgt &e1 Euro'
+  cmdGemsShow: '&7Du hast &a&l%GEMS% &7Gems, Spendenwaren Gegenwert je Gem beträgt &e1 Euro &7und ist gegen alles (auch Ränge) direkt bei Kakifrucht einlösbar'
   cmdHmcCopySchematicAlreadyExists: '&cDie Schematic existiert bereits im Zielverzeichnis'
   cmdHmcCopySchematicCopyError: '&cDie Schematic konnte nicht kopiert werden'
   cmdHmcCopySchematicCopySuccess: '&7Schematic wurde &aerfolgreich &7kopiert'

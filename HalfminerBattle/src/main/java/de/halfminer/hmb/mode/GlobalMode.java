@@ -332,6 +332,15 @@ public class GlobalMode extends AbstractMode {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPvPCombustUncancel(EntityCombustByEntityEvent e) {
+        if (e.isCancelled()
+                && e.getEntity() instanceof Player
+                && pm.isInBattle(type, (Player) e.getEntity())) {
+            e.setCancelled(false);
+        }
+    }
+
     @EventHandler(priority = EventPriority.LOW)
     public void onSplashUncancelStore(PotionSplashEvent e) {
         // to prevent factions/others from removing players from affectedEntities collection do cancel/uncancelling
