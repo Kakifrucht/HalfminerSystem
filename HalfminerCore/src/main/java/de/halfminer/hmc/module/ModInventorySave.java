@@ -1,6 +1,7 @@
 package de.halfminer.hmc.module;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -78,8 +79,9 @@ public class ModInventorySave extends HalfminerModule implements Listener {
 
     private boolean isEnchantedStack(ItemStack itemStack) {
         return itemStack != null
-                && itemStack.hasItemMeta()
-                && itemStack.getItemMeta().hasEnchants();
+                && ((itemStack.hasItemMeta()
+                && itemStack.getItemMeta().hasEnchants())
+                || itemStack.getType().equals(Material.ENCHANTED_BOOK));
     }
 
     @Override
