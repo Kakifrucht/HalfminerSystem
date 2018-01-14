@@ -2,14 +2,12 @@ package de.halfminer.hms.cache;
 
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.cache.exceptions.CachingException;
-import de.halfminer.hms.util.FormattingException;
 import de.halfminer.hms.cache.exceptions.ItemCacheException;
-import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.Pair;
-import de.halfminer.hms.util.StringArgumentSeparator;
-import de.halfminer.hms.util.Utils;
+import de.halfminer.hms.handler.storage.PlayerNotFoundException;
+import de.halfminer.hms.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -118,12 +116,20 @@ public class CustomitemCache {
                         continue;
                     }
                     SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-                    boolean success = meta.setOwner(parameter);
-                    if (success) {
-                        itemStack.setItemMeta(meta);
-                    } else {
-                        logInvalidParameter(keyParamPair.getLeft(), parameter);
-                    }
+                    try {
+                        OfflinePlayer offlinePlayer = HalfminerSystem.getInstance()
+                                .getStorageHandler()
+                                .getPlayer(parameter)
+                                .getBase();
+
+                        boolean success = meta.setOwningPlayer(offlinePlayer);
+                        if (success) {
+                            continue;
+                        }
+
+                    } catch (PlayerNotFoundException ignored) {}
+
+                    logInvalidParameter(keyParamPair.getLeft(), parameter);
                     break;
                 default:
                     logInvalidKey(keyParamPair.getLeft());

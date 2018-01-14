@@ -241,8 +241,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             // itemname - revenue lore - increase lore
             String[] stackDataSplit = stackData.split(Pattern.quote("|"));
 
-            List<String> lore = new ArrayList<>();
-            lore.addAll(Arrays.asList(stackDataSplit).subList(1, stackDataSplit.length));
+            List<String> lore = new ArrayList<>(Arrays.asList(stackDataSplit).subList(1, stackDataSplit.length));
 
             Utils.setDisplayName(currentItem, stackDataSplit[0]);
             Utils.setItemLore(currentItem, lore);

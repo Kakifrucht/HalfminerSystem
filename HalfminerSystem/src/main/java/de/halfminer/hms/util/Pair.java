@@ -54,13 +54,8 @@ public class Pair<L, R> {
 
     @Override
     public boolean equals(Object obj) {
-
-        if (this == obj) return true;
-
-        if (obj instanceof Pair) {
-            if (((Pair) obj).getLeft().equals(left)
-                    && ((Pair) obj).getRight().equals(right)) return true;
-        }
-        return false;
+        return this == obj || obj instanceof Pair
+                && ((Pair) obj).getLeft().equals(left)
+                && ((Pair) obj).getRight().equals(right);
     }
 }

@@ -2,7 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hms.handler.storage.PlayerNotFoundException;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -80,17 +80,11 @@ public class Cmdhmcapi extends HalfminerCommand {
                         return;
                     }
 
-                    String skullOwner = skull.getOwner();
-
-                    int level;
-                    try {
-                        level = storage.getPlayer(skullOwner).getInt(DataType.SKILL_LEVEL);
-                    } catch (PlayerNotFoundException e) {
-                        level = 1;
-                    }
+                    HalfminerPlayer skullOwner = storage.getPlayer(skull.getOwningPlayer());
+                    int level = skullOwner.getInt(DataType.SKILL_LEVEL);
 
                     server.dispatchCommand(consoleInstance,
-                            "vt setstr temp headname_" + player.getName() + " " + skullOwner);
+                            "vt setstr temp headname_" + player.getName() + " " + skullOwner.getName());
                     server.dispatchCommand(consoleInstance,
                             "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
                     server.dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());

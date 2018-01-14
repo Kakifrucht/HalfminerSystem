@@ -286,25 +286,29 @@ public class DuelQueue extends BattleClass {
         List<Arena> freeArenas = am.getFreeArenasFromType(MODE);
         Player partner = pm.getFirstPartner(selector);
 
-        if (freeArenas.size() == 0) {
-            MessageBuilder.create("modeDuelChooseArenaNoneAvailable", hmb)
-                    .sendMessage(selector, partner);
-        } else if (freeArenas.size() == 1) {
-            arenaWasSelected(selector, "random");
-        } else {
-            if (refreshMessage) {
-                MessageBuilder.create("modeDuelChooseArenaRefreshed", hmb).sendMessage(selector);
-            } else {
-                MessageBuilder.create("modeDuelChooseArena", hmb)
-                        .addPlaceholderReplace("%PLAYER%", partner.getName())
-                        .sendMessage(selector);
+        switch (freeArenas.size()) {
+            case 0:
+                MessageBuilder.create("modeDuelChooseArenaNoneAvailable", hmb)
+                        .sendMessage(selector, partner);
+                break;
+            case 1:
+                arenaWasSelected(selector, "random");
+                break;
+            default:
+                if (refreshMessage) {
+                    MessageBuilder.create("modeDuelChooseArenaRefreshed", hmb).sendMessage(selector);
+                } else {
+                    MessageBuilder.create("modeDuelChooseArena", hmb)
+                            .addPlaceholderReplace("%PLAYER%", partner.getName())
+                            .sendMessage(selector);
 
-                MessageBuilder.create("modeDuelPartnerChoosingArena", hmb)
-                        .addPlaceholderReplace("%PLAYER%", selector.getName())
-                        .sendMessage(partner);
-            }
+                    MessageBuilder.create("modeDuelPartnerChoosingArena", hmb)
+                            .addPlaceholderReplace("%PLAYER%", selector.getName())
+                            .sendMessage(partner);
+                }
 
-            am.sendArenaSelection(selector, freeArenas, "/duel choose ", "modeDuelChooseArenaRandom", false);
+                am.sendArenaSelection(selector, freeArenas, "/duel choose ", "modeDuelChooseArenaRandom", false);
+                break;
         }
     }
 

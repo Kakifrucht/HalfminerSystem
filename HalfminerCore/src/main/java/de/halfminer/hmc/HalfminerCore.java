@@ -41,7 +41,9 @@ public class HalfminerCore extends JavaPlugin {
         try {
             for (ModuleType module : ModuleType.values()) {
                 HalfminerModule mod = (HalfminerModule) this.getClassLoader()
-                        .loadClass(PACKAGE_PATH + ".module." + module.getClassName()).newInstance();
+                        .loadClass(PACKAGE_PATH + ".module." + module.getClassName())
+                        .getDeclaredConstructor()
+                        .newInstance();
 
                 modules.put(module, mod);
             }
@@ -63,7 +65,9 @@ public class HalfminerCore extends JavaPlugin {
         HalfminerCommand command;
         try {
             command = (HalfminerCommand) this.getClassLoader()
-                    .loadClass(PACKAGE_PATH + ".cmd.Cmd" + cmd.getName()).newInstance();
+                    .loadClass(PACKAGE_PATH + ".cmd.Cmd" + cmd.getName())
+                    .getDeclaredConstructor()
+                    .newInstance();
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "An error has occured executing " + cmd.getName(), e);
             return true;
