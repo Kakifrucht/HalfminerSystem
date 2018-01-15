@@ -4,96 +4,93 @@ Base Spigot plugin API for Minecraft Server [Two and a half Miner](https://halfm
 Contains handlers, caches and utilities that are shared between all Halfminer Bukkit/Spigot plugins in this repository.
 
 ## Current features
-- Central HalfminerManager serves as hub for persistence across plugins
+- Central ``HalfminerManager`` serves as hub for persistence across plugins
   - Manages configuration file updates
-  - (Un)Registers classes implementing Listener interface
-  - Registered classes may implement additional interfaces...
-    - Disableable interface, to be called when the parent plugin shuts down
-    - Reloadable interface, to be called when the plugins config was reloaded
-    - Sweepable interface, to be called in a set interval for cleanup
+  - (Un-)registers classes from Bukkit event manager implementing ``Listener`` interface
+  - Registered classes may implement additional interfaces …
+    - ``Disableable`` - to be called when the parent plugin shuts down
+    - ``Reloadable`` - to be called when the plugins config was reloaded
+    - ``Sweepable`` - to be called in a set interval for cleanup
 - **Caches**
-  - ActionProbabilityContainer
+  - ``ActionProbabilityContainer``
     - Class reading a list containing key:value pairings, where key is the probability as a number relative to other list elements and value is the action name
-      - Example: List containing "2:action1" and "1:action2" has 66,6% chance to run action1, 33,3% to run action2
+      - Example: List containing ``2:action1`` and ``1:action2`` has 66,6% chance to run action1, 33,3% to run action2
     - Returns a random CustomAction on demand
-  - CustomAction
-    - Reads customactions.txt and executes defined actions
-      - Uses CustomtextCache syntax, where chapter is action name and content is a list of actions
+  - ``CustomAction``
+    - Reads customactions.txt in plugin directory and executes defined actions
+      - Uses ``CustomtextCache`` syntax, where chapter is action name and content is a list of actions
     - Supports placeholders for every action
       - Custom placeholders can be passed before execution of action
-      - %PLAYER% and %PLAYER1-N% always active
+      - ``%PLAYER%`` and ``%PLAYER1-N%`` always active
     - Currently supported actions
-      - "players" |number|: define a minimum amount of players that must be passed to this action to execute
-      - "hasroom" |number| [stacksize]: execution flow will only continue if given amount of slots are free, optional stacksize parameter that will divide the given number
-      - "cmd" |command|: execute command as console
-      - "give" |customitem|: hands out customitem defined in customitems.txt
-      - "broadcast" |message|: broadcast a given message
-      - "tell" |message|: send a given message to main player
-    - Stops execution flow if previous action fails, for 
-      - Example: If broadcast action is below give action and item could not be given, the broadcast won't be done
-  - CustomitemCache
-    - Uses CustomtextCache syntax
+      - ``players |number|``: define a minimum amount of players that must be passed to this action to execute
+      - ``hasroom |number| [stacksize]``: execution flow will only continue if given amount of slots are free, optional stacksize parameter that will divide the given number
+      - ``cmd |command|``: execute command as console
+      - ``give |customitem|``: hands out customitem defined in customitems.txt
+      - ``broadcast |message|``: broadcast a given message
+      - ``tell |message|``: send a given message to main player
+    - Stops execution flow if previous action fails 
+      - Example: If ``broadcast`` action is below ``give`` action and item could not be given, there will be no broadcast
+  - ``CustomitemCache``
+    - Uses ``CustomtextCache`` syntax
     - Chaptername is itemname
     - First line in chapter must be Minecraft Material name
-    - Supports %PLAYER% placeholder (player name that receives item) and custom ones can be passed aswell
+    - Supports ``%PLAYER%`` placeholder (player name that receives item) and custom ones can be passed aswell
     - Available item customisations
-      - itemid: data ID or durability, number as argument
-      - name: itemname, supporting '&' as color code character
-      - lore: custom item lore, lines are separated with '|' character, supports color
-      - enchant: custom enchants, separate enchantment name and level with ':', can include multiple per line
-      - skullowner: set the owner of the skull, only works if given material is "SKULL_ITEM"
-    - Will throw exception if item wasn't given to player
-  - CustomtextCache
+      - ``itemid``: data ID or durability, number as argument
+      - ``name``: itemname, supporting ``&`` as color code character
+      - ``lore``: custom item lore, lines are separated with ``|`` character, supports color
+      - ``enchant``: custom enchants, separate enchantment name and level with ``:``, can include multiple per line
+      - ``skullowner``: set the owner of the skull, only works if given material is ``SKULL_ITEM``
+    - Will throw ``ItemCacheException`` if item wasn't given to player
+  - ``CustomtextCache``
     - Flatfile based text cache, segmented in chapters
-    - To mark a chapter, use "#chaptername argument" (argument optional and not limited, case insensitive)
-       - Supports aliases via comma such as "#chaptername argument,alias argument"
-       - Supports wildcards, such as "#chaptername argument *" or "#chaptername *"
-       - Supports aliases in between via '|' char, such as #chapter subchapter|subchapteralias
-    - Automatic replacement of '&' with Minecraft color code
+    - To mark a chapter, use ``#chaptername argument`` (argument optional and not limited to one, case insensitive)
+       - Supports aliases via ``,``, like ``#chaptername argument,alias argument``
+       - Supports wildcards via ``*``, like ``#chaptername argument *`` or ``#chaptername *``
+       - Supports inlined aliases via ``|``, like ``#chapter subchapter|subchapteralias``
+    - Automatic replacement of ``&`` with Minecraft color code
     - If line ends with space char, add next line to current line
 - **Handlers**
   - BossBar
-    - Send bar to specific player or broadcast
+    - Send bossbar to specific player or broadcast
     - Set time until bar fades out
     - Broadcast bar and player bar separate, only one bar at a time for each
   - Hooks
-    - Hooks external plugins
+    - Hooks external soft-dependant plugins
     - Checks if plugins are loaded
-    - Shortcuts to external api
+    - Shortcuts to external API
   - Storage
     - Data stored in YAML flatfiles
-      - Own UUID storage/cache
+      - UUID<>Username storage/cache
       - Player data storage
       - Storage for other types of data
       - Changes are being autosaved
     - Can easily be queried via Bukkit YAML API
-      - Get HalfminerPlayer object to grab stored user data
+      - Get ``HalfminerPlayer`` object to grab stored user data
       - Thread safe
-    - Holds CustomtextCaches
+    - Holds ``CustomtextCache``'s
   - Teleport
-    - Disallows movement
-    - Change default time in config
-    - Show bossbar during teleport
-    - Stops when player taking damage
+    - Disallows movement before teleport
+      - Displays a countdown bossbar before teleport
+      - Change default time in config
+    - Stop teleport when player is taking damage
     - Execute runnable after successful (or unsuccessful) teleport
-    - Only one teleport at a time
+    - Only one teleport at a time per player
   - Titles
-    - Main title/subtitle
-    - Actionbar title
-    - Tablist titles
+    - Send main title/subtitle
+    - Send actionbar title
+    - Send tablist header/footer
 - **Utils**
   - MessageBuilder
     - Used for messaging, broadcasting and logging of messages
     - Supports custom placeholders
-    - Supports clickable commands via '~' prefix and encapsulation of command with '/'
-    - Supports colors via '&' code
+    - Supports clickable commands via ``~`` prefix and encapsulation of command with ``/``
+    - Supports colors via ``&`` code
   - NMSUtils
-    - Collection of static methods accessing NMS (net.minecraft.server) and CraftBukkit
+    - Collection of static methods accessing NMS (``net.minecraft.server``) and CraftBukkit classes
     - References must be updated manually, as no reflection is being used
     - Set the last killer of a player, get players ping and send title/tablist packets
-  - Pair
-    - Helper class implementing a pair
-    - equals() and hashCode() properly implemented, allowing usage with HashMaps
   - StringArgumentSeparator
     - Helper class splitting a given string and allowing easy access of arguments
     - Allows to easily retrieve numbers from the given String

@@ -1,139 +1,138 @@
 # Halfminer Core
-Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.com/drtshock/Factions).
+Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). 
+Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.com/EssentialsX/Essentials).
 
 ## Current features
 - Built to be modular, lightweight and efficient
 - Messages completely, functionality mostly configurable
-  - Supports clickable commands by using '~' character and encapsulating command in '/'
+  - Supports clickable commands by using ``~`` character and encapsulating command in ``/``
 - **Modules**
   - AntiKillfarming
     - Counts amount of kills between two players
-    - After set amount of kills has been reached, blocks players for a set amount of time
+    - After set amount of kills has been reached, blocks players from PvP and command usage for a set amount of time
       - Checks interval between kills, resets if interval exceeds given amount
       - Broadcasts block to all players
         - Pre warns players one kill before they get blocked
         - Also prints informational message that killfarming is not allowed
-      - Blocks further PvP (both denies for blocked players and prevent other players from hitting aswell)
-        - Direct hitting
-        - TnT killing
-        - Arrow shooting
-        - Splash/Lingering potion throwing
+      - Disallows further PvP, including
+        - direct hitting
+        - TNT killing
+        - arrow shooting
+        - splash/lingering potion throwing
       - Blocks commands
-      - Prints message with remaining block time
-    - Allows other modules to check if a kill was farmed
+      - Shows message with remaining block time
+    - Allows other modules to check if a kill is a repeated kill
     - Punishment doubles for every additional block
   - AntiXray
     - Counts players block breaks
       - Clears after no protected blocks were broken
     - Set protected blocks via config
     - Threshold ratio between broken blocks and broken protected blocks
-    - Threshold Y level until counted
-    - Notifies staff if threshold was passed
+    - Threshold ``Y`` level until counted
+    - Notifies staff if threshold was reached
       - Shows last location
-      - Notifies on join, if staff was offline
+      - If staff was offline notifies on join
   - AutoMessage
-    - Sends messages in a given interval
-    - Messages configurable
-      - Commands can be made clickable (start with '~' and encapsulate command with trailing '/')
+    - Broadcasts messages in a given interval
+    - Messages configurable with support for clickable commands
   - ChatManager
     - Hooks into Vault to get prefix and suffix
     - Custom chatformats
-      - Default chatformat is bottom one
-      - Format can be assigned via custom permission node
-      - Permission to always get format with highest priority
-      - No format limit
+      - Default chatformat is last one defined in list
+      - Format can be assigned to groups/players via custom permission node
+      - Permission to always get format with highest priority can be granted
+      - Amount of formats not limited
     - Denies chatting if globalmute active
       - Allows easy toggling of globalmute
-    - Plays sound on chat
-    - Notifies mentioned players via actionbar
-      - Shows if mentioned player is afk
-      - Rate limit (no mention spam)
+    - Plays sound when sending a message in chat
+    - Notifies mentioned players in chat via actionbar
+      - Tells sender if mentioned player is AFK
+      - Mentioning is rate limited
     - Disallow (or allow via permission)
-      - Sending empty/one character messages
-      - Repeating the same (or similar) message
-      - Using color codes
-      - Using formatting codes
+      - sending empty/one character messages
+      - repeating the same (or similar) message
+      - using color codes and formatting codes via ``&``
       - Posting links/IPs
-      - Writing capitalized
+      - Writing all capitalized
   - CombatLog
     - Tags players when hitting/being hit
     - Shows actionbar message containing time left in fight
     - On logout
       - Combat logging player dies
       - Last attacker will get the kill and get untagged
-      - Message will be broadcast, containing last attacker
+      - Message will be broadcast, containing last attacker name
     - Untags players after timer runs out, player logs out or a player is killed
-    - Disables during fight:
+    - Disabled while tagged:
       - Taking off armor
       - Commands
       - Enderpearls
   - Crafting
     - Add minimum required amounts per item on a crafting field for vanilla recipes
-      - For example, amount set for tnt at 8 requires at least 8 sand/gunpowder on every field in recipe
+      - For example, amount set for TNT at 8 requires at least 8 sand/gunpowder on every field in crafting field
   - GlitchProtection
     - Notifies staff about potential wall glitching
     - Detects dismount glitches, forces player to spawn
     - Override Spigot teleport safety between worlds
-    - Prevents glitching with chorus fruit, instead teleports down
-    - Kills players above netherroof / notifies staff
+    - Prevents glitching with chorus fruit, instead teleports player down
+    - Kills players above netherroof and notifies staff
   - HealthBar
-    - Shows healthbar of attacking/attacked player/entity in bossbar
+    - Shows healthbar of attacking/attacked player or mob in bossbar
       - Contains playername / mobname
-      - If player, shows players skilllevel
-      - Updates on damage or health regain for every player who hit the entity
-      - Dynamic bar segmentation, solid if none available client side
+      - If player, shows players skilllevel from ``ModSkilllevel``
+      - Updates healthbar on damage or health regain for every player who hit the entity
+      - Dynamic bar segmentation, solid bar if no segmentation is available client side
     - Only shows one bar at a time
-      - Shows bar and updates for 8 seconds max, or until other entity was hit
-      - When entity was killed, shows bar in green and only for 2 seconds
+      - Shows bar for 8 seconds max, or until another entity was hit
+      - When entity was killed, shows bar in green and removes it after 2 seconds
   - InventorySave
     - Only drop non enchanted items on death if enabled
-      - If an item has enchantment "Curse of Binding" and is equipped, move to inventory upon death
-    - Toggle EXP drop
+      - If an item has enchantment ``Curse of Binding`` and is equipped, move to inventory upon death
+    - Toggle EXP drops
   - Motd
     - Configurable Serverlist Motd
       - Can be set via command
     - Dynamic playerlimit indicator, configurable with buffers and limits
   - Performance
     - Limits redstone usage
-      - Redstone will not work if triggered to often
+      - Redstone will not work if triggered too often
     - Limits piston usage
       - Only a given amount of pistons can be extended in a given time in the pistons region
     - Limits hopper placement
       - Checks radius, if too many hoppers denies placement
     - Limits mobspawns
-      - Checks radius, if too many mobs stops the mobspawn
+      - Checks radius, if too many mobs denies mobspawn
   - PvP
     - Halves PvP cooldown
       - Reduces damage immunity
-    - Strength potions damage nerfed, configurable
+    - Strength potions damage nerfed (*configurable*)
     - Bow spamming disabled
-    - Disable hitting self with bow
-    - Killstreak via actionbar
+      - Disable hitting self with bow
+    - Broadcasts killstreaks via actionbar
     - Run custom actions with custom probabilities on kill
-      - See customactions.txt for example actions
+      - See ``customactions.txt`` in plugin directory for example actions
     - Sounds on kill/death
     - Remove effects on teleport
-    - Halves satiation health regeneration during combat
+    - Halves saturation health regeneration during combat
     - Remove regeneration potion effect when eating golden apple
       - Ensures that absorption does not fully regenerate when eating a non Notch golden apple
-    - Broadcast resurrect via Totem of Undying
+    - Broadcast resurrection via Totem of Undying
   - Respawn
     - Respawns player at custom location
-    - Adds a first time join
-      - Else, removes join message
+    - Shows a join message for new players
+      - Removes join messages for other players
       - Execute custom command on first join
     - Adds random chance to get own head dropped if new players are being welcomed
       - Custom welcome words
       - Cooldown to prevent misuse
       - Custom probability
-      - Uses (sub)title and bossbar for information and plays sounds
+      - Uses (sub-)title and bossbar for information
   - Sell
     - Full dynamic sell system
-      - Cycle based selling, every given minutes new items will be chosen and all prices will reset
-        - Cycles are persistent through restarts
+      - Cycle based selling, after a given interval new items will be chosen and all prices will reset
+        - Cycles are persistent through server/plugin restarts
         - Broadcast message one minute before and when a new cycle starts
-          - Broadcasts player that sold most of a single item, and which it was
-        - Cycle time is dependent on current player count on server, more players - more cycles
+          - Broadcasts player that sold most of a single item, which item and the total amount sold
+        - Cycle time is dependent on current player count on server, more players -\> more cycles
           - Define a max/min time and playercount for min time in config
       - Reads items and their groups from config
         - Items are defined by their Material, durability/id, base price per unit and name of item
@@ -141,33 +140,33 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
           - Price will be adjusted by a configurable amount every given amount (also configurable per group)
             - Shows original base price
             - Variance can be added to base price for more dynamic pricing
-      - Includes GUI, must be accessed via /sell command
-        - First line in GUI can be fully configured via customitems.txt and config to set a custom command per slot
+      - Includes GUI, can be accessed via */sell* command
+        - Header in GUI is fully configurable via ``customitems.txt`` and the config to set a custom command per slot
           - By default line will be filled with stained glass pane
-          - For example a custom button to toggle auto selling can be added
-    - Custom revenue multiplier per player level (hms.level)
-      - Randomly (depending on revenue) sends message about how much more revenue could have been made with higher rank
+          - For example: A custom button to toggle auto selling (*/sell auto*) can be added
+    - Custom revenue multiplier per player level (``hms.level.x``)
+      - Randomly (depending on revenue) sends message about how much more revenue could have been made with a higher level
     - Auto sells chests on inventory close
-      - Needs to be toggled
-    - Items with any item meta won't be sold
+      - Toggle via */sell auto* command
+    - Items that have an item meta won't be sold
   - SkillLevel
     - PvP based skilllevel system / ELO
     - Dynamic ELO determination
       - Auto derank on inactivity (when rank threshold is met)
-      - Doesn't count farmed kills
-    - Adds level to scoreboard
-      - Colors the players name depending on skillgroup
+      - Doesn't count farmed kills (via ``ModAntiKillfarming``)
+    - Shows level next to players name in scoreboard
+      - Colors the players name depending on skillgroup (*configurable*)
     - Sorts tablist in descending order
     - Support for staff members to always be on top of tablist
   - StaticListeners
-    - Removes quit message
+    - Removes player quit message
     - Keeps itemname of colored items in anvil
     - Commandfilter
-      - Disables commands in bed (teleport glitch)
-      - Rewrites /pluginname:command to just /command
-    - Disables tab completes that are too long, defaults to help instead
+      - Disables commands in bed (prevent teleport glitches)
+      - Rewrites ``/pluginname:command`` to just ``/command``
+    - Disables tab completes that are too long, defaults to ``/help`` instead
   - Stats
-    - Records lots of statistics about a player
+    - Records following statistics about a player in centralized storage from ``HalfminerSystem``
       - Online time
       - Last names
       - Kill/death count
@@ -176,25 +175,25 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
       - Mobkills
       - Money earned
     - View stats on rightclicking a player
-      - Exempt permission
+      - Permission to exempt players
       - Show if player is AFK
   - StatsTop
-    - Manages ordered player stat scoreboards
-      - Define which stats to track via config (integer based)
+    - Manages ordered player stat scoreboards, recorded by ``ModStats``
+      - Define which stats to track via config (integer based values)
       - Define max board size
       - Define min and max amount to be on on board
-    - Optimized for performance, does updates asynchronously
+    - Optimized for performance, does updates asynchronously without causing any lags
   - Titles
     - Shows join title
-      - Players online / money
-      - Configurable message
-      - Shows news after delay in bossbar and title
+      - How many players are online, how much money does the player have
+      - Message configurable
+      - Shows server news after delay in bossbar and title
     - Displays information for new players
-    - Tab titles containing amount of money and playercount
-    - Money through Essentials hook, automatic update
+    - Tablist titles containing amount of money and playercount
+    - Fetches money through Essentials hook, updates automatically
   - Tps
     - Calculates ticks per second
-    - Notifies staff when servers ticks TPS is too low
+    - Notifies staff when servers TPS is too low
 - **Commands**
   - /chat
     - Chat manipulation tools
@@ -209,51 +208,51 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Set news and motd message
   - /customtext
     - Displays custom text data
-    - Should be binded via Bukkit aliases (commands.yml in server root)
-    - Utilizes and extends CustomtextCache with syntax elements
+    - Should be binded via Bukkit aliases (``commands.yml`` in server root)
+    - Utilizes and extends ``CustomtextCache`` with syntax elements
       - Placeholder support for text
-      - Make commands clickable by ending them with '/' character
-        - A line must be started with '~' to be parsed
+      - Make commands clickable by ending them with ``/`` character
+        - A line must be started with ``~`` to be parsed
         - Commands will be printed in italic
       - Support for command execution
-        - Lines starting with "->" will make the player execute following text
-        - Lines starting with "-->" will make the console execute following text as command
+        - Lines starting with ``->`` will make the player execute following text (command or chat message)
+        - Lines starting with ``-->`` will make the console execute following text as command
   - /disposal
-    - Opens portable disposal
+    - Opens a portable disposal
   - /gems
     - Shows the players gem account
-    - Allows players to pay gems via /gems pay command
-      - Executes custom action with amount as placeholder (optional)
+    - Allows players to pay gems via */gems pay* command
+      - Executes custom action with amount paid as placeholder (optional)
     - View and modify players gem accounts, if permission was granted
       - Notifies edited players if they are online
-    - All account changes are being logged
+    - All account changes are being logged in console
   - /hmc
     - Copy a WorldEdit schematic to another directory (copyschematic)
     - Give a custom item defined in customitems.txt to a player (give)
     - Reload config (reload)
-    - Rename items, supports lore (rename)
-    - Remove a players /home block (rmhomeblock)
-    - Run an action defined in customactions.txt (runaction)
+    - Rename items, supports custom lore (rename)
+    - Remove a players */home* block (rmhomeblock)
+    - Run an action defined in ``customactions.txt`` (runaction)
     - Search for homes in a given radius, hooking into Essentials (searchhomes)
     - Edit skillelo of player (updateskill)
-    - List all currently by antixray watched players (xraybypass)
-      - Exempt a player from AntiXRay
+    - List all currently watched players by ``ModAntiXray`` (xraybypass)
+      - Exempt a player from being watched
   - /hmcapi
     - Small features for script integration
       - Show titles
       - Check if player has room in inv
       - Remove head in casino
-      - Remove case in casino
+      - Remove crate in casino
       - Set script vars accordingly
   - /hmstore
-    - Edit HalfminerSystem storage
+    - Edit ``HalfminerSystem`` storage
     - Set, get and delete variables
     - Check if playerdata is being edited
-    - Save to disk
+    - Save everything to disk
   - /home
-    - Executes Essentials /home after unblock from vote
+    - Executes Essentials */home* after unblock from vote
     - Allows usage up to 15 minutes after join
-    - Doesn't block for new users (< 300 Minutes)
+    - Doesn't block command for new users (< 300 Minutes)
     - Doesn't block users whose ip has already voted twice
   - /lag
     - Information if player or server lags
@@ -269,7 +268,7 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - PIN's are only valid for up to an hour after command execution
     - Stores the current rank name with the pin
       - Sets boolean to check if player is upgraded
-      - Sets IP address, to deny sharing of PIN codes
+      - Sets IP address, to prevent sharing of PIN codes
   - /rank
     - Give out ranks to players
     - Executes a custom action to give out rewards and run custom commands
@@ -281,15 +280,15 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Instead of defining upgrade rank on command execution can define number of ranks that player will be upranked
   - /repair
     - Repair the held item or whole inventory
-      - Permissions for access restriction
+      - Permissions to restrict access
     - Adds configurable variable cooldown per level
       - Will only apply cooldown if item was actually repaired
-    - If repairing single item, checks if it is a stack (permission required)
+    - If repairing single item, checks if it is a stack (permission required to repair stacks)
   - /sell
     - Show sell menu
-    - Allows selling item at position in menu with */sell itemposition*, first item with /sell 1
+    - Allows selling item at position in menu with */sell itemposition*, first item with */sell 1*
     - Toggle automatic selling
-    - /clearcycle alias forces a new sell cycle
+    - */clearcycle* command alias forces a new sell cycle
   - /signedit
     - Copy signs, define copy amount
     - Edit signs, define line number
@@ -297,23 +296,22 @@ Core plugin for Minecraft Server [Two and a half Miner](https://halfminer.de). R
     - Teleport player to spawn
     - Teleport other players to spawn with permission
     - Teleport offline players to spawn once they login
-    - Set the spawnpoint with /setspawn
+    - Set the spawnpoint with command alias */setspawn*
   - /stats
-    - View own / other players stats
-    - Allows to compare statistics easily
+    - View own and other players stats
+    - Allows to compare statistics easily via */stats \<playername> compare*
   - /statstop
-    - View the leaderboards configured via ModStatsTop
+    - View the leaderboards configured via ``ModStatsTop``
     - Shows all available leaderboards in a list
-    - By default, shows top 5 of selected board and the players position, plus the next and previous one to the player
-      - If executing player is not on board, shows last player and his own stat
+    - By default, shows top 5 of selected board and the players position, plus the next and previous player relative to the executing player
+      - If executing player is not on board, shows last player on board and his own stat below
       - Specfify page number to scroll through the board
-    - View position on every board at once
-      - Specify player to compare ranks easily
+    - View all position on every board at once via */statstop player*
+      - Specify player to compare ranks easily (*/statstop player \<playername>*)
   - /vote
-    - Shows vote links (custom per player) and current votecount
-    - Execute custom actions when vote is received (configure Votifier to "/vote voted %PLAYER%")
-    - Execute command if certain votecount has been reached (event notifier for instance)
-    - If offline or inventory full, stores reward for retrieval later (/vote getreward)
-    - Counts votes for /stats
-    - Unblocks access to /home
-      - Will also unblock other users with same ip
+    - Shows vote links (custom per player) and current total votecount
+    - Execute custom actions when vote is received (point Votifier to */vote voted %PLAYER%*)
+    - Execute command if certain votecount has been reached (notifier to do an event for example)
+    - If offline or inventory full, stores reward for retrieval later (*/vote getreward*)
+    - Counts votes for */stats*
+    - Unblocks access to */home*
