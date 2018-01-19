@@ -111,10 +111,12 @@ public class CustomitemCache {
                     }
                     break;
                 case "skullowner":
+
                     if (!itemStack.getType().equals(Material.SKULL_ITEM)) {
                         logInvalidParameter(keyParamPair.getLeft(), parameter);
                         continue;
                     }
+
                     SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
                     try {
                         OfflinePlayer offlinePlayer = HalfminerSystem.getInstance()
@@ -124,6 +126,7 @@ public class CustomitemCache {
 
                         boolean success = meta.setOwningPlayer(offlinePlayer);
                         if (success) {
+                            itemStack.setItemMeta(meta);
                             continue;
                         }
 
