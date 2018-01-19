@@ -239,8 +239,8 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
       - Exempt a player from being watched
   - /hmcapi
     - Small features for script integration
-      - Show titles
-      - Check if player has room in inv
+      - Show titles (command interface)
+      - Check if player has room in inventory
       - Remove head in casino
       - Remove crate in casino
       - Set script vars accordingly

@@ -52,6 +52,11 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
         return uuid;
     }
 
+    @Override
+    public boolean wasSeenBefore() {
+        return !getName().isEmpty();
+    }
+
     public String getName() {
         return getString(DataType.LAST_NAME);
     }

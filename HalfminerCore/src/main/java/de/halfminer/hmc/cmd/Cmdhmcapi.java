@@ -13,10 +13,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 /**
  * - Small features for script integration
- *   - Show titles
- *   - Check if player has room in inv
+ *   - Show titles (command interface)
+ *   - Check if player has room in inventory
  *   - Remove head in casino
- *   - Remove case in casino
+ *   - Remove crate in casino
  *   - Set script vars accordingly
  */
 @SuppressWarnings("unused")
@@ -65,31 +65,46 @@ public class Cmdhmcapi extends HalfminerCommand {
                             + sender.getName() + " " + hand.getItemMeta().getDisplayName());
                     server.dispatchCommand(consoleInstance, "vt run casino:caseopen " + player.getName());
 
-                } else server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
+                } else {
+                    showErrorMessage();
+                }
 
             } else if (args[0].equalsIgnoreCase("takehead")) {
 
                 ItemStack hand = player.getInventory().getItemInMainHand();
-                if (hand != null && hand.hasItemMeta()
-                        && reduceHandAmountOrRemove(Material.SKULL_ITEM, 1)) {
+                if (hand != null
+                        && hand.hasItemMeta()
+                        && hand.getType().equals(Material.SKULL_ITEM)) {
 
                     SkullMeta skull = (SkullMeta) hand.getItemMeta();
 
                     if (!skull.hasOwner()) {
-                        server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
+                        showErrorMessage();
                         return;
                     }
 
                     HalfminerPlayer skullOwner = storage.getPlayer(skull.getOwningPlayer());
-                    int level = skullOwner.getInt(DataType.SKILL_LEVEL);
+                    if (!skullOwner.wasSeenBefore()) {
+                        showErrorMessage();
+                        return;
+                    }
 
-                    server.dispatchCommand(consoleInstance,
-                            "vt setstr temp headname_" + player.getName() + " " + skullOwner.getName());
-                    server.dispatchCommand(consoleInstance,
-                            "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
-                    server.dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
+                    if (reduceHandAmountOrRemove(Material.SKULL_ITEM, 1)) {
+                        int level = skullOwner.getInt(DataType.SKILL_LEVEL);
 
-                } else server.dispatchCommand(consoleInstance, "vt run casino:error " + player.getName());
+                        server.dispatchCommand(consoleInstance,
+                                "vt setstr temp headname_" + player.getName() + " " + skullOwner.getName());
+                        server.dispatchCommand(consoleInstance,
+                                "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
+                        server.dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
+                    } else {
+                        showErrorMessage();
+                    }
+
+                } else {
+                    showErrorMessage();
+                }
+                
             } else if (args[0].equalsIgnoreCase("tradeup")) {
 
                 ItemStack hand = player.getInventory().getItemInMainHand();
@@ -131,5 +146,9 @@ public class Cmdhmcapi extends HalfminerCommand {
     private void setHasRoomBoolean(String playerName, boolean value) {
         hmc.getServer().dispatchCommand(hmc.getServer().getConsoleSender(), "vt setbool temp hasroom_"
                         + playerName + " " + String.valueOf(value));
+    }
+
+    private void showErrorMessage() {
+        server.dispatchCommand(server.getConsoleSender(), "vt run casino:error " + player.getName());
     }
 }

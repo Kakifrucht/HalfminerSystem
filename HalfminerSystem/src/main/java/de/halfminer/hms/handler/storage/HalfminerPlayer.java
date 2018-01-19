@@ -14,6 +14,8 @@ public interface HalfminerPlayer {
 
     UUID getUniqueId();
 
+    boolean wasSeenBefore();
+
     String getName();
 
     int getLevel();
