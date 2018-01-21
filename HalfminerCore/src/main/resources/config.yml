@@ -159,7 +159,7 @@ performance:
   #Log to console if a limit has been hit
   hopperLimitLog: false
   #How many living entities are allowed to be around a new mobspawner spawned entity
-  entitiyLimitLiving: 100
+  entityLimitLiving: 100
   #How many entities of the spawned type are allowed to be around a new mobspawner spawned entity
   entityLimitSame: 25
   #Entity limit box radius, that will be checked on mobspawn from a spawner

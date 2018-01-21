@@ -170,7 +170,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
         hopperLimit = config.getInt("hopperLimit", 64);
         hopperLimitRadius = config.getInt("hopperLimitRadius", 7);
         logHopperLimit = config.getBoolean("hopperLimitLog", false);
-        entityLimitLiving = config.getInt("entitiyLimitLiving", 100);
+        entityLimitLiving = config.getInt("entityLimitLiving", 100);
         entityLimitSame = config.getInt("entityLimitSame", 25);
         boxSize = config.getInt("boxSize", 16);
 
