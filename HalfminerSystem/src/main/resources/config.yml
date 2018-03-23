@@ -37,6 +37,7 @@ localization:
   hanStorageCacheCouldNotCreate: 'Die Datei konnte nicht erstellt werden'
   hanStorageCacheCouldNotRead: 'Die Datei konnte nicht gelesen werden'
   hanStorageCacheCreate: 'Die Datei %FILENAME% wurde erstellt'
+  hanStorageNameChange: '&e%OLDNAME% &bhat den Namen zu &a%NAME% &bgewechselt'
   hanStorageSaveSuccessful: 'Die Daten wurden gespeichert'
   hanStorageSaveUnsuccessful: 'Die Daten konnten nicht gespeichert werden'
   hanTeleportBar: 'Teleport im Gange, bleibe still stehen...'

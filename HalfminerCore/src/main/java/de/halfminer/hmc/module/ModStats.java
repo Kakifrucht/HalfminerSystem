@@ -4,7 +4,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
@@ -19,18 +18,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
- * - Records lots of statistics about a player
- *   - Online time
- *   - Last names
+ * - Records lots of additional statistics about a player
  *   - Kill/death count
  *   - K/D ratio
  *   - Blocks placed/broken
@@ -41,9 +35,7 @@ import java.util.logging.Level;
  *   - Show if player is AFK
  */
 @SuppressWarnings("unused")
-public class ModStats extends HalfminerModule implements Disableable, Listener, Sweepable {
-
-    private Map<Player, Long> timeOnline;
+public class ModStats extends HalfminerModule implements Listener, Sweepable {
 
     private final Cache<Player, Player> lastInteract = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.SECONDS)
@@ -56,52 +48,12 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
 
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void joinInitializeStatsAndRename(PlayerJoinEvent e) {
+    public void onJoinSetVoteBarrier(PlayerJoinEvent e) {
 
         Player player = e.getPlayer();
-        HalfminerPlayer hPlayer = storage.getPlayer(player);
-        timeOnline.put(player, System.currentTimeMillis() / 1000);
-
-        String lastName = hPlayer.getName();
-        if (lastName.length() != 0 && !lastName.equalsIgnoreCase(player.getName())) {
-
-            String lastNames = hPlayer.getString(DataType.LAST_NAMES);
-
-            if (lastNames.length() > 0) {
-
-                // Do not store old name if it was already used
-                boolean containsName = false;
-                String lastNameLowercase = lastName.toLowerCase();
-                for (String str : lastNames.toLowerCase().split(" ")) {
-                    if (str.equals(lastNameLowercase)) {
-                        containsName = true;
-                        break;
-                    }
-                }
-                if (!containsName) hPlayer.set(DataType.LAST_NAMES, lastNames + ' ' + lastName);
-            } else {
-                hPlayer.set(DataType.LAST_NAMES, lastName);
-            }
-            MessageBuilder.create("modStatsNameChange", hmc, "Name")
-                    .addPlaceholderReplace("%OLDNAME%", lastName)
-                    .addPlaceholderReplace("%NEWNAME%", player.getName())
-                    .broadcastMessage(true);
-        }
-
-        storage.setUUID(player);
-        hPlayer.set(DataType.LAST_NAME, player.getName());
-
-        // Votebarrier setting
         if (coreStorage.getInt("vote." + player.getUniqueId().toString()) == 0) {
             coreStorage.set("vote." + player.getUniqueId().toString(), ((System.currentTimeMillis() / 1000) + timeUntilHomeBlockSeconds));
         }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void updatePlayerTimeLeave(PlayerQuitEvent e) {
-        Player player = e.getPlayer();
-        setOnlineTime(player);
-        timeOnline.remove(player);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -129,8 +81,6 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
                     .addPlaceholderReplace("%KILLS%", String.valueOf(killsKiller))
                     .addPlaceholderReplace("%KDRATIO%", String.valueOf(kdRatioKiller))
                     .sendMessage(killer);
-
-
 
             ItemStack weapon = killer.getInventory().getItemInMainHand();
             boolean addKillingWeapon = weapon != null
@@ -223,37 +173,9 @@ public class ModStats extends HalfminerModule implements Disableable, Listener, 
         return Utils.roundDouble(calc);
     }
 
-    private void setOnlineTime(Player player) {
-
-        if (timeOnline.containsKey(player)) {
-            long lastTime = timeOnline.get(player);
-            long currentTime = System.currentTimeMillis() / 1000;
-            int time = (int) (currentTime - lastTime);
-
-            storage.getPlayer(player).incrementInt(DataType.TIME_ONLINE, time);
-            timeOnline.put(player, currentTime);
-        }
-    }
-
     @Override
     public void loadConfig() {
-
         timeUntilHomeBlockSeconds = hmc.getConfig().getInt("command.home.timeUntilHomeBlockMinutes") * 60;
-
-        if (timeOnline == null) {
-            timeOnline = new HashMap<>();
-            long time = System.currentTimeMillis() / 1000;
-            for (Player player : server.getOnlinePlayers()) {
-                timeOnline.put(player, time);
-            }
-
-            scheduler.runTaskTimer(hmc, () -> server.getOnlinePlayers().forEach(this::setOnlineTime), 1200L, 1200L);
-        }
-    }
-
-    @Override
-    public void onDisable() {
-        server.getOnlinePlayers().forEach(this::setOnlineTime);
     }
 
     @Override

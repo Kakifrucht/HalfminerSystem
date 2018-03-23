@@ -500,7 +500,6 @@ localization:
   modStaticListenersTabHelp: '~&cVerwende &a/hilfe/ &cfür eine Übersicht über alle Kommandos'
   modStatsDeath: '&cDu bist gestorben! &7Tode: &f%DEATHS%'
   modStatsDeathLog: 'Survival: %PLAYER% ist gestorben'
-  modStatsNameChange: '&e%OLDNAME% &bhat den Namen zu &a%NEWNAME% &bgewechselt'
   modStatsPvPDeath: '&e%KILLER% &7hat dich eliminiert'
   modStatsPvPDeathWeapon: '&e%KILLER% &7hat dich mit "&r%WEAPON%&7" &7eliminiert'
   modStatsPvPKill: '&7Du hast &e%VICTIM% &7eliminiert! Kills: &e%KILLS% &7| K/D: &e%KDRATIO%'

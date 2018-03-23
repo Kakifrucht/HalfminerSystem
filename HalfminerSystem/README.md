@@ -62,8 +62,13 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
     - Shortcuts to external API
   - Storage
     - Data stored in YAML flatfiles
-      - UUID<>Username storage/cache
       - Player data storage
+        - Collects default information about every player
+          - Online time
+          - Last login time
+          - Current and past usernames (does broadcast if name was changed)
+      - UUID<>Username storage/cache
+        - Database is being built automatically when a player logs in
       - Storage for other types of data
       - Changes are being autosaved
     - Can easily be queried via Bukkit YAML API

@@ -167,8 +167,6 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
     - Disables tab completes that are too long, defaults to ``/help`` instead
   - Stats
     - Records following statistics about a player in centralized storage from ``HalfminerSystem``
-      - Online time
-      - Last names
       - Kill/death count
       - K/D ratio
       - Blocks placed/broken

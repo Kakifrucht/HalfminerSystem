@@ -48,6 +48,7 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
         return player;
     }
 
+    @Override
     public UUID getUniqueId() {
         return uuid;
     }
@@ -57,10 +58,12 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
         return !getName().isEmpty();
     }
 
+    @Override
     public String getName() {
         return getString(DataType.LAST_NAME);
     }
 
+    @Override
     public int getLevel() {
         if (!player.isOnline())
             throw new RuntimeException("Player " + getName() + " is not online, cannot get level");
@@ -74,6 +77,7 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
         return playerLevel;
     }
 
+    @Override
     public String getIPAddress() {
         if (!player.isOnline())
             throw new RuntimeException("Player " + getName() + " is not online, cannot get IP address");
@@ -82,16 +86,19 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
         return player.getPlayer().getAddress().getAddress().toString().substring(1);
     }
 
+    @Override
     public void set(DataType type, Object setTo) {
         storage.set(path + type, setTo);
     }
 
+    @Override
     public int incrementInt(DataType type, int amount) {
         int newValue = getInt(type) + amount;
         storage.set(path + type, newValue);
         return newValue;
     }
 
+    @Override
     public double incrementDouble(DataType type, double amount) {
         double newValue = getDouble(type) + amount;
         newValue = Utils.roundDouble(newValue);
@@ -99,22 +106,27 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
         return newValue;
     }
 
+    @Override
     public int getInt(DataType type) {
         return storage.getInt(path + type, 0);
     }
 
+    @Override
     public long getLong(DataType type) {
         return storage.getLong(path + type, 0L);
     }
 
+    @Override
     public double getDouble(DataType type) {
         return storage.getDouble(path + type, 0.0d);
     }
 
+    @Override
     public boolean getBoolean(DataType type) {
         return storage.getBoolean(path + type, false);
     }
 
+    @Override
     public String getString(DataType type) {
         return storage.getString(path + type, "");
     }

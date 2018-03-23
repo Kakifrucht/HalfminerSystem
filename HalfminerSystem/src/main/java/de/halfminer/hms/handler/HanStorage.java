@@ -4,11 +4,12 @@ import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.cache.CacheHolder;
 import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.cache.exceptions.CachingException;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
+import de.halfminer.hms.handler.storage.StorageListener;
 import de.halfminer.hms.handler.storage.YamlHalfminerPlayer;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,8 +25,13 @@ import java.util.logging.Level;
 
 /**
  * - Data stored in YAML flatfiles
- *   - UUID storage/cache
  *   - Player data storage
+ *     - Collects default information about every player
+ *       - Online time
+ *       - Last login time
+ *       - Current and past usernames (does broadcast if name was changed)
+ *   - UUID<>Username storage/cache
+ *     - Database is being built automatically when a player logs in
  *   - Storage for other types of data
  *   - Changes are being autosaved
  * - Can easily be queried via Bukkit API
@@ -50,6 +56,8 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
 
 
     public HanStorage() {
+        // dispatch listener class to collect default stats
+        new StorageListener(this);
     }
 
     public HanStorage(Plugin plugin) {
