@@ -99,9 +99,7 @@ public class Cmdchat extends HalfminerCommand {
             try {
                 time = Integer.decode(args[1]);
                 if (time < 1) time = 1;
-            } catch (NumberFormatException e) {
-                time = 1;
-            }
+            } catch (NumberFormatException ignored) {}
 
             if (args.length > 2) sendTo = server.getPlayer(args[2]);
         }

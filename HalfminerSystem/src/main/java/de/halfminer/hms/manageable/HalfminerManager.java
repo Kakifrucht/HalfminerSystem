@@ -120,9 +120,7 @@ public class HalfminerManager implements Listener {
 
     public void reloadOcurred(Plugin pluginToReload) {
 
-        if (!managedPlugins.contains(pluginToReload)) {
-            managedPlugins.add(pluginToReload);
-        }
+        managedPlugins.add(pluginToReload);
 
         // Save default config.yml if not yet done
         pluginToReload.saveDefaultConfig();

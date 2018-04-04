@@ -46,11 +46,6 @@ public class Cmdgems extends HalfminerCommand {
                     return;
                 }
 
-                if (args.length < 2) {
-                    sendGemsMessage();
-                    return;
-                }
-
                 Integer amount;
                 try {
                     amount = Integer.parseInt(args[1]);

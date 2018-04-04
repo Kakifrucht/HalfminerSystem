@@ -94,9 +94,13 @@ public class ModHealthBar extends HalfminerModule implements Listener {
     }
 
     private boolean isApplicableHealthChangeEvent(EntityEvent e) {
-        return e.getEntity() instanceof Damageable
-                && damageableHealthSeenBy.containsKey(e.getEntity())
-                && !damageableHealthSeenBy.get(e.getEntity()).isEmpty();
+
+        if (e.getEntity() instanceof Damageable) {
+            Damageable damageable = (Damageable) e.getEntity();
+            return damageableHealthSeenBy.containsKey(damageable) && !damageableHealthSeenBy.get(damageable).isEmpty();
+        }
+
+        return false;
     }
 
     private void addToDamageable(Damageable addTo, Player toAdd) {

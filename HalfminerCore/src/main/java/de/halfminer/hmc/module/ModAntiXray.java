@@ -77,7 +77,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
                 if (firstDetection || counter.notifyAgain()) {
                     notify(null, counter, false);
                 }
-            } else if (observedPermanently.contains(uuid)) observedPermanently.remove(uuid);
+            } else observedPermanently.remove(uuid);
         }
     }
 

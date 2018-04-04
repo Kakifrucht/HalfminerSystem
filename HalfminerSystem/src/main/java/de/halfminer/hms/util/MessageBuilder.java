@@ -4,7 +4,6 @@ import de.halfminer.hms.HalfminerSystem;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -69,7 +68,7 @@ public class MessageBuilder {
         return returnMessage(lang, plugin, true);
     }
 
-    public static String returnMessage(String lang, @Nullable Plugin plugin, boolean usePrefix) {
+    public static String returnMessage(String lang, Plugin plugin, boolean usePrefix) {
         MessageBuilder builder = create(lang, plugin);
         if (!usePrefix) builder.togglePrefix();
         return builder.returnMessage();
