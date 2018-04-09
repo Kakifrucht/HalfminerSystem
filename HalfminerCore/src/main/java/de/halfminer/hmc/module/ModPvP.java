@@ -3,18 +3,17 @@ package de.halfminer.hmc.module;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hmc.module.pvp.AttackSpeed;
-import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hms.cache.exceptions.CachingException;
-import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.cache.ActionProbabilityContainer;
 import de.halfminer.hms.cache.CustomAction;
+import de.halfminer.hms.cache.exceptions.CachingException;
+import de.halfminer.hms.handler.storage.DataType;
+import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -38,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  *   - Reduces damage immunity
  * - Strength potions damage nerfed, configurable
  * - Bow spamming disabled
- * - Disable hitting self with bow
+ *   - Disable hitting self with bow
  * - Killstreak via actionbar
  * - Run custom actions with custom probabilities on kill
  *   - See customactions.txt for example actions
@@ -100,9 +99,10 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         final Player damagee = (Player) e.getEntity();
         Player damager = Utils.getDamagerFromEvent(e);
 
-        // prevent self hitting, do not prevent damage from AreaEffectClouds
-        if (damagee.equals(damager) && !(e.getDamager() instanceof AreaEffectCloud)) {
+        // disable hitting self with bow
+        if (damagee.equals(damager) && e.getDamager() instanceof Projectile) {
             e.setCancelled(true);
+            return;
         }
 
         if ((damager != null && damager.hasPermission("hmc.bypass.pvp"))
