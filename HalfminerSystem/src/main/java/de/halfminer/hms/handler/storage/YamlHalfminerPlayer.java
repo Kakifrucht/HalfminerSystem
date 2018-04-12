@@ -14,7 +14,6 @@ import java.util.UUID;
 public class YamlHalfminerPlayer implements HalfminerPlayer {
 
     private final UUID uuid;
-    private OfflinePlayer player = null;
 
     private final FileConfiguration storage;
     private final String path;
@@ -24,7 +23,6 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
         this.storage = storage;
 
         this.uuid = p.getUniqueId();
-        this.player = p;
         this.path = uuid + ".";
     }
 
@@ -40,11 +38,14 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
         }
     }
 
+    @Override
     public OfflinePlayer getBase() {
 
+        OfflinePlayer player = Bukkit.getPlayer(uuid);
         if (player == null) {
             player = Bukkit.getOfflinePlayer(uuid);
         }
+
         return player;
     }
 
@@ -65,13 +66,16 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
 
     @Override
     public int getLevel() {
-        if (!player.isOnline())
-            throw new RuntimeException("Player " + getName() + " is not online, cannot get level");
 
-        Player p = player.getPlayer();
+        OfflinePlayer offlinePlayer = getBase();
+        if (!offlinePlayer.isOnline()) {
+            throw new RuntimeException("Player " + getName() + " is not online, cannot get level");
+        }
+
+        Player player = offlinePlayer.getPlayer();
 
         int playerLevel = 0;
-        while (playerLevel < 6 && p.hasPermission("hms.level." + (playerLevel + 1))) {
+        while (playerLevel < 6 && player.hasPermission("hms.level." + (playerLevel + 1))) {
             playerLevel++;
         }
         return playerLevel;
@@ -79,8 +83,11 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
 
     @Override
     public String getIPAddress() {
-        if (!player.isOnline())
+
+        OfflinePlayer player = getBase();
+        if (!player.isOnline()) {
             throw new RuntimeException("Player " + getName() + " is not online, cannot get IP address");
+        }
 
         // look stupid, but seems to be the most basic way to grab the IP via Bukkit
         return player.getPlayer().getAddress().getAddress().toString().substring(1);

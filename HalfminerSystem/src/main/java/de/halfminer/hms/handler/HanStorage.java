@@ -12,6 +12,7 @@ import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -68,6 +69,8 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
         super(plugin, register);
     }
 
+
+
     public void set(String path, Object value) {
         sysConfig.set(path, value);
     }
@@ -80,6 +83,19 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
 
     public Object get(String path) {
         return sysConfig.get(path);
+    }
+
+    public ConfigurationSection getRootSection() {
+        return sysConfig;
+    }
+
+    public ConfigurationSection getConfigurationSection(String path) {
+
+        if (sysConfig.contains(path) && sysConfig.isConfigurationSection(path)) {
+            return sysConfig.getConfigurationSection(path);
+        } else {
+            return sysConfig.createSection(path);
+        }
     }
 
     public String getString(String path) {
