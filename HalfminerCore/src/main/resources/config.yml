@@ -359,7 +359,7 @@ localization:
   cmdLagStable: '&aDie Verbindung ist stabil'
   cmdNewtpAlreadyUsed: '~&cDu kannst Neutp nur einmal verwenden, es wurde ein automatischer Homepunkt angelegt den du mit &a/home/ &cerreichen kannst'
   cmdNewtpBossbar: 'Lies die &a/hilfe &fum mehr über den Server zu erfahren'
-  cmdNewtpDocumentation: '~&7Es wurde ein automatischer Homepunkt angelegt (&a/home/&7). Du kannst einen neuen mit &e/sethome&7 setzen. Alle Informationen zum Server unter &a/hilfe/&7.'
+  cmdNewtpDocumentation: '~&7Es wurde ein automatischer Homepunkt angelegt (&a/home/&7). Du kannst einen neuen mit &e/sethome&7 setzen. Sichere dein Gebiet mit &a/land buy/&7. Alle Informationen zum Server unter &a/hilfe/&7.'
   cmdNewtpLog: 'Newtp: %PLAYER% wurde zu %LOCATION% teleportiert'
   cmdNewtpStart: '&aDu wirst an einen eigenen Ort teleportiert'
   cmdNewtpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'

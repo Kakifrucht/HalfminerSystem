@@ -89,6 +89,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(setTo);
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAttackReduceStrengthAndLowerImmunity(EntityDamageByEntityEvent e) {
 

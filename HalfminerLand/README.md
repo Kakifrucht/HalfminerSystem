@@ -1,0 +1,48 @@
+# Halfminer Land
+Bukkit plugin offering the ability for players to securely claim and manage their land 
+using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backend.
+
+## Current features
+- Integrates with WorldGuard to offer robust land protection
+  - Blocks lava and water from flowing into protected land
+  - Block certain commands via config in other players lands, like */sethome* (bypass permission available)
+  - Blocks enderpearls and PvP in protected regions
+- Land will be marked as abandoned after a player has been offline for a configurable amount of time
+  - Abandoned land can be stolen and is no longer protected until the owning player logs back in again once
+- Localization configurable, commands are clickable
+- Data stored in flatfile ```.yml``` files
+- Shows land status change on chunk move in titles
+  - If PvP status was toggled (checks WorldGuard PvP flag)
+  - If land owner changed
+- **Commands**
+  - /land buy [confirm]
+    - Buy the land the executing player is currently standing on
+    - Exponential and configurable land cost formula
+      - First land is always free
+      - Set base cost and maximum cost
+    - Shows chunk particles and cost first, purchase has to be confirmed
+    - Disable worlds or set minimum required coordinates to purchase land via config
+      - No other players can be on the land for the purchase to be confirmed
+      - Land that is protected by WorldGuard cannot be bought
+  - /land sell [confirm]
+    - Sell the land the executing player is currently standing on
+    - Requires confirmation analogous to */land buy*
+    - No other players can be on the land for the sell to be confirmed
+    - Pays back a configurable percentage of the money the player has paid for his most recently purchased land
+  - /land info
+    - Shows particles for land executing player is currently standing on
+    - If land is already owned, shows owner, teleport point (if applicable) and friends added to this land
+  - /land friend <add|remove> \<Friend> [all]
+    - Adds or removes a player as a friend to a land
+      - If *all* parameter is specified the given player will be added/removed to all lands
+    - Friend limit per land is configurable (bypass permission available)
+  - /land teleport <buy|set|delete> \<Teleport>
+    - Buy/set a teleport to the position you are currently standing on
+      - Can only be set if player owns land
+        - Only one teleport per land
+      - Custom cost for buy and set configurable
+      - Max amount of teleports per player configurable (permission for unlimited teleports available)
+      - Purchased teleport is globally accessible via */landtp*
+    - Bypass permission for operators to be able to delete any teleport available
+  - /landtp <Teleport>
+    - Teleport to a public teleport point
