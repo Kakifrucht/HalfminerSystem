@@ -132,7 +132,9 @@ public class Cmdteleport extends LandCommand {
 
         } else if (args[0].equalsIgnoreCase("delete")) {
 
-            if (ownsLand(teleportLand) || player.hasPermission("hml.cmd.teleport.deleteothers")) {
+            boolean canDeleteOthers = player.hasPermission("hml.cmd.teleport.deleteothers");
+            if (ownsLand(teleportLand) || (teleportLand != null && canDeleteOthers)) {
+
                 teleportLand.setTeleport(null, null);
                 board.landWasUpdated(teleportLand);
 
@@ -142,7 +144,8 @@ public class Cmdteleport extends LandCommand {
 
                 hml.getLogger().info(player.getName() + " deleted teleport " + teleportName);
             } else {
-                MessageBuilder.create("cmdTeleportNotOwned", hml).sendMessage(player);
+                MessageBuilder.create(canDeleteOthers ? "teleportNotExist" : "cmdTeleportNotOwned", hml)
+                        .sendMessage(player);
             }
 
         } else {

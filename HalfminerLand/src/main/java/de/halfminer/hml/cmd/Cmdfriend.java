@@ -95,7 +95,8 @@ public class Cmdfriend extends LandCommand {
                 .sendMessage(player);
 
         if (success) {
-            hml.getLogger().info(player.getName() + " successfully modified " + toModify.getName() + " land friendship status");
+            hml.getLogger().info(player.getName() + " successfully modified "
+                    + toModify.getName() + " land friendship status");
         }
     }
 

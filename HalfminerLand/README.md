@@ -44,5 +44,5 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - Max amount of teleports per player configurable (permission for unlimited teleports available)
       - Purchased teleport is globally accessible via */landtp*
     - Bypass permission for operators to be able to delete any teleport available
-  - /landtp <Teleport>
+  - /landtp \<Teleport>
     - Teleport to a public teleport point

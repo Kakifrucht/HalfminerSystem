@@ -23,7 +23,7 @@ public class Cmdlandtp extends LandCommand {
             if (teleportTo != null) {
                 hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation());
             } else {
-                MessageBuilder.create("cmdLandtpNotExist", hml).sendMessage(player);
+                MessageBuilder.create("teleportNotExist", hml).sendMessage(player);
             }
         } else {
             MessageBuilder.create("cmdLandtpUsage", hml).sendMessage(player);
