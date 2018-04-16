@@ -10,7 +10,6 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.halfminer.hml.land.Land;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.plugin.PluginManager;
@@ -62,6 +61,8 @@ public class WorldGuardHelper {
                 // create region
                 region = createRegionFromChunk(chunk);
 
+                //noinspection deprecation
+                region.setFlag(DefaultFlag.ENABLE_SHOP, StateFlag.State.ALLOW);
                 region.setFlag(DefaultFlag.USE, StateFlag.State.ALLOW);
                 region.setFlag(DefaultFlag.PVP, StateFlag.State.DENY);
                 region.setFlag(DefaultFlag.ENDERPEARL, StateFlag.State.DENY);
@@ -71,10 +72,6 @@ public class WorldGuardHelper {
                 region.setOwners(defaultDomain);
 
                 regionManager.addRegion(region);
-
-                // no way to add create-shop flag cleanly via WorldGuard API apparently, ugly hack ensues
-                String addCreateShopFlag = "rg flag -w " + chunk.getWorld().getName() + " " + region.getId() + " create-shop allow";
-                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), addCreateShopFlag);
 
                 logger.info("Created region with id " + region.getId() + " in world '" + chunk.getWorld().getName() + "'");
             }
