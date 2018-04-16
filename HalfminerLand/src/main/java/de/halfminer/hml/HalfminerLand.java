@@ -43,12 +43,6 @@ public class HalfminerLand extends JavaPlugin {
         getLogger().info("HalfminerLand enabled");
     }
 
-    private void reload() {
-        HalfminerSystem.getInstance()
-                .getHalfminerManager()
-                .reloadOcurred(this);
-    }
-
     @Override
     public void onDisable() {}
 
@@ -61,6 +55,10 @@ public class HalfminerLand extends JavaPlugin {
         if (commandStr.equalsIgnoreCase("landtp")) {
 
             landCommand = new Cmdlandtp();
+
+        } else if (commandStr.equalsIgnoreCase("hml")) {
+
+            landCommand = new Cmdhml();
 
         } else {
 
@@ -88,17 +86,6 @@ public class HalfminerLand extends JavaPlugin {
                 case "teleport":
                     landCommand = new Cmdteleport();
                     break;
-                case "reload":
-
-                    if (sender.hasPermission("hml.reload")) {
-                        reload();
-                        landStorage.saveConfig();
-                        MessageBuilder.create("pluginReloaded", "Land")
-                                .addPlaceholderReplace("%PLUGINNAME%", getName())
-                                .sendMessage(sender);
-                        return true;
-                    }
-
                 default:
                     showUsage(sender);
                     return true;
@@ -120,12 +107,22 @@ public class HalfminerLand extends JavaPlugin {
         MessageBuilder.create("usage", this).togglePrefix().sendMessage(sender);
     }
 
+    public void reload() {
+        HalfminerSystem.getInstance()
+                .getHalfminerManager()
+                .reloadOcurred(this);
+    }
+
     public WorldGuardHelper getWorldGuardHelper() {
         return worldGuardHelper;
     }
 
     public HanStorage getLandStorage() {
         return landStorage;
+    }
+
+    public void saveLandStorage() {
+        landStorage.saveConfig();
     }
 
     Board getBoard() {

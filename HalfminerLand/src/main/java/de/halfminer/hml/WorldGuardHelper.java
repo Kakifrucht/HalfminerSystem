@@ -36,7 +36,10 @@ public class WorldGuardHelper {
     }
 
     public void updateRegionOfLand(Land land) {
+        updateRegionOfLand(land, false);
+    }
 
+    public void updateRegionOfLand(Land land, boolean forceRefresh) {
         Chunk chunk = land.getChunk();
 
         RegionManager regionManager = wg.getRegionManager(chunk.getWorld());
@@ -49,7 +52,8 @@ public class WorldGuardHelper {
 
                 // check if region has correct owner and is at correct location, else recreate
                 ProtectedRegion compareRegion = createRegionFromChunk(chunk);
-                if (!region.getOwners().contains(land.getOwner().getUniqueId())
+                if (forceRefresh
+                        || !region.getOwners().contains(land.getOwner().getUniqueId())
                         || !region.getMaximumPoint().equals(compareRegion.getMaximumPoint())
                         || !region.getMinimumPoint().equals(compareRegion.getMinimumPoint())) {
 

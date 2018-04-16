@@ -93,8 +93,8 @@ class LandMap {
         return set;
     }
 
-    int getSize() {
-        return chunkLandMap.size();
+    Collection<Land> getLandCollection() {
+        return chunkLandMap.values();
     }
 
     private Pair<World, Pair<Integer, Integer>> getPairFromChunk(Chunk chunk) {

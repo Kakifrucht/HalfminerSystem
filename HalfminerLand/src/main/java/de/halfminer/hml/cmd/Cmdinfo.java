@@ -65,7 +65,6 @@ public class Cmdinfo extends LandCommand {
                         .addPlaceholderReplace("%PLAYER%", toLookup.getName())
                         .addPlaceholderReplace("%TELEPORTAMOUNT%", String.valueOf(teleportCount))
                         .addPlaceholderReplace("%LANDAMOUNT%", String.valueOf(lands.size()))
-                        .addPlaceholderReplace("%GLOBALLANDAMOUNT%", String.valueOf(board.getSize()))
                         .addPlaceholderReplace("%LANDLIST%", landListStringBuilder.toString().trim())
                         .sendMessage(sender);
             }

@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LandBoard extends LandClass implements Board, ContractManager, Sweepable {
 
@@ -73,7 +74,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
             updatePlayerLocation(player, null, player.getLocation().getChunk());
         }
 
-        hml.getLogger().info("Loaded " + landMap.getSize() + " lands");
+        hml.getLogger().info("Loaded " + getOwnedLandSet().size() + " lands");
     }
 
     @Override
@@ -142,8 +143,11 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     }
 
     @Override
-    public int getSize() {
-        return landMap.getSize();
+    public Set<Land> getOwnedLandSet() {
+        return landMap.getLandCollection()
+                .stream()
+                .filter(Land::hasOwner)
+                .collect(Collectors.toSet());
     }
 
     @Override

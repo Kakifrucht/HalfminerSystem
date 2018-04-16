@@ -24,7 +24,7 @@ public interface Board {
 
     Set<Land> getLands(UUID uuid);
 
-    int getSize();
+    Set<Land> getOwnedLandSet();
 
     void showChunkParticles(Player player, Land showParticles);
 

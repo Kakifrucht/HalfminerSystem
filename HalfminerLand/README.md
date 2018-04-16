@@ -49,3 +49,8 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Bypass permission for operators to be able to delete any teleport available
   - /landtp \<Teleport>
     - Teleport to a public teleport point
+  - /hml \<reload|save|status|forcewgrefresh>
+    - Reload the configuration
+    - Save board data on disk
+    - View global land status
+    - Forces all WorldGuard regions to be regenerated (could take a while)

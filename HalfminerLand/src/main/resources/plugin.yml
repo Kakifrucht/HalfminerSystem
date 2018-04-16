@@ -14,6 +14,9 @@ commands:
   landtp:
     description: Teleport to a land with a set teleport point
     aliases: [warpland, warpl]
+  hml:
+    description: Administrative commands
+    aliases: [halfminerland, hmland]
 
 permissions:
   hml.*:
@@ -24,10 +27,10 @@ permissions:
       - hml.cmd.buy
       - hml.cmd.free
       - hml.cmd.friend
+      - hml.cmd.hml
       - hml.cmd.info
       - hml.cmd.info.others
       - hml.cmd.landtp
-      - hml.cmd.reload
       - hml.cmd.sell
       - hml.cmd.teleport
       - hml.cmd.teleport.deleteothers
@@ -52,6 +55,8 @@ permissions:
   hml.cmd.friend:
     description: Grants access to /land friend command
     default: true
+  hml.cmd.hml:
+    description: Grants access to /hml command
   hml.cmd.info:
     description: Grants access to /land info command
     default: true
@@ -60,8 +65,6 @@ permissions:
   hml.cmd.landtp:
     description: Grants access to /landtp command
     default: true
-  hml.cmd.reload:
-    description: Grants access to /land reload command
   hml.cmd.sell:
     description: Grants access to /land sell command
     default: true
