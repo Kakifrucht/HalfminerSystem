@@ -142,6 +142,11 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     }
 
     @Override
+    public int getSize() {
+        return landMap.getSize();
+    }
+
+    @Override
     public void showChunkParticles(Player player, Land landToShow) {
 
         cancelChunkParticles(player);

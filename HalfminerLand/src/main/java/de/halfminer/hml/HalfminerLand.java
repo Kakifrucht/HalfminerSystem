@@ -82,9 +82,6 @@ public class HalfminerLand extends JavaPlugin {
                 case "info":
                     landCommand = new Cmdinfo();
                     break;
-                case "own":
-                    landCommand = new Cmdown();
-                    break;
                 case "sell":
                     landCommand = new Cmdsell();
                     break;

@@ -10,7 +10,7 @@ depend: [HalfminerSystem, Essentials, WorldGuard, Factions]
 commands:
   land:
     description: Base command
-    aliases: [claim, sichern, gebiet]
+    aliases: [claim, zone, gebiet]
   landtp:
     description: Teleport to a land with a set teleport point
     aliases: [warpland, warpl]
@@ -25,8 +25,8 @@ permissions:
       - hml.cmd.free
       - hml.cmd.friend
       - hml.cmd.info
+      - hml.cmd.info.others
       - hml.cmd.landtp
-      - hml.cmd.own
       - hml.cmd.reload
       - hml.cmd.sell
       - hml.cmd.teleport
@@ -55,11 +55,11 @@ permissions:
   hml.cmd.info:
     description: Grants access to /land info command
     default: true
+  hml.cmd.info.others:
+    description: Lookup other player information
   hml.cmd.landtp:
     description: Grants access to /landtp command
     default: true
-  hml.cmd.own:
-    description: Grants access to /land own command
   hml.cmd.reload:
     description: Grants access to /land reload command
   hml.cmd.sell:

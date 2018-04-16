@@ -6,6 +6,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
 - Integrates with WorldGuard to offer robust land protection
   - Blocks lava and water from flowing into protected land
   - Block certain commands via config in other players lands, like */sethome* (bypass permission available)
+    - Takes command aliases into account automatically
   - Blocks enderpearls and PvP in protected regions
 - Land will be marked as abandoned after a player has been offline for a configurable amount of time
   - Abandoned land can be stolen and is no longer protected until the owning player logs back in again once
@@ -29,9 +30,11 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Requires confirmation analogous to */land buy*
     - No other players can be on the land for the sell to be confirmed
     - Pays back a configurable percentage of the money the player has paid for his most recently purchased land
-  - /land info
+  - /land info [player]
     - Shows particles for land executing player is currently standing on
     - If land is already owned, shows owner, teleport point (if applicable) and friends added to this land
+    - Lookup other players lands (requires permission)
+      - Shows all land coordinates bought by given player and teleport names if applicable
   - /land friend <add|remove> \<Friend> [all]
     - Adds or removes a player as a friend to a land
       - If *all* parameter is specified the given player will be added/removed to all lands
