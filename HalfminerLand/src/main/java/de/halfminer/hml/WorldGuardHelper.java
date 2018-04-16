@@ -40,6 +40,7 @@ public class WorldGuardHelper {
         Chunk chunk = land.getChunk();
 
         RegionManager regionManager = wg.getRegionManager(chunk.getWorld());
+        DefaultDomain defaultDomain = null;
         ProtectedRegion region = getRegionFromRegionManager(chunk);
 
         if (land.hasOwner()) {
@@ -52,6 +53,7 @@ public class WorldGuardHelper {
                         || !region.getMaximumPoint().equals(compareRegion.getMaximumPoint())
                         || !region.getMinimumPoint().equals(compareRegion.getMinimumPoint())) {
 
+                    defaultDomain = region.getMembers();
                     regionManager.removeRegion(region.getId());
                     region = null;
                 }
@@ -67,12 +69,15 @@ public class WorldGuardHelper {
                 region.setFlag(DefaultFlag.PVP, StateFlag.State.DENY);
                 region.setFlag(DefaultFlag.ENDERPEARL, StateFlag.State.DENY);
 
-                DefaultDomain defaultDomain = new DefaultDomain();
+                if (defaultDomain != null) {
+                    region.setMembers(defaultDomain);
+                }
+
+                defaultDomain = new DefaultDomain();
                 defaultDomain.addPlayer(land.getOwner().getUniqueId());
                 region.setOwners(defaultDomain);
 
                 regionManager.addRegion(region);
-
                 logger.info("Created region with id " + region.getId() + " in world '" + chunk.getWorld().getName() + "'");
             }
 
