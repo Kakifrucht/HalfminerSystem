@@ -32,7 +32,6 @@ public class Cmdinfo extends LandCommand {
                 return;
             }
 
-
             Set<Land> lands = board.getLands(toLookup.getUniqueId());
 
             if (lands.isEmpty()) {
@@ -68,7 +67,7 @@ public class Cmdinfo extends LandCommand {
                         .addPlaceholderReplace("%LANDAMOUNT%", String.valueOf(lands.size()))
                         .addPlaceholderReplace("%GLOBALLANDAMOUNT%", String.valueOf(board.getSize()))
                         .addPlaceholderReplace("%LANDLIST%", landListStringBuilder.toString().trim())
-                        .sendMessage(player);
+                        .sendMessage(sender);
             }
 
             return;
