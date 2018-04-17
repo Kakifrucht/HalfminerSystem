@@ -72,14 +72,14 @@ public class Cmdfriend extends LandCommand {
             messageLocale += success ? "SuccessAll" : "FailureAll";
 
         } else {
+
             // add to current land
             Land land = board.getLandAt(player);
-
-            if (isFriendLimitReachedAndMessage(land, addFriend, true)) {
-                return;
-            }
-
             if (land.hasOwner() && player.equals(land.getOwner().getBase())) {
+
+                if (isFriendLimitReachedAndMessage(land, addFriend, true)) {
+                    return;
+                }
 
                 success = addFriend ? land.addMember(uuid) : land.removeMember(uuid);
                 messageLocale += success ? "Success" : "Failure";
