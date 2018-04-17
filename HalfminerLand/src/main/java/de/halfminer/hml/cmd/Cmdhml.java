@@ -7,6 +7,8 @@ import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.stream.Collectors;
+
 public class Cmdhml extends LandCommand {
 
     private static final String STORAGE_FREE_LANDS = ".freetotal";
@@ -78,17 +80,23 @@ public class Cmdhml extends LandCommand {
 
                 ConfigurationSection landStorageRoot = hml.getLandStorage().getRootSection();
                 String key = toEdit.getUniqueId().toString() + STORAGE_FREE_LANDS;
-                int currentFree = landStorageRoot.getInt(key, 0);
+                int setFreeAmount = landStorageRoot.getInt(key, 0);
+                int hasFreeAmount = board.getLands(toEdit.getUniqueId())
+                        .stream()
+                        .filter(Land::isFreeLand)
+                        .collect(Collectors.toList())
+                        .size();
 
                 if (setTo >= 0) {
                     landStorageRoot.set(key, setTo > 0 ? setTo : null);
                     hml.getLogger().info("Set free lands for " + toEdit.getName() + " from "
-                            + currentFree + " to " + setTo);
+                            + setFreeAmount + " to " + setTo);
                 }
 
                 MessageBuilder.create(setTo >= 0 ? "cmdHmlFreeSet" : "cmdHmlFreeShow", hml)
                         .addPlaceholderReplace("%PLAYER%", toEdit.getName())
-                        .addPlaceholderReplace("%CURRENTFREE%", String.valueOf(currentFree))
+                        .addPlaceholderReplace("%HASFREE%", String.valueOf(hasFreeAmount))
+                        .addPlaceholderReplace("%CURRENTFREE%", String.valueOf(setFreeAmount))
                         .addPlaceholderReplace("%SETFREE%", String.valueOf(setTo))
                         .sendMessage(sender);
 
