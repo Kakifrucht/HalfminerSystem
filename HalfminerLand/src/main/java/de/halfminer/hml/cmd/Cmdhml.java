@@ -5,8 +5,12 @@ import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Cmdhml extends LandCommand {
@@ -41,8 +45,50 @@ public class Cmdhml extends LandCommand {
                 break;
             case "status":
 
+                Set<Land> allOwnedLands = board.getOwnedLandSet();
+                int totalLands = allOwnedLands.size();
+                int totalTeleports = 0;
+                int totalFree = 0;
+                int totalAbandoned = 0;
+                Map<World, Integer> worldCountMap = new HashMap<>();
+
+                for (Land land : allOwnedLands) {
+
+                    World world = land.getChunk().getWorld();
+                    if (!worldCountMap.containsKey(world)) {
+                        worldCountMap.put(world, 1);
+                    } else {
+                        worldCountMap.put(world, worldCountMap.get(world) + 1);
+                    }
+
+                    if (land.hasTeleportLocation()) {
+                        totalTeleports++;
+                    }
+
+                    if (land.isFreeLand()) {
+                        totalFree++;
+                    }
+
+                    if (land.isAbandoned()) {
+                        totalAbandoned++;
+                    }
+                }
+
+                StringBuilder worldListBuilder = new StringBuilder();
+                for (Map.Entry<World, Integer> worldIntegerEntry : worldCountMap.entrySet()) {
+                    worldListBuilder.append(MessageBuilder.create("cmdHmlStatusWorldListEntry", hml)
+                            .togglePrefix()
+                            .addPlaceholderReplace("%WORLD%", worldIntegerEntry.getKey().getName())
+                            .addPlaceholderReplace("%AMOUNT%", String.valueOf(worldIntegerEntry.getValue()))
+                            .returnMessage()).append(" ");
+                }
+
                 MessageBuilder.create("cmdHmlStatus", hml)
-                        .addPlaceholderReplace("%TOTALLANDS%", String.valueOf(board.getOwnedLandSet().size()))
+                        .addPlaceholderReplace("%TOTALLANDS%", String.valueOf(totalLands))
+                        .addPlaceholderReplace("%TOTALTELEPORTS%", String.valueOf(totalTeleports))
+                        .addPlaceholderReplace("%TOTALFREE%", String.valueOf(totalFree))
+                        .addPlaceholderReplace("%TOTALABANDONED%", String.valueOf(totalAbandoned))
+                        .addPlaceholderReplace("%TOTALWORLDLIST%", worldListBuilder.toString().trim())
                         .sendMessage(sender);
                 break;
             case "forcewgrefresh":

@@ -57,5 +57,9 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Reload the configuration
     - Save board data on disk
     - View global land status
+      - Total amount of land owned
+        - Per world breakdown
+      - Total amount of teleports
+      - Total amount of free and abandoned land
     - Forces all WorldGuard regions to be regenerated (could take a while)
     - See the current free land amount a player can buy or change it
