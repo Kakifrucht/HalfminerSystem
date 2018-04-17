@@ -81,7 +81,7 @@ public abstract class AbstractContract extends LandClass {
         }
 
         if (previousCostList.isEmpty()) {
-            landStorage.set(uuid.toString(), null);
+            landStorage.set(path, null);
         } else {
             landStorage.set(path, previousCostList);
         }

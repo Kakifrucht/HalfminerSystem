@@ -40,7 +40,7 @@ public class Cmdfriend extends LandCommand {
             toModify = hms.getStorageHandler().getPlayer(args[1]);
             uuid = toModify.getUniqueId();
         } catch (PlayerNotFoundException e) {
-            MessageBuilder.create("playerDoesNotExist", "Land").sendMessage(player);
+            sendPlayerNotFoundMessage();
             return;
         }
 

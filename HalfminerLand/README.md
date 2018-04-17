@@ -25,11 +25,15 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Disable worlds or set minimum required coordinates to purchase land via config
       - No other players can be on the land for the purchase to be confirmed
       - Land that is protected by WorldGuard cannot be bought
+    - Support for free lands, that can be granted via */hml free \<player>*
+      - Shows a message how many free lands are left after player used a free land
+      - Free lands do not increase the price for the next paid land and are being handled seperately
   - /land sell [confirm]
     - Sell the land the executing player is currently standing on
     - Requires confirmation analogous to */land buy*
     - No other players can be on the land for the sell to be confirmed
     - Pays back a configurable percentage of the money the player has paid for his most recently purchased land
+      - If land that is being sold was a free land no money will be paid back
   - /land info [player]
     - Shows particles for land executing player is currently standing on
     - If land is already owned, shows owner, teleport point (if applicable) and friends added to this land
@@ -49,8 +53,9 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Bypass permission for operators to be able to delete any teleport available
   - /landtp \<Teleport>
     - Teleport to a public teleport point
-  - /hml \<reload|save|status|forcewgrefresh>
+  - /hml \<reload|save|status|forcewgrefresh|free>
     - Reload the configuration
     - Save board data on disk
     - View global land status
     - Forces all WorldGuard regions to be regenerated (could take a while)
+    - See the current free land amount a player can buy or change it

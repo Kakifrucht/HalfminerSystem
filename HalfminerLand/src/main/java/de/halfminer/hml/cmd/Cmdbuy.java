@@ -6,6 +6,7 @@ import com.massivecraft.factions.Faction;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.BuyContract;
+import de.halfminer.hml.land.contract.FreeContract;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Chunk;
@@ -108,16 +109,25 @@ public class Cmdbuy extends LandCommand {
             }
         }
 
+        int freeLandsMax = hml.getLandStorage().getInt(player.getUniqueId().toString() + ".freetotal");
+        int freeLandsOwned = 0;
         if (contract == null) {
 
             int paidLandsOwned = 0;
             for (Land land : board.getLands(player.getUniqueId())) {
-                if (!land.isFreeLand()) {
+                if (land.isFreeLand()) {
+                    freeLandsOwned++;
+                } else {
                     paidLandsOwned++;
                 }
             }
 
-            contract = new BuyContract(player, landToBuy, paidLandsOwned);
+            if (freeLandsOwned < freeLandsMax) {
+                contract = new FreeContract(player, landToBuy);
+            } else {
+                contract = new BuyContract(player, landToBuy, paidLandsOwned);
+            }
+
             contractManager.setContract(contract);
         }
 
@@ -140,6 +150,13 @@ public class Cmdbuy extends LandCommand {
             MessageBuilder.create("cmdBuySuccess", hml)
                     .addPlaceholderReplace("%COST%", String.valueOf(cost))
                     .sendMessage(player);
+
+            if (contract instanceof FreeContract) {
+                MessageBuilder.create("cmdBuyFreeLandsLeft", hml)
+                        .addPlaceholderReplace("%FREELANDSOWNED%", String.valueOf(freeLandsOwned + 1))
+                        .addPlaceholderReplace("%FREELANDSMAX%", String.valueOf(freeLandsMax))
+                        .sendMessage(player);
+            }
 
         } else {
 

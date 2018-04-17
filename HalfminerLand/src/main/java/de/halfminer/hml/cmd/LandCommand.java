@@ -43,7 +43,7 @@ public abstract class LandCommand extends LandClass {
         MessageBuilder.create("notAPlayer", "Land").sendMessage(sender);
     }
 
-    void sendNoPermissionMessage() {
-        MessageBuilder.create("noPermission", "Land").sendMessage(sender);
+    void sendPlayerNotFoundMessage() {
+        MessageBuilder.create("playerDoesNotExist", "Land").sendMessage(sender);
     }
 }

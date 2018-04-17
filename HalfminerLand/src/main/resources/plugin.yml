@@ -25,7 +25,6 @@ permissions:
     children:
       - hml.bypass.*
       - hml.cmd.buy
-      - hml.cmd.free
       - hml.cmd.friend
       - hml.cmd.hml
       - hml.cmd.info
@@ -50,8 +49,6 @@ permissions:
   hml.cmd.buy:
     description: Grants access to /land buy command
     default: true
-  hml.cmd.free:
-    description: Grants access to /land free command
   hml.cmd.friend:
     description: Grants access to /land friend command
     default: true

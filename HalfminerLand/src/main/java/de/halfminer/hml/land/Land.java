@@ -125,16 +125,14 @@ public class Land extends LandClass {
             mapSection.set(path + STORAGE_OWNER, owner.getUniqueId().toString());
         } else {
             setTeleport(null, null);
+            setFreeLand(false);
             mapSection.set(path, null);
         }
     }
 
     public void setFreeLand(boolean isFreeLand) {
         this.isFreeLand = isFreeLand;
-        
-        if (hasOwner()) {
-            mapSection.set(path + STORAGE_IS_FREE, isFreeLand);
-        }
+        mapSection.set(path + STORAGE_IS_FREE, isFreeLand ? true : null);
     }
 
     public boolean isFreeLand() {
@@ -162,13 +160,11 @@ public class Land extends LandClass {
         this.teleportName = teleportName;
         this.teleportLocation = teleportLocation;
 
-        if (hasOwner()) {
-            if (hasTeleportLocation()) {
-                mapSection.set(path + STORAGE_TELEPORT_NAME, teleportName);
-                mapSection.set(path + STORAGE_TELEPORT_LOCATION, teleportLocation);
-            } else {
-                mapSection.set(path + STORAGE_TELEPORT, null);
-            }
+        if (hasTeleportLocation()) {
+            mapSection.set(path + STORAGE_TELEPORT_NAME, teleportName);
+            mapSection.set(path + STORAGE_TELEPORT_LOCATION, teleportLocation);
+        } else {
+            mapSection.set(path + STORAGE_TELEPORT, null);
         }
     }
 

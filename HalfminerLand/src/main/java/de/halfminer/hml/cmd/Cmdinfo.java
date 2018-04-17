@@ -28,7 +28,7 @@ public class Cmdinfo extends LandCommand {
             try {
                 toLookup = hms.getStorageHandler().getPlayer(args[0]);
             } catch (PlayerNotFoundException e) {
-                MessageBuilder.create("playerDoesNotExist", "Land").sendMessage(sender);
+                sendPlayerNotFoundMessage();
                 return;
             }
 
