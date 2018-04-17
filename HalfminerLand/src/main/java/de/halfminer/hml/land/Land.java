@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,8 +33,8 @@ public class Land extends LandClass {
     private String teleportName;
     private Location teleportLocation;
 
-    private final Set<Player> playersOnLand = new HashSet<>();
-    private final boolean isAbandoned = false;
+    private int playersOnLand;
+    private boolean isAbandoned = false;
 
 
     Land(Chunk chunk, ConfigurationSection mapSection) {
@@ -81,7 +80,7 @@ public class Land extends LandClass {
             return BuyableStatus.LAND_NOT_BUYABLE;
         }
 
-        if (playersOnLand.size() > 1) {
+        if (playersOnLand > 1) {
             return BuyableStatus.OTHER_PLAYERS_ON_LAND;
         }
 
@@ -94,7 +93,7 @@ public class Land extends LandClass {
             return SellableStatus.NOT_OWNED;
         }
 
-        if (playersOnLand.size() > 1) {
+        if (playersOnLand > 1) {
             return SellableStatus.OTHER_PLAYERS_ON_LAND;
         }
 
@@ -168,19 +167,23 @@ public class Land extends LandClass {
         }
     }
 
-    void playerEntered(Player hasEntered) {
-        playersOnLand.add(hasEntered);
+    void playerEntered() {
+        playersOnLand++;
     }
 
     /**
-     * Method to be called if player leaves this land.
+     * Method to be called if a player leaves this land.
      *
-     * @param hasLeft player that has left the land
      * @return true if this object can be discarded
+     * @throws IllegalStateException when player counter is already zero
      */
-    boolean playerLeft(Player hasLeft) {
-        playersOnLand.remove(hasLeft);
-        return owner == null && playersOnLand.isEmpty();
+    boolean playerLeft() {
+        if (playersOnLand == 0) {
+            throw new IllegalStateException("Method called for already empty land (" + toString() + ")");
+        }
+
+        playersOnLand--;
+        return owner == null && playersOnLand == 0;
     }
 
     /**

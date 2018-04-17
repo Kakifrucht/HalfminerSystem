@@ -73,7 +73,7 @@ localization:
   cmdHmlRefreshDone: '&aAlle Regionen wurden erneuert'
   cmdHmlRefreshStarted: '&7Starte WorldGuard Regions Erneuerung, dies kann kurz dauern...'
   cmdHmlSave: '&aDie Land Daten wurden gespeichert'
-  cmdHmlStatus: '&6&lGeladene Länder:\n &7Gesamt: &b%TOTALLANDS% &7Länder\n Teleportpunkte: &b%TOTALTELEPORTS%\n &7Frei: &b%TOTALFREE%\n &7Verlassen: &b%TOTALABANDONED%\n &7Weltliste: %TOTALWORLDLIST%'
+  cmdHmlStatus: '&6&lLänder mit Besitzer:\n &7Gesamt: &b%TOTALLANDS% &7(&okostenlos&7: &b%TOTALFREE%&7, &overlassen&7: &b%TOTALABANDONED%&7)\n Teleportpunkte: &b%TOTALTELEPORTS%\n &7Je Welt: %TOTALWORLDLIST%'
   cmdHmlStatusWorldListEntry: '&e%WORLD%&7-&b%AMOUNT%'
   cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml forcewgrefresh\n /hml free <Spieler> [Wert]\n /land info [Spieler]\n /land teleport delete <Teleport>'
   cmdInfoFree: '~&7Dieses Land ist frei, verwende &a/land buy/ &7zum kaufen'

@@ -84,27 +84,29 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         if (previousChunk != null) {
 
             previousLand = getLandAt(previousChunk);
-            boolean canBeRemoved = previousLand.playerLeft(player);
+            boolean canBeRemoved = previousLand.playerLeft();
             if (canBeRemoved) {
                 landMap.removeLand(previousLand);
             }
 
             // don't show marked chunk on world change
-            if (!previousChunk.getWorld().equals(newChunk.getWorld())
+            if (newChunk != null
+                    && !previousChunk.getWorld().equals(newChunk.getWorld())
                     && chunkPlayerParticleMap.containsKey(player)) {
                 cancelChunkParticles(player);
             }
         }
 
-        Land newLand = getLandAt(newChunk);
-        newLand.playerEntered(player);
-        return new Pair<>(previousLand, newLand);
-    }
+        Land newLand = null;
+        if (newChunk != null) {
+            newLand = getLandAt(newChunk);
+            newLand.playerEntered();
+        } else {
+            // logout
+            cancelChunkParticles(player);
+        }
 
-    @Override
-    public void removePlayer(Player player) {
-        getLandAt(player).playerLeft(player);
-        cancelChunkParticles(player);
+        return new Pair<>(previousLand, newLand);
     }
 
     @Override

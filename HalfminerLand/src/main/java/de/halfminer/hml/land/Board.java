@@ -12,8 +12,6 @@ public interface Board {
 
     Pair<Land, Land> updatePlayerLocation(Player player, Chunk previousChunk, Chunk newChunk);
 
-    void removePlayer(Player player);
-
     Land getLandAt(Player player);
 
     Land getLandAt(Location location);

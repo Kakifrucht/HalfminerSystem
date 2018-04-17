@@ -88,7 +88,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        board.removePlayer(e.getPlayer());
+        board.updatePlayerLocation(e.getPlayer(), e.getPlayer().getLocation().getChunk(), null);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
