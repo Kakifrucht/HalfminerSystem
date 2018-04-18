@@ -58,8 +58,9 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             Land previous = previousAndNewLandPair.getLeft();
             Land newLand = previousAndNewLandPair.getRight();
 
-            String pvpMessageInTitle = " ";
-            String ownerMessageInTitle = " ";
+            String pvpMessageInTitle = "";
+            String spacer = "";
+            String ownerMessageInTitle = "";
 
             boolean currentIsPvP = wgh.isPvPEnabled(to);
             boolean pvpStateChanged = wgh.isPvPEnabled(from) ^ currentIsPvP;
@@ -79,11 +80,17 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                         .returnMessage();
             }
 
-            if (pvpMessageInTitle.length() > 1 || ownerMessageInTitle.length() > 1) {
+            // add spacer if necessary
+            if (pvpStateChanged && !ownerMessageInTitle.isEmpty()) {
+                spacer = MessageBuilder.returnMessage("listenerFormatSpacer", hml, false);
+            }
 
-                hms.getTitlesHandler().sendTitle(player, MessageBuilder.create("%PVPLINE%\n%OWNERLINE%", hml)
-                        .setDirectString()
+            if (pvpStateChanged || !ownerMessageInTitle.isEmpty()) {
+
+                hms.getTitlesHandler().sendTitle(player, MessageBuilder.create("listenerFormatTitle", hml)
+                        .togglePrefix()
                         .addPlaceholderReplace("%PVPLINE%", pvpMessageInTitle)
+                        .addPlaceholderReplace("%SPACER%", spacer)
                         .addPlaceholderReplace("%OWNERLINE%", ownerMessageInTitle)
                         .returnMessage(), 0, 40, 10);
             }

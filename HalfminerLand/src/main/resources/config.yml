@@ -105,6 +105,8 @@ localization:
   listenerBlockBreakBlocked: '&cDu kannst auf dem Land von &a%OWNER% &ckeine Blöcke brechen'
   listenerBlockPlaceBlocked: '&cDu kannst auf dem Land von &a%OWNER% &ckeine Blöcke platzieren'
   listenerCmdBlocked: '&cDu kannst dieses Kommando auf dem Land von &a%OWNER% &cnicht verwenden'
+  listenerFormatSpacer: ' &7|&f '
+  listenerFormatTitle: ' \n%PVPLINE%%SPACER%%OWNERLINE%'
   listenerOwnerFree: '&aFreies Land'
   listenerOwnerOwned: 'Landbesitzer: &b&l%OWNER%'
   listenerPvPOff: '&aPvP aus'
