@@ -18,12 +18,11 @@ public class ForceSellContract extends SellContract {
     public void fulfill(Land land) {
         if (canBeFulfilled) {
 
-            boolean isFreeLand = land.isFreeLand();
-            land.setOwner(null);
-
-            if (!isFreeLand) {
+            if (!land.isFreeLand()) {
                 removeLastCostFromStorage(owner.getUniqueId());
             }
+
+            land.setOwner(null);
 
             hml.getLogger().info(owner.getName() + "' land at ["
                     + land + "] was force sold by " + player.getName()

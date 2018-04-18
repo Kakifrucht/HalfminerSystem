@@ -6,6 +6,7 @@ import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,22 +39,30 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         onMove(e);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onRespawn(PlayerRespawnEvent e) {
+        onLocationChange(e.getPlayer(), e.getPlayer().getLocation(), e.getRespawnLocation());
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent e) {
+        onLocationChange(e.getPlayer(), e.getFrom(), e.getTo());
+    }
 
-        Chunk fromChunk = e.getFrom().getChunk();
-        Chunk newChunk = e.getTo().getChunk();
+    private void onLocationChange(Player player, Location from, Location to) {
+        Chunk fromChunk = from.getChunk();
+        Chunk newChunk = to.getChunk();
         if (!fromChunk.equals(newChunk)) {
 
-            Pair<Land, Land> previousAndNewLandPair = board.updatePlayerLocation(e.getPlayer(), fromChunk, newChunk);
+            Pair<Land, Land> previousAndNewLandPair = board.updatePlayerLocation(player, fromChunk, newChunk);
             Land previous = previousAndNewLandPair.getLeft();
             Land newLand = previousAndNewLandPair.getRight();
 
             String pvpMessageInTitle = " ";
             String ownerMessageInTitle = " ";
 
-            boolean currentIsPvP = wgh.isPvPEnabled(e.getTo());
-            boolean pvpStateChanged = wgh.isPvPEnabled(e.getFrom()) ^ currentIsPvP;
+            boolean currentIsPvP = wgh.isPvPEnabled(to);
+            boolean pvpStateChanged = wgh.isPvPEnabled(from) ^ currentIsPvP;
 
             if (pvpStateChanged) {
                 pvpMessageInTitle = MessageBuilder.returnMessage("listenerPvP" + (currentIsPvP ? "On" : "Off"), hml, false);
@@ -72,7 +81,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             if (pvpMessageInTitle.length() > 1 || ownerMessageInTitle.length() > 1) {
 
-                hms.getTitlesHandler().sendTitle(e.getPlayer(), MessageBuilder.create("%PVPLINE%\n%OWNERLINE%", hml)
+                hms.getTitlesHandler().sendTitle(player, MessageBuilder.create("%PVPLINE%\n%OWNERLINE%", hml)
                         .setDirectString()
                         .addPlaceholderReplace("%PVPLINE%", pvpMessageInTitle)
                         .addPlaceholderReplace("%OWNERLINE%", ownerMessageInTitle)
