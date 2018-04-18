@@ -28,6 +28,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Support for free lands, that can be granted via */hml free \<player>*
       - Shows a message how many free lands are left after player used a free land
       - Free lands do not increase the price for the next paid land and are being handled seperately
+      - Operator permission for unlimited free lands available
   - /land sell [confirm|force]
     - Sell the land the executing player is currently standing on
     - Requires confirmation analogous to */land buy*

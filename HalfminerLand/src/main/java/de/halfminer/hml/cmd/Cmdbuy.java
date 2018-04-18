@@ -110,6 +110,10 @@ public class Cmdbuy extends LandCommand {
         }
 
         int freeLandsMax = hml.getLandStorage().getInt(player.getUniqueId().toString() + ".freetotal");
+        if (player.hasPermission("hml.cmd.buy.free")) {
+            freeLandsMax = Integer.MAX_VALUE;
+        }
+
         int freeLandsOwned = 0;
         int paidLandsOwned = 0;
         for (Land land : board.getLands(player.getUniqueId())) {
@@ -151,7 +155,7 @@ public class Cmdbuy extends LandCommand {
                     .addPlaceholderReplace("%COST%", String.valueOf(cost))
                     .sendMessage(player);
 
-            if (contract instanceof FreeBuyContract) {
+            if (contract instanceof FreeBuyContract && freeLandsMax != Integer.MAX_VALUE) {
                 MessageBuilder.create("cmdBuyFreeLandsLeft", hml)
                         .addPlaceholderReplace("%FREELANDSOWNED%", String.valueOf(freeLandsOwned + 1))
                         .addPlaceholderReplace("%FREELANDSMAX%", String.valueOf(freeLandsMax))
