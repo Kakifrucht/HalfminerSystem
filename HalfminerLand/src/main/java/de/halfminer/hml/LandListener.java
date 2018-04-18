@@ -19,12 +19,16 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LandListener extends LandClass implements Listener, Reloadable {
 
     private final Board board;
     private final WorldGuardHelper wgh;
+
+    private final Map<Player, Chunk> lastKnownChunk;
 
     private List<Command> blockedCmds;
 
@@ -32,11 +36,20 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     LandListener(Board board, WorldGuardHelper wgh) {
         this.board = board;
         this.wgh = wgh;
+
+        this.lastKnownChunk = new HashMap<>();
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onTeleport(PlayerTeleportEvent e) {
-        onMove(e);
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        setLastKnownChunk(e.getPlayer());
+        board.updatePlayerLocation(e.getPlayer(), null, e.getPlayer().getLocation().getChunk());
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        board.updatePlayerLocation(e.getPlayer(), e.getPlayer().getLocation().getChunk(), null);
+        lastKnownChunk.remove(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -45,17 +58,26 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onTeleport(PlayerTeleportEvent e) {
+        onMove(e);
+        onLocationChange(e.getPlayer(), e.getFrom(), e.getTo());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent e) {
         onLocationChange(e.getPlayer(), e.getFrom(), e.getTo());
     }
 
     private void onLocationChange(Player player, Location from, Location to) {
-        Chunk fromChunk = from.getChunk();
-        Chunk newChunk = to.getChunk();
-        if (!fromChunk.equals(newChunk)) {
 
-            Pair<Land, Land> previousAndNewLandPair = board.updatePlayerLocation(player, fromChunk, newChunk);
-            Land previous = previousAndNewLandPair.getLeft();
+        Chunk previousChunk = lastKnownChunk.getOrDefault(player, null);
+        Chunk newChunk = to.getChunk();
+        if (!newChunk.equals(previousChunk)) {
+
+            lastKnownChunk.put(player, newChunk);
+
+            Pair<Land, Land> previousAndNewLandPair = board.updatePlayerLocation(player, previousChunk, newChunk);
+            Land previousLand = previousAndNewLandPair.getLeft();
             Land newLand = previousAndNewLandPair.getRight();
 
             String pvpMessageInTitle = "";
@@ -69,10 +91,10 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 pvpMessageInTitle = MessageBuilder.returnMessage("listenerPvP" + (currentIsPvP ? "On" : "Off"), hml, false);
             }
 
-            if (!newLand.hasOwner() && previous.hasOwner()) {
+            if (!newLand.hasOwner() && previousLand.hasOwner()) {
                 ownerMessageInTitle = MessageBuilder.returnMessage("listenerOwnerFree", hml, false);
 
-            } else if (newLand.hasOwner() && hasDifferentOwner(newLand, previous)) {
+            } else if (newLand.hasOwner() && hasDifferentOwner(newLand, previousLand)) {
 
                 ownerMessageInTitle = MessageBuilder.create("listenerOwnerOwned", hml)
                         .togglePrefix()
@@ -95,16 +117,6 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                         .returnMessage(), 0, 40, 10);
             }
         }
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        board.updatePlayerLocation(e.getPlayer(), null, e.getPlayer().getLocation().getChunk());
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        board.updatePlayerLocation(e.getPlayer(), e.getPlayer().getLocation().getChunk(), null);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -196,6 +208,10 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 || landA.hasOwner() && !landA.getOwner().equals(landB.getOwner());
     }
 
+    private void setLastKnownChunk(Player player) {
+        lastKnownChunk.put(player, player.getLocation().getChunk());
+    }
+
     @Override
     public void loadConfig() {
 
@@ -205,6 +221,10 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             for (String cmd : blockedCmdList) {
                 blockedCmds.add(server.getPluginCommand(cmd));
             }
+        }
+
+        if (lastKnownChunk.isEmpty()) {
+            server.getOnlinePlayers().forEach(this::setLastKnownChunk);
         }
     }
 }
