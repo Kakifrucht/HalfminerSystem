@@ -89,7 +89,11 @@ public class Land extends LandClass {
 
     public SellableStatus getSellableStatus(UUID uuid) {
 
-        if (!hasOwner() || !owner.getUniqueId().equals(uuid)) {
+        if (!hasOwner()) {
+            return SellableStatus.NO_OWNER;
+        }
+
+        if (!owner.getUniqueId().equals(uuid)) {
             return SellableStatus.NOT_OWNED;
         }
 
@@ -246,8 +250,9 @@ public class Land extends LandClass {
     }
 
     public enum SellableStatus {
-        OTHER_PLAYERS_ON_LAND,
+        NO_OWNER,
         NOT_OWNED,
+        OTHER_PLAYERS_ON_LAND,
         HAS_TELEPORT,
         SELLABLE
     }

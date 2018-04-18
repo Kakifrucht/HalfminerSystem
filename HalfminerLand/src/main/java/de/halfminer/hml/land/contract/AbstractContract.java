@@ -50,8 +50,8 @@ public abstract class AbstractContract extends LandClass {
         canBeFulfilled = true;
     }
 
-    double getLastCostFromStorage() {
-        String path = getPath(player.getUniqueId());
+    double getLastCostFromStorage(UUID uuid) {
+        String path = getPath(uuid);
 
         List<String> previousCostList = getStringListFromPath(path);
         if (previousCostList.isEmpty()) {

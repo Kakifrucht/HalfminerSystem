@@ -11,13 +11,20 @@ public class SellContract extends AbstractContract {
 
     public SellContract(Player sellingPlayer, Land landToSell) {
         super(sellingPlayer, landToSell);
-        double sellRefundMultiplier = hml.getConfig().getDouble("priceFormula.sellRefundMultiplier", .8d);
-        this.cost = landToSell.isFreeLand() ? 0 : Utils.roundDouble(getLastCostFromStorage() * sellRefundMultiplier);
+
+        if (landToSell.isFreeLand()) {
+            this.cost = 0d;
+        } else {
+            double lastCostStorage = getLastCostFromStorage(landToSell.getOwner().getUniqueId());
+            double sellRefundMultiplier = hml.getConfig().getDouble("priceFormula.sellRefundMultiplier", .8d);
+
+            this.cost = Utils.roundDouble(lastCostStorage * sellRefundMultiplier);
+        }
     }
 
     @Override
     public void fulfill(Land land) {
-        if (canBeFulfilled) {
+        if (canBeFulfilled()) {
 
             boolean isFreeLand = land.isFreeLand();
             land.setOwner(null);
@@ -30,7 +37,7 @@ public class SellContract extends AbstractContract {
                 removeLastCostFromStorage(player.getUniqueId());
                 hml.getLogger().info(player.getName() + " received $" + cost + " for selling land at [" + land + "]");
             } else {
-                hml.getLogger().info(player.getName() + " sold his free land at [" + land);
+                hml.getLogger().info(player.getName() + " sold his free land at [" + land + "]");
             }
         }
     }

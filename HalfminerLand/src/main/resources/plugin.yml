@@ -31,6 +31,7 @@ permissions:
       - hml.cmd.info.others
       - hml.cmd.landtp
       - hml.cmd.sell
+      - hml.cmd.sell.force
       - hml.cmd.teleport
       - hml.cmd.teleport.deleteothers
       - hml.cmd.teleport.unlimited
@@ -65,6 +66,8 @@ permissions:
   hml.cmd.sell:
     description: Grants access to /land sell command
     default: true
+  hml.cmd.sell.force:
+    description: Grants access to /land sell force command
   hml.cmd.teleport:
     description: Grants access to /land teleport command
     default: true

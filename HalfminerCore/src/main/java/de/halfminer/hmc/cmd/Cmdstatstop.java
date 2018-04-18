@@ -57,7 +57,7 @@ public class Cmdstatstop extends HalfminerCommand {
                     try {
                         toLookup = storage.getPlayer(args[1]);
                     } catch (PlayerNotFoundException e) {
-                        MessageBuilder.create("playerDoesNotExist", "Statstop").sendMessage(sender);
+                        e.sendNotFoundMessage(sender, "Statstop");
                         return;
                     }
                 } else if (isPlayer) {

@@ -42,8 +42,4 @@ public abstract class LandCommand extends LandClass {
     void sendNotAPlayerMessage() {
         MessageBuilder.create("notAPlayer", "Land").sendMessage(sender);
     }
-
-    void sendPlayerNotFoundMessage() {
-        MessageBuilder.create("playerDoesNotExist", "Land").sendMessage(sender);
-    }
 }

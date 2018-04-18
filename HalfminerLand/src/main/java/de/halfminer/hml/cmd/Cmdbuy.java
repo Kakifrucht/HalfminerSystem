@@ -6,7 +6,7 @@ import com.massivecraft.factions.Faction;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.BuyContract;
-import de.halfminer.hml.land.contract.FreeContract;
+import de.halfminer.hml.land.contract.FreeBuyContract;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Chunk;
@@ -111,19 +111,19 @@ public class Cmdbuy extends LandCommand {
 
         int freeLandsMax = hml.getLandStorage().getInt(player.getUniqueId().toString() + ".freetotal");
         int freeLandsOwned = 0;
+        int paidLandsOwned = 0;
+        for (Land land : board.getLands(player.getUniqueId())) {
+            if (land.isFreeLand()) {
+                freeLandsOwned++;
+            } else {
+                paidLandsOwned++;
+            }
+        }
+
         if (contract == null) {
 
-            int paidLandsOwned = 0;
-            for (Land land : board.getLands(player.getUniqueId())) {
-                if (land.isFreeLand()) {
-                    freeLandsOwned++;
-                } else {
-                    paidLandsOwned++;
-                }
-            }
-
             if (freeLandsOwned < freeLandsMax) {
-                contract = new FreeContract(player, landToBuy);
+                contract = new FreeBuyContract(player, landToBuy);
             } else {
                 contract = new BuyContract(player, landToBuy, paidLandsOwned);
             }
@@ -151,7 +151,7 @@ public class Cmdbuy extends LandCommand {
                     .addPlaceholderReplace("%COST%", String.valueOf(cost))
                     .sendMessage(player);
 
-            if (contract instanceof FreeContract) {
+            if (contract instanceof FreeBuyContract) {
                 MessageBuilder.create("cmdBuyFreeLandsLeft", hml)
                         .addPlaceholderReplace("%FREELANDSOWNED%", String.valueOf(freeLandsOwned + 1))
                         .addPlaceholderReplace("%FREELANDSMAX%", String.valueOf(freeLandsMax))

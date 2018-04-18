@@ -113,7 +113,7 @@ public class Cmdhml extends LandCommand {
                 try {
                     toEdit = hms.getStorageHandler().getPlayer(args[1]);
                 } catch (PlayerNotFoundException e) {
-                    sendPlayerNotFoundMessage();
+                    e.sendNotFoundMessage(sender, "Land");
                     return;
                 }
 

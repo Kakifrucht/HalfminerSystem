@@ -28,12 +28,15 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Support for free lands, that can be granted via */hml free \<player>*
       - Shows a message how many free lands are left after player used a free land
       - Free lands do not increase the price for the next paid land and are being handled seperately
-  - /land sell [confirm]
+  - /land sell [confirm|force]
     - Sell the land the executing player is currently standing on
     - Requires confirmation analogous to */land buy*
     - No other players can be on the land for the sell to be confirmed
     - Pays back a configurable percentage of the money the player has paid for his most recently purchased land
       - If land that is being sold was a free land no money will be paid back
+    - Allows operators with the permission to force sell land for other players
+      - If land owner is online it will notify him
+      - Refund amount shown in chat to allow manual refund
   - /land info [player]
     - Shows particles for land executing player is currently standing on
     - If land is already owned, shows owner, teleport point (if applicable) and friends added to this land
