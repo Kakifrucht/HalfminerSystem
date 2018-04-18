@@ -149,7 +149,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
             if (!toUpdate.isOnline()) continue;
 
             barHandler.sendBar(toUpdate,
-                    MessageBuilder.create("modCombatLogBossBar", hmc)
+                    MessageBuilder.create("modHealthBarBossBar" + (entityToUpdate instanceof Player ? "" : "Mob"), hmc)
                             .addPlaceholderReplace("%PLAYER%", entityToUpdate.getName())
                             .addPlaceholderReplace("%LEVEL%", otherPlayer != null ?
                                     storage.getPlayer(otherPlayer).getString(DataType.SKILL_LEVEL) : "1")
