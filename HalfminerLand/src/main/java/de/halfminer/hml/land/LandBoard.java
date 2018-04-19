@@ -28,7 +28,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     private static final String ROOT_MAP_PATH = "map";
     private static final int CHUNK_SHOWN_SECONDS = 10;
     private static final int CHUNK_SHOWN_HEIGHT = 4;
-    private static final int CHUNK_SHOWN_SPACES = 3;
+    private static final int CHUNK_SHOWN_SPACES = 2;
 
     private final HanStorage systemStorage;
 
@@ -158,6 +158,9 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         cancelChunkParticles(player);
 
         Chunk chunk = landToShow.getChunk();
+        World world = chunk.getWorld();
+        int chunkX = chunk.getX() * 16;
+        int chunkZ = chunk.getZ() * 16;
 
         String barMessage = MessageBuilder.returnMessage("boardShowChunkBar", hml, false);
         hms.getBarHandler().sendBar(player, barMessage, BarColor.GREEN, BarStyle.SOLID, CHUNK_SHOWN_SECONDS);
@@ -165,8 +168,6 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         BukkitTask newTask = server.getScheduler().runTaskTimer(hml, new Runnable() {
 
             private int totalRuns = CHUNK_SHOWN_SECONDS;
-            private List<Location> cornerLocations;
-
 
             @Override
             public void run() {
@@ -174,10 +175,10 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
                 int playerYLevel = player.getLocation().getBlockY();
 
                 // green region particles
-                for (int x = 0; x < 16; x += CHUNK_SHOWN_SPACES) {
+                for (int x = 0; x <= 16; x += CHUNK_SHOWN_SPACES) {
                     for (int y = Math.max(0, playerYLevel - CHUNK_SHOWN_HEIGHT); y <= Math.min(255, playerYLevel + CHUNK_SHOWN_HEIGHT); y += 2) {
-                        for (int z = 0; z < 16; z += CHUNK_SHOWN_SPACES) {
-                            Block block = chunk.getBlock(x, y, z);
+                        for (int z = 0; z <= 16; z += CHUNK_SHOWN_SPACES) {
+                            Block block = world.getBlockAt(chunkX + x, y, chunkZ + z);
                             Particle toSpawn = isCorner(x, z) ? Particle.BARRIER : Particle.VILLAGER_HAPPY;
                             player.spawnParticle(toSpawn, block.getLocation(), 1);
                         }
@@ -190,7 +191,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
             }
 
             private boolean isCorner(int x, int z) {
-                return (x == 0 || x == 15) && (z == 0 || z == 15);
+                return (x == 0 || x == 16) && (z == 0 || z == 16);
             }
 
         }, 20L, 20L);
