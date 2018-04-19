@@ -57,8 +57,6 @@ public class Land extends LandClass {
                     hml.getLogger().warning("Player with UUID " + uuidString
                             + "' not found, skipping chunk at " + chunk.getX() + "-" + chunk.getZ());
                 }
-
-                wgh.updateRegionOfLand(this);
             }
 
             isFreeLand = landSection.getBoolean(STORAGE_IS_FREE.substring(1), false);
@@ -68,6 +66,9 @@ public class Land extends LandClass {
                 teleportLocation = (Location) landSection.get(STORAGE_TELEPORT_LOCATION.substring(1));
             }
         }
+
+        // refresh region, ensures that if land has no owner it will be deleted
+        wgh.updateRegionOfLand(this);
     }
 
     public BuyableStatus getBuyableStatus() {
