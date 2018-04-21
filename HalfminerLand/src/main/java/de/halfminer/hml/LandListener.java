@@ -98,7 +98,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
                 ownerMessageInTitle = MessageBuilder.create("listenerOwnerOwned", hml)
                         .togglePrefix()
-                        .addPlaceholderReplace("%OWNER%", newLand.getOwner().getName())
+                        .addPlaceholderReplace("%OWNER%", newLand.getOwnerName())
                         .returnMessage();
             }
 
@@ -141,7 +141,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 if (blockedCmd.getName().startsWith(command) || blockedCmd.getAliases().contains(command)) {
                     e.setCancelled(true);
                     MessageBuilder.create("listenerCmdBlocked", hml)
-                            .addPlaceholderReplace("%OWNER%", currentLand.getOwner().getName())
+                            .addPlaceholderReplace("%OWNER%", currentLand.getOwnerName())
                             .sendMessage(e.getPlayer());
                     return;
                 }
@@ -172,7 +172,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             String locale = e instanceof BlockBreakEvent ? "listenerBlockBreakBlocked" : "listenerBlockPlaceBlocked";
             MessageBuilder.create(locale, hml)
-                    .addPlaceholderReplace("%OWNER%", land.getOwner().getName())
+                    .addPlaceholderReplace("%OWNER%", land.getOwnerName())
                     .sendMessage(player);
 
             return true;

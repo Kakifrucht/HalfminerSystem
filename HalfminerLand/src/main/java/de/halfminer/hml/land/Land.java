@@ -17,6 +17,7 @@ public class Land extends LandClass {
     private static final char PATH_COORDINATE_SPLIT_CHAR = 'z';
     private static final String STORAGE_OWNER = ".owner";
     private static final String STORAGE_IS_FREE = ".isFreeLand";
+    private static final String STORAGE_IS_SERVER_LAND = ".isServerLand";
     private static final String STORAGE_TELEPORT = ".teleport";
     private static final String STORAGE_TELEPORT_NAME = ".teleport.name";
     private static final String STORAGE_TELEPORT_LOCATION = ".teleport.location";
@@ -29,6 +30,7 @@ public class Land extends LandClass {
 
     private HalfminerPlayer owner;
     private boolean isFreeLand = false;
+    private boolean isServerLand = false;
 
     private String teleportName;
     private Location teleportLocation;
@@ -60,6 +62,7 @@ public class Land extends LandClass {
             }
 
             isFreeLand = landSection.getBoolean(STORAGE_IS_FREE.substring(1), false);
+            isServerLand = landSection.getBoolean(STORAGE_IS_SERVER_LAND.substring(1), false);
 
             if (landSection.contains(STORAGE_TELEPORT_NAME)) {
                 teleportName = landSection.getString(STORAGE_TELEPORT_NAME.substring(1));
@@ -88,13 +91,13 @@ public class Land extends LandClass {
         return BuyableStatus.BUYABLE;
     }
 
-    public SellableStatus getSellableStatus(UUID uuid) {
+    public SellableStatus getSellableStatus(Player player) {
 
         if (!hasOwner()) {
             return SellableStatus.NO_OWNER;
         }
 
-        if (!owner.getUniqueId().equals(uuid)) {
+        if (!isOwner(player)) {
             return SellableStatus.NOT_OWNED;
         }
 
@@ -121,6 +124,21 @@ public class Land extends LandClass {
         return owner;
     }
 
+    public String getOwnerName() {
+
+        if (hasOwner()) {
+            return isServerLand ? hml.getConfig().getString("serverName", "Server") : owner.getName();
+        }
+
+        return null;
+    }
+
+    public boolean isOwner(Player player) {
+        return hasOwner()
+                && player.getUniqueId().equals(owner.getUniqueId())
+                || (isServerLand() && player.hasPermission("hml.ownsserverland"));
+    }
+
     public void setOwner(HalfminerPlayer owner) {
         this.owner = owner;
         wgh.updateRegionOfLand(this);
@@ -130,6 +148,7 @@ public class Land extends LandClass {
         } else {
             setTeleport(null, null);
             setFreeLand(false);
+            setServerLand(false);
             mapSection.set(path, null);
         }
     }
@@ -143,9 +162,18 @@ public class Land extends LandClass {
         return isFreeLand;
     }
 
+    public void setServerLand(boolean isServerLand) {
+        this.isServerLand = isServerLand;
+        mapSection.set(path + STORAGE_IS_SERVER_LAND, isServerLand ? true : null);
+    }
+
+    public boolean isServerLand() {
+        return isServerLand;
+    }
+
     public boolean isAbandoned() {
         //TODO logic for abandoned land, depending on player last seen time
-        return isAbandoned;
+        return isAbandoned && !isServerLand;
     }
 
     public boolean hasTeleportLocation() {
@@ -199,13 +227,7 @@ public class Land extends LandClass {
      * @return true if land is free, player is land owner or added as member of land
      */
     public boolean hasPermission(Player player) {
-
-        if (hasOwner()) {
-            return owner.getUniqueId().equals(player.getUniqueId())
-                    || wgh.getMemberList(this).getUniqueIds().contains(player.getUniqueId());
-        }
-
-        return true;
+        return hasOwner() && (isOwner(player) || wgh.getMemberList(this).getUniqueIds().contains(player.getUniqueId()));
     }
 
     public Set<UUID> getMemberSet() {
@@ -245,9 +267,9 @@ public class Land extends LandClass {
 
 
     public enum BuyableStatus {
-        OTHER_PLAYERS_ON_LAND,
         ALREADY_OWNED,
         LAND_NOT_BUYABLE,
+        OTHER_PLAYERS_ON_LAND,
         BUYABLE
     }
 

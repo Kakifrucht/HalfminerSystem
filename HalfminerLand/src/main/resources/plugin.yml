@@ -26,6 +26,7 @@ permissions:
       - hml.bypass.*
       - hml.cmd.buy
       - hml.cmd.buy.free
+      - hml.cmd.buy.server
       - hml.cmd.friend
       - hml.cmd.hml
       - hml.cmd.info
@@ -36,6 +37,7 @@ permissions:
       - hml.cmd.teleport
       - hml.cmd.teleport.deleteothers
       - hml.cmd.teleport.unlimited
+      - hml.ownsserverland
   hml.bypass.*:
     description: Access to all bypass permissions
     children:
@@ -53,6 +55,8 @@ permissions:
     default: true
   hml.cmd.buy.free:
     description: Grants access to unlimited free lands
+  hml.cmd.buy.server:
+    description: Grants access to /land buy server command
   hml.cmd.friend:
     description: Grants access to /land friend command
     default: true
@@ -78,3 +82,5 @@ permissions:
     description: Allows player to delete other players warps
   hml.cmd.teleport.unlimited:
     description: Allows the purchase of unlimited teleports
+  hml.ownsserverland:
+    description: Players with this permission node are considered owners of land claimed for the server

@@ -49,6 +49,7 @@ public class Cmdhml extends LandCommand {
                 int totalLands = allOwnedLands.size();
                 int totalTeleports = 0;
                 int totalFree = 0;
+                int totalServer = 0;
                 int totalAbandoned = 0;
                 Map<World, Integer> worldCountMap = new HashMap<>();
 
@@ -69,6 +70,10 @@ public class Cmdhml extends LandCommand {
                         totalFree++;
                     }
 
+                    if (land.isServerLand()) {
+                        totalServer++;
+                    }
+
                     if (land.isAbandoned()) {
                         totalAbandoned++;
                     }
@@ -87,6 +92,7 @@ public class Cmdhml extends LandCommand {
                         .addPlaceholderReplace("%TOTALLANDS%", String.valueOf(totalLands))
                         .addPlaceholderReplace("%TOTALTELEPORTS%", String.valueOf(totalTeleports))
                         .addPlaceholderReplace("%TOTALFREE%", String.valueOf(totalFree))
+                        .addPlaceholderReplace("%TOTALSERVER%", String.valueOf(totalServer))
                         .addPlaceholderReplace("%TOTALABANDONED%", String.valueOf(totalAbandoned))
                         .addPlaceholderReplace("%TOTALWORLDLIST%", worldListBuilder.toString().trim())
                         .sendMessage(sender);

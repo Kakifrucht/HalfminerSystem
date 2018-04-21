@@ -85,11 +85,13 @@ class LandMap {
     }
 
     Set<Land> getOwnedLandSet(HalfminerPlayer halfminerPlayer) {
+
         Set<Land> set = ownedLandMap.getOrDefault(halfminerPlayer, Collections.emptySet());
-        set.removeIf(l -> !l.hasOwner() || !l.getOwner().equals(halfminerPlayer));
+        set.removeIf(land -> !land.hasOwner() || !land.getOwner().equals(halfminerPlayer) || land.isServerLand());
         if (set.isEmpty()) {
             ownedLandMap.remove(halfminerPlayer);
         }
+
         return set;
     }
 

@@ -75,7 +75,7 @@ public class Cmdfriend extends LandCommand {
 
             // add to current land
             Land land = board.getLandAt(player);
-            if (land.hasOwner() && player.equals(land.getOwner().getBase())) {
+            if (land.isOwner(player)) {
 
                 if (isFriendLimitReachedAndMessage(land, addFriend, true)) {
                     return;

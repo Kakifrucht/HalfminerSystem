@@ -29,6 +29,8 @@ priceFormula:
   limit: 250000
   # Set refund multiplier as a double between 0 and 1
   sellRefundMultiplier: 0.8
+# Will be used as owner name for land bought for the server via /land buy server
+serverName: 'Halfminer.de'
 teleport:
   # Specify how many teleports a player can buy via /land teleport buy,
   #  Bypass permission is 'hml.cmd.teleport.unlimited'
@@ -56,6 +58,7 @@ localization:
   cmdBuyNotBuyableNotVacant: '&cDu kannst Land nur kaufen wenn du zum Kaufzeitpunkt der einzige Spieler auf dem Land bist'
   cmdBuyNotBuyableWorld: '&cDieses Land steht nicht zum Verkauf, du kannst in dieser Welt kein Land kaufen'
   cmdBuySuccess: '~&7Du hast dieses Land erfolgreich für &a&l%COST% HCs &7gekauft. Es ist nun vollständig gesichert und kann nicht gegriefed werden.\n&c&lAchtung: &7Wenn du 21 Tage offline warst kann das Gebiet wieder geklaut und gegriefed werden.\n \n Freunde hinzufügen: &a/land friend add <Spieler>\n &7Öffentlichen Teleport kaufen: &a/land teleport buy <Teleport>\n &7Land verkaufen: &a/land sell/'
+  cmdBuySuccessAsServer: '&7Du hast dieses Land erfolgreich als Serverland gekauft, es wird nicht als verlassen markiert'
   cmdFriendAddSuccess: '~&a%PLAYER% &7wurde erfolgreich als Freund zum aktuellen Land hinzugefügt. Bitte beachte das &cgriefen und bestehlen erlaubt ist&7, traue keinen Fremden Spielern!\n \n Als Freund entfernen: &a/land friend remove %PLAYER%/&7\n Zu allen Gebieten hinzufügen: &a/land friend add %PLAYER% all/'
   cmdFriendAddSuccessAll: '~&a%PLAYER% &7wurde erfolgreich als Freund zu &lall deinen Ländern hinzugefügt&7. Bitte beachte das &cgriefen und bestehlen erlaubt ist&7, traue keinen Fremden Spielern!\n \n Als Freund entfernen: &a/land friend remove %PLAYER% all/'
   cmdFriendAddFailure: '~&b%PLAYER% &cist bereits als Freund zu deinem aktuellen Land hinzugefügt, verwende &a/land friend remove %PLAYER%/ &cum ihn zu entfernen'
@@ -73,9 +76,9 @@ localization:
   cmdHmlRefreshDone: '&aAlle Regionen wurden erneuert'
   cmdHmlRefreshStarted: '&7Starte WorldGuard Regions Erneuerung, dies kann kurz dauern...'
   cmdHmlSave: '&aDie Land Daten wurden gespeichert'
-  cmdHmlStatus: '&6&lLänder mit Besitzer:\n &7Gesamt: &b%TOTALLANDS% &7(&okostenlos&7: &b%TOTALFREE%&7, &overlassen&7: &b%TOTALABANDONED%&7)\n Teleportpunkte: &b%TOTALTELEPORTS%\n &7Je Welt: %TOTALWORLDLIST%'
+  cmdHmlStatus: '&6&lLänder mit Besitzer:\n &7Gesamt: &b%TOTALLANDS% &7(&okostenlos&7: &b%TOTALFREE%&7, &oServer&7: &b%TOTALSERVER%&7, &overlassen&7: &b%TOTALABANDONED%&7)\n Teleportpunkte: &b%TOTALTELEPORTS%\n &7Je Welt: %TOTALWORLDLIST%'
   cmdHmlStatusWorldListEntry: '&e%WORLD%&7-&b%AMOUNT%'
-  cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml forcewgrefresh\n /hml free <Spieler> [Wert]\n /land info [Spieler]\n /land sell force\n /land teleport delete <Teleport>'
+  cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml forcewgrefresh\n /hml free <Spieler> [Wert]\n /land info [Spieler]\n /land buy server\n /land sell force\n /land teleport delete <Teleport>'
   cmdInfoFree: '~&7Dieses Land ist frei, verwende &a/land buy/ &7zum kaufen'
   cmdInfoNoFriends: '&fKeine hinzugefügt'
   cmdInfoOwned: '&7Besitzer: &6&l%OWNER% &7(besitzt &a%OWNEDLANDS% &7Länder)\nFreunde: &6%FRIENDS%'
@@ -91,6 +94,7 @@ localization:
   cmdSellForceUsage: '~&cDieses Land gehört dir nicht, verwende &a/land sell force/ &cum den Verkauf zu erzwingen'
   cmdSellHasTeleport: '~&cDieses Land hat einen Teleportpunkt, verschiebe ihn vor dem Verkauf auf ein anderes Land mit &a/land teleport set %TELEPORT%/ &coder entferne ihn mit &a/land teleport delete %TELEPORT%/'
   cmdSellOthersOnLand: '&cZum Verkaufen darf sich kein anderer Spieler auf dem Land befinden'
+  cmdSellServerSuccess: '&7Das Serverland steht wurde erfolgreich wieder freigegeben'
   cmdSellSuccess: '&aDu hast dieses Land erfolgreich für &l%COST% HCs &averkauft, &7es kann nun von jedem Spieler bebaut und gekauft werden'
   cmdTeleportBuyAlreadyExists: '&cDieser Teleportpunkt ist bereits vergeben'
   cmdTeleportBuyAlreadyExistsOwned: '~&cDieser Teleportpunkt ist bereits vergeben, setze ihn neu mit &a/land teleport set %TELEPORT%/'

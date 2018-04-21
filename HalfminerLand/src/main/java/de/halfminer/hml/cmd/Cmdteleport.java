@@ -35,7 +35,7 @@ public class Cmdteleport extends LandCommand {
         if (args[0].equalsIgnoreCase("buy")) {
 
             if (teleportLand != null) {
-                MessageBuilder.create("cmdTeleportBuyAlreadyExists" + (ownsLand(teleportLand) ? "Owned" : ""), hml)
+                MessageBuilder.create("cmdTeleportBuyAlreadyExists" + (teleportLand.isOwner(player) ? "Owned" : ""), hml)
                         .addPlaceholderReplace("%TELEPORT%", teleportLand.getTeleportName())
                         .sendMessage(player);
                 return;
@@ -48,7 +48,7 @@ public class Cmdteleport extends LandCommand {
                 return;
             }
 
-            if (!ownsLand(land)) {
+            if (!land.isOwner(player)) {
                 MessageBuilder.create("landNotOwned", hml).sendMessage(player);
                 return;
             }
@@ -93,13 +93,13 @@ public class Cmdteleport extends LandCommand {
         } else if (args[0].equalsIgnoreCase("set")) {
 
             // check if land is owned by player setting the teleport
-            if (!ownsLand(land)) {
+            if (!land.isOwner(player)) {
                 MessageBuilder.create("landNotOwned", hml).sendMessage(player);
                 return;
             }
 
             // check if player owns teleport point
-            if (!ownsLand(teleportLand)) {
+            if (teleportLand == null || !teleportLand.isOwner(player)) {
                 MessageBuilder.create("cmdTeleportNotOwned", hml).sendMessage(player);
                 return;
             }
@@ -133,7 +133,7 @@ public class Cmdteleport extends LandCommand {
         } else if (args[0].equalsIgnoreCase("delete")) {
 
             boolean canDeleteOthers = player.hasPermission("hml.cmd.teleport.deleteothers");
-            if (ownsLand(teleportLand) || (teleportLand != null && canDeleteOthers)) {
+            if (teleportLand != null && (teleportLand.isOwner(player) || canDeleteOthers)) {
 
                 teleportLand.setTeleport(null, null);
                 board.landWasUpdated(teleportLand);
@@ -163,10 +163,6 @@ public class Cmdteleport extends LandCommand {
 
         hms.getHooksHandler().addMoney(player, -cost);
         return true;
-    }
-
-    private boolean ownsLand(Land land) {
-        return land != null && land.hasOwner() && land.getOwner().getBase().equals(player);
     }
 
     private void sendLandAlreadyHasTeleportMessage(Land land) {

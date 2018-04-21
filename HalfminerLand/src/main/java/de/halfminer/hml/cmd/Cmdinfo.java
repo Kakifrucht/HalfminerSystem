@@ -97,9 +97,9 @@ public class Cmdinfo extends LandCommand {
                 }
             }
 
-            MessageBuilder.create(land.hasTeleportLocation() ? "cmdInfoOwnedTeleport" : "cmdInfoOwned", hml)
-                    .addPlaceholderReplace("%OWNER%", land.getOwner().getName())
-                    .addPlaceholderReplace("%OWNEDLANDS%", String.valueOf(board.getLands(land.getOwner().getUniqueId()).size()))
+            MessageBuilder.create("cmdInfoOwned" + (land.hasTeleportLocation() ? "Teleport" : ""), hml)
+                    .addPlaceholderReplace("%OWNER%", land.getOwnerName())
+                    .addPlaceholderReplace("%OWNEDLANDS%", land.isServerLand() ? "1" : String.valueOf(board.getLands(land.getOwner().getUniqueId()).size()))
                     .addPlaceholderReplace("%FRIENDS%", friendString.toString().trim())
                     .addPlaceholderReplace("%TELEPORT%", land.getTeleportName())
                     .sendMessage(player);

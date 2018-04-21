@@ -28,7 +28,7 @@ public class Cmdsell extends LandCommand {
                 && args[0].equalsIgnoreCase("force");
 
         Land landToSell = board.getLandAt(player);
-        Land.SellableStatus sellableStatus = landToSell.getSellableStatus(player.getUniqueId());
+        Land.SellableStatus sellableStatus = landToSell.getSellableStatus(player);
 
         if (sellableStatus.equals(Land.SellableStatus.NO_OWNER)) {
             MessageBuilder.create("landNotOwned", hml).sendMessage(player);
@@ -47,6 +47,7 @@ public class Cmdsell extends LandCommand {
             }
         }
 
+        // skip various checks if we force sell
         if (!isForceSell) {
 
             if (sellableStatus.equals(Land.SellableStatus.NOT_OWNED)) {
@@ -67,18 +68,24 @@ public class Cmdsell extends LandCommand {
             }
         }
 
+        boolean isServerLand = landToSell.isServerLand();
         if (contract == null) {
             contract = isForceSell ? new ForceSellContract(player, landToSell) : new SellContract(player, landToSell);
             contractManager.setContract(contract);
+
+            if (isServerLand) {
+                contract.setCanBeFulfilled();
+            }
         }
 
-        if (contract.canBeFulfilled()
+        if ((contract.canBeFulfilled()
                 && args.length > 0
-                && args[0].equalsIgnoreCase("confirm")) {
+                && args[0].equalsIgnoreCase("confirm"))
+                || landToSell.isServerLand()) {
 
             // notify player if land was force sold (only if online)
             HalfminerPlayer landOwner = landToSell.getOwner();
-            if (isForceSell && landOwner.getBase().isOnline()) {
+            if (isForceSell && !landToSell.isServerLand() && landOwner.getBase().isOnline()) {
                 MessageBuilder.create("cmdSellForceNotify", hml)
                         .addPlaceholderReplace("%FORCINGPLAYER%", player.getName())
                         .addPlaceholderReplace("%LAND%", landToSell.toString())
@@ -87,7 +94,9 @@ public class Cmdsell extends LandCommand {
 
             // sell land
             contractManager.fulfillContract(contract);
-            MessageBuilder.create(isForceSell ? "cmdSellForceSuccess" : "cmdSellSuccess", hml)
+
+            String localeKey = isServerLand ? "cmdSellServerSuccess" : (isForceSell ? "cmdSellForceSuccess" : "cmdSellSuccess");
+            MessageBuilder.create(localeKey, hml)
                     .addPlaceholderReplace("%COST%", String.valueOf(contract.getCost()))
                     .addPlaceholderReplace("%LANDOWNER%", landOwner.getName())
                     .sendMessage(player);
