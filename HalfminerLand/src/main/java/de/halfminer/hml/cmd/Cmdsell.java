@@ -78,10 +78,7 @@ public class Cmdsell extends LandCommand {
             }
         }
 
-        if ((contract.canBeFulfilled()
-                && args.length > 0
-                && args[0].equalsIgnoreCase("confirm"))
-                || landToSell.isServerLand()) {
+        if (contract.canBeFulfilled()) {
 
             // notify player if land was force sold (only if online)
             HalfminerPlayer landOwner = landToSell.getOwner();

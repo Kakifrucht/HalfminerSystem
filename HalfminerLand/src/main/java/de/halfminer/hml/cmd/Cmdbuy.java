@@ -154,10 +154,7 @@ public class Cmdbuy extends LandCommand {
             return;
         }
 
-        if ((contract.canBeFulfilled()
-                && args.length > 0
-                && args[0].equalsIgnoreCase("confirm"))
-                || buyAsServer) {
+        if (contract.canBeFulfilled()) {
 
             // buy land
             contractManager.fulfillContract(contract);

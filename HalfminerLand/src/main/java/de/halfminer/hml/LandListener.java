@@ -70,7 +70,12 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
     private void onLocationChange(Player player, Location from, Location to) {
 
-        Chunk previousChunk = lastKnownChunk.getOrDefault(player, null);
+        if (!lastKnownChunk.containsKey(player)) {
+            hml.getLogger().warning("onLocationChange() was called for " + player.getName() + ", although no last known chunk is set");
+            return;
+        }
+
+        Chunk previousChunk = lastKnownChunk.get(player);
         Chunk newChunk = to.getChunk();
         if (!newChunk.equals(previousChunk)) {
 

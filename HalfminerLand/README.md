@@ -16,7 +16,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
   - If PvP status was toggled (checks WorldGuard PvP flag)
   - If land owner changed
 - **Commands**
-  - /land buy [confirm|server]
+  - /land buy [server]
     - Buy the land the executing player is currently standing on
     - Exponential and configurable land cost formula
       - First land is always free
@@ -31,7 +31,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - Operator permission for unlimited free lands available
     - Allows operators with the permission to buy land owned by the server which won't ever be marked as abandoned
       - All players with ``hml.ownsserverland`` permission have full access to land
-  - /land sell [confirm|force]
+  - /land sell [force]
     - Sell the land the executing player is currently standing on
     - Requires confirmation analogous to */land buy*
     - No other players can be on the land for the sell to be confirmed
