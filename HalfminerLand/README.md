@@ -40,11 +40,9 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Allows operators with the permission to force sell land for other players
       - If land owner is online it will notify him
       - Refund amount shown in chat to allow manual refund
-  - /land info [player]
+  - /land info
     - Shows particles for land executing player is currently standing on
     - If land is already owned, shows owner, teleport point (if applicable) and friends added to this land
-    - Lookup other players lands (requires permission)
-      - Shows all land coordinates bought by given player and teleport names if applicable
   - /land friend <add|remove> \<Friend> [all]
     - Adds or removes a player as a friend to a land
       - If *all* parameter is specified the given player will be added/removed to all lands
@@ -59,7 +57,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Bypass permission for operators to be able to delete any teleport available
   - /landtp \<Teleport>
     - Teleport to a public teleport point
-  - /hml \<reload|save|status|forcewgrefresh|free>
+  - /hml \<reload|save|status|forcewgrefresh|free|info>
     - Reload the configuration
     - Save board data on disk
     - View global land status
@@ -69,3 +67,5 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - Total amount of free and abandoned land
     - Forces all WorldGuard regions to be regenerated (could take a while)
     - See the current free land amount a player can buy or change it
+    - Lookup other players lands
+      - Shows all land coordinates bought by given player and teleport names if applicable

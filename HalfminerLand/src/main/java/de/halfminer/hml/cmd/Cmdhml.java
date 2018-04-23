@@ -5,6 +5,7 @@ import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -151,6 +152,59 @@ public class Cmdhml extends LandCommand {
                         .addPlaceholderReplace("%CURRENTFREE%", String.valueOf(setFreeAmount))
                         .addPlaceholderReplace("%SETFREE%", String.valueOf(setTo))
                         .sendMessage(sender);
+
+                break;
+            case "info":
+
+                if (args.length < 2) {
+                    showUsage();
+                    return;
+                }
+
+                HalfminerPlayer hPlayer;
+                try {
+                    hPlayer = hms.getStorageHandler().getPlayer(args[1]);
+                } catch (PlayerNotFoundException e) {
+                    e.sendNotFoundMessage(player, "Land");
+                    return;
+                }
+
+                Set<Land> lands = board.getLands(hPlayer.getUniqueId());
+
+                if (lands.isEmpty()) {
+                    MessageBuilder.create("cmdHmlInfoPlayerNoLand", hml)
+                            .addPlaceholderReplace("%PLAYER%", hPlayer.getName())
+                            .sendMessage(sender);
+                } else {
+
+                    int teleportCount = 0;
+                    StringBuilder landListStringBuilder = new StringBuilder();
+                    for (Land land : lands) {
+
+                        Chunk chunk = land.getChunk();
+                        MessageBuilder toAppendBuilder = MessageBuilder
+                                .create("cmdHmlInfoPlayerLandFormat" + (land.hasTeleportLocation() ? "Teleport" : ""), hml)
+                                .addPlaceholderReplace("%WORLD%", chunk.getWorld().getName())
+                                .addPlaceholderReplace("%X%", String.valueOf(chunk.getX() * 16))
+                                .addPlaceholderReplace("%Z%", String.valueOf(chunk.getZ() * 16));
+
+                        if (land.hasTeleportLocation()) {
+                            toAppendBuilder.addPlaceholderReplace("%TELEPORT%", land.getTeleportName());
+                            teleportCount++;
+                        }
+
+                        landListStringBuilder
+                                .append(toAppendBuilder.togglePrefix().returnMessage())
+                                .append(" ");
+                    }
+
+                    MessageBuilder.create("cmdHmlInfoPlayer", hml)
+                            .addPlaceholderReplace("%PLAYER%", hPlayer.getName())
+                            .addPlaceholderReplace("%TELEPORTAMOUNT%", String.valueOf(teleportCount))
+                            .addPlaceholderReplace("%LANDAMOUNT%", String.valueOf(lands.size()))
+                            .addPlaceholderReplace("%LANDLIST%", landListStringBuilder.toString().trim())
+                            .sendMessage(sender);
+                }
 
                 break;
             default:
