@@ -189,8 +189,10 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
                 for (int x = 0; x <= 16; x += CHUNK_SHOWN_SPACES) {
                     for (int y = Math.max(0, playerYLevel - CHUNK_SHOWN_HEIGHT); y <= Math.min(255, playerYLevel + CHUNK_SHOWN_HEIGHT); y += 2) {
                         for (int z = 0; z <= 16; z += CHUNK_SHOWN_SPACES) {
+
                             Block block = world.getBlockAt(chunkX + x, y, chunkZ + z);
-                            Particle toSpawn = isCorner(x, z) ? Particle.BARRIER : Particle.VILLAGER_HAPPY;
+                            Particle toSpawn = (x % 16 == 0 || z % 16 == 0) ? Particle.BARRIER : Particle.VILLAGER_HAPPY;
+
                             player.spawnParticle(toSpawn, block.getLocation(), 1);
                         }
                     }
@@ -199,10 +201,6 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
                 if (--totalRuns == 0) {
                     cancelChunkParticles(player);
                 }
-            }
-
-            private boolean isCorner(int x, int z) {
-                return (x == 0 || x == 16) && (z == 0 || z == 16);
             }
 
         }, 20L, 20L);
