@@ -54,7 +54,7 @@ public class Cmdfriend extends LandCommand {
         String messageLocale = addFriend ? "cmdFriendAdd" : "cmdFriendRemove";
         if (args.length > 2 && args[2].equalsIgnoreCase("all")) {
 
-            Set<Land> lands = board.getLands(player.getUniqueId());
+            Set<Land> lands = board.getLands(player);
             if (lands.size() == 0) {
                 MessageBuilder.create("cmdFriendNoLandOwned", hml).sendMessage(player);
                 return;

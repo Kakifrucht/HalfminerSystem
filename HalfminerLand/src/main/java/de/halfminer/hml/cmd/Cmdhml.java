@@ -134,7 +134,7 @@ public class Cmdhml extends LandCommand {
                 ConfigurationSection landStorageRoot = hml.getLandStorage().getRootSection();
                 String key = toEdit.getUniqueId().toString() + STORAGE_FREE_LANDS;
                 int setFreeAmount = landStorageRoot.getInt(key, 0);
-                int hasFreeAmount = board.getLands(toEdit.getUniqueId())
+                int hasFreeAmount = board.getLands(toEdit)
                         .stream()
                         .filter(Land::isFreeLand)
                         .collect(Collectors.toList())
@@ -161,19 +161,32 @@ public class Cmdhml extends LandCommand {
                     return;
                 }
 
-                HalfminerPlayer hPlayer;
-                try {
-                    hPlayer = hms.getStorageHandler().getPlayer(args[1]);
-                } catch (PlayerNotFoundException e) {
-                    e.sendNotFoundMessage(player, "Land");
-                    return;
-                }
+                Set<Land> lands;
+                String landOwner;
 
-                Set<Land> lands = board.getLands(hPlayer.getUniqueId());
+                if (args[1].equalsIgnoreCase("-s")) {
+
+                    lands = board.getOwnedLandSet()
+                            .stream()
+                            .filter(Land::isServerLand)
+                            .collect(Collectors.toSet());
+
+                    landOwner = hml.getConfig().getString("serverName");
+
+                } else {
+                    try {
+                        HalfminerPlayer hPlayer = hms.getStorageHandler().getPlayer(args[1]);
+                        lands = board.getLands(hPlayer);
+                        landOwner = hPlayer.getName();
+                    } catch (PlayerNotFoundException e) {
+                        e.sendNotFoundMessage(player, "Land");
+                        return;
+                    }
+                }
 
                 if (lands.isEmpty()) {
                     MessageBuilder.create("cmdHmlInfoPlayerNoLand", hml)
-                            .addPlaceholderReplace("%PLAYER%", hPlayer.getName())
+                            .addPlaceholderReplace("%PLAYER%", landOwner)
                             .sendMessage(sender);
                 } else {
 
@@ -199,7 +212,7 @@ public class Cmdhml extends LandCommand {
                     }
 
                     MessageBuilder.create("cmdHmlInfoPlayer", hml)
-                            .addPlaceholderReplace("%PLAYER%", hPlayer.getName())
+                            .addPlaceholderReplace("%PLAYER%", landOwner)
                             .addPlaceholderReplace("%TELEPORTAMOUNT%", String.valueOf(teleportCount))
                             .addPlaceholderReplace("%LANDAMOUNT%", String.valueOf(lands.size()))
                             .addPlaceholderReplace("%LANDLIST%", landListStringBuilder.toString().trim())

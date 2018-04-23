@@ -62,7 +62,7 @@ public class Cmdteleport extends LandCommand {
                 int maximumTeleports = hml.getConfig().getInt("teleport.maxAmount", 3);
 
                 int hasTeleports = 0;
-                for (Land landOfPlayer : board.getLands(player.getUniqueId())) {
+                for (Land landOfPlayer : board.getLands(player)) {
                     if (landOfPlayer.hasTeleportLocation()) {
                         hasTeleports++;
                     }

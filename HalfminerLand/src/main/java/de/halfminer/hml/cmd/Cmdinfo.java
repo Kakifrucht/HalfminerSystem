@@ -47,7 +47,7 @@ public class Cmdinfo extends LandCommand {
 
             MessageBuilder.create("cmdInfoOwned", hml)
                     .addPlaceholderReplace("%OWNER%", land.getOwnerName())
-                    .addPlaceholderReplace("%OWNEDLANDS%", land.isServerLand() ? "1" : String.valueOf(board.getLands(land.getOwner().getUniqueId()).size()))
+                    .addPlaceholderReplace("%OWNEDLANDS%", land.isServerLand() ? "1" : String.valueOf(board.getLands(land.getOwner()).size()))
                     .addPlaceholderReplace("%FRIENDS%", friendString.toString().trim())
                     .addPlaceholderReplace("%TELEPORT%", teleportName)
                     .sendMessage(player);

@@ -69,3 +69,4 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - See the current free land amount a player can buy or change it
     - Lookup other players lands
       - Shows all land coordinates bought by given player and teleport names if applicable
+    - Get all land owned by server with */hml info -s*

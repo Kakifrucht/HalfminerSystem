@@ -4,6 +4,7 @@ import de.halfminer.hml.LandClass;
 import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.ContractManager;
 import de.halfminer.hms.handler.HanStorage;
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.util.MessageBuilder;
@@ -142,6 +143,16 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         } catch (PlayerNotFoundException e) {
             return Collections.emptySet();
         }
+    }
+
+    @Override
+    public Set<Land> getLands(Player player) {
+        return getLands(player.getUniqueId());
+    }
+
+    @Override
+    public Set<Land> getLands(HalfminerPlayer player) {
+        return getLands(player.getUniqueId());
     }
 
     @Override

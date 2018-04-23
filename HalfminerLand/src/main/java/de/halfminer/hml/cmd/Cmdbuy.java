@@ -121,7 +121,7 @@ public class Cmdbuy extends LandCommand {
 
         int freeLandsOwned = 0;
         int paidLandsOwned = 0;
-        for (Land land : board.getLands(player.getUniqueId())) {
+        for (Land land : board.getLands(player)) {
             if (land.isFreeLand()) {
                 freeLandsOwned++;
             } else {

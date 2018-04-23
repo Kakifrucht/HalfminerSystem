@@ -1,5 +1,6 @@
 package de.halfminer.hml.land;
 
+import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -21,6 +22,10 @@ public interface Board {
     Land getLandFromTeleport(String teleportName);
 
     Set<Land> getLands(UUID uuid);
+
+    Set<Land> getLands(Player player);
+
+    Set<Land> getLands(HalfminerPlayer player);
 
     Set<Land> getOwnedLandSet();
 
