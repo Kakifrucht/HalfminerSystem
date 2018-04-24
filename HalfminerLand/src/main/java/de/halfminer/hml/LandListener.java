@@ -5,6 +5,7 @@ import de.halfminer.hml.land.Land;
 import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
+import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -18,10 +19,7 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LandListener extends LandClass implements Listener, Reloadable {
 
@@ -30,7 +28,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
     private final Map<Player, Chunk> lastKnownChunk;
 
-    private List<Command> blockedCmds;
+    private Set<String> blockedCmds;
 
 
     LandListener(Board board, WorldGuardHelper wgh) {
@@ -135,15 +133,11 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         Land currentLand = board.getLandAt(e.getPlayer());
         if (!currentLand.hasPermission(e.getPlayer())) {
 
-            String command = e.getMessage().substring(1);
-            int indexOf = command.indexOf(' ');
-            if (indexOf > 0) {
-                command = command.substring(0, indexOf);
-            }
+            String command = e.getMessage().substring(1).toLowerCase();
 
-            for (Command blockedCmd : blockedCmds) {
+            for (String blockedCmd : blockedCmds) {
 
-                if (blockedCmd.getName().startsWith(command) || blockedCmd.getAliases().contains(command)) {
+                if (command.startsWith(blockedCmd)) {
                     e.setCancelled(true);
                     MessageBuilder.create("listenerCmdBlocked", hml)
                             .addPlaceholderReplace("%OWNER%", currentLand.getOwnerName())
@@ -220,12 +214,38 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     @Override
     public void loadConfig() {
 
-        this.blockedCmds = new ArrayList<>();
+        this.blockedCmds = new HashSet<>();
         List<String> blockedCmdList = hml.getConfig().getStringList("blockedCmds");
-        if (blockedCmdList != null) {
-            for (String cmd : blockedCmdList) {
-                blockedCmds.add(server.getPluginCommand(cmd));
-            }
+        if (blockedCmdList != null && !blockedCmdList.isEmpty()) {
+
+            // run delayed, to ensure that every plugin is loaded yet
+            scheduler.runTask(hml, () -> {
+                for (String cmd : blockedCmdList) {
+
+                    StringArgumentSeparator cmdParsed = new StringArgumentSeparator(cmd, ' ');
+                    Command command = server.getPluginCommand(cmdParsed.getArgument(0));
+
+                    if (command != null) {
+
+                        Set<String> commandSet = new HashSet<>();
+                        commandSet.add(command.getName());
+                        commandSet.addAll(command.getAliases());
+
+                        if (cmdParsed.meetsLength(2)) {
+                            Set<String> commandSetWithArguments = new HashSet<>();
+                            for (String s : commandSet) {
+                                commandSetWithArguments.add(s + ' ' + cmdParsed.getConcatenatedString(1));
+                            }
+                            commandSet = commandSetWithArguments;
+                        }
+
+                        this.blockedCmds.addAll(commandSet);
+
+                    } else {
+                        hml.getLogger().warning("Command " + cmd + " was not found, skipping");
+                    }
+                }
+            });
         }
 
         if (lastKnownChunk.isEmpty()) {

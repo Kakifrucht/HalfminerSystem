@@ -7,6 +7,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
   - Blocks lava and water from flowing into protected land
   - Block certain commands via config in other players lands, like */sethome* (bypass permission available)
     - Takes command aliases into account automatically
+    - Subcommands can be blocked aswell
   - Blocks enderpearls and PvP in protected regions
 - Land will be marked as abandoned after a player has been offline for a configurable amount of time
   - Abandoned land can be stolen and is no longer protected until the owning player logs back in again once

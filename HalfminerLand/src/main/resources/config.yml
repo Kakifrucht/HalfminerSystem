@@ -2,6 +2,7 @@
 # After how many days of inactivity land should be set abandoned
 abandonedLandAfterInactivityDays: 21
 # Define commands that are blocked if a player doesn't own or was added as a friend
+# Also block all registered command aliases and can also only block subcommands by adding arguments
 #  Bypass permission is 'hml.bypass.cmd'
 blockedCmds:
   - sethome
