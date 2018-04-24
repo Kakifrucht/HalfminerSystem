@@ -1,6 +1,4 @@
 #HalfminerLand Config
-# After how many days of inactivity land should be set abandoned
-abandonedLandAfterInactivityDays: 21
 # Define commands that are blocked if a player doesn't own or was added as a friend
 # Also block all registered command aliases and can also only block subcommands by adding arguments
 #  Bypass permission is 'hml.bypass.cmd'
@@ -21,6 +19,8 @@ buyLimits:
 # How many players can be added per land
 #  Bypass permission is 'hml.bypass.friendlimit'
 friendLimit: 6
+# After how many days of inactivity land should be set abandoned
+landAbandonedAfterDays: 21
 priceFormula:
   # Minimum price, first land is always free
   minPrice: 2
@@ -53,7 +53,7 @@ localization:
   teleportNotExist: '&cDieser Teleport existiert nicht'
   usage: '~ \n&e&m-------------&c&l HalfLand Kommandos &e&m-------------\n&7Aktuelles Land kaufen: &a/land buy/\n&7Aktuelles Land verkaufen: &a/land sell/\n&7Informationen über aktuelles Land: &a/land info/\n&7Freunden Baurechte geben/nehmen: &a/land friend/\n&7Teleportpunkte kaufen/setzen: &a/land teleport/\n&7Zu einem Teleportpunkt teleportieren: &a/landtp <Teleport>\n&e&m----------------------------------------------'
   cmdBuyAlreadyOwnedSelf: '&7Dieses Land gehört dir bereits'
-  cmdBuyConfirm: '~&7Du bist im Begriff das mit Partikeln markierte Land (Chunk von ganz oben bis ganz unten) für &a%COST% &7HCs zu kaufen, wiederhole das Kommando mit &a/land buy/ &7zum bestätigen'
+  cmdBuyConfirm: '~&7Du bist im Begriff das mit Partikeln markierte Land (Chunk von ganz oben bis ganz unten) für &a%COST% &7HCs zu kaufen, wiederhole das Kommando &a/land buy/ &7zum bestätigen'
   cmdBuyFreeLandsLeft: '&7Du hast &b%FREELANDSOWNED%&7/&o%FREELANDSMAX% &7deiner freien Länder benutzt, du kannst sie verkaufen und erneut kaufen um sie frei umzuplatzieren'
   cmdBuyNotBuyable: '&cDieses Land steht nicht zum Verkauf'
   cmdBuyNotBuyableCoordinate: '&cDieses Land steht nicht zum Verkauf, die minimalen Koordinaten zum Landkauf fangen bei &axz%MINIMUMCOORDS% &can'
@@ -84,13 +84,13 @@ localization:
   cmdHmlSave: '&aDie Land Daten wurden gespeichert'
   cmdHmlStatus: '&6&lLänder mit Besitzer:\n &7Gesamt: &b%TOTALLANDS% &7(&okostenlos&7: &b%TOTALFREE%&7, &oServer&7: &b%TOTALSERVER%&7, &overlassen&7: &b%TOTALABANDONED%&7)\n Teleportpunkte: &b%TOTALTELEPORTS%\n &7Je Welt: %TOTALWORLDLIST%'
   cmdHmlStatusWorldListEntry: '&e%WORLD%&7-&b%AMOUNT%'
-  cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml forcewgrefresh\n /hml free <Spieler> [Wert]\n /hml info <Spieler>\n /land buy server\n /land sell force\n /land teleport delete <Teleport>'
+  cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml forcewgrefresh\n /hml free <Spieler> [Wert]\n /hml info <Spieler|-s>\n /land buy server\n /land sell force\n /land teleport delete <Teleport>'
   cmdInfoFree: '~&7Dieses Land ist frei, verwende &a/land buy/ &7zum kaufen'
   cmdInfoNoFriends: '&fKeine hinzugefügt'
   cmdInfoNoTeleport: '&fKeiner gesetzt'
   cmdInfoOwned: '&7Besitzer: &6&l%OWNER% &7(besitzt &a%OWNEDLANDS% &7Länder)\n &7Freunde: &6%FRIENDS%\n &7Teleportpunkt: &a%TELEPORT%'
   cmdLandtpUsage: '&cVerwendung: &f/landtp <Teleport>'
-  cmdSellConfirm: '~&7Du bist im Begriff das mit Partikeln markierte Land für &a%COST% &7HCs zu verkaufen, wiederhole das Kommando mit &a/land sell/ &7zum bestätigen'
+  cmdSellConfirm: '~&7Du bist im Begriff das mit Partikeln markierte Land für &a%COST% &7HCs zu verkaufen, wiederhole das Kommando &a/land sell/ &7zum bestätigen'
   cmdSellForceNotify: '&cDein Land bei &e%LAND% &cwurde von &b%FORCINGPLAYER% &czwangsverkauft'
   cmdSellForceSuccess: '&7Das Land von &e%LANDOWNER% &7steht nun wieder zur Verfügung, der Besitzer hätte bei einem Verkauf &b%COST% HC''s &7erhalten'
   cmdSellForceUsage: '~&cDieses Land gehört dir nicht, verwende &a/land sell force/ &cum den Verkauf zu erzwingen'

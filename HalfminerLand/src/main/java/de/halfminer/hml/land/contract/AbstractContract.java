@@ -16,8 +16,9 @@ public abstract class AbstractContract extends LandClass {
     final Player player;
     private final Chunk chunk;
 
-    boolean canBeFulfilled;
-    private final long creationTimestamp;
+    private boolean canBeFulfilled;
+    private boolean wasFulfilled;
+
 
 
     AbstractContract(Player player, Land land) {
@@ -27,7 +28,7 @@ public abstract class AbstractContract extends LandClass {
         this.chunk = land.getChunk();
 
         this.canBeFulfilled = false;
-        this.creationTimestamp = System.currentTimeMillis();
+        this.wasFulfilled = false;
     }
 
     public Player getPlayer() {
@@ -38,16 +39,16 @@ public abstract class AbstractContract extends LandClass {
         return chunk;
     }
 
-    public long getCreationTimestamp() {
-        return creationTimestamp;
-    }
-
     public boolean canBeFulfilled() {
-        return canBeFulfilled;
+        return canBeFulfilled && !wasFulfilled;
     }
 
     public void setCanBeFulfilled() {
         canBeFulfilled = true;
+    }
+
+    public boolean wasFulfilled() {
+        return wasFulfilled;
     }
 
     double getLastCostFromStorage(UUID uuid) {
@@ -102,7 +103,16 @@ public abstract class AbstractContract extends LandClass {
         return previousCostList;
     }
 
-    public abstract void fulfill(Land land);
+    public void fulfillContract(Land land) {
+        if (canBeFulfilled()) {
+            fulfill(land);
+            this.wasFulfilled = true;
+        } else {
+            hml.getLogger().warning("fulfillContract() called again for land " + land);
+        }
+    }
+
+    abstract void fulfill(Land land);
 
     public abstract double getCost();
 }

@@ -28,17 +28,15 @@ public class BuyContract extends AbstractContract {
 
     @Override
     public void fulfill(Land land) {
-        if (canBeFulfilled()) {
 
-            if (cost != 0d) {
-                hms.getHooksHandler().addMoney(player, -getCost());
-            }
-
-            land.setOwner(hms.getStorageHandler().getPlayer(player));
-            addCurrentCostToStorage(cost);
-
-            hml.getLogger().info(player.getName() + " paid $" + cost + " to buy the land at [" + land + "]");
+        if (cost != 0d) {
+            hms.getHooksHandler().addMoney(player, -getCost());
         }
+
+        land.setOwner(hms.getStorageHandler().getPlayer(player));
+        addCurrentCostToStorage(cost);
+
+        hml.getLogger().info(player.getName() + " paid $" + cost + " to buy the land at [" + land + "]");
     }
 
     @Override

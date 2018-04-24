@@ -1,5 +1,7 @@
 package de.halfminer.hml.land;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hml.LandClass;
 import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.ContractManager;
@@ -22,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class LandBoard extends LandClass implements Board, ContractManager, Sweepable {
@@ -37,7 +40,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     private final LandMap landMap;
 
     private final Map<Player, BukkitTask> chunkPlayerParticleMap;
-    private final Map<Player, AbstractContract> contractMap;
+    private final Cache<Player, AbstractContract> contractCache;
 
 
     public LandBoard() {
@@ -48,7 +51,10 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         this.landMap = new LandMap();
 
         this.chunkPlayerParticleMap = new HashMap<>();
-        this.contractMap = new HashMap<>();
+        this.contractCache = CacheBuilder.newBuilder()
+                .weakKeys()
+                .expireAfterWrite(CHUNK_SHOWN_SECONDS, TimeUnit.SECONDS)
+                .build();
 
         // load board from disk
         for (String worldStr : landStorageSection.getKeys(false)) {
@@ -222,16 +228,17 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
 
     @Override
     public boolean hasContract(Player player) {
-        if (contractMap.containsKey(player)) {
 
-            AbstractContract contract = contractMap.get(player);
+        AbstractContract contract = contractCache.getIfPresent(player);
+        if (contract == null) {
+            return false;
+        }
 
-            // check if expired
-            if (contract.getCreationTimestamp() + (CHUNK_SHOWN_SECONDS * 1000L) < System.currentTimeMillis()) {
-                contractMap.remove(player);
-            } else {
-                return true;
-            }
+        // check if expired
+        if (contract.wasFulfilled()) {
+            contractCache.invalidate(player);
+        } else {
+            return true;
         }
 
         return false;
@@ -239,17 +246,17 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
 
     @Override
     public void setContract(AbstractContract contract) {
-        contractMap.put(contract.getPlayer(), contract);
+        contractCache.put(contract.getPlayer(), contract);
     }
 
     @Override
     public AbstractContract getContract(Player player, Land land) {
 
-        if (hasContract(player)) {
-            AbstractContract contract = contractMap.get(player);
-            if (contract.getChunk().equals(land.getChunk())) {
-                return contract;
-            }
+        AbstractContract contract = contractCache.getIfPresent(player);
+        if (contract != null
+                && !contract.wasFulfilled()
+                && contract.getChunk().equals(land.getChunk())) {
+            return contract;
         }
 
         return null;
@@ -261,16 +268,14 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         Land land = getLandAt(contract.getChunk());
 
         cancelChunkParticles(player);
-        contract.fulfill(land);
+        contract.fulfillContract(land);
 
         landWasUpdated(land);
-        contractMap.remove(player);
+        contractCache.invalidate(player);
     }
 
     @Override
     public void sweep() {
-        for (Player player : new HashSet<>(contractMap.keySet())) {
-            hasContract(player);
-        }
+        contractCache.cleanUp();
     }
 }

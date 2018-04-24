@@ -12,10 +12,8 @@ public class FreeBuyContract extends BuyContract {
 
     @Override
     public void fulfill(Land land) {
-        if (canBeFulfilled()) {
-            super.fulfill(land);
-            land.setFreeLand(true);
-            removeLastCostFromStorage(player.getUniqueId());
-        }
+        super.fulfill(land);
+        land.setFreeLand(true);
+        removeLastCostFromStorage(player.getUniqueId());
     }
 }

@@ -16,17 +16,15 @@ public class ForceSellContract extends SellContract {
 
     @Override
     public void fulfill(Land land) {
-        if (canBeFulfilled) {
 
-            if (!land.isFreeLand()) {
-                removeLastCostFromStorage(owner.getUniqueId());
-            }
-
-            land.setOwner(null);
-
-            hml.getLogger().info(owner.getName() + "' land at ["
-                    + land + "] was force sold by " + player.getName()
-                    + ", $" + getCost() + " was not returned to the original owner");
+        if (!land.isFreeLand()) {
+            removeLastCostFromStorage(owner.getUniqueId());
         }
+
+        land.setOwner(null);
+
+        hml.getLogger().info(owner.getName() + "' land at ["
+                + land + "] was force sold by " + player.getName()
+                + ", $" + getCost() + " was not returned to the original owner");
     }
 }

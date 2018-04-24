@@ -24,21 +24,19 @@ public class SellContract extends AbstractContract {
 
     @Override
     public void fulfill(Land land) {
-        if (canBeFulfilled()) {
 
-            boolean isFreeLand = land.isFreeLand();
-            land.setOwner(null);
+        boolean isFreeLand = land.isFreeLand();
+        land.setOwner(null);
 
-            if (cost != 0d) {
-                hms.getHooksHandler().addMoney(player, cost);
-            }
+        if (cost != 0d) {
+            hms.getHooksHandler().addMoney(player, cost);
+        }
 
-            if (!isFreeLand) {
-                removeLastCostFromStorage(player.getUniqueId());
-                hml.getLogger().info(player.getName() + " received $" + cost + " for selling land at [" + land + "]");
-            } else {
-                hml.getLogger().info(player.getName() + " sold his free land at [" + land + "]");
-            }
+        if (!isFreeLand) {
+            removeLastCostFromStorage(player.getUniqueId());
+            hml.getLogger().info(player.getName() + " received $" + cost + " for selling land at [" + land + "]");
+        } else {
+            hml.getLogger().info(player.getName() + " sold his free land at [" + land + "]");
         }
     }
 
