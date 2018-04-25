@@ -15,7 +15,7 @@ public class ForceSellContract extends SellContract {
     }
 
     @Override
-    public void fulfill(Land land) {
+    void fulfill(Land land) {
 
         if (!land.isFreeLand()) {
             removeLastCostFromStorage(owner.getUniqueId());

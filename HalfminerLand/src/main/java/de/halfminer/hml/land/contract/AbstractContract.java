@@ -20,7 +20,6 @@ public abstract class AbstractContract extends LandClass {
     private boolean wasFulfilled;
 
 
-
     AbstractContract(Player player, Land land) {
         super(false);
         this.landStorage = hml.getLandStorage();

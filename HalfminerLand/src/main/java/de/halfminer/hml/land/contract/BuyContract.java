@@ -27,7 +27,7 @@ public class BuyContract extends AbstractContract {
     }
 
     @Override
-    public void fulfill(Land land) {
+    void fulfill(Land land) {
 
         if (cost != 0d) {
             hms.getHooksHandler().addMoney(player, -getCost());

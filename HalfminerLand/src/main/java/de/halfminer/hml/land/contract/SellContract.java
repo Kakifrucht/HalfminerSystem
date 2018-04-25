@@ -23,7 +23,7 @@ public class SellContract extends AbstractContract {
     }
 
     @Override
-    public void fulfill(Land land) {
+    void fulfill(Land land) {
 
         boolean isFreeLand = land.isFreeLand();
         land.setOwner(null);

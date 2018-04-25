@@ -84,6 +84,7 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
     - Only one teleport at a time per player
   - Titles
     - Send main title/subtitle
+      - Send title with delay, to prioritize titles
     - Send actionbar title
     - Send tablist header/footer
 - **Utils**

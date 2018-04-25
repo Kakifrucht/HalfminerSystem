@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 /**
  * - Main title/subtitle
+ *   - Send title with delay, to prioritize titles
  * - Actionbar title
  * - Tablist titles
  */
@@ -40,17 +41,36 @@ public class HanTitles extends HalfminerClass {
      */
     public void sendTitle(@Nullable Player player, String title, int fadeIn, int stay, int fadeOut) {
 
-        String[] split = ChatColor.translateAlternateColorCodes('&', title).replace("\\n", "\n").split("\n");
+        String[] split = ChatColor.translateAlternateColorCodes('&', title)
+                .replace("\\n", "\n")
+                .split("\n");
+
         String topTitle = split[0];
         String subTitle = "";
-        if (split.length > 1) subTitle = split[1];
-        if (split.length > 2) sendActionBar(player, split[2]);
+        if (split.length > 1) {
+            subTitle = split[1];
+        }
+        if (split.length > 2) {
+            sendActionBar(player, split[2]);
+        }
 
         if (player == null) {
             for (Player sendTo : server.getOnlinePlayers()) {
                 NMSUtils.sendTitlePackets(sendTo, topTitle, subTitle, fadeIn, stay, fadeOut);
             }
-        } else NMSUtils.sendTitlePackets(player, topTitle, subTitle, fadeIn, stay, fadeOut);
+        } else {
+            NMSUtils.sendTitlePackets(player, topTitle, subTitle, fadeIn, stay, fadeOut);
+        }
+    }
+
+    /**
+     * Send title via {@link #sendTitle(Player, String, int, int, int)} while adding a delay that can be used
+     * to prioritize other titles by adding a delay in ticks, for example after a event listener was called.
+     *
+     * @param delay ticks to delay
+     */
+    public void sendTitle(@Nullable Player player, String title, int fadeIn, int stay, int fadeOut, int delay) {
+        scheduler.runTaskLater(hms, () -> sendTitle(player, title, fadeIn, stay, fadeOut), delay);
     }
 
     /**

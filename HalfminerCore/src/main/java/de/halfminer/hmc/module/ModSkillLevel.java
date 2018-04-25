@@ -151,7 +151,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                                 .addPlaceholderReplace("%SKILLLEVEL%", String.valueOf(newLevel))
                                 .addPlaceholderReplace("%SKILLGROUP%", newTeam.getName().substring(2))
                                 .returnMessage(),
-                        10, 50, 10);
+                        10, 50, 10, 10);
             }
 
             MessageBuilder.create("modSkillLevelLog", hmc)
