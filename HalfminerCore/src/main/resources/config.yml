@@ -114,6 +114,9 @@ chat:
 combatLog:
   #Broadcast when a player logs out
   broadcastLog: true
+  #Players that are tagged cannot flee into PvP disabled regions while they are tagged
+  # Other players that are not currently in combat cannot attack them though
+  preventBorderHopping: true
   #Time in seconds until untag
   tagTime: 15
 crafting:

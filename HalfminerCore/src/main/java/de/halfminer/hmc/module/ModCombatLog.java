@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
  *   - Last attacker will get the kill and get untagged
  *   - Message will be broadcast, containing last attacker
  * - Untags players after timer runs out, player logs out or a player is killed
+ * - Players that are tagged can fight in PvP disabled regions aswell (togglable, prevents border hopping)
  * - Disables during fight:
  *   - Taking off armor
  *   - Commands
@@ -45,6 +46,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     private Cache<Player, Player> lastOpponentCache;
 
     private boolean broadcastLog;
+    private boolean preventBorderHopping;
     private int tagTime;
 
 
@@ -94,14 +96,39 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             Player victim = (Player) e.getEntity();
             Player attacker = Utils.getDamagerFromEvent(e);
 
-            if (attacker != null && attacker != victim
-                    && !attacker.isDead() && !victim.isDead()) {
+            if (isPvP(victim, attacker)) {
+
                 lastOpponentCache.put(victim, attacker);
                 lastOpponentCache.put(attacker, victim);
                 tagPlayer(victim);
                 tagPlayer(attacker);
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPvPUncancelCancelled(EntityDamageByEntityEvent e) {
+
+        if (preventBorderHopping && e.isCancelled() && e.getEntity() instanceof Player) {
+
+            Player victim = (Player) e.getEntity();
+            Player attacker = Utils.getDamagerFromEvent(e);
+
+            if (isPvP(victim, attacker)
+                    && isTagged(victim)
+                    && isTagged(attacker)) {
+
+                // uncancel cancelled pvp events if both players are already tagged
+                e.setCancelled(false);
+            }
+        }
+    }
+
+    private boolean isPvP(Player victim, Player attacker) {
+        return attacker != null
+                && attacker != victim
+                && !attacker.isDead()
+                && !victim.isDead();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -189,6 +216,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     public void loadConfig() {
 
         broadcastLog = hmc.getConfig().getBoolean("combatLog.broadcastLog", true);
+        preventBorderHopping = hmc.getConfig().getBoolean("combatLog.preventBorderHopping", true);
         tagTime = hmc.getConfig().getInt("combatLog.tagTime", 15);
 
         lastOpponentCache = Utils.copyValues(lastOpponentCache,
