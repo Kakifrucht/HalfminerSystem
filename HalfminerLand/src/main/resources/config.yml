@@ -21,6 +21,9 @@ buyLimits:
 friendLimit: 6
 # After how many days of inactivity land should be set abandoned
 landAbandonedAfterDays: 21
+# How likely should a player that owns no land yet receive a message about it on block placement
+# Set percentage as decimal, e.g. on place in 1% of the cases is 0.01
+landNotProtectedMessagePercentage: 0.01
 priceFormula:
   # Minimum price, first land is always free
   minPrice: 2
@@ -117,3 +120,4 @@ localization:
   listenerOwnerOwned: 'Landbesitzer: &b&l%OWNER%'
   listenerPvPOff: '&aPvP aus'
   listenerPvPOn: '&cPvP an'
+  listenerUnprotectedLandMessage: '~&7Du baust aktuell auf ungeschütztem Land, sichere dein erstes Land &ekostenlos &7vor Griefing und Diebstahl mit dem Kommando &a/land buy/'

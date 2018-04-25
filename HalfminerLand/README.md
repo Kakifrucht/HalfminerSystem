@@ -16,6 +16,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
 - Shows land status change on chunk move in titles
   - If PvP status was toggled (checks WorldGuard PvP flag)
   - If land owner changed
+- If a player has no land and is placing blocks on unprotected land they will be notified about it (notification percentage configurable)
 - **Commands**
   - /land buy [server]
     - Buy the land the executing player is currently standing on

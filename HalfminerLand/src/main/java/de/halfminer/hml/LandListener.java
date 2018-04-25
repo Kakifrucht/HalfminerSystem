@@ -29,6 +29,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     private final Map<Player, Chunk> lastKnownChunk;
 
     private Set<String> blockedCmds;
+    private double landNotProtectedMessagePercentage;
 
 
     LandListener(Board board, WorldGuardHelper wgh) {
@@ -177,6 +178,15 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             return true;
         }
 
+        // randomly send message on block place if player has no land, remind to buy land
+        if (!land.hasOwner()
+                && Math.random() < landNotProtectedMessagePercentage
+                && e instanceof BlockPlaceEvent
+                && board.getLands(player).isEmpty()) {
+
+            MessageBuilder.create("listenerUnprotectedLandMessage", hml).sendMessage(player);
+        }
+
         return false;
     }
 
@@ -247,6 +257,8 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 }
             });
         }
+
+        this.landNotProtectedMessagePercentage = hml.getConfig().getDouble("landNotProtectedMessagePercentage", 0.01d);
 
         if (lastKnownChunk.isEmpty()) {
             server.getOnlinePlayers().forEach(this::setLastKnownChunk);
