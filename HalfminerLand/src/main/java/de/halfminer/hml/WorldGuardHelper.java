@@ -36,11 +36,11 @@ public class WorldGuardHelper {
     }
 
     public void updateRegionOfLand(Land land) {
-        updateRegionOfLand(land, false);
+        updateRegionOfLand(land, false, true);
     }
 
     @SuppressWarnings("deprecation")
-    public void updateRegionOfLand(Land land, boolean forceRefresh) {
+    public void updateRegionOfLand(Land land, boolean forceRefresh, boolean keepFriendsOnRefresh) {
         Chunk chunk = land.getChunk();
 
         RegionManager regionManager = wg.getRegionManager(chunk.getWorld());
@@ -58,7 +58,10 @@ public class WorldGuardHelper {
                         || !region.getMaximumPoint().equals(compareRegion.getMaximumPoint())
                         || !region.getMinimumPoint().equals(compareRegion.getMinimumPoint())) {
 
-                    defaultDomain = region.getMembers(); //TODO if stealing land don't copy members
+                    if (keepFriendsOnRefresh) {
+                        defaultDomain = region.getMembers();
+                    }
+
                     regionManager.removeRegion(region.getId());
                     region = null;
                 }
@@ -98,7 +101,7 @@ public class WorldGuardHelper {
                     logger.info("Set region for land " + land + " abandoned");
                 } else {
                     // force refresh region fully
-                    updateRegionOfLand(land, true);
+                    updateRegionOfLand(land, true, keepFriendsOnRefresh);
                 }
             }
 

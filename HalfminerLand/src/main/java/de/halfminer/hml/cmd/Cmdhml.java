@@ -104,7 +104,7 @@ public class Cmdhml extends LandCommand {
 
                 WorldGuardHelper wgh = hml.getWorldGuardHelper();
                 for (Land land : board.getOwnedLandSet()) {
-                    wgh.updateRegionOfLand(land, true);
+                    wgh.updateRegionOfLand(land, true, true);
                 }
 
                 MessageBuilder.create("cmdHmlRefreshDone", hml).sendMessage(sender);

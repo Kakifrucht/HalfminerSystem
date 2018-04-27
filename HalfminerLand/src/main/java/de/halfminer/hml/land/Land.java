@@ -149,7 +149,7 @@ public class Land extends LandClass {
 
     public void setOwner(HalfminerPlayer owner) {
         this.owner = owner;
-        wgh.updateRegionOfLand(this);
+        wgh.updateRegionOfLand(this, false, false);
 
         if (owner != null) {
             mapSection.set(path + STORAGE_OWNER, owner.getUniqueId().toString());
