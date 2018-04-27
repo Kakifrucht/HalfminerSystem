@@ -1,6 +1,7 @@
 package de.halfminer.hml;
 
 import de.halfminer.hml.cmd.*;
+import de.halfminer.hml.data.LandStorage;
 import de.halfminer.hml.land.Board;
 import de.halfminer.hml.land.LandBoard;
 import de.halfminer.hml.land.contract.ContractManager;
@@ -23,7 +24,7 @@ public class HalfminerLand extends JavaPlugin {
     }
 
     private WorldGuardHelper worldGuardHelper;
-    private HanStorage landStorage;
+    private LandStorage landStorage;
 
     private LandBoard board;
 
@@ -33,7 +34,7 @@ public class HalfminerLand extends JavaPlugin {
         instance = this;
 
         this.worldGuardHelper = new WorldGuardHelper(getLogger(), getServer().getPluginManager());
-        this.landStorage = new HanStorage(this);
+        this.landStorage = new LandStorage(new HanStorage(this));
         reload();
 
         this.board = new LandBoard();
@@ -42,9 +43,6 @@ public class HalfminerLand extends JavaPlugin {
 
         getLogger().info("HalfminerLand enabled");
     }
-
-    @Override
-    public void onDisable() {}
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -114,12 +112,12 @@ public class HalfminerLand extends JavaPlugin {
         return worldGuardHelper;
     }
 
-    public HanStorage getLandStorage() {
+    public LandStorage getLandStorage() {
         return landStorage;
     }
 
     public void saveLandStorage() {
-        landStorage.saveConfig();
+        landStorage.saveData();
     }
 
     Board getBoard() {

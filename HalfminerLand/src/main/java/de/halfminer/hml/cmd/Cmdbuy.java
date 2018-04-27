@@ -114,7 +114,7 @@ public class Cmdbuy extends LandCommand {
             }
         }
 
-        int freeLandsMax = hml.getLandStorage().getInt(player.getUniqueId().toString() + ".freetotal");
+        int freeLandsMax = hml.getLandStorage().getLandPlayer(player).getFreeLands();
         if (buyAsServer || player.hasPermission("hml.cmd.buy.free")) {
             freeLandsMax = Integer.MAX_VALUE;
         }
@@ -157,7 +157,7 @@ public class Cmdbuy extends LandCommand {
         if (contract.canBeFulfilled()) {
 
             if (landToBuy.isAbandoned() && !landToBuy.isFreeLand()) {
-                //TODO remove last cost from storage (new abstraction?)
+                hml.getLandStorage().getLandPlayer(landToBuy.getOwner()).removeLastCostFromStorage();
             }
 
             // buy land

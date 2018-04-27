@@ -1,13 +1,13 @@
 package de.halfminer.hml.cmd;
 
 import de.halfminer.hml.WorldGuardHelper;
+import de.halfminer.hml.data.LandPlayer;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +15,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Cmdhml extends LandCommand {
-
-    private static final String STORAGE_FREE_LANDS = ".freetotal";
 
 
     public Cmdhml() {
@@ -117,8 +115,10 @@ public class Cmdhml extends LandCommand {
                 }
 
                 HalfminerPlayer toEdit;
+                LandPlayer landPlayer;
                 try {
                     toEdit = hms.getStorageHandler().getPlayer(args[1]);
+                    landPlayer = hml.getLandStorage().getLandPlayer(toEdit);
                 } catch (PlayerNotFoundException e) {
                     e.sendNotFoundMessage(sender, "Land");
                     return;
@@ -131,9 +131,7 @@ public class Cmdhml extends LandCommand {
                     } catch (NumberFormatException ignored) {}
                 }
 
-                ConfigurationSection landStorageRoot = hml.getLandStorage().getRootSection();
-                String key = toEdit.getUniqueId().toString() + STORAGE_FREE_LANDS;
-                int setFreeAmount = landStorageRoot.getInt(key, 0);
+                int setFreeAmount = landPlayer.getFreeLands();
                 int hasFreeAmount = board.getLands(toEdit)
                         .stream()
                         .filter(Land::isFreeLand)
@@ -141,7 +139,8 @@ public class Cmdhml extends LandCommand {
                         .size();
 
                 if (setTo >= 0) {
-                    landStorageRoot.set(key, setTo > 0 ? setTo : null);
+
+                    landPlayer.setFreeLands(setTo);
                     hml.getLogger().info("Set free lands for " + toEdit.getName() + " from "
                             + setFreeAmount + " to " + setTo);
                 }

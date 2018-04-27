@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 public class LandBoard extends LandClass implements Board, ContractManager, Sweepable {
 
-    private static final String ROOT_MAP_PATH = "map";
     private static final int CHUNK_SHOWN_SECONDS = 10;
     private static final int CHUNK_SHOWN_HEIGHT = 4;
     private static final int CHUNK_SHOWN_SPACES = 2;
@@ -47,7 +46,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
 
         this.systemStorage = hms.getStorageHandler();
 
-        this.landStorageSection = hml.getLandStorage().getConfigurationSection(ROOT_MAP_PATH);
+        this.landStorageSection = hml.getLandStorage().getMapSection();
         this.landMap = new LandMap();
 
         this.chunkPlayerParticleMap = new HashMap<>();

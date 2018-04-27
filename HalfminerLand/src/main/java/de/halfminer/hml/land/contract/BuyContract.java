@@ -34,7 +34,7 @@ public class BuyContract extends AbstractContract {
         }
 
         land.setOwner(hms.getStorageHandler().getPlayer(player));
-        addCurrentCostToStorage(cost);
+        landStorage.getLandPlayer(player).addCurrentCostToStorage(cost);
 
         hml.getLogger().info(player.getName() + " paid $" + cost + " to buy the land at [" + land + "]");
     }

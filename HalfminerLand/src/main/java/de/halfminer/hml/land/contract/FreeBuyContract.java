@@ -14,6 +14,6 @@ public class FreeBuyContract extends BuyContract {
     void fulfill(Land land) {
         super.fulfill(land);
         land.setFreeLand(true);
-        removeLastCostFromStorage(player.getUniqueId());
+        landStorage.getLandPlayer(player).removeLastCostFromStorage();
     }
 }
