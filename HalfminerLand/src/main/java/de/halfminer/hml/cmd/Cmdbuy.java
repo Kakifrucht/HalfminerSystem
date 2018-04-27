@@ -156,6 +156,10 @@ public class Cmdbuy extends LandCommand {
 
         if (contract.canBeFulfilled()) {
 
+            if (landToBuy.isAbandoned() && !landToBuy.isFreeLand()) {
+                //TODO remove last cost from storage (new abstraction?)
+            }
+
             // buy land
             contractManager.fulfillContract(contract);
             MessageBuilder.create("cmdBuySuccess" + (buyAsServer ? "AsServer" : ""), hml)

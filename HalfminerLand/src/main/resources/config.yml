@@ -1,6 +1,6 @@
 #HalfminerLand Config
-# Define commands that are blocked if a player doesn't own or was added as a friend
-# Also block all registered command aliases and can also only block subcommands by adding arguments
+# Define commands that are blocked if a player is in a land of another player and wasn't added as a friend
+# Automatically blocks all registered command aliases and can also only block subcommands by adding arguments
 #  Bypass permission is 'hml.bypass.cmd'
 blockedCmds:
   - sethome
@@ -92,6 +92,8 @@ localization:
   cmdInfoNoFriends: '&fKeine hinzugefügt'
   cmdInfoNoTeleport: '&fKeiner gesetzt'
   cmdInfoOwned: '&7Besitzer: &6&l%OWNER% &7(besitzt &a%OWNEDLANDS% &7Länder)\n &7Freunde: &6%FRIENDS%\n &7Teleportpunkt: &a%TELEPORT%'
+  cmdInfoOwnedAbandoned: '&7Besitzer: &8&l%OWNER% &7(besitzt &a%OWNEDLANDS% &7Länder, &oLand ist verlassen)\n &7Freunde: &6%FRIENDS%\n &7Teleportpunkt: &a%TELEPORT%'
+  cmdLandtpIsAbandoned: '&cDieses Land ist verlassen und der Teleport damit nicht mehr zugänglich'
   cmdLandtpUsage: '&cVerwendung: &f/landtp <Teleport>'
   cmdSellConfirm: '~&7Du bist im Begriff das mit Partikeln markierte Land für &a%COST% &7HCs zu verkaufen, wiederhole das Kommando &a/land sell/ &7zum bestätigen'
   cmdSellForceNotify: '&cDein Land bei &e%LAND% &cwurde von &b%FORCINGPLAYER% &czwangsverkauft'
@@ -118,6 +120,7 @@ localization:
   listenerFormatTitle: ' \n%PVPLINE%%SPACER%%OWNERLINE%'
   listenerOwnerFree: '&aFreies Land'
   listenerOwnerOwned: 'Landbesitzer: &b&l%OWNER%'
+  listenerOwnerOwnedAbandoned: 'Landbesitzer: &8%OWNER% &7(Verlassen)'
   listenerPvPOff: '&aPvP aus'
   listenerPvPOn: '&cPvP an'
   listenerUnprotectedLandMessage: '~&7Du baust aktuell auf ungeschütztem Land, sichere dein erstes Land &ekostenlos &7vor Griefing und Diebstahl mit dem Kommando &a/land buy/'

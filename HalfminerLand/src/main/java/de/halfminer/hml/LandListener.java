@@ -43,6 +43,21 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     public void onJoin(PlayerJoinEvent e) {
         setLastKnownChunk(e.getPlayer());
         board.updatePlayerLocation(e.getPlayer(), null, e.getPlayer().getLocation().getChunk());
+
+        // remove abandonment status if land is abandoned
+        Set<Land> ownedLands = board.getLands(e.getPlayer());
+        if (!ownedLands.isEmpty()) {
+
+            boolean landIsAbandoned = false;
+            for (Land ownedLand : ownedLands) {
+                if (ownedLand.isAbandoned()) {
+                    ownedLand.updateAbandonmentStatus();
+                    landIsAbandoned = true;
+                } else if (!landIsAbandoned) {
+                    break;
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -69,8 +84,8 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
     private void onLocationChange(Player player, Location from, Location to) {
 
+        // ignore location changes after logout
         if (!lastKnownChunk.containsKey(player)) {
-            hml.getLogger().warning("onLocationChange() was called for " + player.getName() + ", although no last known chunk is set");
             return;
         }
 
@@ -100,7 +115,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             } else if (newLand.hasOwner() && hasDifferentOwner(newLand, previousLand)) {
 
-                ownerMessageInTitle = MessageBuilder.create("listenerOwnerOwned", hml)
+                ownerMessageInTitle = MessageBuilder.create("listenerOwnerOwned" + (newLand.isAbandoned() ? "Abandoned" : ""), hml)
                         .togglePrefix()
                         .addPlaceholderReplace("%OWNER%", newLand.getOwnerName())
                         .returnMessage();
@@ -199,7 +214,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             Land landFrom = board.getLandAt(from);
             Land landTo = board.getLandAt(to);
-            e.setCancelled(landTo.hasOwner() && hasDifferentOwner(landTo, landFrom));
+            e.setCancelled(landTo.hasOwner() && !landTo.isAbandoned() && hasDifferentOwner(landTo, landFrom));
         }
     }
 
@@ -213,7 +228,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     }
 
     private boolean hasDifferentOwner(Land landA, Land landB) {
-        return (landA.hasOwner() ^ landB.hasOwner())
+        return (landA.hasOwner() != landB.hasOwner())
                 || landA.hasOwner() && !landA.getOwner().equals(landB.getOwner());
     }
 
@@ -232,7 +247,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             scheduler.runTask(hml, () -> {
                 for (String cmd : blockedCmdList) {
 
-                    StringArgumentSeparator cmdParsed = new StringArgumentSeparator(cmd, ' ');
+                    StringArgumentSeparator cmdParsed = new StringArgumentSeparator(cmd.toLowerCase(), ' ');
                     Command command = server.getPluginCommand(cmdParsed.getArgument(0));
 
                     if (command != null) {

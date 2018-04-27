@@ -191,7 +191,6 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
 
                 int playerYLevel = player.getLocation().getBlockY();
 
-                // green region particles
                 for (int x = 0; x <= 16; x += CHUNK_SHOWN_SPACES) {
                     for (int y = Math.max(0, playerYLevel - CHUNK_SHOWN_HEIGHT); y <= Math.min(255, playerYLevel + CHUNK_SHOWN_HEIGHT); y += 2) {
                         for (int z = 0; z <= 16; z += CHUNK_SHOWN_SPACES) {

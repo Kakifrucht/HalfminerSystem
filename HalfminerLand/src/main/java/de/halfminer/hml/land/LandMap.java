@@ -73,15 +73,18 @@ class LandMap {
     }
 
     Land getLandFromTeleport(String teleport) {
+
         Land land = teleportMap.get(teleport);
-        if (land == null) {
-            return null;
-        } else if (land.hasTeleportLocation() && land.getTeleportName().equals(teleport)) {
-            return land;
-        } else {
-            teleportMap.remove(teleport);
-            return null;
+        if (land != null) {
+            if (land.hasTeleportLocation() && land.getTeleportName().equals(teleport)) {
+                return land;
+            } else {
+                teleportMap.remove(teleport);
+                return null;
+            }
         }
+
+        return null;
     }
 
     Set<Land> getOwnedLandSet(HalfminerPlayer halfminerPlayer) {

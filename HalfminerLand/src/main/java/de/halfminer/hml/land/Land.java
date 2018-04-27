@@ -2,6 +2,7 @@ package de.halfminer.hml.land;
 
 import de.halfminer.hml.LandClass;
 import de.halfminer.hml.WorldGuardHelper;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
@@ -37,7 +38,7 @@ public class Land extends LandClass {
     private Location teleportLocation;
 
     private int playersOnLand;
-    private boolean isAbandoned = false;
+    private boolean isAbandoned;
 
 
     Land(Chunk chunk, ConfigurationSection mapSection) {
@@ -57,8 +58,7 @@ public class Land extends LandClass {
                 try {
                     owner = hms.getStorageHandler().getPlayer(UUID.fromString(uuidString));
                 } catch (PlayerNotFoundException e) {
-                    hml.getLogger().warning("Player with UUID " + uuidString
-                            + "' not found, skipping chunk at " + chunk.getX() + "-" + chunk.getZ());
+                    hml.getLogger().warning("Player with UUID " + uuidString + "' not found, skipping land at " + toString());
                 }
             }
 
@@ -71,18 +71,25 @@ public class Land extends LandClass {
             }
         }
 
-        // refresh region, ensures that if land has no owner it will be deleted
-        wgh.updateRegionOfLand(this);
+        this.isAbandoned = wgh.isMarkedAbandoned(this);
+        boolean abandonmentWasUpdated = updateAbandonmentStatus();
+
+        // refresh region if it didn't happen yet, ensures that if land has no owner it will be deleted
+        if (!abandonmentWasUpdated) {
+            wgh.updateRegionOfLand(this);
+        }
     }
 
     public BuyableStatus getBuyableStatus() {
 
-        if (hasOwner()) {
-            return BuyableStatus.ALREADY_OWNED;
-        }
+        if (!isAbandoned()) {
+            if (hasOwner()) {
+                return BuyableStatus.ALREADY_OWNED;
+            }
 
-        if (!wgh.isLandFree(this)) {
-            return BuyableStatus.LAND_NOT_BUYABLE;
+            if (!wgh.isLandFree(this)) {
+                return BuyableStatus.LAND_NOT_BUYABLE;
+            }
         }
 
         if (playersOnLand > 1) {
@@ -150,6 +157,7 @@ public class Land extends LandClass {
             setTeleport(null, null);
             setFreeLand(false);
             setServerLand(false);
+            setAbandoned(false);
             mapSection.set(path, null);
         }
     }
@@ -160,7 +168,7 @@ public class Land extends LandClass {
     }
 
     public boolean isFreeLand() {
-        return isFreeLand;
+        return isFreeLand || isServerLand;
     }
 
     public void setServerLand(boolean isServerLand) {
@@ -173,8 +181,35 @@ public class Land extends LandClass {
     }
 
     public boolean isAbandoned() {
-        //TODO logic for abandoned land, depending on player last seen time
         return isAbandoned && !isServerLand;
+    }
+
+    public boolean updateAbandonmentStatus() {
+
+        if (hasOwner()) {
+
+            int abandonedAfterSeconds = hml.getConfig().getInt("landAbandonedAfterDays", 21) * 24 * 60 * 60;
+            long lastSeen = owner.getLong(DataType.LAST_SEEN);
+
+            if (lastSeen == Long.MAX_VALUE) {
+                return setAbandoned(false);
+            }
+
+            boolean setAbandoned = lastSeen + abandonedAfterSeconds < (System.currentTimeMillis() / 1000);
+            return setAbandoned(setAbandoned);
+        } else {
+            return setAbandoned(false);
+        }
+    }
+
+    private boolean setAbandoned(boolean isAbandoned) {
+        if (this.isAbandoned != isAbandoned) {
+            this.isAbandoned = isAbandoned;
+            wgh.updateRegionOfLand(this);
+            return true;
+        }
+
+        return false;
     }
 
     public boolean hasTeleportLocation() {
@@ -202,6 +237,10 @@ public class Land extends LandClass {
     }
 
     void playerEntered() {
+        if (playersOnLand == 0 && hasOwner()) {
+            updateAbandonmentStatus();
+        }
+
         playersOnLand++;
     }
 
@@ -225,10 +264,13 @@ public class Land extends LandClass {
      * Check if a player can interact on this land.
      *
      * @param player to check
-     * @return true if land is free, player is land owner or added as member of land
+     * @return true if land is not owned, abandoned, player is land owner or added as member of land
      */
     public boolean hasPermission(Player player) {
-        return !hasOwner() || isOwner(player) || wgh.getMemberList(this).getUniqueIds().contains(player.getUniqueId());
+        return !hasOwner()
+                || isOwner(player)
+                || isAbandoned()
+                || wgh.getMemberList(this).getUniqueIds().contains(player.getUniqueId());
     }
 
     public Set<UUID> getMemberSet() {

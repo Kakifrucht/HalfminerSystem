@@ -21,7 +21,13 @@ public class Cmdlandtp extends LandCommand {
         if (args.length > 0) {
             Land teleportTo = board.getLandFromTeleport(args[0].toLowerCase());
             if (teleportTo != null) {
-                hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation());
+
+                if (teleportTo.isAbandoned()) {
+                    MessageBuilder.create("cmdLandtpIsAbandoned", hml).sendMessage(player);
+                } else {
+                    hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation());
+                }
+
             } else {
                 MessageBuilder.create("teleportNotExist", hml).sendMessage(player);
             }

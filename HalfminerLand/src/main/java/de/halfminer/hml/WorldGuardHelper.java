@@ -39,6 +39,7 @@ public class WorldGuardHelper {
         updateRegionOfLand(land, false);
     }
 
+    @SuppressWarnings("deprecation")
     public void updateRegionOfLand(Land land, boolean forceRefresh) {
         Chunk chunk = land.getChunk();
 
@@ -48,26 +49,26 @@ public class WorldGuardHelper {
 
         if (land.hasOwner()) {
 
+            // check if region has correct owner and is at correct location, else recreate
             if (region != null) {
 
-                // check if region has correct owner and is at correct location, else recreate
                 ProtectedRegion compareRegion = createRegionFromChunk(chunk);
                 if (forceRefresh
                         || !region.getOwners().contains(land.getOwner().getUniqueId())
                         || !region.getMaximumPoint().equals(compareRegion.getMaximumPoint())
                         || !region.getMinimumPoint().equals(compareRegion.getMinimumPoint())) {
 
-                    defaultDomain = region.getMembers();
+                    defaultDomain = region.getMembers(); //TODO if stealing land don't copy members
                     regionManager.removeRegion(region.getId());
                     region = null;
                 }
             }
 
             if (region == null) {
+
                 // create region
                 region = createRegionFromChunk(chunk);
 
-                //noinspection deprecation
                 region.setFlag(DefaultFlag.ENABLE_SHOP, StateFlag.State.ALLOW);
                 region.setFlag(DefaultFlag.USE, StateFlag.State.ALLOW);
                 region.setFlag(DefaultFlag.PVP, StateFlag.State.DENY);
@@ -82,7 +83,23 @@ public class WorldGuardHelper {
                 region.setOwners(defaultDomain);
 
                 regionManager.addRegion(region);
-                logger.info("Created region with id " + region.getId() + " in world '" + chunk.getWorld().getName() + "'");
+                logger.info("Created region with id " + region.getId() + " for land " + land);
+            }
+
+            if (land.isAbandoned() != isMarkedAbandoned(land)) {
+                if (land.isAbandoned()) {
+                    region.setFlag(DefaultFlag.PVP, StateFlag.State.ALLOW);
+                    region.setFlag(DefaultFlag.ENDERPEARL, StateFlag.State.ALLOW);
+
+                    region.setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
+                    region.setFlag(DefaultFlag.CHEST_ACCESS, StateFlag.State.ALLOW);
+                    region.setFlag(DefaultFlag.TNT, StateFlag.State.ALLOW);
+
+                    logger.info("Set region for land " + land + " abandoned");
+                } else {
+                    // force refresh region fully
+                    updateRegionOfLand(land, true);
+                }
             }
 
         } else {
@@ -90,9 +107,14 @@ public class WorldGuardHelper {
             // delete region if exists
             if (region != null) {
                 regionManager.removeRegion(region.getId());
-                logger.info("Removed region with id " + region.getId() + " in world '" + chunk.getWorld().getName() + "'");
+                logger.info("Removed region with id " + region.getId() + " for land " + land);
             }
         }
+    }
+
+    public boolean isMarkedAbandoned(Land land) {
+        ProtectedRegion region = getRegionFromRegionManager(land.getChunk());
+        return region != null && region.getFlag(DefaultFlag.BUILD) == StateFlag.State.ALLOW;
     }
 
     public DefaultDomain getMemberList(Land land) {
