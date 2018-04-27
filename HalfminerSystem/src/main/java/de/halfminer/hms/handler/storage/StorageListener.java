@@ -36,7 +36,8 @@ public class StorageListener extends HalfminerClass implements Disableable, List
         HalfminerPlayer hPlayer = storage.getPlayer(player);
 
         storage.setUUID(player);
-        storage.getPlayer(player).set(DataType.LAST_SEEN, Long.MAX_VALUE);
+
+        setLastSeen(player, Long.MAX_VALUE);
         timeOnline.put(hPlayer, System.currentTimeMillis() / 1000);
 
         String previousName = hPlayer.getName();
@@ -95,7 +96,11 @@ public class StorageListener extends HalfminerClass implements Disableable, List
     }
 
     private void setLastSeen(Player player) {
-        storage.getPlayer(player).set(DataType.LAST_SEEN, System.currentTimeMillis() / 1000);
+        setLastSeen(player, System.currentTimeMillis() / 1000);
+    }
+
+    private void setLastSeen(Player player, long time) {
+        storage.getPlayer(player).set(DataType.LAST_SEEN, time);
     }
 
     @Override
@@ -109,6 +114,8 @@ public class StorageListener extends HalfminerClass implements Disableable, List
             }
 
             scheduler.runTaskTimer(hms, this::updateOnlineTimeAllPlayers, 1200L, 1200L);
+
+            server.getOnlinePlayers().forEach(p -> setLastSeen(p, Long.MAX_VALUE));
         }
     }
 
