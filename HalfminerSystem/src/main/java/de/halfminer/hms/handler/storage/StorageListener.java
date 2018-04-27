@@ -71,9 +71,9 @@ public class StorageListener extends HalfminerClass implements Disableable, List
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        storage.getPlayer(player).set(DataType.LAST_SEEN, System.currentTimeMillis() / 1000);
 
         setOnlineTime(player, true);
+        setLastSeen(player);
     }
 
     private void setOnlineTime(Player player, boolean remove) {
@@ -94,6 +94,10 @@ public class StorageListener extends HalfminerClass implements Disableable, List
         }
     }
 
+    private void setLastSeen(Player player) {
+        storage.getPlayer(player).set(DataType.LAST_SEEN, System.currentTimeMillis() / 1000);
+    }
+
     @Override
     public void loadConfig() {
 
@@ -111,6 +115,7 @@ public class StorageListener extends HalfminerClass implements Disableable, List
     @Override
     public void onDisable() {
         updateOnlineTimeAllPlayers();
+        server.getOnlinePlayers().forEach(this::setLastSeen);
     }
 
     private void updateOnlineTimeAllPlayers() {

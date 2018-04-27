@@ -62,7 +62,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
       - Last attacker will get the kill and get untagged
       - Message will be broadcast, containing last attacker name
     - Untags players after timer runs out, player logs out or a player is killed
-    - Players that are tagged can fight in PvP disabled regions aswell (togglable, prevents border hopping)
+    - Players that are tagged can fight in PvP disabled regions aswell (toggleable, prevents border hopping)
     - Disabled while tagged:
       - Taking off armor
       - Commands
