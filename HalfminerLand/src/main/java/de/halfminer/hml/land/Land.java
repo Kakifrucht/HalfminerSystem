@@ -151,13 +151,14 @@ public class Land extends LandClass {
         this.owner = owner;
         wgh.updateRegionOfLand(this, false, false);
 
+        updateAbandonmentStatus();
+
         if (owner != null) {
             mapSection.set(path + STORAGE_OWNER, owner.getUniqueId().toString());
         } else {
-            setTeleport(null, null);
+            removeTeleport();
             setFreeLand(false);
             setServerLand(false);
-            setAbandoned(false);
             mapSection.set(path, null);
         }
     }
@@ -236,6 +237,10 @@ public class Land extends LandClass {
         }
     }
 
+    public void removeTeleport() {
+        setTeleport(null, null);
+    }
+
     void playerEntered() {
         if (playersOnLand == 0 && hasOwner()) {
             updateAbandonmentStatus();
@@ -266,6 +271,7 @@ public class Land extends LandClass {
      * @param player to check
      * @return true if land is not owned, abandoned, player is land owner or added as member of land
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean hasPermission(Player player) {
         return !hasOwner()
                 || isOwner(player)

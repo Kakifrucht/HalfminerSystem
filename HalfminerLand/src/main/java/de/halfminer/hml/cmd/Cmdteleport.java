@@ -117,7 +117,7 @@ public class Cmdteleport extends LandCommand {
                 board.landWasUpdated(land);
 
                 if (isDifferentLand) {
-                    teleportLand.setTeleport(null, null);
+                    teleportLand.removeTeleport();
                     board.landWasUpdated(teleportLand);
                 }
 
@@ -135,7 +135,7 @@ public class Cmdteleport extends LandCommand {
             boolean canDeleteOthers = player.hasPermission("hml.cmd.teleport.deleteothers");
             if (teleportLand != null && (teleportLand.isOwner(player) || canDeleteOthers)) {
 
-                teleportLand.setTeleport(null, null);
+                teleportLand.removeTeleport();
                 board.landWasUpdated(teleportLand);
 
                 MessageBuilder.create("cmdTeleportDeleteSuccess", hml)

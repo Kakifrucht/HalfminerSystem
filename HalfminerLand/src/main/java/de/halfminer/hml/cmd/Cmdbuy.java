@@ -157,6 +157,7 @@ public class Cmdbuy extends LandCommand {
         if (contract.canBeFulfilled()) {
 
             if (landToBuy.isAbandoned() && !landToBuy.isFreeLand()) {
+                landToBuy.removeTeleport();
                 hml.getLandStorage().getLandPlayer(landToBuy.getOwner()).removeLastCostFromStorage();
             }
 
