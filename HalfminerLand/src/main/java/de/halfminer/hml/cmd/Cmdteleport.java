@@ -172,6 +172,8 @@ public class Cmdteleport extends LandCommand {
     }
 
     private void sendUsage() {
-        MessageBuilder.create("cmdTeleportUsage", hml).sendMessage(player);
+        MessageBuilder.create("cmdTeleportUsage", hml)
+                .togglePrefix()
+                .sendMessage(player);
     }
 }

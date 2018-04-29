@@ -119,6 +119,8 @@ public class Cmdfriend extends LandCommand {
     }
 
     private void sendUsage() {
-        MessageBuilder.create("cmdFriendUsage", hml).sendMessage(player);
+        MessageBuilder.create("cmdFriendUsage", hml)
+                .togglePrefix()
+                .sendMessage(player);
     }
 }
