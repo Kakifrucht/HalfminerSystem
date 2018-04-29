@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -212,26 +211,26 @@ public final class Utils {
      * Get the {@link Player} that made damage the damage,
      * either by direct hit, bow, potions, effect cloud or primed tnt.
      *
-     * @param e {@link EntityDamageByEntityEvent event} whose attacker should be extracted
+     * @param entity entity to get the attacking player from
      * @return player if attacker found or null
      */
     @Nullable
-    public static Player getDamagerFromEvent(EntityDamageByEntityEvent e) {
+    public static Player getDamagerFromEntity(Entity entity) {
 
-        if (e.getDamager() instanceof Player) {
-            return (Player) e.getDamager();
-        } else if (e.getDamager() instanceof Projectile) {
-            Projectile projectile = (Projectile) e.getDamager();
+        if (entity instanceof Player) {
+            return (Player) entity;
+        } else if (entity instanceof Projectile) {
+            Projectile projectile = (Projectile) entity;
             if (projectile.getShooter() instanceof Player) {
                 return (Player) projectile.getShooter();
             }
-        } else if (e.getDamager() instanceof TNTPrimed) {
-            TNTPrimed tnt = (TNTPrimed) e.getDamager();
+        } else if (entity instanceof TNTPrimed) {
+            TNTPrimed tnt = (TNTPrimed) entity;
             if (tnt.getSource() instanceof Player) {
                 return (Player) tnt.getSource();
             }
-        } else if (e.getDamager() instanceof AreaEffectCloud) {
-            AreaEffectCloud cloud = (AreaEffectCloud) e.getDamager();
+        } else if (entity instanceof AreaEffectCloud) {
+            AreaEffectCloud cloud = (AreaEffectCloud) entity;
             if (cloud.getSource() instanceof Player) {
                 return (Player) cloud.getSource();
             }

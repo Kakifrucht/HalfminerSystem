@@ -103,7 +103,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
         if (!(e.getEntity() instanceof Player)) return;
         Player victim = (Player) e.getEntity();
-        Player attacker = Utils.getDamagerFromEvent(e);
+        Player attacker = Utils.getDamagerFromEntity(e.getDamager());
 
         if (attacker != null) {
             e.setCancelled(checkTimeAndMessage(attacker, "modAntiKillfarmingNoPvPAttack", attacker)

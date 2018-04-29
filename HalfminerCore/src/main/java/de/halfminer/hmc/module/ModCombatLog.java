@@ -8,11 +8,14 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -94,7 +97,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         if (e.getEntity() instanceof Player) {
 
             Player victim = (Player) e.getEntity();
-            Player attacker = Utils.getDamagerFromEvent(e);
+            Player attacker = Utils.getDamagerFromEntity(e.getDamager());
 
             if (isPvP(victim, attacker)) {
 
@@ -108,18 +111,26 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPvPUncancelCancelled(EntityDamageByEntityEvent e) {
+        uncancelDamageEvent(e, e.getDamager(), e.getEntity());
+    }
 
-        if (preventBorderHopping && e.isCancelled() && e.getEntity() instanceof Player) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPvPCombustUncancel(EntityCombustByEntityEvent e) {
+        uncancelDamageEvent(e, e.getCombuster(), e.getEntity());
+    }
 
-            Player victim = (Player) e.getEntity();
-            Player attacker = Utils.getDamagerFromEvent(e);
+    private void uncancelDamageEvent(Cancellable event, Entity attackerEntity, Entity victimEntity) {
+        if (preventBorderHopping
+                && event.isCancelled()
+                && victimEntity instanceof Player) {
+
+            Player attacker = Utils.getDamagerFromEntity(attackerEntity);
+            Player victim = (Player) victimEntity;
 
             if (isPvP(victim, attacker)
-                    && isTagged(victim)
-                    && isTagged(attacker)) {
-
-                // uncancel cancelled pvp events if both players are already tagged
-                e.setCancelled(false);
+                    && isTagged(attacker)
+                    && isTagged(victim)) {
+                event.setCancelled(false);
             }
         }
     }

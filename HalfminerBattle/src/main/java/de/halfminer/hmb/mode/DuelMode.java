@@ -113,7 +113,7 @@ public class DuelMode extends AbstractMode {
         if (e.getEntity() instanceof Player) {
 
             Player victim = (Player) e.getEntity();
-            Player attacker = Utils.getDamagerFromEvent(e);
+            Player attacker = Utils.getDamagerFromEntity(e.getDamager());
 
             if (attacker == null)
                 return;

@@ -183,7 +183,7 @@ public class FFAMode extends AbstractMode {
 
         if (e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
-            Player attacker = Utils.getDamagerFromEvent(e);
+            Player attacker = Utils.getDamagerFromEntity(e.getDamager());
 
             if (attacker == null
                     || !pm.isInBattle(type, attacker)

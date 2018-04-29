@@ -9,8 +9,10 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.*;
@@ -324,20 +326,20 @@ public class GlobalMode extends AbstractMode {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPvPUncancel(EntityDamageByEntityEvent e) {
         // Allow Faction members to do damage
-        if (e.isCancelled()
-                && e.getEntity() instanceof Player
-                && pm.isInBattle(type, (Player) e.getEntity())
-                && !e.getEntity().equals(Utils.getDamagerFromEvent(e))) {
-            e.setCancelled(false);
-        }
+        uncancelDamageEvent(e, e.getDamager(), e.getEntity());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPvPCombustUncancel(EntityCombustByEntityEvent e) {
-        if (e.isCancelled()
-                && e.getEntity() instanceof Player
-                && pm.isInBattle(type, (Player) e.getEntity())) {
-            e.setCancelled(false);
+        uncancelDamageEvent(e, e.getCombuster(), e.getEntity());
+    }
+
+    private void uncancelDamageEvent(Cancellable event, Entity attackerEntity, Entity victimEntity) {
+        if (event.isCancelled()
+                && victimEntity instanceof Player
+                && pm.isInBattle(type, (Player) victimEntity)
+                && !victimEntity.equals(Utils.getDamagerFromEntity(attackerEntity))) {
+            event.setCancelled(false);
         }
     }
 
@@ -488,7 +490,7 @@ public class GlobalMode extends AbstractMode {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamageCheckItem(EntityDamageByEntityEvent e) {
-        Player damager = Utils.getDamagerFromEvent(e);
+        Player damager = Utils.getDamagerFromEntity(e.getDamager());
         if (damager != null
                 && pm.isInBattle(type, damager)) {
             ItemStack hand = damager.getInventory().getItemInMainHand();
