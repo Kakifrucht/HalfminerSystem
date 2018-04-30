@@ -5,7 +5,7 @@ author: Kakifrucht
 website: https://halfminer.de
 
 main: de.halfminer.hml.HalfminerLand
-depend: [HalfminerSystem, Essentials, WorldGuard, Factions]
+depend: [HalfminerSystem, Essentials, WorldGuard]
 
 commands:
   land:

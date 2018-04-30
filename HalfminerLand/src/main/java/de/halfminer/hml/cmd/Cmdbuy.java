@@ -1,8 +1,5 @@
 package de.halfminer.hml.cmd;
 
-import com.massivecraft.factions.Board;
-import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.Faction;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.BuyContract;
@@ -70,16 +67,6 @@ public class Cmdbuy extends LandCommand {
                 }
             }
         }
-
-        // TEMPORARY FACTION CHECK START - remove dependency from plugin.yml when removing
-        Faction factionAt = Board.getInstance().getFactionAt(new FLocation(player.getLocation()));
-        if (!factionAt.isWilderness() && !player.equals(factionAt.getFPlayerAdmin().getPlayer())) {
-            MessageBuilder.create("&7Land &e>> &cDieses Land kann nur vom Gildenbesitzer gekauft werden", hml)
-                    .setDirectString()
-                    .sendMessage(player);
-            return;
-        }
-        // TEMPORARY FACTION CHECK END
 
         // check status
         Land.BuyableStatus status = landToBuy.getBuyableStatus();

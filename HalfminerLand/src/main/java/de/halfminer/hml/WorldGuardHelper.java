@@ -19,6 +19,8 @@ import java.util.logging.Logger;
 
 public class WorldGuardHelper {
 
+    private static final int HIGHEST_BLOCK_Y = 255;
+
     private final Logger logger;
     private final WorldGuardPlugin wg;
 
@@ -152,7 +154,15 @@ public class WorldGuardHelper {
         return true;
     }
 
-    boolean isPvPEnabled(Location location) {
+    boolean isPvPEnabled(Location loc) {
+
+        Location location = loc.clone();
+        if (loc.getBlockY() < 0) {
+            location.setY(0d);
+        } else if (loc.getBlockY() > HIGHEST_BLOCK_Y) {
+            location.setY((double) HIGHEST_BLOCK_Y);
+        }
+
         return wg.getRegionManager(location.getWorld())
                 .getApplicableRegions(location)
                 .queryValue(null, DefaultFlag.PVP) != StateFlag.State.DENY;
