@@ -112,7 +112,7 @@ localization:
   cmdTeleportLandAlreadyHasTeleport: '&cDieses Land hat bereits einen Teleportpunkt (&e%TELEPORT%&c)'
   cmdTeleportNotOwned: '&cDieser Teleportpunkt gehört dir nicht'
   cmdTeleportSetSuccess: '&7Du hast den Teleportpunkt &e%TELEPORT% &7erfolgreich für &b&l%COST% HCs &7verschoben'
-  cmdTeleportUsage: ' \n&e&m-------------&c&l Teleport Kommandos &e&m-------------\n&7Teleport Kaufen (kostet 10 HCs): &a/land teleport buy <Teleport>\n&7Teleport umsetzen (kostet 5HCs): &a/land teleport set <Teleport>\n&7Teleport löschen: &a/land teleport delete <Teleport>\n \n&7Der Teleportname darf beliebig sein, aber nicht Vulgär (Chatregeln beachten). Er ist für alle Spieler unter &a/landtp <Teleport> &7zugänglich.\n&e&m----------------------------------------------'
+  cmdTeleportUsage: ' \n&e&m-------------&c&l Teleport Kommandos &e&m-------------\n&7Teleport Kaufen (kostet 10 HCs): &a/land teleport buy <Teleport>\n&7Teleport umsetzen (kostet 5 HCs): &a/land teleport set <Teleport>\n&7Teleport löschen: &a/land teleport delete <Teleport>\n \n&7Der Teleportname darf beliebig sein, aber nicht Vulgär (Chatregeln beachten). Er ist für alle Spieler unter &a/landtp <Teleport> &7zugänglich.\n&e&m----------------------------------------------'
   listenerBlockBreakBlocked: '&cDu kannst auf dem Land von &a%OWNER% &ckeine Blöcke brechen'
   listenerBlockPlaceBlocked: '&cDu kannst auf dem Land von &a%OWNER% &ckeine Blöcke platzieren'
   listenerCmdBlocked: '&cDu kannst dieses Kommando auf dem Land von &a%OWNER% &cnicht verwenden'

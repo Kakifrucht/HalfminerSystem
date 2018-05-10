@@ -74,7 +74,6 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent e) {
         onMove(e);
-        onLocationChange(e.getPlayer(), e.getFrom(), e.getTo());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
