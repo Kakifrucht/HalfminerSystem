@@ -208,14 +208,14 @@ public final class Utils {
     }
 
     /**
-     * Get the {@link Player} that made damage the damage,
-     * either by direct hit, bow, potions, effect cloud or primed tnt.
+     * Returns the {@link Player} from a given entity, if said entity is a player,
+     * a projetile fired by a player, tnt that was primed by a player or a {@link AreaEffectCloud} spawned by a player.
      *
-     * @param entity entity to get the attacking player from
-     * @return player if attacker found or null
+     * @param entity to get the player from
+     * @return player if source found or null
      */
     @Nullable
-    public static Player getDamagerFromEntity(Entity entity) {
+    public static Player getPlayerSourceFromEntity(Entity entity) {
 
         if (entity instanceof Player) {
             return (Player) entity;

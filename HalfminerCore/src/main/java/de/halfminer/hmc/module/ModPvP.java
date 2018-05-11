@@ -98,7 +98,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         }
 
         final Player damagee = (Player) e.getEntity();
-        Player damager = Utils.getDamagerFromEntity(e.getDamager());
+        Player damager = Utils.getPlayerSourceFromEntity(e.getDamager());
 
         // disable hitting self with bow
         if (damagee.equals(damager) && e.getDamager() instanceof Projectile) {

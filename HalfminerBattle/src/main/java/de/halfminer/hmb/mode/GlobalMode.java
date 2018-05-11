@@ -338,7 +338,7 @@ public class GlobalMode extends AbstractMode {
         if (event.isCancelled()
                 && victimEntity instanceof Player
                 && pm.isInBattle(type, (Player) victimEntity)
-                && !victimEntity.equals(Utils.getDamagerFromEntity(attackerEntity))) {
+                && !victimEntity.equals(Utils.getPlayerSourceFromEntity(attackerEntity))) {
             event.setCancelled(false);
         }
     }
@@ -490,7 +490,7 @@ public class GlobalMode extends AbstractMode {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamageCheckItem(EntityDamageByEntityEvent e) {
-        Player damager = Utils.getDamagerFromEntity(e.getDamager());
+        Player damager = Utils.getPlayerSourceFromEntity(e.getDamager());
         if (damager != null
                 && pm.isInBattle(type, damager)) {
             ItemStack hand = damager.getInventory().getItemInMainHand();

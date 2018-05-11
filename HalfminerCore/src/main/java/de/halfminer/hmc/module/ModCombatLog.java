@@ -97,7 +97,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         if (e.getEntity() instanceof Player) {
 
             Player victim = (Player) e.getEntity();
-            Player attacker = Utils.getDamagerFromEntity(e.getDamager());
+            Player attacker = Utils.getPlayerSourceFromEntity(e.getDamager());
 
             if (isPvP(victim, attacker)) {
 
@@ -124,7 +124,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 && event.isCancelled()
                 && victimEntity instanceof Player) {
 
-            Player attacker = Utils.getDamagerFromEntity(attackerEntity);
+            Player attacker = Utils.getPlayerSourceFromEntity(attackerEntity);
             Player victim = (Player) victimEntity;
 
             if (isPvP(victim, attacker)
