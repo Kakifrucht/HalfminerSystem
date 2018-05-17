@@ -8,15 +8,15 @@ import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 
 import java.util.*;
@@ -224,6 +224,66 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 && board.getLandAt(e.getRightClicked().getLocation()).hasOwner()) {
             e.setCancelled(false);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void uncancelPistonExtend(BlockPistonExtendEvent e) {
+        onPistonEventCheckUncancel(e);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void uncancelPistonRetract(BlockPistonRetractEvent e) {
+        onPistonEventCheckUncancel(e);
+    }
+
+    private void onPistonEventCheckUncancel(BlockPistonEvent e) {
+
+        // only uncancel
+        if (!e.isCancelled()) {
+            return;
+        }
+
+        Land originLand = board.getLandAt(e.getBlock().getLocation());
+        if (!originLand.hasOwner()) {
+            return;
+        }
+
+        BlockFace direction = e instanceof BlockPistonRetractEvent ? e.getDirection().getOppositeFace() : e.getDirection();
+        if (direction.getModX() == 0 && direction.getModZ() == 0) {
+            return;
+        }
+
+        // check every block possibly pushed/pulled by the piston
+        Location lineToTraverse = e.getBlock().getLocation().clone();
+        boolean skipFirst = e instanceof BlockPistonRetractEvent;
+
+        while (true) {
+
+            lineToTraverse.setX(lineToTraverse.getX() + (double) direction.getModX());
+            lineToTraverse.setZ(lineToTraverse.getZ() + (double) direction.getModZ());
+
+            Block block = lineToTraverse.getBlock();
+            if (block.getType().equals(Material.SLIME_BLOCK)) {
+                return;
+            }
+
+            Land currentLand = board.getLandAt(lineToTraverse);
+            if (hasDifferentOwner(currentLand, originLand)) {
+                return;
+            }
+
+            if (skipFirst) {
+                skipFirst = false;
+                continue;
+            }
+
+            if (block.getType().equals(Material.AIR)) {
+                System.out.println("uncancelled");
+                break;
+            }
+        }
+
+        e.setCancelled(false);
     }
 
     private boolean hasDifferentOwner(Land landA, Land landB) {
