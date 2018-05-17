@@ -48,14 +48,18 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         Set<Land> ownedLands = board.getLands(e.getPlayer());
         if (!ownedLands.isEmpty()) {
 
-            boolean landIsAbandoned = false;
+            int count = 0;
             for (Land ownedLand : ownedLands) {
                 if (ownedLand.isAbandoned()) {
                     ownedLand.updateAbandonmentStatus();
-                    landIsAbandoned = true;
-                } else if (!landIsAbandoned) {
-                    break;
+                    count++;
                 }
+            }
+
+            if (count > 0) {
+                MessageBuilder.create("listenerLandUnabandoned", hml)
+                        .addPlaceholderReplace("%COUNT%", String.valueOf(count))
+                        .sendMessage(e.getPlayer());
             }
         }
     }
@@ -254,31 +258,28 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         }
 
         // check every block possibly pushed/pulled by the piston
-        Location lineToTraverse = e.getBlock().getLocation().clone();
-        boolean skipFirst = e instanceof BlockPistonRetractEvent;
+        Location blockToCheck = e.getBlock().getLocation().clone();
+        for (int i = 0; i < 16; i++) {
 
-        while (true) {
+            blockToCheck.setX(blockToCheck.getX() + (double) direction.getModX());
+            blockToCheck.setZ(blockToCheck.getZ() + (double) direction.getModZ());
 
-            lineToTraverse.setX(lineToTraverse.getX() + (double) direction.getModX());
-            lineToTraverse.setZ(lineToTraverse.getZ() + (double) direction.getModZ());
-
-            Block block = lineToTraverse.getBlock();
+            Block block = blockToCheck.getBlock();
             if (block.getType().equals(Material.SLIME_BLOCK)) {
                 return;
             }
 
-            Land currentLand = board.getLandAt(lineToTraverse);
+            Land currentLand = board.getLandAt(blockToCheck);
             if (hasDifferentOwner(currentLand, originLand)) {
                 return;
             }
 
-            if (skipFirst) {
-                skipFirst = false;
+            // skip first block (always AIR) while retracting
+            if (i == 0 && e instanceof BlockPistonRetractEvent) {
                 continue;
             }
 
             if (block.getType().equals(Material.AIR)) {
-                System.out.println("uncancelled");
                 break;
             }
         }

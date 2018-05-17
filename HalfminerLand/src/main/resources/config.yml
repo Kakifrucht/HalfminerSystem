@@ -118,6 +118,7 @@ localization:
   listenerCmdBlocked: '&cDu kannst dieses Kommando auf dem Land von &a%OWNER% &cnicht verwenden'
   listenerFormatSpacer: ' &7|&f '
   listenerFormatTitle: ' \n%PVPLINE%%SPACER%%OWNERLINE%'
+  listenerLandUnabandoned: '&7Da dein letzter Login länger als 21 Tage her war wurde dein Land zwischenzeitlich als verlassen markiert und war damit ungeschützt, &a%COUNT% &7deiner Länder sind nun wieder geschützt'
   listenerOwnerFree: '&aFreies Land'
   listenerOwnerOwned: 'Landbesitzer: &b&l%OWNER%'
   listenerOwnerOwnedAbandoned: 'Landbesitzer: &8%OWNER% &7(Verlassen)'
