@@ -202,12 +202,12 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
                     }
                 }
 
-                if (--totalRuns == 0) {
+                if (totalRuns-- == 0) {
                     cancelChunkParticles(player);
                 }
             }
 
-        }, 20L, 20L);
+        }, 0L, 20L);
 
         chunkPlayerParticleMap.put(player, newTask);
     }

@@ -7,11 +7,21 @@ import org.bukkit.entity.Player;
 
 public class BuyContract extends AbstractContract {
 
+    private final boolean isFreeBuy;
     private final double cost;
 
 
+    public BuyContract(Player buyingPlayer, Land landToBuy) {
+        super(buyingPlayer, landToBuy);
+
+        isFreeBuy = true;
+        cost = 0d;
+    }
+
     public BuyContract(Player buyingPlayer, Land landToBuy, int amountOfLandOwned) {
         super(buyingPlayer, landToBuy);
+
+        this.isFreeBuy = false;
 
         ConfigurationSection config = hml.getConfig().getConfigurationSection("priceFormula");
 
@@ -26,15 +36,20 @@ public class BuyContract extends AbstractContract {
         }
     }
 
+    public boolean isFreeBuy() {
+        return isFreeBuy;
+    }
+
     @Override
     void fulfill(Land land) {
 
-        if (cost != 0d) {
+        if (!isFreeBuy) {
             hms.getHooksHandler().addMoney(player, -getCost());
+            landStorage.getLandPlayer(player).addLandCost(cost);
         }
 
         land.setOwner(hms.getStorageHandler().getPlayer(player));
-        landStorage.getLandPlayer(player).addCurrentCostToStorage(cost);
+        land.setFreeLand(isFreeBuy);
 
         hml.getLogger().info(player.getName() + " paid $" + cost + " to buy the land at [" + land + "]");
     }

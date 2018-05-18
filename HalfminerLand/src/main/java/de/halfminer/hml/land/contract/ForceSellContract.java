@@ -18,7 +18,7 @@ public class ForceSellContract extends SellContract {
     void fulfill(Land land) {
 
         if (!land.isFreeLand()) {
-            landStorage.getLandPlayer(owner).removeLastCostFromStorage();
+            landStorage.getLandPlayer(owner).removeHighestCost();
         }
 
         land.setOwner(null);

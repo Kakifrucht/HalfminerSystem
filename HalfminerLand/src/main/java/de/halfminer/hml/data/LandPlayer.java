@@ -19,29 +19,34 @@ public class LandPlayer {
         this.dataSection = landStorage.getConfigurationSection(halfminerPlayer.getUniqueId().toString());
     }
 
-    public double getLastCostFromStorage() {
+    public double getHighestCost() {
 
-        List<String> previousCostList = getLastCostList();
-        if (previousCostList.isEmpty()) {
-            return 0d;
+        List<String> previousCostList = getCostListFromStorage();
+
+        double highestCost = 0d;
+        for (String costString : previousCostList) {
+            double cost = Double.valueOf(costString);
+            if (cost > highestCost) {
+                highestCost = cost;
+            }
         }
 
-        return Double.valueOf(previousCostList.get(previousCostList.size() - 1));
+        return highestCost;
     }
 
-    public void addCurrentCostToStorage(double cost) {
+    public void addLandCost(double cost) {
 
-        List<String> previousCostList = getLastCostList();
+        List<String> previousCostList = getCostListFromStorage();
         previousCostList.add(String.valueOf(cost));
 
         dataSection.set(LAST_COST_LIST_PATH, previousCostList);
     }
 
-    public void removeLastCostFromStorage() {
+    public void removeHighestCost() {
 
-        List<String> previousCostList = getLastCostList();
+        List<String> previousCostList = getCostListFromStorage();
         if (!previousCostList.isEmpty()) {
-            previousCostList.remove(previousCostList.size() - 1);
+            previousCostList.remove(String.valueOf(getHighestCost()));
         }
 
         if (previousCostList.isEmpty()) {
@@ -59,7 +64,7 @@ public class LandPlayer {
         dataSection.set(FREE_LANDS_PATH, freeLands > 0 ? freeLands : null);
     }
 
-    private List<String> getLastCostList() {
+    private List<String> getCostListFromStorage() {
 
         List<String> previousCostList = dataSection.getStringList(LAST_COST_LIST_PATH);
 

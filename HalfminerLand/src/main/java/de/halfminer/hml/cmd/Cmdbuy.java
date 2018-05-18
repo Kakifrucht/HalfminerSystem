@@ -3,7 +3,6 @@ package de.halfminer.hml.cmd;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.BuyContract;
-import de.halfminer.hml.land.contract.FreeBuyContract;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Chunk;
@@ -119,7 +118,7 @@ public class Cmdbuy extends LandCommand {
         if (contract == null) {
 
             if (freeLandsOwned < freeLandsMax) {
-                contract = new FreeBuyContract(player, landToBuy);
+                contract = new BuyContract(player, landToBuy);
             } else {
                 contract = new BuyContract(player, landToBuy, paidLandsOwned);
             }
@@ -145,7 +144,7 @@ public class Cmdbuy extends LandCommand {
 
             if (landToBuy.isAbandoned() && !landToBuy.isFreeLand()) {
                 landToBuy.removeTeleport();
-                hml.getLandStorage().getLandPlayer(landToBuy.getOwner()).removeLastCostFromStorage();
+                hml.getLandStorage().getLandPlayer(landToBuy.getOwner()).removeHighestCost();
             }
 
             // buy land
@@ -158,7 +157,7 @@ public class Cmdbuy extends LandCommand {
                 landToBuy.setServerLand(true);
             }
 
-            if (contract instanceof FreeBuyContract && freeLandsMax != Integer.MAX_VALUE) {
+            if (contract.isFreeBuy() && freeLandsMax != Integer.MAX_VALUE) {
                 MessageBuilder.create("cmdBuyFreeLandsLeft", hml)
                         .addPlaceholderReplace("%FREELANDSOWNED%", String.valueOf(freeLandsOwned + 1))
                         .addPlaceholderReplace("%FREELANDSMAX%", String.valueOf(freeLandsMax))
