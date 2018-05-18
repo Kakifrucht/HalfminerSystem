@@ -28,6 +28,8 @@ import java.util.*;
 import java.util.logging.Level;
 
 /**
+ * - List all currently watched players by ModAntiXray (antixray)
+ *   - Exempt a player from being watched
  * - Copy a WorldEdit schematic to another directory (copyschematic)
  * - Give a custom item defined in customitems.txt to a player (give)
  * - Reload config (reload)
@@ -36,8 +38,6 @@ import java.util.logging.Level;
  * - Run an action defined in customactions.txt (runaction)
  * - Search for homes in a given radius, hooking into Essentials (searchhomes)
  * - Show/edit skillelo of player (skilllevel)
- * - List all currently watched players by ModAntiXray (xraybypass)
- *   - Exempt a player from being watched
  */
 @SuppressWarnings("unused")
 public class Cmdhmc extends HalfminerCommand {
@@ -53,6 +53,9 @@ public class Cmdhmc extends HalfminerCommand {
 
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
+                case "antixray":
+                    antiXray();
+                    return;
                 case "copyschematic":
                     copySchematic();
                     return;
@@ -77,12 +80,47 @@ public class Cmdhmc extends HalfminerCommand {
                 case "skilllevel":
                     skilllevel();
                     return;
-                case "xraybypass":
-                    xrayBypass();
-                    return;
             }
         }
         showUsage();
+    }
+
+    private void antiXray() {
+
+        ModAntiXray antiXray = (ModAntiXray) hmc.getModule(ModuleType.ANTI_XRAY);
+
+        if (!antiXray.isEnabled()) {
+            MessageBuilder.create("cmdHmcXrayDisabled", hmc, PREFIX).sendMessage(sender);
+            return;
+        }
+
+        if (args.length > 1) {
+
+            OfflinePlayer p;
+            try {
+                p = storage.getPlayer(args[1]).getBase();
+                MessageBuilder.create(antiXray.setBypassed(p) ?
+                        "cmdHmcXrayBypassSet" : "cmdHmcXrayBypassUnset", hmc, "AntiXRay")
+                        .addPlaceholderReplace("%PLAYER%", p.getName())
+                        .sendMessage(sender);
+
+            } catch (PlayerNotFoundException e) {
+                e.sendNotFoundMessage(sender, "AntiXRay");
+            }
+        } else {
+
+            String information = antiXray.getInformationString();
+
+            if (information.length() > 0) {
+                MessageBuilder.create("cmdHmcXrayShow", hmc, "AntiXRay").sendMessage(sender);
+                MessageBuilder.create(information, hmc)
+                        .setDirectString()
+                        .sendMessage(sender);
+                MessageBuilder.create("cmdHmcXrayLegend", hmc).sendMessage(sender);
+            } else {
+                MessageBuilder.create("cmdHmcXrayShowEmpty", hmc, "AntiXRay").sendMessage(sender);
+            }
+        }
     }
 
     private void copySchematic() {
@@ -458,39 +496,6 @@ public class Cmdhmc extends HalfminerCommand {
                     .addPlaceholderReplace("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
                     .addPlaceholderReplace("%ELO%", String.valueOf(oldValue))
                     .sendMessage(sender);
-        }
-    }
-
-    private void xrayBypass() {
-
-        ModAntiXray antiXray = (ModAntiXray) hmc.getModule(ModuleType.ANTI_XRAY);
-
-        if (args.length > 1) {
-
-            OfflinePlayer p;
-            try {
-                p = storage.getPlayer(args[1]).getBase();
-                MessageBuilder.create(antiXray.setBypassed(p) ?
-                        "cmdHmcXrayBypassSet" : "cmdHmcXrayBypassUnset", hmc, "AntiXRay")
-                        .addPlaceholderReplace("%PLAYER%", p.getName())
-                        .sendMessage(sender);
-
-            } catch (PlayerNotFoundException e) {
-                e.sendNotFoundMessage(sender, "AntiXRay");
-            }
-        } else {
-
-            String information = antiXray.getInformationString();
-
-            if (information.length() > 0) {
-                MessageBuilder.create("cmdHmcXrayShow", hmc, "AntiXRay").sendMessage(sender);
-                MessageBuilder.create(information, hmc)
-                        .setDirectString()
-                        .sendMessage(sender);
-                MessageBuilder.create("cmdHmcXrayLegend", hmc).sendMessage(sender);
-            } else {
-                MessageBuilder.create("cmdHmcXrayShowEmpty", hmc, "AntiXRay").sendMessage(sender);
-            }
         }
     }
 

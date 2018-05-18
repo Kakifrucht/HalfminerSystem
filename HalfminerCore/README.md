@@ -226,6 +226,8 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
       - Notifies edited players if they are online
     - All account changes are being logged in console
   - /hmc
+    - List all currently watched players by ``ModAntiXray`` (antixray)
+      - Exempt a player from being watched
     - Copy a WorldEdit schematic to another directory (copyschematic)
     - Give a custom item defined in customitems.txt to a player (give)
     - Reload config (reload)
@@ -234,8 +236,6 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
     - Run an action defined in ``customactions.txt`` (runaction)
     - Search for homes in a given radius, hooking into Essentials (searchhomes)
     - Show/edit skillelo of player (skilllevel)
-    - List all currently watched players by ``ModAntiXray`` (xraybypass)
-      - Exempt a player from being watched
   - /hmcapi
     - Small features for script integration
       - Show titles (command interface)

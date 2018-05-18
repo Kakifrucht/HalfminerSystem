@@ -80,6 +80,8 @@ antiKillfarming:
   - 'tempban'
   - 'bminfo'
 antiXray:
+  #Global antixray toggle
+  isEnabled: true
   #Time until a counted player won't be counted anymore since last protected break (if not permanently checked)
   intervalUntilClearSeconds: 300
   #Minimum amount of protected blocks that have to be broken to be permanently checked
@@ -342,9 +344,10 @@ localization:
   cmdHmcSkillShow: '&7Das Skilllevel von &e%PLAYER% &7beträgt &e%SKILLLEVEL% &7(&o%ELO%&7)'
   cmdHmcSkillUsage: '&cVerwendung: &f/hmc skilllevel <spieler> [elo]'
   cmdHmcSkillUpdated: '&7Das Skilllevel von &e%PLAYER% &7wurde auf Level &e%SKILLLEVEL% &7(&o%OLDELO% &7-> &o%NEWELO%&7) gesetzt'
-  cmdHmcUsage: 'HalfminerCore Version &6%VERSION% &r(System: &6%SYSTEMVERSION%&r)\n&6&lKommandos:\n &f/hmc reload\n &f/hmc copyschematic <schematic> [auto]\n /hmc give <spieler> <item> [menge]\n /hmc rename <name> [-lore line1|line2|..]\n /hmc skilllevel <spieler> [elo]\n /hmc rmhomeblock <spieler>\n /hmc runaction <action> <player(s)>\n /hmc searchhomes [radius]\n /hmc xraybypass [spieler]'
+  cmdHmcUsage: 'HalfminerCore Version &6%VERSION% &r(System: &6%SYSTEMVERSION%&r)\n&6&lKommandos:\n &f/hmc reload\n &f/hmc antixray [spieler]\n /hmc copyschematic <schematic> [auto]\n /hmc give <spieler> <item> [menge]\n /hmc rename <name> [-lore line1|line2|..]\n /hmc skilllevel <spieler> [elo]\n /hmc rmhomeblock <spieler>\n /hmc runaction <action> <player(s)>\n /hmc searchhomes [radius]'
   cmdHmcXrayBypassSet: '&e%PLAYER% &awird nicht mehr vom AntiXRay gemeldet'
   cmdHmcXrayBypassUnset: '&e%PLAYER% &awird wieder vom AntiXRay gemeldet'
+  cmdHmcXrayDisabled: '&cDas Anti XRay ist deaktiviert'
   cmdHmcXrayLegend: '&7Spielerfarbe Legende: &eIgnoriert &7| Unverdächtig | &cVerdächtig'
   cmdHmcXrayShow: '&7Folgende Spieler werden vom AntiXRay beobachtet'
   cmdHmcXrayShowEmpty: '&aAktuell sind keine Spieler unter Beobachtung'

@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,6 +33,8 @@ import java.util.*;
  */
 public class ModAntiXray extends HalfminerModule implements Listener, Sweepable {
 
+    private boolean isEnabled;
+
     private int timeUntilClear;
     private int protectedBlockThreshold;
     private int yLevelThreshold;
@@ -44,6 +47,10 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
+
+        if (!isEnabled) {
+            return;
+        }
 
         Player p = e.getPlayer();
         if (p.hasPermission("hmc.bypass.antixray")) return;
@@ -84,10 +91,18 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
     @EventHandler
     public void onLoginNotify(PlayerJoinEvent e) {
 
+        if (!isEnabled) {
+            return;
+        }
+
         Player joined = e.getPlayer();
         if (joined.hasPermission("hmc.antixray.notify"))
             for (UUID checked : observedPermanently)
                 notify(joined, observedPlayers.get(checked), true);
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
     public boolean setBypassed(OfflinePlayer p) {
@@ -167,12 +182,15 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
     @Override
     public void loadConfig() {
 
-        timeUntilClear = hmc.getConfig().getInt("antiXray.intervalUntilClearSeconds", 300);
-        protectedBlockThreshold = hmc.getConfig().getInt("antiXray.protectedBlockThreshold", 20);
-        yLevelThreshold = hmc.getConfig().getInt("antiXray.yLevelThreshold", 30);
-        protectedBlockRatio = hmc.getConfig().getDouble("antiXray.protectedBlockRatioThreshold", 0.04);
+        FileConfiguration configuration = hmc.getConfig();
+        isEnabled = configuration.getBoolean("antiXray.isEnabled", true);
 
-        protectedMaterial = Utils.stringListToMaterialSet(hmc.getConfig().getStringList("antiXray.protectedBlocks"));
+        timeUntilClear = configuration.getInt("antiXray.intervalUntilClearSeconds", 300);
+        protectedBlockThreshold = configuration.getInt("antiXray.protectedBlockThreshold", 20);
+        yLevelThreshold = configuration.getInt("antiXray.yLevelThreshold", 30);
+        protectedBlockRatio = configuration.getDouble("antiXray.protectedBlockRatioThreshold", 0.04);
+
+        protectedMaterial = Utils.stringListToMaterialSet(configuration.getStringList("antiXray.protectedBlocks"));
     }
 
     @Override
