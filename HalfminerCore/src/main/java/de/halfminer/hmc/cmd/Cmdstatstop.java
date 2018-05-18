@@ -121,8 +121,17 @@ public class Cmdstatstop extends HalfminerCommand {
                 return;
             } // -- end player scoreboard lookup and comparison
 
-            // we are trying to get the specified board
-            DataType type = DataType.getFromString(args[0]);
+            // we are trying to find the specified board
+            DataType matchingType = null;
+            String boardString = args[0].toLowerCase();
+            for (DataType type : DataType.values()) {
+                if (type.toString().startsWith(boardString)) {
+                    matchingType = type;
+                    break;
+                }
+            }
+
+            DataType type = matchingType;
             if (type == null || !topBoardMap.containsKey(type)) {
                 MessageBuilder.create("cmdStatstopDoesntExist", hmc, "Statstop").sendMessage(sender);
                 return;
