@@ -32,6 +32,8 @@ import java.util.logging.Level;
  */
 public class ModSkillLevel extends HalfminerModule implements Disableable, Listener {
 
+    private static final int LOWEST_BYPASS_LEVEL = 23;
+
     private Scoreboard scoreboard;
 
     private Objective scoreboardObjective;
@@ -123,6 +125,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         int newLevelUp = (int) Math.ceil(calc);
         int newLevelDown = (int) Math.floor(calc);
 
+        // minimum rank when deranking is level 2
+        if (level > 1) {
+            newLevelUp = Math.max(newLevelUp, 2);
+        }
+
         /*
            Example: Player is Level 4, calc is 3.4, you stay level 4 when calc is 3.0 - 4.9, rank down occurs when player
            is lower than 3.0 and rank up when player has reached 5.0. Only rank down when the ceiling of the calc value
@@ -130,8 +137,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
            than the new level. If modifier is 0, allow both upranking and deranking, otherwise do not rank down on kill
            and do not rank up on death
         */
-        if (newLevelDown > level && modifier >= 0) newLevel = newLevelDown;     // rank up
-        else if (newLevelUp < level && modifier <= 0) newLevel = newLevelUp;    // rank down
+        if (newLevelDown > level && modifier >= 0) {        // rank up
+            newLevel = newLevelDown;
+        } else if (newLevelUp < level && modifier <= 0) {   // rank down
+            newLevel = newLevelUp;
+        }
 
         // Set the new values
         Team newTeam = scoreboardTeamNames.get(newLevel - 1);
@@ -166,14 +176,15 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private void updateSkillBypassedPlayer(Player p) {
         HalfminerPlayer hPlayer = storage.getPlayer(p);
         int playerLevel = hPlayer.getInt(DataType.SKILL_LEVEL);
-        if (playerLevel < 23) {
-            playerLevel = 23;
-            hPlayer.set(DataType.SKILL_LEVEL, 23);
+        if (playerLevel < LOWEST_BYPASS_LEVEL) {
+            playerLevel = LOWEST_BYPASS_LEVEL;
+            hPlayer.set(DataType.SKILL_LEVEL, LOWEST_BYPASS_LEVEL);
         }
         scoreboardObjective.getScore(p.getName()).setScore(playerLevel);
+
         // first team level is 23, set it to at least this value
         int maxIndex = scoreboardTeamNamesStaff.size() - 1;
-        int staffArrayIndex = Math.max(0, maxIndex - (playerLevel - 23));
+        int staffArrayIndex = Math.max(0, maxIndex - (playerLevel - LOWEST_BYPASS_LEVEL));
         scoreboardTeamNamesStaff.get(staffArrayIndex).addEntry(p.getName());
     }
 

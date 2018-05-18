@@ -233,7 +233,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
     - Remove a players */home* block (rmhomeblock)
     - Run an action defined in ``customactions.txt`` (runaction)
     - Search for homes in a given radius, hooking into Essentials (searchhomes)
-    - Edit skillelo of player (updateskill)
+    - Show/edit skillelo of player (skilllevel)
     - List all currently watched players by ``ModAntiXray`` (xraybypass)
       - Exempt a player from being watched
   - /hmcapi

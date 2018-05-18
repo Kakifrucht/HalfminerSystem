@@ -230,12 +230,12 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void uncancelPistonExtend(BlockPistonExtendEvent e) {
         onPistonEventCheckUncancel(e);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void uncancelPistonRetract(BlockPistonRetractEvent e) {
         onPistonEventCheckUncancel(e);
     }

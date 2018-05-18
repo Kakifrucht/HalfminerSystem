@@ -31,13 +31,13 @@ import java.util.logging.Level;
  * - Copy a WorldEdit schematic to another directory (copyschematic)
  * - Give a custom item defined in customitems.txt to a player (give)
  * - Reload config (reload)
- * - Rename items, supports lore (rename)
+ * - Rename items, supports custom lore (rename)
  * - Remove a players /home block (rmhomeblock)
  * - Run an action defined in customactions.txt (runaction)
  * - Search for homes in a given radius, hooking into Essentials (searchhomes)
- * - Edit skillelo of player (updateskill)
- * - List all currently by antixray watched players (xraybypass)
- *   - Exempt a player from AntiXRay
+ * - Show/edit skillelo of player (skilllevel)
+ * - List all currently watched players by ModAntiXray (xraybypass)
+ *   - Exempt a player from being watched
  */
 @SuppressWarnings("unused")
 public class Cmdhmc extends HalfminerCommand {
@@ -74,8 +74,8 @@ public class Cmdhmc extends HalfminerCommand {
                 case "searchhomes":
                     searchHomes();
                     return;
-                case "updateskill":
-                    updateSkill();
+                case "skilllevel":
+                    skilllevel();
                     return;
                 case "xraybypass":
                     xrayBypass();
@@ -421,7 +421,7 @@ public class Cmdhmc extends HalfminerCommand {
         });
     }
 
-    private void updateSkill() {
+    private void skilllevel() {
 
         if (args.length < 2) {
             MessageBuilder.create("cmdHmcSkillUsage", hmc, "Skilllevel").sendMessage(sender);
