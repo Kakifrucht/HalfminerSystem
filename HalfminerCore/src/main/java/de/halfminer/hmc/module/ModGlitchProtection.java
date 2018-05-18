@@ -141,7 +141,8 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
         protectedMaterial = Utils.stringListToMaterialSet(
                 hmc.getConfig().getStringList("glitchProtection.protectedMaterial"));
 
-        if (checkIfOverNether == null) {
+        boolean isNetherCheckEnabled = hmc.getConfig().getBoolean("glitchProtection.netherRoofCheck", true);
+        if (isNetherCheckEnabled && checkIfOverNether == null) {
 
             checkIfOverNether = scheduler.runTaskTimer(hmc, () -> {
                 for (Player p : server.getOnlinePlayers()) {
@@ -159,6 +160,9 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                     }
                 }
             }, 100L, 100L);
+        } else if (!isNetherCheckEnabled && checkIfOverNether != null) {
+            checkIfOverNether.cancel();
+            checkIfOverNether = null;
         }
     }
 }

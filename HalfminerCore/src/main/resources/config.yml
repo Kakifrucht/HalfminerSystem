@@ -125,6 +125,8 @@ crafting:
   materialAmounts:
   - TNT 8
 glitchProtection:
+  #Whether players that are above the nether roof should be killed
+  netherRoofCheck: true
   #Material that will be checked
   protectedMaterial:
   - BEDROCK
