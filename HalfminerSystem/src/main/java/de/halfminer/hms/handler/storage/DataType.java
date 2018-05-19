@@ -11,7 +11,6 @@ public enum DataType {
     GEMS("gems"),
     KD_RATIO("kdratio"),
     KILLS("kills"),
-    LAST_PVP("lastpvp"),
     LAST_NAME("lastname"),
     LAST_NAMES("lastnames"),
     LAST_REPAIR("lastrepair"),
@@ -20,6 +19,7 @@ public enum DataType {
     NEWTP_USED("newtp"),
     REVENUE("revenue"),
     SKILL_ELO("skillelo"),
+    SKILL_ELO_LAST_CHANGE("skillelolastchange"),
     SKILL_LEVEL("skilllevel"),
     TIME_ONLINE("timeonline"),
     VOTES("votes");

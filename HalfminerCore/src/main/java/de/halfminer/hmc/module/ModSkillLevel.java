@@ -33,6 +33,8 @@ import java.util.logging.Level;
 public class ModSkillLevel extends HalfminerModule implements Disableable, Listener {
 
     private static final int LOWEST_BYPASS_LEVEL = 23;
+    private static final int MONTH_IN_SECONDS = 2592000;
+    private static final int DAYS_IN_SECONDS = 86400;
 
     private Scoreboard scoreboard;
 
@@ -55,15 +57,15 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         if (player.hasPermission("hmc.bypass.skilllevel")) {
             updateSkillBypassedPlayer(player);
         } else {
-            // Check for derank, if certain skilllevel has been met and no pvp has been made for a certain time
+            // Check for derank, if certain skilllevel has been met and elo hasn't changed for a certain time
             if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankLevelThreshold
-                    && hPlayer.getInt(DataType.LAST_PVP) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
+                    && hPlayer.getInt(DataType.SKILL_ELO_LAST_CHANGE) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
 
-                // set last pvp time to 30 days in the future, to prevent additional inactivity deranks
-                hPlayer.set(DataType.LAST_PVP, (System.currentTimeMillis() / 1000) + 2592000);
+                // set last elo change time to 30 days in the future, to prevent additional inactivity deranks
+                hPlayer.set(DataType.SKILL_ELO_LAST_CHANGE, (System.currentTimeMillis() / 1000) + MONTH_IN_SECONDS);
                 updateSkill(player, derankLossAmount);
                 MessageBuilder.create("modSkillLevelDerank", hmc, "PvP")
-                        .addPlaceholderReplace("%DAYS%", String.valueOf(timeUntilDerankThreshold / 86400))
+                        .addPlaceholderReplace("%DAYS%", String.valueOf(timeUntilDerankThreshold / DAYS_IN_SECONDS))
                         .sendMessage(player);
             } else {
                 updateSkill(player, 0);
@@ -84,10 +86,6 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             HalfminerPlayer hKiller = storage.getPlayer(killer);
             HalfminerPlayer hVictim = storage.getPlayer(victim);
-
-            long currentTime = System.currentTimeMillis() / 1000;
-            hKiller.set(DataType.LAST_PVP, currentTime);
-            hVictim.set(DataType.LAST_PVP, currentTime);
 
             // Prevent grinding
             if (((ModAntiKillfarming) hmc.getModule(ModuleType.ANTI_KILLFARMING)).isNotRepeatedKill(killer, victim)) {
@@ -149,6 +147,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         scoreboardObjective.getScore(player.getName()).setScore(newLevel);
 
         hPlayer.set(DataType.SKILL_ELO, elo);
+        hPlayer.set(DataType.SKILL_ELO_LAST_CHANGE, System.currentTimeMillis() / 1000);
         hPlayer.set(DataType.SKILL_LEVEL, newLevel);
 
         // Send title/log if necessary
