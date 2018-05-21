@@ -194,7 +194,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         Set<Land> leftToInsert = new HashSet<>(ownedLandSet);
         connectedSet.add(land);
 
-        // artificially cap at 10 iterations, as we run this on main server thread and don't want to ever lag
+        // artificially cap at 10 iterations, as we run this on main server thread and don't want to take too long
         for (int i = 0; i < 10; i++) {
             Set<Land> addToConnected = new HashSet<>();
             for (Land ownedLand : leftToInsert) {

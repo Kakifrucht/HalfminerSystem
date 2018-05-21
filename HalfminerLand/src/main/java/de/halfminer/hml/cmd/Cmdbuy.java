@@ -149,19 +149,15 @@ public class Cmdbuy extends LandCommand {
 
             // buy land
             contractManager.fulfillContract(contract);
-            MessageBuilder.create("cmdBuySuccess" + (buyAsServer ? "AsServer" : ""), hml)
+            String messageKey = "cmdBuySuccess" + (buyAsServer ? "AsServer" : (contract.isFreeBuy() ? "Free" : ""));
+            MessageBuilder.create(messageKey, hml)
                     .addPlaceholderReplace("%COST%", String.valueOf(cost))
+                    .addPlaceholderReplace("%FREELANDSOWNED%", String.valueOf(freeLandsOwned + 1))
+                    .addPlaceholderReplace("%FREELANDSMAX%", freeLandsMax == Integer.MAX_VALUE ? "-" : String.valueOf(freeLandsMax))
                     .sendMessage(player);
 
             if (buyAsServer) {
                 landToBuy.setServerLand(true);
-            }
-
-            if (contract.isFreeBuy() && freeLandsMax != Integer.MAX_VALUE) {
-                MessageBuilder.create("cmdBuyFreeLandsLeft", hml)
-                        .addPlaceholderReplace("%FREELANDSOWNED%", String.valueOf(freeLandsOwned + 1))
-                        .addPlaceholderReplace("%FREELANDSMAX%", String.valueOf(freeLandsMax))
-                        .sendMessage(player);
             }
 
         } else {
@@ -169,7 +165,7 @@ public class Cmdbuy extends LandCommand {
             board.showChunkParticles(player, landToBuy);
             contract.setCanBeFulfilled();
 
-            MessageBuilder.create("cmdBuyConfirm", hml)
+            MessageBuilder.create("cmdBuyConfirm" + (contract.isFreeBuy() ? "Free" : ""), hml)
                     .addPlaceholderReplace("%COST%", String.valueOf(cost))
                     .sendMessage(player);
         }

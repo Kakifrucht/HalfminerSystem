@@ -92,7 +92,7 @@ public class Cmdsell extends LandCommand {
             // sell land
             contractManager.fulfillContract(contract);
 
-            String localeKey = isServerLand ? "cmdSellServerSuccess" : (isForceSell ? "cmdSellForceSuccess" : "cmdSellSuccess");
+            String localeKey = "cmdSell" + (isServerLand ? "ServerSuccess" : (isForceSell ? "ForceSuccess" : "Success"));
             MessageBuilder.create(localeKey, hml)
                     .addPlaceholderReplace("%COST%", String.valueOf(contract.getCost()))
                     .addPlaceholderReplace("%LANDOWNER%", landOwner.getName())
@@ -102,7 +102,7 @@ public class Cmdsell extends LandCommand {
             board.showChunkParticles(player, landToSell);
             contract.setCanBeFulfilled();
 
-            MessageBuilder.create("cmdSellConfirm", hml)
+            MessageBuilder.create("cmdSellConfirm" + (landToSell.isFreeLand() ? "Free" : ""), hml)
                     .addPlaceholderReplace("%COST%", String.valueOf(contract.getCost()))
                     .sendMessage(player);
         }
