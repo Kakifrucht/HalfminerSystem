@@ -8,6 +8,7 @@ import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -80,6 +81,22 @@ public class Land extends LandClass {
         }
     }
 
+    public World getWorld() {
+        return chunk.getWorld();
+    }
+
+    public Chunk getChunk() {
+        return chunk;
+    }
+
+    public int getX() {
+        return chunk.getX();
+    }
+
+    public int getZ() {
+        return chunk.getZ();
+    }
+
     public BuyableStatus getBuyableStatus() {
 
         if (!isAbandoned()) {
@@ -118,10 +135,6 @@ public class Land extends LandClass {
         }
 
         return SellableStatus.SELLABLE;
-    }
-
-    public Chunk getChunk() {
-        return chunk;
     }
 
     public boolean hasOwner() {
@@ -266,8 +279,13 @@ public class Land extends LandClass {
     }
 
     boolean isNeighbour(Land land) {
-        int distanceX = Math.abs(land.getChunk().getX() - this.chunk.getX());
-        int distanceZ = Math.abs(land.getChunk().getZ() - this.chunk.getZ());
+
+        if (!land.getWorld().equals(getWorld())) {
+            return false;
+        }
+
+        int distanceX = Math.abs(land.getX() - getX());
+        int distanceZ = Math.abs(land.getZ() - getZ());
         return distanceX <= 1 && distanceZ <= 1 && (distanceX == 0 || distanceZ == 0);
     }
 
@@ -299,7 +317,7 @@ public class Land extends LandClass {
 
     @Override
     public String toString() {
-        return chunk.getWorld().getName() + ",x" + chunk.getX() + ",z" + chunk.getZ();
+        return getWorld().getName() + ",x" + getX() + ",z" + getZ();
     }
 
     @Override

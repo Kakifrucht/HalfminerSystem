@@ -31,10 +31,8 @@ public class WorldGuardHelper {
     }
 
     public boolean isLandFree(Land land) {
-
-        Chunk chunk = land.getChunk();
-        RegionManager regionManager = wg.getRegionManager(chunk.getWorld());
-        return regionManager.getApplicableRegions(createRegionFromChunk(chunk)).size() == 0;
+        RegionManager regionManager = wg.getRegionManager(land.getWorld());
+        return regionManager.getApplicableRegions(createRegionFromChunk(land.getChunk())).size() == 0;
     }
 
     public void updateRegionOfLand(Land land) {
@@ -123,8 +121,8 @@ public class WorldGuardHelper {
     }
 
     public DefaultDomain getMemberList(Land land) {
-        Chunk chunk = land.getChunk();
-        ProtectedRegion region = getRegionFromRegionManager(chunk);
+
+        ProtectedRegion region = getRegionFromRegionManager(land.getChunk());
         if (region == null) {
             throw new IllegalStateException("Region for land " + land.toString() + " not found");
         }

@@ -6,7 +6,6 @@ import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
-import org.bukkit.Chunk;
 import org.bukkit.World;
 
 import java.util.HashMap;
@@ -54,7 +53,7 @@ public class Cmdhml extends LandCommand {
 
                 for (Land land : allOwnedLands) {
 
-                    World world = land.getChunk().getWorld();
+                    World world = land.getWorld();
                     if (!worldCountMap.containsKey(world)) {
                         worldCountMap.put(world, 1);
                     } else {
@@ -189,12 +188,11 @@ public class Cmdhml extends LandCommand {
                     StringBuilder landListStringBuilder = new StringBuilder();
                     for (Land land : lands) {
 
-                        Chunk chunk = land.getChunk();
                         MessageBuilder toAppendBuilder = MessageBuilder
                                 .create("cmdHmlInfoPlayerLandFormat" + (land.hasTeleportLocation() ? "Teleport" : ""), hml)
-                                .addPlaceholderReplace("%WORLD%", chunk.getWorld().getName())
-                                .addPlaceholderReplace("%X%", String.valueOf(chunk.getX() * 16))
-                                .addPlaceholderReplace("%Z%", String.valueOf(chunk.getZ() * 16));
+                                .addPlaceholderReplace("%WORLD%", land.getWorld().getName())
+                                .addPlaceholderReplace("%X%", String.valueOf(land.getX() * 16))
+                                .addPlaceholderReplace("%Z%", String.valueOf(land.getZ() * 16));
 
                         if (land.hasTeleportLocation()) {
                             toAppendBuilder.addPlaceholderReplace("%TELEPORT%", land.getTeleportName());

@@ -5,7 +5,6 @@ import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.BuyContract;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.StringArgumentSeparator;
-import org.bukkit.Chunk;
 
 import java.util.List;
 
@@ -25,7 +24,6 @@ public class Cmdbuy extends LandCommand {
         }
 
         Land landToBuy = board.getLandAt(player);
-        Chunk landChunk = landToBuy.getChunk();
 
         boolean buyAsServer = args.length > 0
                 && args[0].equalsIgnoreCase("server")
@@ -35,7 +33,7 @@ public class Cmdbuy extends LandCommand {
         if (!buyAsServer) {
 
             List<String> worldRestrictions = hml.getConfig().getStringList("buyLimits.worldRestrictions");
-            String worldName = landChunk.getWorld().getName();
+            String worldName = landToBuy.getWorld().getName();
             for (String minimumCoordinate : worldRestrictions) {
 
                 StringArgumentSeparator separator = new StringArgumentSeparator(minimumCoordinate, ',');
@@ -51,10 +49,10 @@ public class Cmdbuy extends LandCommand {
 
                     // check if minimum coordinate requirement is met
                     int chunkMinimumCoordinate = (int) Math.ceil((double) minimumCoordinateInt / 16d);
-                    if (landChunk.getX() < chunkMinimumCoordinate
-                            && landChunk.getX() > -chunkMinimumCoordinate
-                            && landChunk.getZ() < chunkMinimumCoordinate
-                            && landChunk.getZ() > -chunkMinimumCoordinate) {
+                    if (landToBuy.getX() < chunkMinimumCoordinate
+                            && landToBuy.getX() > -chunkMinimumCoordinate
+                            && landToBuy.getZ() < chunkMinimumCoordinate
+                            && landToBuy.getZ() > -chunkMinimumCoordinate) {
 
                         MessageBuilder.create("cmdBuyNotBuyableCoordinate", hml)
                                 .addPlaceholderReplace("%MINIMUMCOORDS%", String.valueOf(minimumCoordinateInt))
