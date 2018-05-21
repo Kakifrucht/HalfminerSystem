@@ -27,7 +27,11 @@ public interface Board {
 
     Set<Land> getLands(HalfminerPlayer player);
 
+    Set<Land> getLandsOfServer();
+
     Set<Land> getOwnedLandSet();
+
+    Set<Land> getConnectedLand(Land land);
 
     void showChunkParticles(Player player, Land showParticles);
 

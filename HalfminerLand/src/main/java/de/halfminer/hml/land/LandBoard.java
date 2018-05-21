@@ -90,8 +90,8 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         if (previousChunk != null) {
 
             previousLand = getLandAt(previousChunk);
-            boolean canBeRemoved = previousLand.playerLeft();
-            if (canBeRemoved) {
+            previousLand.playerLeft();
+            if (previousLand.canBeRemoved()) {
                 landMap.removeLand(previousLand);
             }
 
@@ -161,11 +161,56 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     }
 
     @Override
+    public Set<Land> getLandsOfServer() {
+        return getOwnedLandSet()
+                .stream()
+                .filter(Land::isServerLand)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public Set<Land> getOwnedLandSet() {
         return landMap.getLandCollection()
                 .stream()
                 .filter(Land::hasOwner)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Land> getConnectedLand(Land land) {
+
+        if (!land.hasOwner()) {
+            return Collections.singleton(land);
+        }
+
+        Set<Land> ownedLandSet;
+        if (land.isServerLand()) {
+            ownedLandSet = getLandsOfServer();
+        } else {
+            ownedLandSet = getLands(land.getOwner());
+        }
+
+        Set<Land> connectedSet = new HashSet<>();
+        Set<Land> leftToInsert = new HashSet<>(ownedLandSet);
+        connectedSet.add(land);
+
+        // artificially cap at 10 iterations, as we run this on main server thread and don't want to ever lag
+        for (int i = 0; i < 10; i++) {
+            Set<Land> addToConnected = new HashSet<>();
+            for (Land ownedLand : leftToInsert) {
+                for (Land connectedLand : connectedSet) {
+                    if (connectedLand.isNeighbour(ownedLand)) {
+                        addToConnected.add(ownedLand);
+                        break;
+                    }
+                }
+            }
+
+            connectedSet.addAll(addToConnected);
+            leftToInsert.removeAll(addToConnected);
+        }
+
+        return connectedSet;
     }
 
     @Override
@@ -274,6 +319,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
 
     @Override
     public void sweep() {
+        landMap.cleanUp();
         contractCache.cleanUp();
     }
 }

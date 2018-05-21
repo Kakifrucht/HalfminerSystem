@@ -1,6 +1,7 @@
 package de.halfminer.hml.cmd;
 
 import de.halfminer.hml.LandClass;
+import de.halfminer.hml.land.Board;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,6 +9,8 @@ import org.bukkit.entity.Player;
 public abstract class LandCommand extends LandClass {
 
     private static final String BASE_PERMISSION = "hml.cmd.";
+
+    final Board board = hml.getBoard();
 
     private final String command;
 

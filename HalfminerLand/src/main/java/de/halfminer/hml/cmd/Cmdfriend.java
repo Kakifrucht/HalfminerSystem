@@ -49,32 +49,48 @@ public class Cmdfriend extends LandCommand {
             return;
         }
 
-        // add to all
-        boolean success = false;
         String messageLocale = addFriend ? "cmdFriendAdd" : "cmdFriendRemove";
-        if (args.length > 2 && args[2].equalsIgnoreCase("all")) {
+        Land land = board.getLandAt(player);
+        boolean success = false;
+        int modifiedCount = 0;
 
-            Set<Land> lands = board.getLands(player);
+        // add to all or connected land
+        if (args.length > 2 &&
+                (args[2].equalsIgnoreCase("all")
+                || args[2].equalsIgnoreCase("connected"))) {
+
+            boolean doForAll = args[2].equalsIgnoreCase("all");
+
+            if (!doForAll && !land.isOwner(player)) {
+                MessageBuilder.create("landNotOwned", hml).sendMessage(player);
+                return;
+            }
+
+            Set<Land> lands = doForAll ? board.getLands(player) : board.getConnectedLand(land);
             if (lands.size() == 0) {
                 MessageBuilder.create("cmdFriendNoLandOwned", hml).sendMessage(player);
                 return;
             }
 
-            for (Land land : lands) {
+            for (Land landToModify : lands) {
 
-                if (isFriendLimitReachedAndMessage(land, addFriend, false)) {
+                if (isFriendLimitReachedAndMessage(landToModify, addFriend, false)) {
                     continue;
                 }
 
-                success |= addFriend ? land.addMember(uuid) : land.removeMember(uuid);
+                boolean wasModified = addFriend ? landToModify.addMember(uuid) : landToModify.removeMember(uuid);
+                success |= wasModified;
+
+                if (wasModified) {
+                    modifiedCount++;
+                }
             }
 
-            messageLocale += success ? "SuccessAll" : "FailureAll";
+            messageLocale += success ? "Success" : "Failure";
+            messageLocale += doForAll ? "All" : "Connected";
 
-        } else {
+        } else { // add to current land
 
-            // add to current land
-            Land land = board.getLandAt(player);
             if (land.isOwner(player)) {
 
                 if (isFriendLimitReachedAndMessage(land, addFriend, true)) {
@@ -92,6 +108,7 @@ public class Cmdfriend extends LandCommand {
 
         MessageBuilder.create(messageLocale, hml)
                 .addPlaceholderReplace("%PLAYER%", toModify.getName())
+                .addPlaceholderReplace("%COUNT%", String.valueOf(modifiedCount))
                 .sendMessage(player);
 
         if (success) {

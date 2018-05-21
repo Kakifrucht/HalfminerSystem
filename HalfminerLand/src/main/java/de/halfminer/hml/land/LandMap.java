@@ -95,11 +95,15 @@ class LandMap {
             ownedLandMap.remove(halfminerPlayer);
         }
 
-        return set;
+        return new HashSet<>(set);
     }
 
     Collection<Land> getLandCollection() {
-        return chunkLandMap.values();
+        return new HashSet<>(chunkLandMap.values());
+    }
+
+    void cleanUp() {
+        chunkLandMap.values().removeIf(Land::canBeRemoved);
     }
 
     private Pair<World, Pair<Integer, Integer>> getPairFromChunk(Chunk chunk) {

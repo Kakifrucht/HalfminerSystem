@@ -45,9 +45,10 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
   - /land info
     - Shows particles for land executing player is currently standing on
     - If land is already owned, shows owner, teleport point (if applicable) and friends added to this land
-  - /land friend <add|remove> \<Friend> [all]
+  - /land friend <add|remove> \<Friend> [all|connected]
     - Adds or removes a player as a friend to a land
-      - If *all* parameter is specified the given player will be added/removed to all lands
+      - If *all* parameter is specified, the given player will be added/removed to all lands
+      - If *connected* parameter is specified, the given player will be added/removed to all lands connected to the current land
     - Friend limit per land is configurable (bypass permission available)
   - /land teleport <buy|set|delete> \<Teleport>
     - Buy/set a teleport to the position you are currently standing on

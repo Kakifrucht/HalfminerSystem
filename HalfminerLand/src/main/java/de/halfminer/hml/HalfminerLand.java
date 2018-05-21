@@ -120,7 +120,7 @@ public class HalfminerLand extends JavaPlugin {
         landStorage.saveData();
     }
 
-    Board getBoard() {
+    public Board getBoard() {
         return board;
     }
 

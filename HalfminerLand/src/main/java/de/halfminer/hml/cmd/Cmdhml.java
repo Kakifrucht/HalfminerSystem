@@ -165,11 +165,7 @@ public class Cmdhml extends LandCommand {
 
                 if (args[1].equalsIgnoreCase("-s")) {
 
-                    lands = board.getOwnedLandSet()
-                            .stream()
-                            .filter(Land::isServerLand)
-                            .collect(Collectors.toSet());
-
+                    lands = board.getLandsOfServer();
                     landOwner = hml.getConfig().getString("serverName");
 
                 } else {

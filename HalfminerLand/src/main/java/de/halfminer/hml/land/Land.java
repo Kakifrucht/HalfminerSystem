@@ -251,18 +251,24 @@ public class Land extends LandClass {
 
     /**
      * Method to be called if a player leaves this land.
-     *
-     * @return true if this object can be discarded
      */
-    boolean playerLeft() {
+    void playerLeft() {
 
         if (playersOnLand > 0) {
             playersOnLand--;
         } else {
             hml.getLogger().warning("playerLeft() method called for already empty land (" + toString() + ")");
         }
+    }
 
+    boolean canBeRemoved() {
         return !hasOwner() && playersOnLand == 0;
+    }
+
+    boolean isNeighbour(Land land) {
+        int distanceX = Math.abs(land.getChunk().getX() - this.chunk.getX());
+        int distanceZ = Math.abs(land.getChunk().getZ() - this.chunk.getZ());
+        return distanceX <= 1 && distanceZ <= 1 && (distanceX == 0 || distanceZ == 0);
     }
 
     /**
