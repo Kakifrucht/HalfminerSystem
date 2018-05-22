@@ -24,6 +24,7 @@ public class Land extends LandClass {
     private static final String STORAGE_TELEPORT = ".teleport";
     private static final String STORAGE_TELEPORT_NAME = ".teleport.name";
     private static final String STORAGE_TELEPORT_LOCATION = ".teleport.location";
+    private static final int CHUNK_SIZE = 16;
 
     private final WorldGuardHelper wgh;
     private final Chunk chunk;
@@ -95,6 +96,14 @@ public class Land extends LandClass {
 
     public int getZ() {
         return chunk.getZ();
+    }
+
+    public int getXLandCorner() {
+        return getX() * CHUNK_SIZE;
+    }
+
+    public int getZLandCorner() {
+        return getZ() * CHUNK_SIZE;
     }
 
     public BuyableStatus getBuyableStatus() {

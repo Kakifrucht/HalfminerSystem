@@ -78,6 +78,7 @@ public class Cmdsell extends LandCommand {
             }
         }
 
+        boolean isFreeLand = landToSell.isFreeLand();
         if (contract.canBeFulfilled()) {
 
             // notify player if land was force sold (only if online)
@@ -92,7 +93,15 @@ public class Cmdsell extends LandCommand {
             // sell land
             contractManager.fulfillContract(contract);
 
-            String localeKey = "cmdSell" + (isServerLand ? "ServerSuccess" : (isForceSell ? "ForceSuccess" : "Success"));
+            String localeKey = "cmdSellSuccess";
+            if (isServerLand) {
+                localeKey += "Server";
+            } else if (isForceSell) {
+                localeKey += "Force";
+            } else if (isFreeLand) {
+                localeKey += "Free";
+            }
+
             MessageBuilder.create(localeKey, hml)
                     .addPlaceholderReplace("%COST%", String.valueOf(contract.getCost()))
                     .addPlaceholderReplace("%LANDOWNER%", landOwner.getName())
@@ -102,7 +111,7 @@ public class Cmdsell extends LandCommand {
             board.showChunkParticles(player, landToSell);
             contract.setCanBeFulfilled();
 
-            MessageBuilder.create("cmdSellConfirm" + (landToSell.isFreeLand() ? "Free" : ""), hml)
+            MessageBuilder.create("cmdSellConfirm" + (isFreeLand ? "Free" : ""), hml)
                     .addPlaceholderReplace("%COST%", String.valueOf(contract.getCost()))
                     .sendMessage(player);
         }

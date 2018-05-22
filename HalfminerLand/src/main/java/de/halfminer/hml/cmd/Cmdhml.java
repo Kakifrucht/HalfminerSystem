@@ -191,8 +191,8 @@ public class Cmdhml extends LandCommand {
                         MessageBuilder toAppendBuilder = MessageBuilder
                                 .create("cmdHmlInfoPlayerLandFormat" + (land.hasTeleportLocation() ? "Teleport" : ""), hml)
                                 .addPlaceholderReplace("%WORLD%", land.getWorld().getName())
-                                .addPlaceholderReplace("%X%", String.valueOf(land.getX() * 16))
-                                .addPlaceholderReplace("%Z%", String.valueOf(land.getZ() * 16));
+                                .addPlaceholderReplace("%X%", String.valueOf(land.getXLandCorner()))
+                                .addPlaceholderReplace("%Z%", String.valueOf(land.getZLandCorner()));
 
                         if (land.hasTeleportLocation()) {
                             toAppendBuilder.addPlaceholderReplace("%TELEPORT%", land.getTeleportName());
