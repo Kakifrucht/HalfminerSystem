@@ -288,8 +288,20 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     }
 
     private boolean hasDifferentOwner(Land landA, Land landB) {
-        return (landA.hasOwner() != landB.hasOwner())
-                || landA.hasOwner() && !landA.getOwner().equals(landB.getOwner());
+
+        if (landA.hasOwner() != landB.hasOwner()) {
+            return true;
+        }
+
+        if (landA.isServerLand() && landB.isServerLand()) {
+            return false;
+        }
+
+        if (landA.hasOwner() && landB.hasOwner() && landA.isServerLand() != landB.isServerLand()) {
+            return true;
+        }
+
+        return landA.hasOwner() && !landA.getOwner().equals(landB.getOwner());
     }
 
     private void setLastKnownChunk(Player player) {
