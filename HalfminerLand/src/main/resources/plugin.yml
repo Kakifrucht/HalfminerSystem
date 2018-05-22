@@ -43,12 +43,15 @@ permissions:
       - hml.bypass.breakplace
       - hml.bypass.cmd
       - hml.bypass.friendlimit
+      - hml.bypass.landtptimer
   hml.bypass.breakplace:
     description: Bypasses block break and placement protection
-  hml.bypass.friendlimit:
-    description: Bypasses the friend limit per land
   hml.bypass.cmd:
     description: Bypasses command block list in owned land
+  hml.bypass.friendlimit:
+    description: Bypasses the friend limit per land
+  hml.bypass.landtptimer:
+    description: Bypasses teleport delay when teleporting via landtp to owned land
   hml.cmd.buy:
     description: Grants access to /land buy command
     default: true

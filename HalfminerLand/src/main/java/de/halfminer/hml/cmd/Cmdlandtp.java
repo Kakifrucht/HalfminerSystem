@@ -5,6 +5,8 @@ import de.halfminer.hms.util.MessageBuilder;
 
 public class Cmdlandtp extends LandCommand {
 
+    private static final int OWN_TELEPORT_DELAY_SECONDS = 30;
+
 
     public Cmdlandtp() {
         super("landtp");
@@ -25,7 +27,12 @@ public class Cmdlandtp extends LandCommand {
                 if (teleportTo.isAbandoned()) {
                     MessageBuilder.create("cmdLandtpIsAbandoned", hml).sendMessage(player);
                 } else {
-                    hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation());
+
+                    if (teleportTo.isOwner(player) && !player.hasPermission("hml.bypass.landtptimer")) {
+                        hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation(), OWN_TELEPORT_DELAY_SECONDS);
+                    } else {
+                        hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation());
+                    }
                 }
 
             } else {

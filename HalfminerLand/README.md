@@ -60,6 +60,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Bypass permission for operators to be able to delete any teleport available
   - /landtp \<Teleport>
     - Teleport to a public teleport point
+      - If player owns the teleport point a delay will be added to prevent teleports being used as private homes (bypass available)
     - Teleports into abandoned lands are disabled
   - /hml \<reload|save|status|forcewgrefresh|free|info>
     - Reload the configuration
