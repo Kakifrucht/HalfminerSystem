@@ -42,6 +42,7 @@ public class Cmdlandtp extends LandCommand {
                 } else {
 
                     if (teleportTo.isOwner(player) && !player.hasPermission("hml.bypass.landtptimer")) {
+                        MessageBuilder.create("cmdLandtpOwnTimer", hml).sendMessage(player);
                         hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation(), OWN_TELEPORT_DELAY_SECONDS);
                     } else {
                         hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation());
@@ -110,6 +111,8 @@ public class Cmdlandtp extends LandCommand {
                     } else {
                         MessageBuilder.create("cmdLandtpMenuNoLongerAvailable", hml).sendMessage(player);
                     }
+
+                    scheduler.runTask(hml, player::closeInventory);
                 }
             });
         }

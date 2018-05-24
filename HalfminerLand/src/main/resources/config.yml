@@ -102,6 +102,7 @@ localization:
   cmdLandtpMenuEmpty: '&7Keiner der Spieler, die aktuell online sind, stellt einen Teleportpunkt aus, verwende stattdessen &a/landtp <Teleport> &7um dich zu einem dir bereits bekannten Ort zu teleportieren'
   cmdLandtpMenuNoLongerAvailable: '&cDieser Teleportpunkt ist nicht mehr verfügbar'
   cmdLandtpMenuTitle: '&4&lLand Teleporter &8(/landtp)'
+  cmdLandtpOwnTimer: '&7Da du dich zu deinem eigenen Teleportpunkt teleportierst ist die Wartezeit vor dem Teleport erhöht, um die Verwendung als Ersatzhomes einzuschränken'
   cmdSellConfirm: '~&7Du bist im Begriff das mit Partikeln markierte Land für &a%COST% &7HCs zu verkaufen, wiederhole das Kommando &a/land sell/ &7zum bestätigen'
   cmdSellConfirmFree: '~&7Das mit Partikeln markierte Land ist ein kostenloses Freiland, welches du jederzeit umplatzieren kannst, wiederhole das Kommando &a/land sell/ &7um den Verkauf zu bestätigen'
   cmdSellForceNotify: '&cDein Land bei &e%LAND% &cwurde von &b%FORCINGPLAYER% &czwangsverkauft'
