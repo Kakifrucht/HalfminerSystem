@@ -12,7 +12,7 @@ public abstract class LandCommand extends LandClass {
 
     final Board board = hml.getBoard();
 
-    private final String command;
+    final String command;
 
     CommandSender sender;
     String[] args;

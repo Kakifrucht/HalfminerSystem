@@ -7,14 +7,16 @@ import de.halfminer.hml.land.LandBoard;
 import de.halfminer.hml.land.contract.ContractManager;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;
+import de.halfminer.hms.handler.menu.MenuCreator;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 
-public class HalfminerLand extends JavaPlugin {
+public class HalfminerLand extends JavaPlugin implements MenuCreator {
 
     private static final String PREFIX = "Land";
     private static HalfminerLand instance;
@@ -126,5 +128,10 @@ public class HalfminerLand extends JavaPlugin {
 
     ContractManager getContractManager() {
         return board;
+    }
+
+    @Override
+    public Plugin getPlugin() {
+        return this;
     }
 }

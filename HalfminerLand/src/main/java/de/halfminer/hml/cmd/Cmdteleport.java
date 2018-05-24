@@ -1,6 +1,7 @@
 package de.halfminer.hml.cmd;
 
 import com.google.common.base.CharMatcher;
+import de.halfminer.hml.data.LandPlayer;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
@@ -22,7 +23,7 @@ public class Cmdteleport extends LandCommand {
         }
 
         if (args.length < 2) {
-            sendUsage();
+            showUsage();
             return;
         }
 
@@ -98,9 +99,7 @@ public class Cmdteleport extends LandCommand {
                 return;
             }
 
-            // check if player owns teleport point
-            if (teleportLand == null || !teleportLand.isOwner(player)) {
-                MessageBuilder.create("cmdTeleportNotOwned", hml).sendMessage(player);
+            if (isLandNotOwned(teleportLand)) {
                 return;
             }
 
@@ -148,8 +147,20 @@ public class Cmdteleport extends LandCommand {
                         .sendMessage(player);
             }
 
+        } else if (args[0].equalsIgnoreCase("show")) {
+
+            if (isLandNotOwned(teleportLand)) {
+                return;
+            }
+
+            LandPlayer landPlayer = hml.getLandStorage().getLandPlayer(player);
+            landPlayer.setShownTeleport(teleportName);
+            MessageBuilder.create("cmdTeleportShow", hml)
+                    .addPlaceholderReplace("%TELEPORT%", teleportName)
+                    .sendMessage(player);
+
         } else {
-            sendUsage();
+            showUsage();
         }
     }
 
@@ -165,13 +176,22 @@ public class Cmdteleport extends LandCommand {
         return true;
     }
 
+    private boolean isLandNotOwned(Land teleportLand) {
+        if (teleportLand == null || !teleportLand.isOwner(player)) {
+            MessageBuilder.create("cmdTeleportNotOwned", hml).sendMessage(player);
+            return true;
+        }
+
+        return false;
+    }
+
     private void sendLandAlreadyHasTeleportMessage(Land land) {
         MessageBuilder.create("cmdTeleportLandAlreadyHasTeleport", hml)
                 .addPlaceholderReplace("%TELEPORT%", land.getTeleportName())
                 .sendMessage(player);
     }
 
-    private void sendUsage() {
+    private void showUsage() {
         MessageBuilder.create("cmdTeleportUsage", hml)
                 .togglePrefix()
                 .sendMessage(player);

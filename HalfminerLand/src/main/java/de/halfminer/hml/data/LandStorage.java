@@ -3,8 +3,8 @@ package de.halfminer.hml.data;
 import de.halfminer.hml.LandClass;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 public class LandStorage extends LandClass {
 
@@ -18,7 +18,7 @@ public class LandStorage extends LandClass {
         this.landStorage = landStorage;
     }
 
-    public LandPlayer getLandPlayer(Player player) {
+    public LandPlayer getLandPlayer(OfflinePlayer player) {
         return getLandPlayer(hms.getStorageHandler().getPlayer(player));
     }
 
