@@ -54,7 +54,7 @@ localization:
   notEnoughMoney: '&cDu hast nicht genügend Geld, du benötigst &e%COST% &cHCs'
   noOwner: 'Frei'
   teleportNotExist: '&cDieser Teleport existiert nicht'
-  usage: '~ \n&e&m-------------&c&l HalfLand Kommandos &e&m-------------\n&7Aktuelles Land kaufen: &a/land buy/\n&7Aktuelles Land verkaufen: &a/land sell/\n&7Informationen über aktuelles Land: &a/land info/\n&7Freunden Baurechte geben/nehmen: &a/land friend/\n&7Teleportpunkte kaufen/setzen: &a/land teleport/\n&7Zu einem Teleportpunkt teleportieren: &a/landtp <Teleport>\n&e&m----------------------------------------------'
+  usage: '~ \n&e&m-------------&c&l HalfLand Kommandos &e&m-------------\n&7Aktuelles Land kaufen: &a/land buy/\n&7Aktuelles Land verkaufen: &a/land sell/\n&7Informationen über aktuelles Land: &a/land info/\n&7Freunden Baurechte geben/nehmen: &a/land friend/\n&7Teleportpunkte kaufen/setzen: &a/land teleport/\n&7Zu einem Teleportpunkt teleportieren: &a/landtp/ [Teleport]\n&e&m----------------------------------------------'
   cmdBuyAlreadyOwnedSelf: '&7Dieses Land gehört dir bereits'
   cmdBuyConfirm: '~&7Du bist im Begriff das mit Partikeln markierte Land (Chunk von ganz oben bis ganz unten) für &a%COST% &7HCs zu kaufen, wiederhole das Kommando &a/land buy/ &7zum bestätigen'
   cmdBuyConfirmFree: '~&7Du bist im Begriff das mit Partikeln markierte Land (Chunk von ganz oben bis ganz unten) als kostenloses Freiland zu kaufen, wiederhole das Kommando &a/land buy/ &7zum bestätigen'

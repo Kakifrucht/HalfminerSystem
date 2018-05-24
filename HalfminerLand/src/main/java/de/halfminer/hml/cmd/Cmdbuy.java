@@ -42,22 +42,25 @@ public class Cmdbuy extends LandCommand {
                     int minimumCoordinateInt = separator.getArgumentInt(1);
 
                     // check if world is disabled
-                    if (minimumCoordinateInt < 0) {
+                    if (minimumCoordinateInt < 0 && !player.hasPermission("hml.bypass.buyDisabledWorld")) {
                         MessageBuilder.create("cmdBuyNotBuyableWorld", hml).sendMessage(player);
                         return;
                     }
 
-                    // check if minimum coordinate requirement is met
-                    int chunkMinimumCoordinate = (int) Math.ceil((double) minimumCoordinateInt / 16d);
-                    if (landToBuy.getX() < chunkMinimumCoordinate
-                            && landToBuy.getX() > -chunkMinimumCoordinate
-                            && landToBuy.getZ() < chunkMinimumCoordinate
-                            && landToBuy.getZ() > -chunkMinimumCoordinate) {
+                    if (!player.hasPermission("hml.bypass.minimumCoordinates")) {
 
-                        MessageBuilder.create("cmdBuyNotBuyableCoordinate", hml)
-                                .addPlaceholderReplace("%MINIMUMCOORDS%", String.valueOf(minimumCoordinateInt))
-                                .sendMessage(player);
-                        return;
+                        // check if minimum coordinate requirement is met
+                        int chunkMinimumCoordinate = (int) Math.ceil((double) minimumCoordinateInt / 16d);
+                        if (landToBuy.getX() < chunkMinimumCoordinate
+                                && landToBuy.getX() > -chunkMinimumCoordinate
+                                && landToBuy.getZ() < chunkMinimumCoordinate
+                                && landToBuy.getZ() > -chunkMinimumCoordinate) {
+
+                            MessageBuilder.create("cmdBuyNotBuyableCoordinate", hml)
+                                    .addPlaceholderReplace("%MINIMUMCOORDS%", String.valueOf(minimumCoordinateInt))
+                                    .sendMessage(player);
+                            return;
+                        }
                     }
 
                     break;
