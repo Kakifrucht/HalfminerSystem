@@ -1,6 +1,7 @@
 package de.halfminer.hms.handler.menu;
 
 import de.halfminer.hms.HalfminerClass;
+import de.halfminer.hms.manageable.Disableable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -13,7 +14,7 @@ import java.util.*;
 /**
  * Listening for inventory clicks, inventory close and plugin disables, to handle currently active menus.
  */
-public class MenuListener extends HalfminerClass implements Listener {
+public class MenuListener extends HalfminerClass implements Disableable, Listener {
 
     private final Map<Inventory, MenuContainer> menuMap = new HashMap<>();
 
@@ -51,5 +52,10 @@ public class MenuListener extends HalfminerClass implements Listener {
     public void showMenu(MenuContainer menuContainer) {
         menuMap.put(menuContainer.getInventory(), menuContainer);
         menuContainer.showMenu();
+    }
+
+    @Override
+    public void onDisable() {
+        new HashSet<>(menuMap.values()).forEach(MenuContainer::closeMenu);
     }
 }
