@@ -1,10 +1,7 @@
 package de.halfminer.hmc.module;
 
 import de.halfminer.hmc.CoreClass;
-import de.halfminer.hms.handler.HanBossBar;
-import de.halfminer.hms.handler.HanHooks;
-import de.halfminer.hms.handler.HanStorage;
-import de.halfminer.hms.handler.HanTitles;
+import de.halfminer.hms.handler.*;
 import de.halfminer.hms.manageable.Reloadable;
 
 /**
@@ -15,6 +12,7 @@ public abstract class HalfminerModule extends CoreClass implements Reloadable {
 
     final static HanBossBar barHandler = hms.getBarHandler();
     final static HanHooks hookHandler = hms.getHooksHandler();
+    final static HanMenu menuHandler = hms.getMenuHandler();
     final static HanStorage storage = hms.getStorageHandler();
     final static HanTitles titleHandler = hms.getTitlesHandler();
 

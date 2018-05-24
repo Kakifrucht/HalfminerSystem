@@ -7,6 +7,7 @@ public enum HandlerType {
 
     BOSS_BAR("BossBar"),
     HOOKS("Hooks"),
+    MENU("Menu"),
     STORAGE("Storage"),
     TELEPORT("Teleport"),
     TITLES("Titles");

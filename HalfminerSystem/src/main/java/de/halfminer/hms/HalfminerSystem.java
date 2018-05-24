@@ -116,6 +116,10 @@ public class HalfminerSystem extends JavaPlugin {
         return (HanHooks) handlers.get(HandlerType.HOOKS);
     }
 
+    public HanMenu getMenuHandler() {
+        return (HanMenu) handlers.get(HandlerType.MENU);
+    }
+
     public HanStorage getStorageHandler() {
         return (HanStorage) handlers.get(HandlerType.STORAGE);
     }

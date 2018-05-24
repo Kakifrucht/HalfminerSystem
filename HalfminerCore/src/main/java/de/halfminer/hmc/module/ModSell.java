@@ -8,6 +8,8 @@ import de.halfminer.hms.cache.CustomtextCache;
 import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.cache.exceptions.ItemCacheException;
 import de.halfminer.hms.handler.hooks.HookException;
+import de.halfminer.hms.handler.menu.MenuClickHandler;
+import de.halfminer.hms.handler.menu.MenuCreator;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.manageable.Disableable;
@@ -26,7 +28,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -62,13 +63,12 @@ import java.util.regex.Pattern;
  * - Items with any item meta won't be sold
  */
 @SuppressWarnings("unused")
-public class ModSell extends HalfminerModule implements Disableable, Listener, Sweepable {
+public class ModSell extends HalfminerModule implements Disableable, Listener, Sweepable, MenuCreator {
 
     private Map<Integer, String> menuCommands;
     private List<Double> levelRewardMultipliers;
     private final SellableMap sellableMap = new DefaultSellableMap();
 
-    private final Map<Inventory, Player> activeMenus = new HashMap<>();
     private BukkitTask menuRefreshTask;
 
     private final Cache<UUID, Double> potentialRevenueLostCache = CacheBuilder.newBuilder()
@@ -83,40 +83,8 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             .build();
 
 
-    @EventHandler(ignoreCancelled = true)
-    public void onMenuClick(InventoryClickEvent e) {
-
-        Inventory invClicked = e.getInventory();
-        if (activeMenus.containsKey(invClicked)) {
-
-            e.setCancelled(true);
-            int slot = e.getRawSlot();
-
-            if (e.getRawSlot() != e.getSlot()) {
-                return;
-            }
-
-            Player player = (Player) e.getWhoClicked();
-
-            boolean closeInventory = false;
-            if (menuCommands.containsKey(slot)) {
-
-                scheduler.runTask(hmc, () -> {
-                    player.closeInventory();
-                    player.chat(menuCommands.get(slot));
-                });
-
-            } else if (slot >= 18 && sellMaterialAndReward(slot - 18, player)) {
-                // need to close with delay to prevent glitching out items from menu
-                scheduler.runTask(hmc, player::closeInventory);
-            }
-        }
-    }
-
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMenuClose(InventoryCloseEvent e) {
-
-        activeMenus.remove(e.getInventory());
 
         // auto selling of chests
         if (e.getPlayer() instanceof Player
@@ -249,8 +217,28 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             inv.setItem(i + 18, currentItem);
         }
 
-        player.openInventory(inv);
-        activeMenus.put(inv, player);
+        MenuClickHandler menuClickHandler = e -> {
+            int slot = e.getRawSlot();
+
+            if (e.getRawSlot() != e.getSlot()) {
+                return;
+            }
+
+            boolean closeInventory = false;
+            if (menuCommands.containsKey(slot)) {
+
+                scheduler.runTask(hmc, () -> {
+                    player.closeInventory();
+                    player.chat(menuCommands.get(slot));
+                });
+
+            } else if (slot >= 18 && sellMaterialAndReward(slot - 18, player)) {
+                // need to close with delay to prevent glitching out items from menu
+                scheduler.runTask(hmc, player::closeInventory);
+            }
+        };
+
+        menuHandler.openMenu(this, player, inv, menuClickHandler);
     }
 
     public boolean toggleAutoSell(Player player) {
@@ -385,30 +373,18 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
     }
 
     private void refreshActiveMenus() {
-        if (activeMenus.isEmpty()) {
-            return;
-        }
-        // copy to set to prevent concurrentmodex (closing inventory causes removal from activeMenus)
-        Set<Player> playersViewing = new HashSet<>(activeMenus.values());
-        playersViewing.forEach(this::showSellMenu);
-    }
-
-    private void closeActiveMenus() {
-        for (Map.Entry<Inventory, Player> inventoryPlayerEntry : new HashSet<>(activeMenus.entrySet())) {
-            inventoryPlayerEntry.getValue().closeInventory();
-        }
+        menuHandler.getViewingPlayers(this).forEach(this::showSellMenu);
     }
 
     @Override
     public void onDisable() {
-        closeActiveMenus();
         sellableMap.storeCurrentCycle();
     }
 
     @Override
     public void loadConfig() {
 
-        closeActiveMenus();
+        menuHandler.closeAllMenus(this);
 
         FileConfiguration config = hmc.getConfig();
 

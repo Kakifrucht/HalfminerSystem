@@ -60,6 +60,11 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
     - Hooks external soft-dependant plugins
     - Checks if plugins are loaded
     - Shortcuts to external API
+  - Menu
+    - Opens inventory based menus, classes must implement ``MenuCreator`` interface to create them
+      - Get all currently opened menus that were created by a given ``MenuCreator``
+    - Prevents removing items from said menu
+    - Classes implement ``MenuClickHandler`` to handle inventory interaction
   - Storage
     - Data stored in YAML flatfiles
       - Player data storage
