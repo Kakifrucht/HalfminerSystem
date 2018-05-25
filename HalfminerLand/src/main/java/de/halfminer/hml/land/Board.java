@@ -6,6 +6,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,6 +27,8 @@ public interface Board {
     Set<Land> getLands(Player player);
 
     Set<Land> getLands(HalfminerPlayer player);
+
+    List<Land> getLandsWithTeleport(Player player);
 
     Set<Land> getLandsOfServer();
 

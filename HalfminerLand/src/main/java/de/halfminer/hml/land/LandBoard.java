@@ -161,6 +161,14 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     }
 
     @Override
+    public List<Land> getLandsWithTeleport(Player player) {
+        return getLands(player)
+                .stream()
+                .filter(Land::hasTeleportLocation)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Set<Land> getLandsOfServer() {
         return getOwnedLandSet()
                 .stream()

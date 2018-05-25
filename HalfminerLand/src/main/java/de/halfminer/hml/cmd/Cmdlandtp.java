@@ -5,6 +5,7 @@ import de.halfminer.hml.data.LandStorage;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Cmdlandtp extends LandCommand {
@@ -57,6 +59,12 @@ public class Cmdlandtp extends LandCommand {
             LandStorage landStorage = hml.getLandStorage();
             List<ItemStack> menuSkulls = new ArrayList<>();
 
+            String shownTeleportOfExecutingPlayer = landStorage.getLandPlayer(player).getShownTeleport();
+            for (Land land : board.getLandsWithTeleport(player)) {
+                boolean isShown = land.getTeleportName().equalsIgnoreCase(shownTeleportOfExecutingPlayer);
+                addItemStackToCollection(menuSkulls, player, land.getTeleportName(), isShown);
+            }
+
             for (Player onlinePlayer : server.getOnlinePlayers()) {
 
                 LandPlayer lPlayer = landStorage.getLandPlayer(onlinePlayer);
@@ -65,22 +73,8 @@ public class Cmdlandtp extends LandCommand {
                 if (teleport != null) {
 
                     Land teleportLand = board.getLandFromTeleport(teleport);
-                    if (teleportLand != null && teleportLand.isOwner(onlinePlayer)) {
-
-                        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-
-                        MessageBuilder displayAndLoreBuilder = MessageBuilder.create("cmdLandtpMenuItemFormat", hml)
-                                .togglePrefix()
-                                .addPlaceholderReplace("%PLAYER%", onlinePlayer.getName())
-                                .addPlaceholderReplace("%TELEPORT%", Utils.makeStringFriendly(teleport));
-
-                        Utils.applyLocaleToItemStack(displayAndLoreBuilder, skull);
-
-                        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-                        skullMeta.setOwningPlayer(onlinePlayer);
-                        skull.setItemMeta(skullMeta);
-
-                        menuSkulls.add(skull);
+                    if (teleportLand != null && !teleportLand.isOwner(player) && teleportLand.isOwner(onlinePlayer)) {
+                        addItemStackToCollection(menuSkulls, onlinePlayer, teleport, true);
                     } else {
                         lPlayer.setShownTeleport(null);
                     }
@@ -113,12 +107,47 @@ public class Cmdlandtp extends LandCommand {
                     if (teleportLand != null) {
                         player.chat("/" + command + " " + clickedPlayer.getShownTeleport());
                     } else {
-                        MessageBuilder.create("cmdLandtpMenuNoLongerAvailable", hml).sendMessage(player);
+
+                        // find command in lore
+                        boolean teleportFound = false;
+                        for (String s : skullMeta.getLore()) {
+
+                            String colorStripped = ChatColor.stripColor(s);
+                            if (colorStripped.startsWith("/")) {
+                                player.chat(colorStripped);
+                                teleportFound = true;
+                                break;
+                            }
+                        }
+
+                        if (!teleportFound) {
+                            MessageBuilder.create("cmdLandtpMenuNoLongerAvailable", hml).sendMessage(player);
+                        }
                     }
 
                     scheduler.runTask(hml, player::closeInventory);
                 }
             });
         }
+    }
+
+    private void addItemStackToCollection(Collection<ItemStack> collection,
+                                          Player owner, String teleportName, boolean isShown) {
+
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+
+        String localeKey = "cmdLandtpMenuItemFormat" + (isShown ? "" : "NotShown");
+        MessageBuilder displayAndLoreBuilder = MessageBuilder.create(localeKey, hml)
+                .togglePrefix()
+                .addPlaceholderReplace("%PLAYER%", owner.getName())
+                .addPlaceholderReplace("%TELEPORT%", Utils.makeStringFriendly(teleportName));
+
+        Utils.applyLocaleToItemStack(displayAndLoreBuilder, skull);
+
+        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+        skullMeta.setOwningPlayer(owner);
+        skull.setItemMeta(skullMeta);
+
+        collection.add(skull);
     }
 }
