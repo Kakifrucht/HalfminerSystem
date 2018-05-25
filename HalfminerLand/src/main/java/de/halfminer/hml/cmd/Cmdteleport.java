@@ -154,8 +154,21 @@ public class Cmdteleport extends LandCommand {
             }
 
             LandPlayer landPlayer = hml.getLandStorage().getLandPlayer(player);
-            landPlayer.setShownTeleport(teleportName);
-            MessageBuilder.create("cmdTeleportShow", hml)
+
+            String setTo;
+            String localeKey = "cmdTeleportShow";
+
+            String currentlyShown = landPlayer.getShownTeleport();
+            if (currentlyShown != null && currentlyShown.equalsIgnoreCase(teleportName)) {
+                // unset teleport if given teleport is currently shown
+                setTo = null;
+                localeKey += "Unset";
+            } else {
+                setTo = teleportName;
+            }
+
+            landPlayer.setShownTeleport(setTo);
+            MessageBuilder.create(localeKey, hml)
                     .addPlaceholderReplace("%TELEPORT%", teleportName)
                     .sendMessage(player);
 

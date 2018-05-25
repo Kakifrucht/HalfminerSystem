@@ -124,6 +124,7 @@ localization:
   cmdTeleportNotOwned: '&cDieser Teleportpunkt gehört dir nicht'
   cmdTeleportSetSuccess: '&7Du hast den Teleportpunkt &e%TELEPORT% &7erfolgreich für &b&l%COST% HCs &7verschoben'
   cmdTeleportShow: '~&7Dein Teleportpunkt &e%TELEPORT% &7erscheint nun, solange du online bist, öffentlich für alle Spieler im &a/landtp/ &7Menü'
+  cmdTeleportShowUnset: '~&7Dein Teleportpunkt &e%TELEPORT% &7wird nicht mehr unter &a/landtp/ &7angezeigt'
   cmdTeleportUsage: ' \n&e&m-------------&c&l Teleport Kommandos &e&m-------------\n&7Teleport Kaufen (kostet 10 HCs): &a/land teleport buy <Teleport>\n&7Teleport umsetzen (kostet 5 HCs): &a/land teleport set <Teleport>\n&7Teleport ausstellen: &a/land teleport show <Teleport>\n&7Teleport löschen: &a/land teleport delete <Teleport>\n \n&7Der Teleportname darf beliebig sein, aber nicht Vulgär (Chatregeln beachten). Er ist für alle Spieler unter &a/landtp <Teleport> &7zugänglich.\n&e&m----------------------------------------------'
   listenerBlockBreakBlocked: '&cDu kannst auf dem Land von &a%OWNER% &ckeine Blöcke brechen'
   listenerBlockPlaceBlocked: '&cDu kannst auf dem Land von &a%OWNER% &ckeine Blöcke platzieren'
