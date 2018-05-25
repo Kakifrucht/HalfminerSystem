@@ -100,6 +100,7 @@ localization:
   cmdInfoOwnedAbandoned: '&7Besitzer: &8&l%OWNER% &7(besitzt &a%OWNEDLANDS% &7Länder, &oLand ist verlassen)\n &7Freunde: &6%FRIENDS%\n &7Teleportpunkt: &a%TELEPORT%'
   cmdLandtpIsAbandoned: '&cDieses Land ist verlassen und der Teleport damit nicht mehr zugänglich'
   cmdLandtpMenuEmpty: '&7Keiner der Spieler, die aktuell online sind, stellt einen Teleportpunkt aus, verwende stattdessen &a/landtp <Teleport> &7um dich zu einem dir bereits bekannten Ort zu teleportieren'
+  cmdLandtpMenuItemFormat: '&6&l%TELEPORT%|&r|&a/landtp %TELEPORT%|&7von &e%PLAYER%'
   cmdLandtpMenuNoLongerAvailable: '&cDieser Teleportpunkt ist nicht mehr verfügbar'
   cmdLandtpMenuTitle: '&4&lLand Teleporter &8(/landtp)'
   cmdLandtpOwnTimer: '&7Da du dich zu deinem eigenen Teleportpunkt teleportierst ist die Wartezeit vor dem Teleport erhöht, um die Verwendung als Ersatzhomes einzuschränken'

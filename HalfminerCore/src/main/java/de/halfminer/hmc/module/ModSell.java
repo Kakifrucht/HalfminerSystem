@@ -36,7 +36,6 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 /**
  * - Full dynamic sell system
@@ -198,22 +197,14 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                 unitAmount = String.valueOf(currentUnitAmount);
             }
 
-            String stackData = MessageBuilder.create("modSellMenuStack", hmc)
+            MessageBuilder stackNameAndLore = MessageBuilder.create("modSellMenuStack", hmc)
                     .addPlaceholderReplace("%NAME%", sellable.getMessageName())
                     .addPlaceholderReplace("%MULTIPLIER%", multiplier)
                     .addPlaceholderReplace("%AMOUNT%", unitAmount)
                     .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(sellable.getAmountUntilNextIncrease()))
-                    .addPlaceholderReplace("%SOLDTOTAL%", String.valueOf(sellable.getAmountSoldTotal()))
-                    .returnMessage();
+                    .addPlaceholderReplace("%SOLDTOTAL%", String.valueOf(sellable.getAmountSoldTotal()));
 
-            // itemname - revenue lore - increase lore
-            String[] stackDataSplit = stackData.split(Pattern.quote("|"));
-
-            List<String> lore = new ArrayList<>(Arrays.asList(stackDataSplit).subList(1, stackDataSplit.length));
-
-            Utils.setDisplayName(currentItem, stackDataSplit[0]);
-            Utils.setItemLore(currentItem, lore);
-
+            Utils.applyLocaleToItemStack(stackNameAndLore, currentItem);
             inv.setItem(i + 18, currentItem);
         }
 

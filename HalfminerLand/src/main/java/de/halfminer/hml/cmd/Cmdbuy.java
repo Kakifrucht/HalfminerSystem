@@ -50,11 +50,10 @@ public class Cmdbuy extends LandCommand {
                     if (!player.hasPermission("hml.bypass.minimumCoordinates")) {
 
                         // check if minimum coordinate requirement is met
-                        int chunkMinimumCoordinate = (int) Math.ceil((double) minimumCoordinateInt / 16d);
-                        if (landToBuy.getX() < chunkMinimumCoordinate
-                                && landToBuy.getX() > -chunkMinimumCoordinate
-                                && landToBuy.getZ() < chunkMinimumCoordinate
-                                && landToBuy.getZ() > -chunkMinimumCoordinate) {
+                        if (landToBuy.getXLandCorner() < minimumCoordinateInt
+                                && landToBuy.getXLandCorner() > -minimumCoordinateInt
+                                && landToBuy.getZLandCorner() < minimumCoordinateInt
+                                && landToBuy.getZLandCorner() > -minimumCoordinateInt) {
 
                             MessageBuilder.create("cmdBuyNotBuyableCoordinate", hml)
                                     .addPlaceholderReplace("%MINIMUMCOORDS%", String.valueOf(minimumCoordinateInt))

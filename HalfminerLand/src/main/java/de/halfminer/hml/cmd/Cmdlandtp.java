@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Cmdlandtp extends LandCommand {
@@ -69,8 +68,13 @@ public class Cmdlandtp extends LandCommand {
                     if (teleportLand != null && teleportLand.isOwner(onlinePlayer)) {
 
                         ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-                        Utils.setDisplayName(skull, player.getName());
-                        Utils.setItemLore(skull, Collections.singletonList("§a/" + command + " " + teleport));
+
+                        MessageBuilder displayAndLoreBuilder = MessageBuilder.create("cmdLandtpMenuItemFormat", hml)
+                                .togglePrefix()
+                                .addPlaceholderReplace("%PLAYER%", onlinePlayer.getName())
+                                .addPlaceholderReplace("%TELEPORT%", Utils.makeStringFriendly(teleport));
+
+                        Utils.applyLocaleToItemStack(displayAndLoreBuilder, skull);
 
                         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
                         skullMeta.setOwningPlayer(onlinePlayer);

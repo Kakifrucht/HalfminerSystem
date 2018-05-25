@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 /**
  * Static methods that are shared between other classes
@@ -156,6 +157,26 @@ public final class Utils {
         ItemMeta edit = item.getItemMeta();
         edit.setLore(lore);
         item.setItemMeta(edit);
+    }
+
+    /**
+     * Splits the message from a given {@link MessageBuilder} at the <i>|</i> character and sets
+     * the first value to become the item's displayname, and the rest to become the item lore.
+     *
+     * @param locale MessageBuilder with <i>|</i> character to split at
+     * @param toModify {@link ItemStack} to modify
+     * @return modified ItemStack
+     */
+    public static ItemStack applyLocaleToItemStack(MessageBuilder locale, ItemStack toModify) {
+
+        String[] stackDataSplit = locale.returnMessage().split(Pattern.quote("|"));
+
+        List<String> lore = new ArrayList<>(Arrays.asList(stackDataSplit).subList(1, stackDataSplit.length));
+
+        setDisplayName(toModify, stackDataSplit[0]);
+        setItemLore(toModify, lore);
+
+        return toModify;
     }
 
     /**
