@@ -3,6 +3,7 @@ package de.halfminer.hml.cmd;
 import de.halfminer.hml.data.LandPlayer;
 import de.halfminer.hml.data.LandStorage;
 import de.halfminer.hml.land.Land;
+import de.halfminer.hms.handler.HanMenu;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
@@ -95,14 +96,16 @@ public class Cmdlandtp extends LandCommand {
                 menuInventory.setItem(i, menuSkulls.get(i).getLeft());
             }
 
-            hms.getMenuHandler().openMenu(hml, player, menuInventory, e -> {
+            HanMenu menuHandler = hms.getMenuHandler();
+            menuHandler.openMenu(hml, player, menuInventory, e -> {
 
                 ItemStack clickedItem = e.getCurrentItem();
                 if (clickedItem != null && clickedItem.getType().equals(Material.SKULL_ITEM)) {
 
                     String teleportName = menuSkulls.get(e.getRawSlot()).getRight();
                     player.chat("/" + command + " " + teleportName);
-                    scheduler.runTask(hml, player::closeInventory);
+
+                    menuHandler.closeMenu(player);
                 }
             });
         }

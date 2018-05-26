@@ -218,14 +218,14 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             boolean closeInventory = false;
             if (menuCommands.containsKey(slot)) {
 
+                // execute/close on next tick, to allow other menus to be opened via command
                 scheduler.runTask(hmc, () -> {
                     player.closeInventory();
                     player.chat(menuCommands.get(slot));
                 });
 
             } else if (slot >= 18 && sellMaterialAndReward(slot - 18, player)) {
-                // need to close with delay to prevent glitching out items from menu
-                scheduler.runTask(hmc, player::closeInventory);
+                menuHandler.closeMenu(player);
             }
         };
 

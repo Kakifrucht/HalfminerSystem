@@ -124,7 +124,7 @@ public class Cmdstatstop extends HalfminerCommand {
             // we are trying to find the specified board
             DataType matchingType = null;
             String boardString = args[0].toLowerCase();
-            for (DataType type : DataType.values()) {
+            for (DataType type : topBoardMap.keySet()) {
                 if (type.toString().startsWith(boardString)) {
                     matchingType = type;
                     break;

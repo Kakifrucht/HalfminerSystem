@@ -64,12 +64,11 @@ public class Cmdhml extends LandCommand {
                         totalTeleports++;
                     }
 
-                    if (land.isFreeLand()) {
-                        totalFree++;
-                    }
-
+                    // server land is always free land aswell, don't count it as free land if it is server land
                     if (land.isServerLand()) {
                         totalServer++;
+                    } else if (land.isFreeLand()) {
+                        totalFree++;
                     }
 
                     if (land.isAbandoned()) {

@@ -31,6 +31,11 @@ public class HanMenu extends HalfminerClass {
         menuListener.showMenu(new MenuContainer(menuCreator, player, menu, clickHandler));
     }
 
+    public void closeMenu(Player player) {
+        // need to close with delay to prevent glitching out items from menu
+        scheduler.runTask(hms, player::closeInventory);
+    }
+
     public List<Player> getViewingPlayers(MenuCreator menuCreator) {
         return getMatchingContainers(menuCreator)
                 .stream()
