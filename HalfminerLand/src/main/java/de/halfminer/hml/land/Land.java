@@ -24,6 +24,7 @@ public class Land extends LandClass {
     private static final String STORAGE_TELEPORT = ".teleport";
     private static final String STORAGE_TELEPORT_NAME = ".teleport.name";
     private static final String STORAGE_TELEPORT_LOCATION = ".teleport.location";
+    private static final String STORAGE_TITLE = ".title";
     private static final int CHUNK_SIZE = 16;
 
     private final WorldGuardHelper wgh;
@@ -38,6 +39,8 @@ public class Land extends LandClass {
 
     private String teleportName;
     private Location teleportLocation;
+
+    private String title;
 
     private int playersOnLand;
     private boolean isAbandoned;
@@ -71,6 +74,8 @@ public class Land extends LandClass {
                 teleportName = landSection.getString(STORAGE_TELEPORT_NAME.substring(1));
                 teleportLocation = (Location) landSection.get(STORAGE_TELEPORT_LOCATION.substring(1));
             }
+
+            title = landSection.getString(STORAGE_TITLE.substring(1));
         }
 
         this.isAbandoned = wgh.isMarkedAbandoned(this);
@@ -90,11 +95,11 @@ public class Land extends LandClass {
         return chunk;
     }
 
-    public int getX() {
+    private int getX() {
         return chunk.getX();
     }
 
-    public int getZ() {
+    private int getZ() {
         return chunk.getZ();
     }
 
@@ -181,6 +186,7 @@ public class Land extends LandClass {
             removeTeleport();
             setFreeLand(false);
             setServerLand(false);
+            setTitle(null);
             mapSection.set(path, null);
         }
     }
@@ -261,6 +267,19 @@ public class Land extends LandClass {
 
     public void removeTeleport() {
         setTeleport(null, null);
+    }
+
+    public boolean hasTitle() {
+        return title != null;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+        mapSection.set(path + STORAGE_TITLE, title);
     }
 
     void playerEntered() {

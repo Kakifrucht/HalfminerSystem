@@ -138,6 +138,10 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                         .addPlaceholderReplace("%OWNERLINE%", ownerMessageInTitle)
                         .returnMessage(), 0, 40, 10);
             }
+
+            if (newLand.hasTitle()) {
+                hms.getTitlesHandler().sendActionBar(player, newLand.getTitle());
+            }
         }
     }
 

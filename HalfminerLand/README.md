@@ -16,6 +16,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
 - Shows land status change on chunk move in titles
   - If PvP status was toggled (checks WorldGuard PvP flag)
   - If land owner changed
+  - Custom titles that can be set via */hml customtitle <Title>*
 - If a player has no land and is placing blocks on unprotected land they will be notified about it (notification percentage configurable)
 - **Commands**
   - /land buy [server]
@@ -64,7 +65,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - If no teleport argument is given opens a menu that displays all owned teleports and all teleports owned by other online players
       - Always shows every owned teleport by executing player
     - Teleports into abandoned lands are disabled
-  - /hml \<reload|save|status|forcewgrefresh|free|info>
+  - /hml \<customtitle|forcewgrefresh|free|info|reload|save|status>
     - Reload the configuration
     - Save board data on disk
     - View global land status
@@ -77,3 +78,4 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Lookup other players lands
       - Shows all land coordinates bought by given player and teleport names if applicable
     - Get all land owned by server with */hml info -s*
+    - Specify a custom title for a currently owned land via */hml customtitle [title]*, remove it by using */hml customtitle -c*
