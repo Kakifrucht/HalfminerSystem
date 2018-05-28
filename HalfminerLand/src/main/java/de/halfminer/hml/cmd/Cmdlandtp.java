@@ -120,7 +120,8 @@ public class Cmdlandtp extends LandCommand {
         MessageBuilder displayAndLoreBuilder = MessageBuilder.create(localeKey, hml)
                 .togglePrefix()
                 .addPlaceholderReplace("%PLAYER%", owner.getName())
-                .addPlaceholderReplace("%TELEPORT%", Utils.makeStringFriendly(teleportName));
+                .addPlaceholderReplace("%TELEPORT%", teleportName)
+                .addPlaceholderReplace("%TELEPORTFRIENDLY%", Utils.makeStringFriendly(teleportName));
 
         Utils.applyLocaleToItemStack(displayAndLoreBuilder, skull);
 
