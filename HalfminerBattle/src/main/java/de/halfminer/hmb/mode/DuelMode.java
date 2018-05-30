@@ -134,7 +134,7 @@ public class DuelMode extends AbstractMode {
 
         Player didQuit = e.getPlayer();
         if (pm.isInQueue(type, didQuit)) queue.removeFromQueue(didQuit);
-        else if (pm.isInBattle(type, didQuit)) queue.gameHasFinished(didQuit, true, true);
+        else if (pm.isInBattle(type, didQuit)) queue.gameHasFinished(didQuit, true);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -151,6 +151,6 @@ public class DuelMode extends AbstractMode {
 
         Player died = e.getEntity();
         if (pm.isInQueue(type, died)) queue.removeFromQueue(died);
-        else if (pm.isInBattle(type, died)) queue.gameHasFinished(died, true, false);
+        else if (pm.isInBattle(type, died)) queue.gameHasFinished(died, true);
     }
 }

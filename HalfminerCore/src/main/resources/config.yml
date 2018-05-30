@@ -246,8 +246,8 @@ skillLevel:
   derankThreshold: 16
   #Time until a player will be deranked when he didn't fight in the meantime
   timeUntilDerankDays: 4
-  #Amount of elo points the player will lose on derank
-  derankLossAmount: 250
+  #Percent (as decimal) of elo points the player will lose on derank
+  derankAmountPercent: 0.15
   #Six skillgroups need to be set, first character is the color code, bottom skillgroup is default
   skillGroups:
   - 0Pro

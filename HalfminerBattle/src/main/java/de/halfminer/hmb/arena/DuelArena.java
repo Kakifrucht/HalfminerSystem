@@ -78,7 +78,7 @@ public class DuelArena extends AbstractArena {
                 }
 
                 if (timeLeft <= 0) {
-                    mode.getQueue().gameHasFinished(playerA, false, false);
+                    mode.getQueue().gameHasFinished(playerA, false);
                 }
             }
 

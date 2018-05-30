@@ -33,7 +33,6 @@ import java.util.logging.Level;
 public class ModSkillLevel extends HalfminerModule implements Disableable, Listener {
 
     private static final int LOWEST_BYPASS_LEVEL = 23;
-    private static final int MONTH_IN_SECONDS = 2592000;
     private static final int DAYS_IN_SECONDS = 86400;
 
     private Scoreboard scoreboard;
@@ -44,7 +43,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
     private int derankLevelThreshold;
     private int timeUntilDerankThreshold;
-    private int derankLossAmount;
+    private double derankAmountPercent;
     private String skillgroupNameAdmin;
     private String skillgroupNameNone;
 
@@ -61,9 +60,8 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             if (hPlayer.getInt(DataType.SKILL_LEVEL) >= derankLevelThreshold
                     && hPlayer.getInt(DataType.SKILL_ELO_LAST_CHANGE) + timeUntilDerankThreshold < (System.currentTimeMillis() / 1000)) {
 
-                // set last elo change time to 30 days in the future, to prevent additional inactivity deranks
-                hPlayer.set(DataType.SKILL_ELO_LAST_CHANGE, (System.currentTimeMillis() / 1000) + MONTH_IN_SECONDS);
-                updateSkill(player, derankLossAmount);
+                int skillEloChange = (int) -Math.round((double) hPlayer.getInt(DataType.SKILL_ELO) * derankAmountPercent);
+                updateSkill(player, skillEloChange);
                 MessageBuilder.create("modSkillLevelDerank", hmc, "PvP")
                         .addPlaceholderReplace("%DAYS%", String.valueOf(timeUntilDerankThreshold / DAYS_IN_SECONDS))
                         .sendMessage(player);
@@ -147,8 +145,11 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         scoreboardObjective.getScore(player.getName()).setScore(newLevel);
 
         hPlayer.set(DataType.SKILL_ELO, elo);
-        hPlayer.set(DataType.SKILL_ELO_LAST_CHANGE, System.currentTimeMillis() / 1000);
         hPlayer.set(DataType.SKILL_LEVEL, newLevel);
+
+        if (modifier != 0) {
+            hPlayer.set(DataType.SKILL_ELO_LAST_CHANGE, System.currentTimeMillis() / 1000);
+        }
 
         // Send title/log if necessary
         if (newLevel != level) {
@@ -173,6 +174,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     }
 
     private void updateSkillBypassedPlayer(Player p) {
+
         HalfminerPlayer hPlayer = storage.getPlayer(p);
         int playerLevel = hPlayer.getInt(DataType.SKILL_LEVEL);
         if (playerLevel < LOWEST_BYPASS_LEVEL) {
@@ -205,7 +207,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
         derankLevelThreshold = hmc.getConfig().getInt("skillLevel.derankThreshold", 16);
         timeUntilDerankThreshold = hmc.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
-        derankLossAmount = -hmc.getConfig().getInt("skillLevel.derankLossAmount", 250);
+        derankAmountPercent = hmc.getConfig().getDouble("skillLevel.derankAmountPercent", .15d);
         skillgroupNameAdmin = MessageBuilder.returnMessage("modSkillLevelAdmingroupName", hmc);
         skillgroupNameNone = MessageBuilder.returnMessage("modSkillLevelNoGroup", hmc);
 

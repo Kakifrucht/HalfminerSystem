@@ -377,9 +377,8 @@ public class DuelQueue extends BattleClass {
      *
      * @param playerA   player the game finished for
      * @param hasWinner if true, the given player is the loser of the match
-     * @param hasLogged if true, the given player logged out
      */
-    public void gameHasFinished(Player playerA, boolean hasWinner, boolean hasLogged) {
+    public void gameHasFinished(Player playerA, boolean hasWinner) {
 
         Player winner = pm.getFirstPartner(playerA);
         DuelArena arena = (DuelArena) pm.getArena(playerA);
@@ -393,15 +392,15 @@ public class DuelQueue extends BattleClass {
                 .addPlaceholderReplace("%PLAYER%", winner.getName())
                 .sendMessage(playerA);
 
-        // broadcasting
         if (hasWinner) {
 
-            // player logged out, ensure that winner gets the kill due to logout
-            if (hasLogged && !playerA.isDead()) {
+            // ensure that winner gets the kill
+            if (!playerA.isDead()) {
                 NMSUtils.setKiller(playerA, winner);
                 playerA.setHealth(0.0d);
             }
 
+            // broadcasting
             if (duelMode.doWinBroadcast()) {
                 List<Player> sendTo = server.getOnlinePlayers().stream()
                         .filter(obj -> !(obj.equals(winner) || obj.equals(playerA)))
