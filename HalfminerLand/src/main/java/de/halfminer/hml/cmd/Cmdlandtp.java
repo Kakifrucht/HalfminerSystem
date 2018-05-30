@@ -4,12 +4,13 @@ import de.halfminer.hml.data.LandPlayer;
 import de.halfminer.hml.data.LandStorage;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.HanMenu;
+import de.halfminer.hms.handler.menu.MenuClickHandler;
+import de.halfminer.hms.handler.menu.MenuContainer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -20,7 +21,6 @@ import java.util.List;
 public class Cmdlandtp extends LandCommand {
 
     private static final int OWN_TELEPORT_DELAY_SECONDS = 30;
-    private static final int MENU_ITEMS_PER_ROW = 9;
 
 
     public Cmdlandtp() {
@@ -87,27 +87,26 @@ public class Cmdlandtp extends LandCommand {
                 return;
             }
 
-            int inventorySize = menuSkulls.size();
-            inventorySize += MENU_ITEMS_PER_ROW - (inventorySize % MENU_ITEMS_PER_ROW);
-
             String inventoryTitle = MessageBuilder.returnMessage("cmdLandtpMenuTitle", hml, false);
-            Inventory menuInventory = server.createInventory(player, inventorySize, inventoryTitle);
+            ItemStack[] menuItems = new ItemStack[menuSkulls.size()];
             for (int i = 0; i < menuSkulls.size(); i++) {
-                menuInventory.setItem(i, menuSkulls.get(i).getLeft());
+                menuItems[i] = menuSkulls.get(i).getLeft();
             }
 
             HanMenu menuHandler = hms.getMenuHandler();
-            menuHandler.openMenu(hml, player, menuInventory, e -> {
-
+            MenuClickHandler menuClickHandler = (e, rawSlot) -> {
                 ItemStack clickedItem = e.getCurrentItem();
                 if (clickedItem != null && clickedItem.getType().equals(Material.SKULL_ITEM)) {
 
-                    String teleportName = menuSkulls.get(e.getRawSlot()).getRight();
+                    String teleportName = menuSkulls.get(rawSlot).getRight();
                     player.chat("/" + command + " " + teleportName);
 
                     menuHandler.closeMenu(player);
                 }
-            });
+            };
+
+            MenuContainer menuContainer = new MenuContainer(hml, player, inventoryTitle, menuItems, menuClickHandler);
+            menuHandler.openMenu(menuContainer);
         }
     }
 
@@ -123,7 +122,7 @@ public class Cmdlandtp extends LandCommand {
                 .addPlaceholderReplace("%TELEPORT%", teleportName)
                 .addPlaceholderReplace("%TELEPORTFRIENDLY%", Utils.makeStringFriendly(teleportName));
 
-        Utils.applyLocaleToItemStack(displayAndLoreBuilder, skull);
+        Utils.applyLocaleToItemStack(skull, displayAndLoreBuilder);
 
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwningPlayer(owner);

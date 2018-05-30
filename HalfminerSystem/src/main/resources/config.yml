@@ -1,5 +1,13 @@
 #HalfminerSystem Config
 handler:
+  menu:
+    #How many menu items until pagination controls are added to a menu
+    slotsUntilPagination: 45
+    paginationControls:
+      #Number between 0-8, defines on which slot on the pagination controls the previous page button will be
+      previous: 0
+      #Number between 0-8, defines on which slot on the pagination controls the next page button will be
+      next: 8
   storage:
     #Time in minutes the storage will be autosaving
     autoSaveMinutes: 15
@@ -40,6 +48,8 @@ localization:
   hanStorageNameChange: '&e%OLDNAME% &bhat den Namen zu &a%NAME% &bgewechselt'
   hanStorageSaveSuccessful: 'Die Daten wurden gespeichert'
   hanStorageSaveUnsuccessful: 'Die Daten konnten nicht gespeichert werden'
+  hanMenuPageStackNext: '&6Nächste Seite|&r|&fAktuelle Seite: &a%PAGE%&7/&o%PAGECOUNT%'
+  hanMenuPageStackPrevious: '&6Vorherige Seite|&r|&fAktuelle Seite: &a%PAGE%&7/&o%PAGECOUNT%'
   hanTeleportBar: 'Teleport im Gange, bleibe still stehen...'
   hanTeleportDone: '&7Teleportiere...'
   hanTeleportMoved: '&cTeleport abgebrochen, du hast dich bewegt'

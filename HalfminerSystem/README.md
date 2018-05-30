@@ -63,8 +63,10 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
   - Menu
     - Opens inventory based menus, classes must implement ``MenuCreator`` interface to create them
       - Get all currently opened menus that were created by a given ``MenuCreator``
-    - Prevents removing items from said menu
-    - Classes implement ``MenuClickHandler`` to handle inventory interaction
+    - Prevents entering/removing items from menu
+    - Classes can optionally pass a ``MenuClickHandler`` to handle inventory interaction
+    - Automatically adds pagination, previous/next page buttons will be added if necessary
+      - Pagination constants can be configured, such as items per page
   - Storage
     - Data stored in YAML flatfiles
       - Player data storage

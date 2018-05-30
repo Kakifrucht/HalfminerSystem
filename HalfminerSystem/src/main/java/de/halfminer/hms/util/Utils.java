@@ -163,11 +163,11 @@ public final class Utils {
      * Splits the message from a given {@link MessageBuilder} at the <i>|</i> character and sets
      * the first value to become the item's displayname, and the rest to become the item lore.
      *
-     * @param locale MessageBuilder with <i>|</i> character to split at
      * @param toModify {@link ItemStack} to modify
+     * @param locale MessageBuilder with <i>|</i> character to split at
      * @return modified ItemStack
      */
-    public static ItemStack applyLocaleToItemStack(MessageBuilder locale, ItemStack toModify) {
+    public static ItemStack applyLocaleToItemStack(ItemStack toModify, MessageBuilder locale) {
 
         String[] stackDataSplit = locale.returnMessage().split(Pattern.quote("|"));
 

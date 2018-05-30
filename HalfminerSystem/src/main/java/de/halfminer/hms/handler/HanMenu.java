@@ -6,7 +6,6 @@ import de.halfminer.hms.handler.menu.MenuContainer;
 import de.halfminer.hms.handler.menu.MenuCreator;
 import de.halfminer.hms.handler.menu.MenuListener;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,8 +13,9 @@ import java.util.stream.Collectors;
 /**
  * - Opens inventory based menus, classes must implement {@link MenuCreator} interface to create them
  *   - Get all currently opened menus that were created by a given {@link MenuCreator}
- * - Prevents removing items from said menu
- * - Classes implement {@link MenuClickHandler} to handle inventory interaction
+ * - Prevents entering/removing items from menu
+ * - Classes can optionally pass a {@link MenuClickHandler} to handle inventory interaction
+ * - Automatically adds pagination, previous/next page buttons will be added if necessary
  */
 @SuppressWarnings("unused")
 public class HanMenu extends HalfminerClass {
@@ -27,13 +27,26 @@ public class HanMenu extends HalfminerClass {
         this.menuListener = new MenuListener();
     }
 
-    public void openMenu(MenuCreator menuCreator, Player player, Inventory menu, MenuClickHandler clickHandler) {
-        menuListener.showMenu(new MenuContainer(menuCreator, player, menu, clickHandler));
+    /**
+     * Open a menu wrapped in a {@link MenuContainer} for a given player.
+     * The menu will be protected from item theft.
+     * @param menuContainer that contains the necessary menu data
+     */
+    public void openMenu(MenuContainer menuContainer) {
+        menuListener.showMenu(menuContainer);
     }
 
+    /**
+     * Calls {@link MenuContainer#closeMenu()} of a given player, only if a menu is opened.
+     *
+     * @param player to close the active menu from
+     */
     public void closeMenu(Player player) {
-        // need to close with delay to prevent glitching out items from menu
-        scheduler.runTask(hms, player::closeInventory);
+
+        MenuContainer menuContainer = menuListener.getPlayerMenuContainer(player);
+        if (menuContainer != null) {
+            menuContainer.closeMenu();
+        }
     }
 
     public List<Player> getViewingPlayers(MenuCreator menuCreator) {

@@ -65,7 +65,11 @@ public class HalfminerSystem extends JavaPlugin {
 
             boolean reloadAll = args.length > 1 && args[1].equalsIgnoreCase("-a");
             for (Plugin plugin : manager.getManagedPlugins()) {
-                if (!reloadAll && !plugin.equals(this)) continue;
+
+                if (!reloadAll && !plugin.equals(this)) {
+                    continue;
+                }
+
                 manager.reloadOcurred(plugin);
                 MessageBuilder.create("pluginReloaded", "HMS")
                         .addPlaceholderReplace("%PLUGINNAME%", plugin.getName())

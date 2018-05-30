@@ -9,6 +9,7 @@ import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.cache.exceptions.ItemCacheException;
 import de.halfminer.hms.handler.hooks.HookException;
 import de.halfminer.hms.handler.menu.MenuClickHandler;
+import de.halfminer.hms.handler.menu.MenuContainer;
 import de.halfminer.hms.handler.menu.MenuCreator;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
@@ -144,13 +145,13 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         }
 
         SellCycle currentCycle = sellableMap.getCurrentCycle();
-        Inventory inv = server.createInventory(player, 45, MessageBuilder.returnMessage("modSellMenuTitle", hmc));
+        ItemStack[] menuItems = new ItemStack[45];
 
         // top line (menu controls), first prefill first line with stained glass
         ItemStack spacer = new ItemStack(Material.STAINED_GLASS_PANE);
         Utils.setDisplayName(spacer, ChatColor.RESET.toString());
         for (int slot = 0; slot < 9; slot++) {
-            inv.setItem(slot, spacer);
+            menuItems[slot] = spacer;
         }
 
         // read menu items in first line from customitem cache
@@ -163,7 +164,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             for (int i = 0; i < 9; i++) {
                 String key = "sellmenu-" + (i + 1);
                 try {
-                    inv.setItem(i, itemCache.getItem(key, player, 1, placeholders));
+                    menuItems[i] = itemCache.getItem(key, player, 1, placeholders);
                 } catch (ItemCacheException e) {
                     if (e.getReason().equals(ItemCacheException.Reason.ITEM_SYNTAX_ERROR)) {
                         MessageBuilder.create("modSellMenuSyntaxError")
@@ -204,32 +205,33 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                     .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(sellable.getAmountUntilNextIncrease()))
                     .addPlaceholderReplace("%SOLDTOTAL%", String.valueOf(sellable.getAmountSoldTotal()));
 
-            Utils.applyLocaleToItemStack(stackNameAndLore, currentItem);
-            inv.setItem(i + 18, currentItem);
+            Utils.applyLocaleToItemStack(currentItem, stackNameAndLore);
+            menuItems[i + 18] = currentItem;
         }
 
-        MenuClickHandler menuClickHandler = e -> {
-            int slot = e.getRawSlot();
+        String menuTitle = MessageBuilder.returnMessage("modSellMenuTitle", hmc);
+        MenuClickHandler menuClickHandler = (e, rawSlot) -> {
 
             if (e.getRawSlot() != e.getSlot()) {
                 return;
             }
 
             boolean closeInventory = false;
-            if (menuCommands.containsKey(slot)) {
+            if (menuCommands.containsKey(rawSlot)) {
 
                 // execute/close on next tick, to allow other menus to be opened via command
                 scheduler.runTask(hmc, () -> {
                     player.closeInventory();
-                    player.chat(menuCommands.get(slot));
+                    player.chat(menuCommands.get(rawSlot));
                 });
 
-            } else if (slot >= 18 && sellMaterialAndReward(slot - 18, player)) {
+            } else if (rawSlot >= 18 && sellMaterialAndReward(rawSlot - 18, player)) {
                 menuHandler.closeMenu(player);
             }
         };
 
-        menuHandler.openMenu(this, player, inv, menuClickHandler);
+        MenuContainer menuContainer = new MenuContainer(this, player, menuTitle, menuItems, menuClickHandler);
+        menuHandler.openMenu(menuContainer);
     }
 
     public boolean toggleAutoSell(Player player) {
