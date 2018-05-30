@@ -27,33 +27,23 @@ public class MenuListener extends HalfminerClass implements Disableable, Sweepab
         if (e.getWhoClicked() instanceof Player) {
 
             Player whoClicked = (Player) e.getWhoClicked();
-            if (menuMap.containsKey(whoClicked)) {
+            MenuContainer menuContainer = getPlayerMenuContainer(whoClicked);
+            if (menuContainer != null) {
 
-                MenuContainer container = menuMap.get(whoClicked);
-                if (container.isOpened()) {
+                e.setCancelled(true);
 
-                    e.setCancelled(true);
+                if (menuContainer.isPaginated()) {
 
-                    boolean handleClick = true;
-                    if (container.isPaginated()) {
-
-                        if (e.getRawSlot() == container.getPreviousPageRawSlot()) {
-                            container.showMenuPrevious();
-                            handleClick = false;
-                        } else if (e.getRawSlot() == container.getNextPageRawSlot()) {
-                            container.showMenuNext();
-                            handleClick = false;
-                        }
+                    if (e.getRawSlot() == menuContainer.getPreviousPageRawSlot()) {
+                        menuContainer.showMenuPrevious();
+                        return;
+                    } else if (e.getRawSlot() == menuContainer.getNextPageRawSlot()) {
+                        menuContainer.showMenuNext();
+                        return;
                     }
-
-                    // don't handle click if pagination buttons were pressed
-                    if (handleClick) {
-                        container.handleClick(e);
-                    }
-
-                } else {
-                    menuMap.remove(whoClicked);
                 }
+
+                menuContainer.handleClick(e);
             }
         }
     }
@@ -86,6 +76,8 @@ public class MenuListener extends HalfminerClass implements Disableable, Sweepab
             MenuContainer menuContainer = menuMap.get(player);
             if (menuContainer.isOpened()) {
                 return menuContainer;
+            } else {
+                menuMap.remove(player);
             }
         }
 

@@ -44,7 +44,6 @@ public class MenuContainer {
 
     public MenuContainer(MenuCreator menuCreator, Player player,
                          String title, ItemStack[] menuItems, MenuClickHandler clickHandler) {
-        super();
         this.menuCreator = menuCreator;
         this.plugin = menuCreator.getPlugin();
         this.player = player;
@@ -115,7 +114,7 @@ public class MenuContainer {
                 inventory.setItem(i, rowPane);
             }
 
-            // add necessary butons
+            // add necessary buttons
             ItemStack paginationButtonStack = new ItemStack(Material.STAINED_GLASS_PANE);
             paginationButtonStack.setDurability((short) 14);
             if (hasPreviousPage()) {
@@ -133,22 +132,18 @@ public class MenuContainer {
         player.openInventory(inventory);
     }
 
+    private MessageBuilder getPaginationMessageBuilder(String langKey) {
+        return MessageBuilder.create(langKey, HalfminerSystem.getInstance())
+                .addPlaceholderReplace("%PAGE%", String.valueOf(getCurrentPage()))
+                .addPlaceholderReplace("%PAGECOUNT%", String.valueOf(getPageCount()));
+    }
+
     int getPreviousPageRawSlot() {
-
-        if (!hasPreviousPage()) {
-            return -1;
-        }
-
-        return previousPageRawSlot;
+        return hasPreviousPage() ? previousPageRawSlot : -1;
     }
 
     int getNextPageRawSlot() {
-
-        if (!hasNextPage()) {
-            return -1;
-        }
-
-        return nextPageRawSlot;
+        return hasNextPage() ? nextPageRawSlot : -1;
     }
 
     void showMenuPrevious() {
@@ -171,12 +166,6 @@ public class MenuContainer {
 
     boolean isOpened() {
         return !this.currentInventory.getViewers().isEmpty();
-    }
-
-    private MessageBuilder getPaginationMessageBuilder(String langKey) {
-        return MessageBuilder.create(langKey, HalfminerSystem.getInstance())
-                .addPlaceholderReplace("%PAGE%", String.valueOf(getCurrentPage()))
-                .addPlaceholderReplace("%PAGECOUNT%", String.valueOf(getPageCount()));
     }
 
     private int getCurrentPage() {

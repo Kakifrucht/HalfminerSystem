@@ -29,7 +29,7 @@ public class HanMenu extends HalfminerClass {
 
     /**
      * Open a menu wrapped in a {@link MenuContainer} for a given player.
-     * The menu will be protected from item theft.
+     *
      * @param menuContainer that contains the necessary menu data
      */
     public void openMenu(MenuContainer menuContainer) {
