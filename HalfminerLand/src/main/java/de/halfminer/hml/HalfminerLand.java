@@ -83,6 +83,9 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
                 case "teleport":
                     landCommand = new Cmdteleport();
                     break;
+                case "list":
+                    landCommand = new Cmdlist();
+                    break;
                 default:
                     showUsage(sender);
                     return true;

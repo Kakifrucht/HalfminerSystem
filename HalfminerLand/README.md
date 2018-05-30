@@ -59,13 +59,19 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - Max amount of teleports per player configurable (permission for unlimited teleports available)
       - Purchased teleport is globally accessible via */landtp*
     - Bypass permission for operators to be able to delete any teleport available
+  - /land list [player]
+    - Opens a menu that shows all owned lands, their world, coordinates and teleport names (if applicable)
+      - Shows lands with teleport at the front
+    - Can be called from console, which will output a non menu based list
+    - Lookup other players lands, requires permission
+      - List all land owned by server with */land list -s*
   - /landtp [teleport]
     - Teleport to a public teleport point
       - If player owns the teleport point a delay will be added to prevent teleports being used as private homes (bypass available)
     - If no teleport argument is given opens a menu that displays all owned teleports and all teleports owned by other online players
       - Always shows every owned teleport by executing player
     - Teleports into abandoned lands are disabled
-  - /hml \<customtitle|forcewgrefresh|free|info|reload|save|status>
+  - /hml \<customtitle|forcewgrefresh|free|reload|save|status>
     - Reload the configuration
     - Save board data on disk
     - View global land status
@@ -73,9 +79,6 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
         - Per world breakdown
       - Total amount of teleports
       - Total amount of free and abandoned land
-    - Forces all WorldGuard regions to be regenerated (could take a while)
+    - Forces all WorldGuard regions to be regenerated (can take a while)
     - See the current free land amount a player can buy or change it
-    - Lookup other players lands
-      - Shows all land coordinates bought by given player and teleport names if applicable
-    - Get all land owned by server with */hml info -s*
     - Specify a custom title for a currently owned land via */hml customtitle [title]*, remove it by using */hml customtitle -c*

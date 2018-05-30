@@ -68,7 +68,7 @@ public class Cmdfriend extends LandCommand {
 
             Set<Land> lands = doForAll ? board.getLands(player) : board.getConnectedLand(land);
             if (lands.size() == 0) {
-                MessageBuilder.create("cmdFriendNoLandOwned", hml).sendMessage(player);
+                MessageBuilder.create("noLandOwned", hml).sendMessage(player);
                 return;
             }
 

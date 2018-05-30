@@ -39,9 +39,6 @@ public class Cmdhml extends LandCommand {
             case "free":
                 free();
                 break;
-            case "info":
-                info();
-                break;
             case "reload":
                 reload();
                 break;
@@ -151,67 +148,6 @@ public class Cmdhml extends LandCommand {
                 .addPlaceholderReplace("%SETFREE%", String.valueOf(setTo))
                 .sendMessage(sender);
     }
-
-    private void info() {
-        if (args.length < 2) {
-            showUsage();
-            return;
-        }
-
-        Set<Land> lands;
-        String landOwner;
-
-        if (args[1].equalsIgnoreCase("-s")) {
-
-            lands = board.getLandsOfServer();
-            landOwner = hml.getConfig().getString("serverName");
-
-        } else {
-            try {
-                HalfminerPlayer hPlayer = hms.getStorageHandler().getPlayer(args[1]);
-                lands = board.getLands(hPlayer);
-                landOwner = hPlayer.getName();
-            } catch (PlayerNotFoundException e) {
-                e.sendNotFoundMessage(player, "Land");
-                return;
-            }
-        }
-
-        if (lands.isEmpty()) {
-            MessageBuilder.create("cmdHmlInfoPlayerNoLand", hml)
-                    .addPlaceholderReplace("%PLAYER%", landOwner)
-                    .sendMessage(sender);
-        } else {
-
-            int teleportCount = 0;
-            StringBuilder landListStringBuilder = new StringBuilder();
-            for (Land land : lands) {
-
-                MessageBuilder toAppendBuilder = MessageBuilder
-                        .create("cmdHmlInfoPlayerLandFormat" + (land.hasTeleportLocation() ? "Teleport" : ""), hml)
-                        .addPlaceholderReplace("%WORLD%", land.getWorld().getName())
-                        .addPlaceholderReplace("%X%", String.valueOf(land.getXLandCorner()))
-                        .addPlaceholderReplace("%Z%", String.valueOf(land.getZLandCorner()));
-
-                if (land.hasTeleportLocation()) {
-                    toAppendBuilder.addPlaceholderReplace("%TELEPORT%", land.getTeleportName());
-                    teleportCount++;
-                }
-
-                landListStringBuilder
-                        .append(toAppendBuilder.togglePrefix().returnMessage())
-                        .append(" ");
-            }
-
-            MessageBuilder.create("cmdHmlInfoPlayer", hml)
-                    .addPlaceholderReplace("%PLAYER%", landOwner)
-                    .addPlaceholderReplace("%TELEPORTAMOUNT%", String.valueOf(teleportCount))
-                    .addPlaceholderReplace("%LANDAMOUNT%", String.valueOf(lands.size()))
-                    .addPlaceholderReplace("%LANDLIST%", landListStringBuilder.toString().trim())
-                    .sendMessage(sender);
-        }
-    }
-
 
     private void reload() {
         hml.reload();

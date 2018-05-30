@@ -31,6 +31,8 @@ permissions:
       - hml.cmd.hml
       - hml.cmd.info
       - hml.cmd.landtp
+      - hml.cmd.list
+      - hml.cmd.list.others
       - hml.cmd.sell
       - hml.cmd.sell.force
       - hml.cmd.teleport
@@ -76,6 +78,11 @@ permissions:
   hml.cmd.landtp:
     description: Grants access to /landtp command
     default: true
+  hml.cmd.list:
+    description: Grants access to /land list command
+    default: true
+  hml.cmd.list.others:
+    description: Access to list other player land
   hml.cmd.sell:
     description: Grants access to /land sell command
     default: true

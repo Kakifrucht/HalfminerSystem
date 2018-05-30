@@ -162,7 +162,7 @@ public class Land extends LandClass {
     public String getOwnerName() {
 
         if (hasOwner()) {
-            return isServerLand ? hml.getConfig().getString("serverName", "Server") : owner.getName();
+            return isServerLand ? hml.getConfig().getString("serverName", "") : owner.getName();
         }
 
         return MessageBuilder.returnMessage("noOwner", hml, false);
