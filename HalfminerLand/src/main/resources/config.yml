@@ -105,7 +105,7 @@ localization:
   cmdLandtpMenuItemFormatNotShown: '&f&6&l%TELEPORTFRIENDLY%|&r|&a/landtp %TELEPORT%|&7&oDieser Teleport ist nicht|&7&oausgestellt und wird|&7&onur dir angezeigt'
   cmdLandtpMenuTitle: '&4&lLand Teleporter &8(/landtp)'
   cmdLandtpOwnTimer: '&7Da du dich zu deinem eigenen Teleportpunkt teleportierst ist die Wartezeit vor dem Teleport erhöht, um die Verwendung als Ersatzhomes einzuschränken'
-  cmdListAsText: '&a%PLAYER% &7besitzt &b%LANDAMOUNT% &7Länder und &b%TELEPORTAMOUNT% &7Teleportpunkte.\n Länderliste: %LANDLIST%'
+  cmdListAsText: '&a%PLAYER% &7besitzt &b%LANDAMOUNT% &7Länder.\n Länderliste: %LANDLIST%'
   cmdListAsTextFormat: '&6%WORLD%&7|&ex%X%&7|&ez%Z%'
   cmdListAsTextFormatTeleport: '&6%WORLD%&7|&ex%X%&7|&ez%Z%&7|&etp&b&o%TELEPORT%'
   cmdListMenuLandEntry: '&fX: &a%X% &fZ: &a%Z%|&r|&7Welt: &a%WORLD%'

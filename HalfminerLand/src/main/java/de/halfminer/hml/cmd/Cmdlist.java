@@ -57,7 +57,9 @@ public class Cmdlist extends LandCommand implements MenuCreator {
         }
 
         if (ownedLands.isEmpty()) {
-            MessageBuilder.create("noLandOwned" + (isLookup ? "Player" : ""), hml).sendMessage(sender);
+            MessageBuilder.create("noLandOwned" + (isLookup ? "Player" : ""), hml)
+                    .addPlaceholderReplace("%PLAYER%", name)
+                    .sendMessage(sender);
             return;
         }
 
@@ -111,9 +113,8 @@ public class Cmdlist extends LandCommand implements MenuCreator {
             MenuContainer menuContainer = new MenuContainer(this, player, menuTitle, menuItems);
             hms.getMenuHandler().openMenu(menuContainer);
 
-        } else {
+        } else /* sender is not player, show as text */ {
 
-            int teleportCount = 0;
             StringBuilder landListStringBuilder = new StringBuilder();
             for (Land land : sortedLandList) {
 
@@ -125,7 +126,6 @@ public class Cmdlist extends LandCommand implements MenuCreator {
 
                 if (land.hasTeleportLocation()) {
                     toAppendBuilder.addPlaceholderReplace("%TELEPORT%", land.getTeleportName());
-                    teleportCount++;
                 }
 
                 landListStringBuilder
@@ -135,7 +135,6 @@ public class Cmdlist extends LandCommand implements MenuCreator {
 
             MessageBuilder.create("cmdListAsText", hml)
                     .addPlaceholderReplace("%PLAYER%", name)
-                    .addPlaceholderReplace("%TELEPORTAMOUNT%", String.valueOf(teleportCount))
                     .addPlaceholderReplace("%LANDAMOUNT%", String.valueOf(sortedLandList.size()))
                     .addPlaceholderReplace("%LANDLIST%", landListStringBuilder.toString().trim())
                     .sendMessage(sender);
