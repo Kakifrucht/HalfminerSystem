@@ -112,6 +112,7 @@ public class ModStats extends HalfminerModule implements Listener, Sweepable {
 
             MessageBuilder.create("modStatsDeathLog", hmc)
                     .addPlaceholderReplace("%PLAYER%", victim.getName())
+                    .addPlaceholderReplace("%CAUSE%", victim.getLastDamageCause().getCause().toString())
                     .logMessage(Level.INFO);
         }
     }
