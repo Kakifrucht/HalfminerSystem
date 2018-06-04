@@ -248,6 +248,10 @@ skillLevel:
   timeUntilDerankDays: 4
   #Percent (as decimal) of elo points the player will lose on derank
   derankAmountPercent: 0.15
+  #ELO modifier if both players have the same ELO
+  eloModifierSameLevel: 80
+  #Level difference until ELO will be defaulted to +1 and -1, killer must be higher level than victim
+  maxLevelDifference: 14
   #Six skillgroups need to be set, first character is the color code, bottom skillgroup is default
   skillGroups:
   - 0Pro

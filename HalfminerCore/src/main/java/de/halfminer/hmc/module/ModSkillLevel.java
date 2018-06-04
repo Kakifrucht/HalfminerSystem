@@ -1,11 +1,12 @@
 package de.halfminer.hmc.module;
 
 import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
+import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,6 +35,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
     private static final int LOWEST_BYPASS_LEVEL = 23;
     private static final int DAYS_IN_SECONDS = 86400;
+    private static final double ELO_MULTIPLIER = 0.0155d;
+    private static final String SCOREBOARD_OBJECTIVE_NAME = "skill";
+    private static final String SCOREBOARD_TEAM_NAME = "Team";
 
     private Scoreboard scoreboard;
 
@@ -44,6 +48,10 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     private int derankLevelThreshold;
     private int timeUntilDerankThreshold;
     private double derankAmountPercent;
+
+    private int eloModifierSameLevel;
+    private int maxLevelDifference;
+
     private String skillgroupNameAdmin;
     private String skillgroupNameNone;
 
@@ -86,17 +94,26 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             HalfminerPlayer hVictim = storage.getPlayer(victim);
 
             // Prevent grinding
-            if (((ModAntiKillfarming) hmc.getModule(ModuleType.ANTI_KILLFARMING)).isNotRepeatedKill(killer, victim)) {
+            ModAntiKillfarming antiKillfarming = (ModAntiKillfarming) hmc.getModule(ModuleType.ANTI_KILLFARMING);
+            if (antiKillfarming.isNotRepeatedKill(killer, victim)) {
 
                 // Calculate skill modifier
+                int killerElo = hKiller.getInt(DataType.SKILL_ELO);
                 int killerLevel = hKiller.getInt(DataType.SKILL_LEVEL);
-                int victimLevel = hVictim.getInt(DataType.SKILL_LEVEL);
-                int killerVictimDifference = killerLevel - victimLevel;
-                int modifier = ((killerVictimDifference * 3) - 65) * -1;
-                if (killerVictimDifference >= 10 && modifier >= 4) modifier /= 4;
 
-                updateSkill(killer, modifier);
-                updateSkill(victim, -modifier);
+                int victimElo = hVictim.getInt(DataType.SKILL_ELO);
+                int victimLevel = hVictim.getInt(DataType.SKILL_LEVEL);
+
+                int killerVictimDifferenceLevel = killerLevel - victimLevel;
+                int killerVictimDifferenceElo = killerElo - victimElo;
+
+                int eloModifier = (((int) Math.round(killerVictimDifferenceElo * ELO_MULTIPLIER)) - eloModifierSameLevel) * -1;
+                if (killerVictimDifferenceLevel >= maxLevelDifference) {
+                    eloModifier = 1;
+                }
+
+                updateSkill(killer, eloModifier);
+                updateSkill(victim, -eloModifier);
             }
         }
     }
@@ -205,9 +222,14 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     @Override
     public void loadConfig() {
 
-        derankLevelThreshold = hmc.getConfig().getInt("skillLevel.derankThreshold", 16);
-        timeUntilDerankThreshold = hmc.getConfig().getInt("skillLevel.timeUntilDerankDays", 4) * 24 * 60 * 60;
-        derankAmountPercent = hmc.getConfig().getDouble("skillLevel.derankAmountPercent", .15d);
+        ConfigurationSection config = hmc.getConfig().getConfigurationSection("skillLevel");
+        derankLevelThreshold = config.getInt("derankThreshold", 16);
+        timeUntilDerankThreshold = config.getInt("timeUntilDerankDays", 4) * 24 * 60 * 60;
+        derankAmountPercent = config.getDouble("derankAmountPercent", .15d);
+
+        eloModifierSameLevel = config.getInt("eloModifierSameLevel", 80);
+        maxLevelDifference = config.getInt("maxLevelDifference", 10);
+
         skillgroupNameAdmin = MessageBuilder.returnMessage("modSkillLevelAdmingroupName", hmc);
         skillgroupNameNone = MessageBuilder.returnMessage("modSkillLevelNoGroup", hmc);
 
@@ -219,16 +241,16 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         }
 
         // register skilllevel objective
-        scoreboardObjective = scoreboard.getObjective("skill");
+        scoreboardObjective = scoreboard.getObjective(SCOREBOARD_OBJECTIVE_NAME);
         if (scoreboardObjective == null) {
-            scoreboardObjective = scoreboard.registerNewObjective("skill", "dummy");
+            scoreboardObjective = scoreboard.registerNewObjective(SCOREBOARD_OBJECTIVE_NAME, "dummy");
         }
         scoreboardObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
         // register player teams
         scoreboardTeamNames = new ArrayList<>(Collections.nCopies(22, null));
         int sortId = 1;
-        for (String skillGroup : hmc.getConfig().getStringList("skillLevel.skillGroups")) {
+        for (String skillGroup : config.getStringList("skillGroups")) {
 
             if (sortId > 22) break;
 
@@ -255,7 +277,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         }
 
         // register staff teams
-        int amountTeamGroups = hmc.getConfig().getInt("skillLevel.amountTeamGroups", 3);
+        int amountTeamGroups = config.getInt("amountTeamGroups", 3);
         scoreboardTeamNamesStaff = new ArrayList<>(Collections.nCopies(amountTeamGroups, null));
 
         for (int i = 0; i < amountTeamGroups; i++) {
@@ -263,7 +285,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             while (indexToString.length() < 3) {
                 indexToString.insert(0, '0');
             }
-            String teamName = indexToString + "Team";
+            String teamName = indexToString + SCOREBOARD_TEAM_NAME;
             Team registered;
             if ((registered = scoreboard.getTeam(teamName)) == null) {
                 registered = scoreboard.registerNewTeam(teamName);
