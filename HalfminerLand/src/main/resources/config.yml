@@ -43,6 +43,8 @@ teleport:
   price: 10
   # Specify the price to move the teleport
   priceMove: 5
+  # Specify which material to use when server land was pinned
+  pinnedTeleportServerLandMaterial: DIAMOND_BLOCK
 # Use '&' as color code
 # Lines starting with '~' will be parsed to make commands clickable, close the command with another '/' (like /help/)
 # Messages can be removed by simply setting the message to nothing ('')
@@ -88,12 +90,16 @@ localization:
   cmdHmlCustomTitleSet: '&7Folgender Title wurde &aerfolgreich &7gesetzt:\n&r%TITLE%'
   cmdHmlFreeSet: '&e%PLAYER%''s &7maximale freie Länder wurde von &b%CURRENTFREE% &7auf &o%HASFREE%&7/&a%SETFREE% &7gesetzt'
   cmdHmlFreeShow: '&e%PLAYER% &7hat &b%HASFREE%&7/&o%CURRENTFREE% &7freien Ländern'
+  cmdHmlPinTpNotFound: '&cDieser Teleportpunkt existiert nicht'
+  cmdHmlPinTpPinned: '&a%TELEPORT% &7wurde erfolgreich angepinnt'
+  cmdHmlPinTpRemoved: '&a%TELEPORT% &7wurde erfolgreich entpinnt'
+  cmdHmlPinTpUnknownMaterial: '&cDas Material existiert nicht'
   cmdHmlRefreshDone: '&aAlle Regionen wurden erneuert'
   cmdHmlRefreshStarted: '&7Starte WorldGuard Regions Erneuerung, dies kann kurz dauern...'
   cmdHmlSave: '&aDie Land Daten wurden gespeichert'
   cmdHmlStatus: '&6&lLänder mit Besitzer:\n &7Gesamt: &b%TOTALLANDS% &7(&okostenlos&7: &b%TOTALFREE%&7, &oServer&7: &b%TOTALSERVER%&7, &overlassen&7: &b%TOTALABANDONED%&7)\n Teleportpunkte: &b%TOTALTELEPORTS%\n &7Je Welt: %TOTALWORLDLIST%'
   cmdHmlStatusWorldListEntry: '&e%WORLD%&7-&b%AMOUNT%'
-  cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml customtitle <Titel|-c>\n /hml forcewgrefresh\n /hml free <Spieler> [Wert]\n /land buy server\n /land sell force\n /land teleport delete <Teleport>\n /land list <Spieler|-s>'
+  cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml customtitle <Titel|-c>\n /hml forcewgrefresh\n /hml free <Spieler> [Wert]\n /hml pintp <Teleport>\n /land buy server\n /land sell force\n /land teleport delete <Teleport>\n /land list <Spieler|-s>'
   cmdInfoFree: '~&7Dieses Land ist frei, verwende &a/land buy/ &7zum kaufen'
   cmdInfoNoFriends: '&fKeine hinzugefügt'
   cmdInfoNoTeleport: '&fKeiner gesetzt'
@@ -103,6 +109,7 @@ localization:
   cmdLandtpMenuEmpty: '&7Keiner der Spieler, die aktuell online sind, stellt einen Teleportpunkt aus, verwende stattdessen &a/landtp <Teleport> &7um dich zu einem dir bereits bekannten Ort zu teleportieren'
   cmdLandtpMenuItemFormat: '&6&l%TELEPORTFRIENDLY%|&r|&a/landtp %TELEPORT%|&7von &e%PLAYER%'
   cmdLandtpMenuItemFormatNotShown: '&f&6&l%TELEPORTFRIENDLY%|&r|&a/landtp %TELEPORT%|&7&oDieser Teleport ist nicht|&7&oausgestellt und wird|&7&onur dir angezeigt'
+  cmdLandtpMenuItemFormatPinned: '&6&l%TELEPORTFRIENDLY%|&e✪ Angepinnt|&r|&a/landtp %TELEPORT%|&7von &e%PLAYER%'
   cmdLandtpMenuTitle: '&4&lLand Teleporter &8(/landtp)'
   cmdLandtpOwnTimer: '&7Da du dich zu deinem eigenen Teleportpunkt teleportierst ist die Wartezeit vor dem Teleport erhöht, um die Verwendung als Ersatzhomes einzuschränken'
   cmdListAsText: '&a%PLAYER% &7besitzt &b%LANDAMOUNT% &7Länder.\n Länderliste: %LANDLIST%'

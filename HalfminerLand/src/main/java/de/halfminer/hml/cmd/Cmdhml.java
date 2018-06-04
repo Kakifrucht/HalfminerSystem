@@ -2,16 +2,17 @@ package de.halfminer.hml.cmd;
 
 import de.halfminer.hml.WorldGuardHelper;
 import de.halfminer.hml.data.LandPlayer;
+import de.halfminer.hml.data.LandStorage;
+import de.halfminer.hml.data.PinnedTeleport;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
+import org.bukkit.Material;
 import org.bukkit.World;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Cmdhml extends LandCommand {
@@ -38,6 +39,9 @@ public class Cmdhml extends LandCommand {
                 break;
             case "free":
                 free();
+                break;
+            case "pintp":
+                pinTp();
                 break;
             case "reload":
                 reload();
@@ -146,6 +150,52 @@ public class Cmdhml extends LandCommand {
                 .addPlaceholderReplace("%HASFREE%", String.valueOf(hasFreeAmount))
                 .addPlaceholderReplace("%CURRENTFREE%", String.valueOf(setFreeAmount))
                 .addPlaceholderReplace("%SETFREE%", String.valueOf(setTo))
+                .sendMessage(sender);
+    }
+
+    private void pinTp() {
+
+        if (args.length < 2) {
+            showUsage();
+            return;
+        }
+
+        Land land = board.getLandFromTeleport(args[1]);
+        if (land == null) {
+            MessageBuilder.create("cmdHmlPinTpNotFound", hml).sendMessage(sender);
+            return;
+        }
+
+        LandStorage landStorage = hml.getLandStorage();
+
+        // check for removal
+        List<PinnedTeleport> pinnedTeleports = landStorage.getPinnedTeleportList();
+        for (PinnedTeleport pinnedTeleport : new ArrayList<>(pinnedTeleports)) {
+            if (pinnedTeleport.getTeleport().equals(land.getTeleportName())) {
+
+                pinnedTeleports.remove(pinnedTeleport);
+                landStorage.setPinnedTeleportList(pinnedTeleports);
+
+                MessageBuilder.create("cmdHmlPinTpRemoved", hml)
+                        .addPlaceholderReplace("%TELEPORT%", land.getTeleportName())
+                        .sendMessage(sender);
+                return;
+            }
+        }
+
+        Material material = null;
+        if (args.length > 2) {
+            material = Material.matchMaterial(args[2]);
+            if (material == null) {
+                MessageBuilder.create("cmdHmlPinTpUnknownMaterial", hml).sendMessage(sender);
+                return;
+            }
+        }
+
+        pinnedTeleports.add(new PinnedTeleport(land, material));
+        landStorage.setPinnedTeleportList(pinnedTeleports);
+        MessageBuilder.create("cmdHmlPinTpPinned", hml)
+                .addPlaceholderReplace("%TELEPORT%", land.getTeleportName())
                 .sendMessage(sender);
     }
 

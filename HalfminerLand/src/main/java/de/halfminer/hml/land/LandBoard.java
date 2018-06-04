@@ -138,7 +138,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
 
     @Override
     public Land getLandFromTeleport(String teleportName) {
-        return landMap.getLandFromTeleport(teleportName);
+        return landMap.getLandFromTeleport(teleportName.toLowerCase());
     }
 
     @Override
