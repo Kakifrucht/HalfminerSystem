@@ -190,12 +190,9 @@ class DefaultSellable implements Sellable {
         long unitAmount = valueNextIncreasePair.getLeft();
         int amountUntilNextIncrease = valueNextIncreasePair.getRight();
 
-        // if necessary, call recursively while changing base price
-        boolean callRecursively = false;
         int amountSoldPartial = amountSold;
         if (amountSoldPartial > amountUntilNextIncrease) {
             amountSoldPartial = amountUntilNextIncrease;
-            callRecursively = true;
         }
 
         double revenue = amountSoldPartial / (double) unitAmount;
@@ -208,7 +205,8 @@ class DefaultSellable implements Sellable {
         amountSoldMap.put(hasSold.getUniqueId(), amountSoldTotalPlayer);
         this.amountSoldTotal += amountSoldPartial;
 
-        if (callRecursively) {
+        if (amountSold > amountSoldPartial) {
+            // if necessary, call recursively while unitAmount changes for next call
             return revenue + getRevenue(hasSold, amountSold - amountSoldPartial);
         } else {
             return revenue;
