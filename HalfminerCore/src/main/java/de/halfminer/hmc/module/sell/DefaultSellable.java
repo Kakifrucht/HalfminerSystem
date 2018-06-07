@@ -1,23 +1,19 @@
 package de.halfminer.hmc.module.sell;
 
-import de.halfminer.hmc.CoreClass;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /**
  * Default implementation of {@link Sellable}.
  */
-class DefaultSellable extends CoreClass implements Sellable {
+class DefaultSellable implements Sellable {
 
     private final SellableGroup group;
     private final Material material;
@@ -26,23 +22,20 @@ class DefaultSellable extends CoreClass implements Sellable {
 
     private final int baseUnitAmount;
 
-    private Map<UUID, Integer> amountSoldBy;
-    private long currentUnitAmount;
-    private int amountUntilNextIncrease;
+    private Map<UUID, Integer> amountSoldMap;
     private int amountSoldTotal;
 
 
     DefaultSellable(SellableGroup group, Material material, short durability, String messageName, int baseUnitAmount) {
-        super(false);
 
         this.group = group;
-
         this.material = material;
         this.durability = durability;
         this.messageName = messageName;
 
         this.baseUnitAmount = baseUnitAmount;
-        doRandomReset();
+
+        doReset();
     }
 
     @Override
@@ -62,15 +55,47 @@ class DefaultSellable extends CoreClass implements Sellable {
 
     @Override
     public String getStateString() {
-        return currentUnitAmount + " " + amountUntilNextIncrease + " " + amountSoldTotal;
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<UUID, Integer> uuidIntegerEntry : amountSoldMap.entrySet()) {
+            sb.append(uuidIntegerEntry.getKey().toString())
+                    .append(" ")
+                    .append(uuidIntegerEntry.getValue())
+                    .append(" ");
+        }
+
+        if (sb.toString().endsWith(" ")) {
+            sb.setLength(sb.length() - 1);
+        }
+
+        return sb.toString();
     }
 
     @Override
     public void setState(String state) {
+
+        doReset();
+
         StringArgumentSeparator separator = new StringArgumentSeparator(state);
-        currentUnitAmount = separator.getArgumentInt(0);
-        amountUntilNextIncrease = separator.getArgumentInt(1);
-        amountSoldTotal = separator.getArgumentInt(2);
+        for (int i = 0; separator.meetsLength(i + 2); i += 2) {
+
+            UUID uuid;
+            try {
+                uuid = UUID.fromString(separator.getArgument(i));
+            } catch (IllegalArgumentException e) {
+                // invalid format, don't recover state
+                return;
+            }
+
+            int amount = separator.getArgumentInt(i + 1);
+            if (amount == Integer.MIN_VALUE) {
+                return;
+            }
+
+            amountSoldMap.put(uuid, amount);
+        }
+
+        computeAmountSoldTotal();
     }
 
     @Override
@@ -79,18 +104,43 @@ class DefaultSellable extends CoreClass implements Sellable {
     }
 
     @Override
-    public Map<UUID, Integer> getAmountSoldBy() {
-        return amountSoldBy;
+    public Map<UUID, Integer> getAmountSoldMap() {
+        return amountSoldMap;
     }
 
     @Override
-    public long getCurrentUnitAmount() {
-        return currentUnitAmount;
+    public long getCurrentUnitAmount(Player player) {
+        return getUnitAmountAndAmountUntilIncrease(player).getLeft();
     }
 
     @Override
-    public int getAmountUntilNextIncrease() {
-        return amountUntilNextIncrease;
+    public int getAmountUntilNextIncrease(Player player) {
+        return getUnitAmountAndAmountUntilIncrease(player).getRight();
+    }
+
+    private Pair<Long, Integer> getUnitAmountAndAmountUntilIncrease(Player player) {
+
+        int amountSold = amountSoldMap.getOrDefault(player.getUniqueId(), 0);
+
+        long currentUnitAmount = baseUnitAmount;
+        int amountUntilIncrease = baseUnitAmount * group.getUnitsUntilIncrease();
+
+        amountUntilIncrease -= amountSold;
+
+        // update price if necessary
+        while (amountUntilIncrease <= 0) {
+
+            long newUnitAmount = Math.round((double) currentUnitAmount * group.getPriceAdjustMultiplier());
+            // ensure that unit amount increases by one, at least
+            if (newUnitAmount == currentUnitAmount) {
+                newUnitAmount++;
+            }
+
+            currentUnitAmount = newUnitAmount;
+            amountUntilIncrease += (baseUnitAmount * group.getUnitsUntilIncrease());
+        }
+
+        return new Pair<>(currentUnitAmount, amountUntilIncrease);
     }
 
     @Override
@@ -99,21 +149,9 @@ class DefaultSellable extends CoreClass implements Sellable {
     }
 
     @Override
-    public void doRandomReset() {
-
-        Random rnd = new Random();
-        double priceVarianceFactor = group.getPriceVarianceFactor();
-
-        double factorRandomized = rnd.nextDouble() * priceVarianceFactor;
-        if (rnd.nextBoolean()) {
-            factorRandomized = -factorRandomized;
-        }
-
-        priceVarianceFactor = 1.0d + factorRandomized;
-        this.currentUnitAmount = (int) Math.round(priceVarianceFactor * (double) baseUnitAmount);
-        this.amountUntilNextIncrease = (int) currentUnitAmount * group.getUnitsUntilIncrease();
-        amountSoldTotal = 0;
-        amountSoldBy = new HashMap<>();
+    public void doReset() {
+        amountSoldMap = new HashMap<>();
+        computeAmountSoldTotal();
     }
 
     @Override
@@ -123,10 +161,8 @@ class DefaultSellable extends CoreClass implements Sellable {
 
     @Override
     public void copyStateFromSellable(Sellable toCopy) {
-        this.amountSoldBy = toCopy.getAmountSoldBy();
-        this.currentUnitAmount = toCopy.getCurrentUnitAmount();
-        this.amountUntilNextIncrease = toCopy.getAmountUntilNextIncrease();
-        this.amountSoldTotal = toCopy.getAmountSoldTotal();
+        this.amountSoldMap = toCopy.getAmountSoldMap();
+        computeAmountSoldTotal();
     }
 
     @Override
@@ -150,44 +186,39 @@ class DefaultSellable extends CoreClass implements Sellable {
     @Override
     public double getRevenue(Player hasSold, int amountSold) {
 
-        double revenue = amountSold / (double) currentUnitAmount;
+        Pair<Long, Integer> valueNextIncreasePair = getUnitAmountAndAmountUntilIncrease(hasSold);
+        long unitAmount = valueNextIncreasePair.getLeft();
+        int amountUntilNextIncrease = valueNextIncreasePair.getRight();
 
-        // update price if necessary
-        amountUntilNextIncrease -= amountSold;
-        amountSoldTotal += amountSold;
-        while (amountUntilNextIncrease <= 0) {
-
-            long newUnitAmount = Math.round((double) currentUnitAmount * group.getPriceAdjustMultiplier());
-            if (newUnitAmount == currentUnitAmount) {
-                newUnitAmount++;
-            }
-
-            currentUnitAmount = newUnitAmount;
-            amountUntilNextIncrease += (baseUnitAmount * group.getUnitsUntilIncrease());
-
-            hasSold.playSound(hasSold.getLocation(), Sound.BLOCK_NOTE_HARP, 1.0f, 1.2f);
-
-            MessageBuilder mb = MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
-                    .addPlaceholderReplace("%NAME%", messageName)
-                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(currentUnitAmount));
-            mb.sendMessage(hasSold);
-            mb.logMessage(Level.INFO);
+        // if necessary, call recursively while changing base price
+        boolean callRecursively = false;
+        int amountSoldPartial = amountSold;
+        if (amountSoldPartial > amountUntilNextIncrease) {
+            amountSoldPartial = amountUntilNextIncrease;
+            callRecursively = true;
         }
 
-        // update non persistent storage that holds information who sold how much of this sellable
-        if (amountSoldBy.containsKey(hasSold.getUniqueId())) {
-            int newAmount = amountSoldBy.get(hasSold.getUniqueId()) + amountSold;
-            amountSoldBy.put(hasSold.getUniqueId(), newAmount);
+        double revenue = amountSoldPartial / (double) unitAmount;
+
+        // update total amount of player
+        int amountSoldTotalPlayer = amountSoldPartial;
+        if (amountSoldMap.containsKey(hasSold.getUniqueId())) {
+            amountSoldTotalPlayer += amountSoldMap.get(hasSold.getUniqueId());
+        }
+        amountSoldMap.put(hasSold.getUniqueId(), amountSoldTotalPlayer);
+        this.amountSoldTotal += amountSoldPartial;
+
+        if (callRecursively) {
+            return revenue + getRevenue(hasSold, amountSold - amountSoldPartial);
         } else {
-            amountSoldBy.put(hasSold.getUniqueId(), amountSold);
+            return revenue;
         }
-        return revenue;
     }
 
     @Override
     public Map.Entry<UUID, Integer> soldMostBy() {
         Map.Entry<UUID, Integer> soldMost = null;
-        for (Map.Entry<UUID, Integer> uuidIntegerEntry : amountSoldBy.entrySet()) {
+        for (Map.Entry<UUID, Integer> uuidIntegerEntry : amountSoldMap.entrySet()) {
             if (soldMost == null || uuidIntegerEntry.getValue() > soldMost.getValue()) {
                 soldMost = uuidIntegerEntry;
             }
@@ -197,6 +228,13 @@ class DefaultSellable extends CoreClass implements Sellable {
 
     @Override
     public String toString() {
-        return messageName + " (" + material.toString() + ") - " + currentUnitAmount + "/" + amountUntilNextIncrease;
+        return messageName + " (" + material.toString() + ")";
+    }
+
+    private void computeAmountSoldTotal() {
+        this.amountSoldTotal = 0;
+        for (Integer amountSold : amountSoldMap.values()) {
+            amountSoldTotal += amountSold;
+        }
     }
 }

@@ -13,6 +13,4 @@ interface SellableGroup {
     int getUnitsUntilIncrease();
 
     double getPriceAdjustMultiplier();
-
-    double getPriceVarianceFactor();
 }

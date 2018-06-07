@@ -8,10 +8,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 public interface MenuClickHandler {
 
     /**
-     * Called when a {@link InventoryClickEvent} was fired on a menu.
-     * The given takes menu pagination into account.
+     * Called when a {@link InventoryClickEvent} was fired while a menu was opened.
+     * The given rawSlot takes menu pagination into account, whereas {@link InventoryClickEvent#getRawSlot()} does not.
      * Example: If menu is on page 3 and {@link InventoryClickEvent#getRawSlot()} returned 2,
-     * rawSlot would be 2 + (3 * slotsPerPage).
+     * rawSlot parameter would be 2 + ((3 - 1) * slotsPerPage).
      *
      * @param clickEvent click event that triggers the method invocation
      * @param rawSlot slot that keeps track of current paginated slot

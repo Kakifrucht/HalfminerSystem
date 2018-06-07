@@ -24,17 +24,17 @@ public interface Sellable {
 
     int getBaseUnitAmount();
 
-    Map<UUID, Integer> getAmountSoldBy();
+    Map<UUID, Integer> getAmountSoldMap();
 
-    long getCurrentUnitAmount();
+    long getCurrentUnitAmount(Player player);
 
-    int getAmountUntilNextIncrease();
+    int getAmountUntilNextIncrease(Player player);
 
     int getAmountSoldTotal();
 
     void setState(String state);
 
-    void doRandomReset();
+    void doReset();
 
     boolean isSimiliar(Sellable sellable);
 

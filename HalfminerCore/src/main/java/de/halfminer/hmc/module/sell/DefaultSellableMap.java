@@ -85,20 +85,16 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             int amountPerCycle = separator.getArgumentIntMinimum(1, 1);
             int unitsUntilIncrease = 100;
             double priceAdjustMultiplier = 1.5d;
-            double priceVarianceFactor = 0.0d;
 
             if (separator.meetsLength(3)) {
                 unitsUntilIncrease = separator.getArgumentIntMinimum(2, 1);
                 if (separator.meetsLength(4)) {
                     priceAdjustMultiplier = separator.getArgumentDoubleMinimum(3, 1.0d);
-                    if (separator.meetsLength(5)) {
-                        priceVarianceFactor = Math.min(separator.getArgumentDoubleMinimum(4, 0.0d), 0.9d);
-                    }
                 }
             }
 
             SellableGroup newGroup = new DefaultSellableGroup(
-                    groupName, amountPerCycle, unitsUntilIncrease, priceAdjustMultiplier, priceVarianceFactor
+                    groupName, amountPerCycle, unitsUntilIncrease, priceAdjustMultiplier
             );
             groups.put(groupName, newGroup);
         }
@@ -275,7 +271,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
                 }
             }
 
-            currentCycle.getSellables().forEach(Sellable::doRandomReset);
+            currentCycle.getSellables().forEach(Sellable::doReset);
         }
 
         // dynamically determine time until next cycle

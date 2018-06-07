@@ -10,17 +10,14 @@ class DefaultSellableGroup implements SellableGroup {
     private final int amountPerCycle;
     private final int unitsUntilIncrease;
     private final double priceAdjustMultiplier;
-    private final double priceVarianceFactor;
 
 
-    DefaultSellableGroup(String groupName, int amountPerCycle, int unitsUntilIncrease,
-                         double priceAdjustMultiplier, double priceVarianceFactor) {
+    DefaultSellableGroup(String groupName, int amountPerCycle, int unitsUntilIncrease, double priceAdjustMultiplier) {
 
         this.groupName = groupName;
         this.amountPerCycle = amountPerCycle;
         this.unitsUntilIncrease = unitsUntilIncrease;
         this.priceAdjustMultiplier = priceAdjustMultiplier;
-        this.priceVarianceFactor = priceVarianceFactor;
     }
 
     @Override
@@ -41,11 +38,6 @@ class DefaultSellableGroup implements SellableGroup {
     @Override
     public double getPriceAdjustMultiplier() {
         return priceAdjustMultiplier;
-    }
-
-    @Override
-    public double getPriceVarianceFactor() {
-        return priceVarianceFactor;
     }
 
     @Override

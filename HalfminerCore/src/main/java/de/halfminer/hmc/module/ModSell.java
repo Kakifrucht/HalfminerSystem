@@ -185,7 +185,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             Sellable sellable = sellables.get(i);
             ItemStack currentItem = sellable.getItemStack();
 
-            long currentUnitAmount = sellable.getCurrentUnitAmount();
+            long currentUnitAmount = sellable.getCurrentUnitAmount(player);
             int baseUnitAmount = sellable.getBaseUnitAmount();
 
             String unitAmount;
@@ -202,7 +202,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                     .addPlaceholderReplace("%NAME%", sellable.getMessageName())
                     .addPlaceholderReplace("%MULTIPLIER%", multiplier)
                     .addPlaceholderReplace("%AMOUNT%", unitAmount)
-                    .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(sellable.getAmountUntilNextIncrease()))
+                    .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(sellable.getAmountUntilNextIncrease(player)))
                     .addPlaceholderReplace("%SOLDTOTAL%", String.valueOf(sellable.getAmountSoldTotal()));
 
             Utils.applyLocaleToItemStack(currentItem, stackNameAndLore);
@@ -288,7 +288,22 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         double multiplier = getMultiplier(toReward);
         double highestMultiplier = levelRewardMultipliers.get(levelRewardMultipliers.size() - 1);
 
+        long unitAmount = sold.getCurrentUnitAmount(toReward);
         double baseRevenue = sold.getRevenue(toReward, amount);
+
+        // notify of unit amount change
+        long unitAmountAfterSell = sold.getCurrentUnitAmount(toReward);
+        if (unitAmount < unitAmountAfterSell) {
+            toReward.playSound(toReward.getLocation(), Sound.BLOCK_NOTE_HARP, 1.0f, 1.2f);
+
+            MessageBuilder mb = MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
+                    .addPlaceholderReplace("%NAME%", sold.getMessageName())
+                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(unitAmountAfterSell));
+
+            mb.sendMessage(toReward);
+            mb.logMessage(Level.INFO);
+        }
+
         double revenue = baseRevenue * multiplier;
         double potentialRevenueLost = (highestMultiplier * baseRevenue) - revenue;
 
