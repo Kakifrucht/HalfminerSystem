@@ -88,8 +88,8 @@ public class MenuContainer {
         }
     }
 
-    boolean isPaginated() {
-        return isPaginated;
+    boolean isPaginationSlot(int rawSlot) {
+        return isPaginated && rawSlot >= slotsUntilPagination;
     }
 
     void showMenu() {

@@ -65,6 +65,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Can be called from console, which will output a non menu based list
     - Lookup other players lands, requires permission
       - List all land owned by server with */land list -s*
+    - Teleport to a land by clicking on it, will mark the chunk with particles after teleport (requires permission)
   - /landtp [teleport]
     - Teleport to a public teleport point
       - If player owns the teleport point a delay will be added to prevent teleports being used as private homes (bypass available)

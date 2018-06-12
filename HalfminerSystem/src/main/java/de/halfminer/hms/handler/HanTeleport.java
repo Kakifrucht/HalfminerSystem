@@ -39,6 +39,10 @@ public class HanTeleport extends HalfminerClass implements Reloadable {
         startTeleport(player, loc, delay, true, null, null);
     }
 
+    public void startTeleport(Player player, Location loc, Runnable toRun, Runnable toRunIfCancelled) {
+        startTeleport(player, loc, defaultTime, true, toRun, toRunIfCancelled);
+    }
+
     public void startTeleport(final Player player, final Location loc, final int delay, boolean setLastLocation,
                               Runnable toRun, Runnable toRunIfCancelled) {
 

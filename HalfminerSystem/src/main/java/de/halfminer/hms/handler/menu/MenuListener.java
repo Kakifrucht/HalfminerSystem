@@ -32,15 +32,15 @@ public class MenuListener extends HalfminerClass implements Disableable, Sweepab
 
                 e.setCancelled(true);
 
-                if (menuContainer.isPaginated()) {
+                if (menuContainer.isPaginationSlot(e.getRawSlot())) {
 
                     if (e.getRawSlot() == menuContainer.getPreviousPageRawSlot()) {
                         menuContainer.showMenuPrevious();
-                        return;
                     } else if (e.getRawSlot() == menuContainer.getNextPageRawSlot()) {
                         menuContainer.showMenuNext();
-                        return;
                     }
+
+                    return;
                 }
 
                 menuContainer.handleClick(e);

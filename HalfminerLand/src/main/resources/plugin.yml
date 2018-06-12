@@ -33,6 +33,7 @@ permissions:
       - hml.cmd.landtp
       - hml.cmd.list
       - hml.cmd.list.others
+      - hml.cmd.list.teleport
       - hml.cmd.sell
       - hml.cmd.sell.force
       - hml.cmd.teleport
@@ -83,6 +84,8 @@ permissions:
     default: true
   hml.cmd.list.others:
     description: Access to list other player land
+  hml.cmd.list.teleport:
+    description: Teleport to land by clicking the land in list GUI
   hml.cmd.sell:
     description: Grants access to /land sell command
     default: true
