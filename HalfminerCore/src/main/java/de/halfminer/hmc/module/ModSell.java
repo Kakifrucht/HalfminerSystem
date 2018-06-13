@@ -296,12 +296,10 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         if (unitAmount < unitAmountAfterSell) {
             toReward.playSound(toReward.getLocation(), Sound.BLOCK_NOTE_HARP, 1.0f, 1.2f);
 
-            MessageBuilder mb = MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
+            MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
                     .addPlaceholderReplace("%NAME%", sold.getMessageName())
-                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(unitAmountAfterSell));
-
-            mb.sendMessage(toReward);
-            mb.logMessage(Level.INFO);
+                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(unitAmountAfterSell))
+                    .sendMessage(toReward);
         }
 
         double revenue = baseRevenue * multiplier;
