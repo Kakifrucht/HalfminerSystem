@@ -130,7 +130,7 @@ class DefaultSellable implements Sellable {
         // update price if necessary
         while (amountUntilIncrease <= 0) {
 
-            long newUnitAmount = Math.round((double) currentUnitAmount * group.getPriceAdjustMultiplier());
+            long newUnitAmount = currentUnitAmount + Math.round((double) baseUnitAmount * group.getPriceAdjustMultiplier());
             // ensure that unit amount increases by one, at least
             if (newUnitAmount == currentUnitAmount) {
                 newUnitAmount++;
