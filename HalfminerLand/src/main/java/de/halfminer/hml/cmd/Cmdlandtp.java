@@ -104,14 +104,23 @@ public class Cmdlandtp extends LandCommand {
             }
 
             if (!pinnedTeleports.isEmpty()) {
+
+                ItemStack stackFill =new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 4);
+                ItemStack stackBar = new ItemStack(Material.STAINED_GLASS_PANE, 1);
+                Utils.setDisplayName(stackFill, " ");
+                Utils.setDisplayName(stackBar, " ");
+
+                Pair<ItemStack, String> pairFill = new Pair<>(stackFill, "");
+                Pair<ItemStack, String> pairBar = new Pair<>(stackBar, "");
+
                 // fill up line if necessary
                 while (menuEntries.size() % INVENTORY_SLOTS_PER_LINE != 0) {
-                    menuEntries.add(null);
+                    menuEntries.add(pairFill);
                 }
 
                 // add spacer line between pins and playerskulls
                 for (int i = 0; i < INVENTORY_SLOTS_PER_LINE; i++) {
-                    menuEntries.add(null);
+                    menuEntries.add(pairBar);
                 }
             }
 
@@ -161,9 +170,11 @@ public class Cmdlandtp extends LandCommand {
                 if (clickedItem != null && !clickedItem.getType().equals(Material.AIR)) {
 
                     String teleportName = menuEntries.get(rawSlot).getRight();
-                    player.chat("/" + command + " " + teleportName);
+                    if (!teleportName.isEmpty()) {
+                        player.chat("/" + command + " " + teleportName);
 
-                    menuHandler.closeMenu(player);
+                        menuHandler.closeMenu(player);
+                    }
                 }
             };
 
