@@ -58,6 +58,9 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - Custom cost for buy and set configurable
       - Max amount of teleports per player configurable (permission for unlimited teleports available)
       - Purchased teleport is globally accessible via */landtp*
+    - Teleports for abandoned land can optionally be stolen
+    - Max/min length for teleport name configurable, no special characters for teleports (bypass permission available)
+    - Blacklist for teleport names (bypass permission available)
     - Bypass permission for operators to be able to delete any teleport available
   - /land list [player]
     - Opens a menu that shows all owned lands, their world, coordinates and teleport names (if applicable)
@@ -79,7 +82,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - Shows pinned teleports in top line of menu with enchantment effect
         - Pinned teleports are always visible, even if owning player is offline
         - Default material for server land can be configured
-    - Teleports into abandoned lands are disabled
+    - Teleports into abandoned lands are disabled, if teleport stealing is enabled shows command to steal teleport name
   - /hml \<customtitle|forcewgrefresh|flytime|free|pintp|reload|save|status>
     - Reload the configuration
     - Save board data on disk

@@ -7,6 +7,8 @@ import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 
+import java.util.List;
+
 public class Cmdteleport extends LandCommand {
 
 
@@ -36,17 +38,44 @@ public class Cmdteleport extends LandCommand {
         if (args[0].equalsIgnoreCase("buy")) {
 
             if (teleportLand != null) {
-                MessageBuilder.create("cmdTeleportBuyAlreadyExists" + (teleportLand.isOwner(player) ? "Owned" : ""), hml)
-                        .addPlaceholderReplace("%TELEPORT%", teleportLand.getTeleportName())
-                        .sendMessage(player);
-                return;
+
+                boolean isStealingEnabled = hml.getConfig().getBoolean("teleport.allowStealingAbandoned", false);
+                if (isStealingEnabled && teleportLand.isAbandoned()) {
+                    teleportLand.removeTeleport();
+                } else {
+                    MessageBuilder.create("cmdTeleportBuyAlreadyExists" + (teleportLand.isOwner(player) ? "Owned" : ""), hml)
+                            .addPlaceholderReplace("%TELEPORT%", teleportLand.getTeleportName())
+                            .sendMessage(player);
+                    return;
+                }
             }
 
-            if (teleportName.length() < 4
-                    || teleportName.length() > 15
-                    || !CharMatcher.ascii().matchesAllOf(teleportName)) {
-                MessageBuilder.create("cmdTeleportBuyNameFormat", hml).sendMessage(player);
-                return;
+            if (!player.hasPermission("hml.bypass.teleportblacklist")) {
+                List<String> blacklist = hml.getConfig().getStringList("teleport.name.blacklist");
+
+                for (String blacklistedName : blacklist) {
+                    if (blacklistedName.equalsIgnoreCase(teleportName)) {
+                        MessageBuilder.create("cmdTeleportBuyBlacklisted", hml).sendMessage(player);
+                        return;
+                    }
+                }
+            }
+
+            if (!player.hasPermission("hml.bypass.teleportlength")) {
+
+                int minLength = hml.getConfig().getInt("teleport.name.minLength", 4);
+                int maxLength = hml.getConfig().getInt("teleport.name.maxLength", 15);
+
+                if (teleportName.length() < minLength
+                        || teleportName.length() > maxLength
+                        || !CharMatcher.ascii().matchesAllOf(teleportName)) {
+
+                    MessageBuilder.create("cmdTeleportBuyNameFormat", hml)
+                            .addPlaceholderReplace("%MINLENGTH%", minLength)
+                            .addPlaceholderReplace("%MAXLENGTH%", maxLength)
+                            .sendMessage(player);
+                    return;
+                }
             }
 
             if (!land.isOwner(player)) {

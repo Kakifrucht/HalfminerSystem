@@ -50,6 +50,8 @@ permissions:
       - hml.bypass.friendlimit
       - hml.bypass.landtptimer
       - hml.bypass.minimumCoordinates
+      - hml.bypass.teleportblacklist
+      - hml.bypass.teleportlength
   hml.bypass.breakplace:
     description: Bypasses block break and placement protection
   hml.bypass.disabledWorld:
@@ -62,6 +64,10 @@ permissions:
     description: Bypasses teleport delay when teleporting via landtp to owned land
   hml.bypass.minimumCoordinates:
     description: Bypasses the minimum coordinates set to purchase a land
+  hml.bypass.teleportblacklist:
+    description: Bypasses teleport name blacklist set in config
+  hml.bypass.teleportlength:
+    description: Bypasses minimum/maximum length requirements set in config when buying a teleport
   hml.cmd.buy:
     description: Grants access to /land buy command
     default: true

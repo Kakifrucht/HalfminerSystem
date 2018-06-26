@@ -41,6 +41,19 @@ priceFormula:
 # Will be used as owner name for land bought for the server via /land buy server
 serverName: 'Halfminer.de'
 teleport:
+  name:
+    # Teleport names that cannot be bought, teleport names must be between 4 and 15 characters
+    #  Bypass permission is 'hml.bypass.teleportblacklist'
+    blacklist:
+    - admin
+    - adminshop
+    - shop
+    # Minimum teleport name length, bypass permission is 'hml.bypass.teleportlength'
+    minLength: 4
+    # Maximum teleport name length, bypass permission is 'hml.bypass.teleportlength'
+    maxLength: 15
+  # If set to true players can steal a teleport name when the land is currently abandoned
+  allowStealingAbandoned: false
   # Specify how many teleports a player can buy via /land teleport buy,
   #  Bypass permission is 'hml.cmd.teleport.unlimited'
   maxAmount: 3
@@ -117,6 +130,7 @@ localization:
   cmdInfoOwned: '&7Besitzer: &6&l%OWNER% &7(besitzt &a%OWNEDLANDS% &7Länder)\n &7Freunde: &6%FRIENDS%\n &7Teleportpunkt: &a%TELEPORT%'
   cmdInfoOwnedAbandoned: '&7Besitzer: &8&l%OWNER% &7(besitzt &a%OWNEDLANDS% &7Länder, &oLand ist verlassen)\n &7Freunde: &6%FRIENDS%\n &7Teleportpunkt: &a%TELEPORT%'
   cmdLandtpIsAbandoned: '&cDieses Land ist verlassen und der Teleport damit nicht mehr zugänglich'
+  cmdLandtpIsAbandonedSteal: '~&cDieses Land ist verlassen und der Teleport damit nicht mehr zugänglich&7, du kannst den Teleportpunkt mit &a/land teleport buy %NAME%/ &7klauen'
   cmdLandtpMenuEmpty: '&7Keiner der Spieler, die aktuell online sind, stellt einen Teleportpunkt aus, verwende stattdessen &a/landtp <Teleport> &7um dich zu einem dir bereits bekannten Ort zu teleportieren'
   cmdLandtpMenuItemFormat: '&6&l%TELEPORTFRIENDLY%|&r|&a/landtp %TELEPORT%|&7von &e%PLAYER%'
   cmdLandtpMenuItemFormatNotShown: '&f&6&l%TELEPORTFRIENDLY%|&r|&a/landtp %TELEPORT%|&7&oDieser Teleport ist nicht|&7&oausgestellt und wird|&7&onur dir angezeigt'
@@ -142,8 +156,9 @@ localization:
   cmdSellSuccessServer: '&7Das Serverland wurde erfolgreich wieder &cfreigegeben'
   cmdTeleportBuyAlreadyExists: '&cDieser Teleportpunkt ist bereits vergeben'
   cmdTeleportBuyAlreadyExistsOwned: '~&cDieser Teleportpunkt ist bereits vergeben, setze ihn neu mit &a/land teleport set %TELEPORT%/'
+  cmdTeleportBuyBlacklisted: '&cDieser Teleportpunkt steht nicht zum Verkauf, bitte wähle einen anderen Namen'
   cmdTeleportBuyLimitReached: '&cDu hast die maximale Anzahl an Teleportpunkten (Limit: &a%LIMIT%&c) bereits erreicht'
-  cmdTeleportBuyNameFormat: '&cDer Teleportpunkt muss zwischen 4 und 15 Zeichen enthalten und darf keine Sonderzeichen enthalten'
+  cmdTeleportBuyNameFormat: '&cDer Teleportpunkt muss zwischen %MINLENGTH% und %MAXLENGTH% Zeichen enthalten und darf keine Sonderzeichen enthalten'
   cmdTeleportBuySuccess: '~&7Du hast den Teleportpunkt &a%TELEPORT% &7erfolgreich für &b&l%COST% HCs &7gekauft, welcher über &a/landtp %TELEPORT%/ &7öffentlich erreichbar ist. &c&lAchtung: &7Beachte unbedingt die &a/regeln/ &7bezüglich Teleportpunkten (Kurzfassung: Sichere Umgebung schaffen, keine Fallen, keine Lava Kills, ...)'
   cmdTeleportDeleteSuccess: '&7Du hast den Teleportpunkt &e%TELEPORT% &7erfolgreich entfernt'
   cmdTeleportLandAlreadyHasTeleport: '&cDieses Land hat bereits einen Teleportpunkt (&e%TELEPORT%&c)'

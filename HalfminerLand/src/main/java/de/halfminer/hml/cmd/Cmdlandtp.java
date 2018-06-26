@@ -43,11 +43,15 @@ public class Cmdlandtp extends LandCommand {
         }
 
         if (args.length > 0) {
-            Land teleportTo = board.getLandFromTeleport(args[0].toLowerCase());
+            String teleportName = args[0].toLowerCase();
+            Land teleportTo = board.getLandFromTeleport(teleportName);
             if (teleportTo != null) {
 
                 if (teleportTo.isAbandoned()) {
-                    MessageBuilder.create("cmdLandtpIsAbandoned", hml).sendMessage(player);
+                    boolean isStealingEnabled = hml.getConfig().getBoolean("teleport.allowStealingAbandoned", false);
+                    MessageBuilder.create("cmdLandtpIsAbandoned" + (isStealingEnabled ? "Steal" : ""), hml)
+                            .addPlaceholderReplace("%NAME%", teleportName)
+                            .sendMessage(player);
                 } else {
 
                     if (teleportTo.isOwner(player) && !player.hasPermission("hml.bypass.landtptimer")) {
