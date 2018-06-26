@@ -127,7 +127,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
             if (getFromList >= rankNameAndMultiplierPairs.size()) {
                 MessageBuilder send = MessageBuilder.create("cmdRankInvalidUpgradeParam", hmc, "Rank")
                         .addPlaceholderReplace("%PLAYER%", player.getName())
-                        .addPlaceholderReplace("%UPGRADEAMOUNT%", String.valueOf(upgradeAmount));
+                        .addPlaceholderReplace("%UPGRADEAMOUNT%", upgradeAmount);
                 sendAndLogMessageBuilder(send);
                 return;
             }

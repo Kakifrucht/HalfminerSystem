@@ -57,7 +57,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
             }
 
             MessageBuilder.create("cmdSigneditCopy", hmc, PREFIX)
-                    .addPlaceholderReplace("%AMOUNT%", String.valueOf(amountToCopy))
+                    .addPlaceholderReplace("%AMOUNT%", amountToCopy)
                     .sendMessage(player);
             setPersistent(player.getUniqueId());
             return;
@@ -73,7 +73,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                     }
 
                     MessageBuilder.create("cmdSigneditSet", hmc, PREFIX)
-                            .addPlaceholderReplace("%LINE%", String.valueOf(lineNumber + 1))
+                            .addPlaceholderReplace("%LINE%", lineNumber + 1)
                             .addPlaceholderReplace("%TEXT%", lineText)
                             .sendMessage(player);
                     setPersistent(player.getUniqueId());
@@ -114,7 +114,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                     for (int i = 0; i < 4; i++) sign.setLine(i, signToBeCopied[i]);
                     if (--amountToCopy == 0) isDone = true;
                     MessageBuilder.create("cmdSigneditSignPasted", hmc, PREFIX)
-                            .addPlaceholderReplace("%AMOUNT%", String.valueOf(amountToCopy))
+                            .addPlaceholderReplace("%AMOUNT%", amountToCopy)
                             .sendMessage(player);
                 } else {
                     sign.setLine(lineNumber, lineText);

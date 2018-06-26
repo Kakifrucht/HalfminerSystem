@@ -112,7 +112,7 @@ public class Cmdchat extends HalfminerCommand {
 
         MessageBuilder.create(notifySender, hmc, "Chat")
                 .addPlaceholderReplace("%SENDTO%", recipientName)
-                .addPlaceholderReplace("%TIME%", String.valueOf(time))
+                .addPlaceholderReplace("%TIME%", time)
                 .addPlaceholderReplace("%MESSAGE%", message)
                 .sendMessage(sender);
 
@@ -178,7 +178,7 @@ public class Cmdchat extends HalfminerCommand {
         else {
 
             MessageBuilder.create("cmdChatCountdownStarted", hmc, "Chat")
-                    .addPlaceholderReplace("%COUNT%", String.valueOf(countdown))
+                    .addPlaceholderReplace("%COUNT%", countdown)
                     .sendMessage(sender);
 
             final HanBossBar bar = hms.getBarHandler();
@@ -193,7 +193,7 @@ public class Cmdchat extends HalfminerCommand {
                     }
 
                     bar.broadcastBar(MessageBuilder.create("cmdChatCountdown", hmc)
-                                    .addPlaceholderReplace("%COUNT%", String.valueOf(count))
+                                    .addPlaceholderReplace("%COUNT%", count)
                                     .returnMessage(),
                             BarColor.GREEN, BarStyle.SOLID, 35, (double) count / countdown);
                     if (count-- == 0) {

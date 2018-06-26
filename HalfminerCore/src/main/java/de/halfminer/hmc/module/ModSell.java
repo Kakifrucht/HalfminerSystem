@@ -112,7 +112,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_FLUTE, 1.0f, 0.8f));
         MessageBuilder.create("modSellNewCycleBroadcast", hmc, "Sell")
-                .addPlaceholderReplace("%TIME%", String.valueOf(e.getTimeUntilNextCycle() / 60))
+                .addPlaceholderReplace("%TIME%", e.getTimeUntilNextCycle() / 60)
                 .broadcastMessage(true);
 
         // broadcast player who sold most in last cycle (with delay)
@@ -129,7 +129,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                         MessageBuilder.create("modSellMostSoldBroadcast", hmc, "Sell")
                                 .addPlaceholderReplace("%PLAYER%", storage.getPlayer(uuidMostSoldLastCycle).getName())
                                 .addPlaceholderReplace("%ITEMNAME%", mostSoldLastCycle.getMessageName())
-                                .addPlaceholderReplace("%ITEMAMOUNT%", String.valueOf(amountSold))
+                                .addPlaceholderReplace("%ITEMAMOUNT%", amountSold)
                                 .broadcastMessage(true);
                     } catch (PlayerNotFoundException ignored) {}
                 }, 500L);
@@ -191,8 +191,8 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             String unitAmount;
             if (currentUnitAmount != baseUnitAmount) {
                 unitAmount = MessageBuilder.create("modSellMenuStackAmountFormat", hmc)
-                        .addPlaceholderReplace("%CURRENT%", String.valueOf(currentUnitAmount))
-                        .addPlaceholderReplace("%BASE%", String.valueOf(baseUnitAmount))
+                        .addPlaceholderReplace("%CURRENT%", currentUnitAmount)
+                        .addPlaceholderReplace("%BASE%", baseUnitAmount)
                         .returnMessage();
             } else {
                 unitAmount = String.valueOf(currentUnitAmount);
@@ -202,8 +202,8 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
                     .addPlaceholderReplace("%NAME%", sellable.getMessageName())
                     .addPlaceholderReplace("%MULTIPLIER%", multiplier)
                     .addPlaceholderReplace("%AMOUNT%", unitAmount)
-                    .addPlaceholderReplace("%NEXTINCREASE%", String.valueOf(sellable.getAmountUntilNextIncrease(player)))
-                    .addPlaceholderReplace("%SOLDTOTAL%", String.valueOf(sellable.getAmountSoldTotal()));
+                    .addPlaceholderReplace("%NEXTINCREASE%", sellable.getAmountUntilNextIncrease(player))
+                    .addPlaceholderReplace("%SOLDTOTAL%", sellable.getAmountSoldTotal());
 
             Utils.applyLocaleToItemStack(currentItem, stackNameAndLore);
             menuItems[i + 18] = currentItem;
@@ -298,7 +298,7 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
             MessageBuilder.create("modSellAmountIncreased", hmc, "Sell")
                     .addPlaceholderReplace("%NAME%", sold.getMessageName())
-                    .addPlaceholderReplace("%NEWAMOUNT%", String.valueOf(unitAmountAfterSell))
+                    .addPlaceholderReplace("%NEWAMOUNT%", unitAmountAfterSell)
                     .sendMessage(toReward);
         }
 
@@ -324,15 +324,15 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         MessageBuilder.create("modSellSuccess", hmc, "Sell")
                 .addPlaceholderReplace("%MATERIAL%", sold.getMessageName())
-                .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))
-                .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                .addPlaceholderReplace("%MONEY%", revenue)
+                .addPlaceholderReplace("%AMOUNT%", amount)
                 .sendMessage(toReward);
 
         MessageBuilder.create("modSellSuccessLog", hmc)
                 .addPlaceholderReplace("%PLAYER%", toReward.getName())
                 .addPlaceholderReplace("%MATERIAL%", sold.getMessageName())
-                .addPlaceholderReplace("%MONEY%", String.valueOf(revenue))
-                .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                .addPlaceholderReplace("%MONEY%", revenue)
+                .addPlaceholderReplace("%AMOUNT%", amount)
                 .logMessage(Level.INFO);
 
         // messaging about possible sell revenue
@@ -352,17 +352,17 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
             }
 
             if (revenueLostTotal > 20.0d && Utils.random(Math.min((int) revenueLostTotal * 5, 500))) {
-                String amountLostString = String.valueOf(Utils.roundDouble(revenueLostTotal));
+                double revenueLostRounded = Utils.roundDouble(revenueLostTotal);
                 scheduler.runTaskLater(hmc, () -> {
                     if (toReward.isOnline()) {
 
                         MessageBuilder.create("modSellSuccessPossibleAmountLog", hmc)
                                 .addPlaceholderReplace("%PLAYER%", toReward.getName())
-                                .addPlaceholderReplace("%REVENUELOST%", amountLostString)
+                                .addPlaceholderReplace("%REVENUELOST%", revenueLostRounded)
                                 .logMessage(Level.INFO);
 
                         MessageBuilder.create("modSellSuccessPossibleAmount", hmc, "Sell")
-                                .addPlaceholderReplace("%REVENUELOST%", amountLostString)
+                                .addPlaceholderReplace("%REVENUELOST%", revenueLostRounded)
                                 .sendMessage(toReward);
                         toReward.playSound(toReward.getLocation(), Sound.BLOCK_NOTE_PLING, 0.7f, 1.4f);
                     }

@@ -347,7 +347,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
             sellableString.setLength(sellableString.length() - 2);
             MessageBuilder.create("modSellCurrentCycleLog", hmc)
-                    .addPlaceholderReplace("%TIMELEFT%", String.valueOf(currentCycle.getSecondsTillExpiry() / 60))
+                    .addPlaceholderReplace("%TIMELEFT%", currentCycle.getSecondsTillExpiry() / 60)
                     .addPlaceholderReplace("%SELLABLES%", sellableString.toString())
                     .logMessage(Level.INFO);
         }

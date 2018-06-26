@@ -195,7 +195,7 @@ public class CustomAction {
                 addLineNumber ? "cacheCustomActionParseError" : "cacheCustomActionParseErrorNoLine")
                 .addPlaceholderReplace("%NAME%", actionName)
                 .addPlaceholderReplace("%TYPE%", type);
-        if (addLineNumber) builder.addPlaceholderReplace("%LINE%", String.valueOf(lineNumber + 1));
+        if (addLineNumber) builder.addPlaceholderReplace("%LINE%", lineNumber + 1);
         builder.logMessage(Level.WARNING);
     }
 

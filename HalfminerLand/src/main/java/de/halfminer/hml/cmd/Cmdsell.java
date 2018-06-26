@@ -103,7 +103,7 @@ public class Cmdsell extends LandCommand {
             }
 
             MessageBuilder.create(localeKey, hml)
-                    .addPlaceholderReplace("%COST%", String.valueOf(contract.getCost()))
+                    .addPlaceholderReplace("%COST%", contract.getCost())
                     .addPlaceholderReplace("%LANDOWNER%", landOwner.getName())
                     .sendMessage(player);
 
@@ -112,7 +112,7 @@ public class Cmdsell extends LandCommand {
             contract.setCanBeFulfilled();
 
             MessageBuilder.create("cmdSellConfirm" + (isFreeLand ? "Free" : ""), hml)
-                    .addPlaceholderReplace("%COST%", String.valueOf(contract.getCost()))
+                    .addPlaceholderReplace("%COST%", contract.getCost())
                     .sendMessage(player);
         }
     }

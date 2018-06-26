@@ -78,8 +78,8 @@ public class ModStats extends HalfminerModule implements Listener, Sweepable {
 
             MessageBuilder.create("modStatsPvPKill", hmc, "PvP")
                     .addPlaceholderReplace("%VICTIM%", victim.getName())
-                    .addPlaceholderReplace("%KILLS%", String.valueOf(killsKiller))
-                    .addPlaceholderReplace("%KDRATIO%", String.valueOf(kdRatioKiller))
+                    .addPlaceholderReplace("%KILLS%", killsKiller)
+                    .addPlaceholderReplace("%KDRATIO%", kdRatioKiller)
                     .sendMessage(killer);
 
             ItemStack weapon = killer.getInventory().getItemInMainHand();
@@ -130,14 +130,12 @@ public class ModStats extends HalfminerModule implements Listener, Sweepable {
 
         HalfminerPlayer hClicked = storage.getPlayer(clicked);
         String skillgroup = ((ModSkillLevel) hmc.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);
-        String kills = String.valueOf(hClicked.getInt(DataType.KILLS));
-        String kdratio = String.valueOf(hClicked.getDouble(DataType.KD_RATIO));
 
         MessageBuilder.create(!clicked.hasPermission("hmc.bypass.statsrightclick") ?
                 "modStatsRightClick" : "modStatsRightClickExempt", hmc, clicked.getName())
                 .addPlaceholderReplace("%SKILLGROUP%", skillgroup)
-                .addPlaceholderReplace("%KILLS%", kills)
-                .addPlaceholderReplace("%KDRATIO%", kdratio)
+                .addPlaceholderReplace("%KILLS%", hClicked.getInt(DataType.KILLS))
+                .addPlaceholderReplace("%KDRATIO%", hClicked.getDouble(DataType.KD_RATIO))
                 .addPlaceholderReplace("%AFK%", hookHandler.isAfk(clicked) ?
                         MessageBuilder.returnMessage("modStatsRightClickAFKAppend", hmc) : "")
                 .sendMessage(clicker);

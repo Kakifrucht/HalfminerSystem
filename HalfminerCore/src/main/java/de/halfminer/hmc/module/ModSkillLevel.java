@@ -71,7 +71,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 int skillEloChange = (int) -Math.round((double) hPlayer.getInt(DataType.SKILL_ELO) * derankAmountPercent);
                 updateSkill(player, skillEloChange);
                 MessageBuilder.create("modSkillLevelDerank", hmc, "PvP")
-                        .addPlaceholderReplace("%DAYS%", String.valueOf(timeUntilDerankThreshold / DAYS_IN_SECONDS))
+                        .addPlaceholderReplace("%DAYS%", timeUntilDerankThreshold / DAYS_IN_SECONDS)
                         .sendMessage(player);
             } else {
                 updateSkill(player, 0);
@@ -175,7 +175,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 titleHandler.sendTitle((Player) player,
                         MessageBuilder.create(newLevel > level ?
                                 "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle", hmc)
-                                .addPlaceholderReplace("%SKILLLEVEL%", String.valueOf(newLevel))
+                                .addPlaceholderReplace("%SKILLLEVEL%", newLevel)
                                 .addPlaceholderReplace("%SKILLGROUP%", newTeam.getName().substring(2))
                                 .returnMessage(),
                         10, 50, 10, 10);
@@ -183,9 +183,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             MessageBuilder.create("modSkillLevelLog", hmc)
                     .addPlaceholderReplace("%PLAYER%", player.getName())
-                    .addPlaceholderReplace("%SKILLOLD%", String.valueOf(level))
-                    .addPlaceholderReplace("%SKILLNEW%", String.valueOf(newLevel))
-                    .addPlaceholderReplace("%SKILLNO%", String.valueOf(elo))
+                    .addPlaceholderReplace("%SKILLOLD%", level)
+                    .addPlaceholderReplace("%SKILLNEW%", newLevel)
+                    .addPlaceholderReplace("%SKILLNO%", elo)
                     .logMessage(Level.INFO);
         }
     }

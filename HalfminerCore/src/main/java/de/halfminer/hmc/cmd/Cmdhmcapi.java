@@ -95,7 +95,7 @@ public class Cmdhmcapi extends HalfminerCommand {
                         server.dispatchCommand(consoleInstance,
                                 "vt setstr temp headname_" + player.getName() + " " + skullOwner.getName());
                         server.dispatchCommand(consoleInstance,
-                                "vt setint temp headlevel_" + player.getName() + " " + String.valueOf(level));
+                                "vt setint temp headlevel_" + player.getName() + " " + level);
                         server.dispatchCommand(consoleInstance, "vt run casino:roulette " + player.getName());
                     } else {
                         showErrorMessage();
@@ -145,7 +145,7 @@ public class Cmdhmcapi extends HalfminerCommand {
 
     private void setHasRoomBoolean(String playerName, boolean value) {
         hmc.getServer().dispatchCommand(hmc.getServer().getConsoleSender(), "vt setbool temp hasroom_"
-                        + playerName + " " + String.valueOf(value));
+                        + playerName + " " + value);
     }
 
     private void showErrorMessage() {

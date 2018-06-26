@@ -63,7 +63,7 @@ public class FFAArena extends AbstractArena {
             long secondsLeft = timestamp - (System.currentTimeMillis() / 1000);
             if (secondsLeft > 0L) {
                 MessageBuilder.create("modeFFACooldown", hmb)
-                        .addPlaceholderReplace("%TIMELEFT%", String.valueOf(secondsLeft))
+                        .addPlaceholderReplace("%TIMELEFT%", secondsLeft)
                         .sendMessage(toAdd);
                 return;
             } else bannedFromArena.invalidate(toAdd.getUniqueId());
@@ -147,8 +147,8 @@ public class FFAArena extends AbstractArena {
                     .addPlaceholderReplace("%ARENA%", getName())
                     .addPlaceholderReplace("%KILLER%", killer.getName())
                     .addPlaceholderReplace("%VICTIM%", hasDied.getName())
-                    .addPlaceholderReplace("%KILLSTREAK%", String.valueOf(streak))
-                    .addPlaceholderReplace("%DEATHSTREAK%", String.valueOf(Math.abs(streakDied)))
+                    .addPlaceholderReplace("%KILLSTREAK%", streak)
+                    .addPlaceholderReplace("%DEATHSTREAK%", Math.abs(streakDied))
                     .logMessage(Level.INFO);
 
             try {

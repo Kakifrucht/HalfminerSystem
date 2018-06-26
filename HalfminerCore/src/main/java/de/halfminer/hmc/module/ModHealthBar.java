@@ -153,8 +153,8 @@ public class ModHealthBar extends HalfminerModule implements Listener {
                             .addPlaceholderReplace("%PLAYER%", entityToUpdate.getName())
                             .addPlaceholderReplace("%LEVEL%", otherPlayer != null ?
                                     storage.getPlayer(otherPlayer).getString(DataType.SKILL_LEVEL) : "1")
-                            .addPlaceholderReplace("%HEALTH%", String.valueOf(health))
-                            .addPlaceholderReplace("%MAXHEALTH%", String.valueOf((int) maxHealth))
+                            .addPlaceholderReplace("%HEALTH%", health)
+                            .addPlaceholderReplace("%MAXHEALTH%", (int) maxHealth)
                             .returnMessage(),
                     color,
                     style,

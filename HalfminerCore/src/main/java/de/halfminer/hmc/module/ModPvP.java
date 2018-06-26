@@ -212,7 +212,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 scheduler.runTaskLater(hmc, () -> titleHandler.sendActionBar(null,
                         MessageBuilder.create("modPvPKillStreak", hmc)
                                 .addPlaceholderReplace("%PLAYER%", killer.getName())
-                                .addPlaceholderReplace("%STREAK%", String.valueOf(streak))
+                                .addPlaceholderReplace("%STREAK%", streak)
                                 .returnMessage()), 0L);
             }
         } else {

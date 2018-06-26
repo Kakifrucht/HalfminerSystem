@@ -105,7 +105,7 @@ public class ModPerformance extends HalfminerModule implements Listener {
             if (logHopperLimit) {
                 MessageBuilder.create("modPerformanceReachedHopperLog", hmc)
                         .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
-                        .addPlaceholderReplace("%LIMIT%", String.valueOf(hopperLimit))
+                        .addPlaceholderReplace("%LIMIT%", hopperLimit)
                         .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(block.getLocation()))
                         .logMessage(Level.INFO);
             }

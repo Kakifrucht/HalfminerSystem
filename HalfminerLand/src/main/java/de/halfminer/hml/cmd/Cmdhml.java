@@ -145,8 +145,8 @@ public class Cmdhml extends LandCommand {
 
         MessageBuilder.create("cmdHmlFlyTime" + (setFlyTime ? "Set" : ""), hml)
                 .addPlaceholderReplace("%PLAYER%", halfminerPlayer.getName())
-                .addPlaceholderReplace("%TIMELEFT%", String.valueOf(flyTimeLeft))
-                .addPlaceholderReplace("%TIMESET%", String.valueOf(setTo))
+                .addPlaceholderReplace("%TIMELEFT%", flyTimeLeft)
+                .addPlaceholderReplace("%TIMESET%", setTo)
                 .sendMessage(sender);
     }
 
@@ -189,9 +189,9 @@ public class Cmdhml extends LandCommand {
 
         MessageBuilder.create(setFreeLands ? "cmdHmlFreeSet" : "cmdHmlFreeShow", hml)
                 .addPlaceholderReplace("%PLAYER%", toEdit.getName())
-                .addPlaceholderReplace("%HASFREE%", String.valueOf(hasFreeAmount))
-                .addPlaceholderReplace("%CURRENTFREE%", String.valueOf(setFreeAmount))
-                .addPlaceholderReplace("%SETFREE%", String.valueOf(setTo))
+                .addPlaceholderReplace("%HASFREE%", hasFreeAmount)
+                .addPlaceholderReplace("%CURRENTFREE%", setFreeAmount)
+                .addPlaceholderReplace("%SETFREE%", setTo)
                 .sendMessage(sender);
     }
 
@@ -292,16 +292,16 @@ public class Cmdhml extends LandCommand {
             worldListBuilder.append(MessageBuilder.create("cmdHmlStatusWorldListEntry", hml)
                     .togglePrefix()
                     .addPlaceholderReplace("%WORLD%", worldIntegerEntry.getKey().getName())
-                    .addPlaceholderReplace("%AMOUNT%", String.valueOf(worldIntegerEntry.getValue()))
+                    .addPlaceholderReplace("%AMOUNT%", worldIntegerEntry.getValue())
                     .returnMessage()).append(" ");
         }
 
         MessageBuilder.create("cmdHmlStatus", hml)
-                .addPlaceholderReplace("%TOTALLANDS%", String.valueOf(totalLands))
-                .addPlaceholderReplace("%TOTALTELEPORTS%", String.valueOf(totalTeleports))
-                .addPlaceholderReplace("%TOTALFREE%", String.valueOf(totalFree))
-                .addPlaceholderReplace("%TOTALSERVER%", String.valueOf(totalServer))
-                .addPlaceholderReplace("%TOTALABANDONED%", String.valueOf(totalAbandoned))
+                .addPlaceholderReplace("%TOTALLANDS%", totalLands)
+                .addPlaceholderReplace("%TOTALTELEPORTS%", totalTeleports)
+                .addPlaceholderReplace("%TOTALFREE%", totalFree)
+                .addPlaceholderReplace("%TOTALSERVER%", totalServer)
+                .addPlaceholderReplace("%TOTALABANDONED%", totalAbandoned)
                 .addPlaceholderReplace("%TOTALWORLDLIST%", worldListBuilder.toString().trim())
                 .sendMessage(sender);
     }

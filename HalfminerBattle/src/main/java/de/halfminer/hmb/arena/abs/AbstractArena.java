@@ -220,8 +220,7 @@ public abstract class AbstractArena extends BattleClass implements Arena {
     }
 
     protected String getCustomLoreID() {
-        return ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY
-                + ChatColor.ITALIC + String.valueOf(System.currentTimeMillis() / 1000);
+        return ChatColor.DARK_GRAY + "ID: " + ChatColor.DARK_GRAY + ChatColor.ITALIC + (System.currentTimeMillis() / 1000);
     }
 
     protected List<Player> parameterToList(Player... param) {

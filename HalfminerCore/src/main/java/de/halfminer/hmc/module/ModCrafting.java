@@ -71,7 +71,7 @@ public class ModCrafting extends HalfminerModule implements Listener {
                 inventory.setResult(null);
                 MessageBuilder.create("modCraftingRemoved", hmc, "Crafting")
                         .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(result.getType().toString()))
-                        .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                        .addPlaceholderReplace("%AMOUNT%", amount)
                         .sendMessage(e.getWhoClicked());
             }
         }

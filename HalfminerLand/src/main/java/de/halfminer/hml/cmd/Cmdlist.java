@@ -108,8 +108,8 @@ public class Cmdlist extends LandCommand implements MenuCreator {
                 MessageBuilder localeBuilder = MessageBuilder.create(localeKey, hml)
                         .togglePrefix()
                         .addPlaceholderReplace("%WORLD%", ownedLand.getWorld().getName())
-                        .addPlaceholderReplace("%X%", String.valueOf(ownedLand.getXLandCorner()))
-                        .addPlaceholderReplace("%Z%", String.valueOf(ownedLand.getZLandCorner()))
+                        .addPlaceholderReplace("%X%", ownedLand.getXLandCorner())
+                        .addPlaceholderReplace("%Z%", ownedLand.getZLandCorner())
                         .addPlaceholderReplace("%TELEPORT%", teleportString);
 
                 Utils.applyLocaleToItemStack(landItem, localeBuilder);
@@ -154,8 +154,8 @@ public class Cmdlist extends LandCommand implements MenuCreator {
                 MessageBuilder toAppendBuilder = MessageBuilder
                         .create("cmdListAsTextFormat" + (land.hasTeleportLocation() ? "Teleport" : ""), hml)
                         .addPlaceholderReplace("%WORLD%", land.getWorld().getName())
-                        .addPlaceholderReplace("%X%", String.valueOf(land.getXLandCorner()))
-                        .addPlaceholderReplace("%Z%", String.valueOf(land.getZLandCorner()));
+                        .addPlaceholderReplace("%X%", land.getXLandCorner())
+                        .addPlaceholderReplace("%Z%", land.getZLandCorner());
 
                 if (land.hasTeleportLocation()) {
                     toAppendBuilder.addPlaceholderReplace("%TELEPORT%", land.getTeleportName());
@@ -168,7 +168,7 @@ public class Cmdlist extends LandCommand implements MenuCreator {
 
             MessageBuilder.create("cmdListAsText", hml)
                     .addPlaceholderReplace("%PLAYER%", name)
-                    .addPlaceholderReplace("%LANDAMOUNT%", String.valueOf(sortedLandList.size()))
+                    .addPlaceholderReplace("%LANDAMOUNT%", sortedLandList.size())
                     .addPlaceholderReplace("%LANDLIST%", landListStringBuilder.toString().trim())
                     .sendMessage(sender);
         }

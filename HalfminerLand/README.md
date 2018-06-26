@@ -67,7 +67,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - List all land owned by server with */land list -s*
     - Teleport to a land by clicking on it, will mark the chunk with particles after teleport (requires permission)
   - /land fly
-    - Enables fly mode on owned land
+    - Toggles fly mode on owned land
       - Disables fly when leaving land, reenables it when entering owned land
     - Custom cost and duration to fly
     - Automatically renews fly if currently used

@@ -140,8 +140,8 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
                     .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(last))
                     .addPlaceholderReplace("%WORLD%", last.getWorld().getName())
                     .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()))
-                    .addPlaceholderReplace("%PROTECTED%", String.valueOf(counter.getProtectedBreakages()))
-                    .addPlaceholderReplace("%BROKEN%", String.valueOf(counter.getBreakages()))
+                    .addPlaceholderReplace("%PROTECTED%", counter.getProtectedBreakages())
+                    .addPlaceholderReplace("%BROKEN%", counter.getBreakages())
                     .returnMessage()).append("\n");
         }
 
@@ -160,8 +160,8 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
 
         MessageBuilder message = MessageBuilder.create("modAntiXrayDetected", hmc, "AntiXRay")
                 .addPlaceholderReplace("%PLAYER%", counter.getOwnerName())
-                .addPlaceholderReplace("%BROKENTOTAL%", String.valueOf(counter.getBreakages()))
-                .addPlaceholderReplace("%BROKENPROTECTED%", String.valueOf(counter.getProtectedBreakages()))
+                .addPlaceholderReplace("%BROKENTOTAL%", counter.getBreakages())
+                .addPlaceholderReplace("%BROKENPROTECTED%", counter.getProtectedBreakages())
                 .addPlaceholderReplace("%LASTLOCATION%", Utils.getStringFromLocation(counter.getLastProtectedLocation()))
                 .addPlaceholderReplace("%WORLD%", counter.getLastProtectedLocation().getWorld().getName())
                 .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()));

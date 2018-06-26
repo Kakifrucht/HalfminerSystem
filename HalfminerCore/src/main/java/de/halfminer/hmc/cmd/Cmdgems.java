@@ -58,8 +58,8 @@ public class Cmdgems extends HalfminerCommand {
 
                         int gemsInAccount = hPlayer.getInt(DataType.GEMS);
                         MessageBuilder.create("cmdGemsPaySuccess", hmc, "Gems")
-                                .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
-                                .addPlaceholderReplace("%TOTALAMOUNT%", String.valueOf(gemsInAccount))
+                                .addPlaceholderReplace("%AMOUNT%", amount)
+                                .addPlaceholderReplace("%TOTALAMOUNT%", gemsInAccount)
                                 .sendMessage(sender);
 
                         // execute custom action
@@ -116,7 +116,7 @@ public class Cmdgems extends HalfminerCommand {
                         int totalAmount = hPlayer.getInt(DataType.GEMS);
                         MessageBuilder.create("cmdGemsAdminNotEnough", hmc, "Gems")
                                 .addPlaceholderReplace("%PLAYER%", hPlayer.getName())
-                                .addPlaceholderReplace("%TOTALAMOUNT%", String.valueOf(totalAmount))
+                                .addPlaceholderReplace("%TOTALAMOUNT%", totalAmount)
                                 .sendMessage(sender);
                         return;
                     }
@@ -125,8 +125,8 @@ public class Cmdgems extends HalfminerCommand {
 
                     MessageBuilder.create(doTake ? "cmdGemsAdminTake" : "cmdGemsAdminGive", hmc, "Gems")
                             .addPlaceholderReplace("%PLAYER%", hPlayer.getName())
-                            .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
-                            .addPlaceholderReplace("%TOTALAMOUNT%", String.valueOf(newAmount))
+                            .addPlaceholderReplace("%AMOUNT%", amount)
+                            .addPlaceholderReplace("%TOTALAMOUNT%", newAmount)
                             .sendMessage(sender);
 
                     // message player if online
@@ -134,8 +134,8 @@ public class Cmdgems extends HalfminerCommand {
                     if (accountChanged instanceof Player) {
 
                         MessageBuilder.create(doTake ? "cmdGemsAdminAccountChangedTake" : "cmdGemsAdminAccountChangedGive", hmc, "Gems")
-                                .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
-                                .addPlaceholderReplace("%TOTALAMOUNT%", String.valueOf(newAmount))
+                                .addPlaceholderReplace("%AMOUNT%", amount)
+                                .addPlaceholderReplace("%TOTALAMOUNT%", newAmount)
                                 .sendMessage((Player) accountChanged);
                     }
 
@@ -158,7 +158,7 @@ public class Cmdgems extends HalfminerCommand {
         int gems = hPlayer.getInt(DataType.GEMS);
         if (gems > 0) {
             MessageBuilder.create("cmdGemsShow", hmc, prefix)
-                    .addPlaceholderReplace("%GEMS%", String.valueOf(gems))
+                    .addPlaceholderReplace("%GEMS%", gems)
                     .sendMessage(player);
         } else {
             MessageBuilder.create("cmdGemsHasNone", hmc, prefix).sendMessage(player);
@@ -177,8 +177,8 @@ public class Cmdgems extends HalfminerCommand {
 
         MessageBuilder.create("cmdGemsLog", hmc)
                 .addPlaceholderReplace("%PLAYER%", hPlayer.getName())
-                .addPlaceholderReplace("%TOTALAMOUNT%", String.valueOf(currentAmount))
-                .addPlaceholderReplace("%CHANGEDBY%", String.valueOf(changeBy))
+                .addPlaceholderReplace("%TOTALAMOUNT%", currentAmount)
+                .addPlaceholderReplace("%CHANGEDBY%", changeBy)
                 .logMessage(Level.INFO);
         return true;
     }

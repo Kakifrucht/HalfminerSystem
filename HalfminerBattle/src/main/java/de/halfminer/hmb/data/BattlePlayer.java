@@ -297,7 +297,7 @@ class BattlePlayer extends BattleClass {
                 scheduler.runTaskAsynchronously(hmb, () -> {
 
                     synchronized (inventoryWriteLock) {
-                        String fileName = String.valueOf(System.currentTimeMillis() / 1000) + "-" + player.getName() + ".yml";
+                        String fileName = (System.currentTimeMillis() / 1000) + "-" + player.getName() + ".yml";
 
                         File path = new File(hmb.getDataFolder(), "inventories");
                         boolean pathExists = path.exists();

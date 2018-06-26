@@ -200,7 +200,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 }
 
                 if (time-- > 0) titleHandler.sendActionBar(p, MessageBuilder.create("modCombatLogCountdown", hmc)
-                        .addPlaceholderReplace("%TIME%", String.valueOf(time + 1))
+                        .addPlaceholderReplace("%TIME%", time + 1)
                         .addPlaceholderReplace("%PROGRESSBAR%", progressBar.toString())
                         .returnMessage());
                 else untagPlayer(p);

@@ -108,7 +108,7 @@ public class Cmdfriend extends LandCommand {
 
         MessageBuilder.create(messageLocale, hml)
                 .addPlaceholderReplace("%PLAYER%", toModify.getName())
-                .addPlaceholderReplace("%COUNT%", String.valueOf(modifiedCount))
+                .addPlaceholderReplace("%COUNT%", modifiedCount)
                 .sendMessage(player);
 
         if (success) {
@@ -128,7 +128,7 @@ public class Cmdfriend extends LandCommand {
         boolean limitReached = land.getMemberSet().size() >= friendLimit;
         if (limitReached && sendMessage) {
             MessageBuilder.create("cmdFriendAddLimitReached", hml)
-                    .addPlaceholderReplace("%LIMIT%", String.valueOf(friendLimit))
+                    .addPlaceholderReplace("%LIMIT%", friendLimit)
                     .sendMessage(player);
         }
 

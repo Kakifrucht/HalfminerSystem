@@ -71,7 +71,7 @@ public class Cmdteleport extends LandCommand {
 
                 if (hasTeleports >= maximumTeleports) {
                     MessageBuilder.create("cmdTeleportBuyLimitReached", hml)
-                            .addPlaceholderReplace("%LIMIT%", String.valueOf(maximumTeleports))
+                            .addPlaceholderReplace("%LIMIT%", maximumTeleports)
                             .sendMessage(player);
                     return;
                 }
@@ -84,7 +84,7 @@ public class Cmdteleport extends LandCommand {
 
                 MessageBuilder.create("cmdTeleportBuySuccess", hml)
                         .addPlaceholderReplace("%TELEPORT%", teleportName)
-                        .addPlaceholderReplace("%COST%", String.valueOf(cost))
+                        .addPlaceholderReplace("%COST%", cost)
                         .sendMessage(player);
 
                 hml.getLogger().info(player.getName() + " bought teleport "
@@ -122,7 +122,7 @@ public class Cmdteleport extends LandCommand {
 
                 MessageBuilder.create("cmdTeleportSetSuccess", hml)
                         .addPlaceholderReplace("%TELEPORT%", teleportName)
-                        .addPlaceholderReplace("%COST%", String.valueOf(cost))
+                        .addPlaceholderReplace("%COST%", cost)
                         .sendMessage(player);
 
                 hml.getLogger().info(player.getName() + " set teleport "
@@ -180,7 +180,7 @@ public class Cmdteleport extends LandCommand {
     private boolean takeMoney(double cost) {
         if (hms.getHooksHandler().getMoney(player) < cost) {
             MessageBuilder.create("notEnoughMoney", hml)
-                    .addPlaceholderReplace("%COST%", String.valueOf(cost))
+                    .addPlaceholderReplace("%COST%", cost)
                     .sendMessage(player);
             return false;
         }

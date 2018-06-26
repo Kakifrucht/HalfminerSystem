@@ -125,8 +125,7 @@ public class Cmdvote extends HalfminerCommand {
 
         boolean thresholdPassed = totalVotes < totalVotesThreshold;
         MessageBuilder.create(thresholdPassed ? "cmdVoteUntil" : "cmdVoteReached", hmc)
-                .addPlaceholderReplace(thresholdPassed ?
-                        "%TOTALVOTES%" : "%TOTALVOTESTHRESHOLD%", String.valueOf(totalVotes))
+                .addPlaceholderReplace("%TOTALVOTES%" + (thresholdPassed ? "" : "%THRESHOLD%"), totalVotes)
                 .sendMessage(sender);
 
         if (rewardLeft > 0) MessageBuilder.create("cmdVoteGrabReward", hmc).sendMessage(sender);

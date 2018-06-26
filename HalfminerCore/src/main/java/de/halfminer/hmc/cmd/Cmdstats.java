@@ -94,7 +94,7 @@ public class Cmdstats extends HalfminerCommand {
         }
 
         if (type == DataType.TIME_ONLINE) playerVar /= 60;
-        return returnString + String.valueOf(playerVar);
+        return returnString + playerVar;
     }
 
     @SuppressWarnings("Duplicates")
@@ -111,6 +111,6 @@ public class Cmdstats extends HalfminerCommand {
             else returnString = ChatColor.YELLOW.toString();
         }
 
-        return returnString + String.valueOf(playerVar);
+        return returnString + playerVar;
     }
 }

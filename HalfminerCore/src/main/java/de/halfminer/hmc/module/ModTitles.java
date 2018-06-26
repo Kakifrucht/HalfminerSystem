@@ -58,7 +58,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             scheduler.runTaskLater(hmc, () -> {
 
                 titleHandler.sendTitle(joined, MessageBuilder.create("modTitlesJoinFormat", hmc)
-                        .addPlaceholderReplace("%BALANCE%", String.valueOf(updateBalanceAndTablist(joined)))
+                        .addPlaceholderReplace("%BALANCE%", updateBalanceAndTablist(joined))
                         .addPlaceholderReplace("%PLAYERCOUNT%", getPlayercountString())
                         .returnMessage(), 10, 100, 10);
 
@@ -123,7 +123,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     private void updateTablist(Player player) {
 
         titleHandler.setTablistHeaderFooter(player, MessageBuilder.create("modTitlesTablist", hmc)
-                .addPlaceholderReplace("%BALANCE%", String.valueOf(balances.get(player)))
+                .addPlaceholderReplace("%BALANCE%", balances.get(player))
                 .addPlaceholderReplace("%PLAYERCOUNT%", getPlayercountString())
                 .returnMessage());
     }

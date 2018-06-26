@@ -134,8 +134,8 @@ public class MenuContainer {
 
     private MessageBuilder getPaginationMessageBuilder(String langKey) {
         return MessageBuilder.create(langKey, HalfminerSystem.getInstance())
-                .addPlaceholderReplace("%PAGE%", String.valueOf(getCurrentPage()))
-                .addPlaceholderReplace("%PAGECOUNT%", String.valueOf(getPageCount()));
+                .addPlaceholderReplace("%PAGE%", getCurrentPage())
+                .addPlaceholderReplace("%PAGECOUNT%", getPageCount());
     }
 
     int getPreviousPageRawSlot() {

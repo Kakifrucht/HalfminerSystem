@@ -129,8 +129,8 @@ public class ArenaManager {
         }
 
         MessageBuilder.create("modeGlobalArenaLoadLog", hmb)
-                .addPlaceholderReplace("%ARENAS%", String.valueOf(totalArenasLoaded))
-                .addPlaceholderReplace("%KITS%", String.valueOf(totalKitsLoaded))
+                .addPlaceholderReplace("%ARENAS%", totalArenasLoaded)
+                .addPlaceholderReplace("%KITS%", totalKitsLoaded)
                 .logMessage(Level.INFO);
     }
 
@@ -242,7 +242,7 @@ public class ArenaManager {
             if (addPlayercounts) {
                 String playerCount = " " + MessageBuilder.create("modeGlobalChoosePlayerCount", hmb)
                         .togglePrefix()
-                        .addPlaceholderReplace("%AMOUNT%", String.valueOf(freeArena.getPlayerCount()))
+                        .addPlaceholderReplace("%AMOUNT%", freeArena.getPlayerCount())
                         .returnMessage();
                 builder.append(playerCount).reset().color(ChatColor.GRAY);
             }

@@ -56,7 +56,7 @@ public class Cmdbuy extends LandCommand {
                                 && landToBuy.getZLandCorner() > -minimumCoordinateInt) {
 
                             MessageBuilder.create("cmdBuyNotBuyableCoordinate", hml)
-                                    .addPlaceholderReplace("%MINIMUMCOORDS%", String.valueOf(minimumCoordinateInt))
+                                    .addPlaceholderReplace("%MINIMUMCOORDS%", minimumCoordinateInt)
                                     .sendMessage(player);
                             return;
                         }
@@ -135,7 +135,7 @@ public class Cmdbuy extends LandCommand {
         double cost = contract.getCost();
         if (cost > money) {
             MessageBuilder.create("notEnoughMoney", hml)
-                    .addPlaceholderReplace("%COST%", String.valueOf(cost))
+                    .addPlaceholderReplace("%COST%", cost)
                     .sendMessage(player);
             return;
         }
@@ -151,9 +151,9 @@ public class Cmdbuy extends LandCommand {
             contractManager.fulfillContract(contract);
             String messageKey = "cmdBuySuccess" + (buyAsServer ? "AsServer" : (contract.isFreeBuy() ? "Free" : ""));
             MessageBuilder.create(messageKey, hml)
-                    .addPlaceholderReplace("%COST%", String.valueOf(cost))
-                    .addPlaceholderReplace("%FREELANDSOWNED%", String.valueOf(freeLandsOwned + 1))
-                    .addPlaceholderReplace("%FREELANDSMAX%", freeLandsMax == Integer.MAX_VALUE ? "-" : String.valueOf(freeLandsMax))
+                    .addPlaceholderReplace("%COST%", cost)
+                    .addPlaceholderReplace("%FREELANDSOWNED%", freeLandsOwned + 1)
+                    .addPlaceholderReplace("%FREELANDSMAX%", freeLandsMax == Integer.MAX_VALUE ? "-" : freeLandsMax)
                     .sendMessage(player);
 
             if (buyAsServer) {
@@ -166,7 +166,7 @@ public class Cmdbuy extends LandCommand {
             contract.setCanBeFulfilled();
 
             MessageBuilder.create("cmdBuyConfirm" + (contract.isFreeBuy() ? "Free" : ""), hml)
-                    .addPlaceholderReplace("%COST%", String.valueOf(cost))
+                    .addPlaceholderReplace("%COST%", cost)
                     .sendMessage(player);
         }
     }

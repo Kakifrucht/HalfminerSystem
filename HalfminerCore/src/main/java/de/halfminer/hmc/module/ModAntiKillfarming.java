@@ -117,7 +117,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
             if (messageKey.length() > 0)
                 MessageBuilder.create(messageKey, hmc, "PvP")
                         .addPlaceholderReplace("%PLAYER%", toCheck.getName())
-                        .addPlaceholderReplace("%TIME%", String.valueOf(blockTime))
+                        .addPlaceholderReplace("%TIME%", blockTime)
                         .sendMessage(toMessage);
             return true;
         }
@@ -145,7 +145,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
             String command = e.getMessage().split(" ")[0].toLowerCase();
             if (!exemptCommands.contains(command.substring(1, command.length()))) {
                 MessageBuilder.create("modAntiKillfarmingNoCommand", hmc, "PvP")
-                        .addPlaceholderReplace("%TIME%", String.valueOf(time))
+                        .addPlaceholderReplace("%TIME%", time)
                         .sendMessage(e.getPlayer());
                 e.setCancelled(true);
             }
@@ -215,12 +215,12 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
                 .broadcastMessage(true);
 
         MessageBuilder.create("modAntiKillfarmingBlockedKiller", hmc, "PvP")
-                .addPlaceholderReplace("%TIME%", String.valueOf(blockTimeKiller / 60))
+                .addPlaceholderReplace("%TIME%", blockTimeKiller / 60)
                 .addPlaceholderReplace("%PLAYER%", victim.getName())
                 .sendMessage(killer);
 
         MessageBuilder.create("modAntiKillfarmingBlockedVictim", hmc, "PvP")
-                .addPlaceholderReplace("%TIME%", String.valueOf(blockTimeVictim / 60))
+                .addPlaceholderReplace("%TIME%", blockTimeVictim / 60)
                 .addPlaceholderReplace("%PLAYER%", killer.getName())
                 .sendMessage(victim);
     }

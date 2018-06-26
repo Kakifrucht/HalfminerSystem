@@ -50,7 +50,7 @@ public class DuelArena extends AbstractArena {
                 if (timeLeft > timeStart) {
                     String toSend = MessageBuilder.create("modeDuelTitleCountdown", hmb)
                             .togglePrefix()
-                            .addPlaceholderReplace("%TIME%", String.valueOf(timeLeft - timeStart))
+                            .addPlaceholderReplace("%TIME%", timeLeft - timeStart)
                             .returnMessage();
 
                     titles.sendTitle(playerA, toSend, 0, 21, 0);

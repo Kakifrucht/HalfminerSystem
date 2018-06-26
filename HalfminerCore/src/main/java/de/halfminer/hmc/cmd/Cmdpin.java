@@ -79,7 +79,7 @@ public class Cmdpin extends HalfminerCommand {
         storage.set(path + "isUpgraded", level > 0);
 
         MessageBuilder.create("cmdPinShow", hmc, "PIN")
-                .addPlaceholderReplace("%PIN%", String.valueOf(pinCode))
+                .addPlaceholderReplace("%PIN%", pinCode)
                 .sendMessage(player);
     }
 }

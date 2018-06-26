@@ -240,7 +240,7 @@ public class Cmdhmc extends HalfminerCommand {
             MessageBuilder.create("cmdHmcGiveSuccessful", hmc, PREFIX)
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName())
                     .addPlaceholderReplace("%ITEM%", itemName)
-                    .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                    .addPlaceholderReplace("%AMOUNT%", amount)
                     .sendMessage(sender);
         } catch (ItemCacheException e) {
 
@@ -253,7 +253,7 @@ public class Cmdhmc extends HalfminerCommand {
                 MessageBuilder.create("cmdHmcGiveInventoryFull", hmc, PREFIX)
                         .addPlaceholderReplace("%PLAYER%", giveTo.getName())
                         .addPlaceholderReplace("%ITEM%", itemName)
-                        .addPlaceholderReplace("%AMOUNT%", String.valueOf(totalLost))
+                        .addPlaceholderReplace("%AMOUNT%", totalLost)
                         .sendMessage(sender);
             } else if (e.getReason().equals(ItemCacheException.Reason.ITEM_NOT_FOUND)) {
                 MessageBuilder.create("cmdHmcGiveItemNotFound", hmc, PREFIX)
@@ -424,7 +424,7 @@ public class Cmdhmc extends HalfminerCommand {
         } else checkRadius = 5;
 
         MessageBuilder.create("cmdHmcSearchhomesStarted", hmc, PREFIX)
-                .addPlaceholderReplace("%RADIUS%", String.valueOf(checkRadius))
+                .addPlaceholderReplace("%RADIUS%", checkRadius)
                 .sendMessage(player);
 
         scheduler.runTaskAsynchronously(hmc, () -> {
@@ -484,7 +484,7 @@ public class Cmdhmc extends HalfminerCommand {
                 MessageBuilder.create("cmdHmcSkillUpdated", hmc, "Skilllevel")
                         .addPlaceholderReplace("%PLAYER%", p.getName())
                         .addPlaceholderReplace("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
-                        .addPlaceholderReplace("%OLDELO%", String.valueOf(oldValue))
+                        .addPlaceholderReplace("%OLDELO%", oldValue)
                         .addPlaceholderReplace("%NEWELO%", p.getString(DataType.SKILL_ELO))
                         .sendMessage(sender);
             } catch (NumberFormatException e) {
@@ -494,7 +494,7 @@ public class Cmdhmc extends HalfminerCommand {
             MessageBuilder.create("cmdHmcSkillShow", hmc, "Skilllevel")
                     .addPlaceholderReplace("%PLAYER%", p.getName())
                     .addPlaceholderReplace("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
-                    .addPlaceholderReplace("%ELO%", String.valueOf(oldValue))
+                    .addPlaceholderReplace("%ELO%", oldValue)
                     .sendMessage(sender);
         }
     }

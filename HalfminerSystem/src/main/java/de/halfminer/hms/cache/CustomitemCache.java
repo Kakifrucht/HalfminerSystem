@@ -156,7 +156,7 @@ public class CustomitemCache {
         } else {
             MessageBuilder.create("cacheCustomitemCacheLogSuccess")
                     .addPlaceholderReplace("%PLAYER%", giveTo.getName())
-                    .addPlaceholderReplace("%AMOUNT%", String.valueOf(amount))
+                    .addPlaceholderReplace("%AMOUNT%", amount)
                     .addPlaceholderReplace("%ITEMNAME%", itemKey)
                     .logMessage(Level.INFO);
         }
