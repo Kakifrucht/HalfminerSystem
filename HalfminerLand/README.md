@@ -66,6 +66,11 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Lookup other players lands, requires permission
       - List all land owned by server with */land list -s*
     - Teleport to a land by clicking on it, will mark the chunk with particles after teleport (requires permission)
+  - /land fly
+    - Enables fly mode on owned land
+      - Disables fly when leaving land, reenables it when entering owned land
+    - Custom cost and duration to fly
+    - Automatically renews fly if currently used
   - /landtp [teleport]
     - Teleport to a public teleport point
       - If player owns the teleport point a delay will be added to prevent teleports being used as private homes (bypass available)
@@ -75,7 +80,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
         - Pinned teleports are always visible, even if owning player is offline
         - Default material for server land can be configured
     - Teleports into abandoned lands are disabled
-  - /hml \<customtitle|forcewgrefresh|free|pintp|reload|save|status>
+  - /hml \<customtitle|forcewgrefresh|flytime|free|pintp|reload|save|status>
     - Reload the configuration
     - Save board data on disk
     - View global land status
@@ -87,3 +92,4 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - See the current free land amount a player can buy or change it
     - Pin (and unpin) a teleport point at the top in the */landtp* menu
     - Specify a custom title for a currently owned land via */hml customtitle [title]*, remove it by using */hml customtitle -c*
+    - Get and set the remaining fly time (for */land fly*)

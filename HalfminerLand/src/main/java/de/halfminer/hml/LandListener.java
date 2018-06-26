@@ -1,6 +1,7 @@
 package de.halfminer.hml;
 
 import de.halfminer.hml.land.Board;
+import de.halfminer.hml.land.FlyBoard;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
@@ -66,8 +67,16 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        board.updatePlayerLocation(e.getPlayer(), e.getPlayer().getLocation().getChunk(), null);
-        lastKnownChunk.remove(e.getPlayer());
+
+        Player player = e.getPlayer();
+        board.updatePlayerLocation(player, e.getPlayer().getLocation().getChunk(), null);
+
+        FlyBoard flyBoard = board.getFlyBoard();
+        if (flyBoard.isPlayerFlying(player)) {
+            flyBoard.togglePlayerFlying(player);
+        }
+
+        lastKnownChunk.remove(player);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -138,6 +147,9 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                         .addPlaceholderReplace("%OWNERLINE%", ownerMessageInTitle)
                         .returnMessage(), 0, 40, 10);
             }
+
+            // toggle flying if entering/leaving owned land
+            board.getFlyBoard().updatePlayerAllowFlight(player, newLand.isOwner(player));
 
             if (newLand.hasTitle()) {
                 hms.getTitlesHandler().sendActionBar(player, newLand.getTitle());

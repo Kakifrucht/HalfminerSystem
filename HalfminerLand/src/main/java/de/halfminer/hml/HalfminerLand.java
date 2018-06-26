@@ -74,6 +74,9 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
                 case "friend":
                     landCommand = new Cmdfriend();
                     break;
+                case "fly":
+                    landCommand = new Cmdfly();
+                    break;
                 case "info":
                     landCommand = new Cmdinfo();
                     break;

@@ -16,7 +16,12 @@ buyLimits:
   - world_nether, 112
   - world_the_end, 112
   - world_disabled, -1
-# How many players can be added per land
+fly:
+  # Price to fly
+  cost: 10.0
+  # How long a player can fly for the given cost
+  durationSeconds: 600
+# How many players can be added as friend per land
 #  Bypass permission is 'hml.bypass.friendlimit'
 friendLimit: 6
 # After how many days of inactivity land should be set abandoned
@@ -58,7 +63,7 @@ localization:
   noLandOwnedPlayer: '&c%PLAYER% &7besitzt kein Land'
   noOwner: 'Frei'
   teleportNotExist: '&cDieser Teleport existiert nicht'
-  usage: '~ \n&e&m-------------&c&l HalfLand Kommandos &e&m-------------\n&7Aktuelles Land kaufen: &a/land buy/\n&7Aktuelles Land verkaufen: &a/land sell/\n&7Informationen über aktuelles Land: &a/land info/\n&7Freunden Baurechte geben/nehmen: &a/land friend/\n&7Teleportpunkte kaufen/setzen: &a/land teleport/\n&7Alle eigenen Länder anzeigen: &a/land list/\n&7Zu einem Teleportpunkt teleportieren: &a/landtp/ [Teleport]\n&e&m----------------------------------------------'
+  usage: '~ \n&e&m-------------&c&l HalfLand Kommandos &e&m-------------\n&7Aktuelles Land kaufen: &a/land buy/\n&7Aktuelles Land verkaufen: &a/land sell/\n&7Informationen über aktuelles Land: &a/land info/\n&7Freunden Baurechte geben/nehmen: &a/land friend/\n&7Teleportpunkte kaufen/setzen: &a/land teleport/\n&7Alle eigenen Länder anzeigen: &a/land list/\n&7Auf eigenem Gebiet fliegen: &a/land fly/\n&7Zu einem Teleportpunkt teleportieren: &a/landtp/ [Teleport]\n&e&m----------------------------------------------'
   cmdBuyAlreadyOwnedSelf: '&7Dieses Land gehört dir bereits'
   cmdBuyConfirm: '~&7Du bist im Begriff das mit Partikeln markierte Land (Chunk von ganz oben bis ganz unten) für &a%COST% &7HCs zu kaufen, wiederhole das Kommando &a/land buy/ &7zum bestätigen'
   cmdBuyConfirmFree: '~&7Du bist im Begriff das mit Partikeln markierte Land (Chunk von ganz oben bis ganz unten) als kostenloses Freiland zu kaufen, wiederhole das Kommando &a/land buy/ &7zum bestätigen'
@@ -69,6 +74,10 @@ localization:
   cmdBuySuccess: '~&7Du hast dieses Land erfolgreich für &a&l%COST% HCs &7gekauft. Es ist nun vollständig gesichert und kann nicht gegriefed werden. &c&lAchtung: &7Wenn du 21 Tage offline warst kann das Gebiet wieder geklaut und gegriefed werden.\n \n Freunde hinzufügen: &a/land friend add <Spieler>\n &7Öffentlichen Teleport kaufen: &a/land teleport buy <Teleport>\n &7Land verkaufen: &a/land sell/'
   cmdBuySuccessAsServer: '&7Du hast dieses Land erfolgreich als Serverland gekauft, es wird nicht als verlassen markiert'
   cmdBuySuccessFree: '&7Du hast dieses Land erfolgreich als Freiland gekauft und &b%FREELANDSOWNED%&7/&o%FREELANDSMAX% &7deiner freien Länder benutzt, du kannst es jederzeit verkaufen und stattdessen ein anderes Gebiet als Freiland kaufen'
+  cmdFlyDisable: '&7Flugmodus &cbeendet&7, deine verbleibende Flugzeit beträgt &a%TIME% &7Sekunden'
+  cmdFlyEnable: '~&7Flugmodus &aaktiviert&7, du kannst nun auf deinem eigenem Grundstück für &a%TIME% &7Sekunden fliegen, der Flug wird automatisch verlängert, sofern er nicht vorher mit &a/land fly/ &7beendet wird'
+  cmdFlyNotEnoughMoney: '&7Du hast nicht genügend Geld, fliegen kostet &c%COST% HCs &7je &o%TIME% &7Sekunden'
+  cmdFlyNotOwned: '&cDu kannst nur auf eigenem Land anfangen zu fliegen'
   cmdFriendAddSuccess: '~&a%PLAYER% &7wurde erfolgreich als Freund zum aktuellen Land hinzugefügt. Bitte beachte das &cgriefen und bestehlen erlaubt ist&7, traue keinen fremden Spielern!\n \n Als Freund entfernen: &a/land friend remove %PLAYER%/&7\n Zu allen Gebieten hinzufügen: &a/land friend add %PLAYER% all/'
   cmdFriendAddSuccessAll: '~&a%PLAYER% &7wurde erfolgreich als Freund zu &lall deinen &b&l%COUNT% &7&lLändern hinzugefügt&7. Bitte beachte das &cgriefen und bestehlen erlaubt ist&7, traue keinen Fremden Spielern!\n \n Als Freund entfernen: &a/land friend remove %PLAYER% all/'
   cmdFriendAddSuccessConnected: '~&a%PLAYER% &7wurde erfolgreich als Freund zu &b&l%COUNT% &7&lLändern, die mit deinem aktuellen Land verbunden sind, hinzugefügt&7. Bitte beachte das &cgriefen und bestehlen erlaubt ist&7, traue keinen Fremden Spielern!\n \n Als Freund entfernen: &a/land friend remove %PLAYER% connected/'
@@ -88,6 +97,8 @@ localization:
   cmdHmlCustomTitleNotOwned: '&cDieses Land hat keinen Besitzer'
   cmdHmlCustomTitleRemoved: '&7Folgender Titel wurde &aerfolgreich &7entfernt:\n&r%TITLE%'
   cmdHmlCustomTitleSet: '&7Folgender Title wurde &aerfolgreich &7gesetzt:\n&r%TITLE%'
+  cmdHmlFlyTime: '&7Verbleibende Flugzeit für &e%PLAYER%&7: &a%TIMELEFT% &7&oSekunden'
+  cmdHmlFlyTimeSet: '&7Verbleibende Flugzeit für &e%PLAYER%&7 wurde erfolgreich von &b%TIMELEFT% &7auf &a%TIMESET% &7Sekunden gesetzt'
   cmdHmlFreeSet: '&e%PLAYER%''s &7maximale freie Länder wurde von &b%CURRENTFREE% &7auf &o%HASFREE%&7/&a%SETFREE% &7gesetzt'
   cmdHmlFreeShow: '&e%PLAYER% &7hat &b%HASFREE%&7/&o%CURRENTFREE% &7freien Ländern'
   cmdHmlPinTpNotFound: '&cDieser Teleportpunkt existiert nicht'
@@ -99,7 +110,7 @@ localization:
   cmdHmlSave: '&aDie Land Daten wurden gespeichert'
   cmdHmlStatus: '&6&lLänder mit Besitzer:\n &7Gesamt: &b%TOTALLANDS% &7(&okostenlos&7: &b%TOTALFREE%&7, &oServer&7: &b%TOTALSERVER%&7, &overlassen&7: &b%TOTALABANDONED%&7)\n Teleportpunkte: &b%TOTALTELEPORTS%\n &7Je Welt: %TOTALWORLDLIST%'
   cmdHmlStatusWorldListEntry: '&e%WORLD%&7-&b%AMOUNT%'
-  cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml customtitle <Titel|-c>\n /hml forcewgrefresh\n /hml free <Spieler> [Wert]\n /hml pintp <Teleport>\n /land buy server\n /land sell force\n /land teleport delete <Teleport>\n /land list <Spieler|-s>'
+  cmdHmlUsage: 'HalfminerLand Version &6%VERSION%\n&6&lLand Admin Kommandos:&f\n /hml reload\n /hml save\n /hml status\n /hml customtitle <Titel|-c>\n /hml forcewgrefresh\n /hml flytime <Spieler> [Zeit]\n /hml free <Spieler> [Wert]\n /hml pintp <Teleport>\n /land buy server\n /land sell force\n /land teleport delete <Teleport>\n /land list <Spieler|-s>'
   cmdInfoFree: '~&7Dieses Land ist frei, verwende &a/land buy/ &7zum kaufen'
   cmdInfoNoFriends: '&fKeine hinzugefügt'
   cmdInfoNoTeleport: '&fKeiner gesetzt'
@@ -141,6 +152,10 @@ localization:
   cmdTeleportShow: '~&7Dein Teleportpunkt &e%TELEPORT% &7erscheint nun, solange du online bist, öffentlich für alle Spieler im &a/landtp/ &7Menü'
   cmdTeleportShowUnset: '~&7Dein Teleportpunkt &e%TELEPORT% &7wird nicht mehr für alle Spieler unter &a/landtp/ &7angezeigt'
   cmdTeleportUsage: '~ \n&e&m-------------&c&l Teleport Kommandos &e&m-------------\n&7Teleport Kaufen (kostet 10 HCs): &a/land teleport buy <Teleport>\n&7Teleport umsetzen (kostet 5 HCs): &a/land teleport set <Teleport>\n&7Teleport ausstellen: &a/land teleport show <Teleport>\n&7Teleport löschen: &a/land teleport delete <Teleport>\n \n&7Der Teleportname darf beliebig sein, aber nicht Vulgär (Chatregeln beachten). Er ist für alle Spieler unter &a/landtp <Teleport> &7zugänglich. All deine Teleportpunkte, sowie alle ausgestellten Teleportpunkte von anderen online Spielern, erscheinen unter &a/landtp/&7.\n&e&m----------------------------------------------'
+  flyBoardDisableAfk: '&cDein Flug wurde nicht verlängert, da du abwesend bist'
+  flyBoardDisableForce: '~&7Flugmodus beendet, bitte reaktiviere ihn bei Bedarf mit &a/land fly/'
+  flyBoardDisableNotEnoughMoney: '&cFlugzeit abgelaufen, du hast nicht genügend Geld um weiterzufliegen'
+  flyBoardRenewed: '~&7Deine Flugzeit wurde um &a%TIME% &7Sekunden für &b%COST% HCs &7verlängert, verwende &a/land fly/ &7um den Flugmodus zu deaktivieren'
   listenerBlockBreakBlocked: '&cDu kannst auf dem Land von &a%OWNER% &ckeine Blöcke brechen'
   listenerBlockPlaceBlocked: '&cDu kannst auf dem Land von &a%OWNER% &ckeine Blöcke platzieren'
   listenerCmdBlocked: '&cDu kannst dieses Kommando auf dem Land von &a%OWNER% &cnicht verwenden'

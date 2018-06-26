@@ -39,4 +39,6 @@ public interface Board {
     void showChunkParticles(Player player, Land showParticles);
 
     void landWasUpdated(Land land);
+
+    FlyBoard getFlyBoard();
 }

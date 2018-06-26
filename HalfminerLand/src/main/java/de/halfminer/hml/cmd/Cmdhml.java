@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 public class Cmdhml extends LandCommand {
 
+    private static final String PREFIX = "Land";
+
 
     public Cmdhml() {
         super("hml");
@@ -36,6 +38,9 @@ public class Cmdhml extends LandCommand {
                 break;
             case "forcewgrefresh":
                 forceWGRefresh();
+                break;
+            case "flytime":
+                flyTime();
                 break;
             case "free":
                 free();
@@ -108,6 +113,43 @@ public class Cmdhml extends LandCommand {
         MessageBuilder.create("cmdHmlRefreshDone", hml).sendMessage(sender);
     }
 
+    private void flyTime() {
+
+        if (args.length < 2) {
+            showUsage();
+            return;
+        }
+
+        HalfminerPlayer halfminerPlayer;
+        try {
+            halfminerPlayer = hms.getStorageHandler().getPlayer(args[1]);
+        } catch (PlayerNotFoundException e) {
+            e.sendNotFoundMessage(sender, PREFIX);
+            return;
+        }
+
+        LandPlayer landPlayer = hml.getLandStorage().getLandPlayer(halfminerPlayer);
+        int flyTimeLeft = landPlayer.getFlyTimeLeft();
+
+        int setTo = -1;
+        if (args.length > 2) {
+            try {
+                setTo = Integer.parseInt(args[2]);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        boolean setFlyTime = setTo >= 0;
+        if (setFlyTime) {
+            landPlayer.setFlyTimeLeft(setTo);
+        }
+
+        MessageBuilder.create("cmdHmlFlyTime" + (setFlyTime ? "Set" : ""), hml)
+                .addPlaceholderReplace("%PLAYER%", halfminerPlayer.getName())
+                .addPlaceholderReplace("%TIMELEFT%", String.valueOf(flyTimeLeft))
+                .addPlaceholderReplace("%TIMESET%", String.valueOf(setTo))
+                .sendMessage(sender);
+    }
+
     private void free() {
         if (args.length < 2) {
             showUsage();
@@ -120,7 +162,7 @@ public class Cmdhml extends LandCommand {
             toEdit = hms.getStorageHandler().getPlayer(args[1]);
             landPlayer = hml.getLandStorage().getLandPlayer(toEdit);
         } catch (PlayerNotFoundException e) {
-            e.sendNotFoundMessage(sender, "Land");
+            e.sendNotFoundMessage(sender, PREFIX);
             return;
         }
 
@@ -138,14 +180,14 @@ public class Cmdhml extends LandCommand {
                 .collect(Collectors.toList())
                 .size();
 
-        if (setTo >= 0) {
-
+        boolean setFreeLands = setTo >= 0;
+        if (setFreeLands) {
             landPlayer.setFreeLands(setTo);
             hml.getLogger().info("Set free lands for " + toEdit.getName() + " from "
                     + setFreeAmount + " to " + setTo);
         }
 
-        MessageBuilder.create(setTo >= 0 ? "cmdHmlFreeSet" : "cmdHmlFreeShow", hml)
+        MessageBuilder.create(setFreeLands ? "cmdHmlFreeSet" : "cmdHmlFreeShow", hml)
                 .addPlaceholderReplace("%PLAYER%", toEdit.getName())
                 .addPlaceholderReplace("%HASFREE%", String.valueOf(hasFreeAmount))
                 .addPlaceholderReplace("%CURRENTFREE%", String.valueOf(setFreeAmount))
@@ -201,7 +243,7 @@ public class Cmdhml extends LandCommand {
 
     private void reload() {
         hml.reload();
-        MessageBuilder.create("pluginReloaded", "Land")
+        MessageBuilder.create("pluginReloaded", PREFIX)
                 .addPlaceholderReplace("%PLUGINNAME%", hml.getName())
                 .sendMessage(sender);
     }

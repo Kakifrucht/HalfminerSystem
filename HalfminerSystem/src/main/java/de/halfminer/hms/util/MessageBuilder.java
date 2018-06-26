@@ -115,6 +115,11 @@ public class MessageBuilder {
         return this;
     }
 
+    public MessageBuilder addPlaceholderReplace(String placeholder, Object replaceWith) {
+        addPlaceholderReplace(placeholder, String.valueOf(replaceWith));
+        return this;
+    }
+
     public String returnMessage() {
         return returnMessage(false);
     }

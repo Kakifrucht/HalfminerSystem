@@ -41,6 +41,8 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     private final Map<Player, BukkitTask> chunkPlayerParticleMap;
     private final Cache<Player, AbstractContract> contractCache;
 
+    private final FlyBoard flyBoard;
+
 
     public LandBoard() {
 
@@ -54,6 +56,8 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
                 .weakKeys()
                 .expireAfterWrite(CHUNK_SHOWN_SECONDS, TimeUnit.SECONDS)
                 .build();
+
+        this.flyBoard = new FlyBoard();
 
         // load board from disk
         for (String worldStr : landStorageSection.getKeys(false)) {
@@ -281,6 +285,11 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     @Override
     public void landWasUpdated(Land land) {
         landMap.addLand(land);
+    }
+
+    @Override
+    public FlyBoard getFlyBoard() {
+        return flyBoard;
     }
 
     @Override

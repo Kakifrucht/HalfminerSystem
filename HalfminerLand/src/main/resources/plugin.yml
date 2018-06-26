@@ -27,6 +27,7 @@ permissions:
       - hml.cmd.buy
       - hml.cmd.buy.free
       - hml.cmd.buy.server
+      - hml.cmd.fly
       - hml.cmd.friend
       - hml.cmd.hml
       - hml.cmd.info
@@ -68,6 +69,8 @@ permissions:
     description: Grants access to unlimited free lands
   hml.cmd.buy.server:
     description: Grants access to /land buy server command
+  hml.cmd.fly:
+    description: Grants access to /land fly command
   hml.cmd.friend:
     description: Grants access to /land friend command
     default: true

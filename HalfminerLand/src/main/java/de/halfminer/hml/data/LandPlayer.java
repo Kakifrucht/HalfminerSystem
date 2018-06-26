@@ -12,6 +12,7 @@ public class LandPlayer {
     private static final String LAST_COST_LIST_PATH = "previousCostList";
     private static final String FREE_LANDS_PATH = "freetotal";
     private static final String SHOWN_TELEPORT_PATH = "shownTeleport";
+    private static final String FLY_TIME_LEFT_PATH = "flyTimeLeft";
 
     private final ConfigurationSection dataSection;
 
@@ -71,6 +72,14 @@ public class LandPlayer {
 
     public void setShownTeleport(String teleport) {
         dataSection.set(SHOWN_TELEPORT_PATH, teleport);
+    }
+
+    public int getFlyTimeLeft() {
+        return dataSection.getInt(FLY_TIME_LEFT_PATH, 0);
+    }
+
+    public void setFlyTimeLeft(int flyTimeLeft) {
+        dataSection.set(FLY_TIME_LEFT_PATH, flyTimeLeft > 0 ? flyTimeLeft : null);
     }
 
     private List<String> getCostListFromStorage() {
