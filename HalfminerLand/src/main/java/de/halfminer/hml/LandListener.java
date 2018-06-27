@@ -7,6 +7,7 @@ import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.*;
 
 import java.util.*;
@@ -301,6 +303,32 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         }
 
         e.setCancelled(false);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPvP(EntityDamageByEntityEvent e) {
+        if (e.getEntity() instanceof Player) {
+
+            Player victim = (Player) e.getEntity();
+            Player attacker = Utils.getPlayerSourceFromEntity(e.getDamager());
+
+            if (attacker != null) {
+                disableFlyOnPvP(victim);
+                disableFlyOnPvP(attacker);
+            }
+        }
+    }
+
+    private void disableFlyOnPvP(Player player) {
+
+        FlyBoard flyBoard = board.getFlyBoard();
+
+        if (flyBoard.isPlayerFlying(player)) {
+            flyBoard.togglePlayerFlying(player);
+            MessageBuilder.create("listenerFlyPvPDisabled", hml)
+                    .addPlaceholderReplace("%TIME%", flyBoard.getFlyTimeLeft(player))
+                    .sendMessage(player);
+        }
     }
 
     private boolean hasDifferentOwner(Land landA, Land landB) {

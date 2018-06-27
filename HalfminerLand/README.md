@@ -72,6 +72,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
   - /land fly
     - Toggles fly mode on owned land
       - Disables fly when leaving land, reenables it when entering owned land
+      - Disables fly when leaving the server or entering combat with players
     - Custom cost and duration to fly
     - Automatically renews fly if currently used
   - /landtp [teleport]
