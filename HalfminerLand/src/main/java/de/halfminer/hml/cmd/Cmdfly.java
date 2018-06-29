@@ -3,6 +3,7 @@ package de.halfminer.hml.cmd;
 import de.halfminer.hml.land.FlyBoard;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.util.MessageBuilder;
+import org.bukkit.GameMode;
 
 public class Cmdfly extends LandCommand {
 
@@ -19,6 +20,11 @@ public class Cmdfly extends LandCommand {
             return;
         }
 
+        if (!server.getAllowFlight()) {
+            MessageBuilder.create("cmdFlyServerDisabled", hml).sendMessage(player);
+            return;
+        }
+
         FlyBoard flyBoard = board.getFlyBoard();
         if (flyBoard.isPlayerFlying(player)) {
             flyBoard.togglePlayerFlying(player);
@@ -26,6 +32,14 @@ public class Cmdfly extends LandCommand {
                     .addPlaceholderReplace("%TIME%", flyBoard.getFlyTimeLeft(player))
                     .sendMessage(player);
         } else {
+
+            if (player.isFlying()
+                    || player.getAllowFlight()
+                    || player.getGameMode().equals(GameMode.CREATIVE)
+                    || player.getGameMode().equals(GameMode.SPECTATOR)) {
+                MessageBuilder.create("cmdFlyAlreadyFlying", hml).sendMessage(player);
+                return;
+            }
 
             Land land = board.getLandAt(player);
             if (land.isOwner(player)) {
