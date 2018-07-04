@@ -24,6 +24,9 @@ import org.bukkit.event.player.*;
 
 import java.util.*;
 
+/**
+ * Listener class for the entire code base. Handles Bukkit events, like moving between chunks,
+ */
 public class LandListener extends LandClass implements Listener, Reloadable {
 
     private final Board board;
@@ -151,7 +154,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             }
 
             // toggle flying if entering/leaving owned land
-            board.getFlyBoard().updatePlayerAllowFlight(player, newLand.isOwner(player));
+            board.getFlyBoard().updatePlayerAllowFlight(player, newLand.hasOwner(), newLand.hasPermission(player));
 
             if (newLand.hasTitle()) {
                 hms.getTitlesHandler().sendActionBar(player, newLand.getTitle());

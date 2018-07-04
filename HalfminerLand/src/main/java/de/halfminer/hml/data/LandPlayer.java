@@ -7,6 +7,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class handling the storage for a given player. Constructor takes a {@link HanStorage} instance for reading/writing,
+ * and a {@link HalfminerPlayer} that will be associated with this instance.
+ */
 public class LandPlayer {
 
     private static final String LAST_COST_LIST_PATH = "previousCostList";

@@ -15,6 +15,13 @@ import org.bukkit.entity.Player;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Class representing one land that can be owned by a player.
+ * Every land consists of a chunk and handles protection automatically.
+ * Data is loaded from the given {@link ConfigurationSection} during constructor call, and automatically
+ * stored if changes occur. Land can be free land, owned by the server, be abandoned,
+ * contain one teleport point and a custom title.
+ */
 public class Land extends LandClass {
 
     private static final char PATH_COORDINATE_SPLIT_CHAR = 'z';
@@ -169,9 +176,16 @@ public class Land extends LandClass {
     }
 
     public boolean isOwner(Player player) {
-        return hasOwner()
-                && player.getUniqueId().equals(owner.getUniqueId())
-                || (isServerLand() && player.hasPermission("hml.ownsserverland"));
+
+        if (!hasOwner()) {
+            return false;
+        }
+
+        if (isServerLand) {
+            return player.hasPermission("hml.ownsserverland");
+        }
+
+        return player.getUniqueId().equals(owner.getUniqueId());
     }
 
     public void setOwner(HalfminerPlayer owner) {
@@ -323,7 +337,6 @@ public class Land extends LandClass {
      * @param player to check
      * @return true if land is not owned, abandoned, player is land owner or added as member of land
      */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean hasPermission(Player player) {
         return !hasOwner()
                 || isOwner(player)

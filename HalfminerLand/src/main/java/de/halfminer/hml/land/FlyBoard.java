@@ -9,7 +9,6 @@ import de.halfminer.hms.manageable.Reloadable;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
@@ -17,7 +16,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class FlyBoard extends LandClass implements Listener, Disableable, Reloadable {
+/**
+ * This class keeps track of all players that are currently flying, toggles the fly state,
+ * gets the price and fly duration from config and automatically renews the flight when
+ * the time runs out.
+ */
+public class FlyBoard extends LandClass implements Disableable, Reloadable {
 
     private final Map<Player, Pair<Long, BukkitTask>> flyMap;
 
@@ -78,11 +82,12 @@ public class FlyBoard extends LandClass implements Listener, Disableable, Reload
         return true;
     }
 
-    public void updatePlayerAllowFlight(Player player, boolean isOwner) {
+    public void updatePlayerAllowFlight(Player player, boolean isOwned, boolean hasPermission) {
         if (isPlayerFlying(player)) {
-            if (!player.getAllowFlight() && isOwner) {
+            boolean isAllowedFlight = isOwned && hasPermission;
+            if (!player.getAllowFlight() && isAllowedFlight) {
                 setFlyEnabled(player, true);
-            } else if (player.getAllowFlight() && !isOwner) {
+            } else if (player.getAllowFlight() && !isAllowedFlight) {
                 setFlyEnabled(player, false);
             }
         }

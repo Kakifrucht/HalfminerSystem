@@ -17,6 +17,11 @@ import org.bukkit.plugin.PluginManager;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * This class handles WorldGuard integration. It creates regions for given {@link Land} and updates their states.
+ * It queries current protection and fixes it on demand. Friends can be added through
+ * {@link #addMemberToRegion(Land, UUID)} and removed via {@link #removeMemberFromRegion(Land, UUID)}.
+ */
 public class WorldGuardHelper {
 
     private static final int HIGHEST_BLOCK_Y = 255;

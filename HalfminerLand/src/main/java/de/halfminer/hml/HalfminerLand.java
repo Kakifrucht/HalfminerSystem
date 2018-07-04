@@ -16,6 +16,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 
+/**
+ * HalfminerLand main class, land management plugin for Bukkit/Spigot plugin, using WorldGuard as protection backend.
+ *
+ * @author Fabian Prieto Wunderlich / Kakifrucht
+ */
 public class HalfminerLand extends JavaPlugin implements MenuCreator {
 
     private static final String PREFIX = "Land";

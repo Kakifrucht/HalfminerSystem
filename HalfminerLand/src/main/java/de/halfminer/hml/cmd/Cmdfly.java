@@ -42,7 +42,7 @@ public class Cmdfly extends LandCommand {
             }
 
             Land land = board.getLandAt(player);
-            if (land.isOwner(player)) {
+            if (land.hasOwner() && land.hasPermission(player)) {
 
                 boolean flyEnabled = board.getFlyBoard().togglePlayerFlying(player);
                 if (flyEnabled) {
@@ -57,7 +57,7 @@ public class Cmdfly extends LandCommand {
                 }
 
             } else {
-                MessageBuilder.create("cmdFlyNotOwned", hml).sendMessage(player);
+                MessageBuilder.create("cmdFlyNoPermission", hml).sendMessage(player);
             }
         }
     }

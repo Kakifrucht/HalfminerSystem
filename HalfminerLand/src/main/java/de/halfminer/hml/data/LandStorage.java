@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Storage backed by a {@link HanStorage} instance for map/land and player data storage.
+ * Returns {@link LandPlayer} instances, a list of pinned teleports via {@link #getPinnedTeleportList()} and
+ * the entire map section as {@link ConfigurationSection} via {@link #getMapSection()}.
+ */
 public class LandStorage extends LandClass {
 
     private static final String ROOT_MAP_PATH = "map";
