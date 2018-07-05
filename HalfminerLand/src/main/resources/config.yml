@@ -92,7 +92,6 @@ localization:
   cmdFlyEnable: '~&7Flugmodus &aaktiviert&7, du kannst nun auf deinem eigenem Grundstück für &a%TIME% &7Sekunden fliegen, der Flug wird automatisch verlängert, sofern er nicht vorher mit &a/land fly/ &7beendet wird'
   cmdFlyNoPermission: '&cDu darfst auf diesem Land nicht fliegen'
   cmdFlyNotEnoughMoney: '&7Du hast nicht genügend Geld, fliegen kostet &c%COST% HCs &7je &o%TIME% &7Sekunden'
-  cmdFlyServerDisabled: '&cFliegen ist auf dem Server deaktiviert'
   cmdFriendAddSuccess: '~&a%PLAYER% &7wurde erfolgreich als Freund zum aktuellen Land hinzugefügt. Bitte beachte das &cgriefen und bestehlen erlaubt ist&7, traue keinen fremden Spielern!\n \n Als Freund entfernen: &a/land friend remove %PLAYER%/&7\n Zu allen Gebieten hinzufügen: &a/land friend add %PLAYER% all/'
   cmdFriendAddSuccessAll: '~&a%PLAYER% &7wurde erfolgreich als Freund zu &lall deinen &b&l%COUNT% &7&lLändern hinzugefügt&7. Bitte beachte das &cgriefen und bestehlen erlaubt ist&7, traue keinen Fremden Spielern!\n \n Als Freund entfernen: &a/land friend remove %PLAYER% all/'
   cmdFriendAddSuccessConnected: '~&a%PLAYER% &7wurde erfolgreich als Freund zu &b&l%COUNT% &7&lLändern, die mit deinem aktuellen Land verbunden sind, hinzugefügt&7. Bitte beachte das &cgriefen und bestehlen erlaubt ist&7, traue keinen Fremden Spielern!\n \n Als Freund entfernen: &a/land friend remove %PLAYER% connected/'

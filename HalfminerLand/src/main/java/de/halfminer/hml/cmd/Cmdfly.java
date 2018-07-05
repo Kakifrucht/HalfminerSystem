@@ -20,11 +20,6 @@ public class Cmdfly extends LandCommand {
             return;
         }
 
-        if (!server.getAllowFlight()) {
-            MessageBuilder.create("cmdFlyServerDisabled", hml).sendMessage(player);
-            return;
-        }
-
         FlyBoard flyBoard = board.getFlyBoard();
         if (flyBoard.isPlayerFlying(player)) {
             flyBoard.togglePlayerFlying(player);
