@@ -40,15 +40,11 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
     public boolean togglePlayerFlying(Player player) {
 
         LandPlayer landPlayer = hml.getLandStorage().getLandPlayer(player);
-        if (flyMap.containsKey(player)) {
 
-            setFlyEnabled(player, false);
-            landPlayer.setFlyTimeLeft(getFlyTimeLeft(player));
-            flyMap.remove(player).getRight().cancel();
+        boolean doEnable = !flyMap.containsKey(player);
+        int timeLeftFlying = getFlyTimeLeft(player);
+        if (doEnable) {
 
-        } else {
-
-            int timeLeftFlying = getFlyTimeLeft(player);
             if (timeLeftFlying < 1 && !takePayment(player)) {
                 return false;
             }
@@ -77,7 +73,16 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
 
             setFlyEnabled(player, true);
             setFlyTimeLeft(player, timeLeftFlying, task);
+
+        } else {
+            setFlyEnabled(player, false);
+            landPlayer.setFlyTimeLeft(timeLeftFlying);
+            flyMap.remove(player).getRight().cancel();
         }
+
+        String logStateString = doEnable ? "enabled" : "disabled";
+        hml.getLogger().info("Fly mode " + logStateString + " for " + player.getName()
+                + ", time left: " + timeLeftFlying + " Seconds");
 
         return true;
     }
