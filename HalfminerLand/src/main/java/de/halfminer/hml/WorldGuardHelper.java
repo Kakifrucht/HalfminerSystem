@@ -94,7 +94,7 @@ public class WorldGuardHelper {
                 logger.info("Created region with id " + region.getId() + " for land " + land);
             }
 
-            if (land.isAbandoned() != isMarkedAbandoned(land)) {
+            if (land.isAbandoned() != isAbandoned(region)) {
                 if (land.isAbandoned()) {
                     region.setFlag(DefaultFlag.PVP, StateFlag.State.ALLOW);
                     region.setFlag(DefaultFlag.ENDERPEARL, StateFlag.State.ALLOW);
@@ -122,7 +122,11 @@ public class WorldGuardHelper {
 
     public boolean isMarkedAbandoned(Land land) {
         ProtectedRegion region = getRegionFromRegionManager(land.getChunk());
-        return region != null && region.getFlag(DefaultFlag.BUILD) == StateFlag.State.ALLOW;
+        return region != null && isAbandoned(region);
+    }
+
+    private boolean isAbandoned(ProtectedRegion region) {
+        return region.getFlag(DefaultFlag.BUILD) == StateFlag.State.ALLOW;
     }
 
     public DefaultDomain getMemberList(Land land) {

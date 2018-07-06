@@ -308,6 +308,15 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         e.setCancelled(false);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onWorldChangeFly(PlayerChangedWorldEvent e) {
+
+        // update fly allow on world change, as it might get overriden otherwise
+        Player player = e.getPlayer();
+        Land land = board.getLandAt(player);
+        board.getFlyBoard().updatePlayerAllowFlight(player, land.hasOwner(), land.hasPermission(player));
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPvP(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player) {

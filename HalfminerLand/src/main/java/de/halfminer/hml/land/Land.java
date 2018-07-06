@@ -88,8 +88,8 @@ public class Land extends LandClass {
         this.isAbandoned = wgh.isMarkedAbandoned(this);
         boolean abandonmentWasUpdated = updateAbandonmentStatus();
 
-        // refresh region if it didn't happen yet, ensures that if land has no owner it will be deleted
-        if (!abandonmentWasUpdated) {
+        // refresh region if it didn't happen yet, ensures that if land has no owner the region will be deleted
+        if (!abandonmentWasUpdated && !hasOwner()) {
             wgh.updateRegionOfLand(this);
         }
     }

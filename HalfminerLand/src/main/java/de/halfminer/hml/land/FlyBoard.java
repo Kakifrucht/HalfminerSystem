@@ -82,7 +82,7 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
 
         String logStateString = doEnable ? "enabled" : "disabled";
         hml.getLogger().info("Fly mode " + logStateString + " for " + player.getName()
-                + ", time left: " + timeLeftFlying + " Seconds");
+                + ", time left: " + timeLeftFlying + " seconds");
 
         return true;
     }
