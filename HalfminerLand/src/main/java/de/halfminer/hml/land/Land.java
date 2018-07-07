@@ -232,8 +232,13 @@ public class Land extends LandClass {
         if (hasOwner()) {
 
             int abandonedAfterSeconds = hml.getConfig().getInt("landAbandonedAfterDays", 21) * 24 * 60 * 60;
+            if (abandonedAfterSeconds < 1) {
+                return setAbandoned(false);
+            }
+
             long lastSeen = owner.getLong(DataType.LAST_SEEN);
 
+            // check if player is online
             if (lastSeen == Long.MAX_VALUE) {
                 return setAbandoned(false);
             }

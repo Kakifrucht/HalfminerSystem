@@ -42,12 +42,12 @@ public class Cmdbuy extends LandCommand {
                     int minimumCoordinateInt = separator.getArgumentInt(1);
 
                     // check if world is disabled
-                    if (minimumCoordinateInt < 0 && !player.hasPermission("hml.bypass.buyDisabledWorld")) {
+                    if (minimumCoordinateInt < 0 && !player.hasPermission("hml.bypass.buydisabledworld")) {
                         MessageBuilder.create("cmdBuyNotBuyableWorld", hml).sendMessage(player);
                         return;
                     }
 
-                    if (!player.hasPermission("hml.bypass.minimumCoordinates")) {
+                    if (!player.hasPermission("hml.bypass.minimumcoordinates")) {
 
                         // check if minimum coordinate requirement is met
                         if (landToBuy.getXLandCorner() < minimumCoordinateInt

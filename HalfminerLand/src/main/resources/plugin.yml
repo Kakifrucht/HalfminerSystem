@@ -45,16 +45,16 @@ permissions:
     description: Access to all bypass permissions
     children:
       - hml.bypass.breakplace
+      - hml.bypass.buydisabledworld
       - hml.bypass.cmd
-      - hml.bypass.disabledWorld
       - hml.bypass.friendlimit
       - hml.bypass.landtptimer
-      - hml.bypass.minimumCoordinates
+      - hml.bypass.minimumcoordinates
       - hml.bypass.teleportblacklist
       - hml.bypass.teleportlength
   hml.bypass.breakplace:
     description: Bypasses block break and placement protection
-  hml.bypass.disabledWorld:
+  hml.bypass.buydisabledworld:
     description: Bypasses disabled worlds during buy
   hml.bypass.cmd:
     description: Bypasses command block list in owned land
@@ -62,7 +62,7 @@ permissions:
     description: Bypasses the friend limit per land
   hml.bypass.landtptimer:
     description: Bypasses teleport delay when teleporting via landtp to owned land
-  hml.bypass.minimumCoordinates:
+  hml.bypass.minimumcoordinates:
     description: Bypasses the minimum coordinates set to purchase a land
   hml.bypass.teleportblacklist:
     description: Bypasses teleport name blacklist set in config

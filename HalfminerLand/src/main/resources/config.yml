@@ -24,7 +24,7 @@ fly:
 # How many players can be added as friend per land
 #  Bypass permission is 'hml.bypass.friendlimit'
 friendLimit: 6
-# After how many days of inactivity land should be set abandoned
+# After how many days of inactivity land should be set abandoned, set to 0 to disable abandoned land
 landAbandonedAfterDays: 21
 # How likely should a player that owns no land yet receive a message about it on block placement
 # Set percentage as decimal, e.g. on place in 1% of the cases is 0.01

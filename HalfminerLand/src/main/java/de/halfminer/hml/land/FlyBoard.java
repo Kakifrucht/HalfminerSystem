@@ -87,9 +87,9 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
         return true;
     }
 
-    public void updatePlayerAllowFlight(Player player, boolean isOwned, boolean hasPermission) {
+    public void updatePlayerAllowFlight(Player player, Land land) {
         if (isPlayerFlying(player)) {
-            boolean isAllowedFlight = isOwned && hasPermission;
+            boolean isAllowedFlight = land.hasOwner() && land.hasPermission(player);
             if (!player.getAllowFlight() && isAllowedFlight) {
                 setFlyEnabled(player, true);
             } else if (player.getAllowFlight() && !isAllowedFlight) {

@@ -154,7 +154,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             }
 
             // toggle flying if entering/leaving owned land
-            board.getFlyBoard().updatePlayerAllowFlight(player, newLand.hasOwner(), newLand.hasPermission(player));
+            board.getFlyBoard().updatePlayerAllowFlight(player, newLand);
 
             if (newLand.hasTitle()) {
                 hms.getTitlesHandler().sendActionBar(player, newLand.getTitle());
@@ -313,8 +313,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
         // update fly allow on world change, as it might get overriden otherwise
         Player player = e.getPlayer();
-        Land land = board.getLandAt(player);
-        board.getFlyBoard().updatePlayerAllowFlight(player, land.hasOwner(), land.hasPermission(player));
+        board.getFlyBoard().updatePlayerAllowFlight(player, board.getLandAt(player));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
