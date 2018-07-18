@@ -19,14 +19,20 @@ import java.util.logging.Level;
 /**
  * This class keeps track of all players that are currently flying, toggles the fly state,
  * gets the price and fly duration from config and automatically renews the flight when
- * the time runs out.
+ * the time runs out. If a player is afk during fly, or flies higher than specified in
+ * {@link #FLY_CHECK_TASK_TICKS} the fly is cancelled and the remaining time will be saved.
  */
 public class FlyBoard extends LandClass implements Disableable, Reloadable {
+
+    private static final int MAX_FLY_HEIGHT = 320;
+    private static final long FLY_CHECK_TASK_TICKS = 5 * 20L;
 
     private final Map<Player, Pair<Long, BukkitTask>> flyMap;
 
     private double flyCost;
     private int flyDurationSeconds;
+
+    private BukkitTask flyCheckTask;
 
 
     FlyBoard() {
@@ -54,13 +60,8 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
                 timeLeftFlying = flyDurationSeconds;
             }
 
+            // run money refresh task
             BukkitTask task = scheduler.runTaskTimer(hml, () -> {
-
-                if (hms.getHooksHandler().isAfk(player)) {
-                    togglePlayerFlying(player);
-                    MessageBuilder.create("flyBoardDisableAfk", hml).sendMessage(player);
-                    return;
-                }
 
                 if (takePayment(player)) {
                     setFlyTimeLeft(player, flyDurationSeconds, null);
@@ -83,6 +84,30 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
         String logStateString = doEnable ? "enabled" : "disabled";
         hml.getLogger().info("Fly mode " + logStateString + " for " + player.getName()
                 + ", time left: " + timeLeftFlying + " seconds");
+
+        // run fly scheduler task if necessary, stop flying if player is afk and enforce fly height limit
+        if (!flyMap.isEmpty() && (flyCheckTask == null || flyCheckTask.isCancelled())) {
+
+            flyCheckTask = scheduler.runTaskTimer(hml, () -> {
+
+                if (flyMap.isEmpty()) {
+                    flyCheckTask.cancel();
+                    return;
+                }
+
+                for (Player flyingPlayer : flyMap.keySet()) {
+
+                    if (hms.getHooksHandler().isAfk(flyingPlayer)) {
+                        togglePlayerFlying(flyingPlayer);
+                        MessageBuilder.create("flyBoardDisableAfk", hml).sendMessage(player);
+                    } else if (flyingPlayer.getLocation().getBlockY() > MAX_FLY_HEIGHT) {
+                        togglePlayerFlying(flyingPlayer);
+                        MessageBuilder.create("flyBoardFlyHeightLimit", hml).sendMessage(player);
+                    }
+                }
+
+            }, FLY_CHECK_TASK_TICKS, FLY_CHECK_TASK_TICKS);
+        }
 
         return true;
     }

@@ -39,6 +39,12 @@ public class Cmdfly extends LandCommand {
             Land land = board.getLandAt(player);
             if (land.hasOwner() && land.hasPermission(player)) {
 
+                // player must stand still to start flying
+                if (player.getVelocity().length() > 0.1d) {
+                    MessageBuilder.create("cmdFlyNotStandingStill", hml).sendMessage(player);
+                    return;
+                }
+
                 boolean flyEnabled = board.getFlyBoard().togglePlayerFlying(player);
                 if (flyEnabled) {
                     MessageBuilder.create("cmdFlyEnable", hml)
