@@ -127,8 +127,14 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 pvpMessageInTitle = MessageBuilder.returnMessage("listenerPvP" + (currentIsPvP ? "On" : "Off"), hml, false);
             }
 
-            if (!newLand.hasOwner() && previousLand.hasOwner()) {
-                ownerMessageInTitle = MessageBuilder.returnMessage("listenerOwnerFree", hml, false);
+            if (!newLand.hasOwner()) {
+
+                boolean newLandIsFree = wgh.isLandFree(newLand);
+
+                if (previousLand.hasOwner() || (newLandIsFree != wgh.isLandFree(previousLand))) {
+                    String messageKey = "listenerOwner" + (newLandIsFree ? "Free" : "Protected");
+                    ownerMessageInTitle = MessageBuilder.returnMessage(messageKey, hml, false);
+                }
 
             } else if (newLand.hasOwner() && hasDifferentOwner(newLand, previousLand)) {
 

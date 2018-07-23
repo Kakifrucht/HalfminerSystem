@@ -184,6 +184,7 @@ localization:
   listenerOwnerFree: '&aFreies Land'
   listenerOwnerOwned: 'Landbesitzer: &b&l%OWNER%'
   listenerOwnerOwnedAbandoned: 'Landbesitzer: &8%OWNER% &7(Verlassen)'
+  listenerOwnerProtected: '&eGeschütztes Land'
   listenerPvPOff: '&aPvP aus'
   listenerPvPOn: '&cPvP an'
   listenerUnprotectedLandMessage: '~&7Du baust aktuell auf ungeschütztem Land, sichere dein erstes Land &ekostenlos &7vor Griefing und Diebstahl mit dem Kommando &a/land buy/'
