@@ -1,9 +1,12 @@
 package de.halfminer.hmc.module;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * - Removes quit message
@@ -82,6 +86,11 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         }
     }
 
+    private final Cache<CommandSender, Boolean> tabCompleteMessageCooldownCache = CacheBuilder.newBuilder()
+            .weakKeys()
+            .expireAfterWrite(30, TimeUnit.SECONDS)
+            .build();
+
     @EventHandler(ignoreCancelled = true)
     public void tabCompleteFilter(TabCompleteEvent e) {
 
@@ -102,7 +111,11 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                 && ((complete.size() > 10 && complete.get(0).startsWith("/"))
                 || (complete.size() == 0 && !buffer.contains(" ")))) {
 
-            MessageBuilder.create("modStaticListenersTabHelp", hmc, "Info").sendMessage(e.getSender());
+            if (tabCompleteMessageCooldownCache.getIfPresent(e.getSender()) == null) {
+                MessageBuilder.create("modStaticListenersTabHelp", hmc, "Info").sendMessage(e.getSender());
+                tabCompleteMessageCooldownCache.put(e.getSender(), true);
+            }
+
             e.setCompletions(Collections.singletonList("/hilfe"));
         }
     }
