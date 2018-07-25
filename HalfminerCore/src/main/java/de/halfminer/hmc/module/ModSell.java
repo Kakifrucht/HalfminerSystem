@@ -110,7 +110,12 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
 
         refreshActiveMenus();
 
-        server.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_FLUTE, 1.0f, 0.8f));
+        for (Player p : server.getOnlinePlayers()) {
+            if (!p.hasPermission("hmc.bypass.sellcyclesound")) {
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_FLUTE, 1.0f, 0.8f);
+            }
+        }
+
         MessageBuilder.create("modSellNewCycleBroadcast", hmc, "Sell")
                 .addPlaceholderReplace("%TIME%", e.getTimeUntilNextCycle() / 60)
                 .broadcastMessage(true);

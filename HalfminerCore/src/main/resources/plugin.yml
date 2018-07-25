@@ -114,6 +114,7 @@ permissions:
       hmc.bypass.nokillfarming: true
       hmc.bypass.nokillfarmingrepeat: true
       hmc.bypass.pvp: true
+      hmc.bypass.sellcyclesound: true
       hmc.bypass.skilllevel: true
       hmc.bypass.statsrightclick: true
       hmc.bypass.tabcomplete: true
@@ -185,6 +186,8 @@ permissions:
     description: Bypass killfarming kill repeat check, used by other modules to determine if kill is grinded
   hmc.bypass.pvp:
     description: Bypass pvp modifications
+  hmc.bypass.sellcyclesound:
+    description: Bypass the sell cycle refresh notification sound
   hmc.bypass.skilllevel:
     description: Bypass setting and updating of skilllevel
     children:
