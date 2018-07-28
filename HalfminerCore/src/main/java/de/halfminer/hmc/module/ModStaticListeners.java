@@ -1,12 +1,9 @@
 package de.halfminer.hmc.module;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,14 +12,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * - Removes quit message
@@ -30,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  * - Commandfilter
  *   - Disables commands in bed (teleport glitch)
  *   - Rewrites /pluginname:command to just /command
- * - Disables tab completes that are too long, defaults to help instead
  */
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
@@ -86,37 +77,5 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         }
     }
 
-    private final Cache<CommandSender, Boolean> tabCompleteMessageCooldownCache = CacheBuilder.newBuilder()
-            .weakKeys()
-            .expireAfterWrite(30, TimeUnit.SECONDS)
-            .build();
 
-    @EventHandler(ignoreCancelled = true)
-    public void tabCompleteFilter(TabCompleteEvent e) {
-
-        String buffer = e.getBuffer();
-        List<String> complete = e.getCompletions();
-
-        /*
-          Conditions breakdown (replace tab complete with /hilfe, if...):
-            - Buffer is a command
-            - The sender doesn't have bypass permission
-            - Either..
-              - There are more than 10 completions and they are commands
-              - When there are 0 completions the buffer must not contain a space
-                (not root command, so no need to overwrite buffer)
-         */
-        if (buffer.startsWith("/")
-                && !e.getSender().hasPermission("hmc.bypass.tabcomplete")
-                && ((complete.size() > 10 && complete.get(0).startsWith("/"))
-                || (complete.size() == 0 && !buffer.contains(" ")))) {
-
-            if (tabCompleteMessageCooldownCache.getIfPresent(e.getSender()) == null) {
-                MessageBuilder.create("modStaticListenersTabHelp", hmc, "Info").sendMessage(e.getSender());
-                tabCompleteMessageCooldownCache.put(e.getSender(), true);
-            }
-
-            e.setCompletions(Collections.singletonList("/hilfe"));
-        }
-    }
 }

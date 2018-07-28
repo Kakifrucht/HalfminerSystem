@@ -10,11 +10,13 @@ import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.server.TabCompleteEvent;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +41,7 @@ import java.util.concurrent.TimeUnit;
  *   - Using formatting codes
  *   - Posting links/IPs
  *   - Writing capitalized
+ * - Disables tab completes that are too long, defaults to help instead
  */
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
@@ -51,6 +54,11 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     private final Cache<Player, String> lastSentMessage = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .weakKeys()
+            .build();
+
+    private final Cache<CommandSender, Boolean> tabCompleteMessageCooldownCache = CacheBuilder.newBuilder()
+            .weakKeys()
+            .expireAfterWrite(30, TimeUnit.SECONDS)
             .build();
 
     private boolean isGlobalmuted = false;
@@ -173,6 +181,35 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         e.setMessage(message);
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void tabCompleteFilter(TabCompleteEvent e) {
+
+        String buffer = e.getBuffer();
+        List<String> complete = e.getCompletions();
+
+        /*
+          Conditions breakdown (replace tab complete with /hilfe, if...):
+            - Buffer is a command
+            - The sender doesn't have bypass permission
+            - Either..
+              - There are more than 10 completions and they are commands
+              - When there are 0 completions the buffer must not contain a space
+                (not root command, so no need to overwrite buffer)
+         */
+        if (buffer.startsWith("/")
+                && !e.getSender().hasPermission("hmc.bypass.tabcomplete")
+                && ((complete.size() > 10 && complete.get(0).startsWith("/"))
+                || (complete.size() == 0 && !buffer.contains(" ")))) {
+
+            if (tabCompleteMessageCooldownCache.getIfPresent(e.getSender()) == null) {
+                MessageBuilder.create("modStaticListenersTabHelp", hmc, "Info").sendMessage(e.getSender());
+                tabCompleteMessageCooldownCache.put(e.getSender(), true);
+            }
+
+            e.setCompletions(Collections.singletonList("/hilfe"));
+        }
+    }
+
     public void toggleGlobalmute() {
 
         isGlobalmuted = !isGlobalmuted;
@@ -277,5 +314,6 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     public void sweep() {
         wasMentioned.cleanUp();
         lastSentMessage.cleanUp();
+        tabCompleteMessageCooldownCache.cleanUp();
     }
 }

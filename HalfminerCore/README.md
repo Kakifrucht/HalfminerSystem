@@ -54,6 +54,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
       - using color codes and formatting codes via ``&``
       - Posting links/IPs
       - Writing all capitalized
+    - Disables tab completes that are too long, defaults to help instead
   - CombatLog
     - Tags players when hitting/being hit
     - Shows actionbar message containing time left in fight
@@ -165,7 +166,6 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
     - Commandfilter
       - Disables commands in bed (prevent teleport glitches)
       - Rewrites ``/pluginname:command`` to just ``/command``
-    - Disables tab completes that are too long, defaults to ``/help`` instead
   - Stats
     - Records following statistics about a player in centralized storage from ``HalfminerSystem``
       - Kill/death count
