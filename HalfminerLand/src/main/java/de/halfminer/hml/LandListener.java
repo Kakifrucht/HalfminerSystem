@@ -14,7 +14,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.HopperMinecart;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -250,9 +253,25 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void uncancelPlayerInteract(PlayerInteractEntityEvent e) {
-        if (e.isCancelled()
-                && e.getRightClicked() instanceof Player
-                && board.getLandAt(e.getRightClicked().getLocation()).hasOwner()) {
+
+        Player player = e.getPlayer();
+        Entity entity = e.getRightClicked();
+        Land land = board.getLandAt(entity.getLocation());
+
+        if (!e.isCancelled()
+                && !land.hasPermission(player)
+                && (entity instanceof HopperMinecart
+                || entity instanceof StorageMinecart)) {
+
+            MessageBuilder.create("listenerNoInteract", hml)
+                    .addPlaceholderReplace("%OWNER%", land.getOwnerName())
+                    .sendMessage(player);
+
+            e.setCancelled(true);
+
+        } else if (e.isCancelled()
+                && entity instanceof Player
+                && board.getLandAt(entity.getLocation()).hasOwner()) {
             e.setCancelled(false);
         }
     }
