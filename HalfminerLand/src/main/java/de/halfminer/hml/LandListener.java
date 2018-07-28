@@ -252,12 +252,13 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void uncancelPlayerInteract(PlayerInteractEntityEvent e) {
+    public void onPlayerInteract(PlayerInteractEntityEvent e) {
 
         Player player = e.getPlayer();
         Entity entity = e.getRightClicked();
         Land land = board.getLandAt(entity.getLocation());
 
+        // block access to storage/hopper minecarts
         if (!e.isCancelled()
                 && !land.hasPermission(player)
                 && (entity instanceof HopperMinecart
@@ -269,7 +270,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             e.setCancelled(true);
 
-        } else if (e.isCancelled()
+        } else if (e.isCancelled() // uncancel cancelled interact with players in WorldGuard regions
                 && entity instanceof Player
                 && board.getLandAt(entity.getLocation()).hasOwner()) {
             e.setCancelled(false);
