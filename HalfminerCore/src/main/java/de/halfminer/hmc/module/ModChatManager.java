@@ -45,6 +45,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
+    private static final String PREFIX = "Chat";
+
     private List<Pair<String, String>> chatFormats;
     private String topFormat;
     private String defaultFormat;
@@ -69,7 +71,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         Player p = e.getPlayer();
         if (isGlobalmuted && !p.hasPermission("hmc.chat.bypassglobalmute")) {
-            MessageBuilder.create("modChatManGlobalmuteDenied", hmc, "Chat").sendMessage(p);
+            MessageBuilder.create("modChatManGlobalmuteDenied", hmc, PREFIX).sendMessage(p);
             e.setCancelled(true);
             return;
         }
@@ -86,7 +88,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                     colorCount += 2;
 
             if ((message.length() - colorCount) < 2) {
-                MessageBuilder.create("modChatManTooShort", hmc, "Chat").sendMessage(p);
+                MessageBuilder.create("modChatManTooShort", hmc, PREFIX).sendMessage(p);
                 e.setCancelled(true);
                 return;
             }
@@ -112,7 +114,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 }
 
                 if (cancel) {
-                    MessageBuilder.create("modChatManRepeat", hmc, "Chat").sendMessage(p);
+                    MessageBuilder.create("modChatManRepeat", hmc, PREFIX).sendMessage(p);
                     e.setCancelled(true);
                     return;
                 }
@@ -202,18 +204,23 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 || (complete.size() == 0 && !buffer.contains(" ")))) {
 
             if (tabCompleteMessageCooldownCache.getIfPresent(e.getSender()) == null) {
-                MessageBuilder.create("modStaticListenersTabHelp", hmc, "Info").sendMessage(e.getSender());
+                MessageBuilder.create("modChatManTabHelp", hmc, PREFIX).sendMessage(e.getSender());
                 tabCompleteMessageCooldownCache.put(e.getSender(), true);
             }
 
-            e.setCompletions(Collections.singletonList("/hilfe"));
+            String commandToSet = hmc.getConfig().getString("chat.tabCompleteCommand", "/help");
+            if (!commandToSet.startsWith("/")) {
+                commandToSet = "/" + commandToSet;
+            }
+
+            e.setCompletions(Collections.singletonList(commandToSet));
         }
     }
 
     public void toggleGlobalmute() {
 
         isGlobalmuted = !isGlobalmuted;
-        MessageBuilder.create(isGlobalmuted ? "modChatManGlobalmuteOn" : "modChatManGlobalmuteOff", hmc, "Chat")
+        MessageBuilder.create(isGlobalmuted ? "modChatManGlobalmuteOn" : "modChatManGlobalmuteOff", hmc, PREFIX)
                 .broadcastMessage(true);
     }
 

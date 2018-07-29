@@ -113,6 +113,8 @@ chat:
   formats:
   - 'owner:%CPREFIX% &r- &l%PLAYER%%SUFFIX%: &7%MESSAGE%'
   - 'default:%CPREFIX% &r- %PLAYER%: &7%MESSAGE%'
+  #Command to put into the buffer/chatfield after using tab when too many commands are set (bypass with 'hmc.bypass.tabcomplete')
+  tabCompleteCommand: help
 combatLog:
   #Broadcast when a player logs out
   broadcastLog: true
@@ -448,6 +450,7 @@ localization:
   modChatManIsAfk: '&a&l%PLAYER% &cist als abwesend markiert'
   modChatManMentioned: '&7Du wurdest von &a&l%PLAYER% &7im Chat erwähnt'
   modChatManRepeat: '&cBitte wiederhole dich nicht'
+  modChatManTabHelp: '~&cVerwende &a/hilfe/ &cfür eine Übersicht über alle Kommandos'
   modChatManTooShort: '&cDie Nachricht ist zu kurz'
   modCombatLogCountdown: '&cIm Kampf: &e%TIME% &7Sekunden | &r%PROGRESSBAR%&r &7| Ausloggen: Tod'
   modCombatLogLoggedOut: '&e%PLAYER% &chat sich im Kampf gegen &a%ENEMY% &causgeloggt'
@@ -508,7 +511,6 @@ localization:
   modSkillLevelNoGroup: '&oKeine'
   modSkillLevelUprankTitle: ' \n&aDu wurdest befördert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
-  modStaticListenersTabHelp: '~&cVerwende &a/hilfe/ &cfür eine Übersicht über alle Kommandos'
   modStatsDeath: '&cDu bist gestorben! &7Tode: &f%DEATHS%'
   modStatsDeathLog: 'Survival: %PLAYER% ist gestorben (Grund: %CAUSE%)'
   modStatsPvPDeath: '&e%KILLER% &7hat dich eliminiert'
