@@ -37,7 +37,7 @@ public class Cmdfly extends LandCommand {
             }
 
             Land land = board.getLandAt(player);
-            if (land.hasOwner() && land.hasPermission(player)) {
+            if (flyBoard.hasFlyPermission(player, land)) {
 
                 // player must stand still to start flying
                 if (player.getVelocity().length() > 0.1d) {
@@ -45,7 +45,7 @@ public class Cmdfly extends LandCommand {
                     return;
                 }
 
-                boolean flyEnabled = board.getFlyBoard().togglePlayerFlying(player);
+                boolean flyEnabled = flyBoard.togglePlayerFlying(player);
                 if (flyEnabled) {
                     MessageBuilder.create("cmdFlyEnable", hml)
                             .addPlaceholderReplace("%TIME%", flyBoard.getFlyTimeLeft(player))
