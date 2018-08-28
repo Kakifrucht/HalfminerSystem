@@ -38,10 +38,19 @@ public class Cmdvote extends HalfminerCommand {
             if (args[0].equalsIgnoreCase("voted") && sender.isOp() && args.length == 2) {
 
                 // grab player
+                String voteName = args[1];
                 HalfminerPlayer hasVoted;
                 try {
-                    hasVoted = storage.getPlayer(args[1]);
+                    hasVoted = storage.getPlayer(voteName);
+
+                    // only count votes that match the current playername, since our storage call also matches partial and previous names
+                    if (!hasVoted.getName().equals(voteName)) {
+                        hmc.getLogger().info("Received invalid vote for player '" + voteName + "', argument does not match playername");
+                        return;
+                    }
+
                 } catch (PlayerNotFoundException e) {
+                    hmc.getLogger().info("Received invalid vote for player '" + voteName + "', player not found");
                     return;
                 }
 
