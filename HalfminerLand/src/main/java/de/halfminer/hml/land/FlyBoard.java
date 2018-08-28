@@ -105,10 +105,10 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
 
                     if (hms.getHooksHandler().isAfk(flyingPlayer)) {
                         togglePlayerFlying(flyingPlayer);
-                        MessageBuilder.create("flyBoardDisableAfk", hml).sendMessage(player);
+                        MessageBuilder.create("flyBoardDisableAfk", hml).sendMessage(flyingPlayer);
                     } else if (flyingPlayer.getLocation().getBlockY() > MAX_FLY_HEIGHT) {
                         togglePlayerFlying(flyingPlayer);
-                        MessageBuilder.create("flyBoardFlyHeightLimit", hml).sendMessage(player);
+                        MessageBuilder.create("flyBoardFlyHeightLimit", hml).sendMessage(flyingPlayer);
                     }
                 }
 
