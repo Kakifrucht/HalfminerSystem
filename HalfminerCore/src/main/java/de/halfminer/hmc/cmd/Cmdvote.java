@@ -44,7 +44,7 @@ public class Cmdvote extends HalfminerCommand {
                     hasVoted = storage.getPlayer(voteName);
 
                     // only count votes that match the current playername, since our storage call also matches partial and previous names
-                    if (!hasVoted.getName().equals(voteName)) {
+                    if (!hasVoted.getName().equalsIgnoreCase(voteName)) {
                         hmc.getLogger().info("Received invalid vote for player '" + voteName + "', argument does not match playername");
                         return;
                     }
