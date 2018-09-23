@@ -157,10 +157,15 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
 
         try {
             hms.getHooksHandler().addMoney(player, -flyCost);
+
+            hml.getLogger().info("Renewed fly time for player " + player.getName()
+                    + " (" + flyDurationSeconds + " seconds, $" + flyCost + ")");
+
             MessageBuilder.create("flyBoardRenewed", hml)
                     .addPlaceholderReplace("%TIME%", flyDurationSeconds)
                     .addPlaceholderReplace("%COST%", flyCost)
                     .sendMessage(player);
+
             return true;
         } catch (HookException e) {
             hml.getLogger().log(Level.WARNING, "Couldn't take money from " + player.getName() + " for flying", e);
