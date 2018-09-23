@@ -50,6 +50,9 @@ command:
     cooldownBase: 900
     #Longest cooldown in seconds if no level has been met
     maxCooldown: 28800
+  stats:
+    #How many names to show under previous names (minimum 2)
+    previousNamesMax: 4
   vote:
     #Define actions to be run when a player votes, key left of ':' must be a number and defines the
     #probability for the action to be run in relation to the other actions. The sum doesn't have to be
@@ -405,7 +408,7 @@ localization:
   cmdStatsCompareInfo: '~&7Verwende &e/statstop player %PLAYER%/ &7zum vergleichen'
   cmdStatsCompareLegend: '&7Dein Wert ist &ahöher&7, Werte sind &egleich&7, dein Wert ist &cgeringer'
   cmdStatsHeader: '&e&m-------------------&c&l Statistiken &e&m-------------------'
-  cmdStatsOldnames: '&fAlte Namen: &e%OLDNAMES%'
+  cmdStatsPreviousNames: '&fAlte Namen: &e%PREVIOUSNAMES%'
   cmdStatsShow: '&3Statistiken von %PLAYER% &e>>\n&rSkillgruppe: &e%SKILLGROUP% &7| &rSkilllevel: &e%SKILLLEVEL%&7&o/22\n&rZeit Online: &e%ONLINETIME% &7Minuten | &rGeld: &e%REVENUE% &7HCs verdient\n&rKills: &e%KILLS% &7Mord(e) | &rDeaths: &e%DEATHS% &7Tod(e) | &rK/D: &e%KDRATIO%\n&rGevotet: &e%VOTES% &7mal | &rMobs: &e%MOBKILLS% &7Mobs getötet\n&rBlöcke: &e%BLOCKSPLACED% &7platziert | &e%BLOCKSBROKEN% &7gebrochen'
   cmdStatsShowotherStats: '~&7Bestenlisten: &e/statstop/\n&7Statistiken zu anderen Spielern: &e/stats <Spieler>'
   cmdStatstopDoesntExist: '&cDiese Bestenliste existiert nicht'

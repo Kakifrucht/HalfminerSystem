@@ -1,14 +1,17 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hmc.module.ModuleType;
-import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hmc.module.ModSkillLevel;
+import de.halfminer.hmc.module.ModuleType;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * - View own / other players stats
@@ -35,15 +38,20 @@ public class Cmdstats extends HalfminerCommand {
 
         } else {
 
-            if (isPlayer) showStats(storage.getPlayer((Player) sender), false);
-            else sendNotAPlayerMessage("Stats");
+            if (isPlayer) {
+                showStats(storage.getPlayer((Player) sender), false);
+            } else {
+                sendNotAPlayerMessage("Stats");
+            }
         }
     }
 
     private void showStats(final HalfminerPlayer player, boolean compare) {
 
         HalfminerPlayer compareWith = null;
-        if (compare && !sender.equals(player.getBase())) compareWith = storage.getPlayer((Player) sender);
+        if (compare && !sender.equals(player.getBase())) {
+            compareWith = storage.getPlayer((Player) sender);
+        }
 
         MessageBuilder.create("cmdStatsHeader", hmc).sendMessage(sender);
         MessageBuilder.create("cmdStatsShow", hmc)
@@ -62,17 +70,40 @@ public class Cmdstats extends HalfminerCommand {
                 .addPlaceholderReplace("%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith))
                 .sendMessage(sender);
 
-        String oldNames = player.getString(DataType.LAST_NAMES);
-        if (oldNames.length() > 0)
-            MessageBuilder.create("cmdStatsOldnames", hmc)
-                    .addPlaceholderReplace("%OLDNAMES%", oldNames)
-                    .sendMessage(sender);
+        List<String> previousNames = player.getPreviousNames();
+        if (!previousNames.isEmpty()) {
 
-        if (sender.equals(player.getBase()))
+            String previousNamesToSend = player.getString(DataType.PREVIOUS_NAMES);
+
+            int toDisplayMax = hmc.getConfig().getInt("cmd.stats.previousNamesMax", 4);
+            if (previousNames.size() > toDisplayMax && previousNames.size() > 1) {
+
+                // if configured limit has been reached, show the first seen, most recent and two random names in between
+                StringBuilder sb = new StringBuilder(previousNames.get(0)).append(' ');
+                previousNames.remove(0);
+
+                String mostRecentName = previousNames.get(previousNames.size() - 1);
+                previousNames.remove(mostRecentName);
+
+                Collections.shuffle(previousNames);
+                for (int i = 0; i < previousNames.size() && i < 2; i++) {
+                    sb.append(previousNames.get(i)).append(' ');
+                }
+
+                sb.append(mostRecentName);
+                previousNamesToSend = sb.toString();
+            }
+
+            MessageBuilder.create("cmdStatsPreviousNames", hmc)
+                    .addPlaceholderReplace("%PREVIOUSNAMES%", previousNamesToSend)
+                    .sendMessage(sender);
+        }
+
+        if (sender.equals(player.getBase())) {
             MessageBuilder.create("cmdStatsShowotherStats", hmc).sendMessage(sender);
-        else if (compare)
+        } else if (compare) {
             MessageBuilder.create("cmdStatsCompareLegend", hmc).sendMessage(sender);
-        else if (sender instanceof Player) {
+        } else if (sender instanceof Player) {
             MessageBuilder.create("cmdStatsCompareInfo", hmc)
                     .addPlaceholderReplace("%PLAYER%", player.getName())
                     .sendMessage(sender);

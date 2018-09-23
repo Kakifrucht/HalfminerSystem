@@ -40,26 +40,12 @@ public class StorageListener extends HalfminerClass implements Disableable, List
         setLastSeen(player, Long.MAX_VALUE);
         timeOnline.put(hPlayer, System.currentTimeMillis() / 1000);
 
+        // check and store previous name, broadcast name change
         String previousName = hPlayer.getName();
         if (hPlayer.wasSeenBefore() && !previousName.equalsIgnoreCase(player.getName())) {
 
-            String lastNames = hPlayer.getString(DataType.LAST_NAMES);
+            hPlayer.addPreviousName(previousName);
 
-            if (lastNames.length() > 0) {
-
-                // Do not store old name if it was already used
-                boolean containsName = false;
-                String lastNameLowercase = previousName.toLowerCase();
-                for (String str : lastNames.toLowerCase().split(" ")) {
-                    if (str.equals(lastNameLowercase)) {
-                        containsName = true;
-                        break;
-                    }
-                }
-                if (!containsName) hPlayer.set(DataType.LAST_NAMES, lastNames + ' ' + previousName);
-            } else {
-                hPlayer.set(DataType.LAST_NAMES, previousName);
-            }
             MessageBuilder.create("hanStorageNameChange", "Name")
                     .addPlaceholderReplace("%OLDNAME%", previousName)
                     .addPlaceholderReplace("%NAME%", player.getName())

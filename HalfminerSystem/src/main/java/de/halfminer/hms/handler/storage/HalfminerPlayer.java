@@ -2,6 +2,7 @@ package de.halfminer.hms.handler.storage;
 
 import org.bukkit.OfflinePlayer;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -17,6 +18,10 @@ public interface HalfminerPlayer {
     boolean wasSeenBefore();
 
     String getName();
+
+    List<String> getPreviousNames();
+
+    void addPreviousName(String previousName);
 
     int getLevel();
 

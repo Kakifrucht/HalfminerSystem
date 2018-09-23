@@ -6,7 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Implementation via {@link FileConfiguration Bukkit's Yaml config API}.
@@ -62,6 +62,41 @@ public class YamlHalfminerPlayer implements HalfminerPlayer {
     @Override
     public String getName() {
         return getString(DataType.LAST_NAME);
+    }
+
+    @Override
+    public List<String> getPreviousNames() {
+
+        String previousNamesStr = getString(DataType.PREVIOUS_NAMES);
+        if (previousNamesStr.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return new ArrayList<>(Arrays.asList(previousNamesStr.split(" ")));
+    }
+
+    @Override
+    public void addPreviousName(String previousName) {
+
+        boolean containsName = false;
+        for (String name : getPreviousNames()) {
+            if (name.equalsIgnoreCase(previousName)) {
+                containsName = true;
+                break;
+            }
+        }
+
+        // don't add duplicates
+        if (!containsName) {
+
+            String previousNames = getString(DataType.PREVIOUS_NAMES);
+            if (!previousNames.isEmpty()) {
+                previousName += ' ';
+            }
+
+            previousNames += previousName;
+            set(DataType.PREVIOUS_NAMES, previousNames);
+        }
     }
 
     @Override
