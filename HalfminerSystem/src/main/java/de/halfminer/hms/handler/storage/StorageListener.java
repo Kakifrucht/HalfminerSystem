@@ -44,7 +44,25 @@ public class StorageListener extends HalfminerClass implements Disableable, List
         String previousName = hPlayer.getName();
         if (hPlayer.wasSeenBefore() && !previousName.equalsIgnoreCase(player.getName())) {
 
-            hPlayer.addPreviousName(previousName);
+            boolean containsName = false;
+            for (String name : hPlayer.getPreviousNames()) {
+                if (name.equalsIgnoreCase(previousName)) {
+                    containsName = true;
+                    break;
+                }
+            }
+
+            // don't add duplicates to database
+            if (!containsName) {
+
+                String previousNames = hPlayer.getString(DataType.PREVIOUS_NAMES);
+                if (!previousNames.isEmpty()) {
+                    previousName += ' ';
+                }
+
+                previousNames += previousName;
+                hPlayer.set(DataType.PREVIOUS_NAMES, previousNames);
+            }
 
             MessageBuilder.create("hanStorageNameChange", "Name")
                     .addPlaceholderReplace("%OLDNAME%", previousName)

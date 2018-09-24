@@ -10,8 +10,7 @@ import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * - View own / other players stats
@@ -75,22 +74,35 @@ public class Cmdstats extends HalfminerCommand {
 
             String previousNamesToSend = player.getString(DataType.PREVIOUS_NAMES);
 
-            int toDisplayMax = hmc.getConfig().getInt("cmd.stats.previousNamesMax", 4);
+            int toDisplayMax = hmc.getConfig().getInt("command.stats.previousNamesMax", 4);
             if (previousNames.size() > toDisplayMax && previousNames.size() > 1) {
 
-                // if configured limit has been reached, show the first seen, most recent and two random names in between
-                StringBuilder sb = new StringBuilder(previousNames.get(0)).append(' ');
-                previousNames.remove(0);
+                // add first and last known name, and fill up with random names
+                Set<String> displayedNamesSet = new HashSet<>();
+                displayedNamesSet.add(previousNames.get(0));
+                displayedNamesSet.add(previousNames.get(previousNames.size() - 1));
 
-                String mostRecentName = previousNames.get(previousNames.size() - 1);
-                previousNames.remove(mostRecentName);
-
-                Collections.shuffle(previousNames);
-                for (int i = 0; i < previousNames.size() && i < 2; i++) {
-                    sb.append(previousNames.get(i)).append(' ');
+                List<String> previousNamesCopy = new ArrayList<>(previousNames);
+                previousNamesCopy.removeAll(displayedNamesSet);
+                Collections.shuffle(previousNamesCopy);
+                for (int i = 0; i < (toDisplayMax - 2); i++) {
+                    displayedNamesSet.add(previousNamesCopy.get(i));
                 }
 
-                sb.append(mostRecentName);
+                // create sorted list containing all selected names
+                List<String> displayedNames = new ArrayList<>();
+                for (String previousName : previousNames) {
+                    if (displayedNamesSet.contains(previousName)) {
+                        displayedNames.add(previousName);
+                    }
+                }
+
+                StringBuilder sb = new StringBuilder();
+                for (String displayedName : displayedNames) {
+                    sb.append(displayedName).append(' ');
+                }
+
+                sb.setLength(sb.length() - 1);
                 previousNamesToSend = sb.toString();
             }
 

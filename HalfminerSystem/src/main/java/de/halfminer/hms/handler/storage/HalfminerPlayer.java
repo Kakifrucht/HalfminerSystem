@@ -21,8 +21,6 @@ public interface HalfminerPlayer {
 
     List<String> getPreviousNames();
 
-    void addPreviousName(String previousName);
-
     int getLevel();
 
     String getIPAddress();
