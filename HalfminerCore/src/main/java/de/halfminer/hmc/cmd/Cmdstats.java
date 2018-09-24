@@ -72,12 +72,12 @@ public class Cmdstats extends HalfminerCommand {
         List<String> previousNames = player.getPreviousNames();
         if (!previousNames.isEmpty()) {
 
-            String previousNamesToSend = player.getString(DataType.PREVIOUS_NAMES);
+            List<String> previousNamesToDisplay = new ArrayList<>();
 
             int toDisplayMax = hmc.getConfig().getInt("command.stats.previousNamesMax", 4);
             if (previousNames.size() > toDisplayMax && previousNames.size() > 1) {
 
-                // add first and last known name, and fill up with random names
+                // add first and last known name, fill up with random names
                 Set<String> displayedNamesSet = new HashSet<>();
                 displayedNamesSet.add(previousNames.get(0));
                 displayedNamesSet.add(previousNames.get(previousNames.size() - 1));
@@ -89,25 +89,25 @@ public class Cmdstats extends HalfminerCommand {
                     displayedNamesSet.add(previousNamesCopy.get(i));
                 }
 
-                // create sorted list containing all selected names
-                List<String> displayedNames = new ArrayList<>();
+                // add selected names sorted to displayed list
                 for (String previousName : previousNames) {
                     if (displayedNamesSet.contains(previousName)) {
-                        displayedNames.add(previousName);
+                        previousNamesToDisplay.add(previousName);
                     }
                 }
 
-                StringBuilder sb = new StringBuilder();
-                for (String displayedName : displayedNames) {
-                    sb.append(displayedName).append(' ');
-                }
-
-                sb.setLength(sb.length() - 1);
-                previousNamesToSend = sb.toString();
+            } else {
+                previousNamesToDisplay.addAll(previousNames);
             }
 
+            StringBuilder sb = new StringBuilder();
+            for (String displayedName : previousNamesToDisplay) {
+                sb.append(displayedName).append(' ');
+            }
+            sb.setLength(sb.length() - 1);
+
             MessageBuilder.create("cmdStatsPreviousNames", hmc)
-                    .addPlaceholderReplace("%PREVIOUSNAMES%", previousNamesToSend)
+                    .addPlaceholderReplace("%PREVIOUSNAMES%", sb.toString())
                     .sendMessage(sender);
         }
 
