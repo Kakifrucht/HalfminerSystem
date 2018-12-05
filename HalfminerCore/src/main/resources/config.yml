@@ -378,7 +378,7 @@ localization:
   cmdNewtpLog: 'Newtp: %PLAYER% wurde zu %LOCATION% teleportiert'
   cmdNewtpStart: '&aDu wirst an einen eigenen Ort teleportiert'
   cmdNewtpTpDone: '&e&lViel Spass auf halfminer.de, %PLAYER%!'
-  cmdPinShow: '~&7Deine aktuelle PIN läuft in einer Stunde ab und ist nur über deine Internet Leitung im Teamspeak und Forum gültig\n&3Teamspeak Freischaltung (&a/hilfe teamspeak/&3) &e>>\n&7Antworte dem &oHalfminer.de TSBot&7, nachdem du den Server betreten hast, mit dem Kommando &a&o!pin %PIN%\n&3Forum Freischaltung (&a/forum/&3) &e>>\n&a&l&ohttps://halfminer.de/forum/rank.php?pin=%PIN%'
+  cmdPinShow: '~&7Deine aktuelle PIN läuft in einer Stunde ab und ist nur über deine Internet Leitung im Teamspeak und Forum gültig\n&3Teamspeak Freischaltung (&a/hilfe teamspeak/&3) &e>>\n&7Antworte dem &oHalfminer.de TSBot&7, nachdem du den Server betreten hast, mit dem Kommando &a&o!pin %PIN%\n&3Forum Freischaltung (&a/forum/&3) &e>>\n&a&l&ohttps://forum.halfminer.de/rank.php?pin=%PIN%'
   cmdRankActionNotFound: '&cDie Aktion &e%ACTIONNAME% &cfür &b%PLAYER% &ckonnte nicht ausgeführt werden'
   cmdRankInvalidRankCommand: '&cUnbekannter Rang'
   cmdRankInvalidRankConfig: '&cUngültige Konfiguration: &r%INVALIDINPUT%'
