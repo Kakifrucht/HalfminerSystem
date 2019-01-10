@@ -41,7 +41,7 @@ public class StorageListener extends HalfminerClass implements Disableable, List
         timeOnline.put(hPlayer, System.currentTimeMillis() / 1000);
 
         // check and store previous name, broadcast name change
-        String previousName = hPlayer.getName();
+        final String previousName = hPlayer.getName();
         if (hPlayer.wasSeenBefore() && !previousName.equalsIgnoreCase(player.getName())) {
 
             boolean containsName = false;
@@ -57,9 +57,8 @@ public class StorageListener extends HalfminerClass implements Disableable, List
 
                 String previousNames = hPlayer.getString(DataType.PREVIOUS_NAMES);
                 if (!previousNames.isEmpty()) {
-                    previousName += ' ';
+                    previousNames += ' ';
                 }
-
                 previousNames += previousName;
                 hPlayer.set(DataType.PREVIOUS_NAMES, previousNames);
             }

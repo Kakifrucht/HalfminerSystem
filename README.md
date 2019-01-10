@@ -7,7 +7,7 @@ Halfminer Teamspeak Bot can be found [here](https://github.com/Kakifrucht/Halfmi
 ## Current Modules
 - **HalfminerSystem** - Base plugin API containing shared functionality and a centralized storage system.
   - **HalfminerBattle** - Battle arena Bukkit/Spigot plugin implementing various arena based game modes.
-  - **HalfminerCore** - Core Bukkit/Spigot plugin containing most server side functionality.
+  - **HalfminerCore** - Core Bukkit/Spigot plugin containing Minecraft server modifications for various aspects of the game.
   - **HalfminerLand** - Land protection and management plugin.
   - **HalfminerREST** - Bukkit plugin running a lightweight REST HTTP server responding in JSON.
 

@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * - View own / other players stats
@@ -69,7 +70,11 @@ public class Cmdstats extends HalfminerCommand {
                 .addPlaceholderReplace("%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith))
                 .sendMessage(sender);
 
-        List<String> previousNames = player.getPreviousNames();
+        // filter out current name
+        List<String> previousNames = player.getPreviousNames().stream()
+                .filter(previousName -> !previousName.equalsIgnoreCase(player.getName()))
+                .collect(Collectors.toList());
+
         if (!previousNames.isEmpty()) {
 
             List<String> previousNamesToDisplay = new ArrayList<>();
