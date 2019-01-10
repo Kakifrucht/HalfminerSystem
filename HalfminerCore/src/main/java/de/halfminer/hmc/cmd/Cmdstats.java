@@ -105,11 +105,12 @@ public class Cmdstats extends HalfminerCommand {
                 previousNamesToDisplay.addAll(previousNames);
             }
 
+            final String spacer = MessageBuilder.returnMessage("cmdStatsPreviousNamesSpacer", hmc, false);
             StringBuilder sb = new StringBuilder();
             for (String displayedName : previousNamesToDisplay) {
-                sb.append(displayedName).append(' ');
+                sb.append(displayedName).append(spacer);
             }
-            sb.setLength(sb.length() - 1);
+            sb.setLength(sb.length() - spacer.length());
 
             MessageBuilder.create("cmdStatsPreviousNames", hmc)
                     .addPlaceholderReplace("%PREVIOUSNAMES%", sb.toString())
