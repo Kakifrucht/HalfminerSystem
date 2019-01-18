@@ -101,7 +101,7 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
                     return;
                 }
 
-                for (Player flyingPlayer : flyMap.keySet()) {
+                for (Player flyingPlayer : new HashSet<>(flyMap.keySet())) {
 
                     if (hms.getHooksHandler().isAfk(flyingPlayer)) {
                         togglePlayerFlying(flyingPlayer);
