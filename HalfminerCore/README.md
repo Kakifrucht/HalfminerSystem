@@ -166,6 +166,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
     - Commandfilter
       - Disables commands in bed (prevent teleport glitches)
       - Rewrites ``/pluginname:command`` to just ``/command``
+    - Denies conversion of mobspawners with spawneggs
   - Stats
     - Records following statistics about a player in centralized storage from ``HalfminerSystem``
       - Kill/death count

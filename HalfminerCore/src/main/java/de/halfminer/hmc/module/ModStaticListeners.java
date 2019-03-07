@@ -11,20 +11,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * - Removes quit message
+ * - Removes player quit message
  * - Keeps itemname of colored items in anvil
  * - Commandfilter
- *   - Disables commands in bed (teleport glitch)
+ *   - Disables commands in bed (prevent teleport glitches)
  *   - Rewrites /pluginname:command to just /command
+ * - Denies conversion of mobspawners with spawneggs
  */
 @SuppressWarnings("unused")
 public class ModStaticListeners extends HalfminerModule implements Listener {
+
+    private static final String PREFIX = "Info";
 
 
     @EventHandler
@@ -60,7 +64,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         Player player = e.getPlayer();
         if (player.hasPermission("hmc.bypass.commandfilter")) return;
         if (player.isSleeping()) {
-            MessageBuilder.create("modStaticListenersCommandSleep", hmc, "Info").sendMessage(player);
+            MessageBuilder.create("modStaticListenersCommandSleep", hmc, PREFIX).sendMessage(player);
             e.setCancelled(true);
         } else {
 
@@ -77,5 +81,18 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onSpawnerInteract(PlayerInteractEvent e) {
 
+        Player player = e.getPlayer();
+
+        if (e.getClickedBlock().getType().equals(Material.MOB_SPAWNER)
+                && e.getItem() != null
+                && e.getItem().getType().equals(Material.MONSTER_EGG)
+                && !player.hasPermission("hmc.bypass.spawnerconvert")) {
+
+            MessageBuilder.create("modStaticListenersSpawnerConvert", hmc, PREFIX).sendMessage(player);
+            e.setCancelled(true);
+        }
+    }
 }

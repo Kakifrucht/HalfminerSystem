@@ -116,6 +116,7 @@ permissions:
       hmc.bypass.pvp: true
       hmc.bypass.sellcyclesound: true
       hmc.bypass.skilllevel: true
+      hmc.bypass.spawnerinteract: true
       hmc.bypass.statsrightclick: true
       hmc.bypass.tabcomplete: true
       hmc.bypass.teleportcheck: true
@@ -194,6 +195,8 @@ permissions:
     - hmc.bypass.skilllevel.update
   hmc.bypass.skilllevel.update:
     description: Bypass updating of skilllevel
+  hmc.bypass.spawnerconvert:
+    description: Allow converting mobspawners with mobeggs
   hmc.bypass.statsrightclick:
     description: Bypass stats on rightclick
   hmc.bypass.tabcomplete:

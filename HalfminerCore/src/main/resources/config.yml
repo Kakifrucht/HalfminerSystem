@@ -515,6 +515,7 @@ localization:
   modSkillLevelNoGroup: '&oKeine'
   modSkillLevelUprankTitle: ' \n&aDu wurdest befördert: &7Level &a%SKILLLEVEL% &7(%SKILLGROUP%)'
   modStaticListenersCommandSleep: '&cDu kannst keine Kommandos im Bett benutzen'
+  modStaticListenersSpawnerConvert: '&cDu kannst keine Mobspawner konvertieren'
   modStatsDeath: '&cDu bist gestorben! &7Tode: &f%DEATHS%'
   modStatsDeathLog: 'Survival: %PLAYER% ist gestorben (Grund: %CAUSE%)'
   modStatsPvPDeath: '&e%KILLER% &7hat dich eliminiert'
