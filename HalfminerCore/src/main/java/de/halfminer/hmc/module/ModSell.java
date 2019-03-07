@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -90,7 +91,8 @@ public class ModSell extends HalfminerModule implements Disableable, Listener, S
         if (e.getPlayer() instanceof Player
                 && autoSellingCache.getIfPresent(e.getPlayer()) != null
                 && (e.getInventory().getHolder() instanceof Chest
-                || e.getInventory().getHolder() instanceof DoubleChest)) {
+                || e.getInventory().getHolder() instanceof DoubleChest
+                || e.getInventory().getHolder() instanceof ShulkerBox)) {
 
             Inventory chest = e.getInventory();
             ItemStack item = chest.getItem(0);
