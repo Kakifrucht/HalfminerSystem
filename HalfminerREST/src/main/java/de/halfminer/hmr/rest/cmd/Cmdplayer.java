@@ -90,7 +90,7 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
         return returnNotFoundDefault();
     }
 
-    private class Response {
+    private static class Response {
 
         final String name;
         final String uuid;

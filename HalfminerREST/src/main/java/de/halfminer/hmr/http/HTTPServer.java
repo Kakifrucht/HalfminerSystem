@@ -93,7 +93,7 @@ public class HTTPServer extends NanoHTTPD {
             }
 
             if (currentKey.length() > 0) {
-                bodyParsed.put(currentKey, toParse.substring(lastSubstring, toParse.length()));
+                bodyParsed.put(currentKey, toParse.substring(lastSubstring));
             }
         }
 

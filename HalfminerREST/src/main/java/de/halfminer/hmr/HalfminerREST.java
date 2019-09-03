@@ -86,7 +86,7 @@ public class HalfminerREST extends JavaPlugin {
 
     private boolean load() {
 
-        HalfminerSystem.getInstance().getHalfminerManager().reloadOcurred(this);
+        HalfminerSystem.getInstance().getHalfminerManager().reload(this);
 
         if (server != null) {
             getLogger().info("Reloading HTTP server, stopping old instance...");

@@ -14,7 +14,7 @@ public class Cmdstatus extends RESTCommand implements MethodGET {
         return ResponseBuilder.getOKResponse(new Status());
     }
 
-    private class Status {
+    private static class Status {
         int playercount = hmw.getServer().getOnlinePlayers().size();
     }
 }
