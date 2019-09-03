@@ -108,11 +108,11 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
         return sysConfig.getLong(path);
     }
 
-    public void setUUID(OfflinePlayer player) {
+    public void setUUID(String playerName, UUID uuid) {
         if (uuidConfig == null) {
             throw new RuntimeException("setUUID(OfflinePlayer) called on non HalfminerSystem HanStorage instance");
         }
-        uuidConfig.set(player.getName().toLowerCase(), player.getUniqueId().toString());
+        uuidConfig.set(playerName.toLowerCase(), uuid.toString());
     }
 
     public HalfminerPlayer getPlayer(String playerString) throws PlayerNotFoundException {
@@ -186,7 +186,7 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
 
             if (cacheFile.exists()) {
                 MessageBuilder.create("hanStorageCacheCreate")
-                        .addPlaceholderReplace("%FILENAME%", cacheFile.getName())
+                        .addPlaceholder("%FILENAME%", cacheFile.getName())
                         .logMessage(Level.INFO);
             } else {
                 MessageBuilder.create("hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);

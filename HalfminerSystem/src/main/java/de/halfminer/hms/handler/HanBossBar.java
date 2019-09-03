@@ -66,7 +66,7 @@ public class HanBossBar extends HalfminerClass implements Disableable {
         setBroadcastBar(text, color, style, progression);
 
         if (broadcastRemoveTask != null) broadcastRemoveTask.cancel();
-        broadcastRemoveTask = scheduler.runTaskLater(hms, this::removeBar, 20 * time);
+        broadcastRemoveTask = scheduler.runTaskLater(hms, (Runnable) this::removeBar, 20 * time);
     }
 
     private void setBroadcastBar(String text, BarColor color, BarStyle style, double progression) {
@@ -165,9 +165,8 @@ public class HanBossBar extends HalfminerClass implements Disableable {
     }
 
     private void setProgress(BossBar bar, double progress) {
-        if (progress < 0.0d) bar.setProgress(0.0d);
-        else if (progress > 1.0d) bar.setProgress(1.0d);
-        else bar.setProgress(progress);
+        if (progress < 0d) bar.setProgress(0d);
+        else bar.setProgress(Math.min(progress, 1d));
     }
 
     @Override

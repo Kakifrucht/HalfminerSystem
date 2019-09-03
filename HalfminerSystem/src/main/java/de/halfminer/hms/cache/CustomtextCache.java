@@ -6,6 +6,7 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -65,7 +66,7 @@ public class CustomtextCache {
         if (!wasModified()) return;
 
         try {
-            BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             ParseHelper helper = new ParseHelper(fileReader);
             lastCached = file.lastModified();
             this.cache = helper.getCache();
@@ -89,7 +90,6 @@ public class CustomtextCache {
 
         private final Map<String, List<String>> cache = new HashMap<>();
 
-        private int lineNumber = 0;
         private int lineNumberLastHashtag = 0;
         private List<String> currentChapters = new ArrayList<>();
         private List<String> currentContent = new ArrayList<>();
@@ -101,6 +101,7 @@ public class CustomtextCache {
                 String line;
                 while ((line = reader.readLine()) != null) {
 
+                    int lineNumber = 0;
                     lineNumber++;
                     if (line.startsWith("#")) {
 

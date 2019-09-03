@@ -37,9 +37,9 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
     - First line in chapter must be Minecraft Material name
     - Supports ``%PLAYER%`` placeholder (player name that receives item) and custom ones can be passed aswell
     - Available item customisations
-      - ``itemid``: data ID or durability, number as argument
       - ``name``: itemname, supporting ``&`` as color code character
       - ``lore``: custom item lore, lines are separated with ``|`` character, supports color
+      - ``damage``: durability, number as argument
       - ``enchant``: custom enchants, separate enchantment name and level with ``:``, can include multiple per line
       - ``skullowner``: set the owner of the skull, only works if given material is ``SKULL_ITEM``
     - Will throw ``ItemCacheException`` if item wasn't given to player

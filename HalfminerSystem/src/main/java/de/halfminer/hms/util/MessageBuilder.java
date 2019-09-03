@@ -46,7 +46,7 @@ public class MessageBuilder {
      * @return MessageBuilder that can send a parsed message
      */
     public static MessageBuilder create(String lang, Plugin plugin, String prefix) {
-        return create(lang, plugin).addPlaceholderReplace("PREFIX", prefix);
+        return create(lang, plugin).addPlaceholder("PREFIX", prefix);
     }
 
     /**
@@ -110,13 +110,13 @@ public class MessageBuilder {
      * @param replaceWith String with what to replace with
      * @return MessageBuilder, same instance
      */
-    public MessageBuilder addPlaceholderReplace(String placeholder, String replaceWith) {
+    public MessageBuilder addPlaceholder(String placeholder, String replaceWith) {
         placeholders.put(placeholder.replaceAll(PLACEHOLDER_CHARACTER + "", "").trim(), replaceWith);
         return this;
     }
 
-    public MessageBuilder addPlaceholderReplace(String placeholder, Object replaceWith) {
-        addPlaceholderReplace(placeholder, String.valueOf(replaceWith));
+    public MessageBuilder addPlaceholder(String placeholder, Object replaceWith) {
+        addPlaceholder(placeholder, String.valueOf(replaceWith));
         return this;
     }
 
@@ -128,7 +128,7 @@ public class MessageBuilder {
 
         String toReturn;
         if (getFromLocale) {
-            toReturn = getMessage(lang);
+            toReturn = getLocalizedMessage(lang);
             // allow removal of messages
             if (toReturn == null || toReturn.length() == 0)
                 return "";
@@ -142,7 +142,7 @@ public class MessageBuilder {
         }
 
         if (usePrefix && !loggingMode) {
-            String prefixPlaceholder = getMessage("prefix");
+            String prefixPlaceholder = getLocalizedMessage("prefix");
             // if %PREFIX% placeholder is part of plugins prefix, check if MessageBuilder contains
             // said placeholder, only add prefix if placeholder will be replaced
             if (prefixPlaceholder.length() > 0
@@ -214,7 +214,7 @@ public class MessageBuilder {
             plugin.getLogger().log(logLevel, toLog);
     }
 
-    private String getMessage(String messageKey) {
+    private String getLocalizedMessage(String messageKey) {
         return plugin.getConfig().getString("localization." + messageKey, "");
     }
 

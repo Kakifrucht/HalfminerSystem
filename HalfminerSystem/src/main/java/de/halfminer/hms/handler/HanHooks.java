@@ -1,6 +1,5 @@
 package de.halfminer.hms.handler;
 
-import com.earth2me.essentials.Enchantments;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import de.halfminer.hms.HalfminerClass;
@@ -86,11 +85,14 @@ public class HanHooks extends HalfminerClass {
     }
 
     public Enchantment getEnchantmentFromString(String enchantment) {
-        if (essentialsHook != null) {
-            return Enchantments.getByName(enchantment);
-        } else {
-            return Enchantment.getByName(enchantment.toUpperCase());
+
+        //TODO test this or use something like this: Enchantment.getByKey(new NamespacedKey(hms, enchantment));
+        for (Enchantment value : Enchantment.values()) {
+            if (value.getKey().getKey().equals(enchantment.toLowerCase())) {
+                return value;
+            }
         }
+        return null;
     }
 
     public String getPrefix(Player player) throws HookException {

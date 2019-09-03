@@ -38,10 +38,6 @@ public class MenuContainer {
     private int currentPage = 0;
 
 
-    public MenuContainer(MenuCreator menuCreator, Player player, String title, ItemStack[] menuItems) {
-        this(menuCreator, player, title, menuItems, null);
-    }
-
     public MenuContainer(MenuCreator menuCreator, Player player,
                          String title, ItemStack[] menuItems, MenuClickHandler clickHandler) {
         this.menuCreator = menuCreator;
@@ -108,15 +104,14 @@ public class MenuContainer {
         if (isPaginated) {
 
             // pre fill row with glass panes
-            ItemStack rowPane = new ItemStack(Material.STAINED_GLASS_PANE);
+            ItemStack rowPane = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
             Utils.setDisplayName(rowPane, " ");
             for (int i = slotsUntilPagination; i < slotsUntilPagination + MENU_SLOTS_PER_ROW; i++) {
                 inventory.setItem(i, rowPane);
             }
 
             // add necessary buttons
-            ItemStack paginationButtonStack = new ItemStack(Material.STAINED_GLASS_PANE);
-            paginationButtonStack.setDurability((short) 14);
+            ItemStack paginationButtonStack = new ItemStack(Material.RED_STAINED_GLASS_PANE);
             if (hasPreviousPage()) {
                 Utils.applyLocaleToItemStack(paginationButtonStack, getPaginationMessageBuilder("hanMenuPageStackPrevious"));
                 inventory.setItem(previousPageRawSlot, paginationButtonStack);
@@ -134,8 +129,8 @@ public class MenuContainer {
 
     private MessageBuilder getPaginationMessageBuilder(String langKey) {
         return MessageBuilder.create(langKey, HalfminerSystem.getInstance())
-                .addPlaceholderReplace("%PAGE%", getCurrentPage())
-                .addPlaceholderReplace("%PAGECOUNT%", getPageCount());
+                .addPlaceholder("%PAGE%", getCurrentPage())
+                .addPlaceholder("%PAGECOUNT%", getPageCount());
     }
 
     int getPreviousPageRawSlot() {

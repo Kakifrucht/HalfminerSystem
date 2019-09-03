@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 /**
  * Static methods that are shared between other classes
  */
-@SuppressWarnings("WeakerAccess")
 public final class Utils {
 
     private Utils() {}
@@ -125,7 +124,7 @@ public final class Utils {
                 toReturn.add(Material.matchMaterial(material));
             } catch (IllegalArgumentException ignored) {
                 MessageBuilder.create("utilInvalidMaterial")
-                        .addPlaceholderReplace("%MATERIAL%", material)
+                        .addPlaceholder("%MATERIAL%", material)
                         .logMessage(Level.WARNING);
             }
         }
@@ -149,25 +148,30 @@ public final class Utils {
 
     public static void setDisplayName(ItemStack item, String displayName) {
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            throw new IllegalArgumentException("Cannot set display name for " + item.toString());
+        }
         meta.setDisplayName(displayName);
         item.setItemMeta(meta);
     }
 
     public static void setItemLore(ItemStack item, List<String> lore) {
-        ItemMeta edit = item.getItemMeta();
-        edit.setLore(lore);
-        item.setItemMeta(edit);
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            throw new IllegalArgumentException("Cannot set item lore for " + item.toString());
+        }
+        meta.setLore(lore);
+        item.setItemMeta(meta);
     }
 
     /**
      * Splits the message from a given {@link MessageBuilder} at the <i>|</i> character and sets
-     * the first value to become the item's displayname, and the rest to become the item lore.
+     * the first value to become the item's displayname and the rest to become the item lore.
      *
      * @param toModify {@link ItemStack} to modify
      * @param locale MessageBuilder with <i>|</i> character to split at
-     * @return modified ItemStack
      */
-    public static ItemStack applyLocaleToItemStack(ItemStack toModify, MessageBuilder locale) {
+    public static void applyLocaleToItemStack(ItemStack toModify, MessageBuilder locale) {
 
         String[] stackDataSplit = locale.returnMessage().split(Pattern.quote("|"));
 
@@ -175,8 +179,6 @@ public final class Utils {
 
         setDisplayName(toModify, stackDataSplit[0]);
         setItemLore(toModify, lore);
-
-        return toModify;
     }
 
     /**

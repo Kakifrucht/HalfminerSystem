@@ -131,7 +131,7 @@ public class CustomAction {
                             parsedMessage.returnMessage());
                     if (!success) {
                         MessageBuilder.create("cacheCustomActionCommandNotFound")
-                                .addPlaceholderReplace("%COMMAND%", parsedMessage.returnMessage())
+                                .addPlaceholder("%COMMAND%", parsedMessage.returnMessage())
                                 .logMessage(Level.WARNING);
                         return false;
                     }
@@ -145,8 +145,8 @@ public class CustomAction {
 
                         if (!e.getReason().equals(ItemCacheException.Reason.INVENTORY_FULL)) {
                             MessageBuilder.create("cacheCustomActionGiveItemError")
-                                    .addPlaceholderReplace("%ITEM%", parsedMessage.returnMessage())
-                                    .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                                    .addPlaceholder("%ITEM%", parsedMessage.returnMessage())
+                                    .addPlaceholder("%REASON%", e.getCleanReason())
                                     .logMessage(Level.WARNING);
                         }
                         // quit execution of action on fail
@@ -185,7 +185,7 @@ public class CustomAction {
     private MessageBuilder replaceWithPlaceholders(String toReplace) {
 
         MessageBuilder message = MessageBuilder.create(toReplace).setDirectString();
-        placeholders.forEach(message::addPlaceholderReplace);
+        placeholders.forEach(message::addPlaceholder);
         return message;
     }
 
@@ -193,9 +193,9 @@ public class CustomAction {
         boolean addLineNumber = lineNumber >= 0;
         MessageBuilder builder = MessageBuilder.create(
                 addLineNumber ? "cacheCustomActionParseError" : "cacheCustomActionParseErrorNoLine")
-                .addPlaceholderReplace("%NAME%", actionName)
-                .addPlaceholderReplace("%TYPE%", type);
-        if (addLineNumber) builder.addPlaceholderReplace("%LINE%", lineNumber + 1);
+                .addPlaceholder("%NAME%", actionName)
+                .addPlaceholder("%TYPE%", type);
+        if (addLineNumber) builder.addPlaceholder("%LINE%", lineNumber + 1);
         builder.logMessage(Level.WARNING);
     }
 

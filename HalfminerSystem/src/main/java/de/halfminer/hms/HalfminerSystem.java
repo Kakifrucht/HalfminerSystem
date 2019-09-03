@@ -49,7 +49,7 @@ public class HalfminerSystem extends JavaPlugin {
             return;
         }
 
-        manager.reloadOcurred(this);
+        manager.reload(this);
         getLogger().info("HalfminerSystem enabled");
     }
 
@@ -70,16 +70,16 @@ public class HalfminerSystem extends JavaPlugin {
                     continue;
                 }
 
-                manager.reloadOcurred(plugin);
+                manager.reload(plugin);
                 MessageBuilder.create("pluginReloaded", "HMS")
-                        .addPlaceholderReplace("%PLUGINNAME%", plugin.getName())
+                        .addPlaceholder("%PLUGINNAME%", plugin.getName())
                         .sendMessage(sender);
             }
             return true;
         }
 
         MessageBuilder.create("cmdHmsSystem", "HMS")
-                .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
+                .addPlaceholder("%VERSION%", getDescription().getVersion())
                 .sendMessage(sender);
 
         Set<Plugin> managedPlugins = manager.getManagedPlugins();
@@ -89,14 +89,15 @@ public class HalfminerSystem extends JavaPlugin {
             for (Plugin plugin : managedPlugins) {
                 if (plugin == this) continue;
 
+                final String pluginPrefix = "Halfminer";
                 String pluginName = plugin.getName();
-                if (pluginName.startsWith("Halfminer")) {
-                    pluginName = pluginName.substring(9);
+                if (pluginName.startsWith(pluginPrefix)) {
+                    pluginName = pluginName.substring(pluginPrefix.length());
                 }
 
                 MessageBuilder.create("cmdHmsHooked")
-                        .addPlaceholderReplace("%NAME%", pluginName)
-                        .addPlaceholderReplace("%VERSION%", plugin.getDescription().getVersion())
+                        .addPlaceholder("%NAME%", pluginName)
+                        .addPlaceholder("%VERSION%", plugin.getDescription().getVersion())
                         .sendMessage(sender);
             }
 

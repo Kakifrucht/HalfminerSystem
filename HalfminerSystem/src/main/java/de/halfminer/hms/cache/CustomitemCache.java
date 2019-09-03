@@ -11,6 +11,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import javax.annotation.Nullable;
@@ -19,12 +21,13 @@ import java.util.logging.Level;
 
 /**
  * Parses a CustomtextCache to create a custom {@link ItemStack} that will be given to a player.
- * Define custom id, custom name, custom lore and custom enchants, see customitems.txt for example.
+ * Define custom id, custom name, custom lore and custom enchants.
  * The owner of a skull can be set aswell. Additional placeholders can be passed to the item.
  */
 public class CustomitemCache {
 
     private final CustomtextCache originalCache;
+
 
     public CustomitemCache(CustomtextCache textCache) {
         originalCache = textCache;
@@ -45,6 +48,9 @@ public class CustomitemCache {
         Material itemMaterial;
         try {
             itemMaterial = Material.matchMaterial(itemUnparsed.get(0));
+            if (itemMaterial == null) {
+                throw new ItemCacheException(ItemCacheException.Reason.ITEM_SYNTAX_ERROR);
+            }
         } catch (IllegalArgumentException e) {
             throw new ItemCacheException(ItemCacheException.Reason.ITEM_SYNTAX_ERROR);
         }
@@ -65,28 +71,35 @@ public class CustomitemCache {
 
             MessageBuilder parameterParse = MessageBuilder.create(keyParamPair.getRight())
                     .setDirectString()
-                    .addPlaceholderReplace("%PLAYER%", owner.getName());
+                    .addPlaceholder("%PLAYER%", owner.getName());
 
             if (additionalPlaceholders != null) {
-                additionalPlaceholders.forEach(parameterParse::addPlaceholderReplace);
+                additionalPlaceholders.forEach(parameterParse::addPlaceholder);
             }
             // get the actual parameter and replace player placeholder
             String parameter = parameterParse.returnMessage();
 
             switch (keyParamPair.getLeft().toLowerCase()) {
-                case "itemid":
-                    try {
-                        short itemId = Short.parseShort(parameter);
-                        itemStack.setDurability(itemId);
-                    } catch (NumberFormatException e) {
-                        logInvalidParameter(keyParamPair.getLeft(), parameter);
-                    }
-                    break;
+
                 case "name":
                     Utils.setDisplayName(itemStack, ChatColor.translateAlternateColorCodes('&', parameter));
                     break;
                 case "lore":
                     Utils.setItemLore(itemStack, Arrays.asList(parameter.split("[|]")));
+                    break;
+                case "damage":
+                    try {
+                        int damage = Integer.parseInt(parameter);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        if (itemMeta instanceof Damageable) {
+                            ((Damageable) itemMeta).setDamage(damage);
+                            itemStack.setItemMeta(itemMeta);
+                        } else {
+                            logInvalidParameter(keyParamPair.getLeft(), parameter);
+                        }
+                    } catch (NumberFormatException e) {
+                        logInvalidParameter(keyParamPair.getLeft(), parameter);
+                    }
                     break;
                 case "enchant":
                     StringArgumentSeparator separator = new StringArgumentSeparator(parameter);
@@ -112,7 +125,7 @@ public class CustomitemCache {
                     break;
                 case "skullowner":
 
-                    if (!itemStack.getType().equals(Material.SKULL_ITEM)) {
+                    if (!itemStack.getType().equals(Material.PLAYER_HEAD)) {
                         logInvalidParameter(keyParamPair.getLeft(), parameter);
                         continue;
                     }
@@ -155,9 +168,9 @@ public class CustomitemCache {
             throw new ItemCacheException(notGiven);
         } else {
             MessageBuilder.create("cacheCustomitemCacheLogSuccess")
-                    .addPlaceholderReplace("%PLAYER%", giveTo.getName())
-                    .addPlaceholderReplace("%AMOUNT%", amount)
-                    .addPlaceholderReplace("%ITEMNAME%", itemKey)
+                    .addPlaceholder("%PLAYER%", giveTo.getName())
+                    .addPlaceholder("%AMOUNT%", amount)
+                    .addPlaceholder("%ITEMNAME%", itemKey)
                     .logMessage(Level.INFO);
         }
     }
@@ -172,14 +185,14 @@ public class CustomitemCache {
 
     private void logInvalidKey(String key) {
         MessageBuilder.create("cacheCustomitemCacheInvalidKey")
-                .addPlaceholderReplace("%KEY%", key)
+                .addPlaceholder("%KEY%", key)
                 .logMessage(Level.WARNING);
     }
 
     private void logInvalidParameter(String key, String param) {
         MessageBuilder.create("cacheCustomitemCacheInvalidParameter")
-                .addPlaceholderReplace("%KEY%", key)
-                .addPlaceholderReplace("%PARAMETER%", param)
+                .addPlaceholder("%KEY%", key)
+                .addPlaceholder("%PARAMETER%", param)
                 .logMessage(Level.WARNING);
     }
 }

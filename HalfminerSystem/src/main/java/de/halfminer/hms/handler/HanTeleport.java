@@ -62,7 +62,7 @@ public class HanTeleport extends HalfminerClass implements Reloadable {
         }
 
         MessageBuilder.create(lang.get("start")).setDirectString()
-                .addPlaceholderReplace("%TIME%", delay)
+                .addPlaceholder("%TIME%", delay)
                 .sendMessage(player);
         hms.getBarHandler().sendBar(player, lang.get("startbar"), BarColor.YELLOW, BarStyle.SOLID, delay);
         currentTeleport.put(player, scheduler.runTaskTimer(hms, tp, 25L, 20L));
