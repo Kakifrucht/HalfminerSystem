@@ -56,7 +56,7 @@ public class Cmdbuy extends LandCommand {
                                 && landToBuy.getZLandCorner() > -minimumCoordinateInt) {
 
                             MessageBuilder.create("cmdBuyNotBuyableCoordinate", hml)
-                                    .addPlaceholderReplace("%MINIMUMCOORDS%", minimumCoordinateInt)
+                                    .addPlaceholder("%MINIMUMCOORDS%", minimumCoordinateInt)
                                     .sendMessage(player);
                             return;
                         }
@@ -73,7 +73,7 @@ public class Cmdbuy extends LandCommand {
         if (status.equals(Land.BuyableStatus.ALREADY_OWNED)) {
 
             MessageBuilder.create("cmdBuyAlreadyOwned" + (landToBuy.isOwner(player) ? "Self" : ""), hml)
-                    .addPlaceholderReplace("%PLAYER%", landToBuy.getOwnerName())
+                    .addPlaceholder("%PLAYER%", landToBuy.getOwnerName())
                     .sendMessage(player);
             return;
         }
@@ -135,7 +135,7 @@ public class Cmdbuy extends LandCommand {
         double cost = contract.getCost();
         if (cost > money) {
             MessageBuilder.create("notEnoughMoney", hml)
-                    .addPlaceholderReplace("%COST%", cost)
+                    .addPlaceholder("%COST%", cost)
                     .sendMessage(player);
             return;
         }
@@ -151,9 +151,9 @@ public class Cmdbuy extends LandCommand {
             contractManager.fulfillContract(contract);
             String messageKey = "cmdBuySuccess" + (buyAsServer ? "AsServer" : (contract.isFreeBuy() ? "Free" : ""));
             MessageBuilder.create(messageKey, hml)
-                    .addPlaceholderReplace("%COST%", cost)
-                    .addPlaceholderReplace("%FREELANDSOWNED%", freeLandsOwned + 1)
-                    .addPlaceholderReplace("%FREELANDSMAX%", freeLandsMax == Integer.MAX_VALUE ? "-" : freeLandsMax)
+                    .addPlaceholder("%COST%", cost)
+                    .addPlaceholder("%FREELANDSOWNED%", freeLandsOwned + 1)
+                    .addPlaceholder("%FREELANDSMAX%", freeLandsMax == Integer.MAX_VALUE ? "-" : freeLandsMax)
                     .sendMessage(player);
 
             if (buyAsServer) {
@@ -166,7 +166,7 @@ public class Cmdbuy extends LandCommand {
             contract.setCanBeFulfilled();
 
             MessageBuilder.create("cmdBuyConfirm" + (contract.isFreeBuy() ? "Free" : ""), hml)
-                    .addPlaceholderReplace("%COST%", cost)
+                    .addPlaceholder("%COST%", cost)
                     .sendMessage(player);
         }
     }

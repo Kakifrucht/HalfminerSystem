@@ -90,7 +90,7 @@ public class Cmdhml extends LandCommand {
             String title = land.getTitle();
             land.setTitle(null);
             MessageBuilder.create("cmdHmlCustomTitleRemoved", hml)
-                    .addPlaceholderReplace("%TITLE%", title)
+                    .addPlaceholder("%TITLE%", title)
                     .sendMessage(player);
             return;
         }
@@ -98,7 +98,7 @@ public class Cmdhml extends LandCommand {
         String title = Utils.arrayToString(args, 1, true);
         land.setTitle(title);
         MessageBuilder.create("cmdHmlCustomTitleSet", hml)
-                .addPlaceholderReplace("%TITLE%", title)
+                .addPlaceholder("%TITLE%", title)
                 .sendMessage(player);
     }
 
@@ -144,9 +144,9 @@ public class Cmdhml extends LandCommand {
         }
 
         MessageBuilder.create("cmdHmlFlyTime" + (setFlyTime ? "Set" : ""), hml)
-                .addPlaceholderReplace("%PLAYER%", halfminerPlayer.getName())
-                .addPlaceholderReplace("%TIMELEFT%", flyTimeLeft)
-                .addPlaceholderReplace("%TIMESET%", setTo)
+                .addPlaceholder("%PLAYER%", halfminerPlayer.getName())
+                .addPlaceholder("%TIMELEFT%", flyTimeLeft)
+                .addPlaceholder("%TIMESET%", setTo)
                 .sendMessage(sender);
     }
 
@@ -188,10 +188,10 @@ public class Cmdhml extends LandCommand {
         }
 
         MessageBuilder.create(setFreeLands ? "cmdHmlFreeSet" : "cmdHmlFreeShow", hml)
-                .addPlaceholderReplace("%PLAYER%", toEdit.getName())
-                .addPlaceholderReplace("%HASFREE%", hasFreeAmount)
-                .addPlaceholderReplace("%CURRENTFREE%", setFreeAmount)
-                .addPlaceholderReplace("%SETFREE%", setTo)
+                .addPlaceholder("%PLAYER%", toEdit.getName())
+                .addPlaceholder("%HASFREE%", hasFreeAmount)
+                .addPlaceholder("%CURRENTFREE%", setFreeAmount)
+                .addPlaceholder("%SETFREE%", setTo)
                 .sendMessage(sender);
     }
 
@@ -219,7 +219,7 @@ public class Cmdhml extends LandCommand {
                 landStorage.setPinnedTeleportList(pinnedTeleports);
 
                 MessageBuilder.create("cmdHmlPinTpRemoved", hml)
-                        .addPlaceholderReplace("%TELEPORT%", land.getTeleportName())
+                        .addPlaceholder("%TELEPORT%", land.getTeleportName())
                         .sendMessage(sender);
                 return;
             }
@@ -237,14 +237,14 @@ public class Cmdhml extends LandCommand {
         pinnedTeleports.add(new PinnedTeleport(land, material));
         landStorage.setPinnedTeleportList(pinnedTeleports);
         MessageBuilder.create("cmdHmlPinTpPinned", hml)
-                .addPlaceholderReplace("%TELEPORT%", land.getTeleportName())
+                .addPlaceholder("%TELEPORT%", land.getTeleportName())
                 .sendMessage(sender);
     }
 
     private void reload() {
         hml.reload();
         MessageBuilder.create("pluginReloaded", PREFIX)
-                .addPlaceholderReplace("%PLUGINNAME%", hml.getName())
+                .addPlaceholder("%PLUGINNAME%", hml.getName())
                 .sendMessage(sender);
     }
 
@@ -291,24 +291,24 @@ public class Cmdhml extends LandCommand {
         for (Map.Entry<World, Integer> worldIntegerEntry : worldCountMap.entrySet()) {
             worldListBuilder.append(MessageBuilder.create("cmdHmlStatusWorldListEntry", hml)
                     .togglePrefix()
-                    .addPlaceholderReplace("%WORLD%", worldIntegerEntry.getKey().getName())
-                    .addPlaceholderReplace("%AMOUNT%", worldIntegerEntry.getValue())
+                    .addPlaceholder("%WORLD%", worldIntegerEntry.getKey().getName())
+                    .addPlaceholder("%AMOUNT%", worldIntegerEntry.getValue())
                     .returnMessage()).append(" ");
         }
 
         MessageBuilder.create("cmdHmlStatus", hml)
-                .addPlaceholderReplace("%TOTALLANDS%", totalLands)
-                .addPlaceholderReplace("%TOTALTELEPORTS%", totalTeleports)
-                .addPlaceholderReplace("%TOTALFREE%", totalFree)
-                .addPlaceholderReplace("%TOTALSERVER%", totalServer)
-                .addPlaceholderReplace("%TOTALABANDONED%", totalAbandoned)
-                .addPlaceholderReplace("%TOTALWORLDLIST%", worldListBuilder.toString().trim())
+                .addPlaceholder("%TOTALLANDS%", totalLands)
+                .addPlaceholder("%TOTALTELEPORTS%", totalTeleports)
+                .addPlaceholder("%TOTALFREE%", totalFree)
+                .addPlaceholder("%TOTALSERVER%", totalServer)
+                .addPlaceholder("%TOTALABANDONED%", totalAbandoned)
+                .addPlaceholder("%TOTALWORLDLIST%", worldListBuilder.toString().trim())
                 .sendMessage(sender);
     }
 
     private void showUsage() {
         MessageBuilder.create("cmdHmlUsage", hml)
-                .addPlaceholderReplace("%VERSION%", hml.getDescription().getVersion())
+                .addPlaceholder("%VERSION%", hml.getDescription().getVersion())
                 .sendMessage(sender);
     }
 }

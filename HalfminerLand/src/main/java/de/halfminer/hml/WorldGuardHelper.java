@@ -167,7 +167,7 @@ public class WorldGuardHelper {
         if (loc.getBlockY() < 0) {
             location.setY(0d);
         } else if (loc.getBlockY() > HIGHEST_BLOCK_Y) {
-            location.setY((double) HIGHEST_BLOCK_Y);
+            location.setY(HIGHEST_BLOCK_Y);
         }
 
         return wg.getRegionManager(location.getWorld())

@@ -67,7 +67,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             if (count > 0) {
                 MessageBuilder.create("listenerLandUnabandoned", hml)
-                        .addPlaceholderReplace("%COUNT%", count)
+                        .addPlaceholder("%COUNT%", count)
                         .sendMessage(e.getPlayer());
             }
         }
@@ -143,7 +143,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
                 ownerMessageInTitle = MessageBuilder.create("listenerOwnerOwned" + (newLand.isAbandoned() ? "Abandoned" : ""), hml)
                         .togglePrefix()
-                        .addPlaceholderReplace("%OWNER%", newLand.getOwnerName())
+                        .addPlaceholder("%OWNER%", newLand.getOwnerName())
                         .returnMessage();
             }
 
@@ -156,9 +156,9 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
                 hms.getTitlesHandler().sendTitle(player, MessageBuilder.create("listenerFormatTitle", hml)
                         .togglePrefix()
-                        .addPlaceholderReplace("%PVPLINE%", pvpMessageInTitle)
-                        .addPlaceholderReplace("%SPACER%", spacer)
-                        .addPlaceholderReplace("%OWNERLINE%", ownerMessageInTitle)
+                        .addPlaceholder("%PVPLINE%", pvpMessageInTitle)
+                        .addPlaceholder("%SPACER%", spacer)
+                        .addPlaceholder("%OWNERLINE%", ownerMessageInTitle)
                         .returnMessage(), 0, 40, 10);
             }
 
@@ -189,7 +189,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 if (command.startsWith(blockedCmd)) {
                     e.setCancelled(true);
                     MessageBuilder.create("listenerCmdBlocked", hml)
-                            .addPlaceholderReplace("%OWNER%", currentLand.getOwnerName())
+                            .addPlaceholder("%OWNER%", currentLand.getOwnerName())
                             .sendMessage(e.getPlayer());
                     return;
                 }
@@ -220,7 +220,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             String locale = e instanceof BlockBreakEvent ? "listenerBlockBreakBlocked" : "listenerBlockPlaceBlocked";
             MessageBuilder.create(locale, hml)
-                    .addPlaceholderReplace("%OWNER%", land.getOwnerName())
+                    .addPlaceholder("%OWNER%", land.getOwnerName())
                     .sendMessage(player);
 
             return true;
@@ -265,7 +265,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 || entity instanceof StorageMinecart)) {
 
             MessageBuilder.create("listenerNoInteract", hml)
-                    .addPlaceholderReplace("%OWNER%", land.getOwnerName())
+                    .addPlaceholder("%OWNER%", land.getOwnerName())
                     .sendMessage(player);
 
             e.setCancelled(true);
@@ -363,7 +363,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         if (flyBoard.isPlayerFlying(player)) {
             flyBoard.togglePlayerFlying(player);
             MessageBuilder.create("listenerFlyPvPDisabled", hml)
-                    .addPlaceholderReplace("%TIME%", flyBoard.getFlyTimeLeft(player))
+                    .addPlaceholder("%TIME%", flyBoard.getFlyTimeLeft(player))
                     .sendMessage(player);
         }
     }

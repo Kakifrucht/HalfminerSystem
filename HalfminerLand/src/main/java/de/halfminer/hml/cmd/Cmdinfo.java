@@ -46,10 +46,10 @@ public class Cmdinfo extends LandCommand {
                     land.getTeleportName() : MessageBuilder.returnMessage("cmdInfoNoTeleport", hml, false);
 
             MessageBuilder.create("cmdInfoOwned" + (land.isAbandoned() ? "Abandoned" : ""), hml)
-                    .addPlaceholderReplace("%OWNER%", land.getOwnerName())
-                    .addPlaceholderReplace("%OWNEDLANDS%", land.isServerLand() ? "1" : board.getLands(land.getOwner()).size())
-                    .addPlaceholderReplace("%FRIENDS%", friendString.toString().trim())
-                    .addPlaceholderReplace("%TELEPORT%", teleportName)
+                    .addPlaceholder("%OWNER%", land.getOwnerName())
+                    .addPlaceholder("%OWNEDLANDS%", land.isServerLand() ? "1" : board.getLands(land.getOwner()).size())
+                    .addPlaceholder("%FRIENDS%", friendString.toString().trim())
+                    .addPlaceholder("%TELEPORT%", teleportName)
                     .sendMessage(player);
 
         } else {

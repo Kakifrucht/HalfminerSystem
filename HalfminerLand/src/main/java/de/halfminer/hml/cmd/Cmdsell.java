@@ -62,7 +62,7 @@ public class Cmdsell extends LandCommand {
 
             if (sellableStatus.equals(Land.SellableStatus.HAS_TELEPORT)) {
                 MessageBuilder.create("cmdSellHasTeleport", hml)
-                        .addPlaceholderReplace("%TELEPORT%", landToSell.getTeleportName())
+                        .addPlaceholder("%TELEPORT%", landToSell.getTeleportName())
                         .sendMessage(player);
                 return;
             }
@@ -85,8 +85,8 @@ public class Cmdsell extends LandCommand {
             HalfminerPlayer landOwner = landToSell.getOwner();
             if (isForceSell && !landToSell.isServerLand() && landOwner.getBase().isOnline()) {
                 MessageBuilder.create("cmdSellForceNotify", hml)
-                        .addPlaceholderReplace("%FORCINGPLAYER%", player.getName())
-                        .addPlaceholderReplace("%LAND%", landToSell.toString())
+                        .addPlaceholder("%FORCINGPLAYER%", player.getName())
+                        .addPlaceholder("%LAND%", landToSell.toString())
                         .sendMessage(landOwner.getBase().getPlayer());
             }
 
@@ -103,8 +103,8 @@ public class Cmdsell extends LandCommand {
             }
 
             MessageBuilder.create(localeKey, hml)
-                    .addPlaceholderReplace("%COST%", contract.getCost())
-                    .addPlaceholderReplace("%LANDOWNER%", landOwner.getName())
+                    .addPlaceholder("%COST%", contract.getCost())
+                    .addPlaceholder("%LANDOWNER%", landOwner.getName())
                     .sendMessage(player);
 
         } else {
@@ -112,7 +112,7 @@ public class Cmdsell extends LandCommand {
             contract.setCanBeFulfilled();
 
             MessageBuilder.create("cmdSellConfirm" + (isFreeLand ? "Free" : ""), hml)
-                    .addPlaceholderReplace("%COST%", contract.getCost())
+                    .addPlaceholder("%COST%", contract.getCost())
                     .sendMessage(player);
         }
     }

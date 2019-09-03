@@ -50,7 +50,7 @@ public class Cmdlandtp extends LandCommand {
                 if (teleportTo.isAbandoned()) {
                     boolean isStealingEnabled = hml.getConfig().getBoolean("teleport.allowStealingAbandoned", false);
                     MessageBuilder.create("cmdLandtpIsAbandoned" + (isStealingEnabled ? "Steal" : ""), hml)
-                            .addPlaceholderReplace("%NAME%", teleportName)
+                            .addPlaceholder("%NAME%", teleportName)
                             .sendMessage(player);
                 } else {
 
@@ -109,7 +109,7 @@ public class Cmdlandtp extends LandCommand {
 
             if (!pinnedTeleports.isEmpty()) {
 
-                ItemStack stackBar = new ItemStack(Material.STAINED_GLASS_PANE, 1);
+                ItemStack stackBar = new ItemStack(Material.WHITE_STAINED_GLASS_PANE, 1);
                 Utils.setDisplayName(stackBar, " ");
                 Pair<ItemStack, String> pairAir = new Pair<>(new ItemStack(Material.AIR), "");
                 Pair<ItemStack, String> pairBar = new Pair<>(stackBar, "");
@@ -206,7 +206,7 @@ public class Cmdlandtp extends LandCommand {
 
     private ItemStack getSkullItem(OfflinePlayer owner) {
 
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         if (owner != null) {
             SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
             skullMeta.setOwningPlayer(owner);
@@ -231,8 +231,8 @@ public class Cmdlandtp extends LandCommand {
     private MessageBuilder getLocaleBuilder(String localeKey, String ownerName, String teleportName) {
         return MessageBuilder.create(localeKey, hml)
                 .togglePrefix()
-                .addPlaceholderReplace("%PLAYER%", ownerName)
-                .addPlaceholderReplace("%TELEPORT%", teleportName)
-                .addPlaceholderReplace("%TELEPORTFRIENDLY%", Utils.makeStringFriendly(teleportName));
+                .addPlaceholder("%PLAYER%", ownerName)
+                .addPlaceholder("%TELEPORT%", teleportName)
+                .addPlaceholder("%TELEPORTFRIENDLY%", Utils.makeStringFriendly(teleportName));
     }
 }

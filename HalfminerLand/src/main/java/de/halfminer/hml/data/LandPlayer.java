@@ -31,7 +31,7 @@ public class LandPlayer {
 
         double highestCost = 0d;
         for (String costString : previousCostList) {
-            double cost = Double.valueOf(costString);
+            double cost = Double.parseDouble(costString);
             if (cost > highestCost) {
                 highestCost = cost;
             }

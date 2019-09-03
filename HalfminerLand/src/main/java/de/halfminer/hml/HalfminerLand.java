@@ -118,7 +118,7 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
     public void reload() {
         HalfminerSystem.getInstance()
                 .getHalfminerManager()
-                .reloadOcurred(this);
+                .reload(this);
     }
 
     public WorldGuardHelper getWorldGuardHelper() {
