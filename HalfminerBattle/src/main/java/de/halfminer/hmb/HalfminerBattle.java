@@ -70,7 +70,7 @@ public class HalfminerBattle extends JavaPlugin {
 
     public boolean saveAndReloadConfig() {
 
-        manager.reloadOcurred(this);
+        manager.reload(this);
 
         try {
             arenaManager.reloadConfig();
@@ -108,7 +108,7 @@ public class HalfminerBattle extends JavaPlugin {
                 if (called != null) {
                     if (!called.onAdminCommand(sender, args)) {
                         MessageBuilder.create("adminNotDefined", this)
-                                .addPlaceholderReplace("%BATTLEMODE%", args[0])
+                                .addPlaceholder("%BATTLEMODE%", args[0])
                                 .sendMessage(sender);
                     }
                     return true;

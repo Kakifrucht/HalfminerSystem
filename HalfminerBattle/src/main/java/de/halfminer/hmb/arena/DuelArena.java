@@ -50,7 +50,7 @@ public class DuelArena extends AbstractArena {
                 if (timeLeft > timeStart) {
                     String toSend = MessageBuilder.create("modeDuelTitleCountdown", hmb)
                             .togglePrefix()
-                            .addPlaceholderReplace("%TIME%", timeLeft - timeStart)
+                            .addPlaceholder("%TIME%", timeLeft - timeStart)
                             .returnMessage();
 
                     titles.sendTitle(playerA, toSend, 0, 21, 0);
@@ -83,7 +83,7 @@ public class DuelArena extends AbstractArena {
             }
 
             private void playPlingSound() {
-                playersInArena.forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_CHIME, 1.0f, 1.0f));
+                playersInArena.forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f));
             }
 
         }, 0L, 20L);
@@ -104,9 +104,9 @@ public class DuelArena extends AbstractArena {
             MessageBuilder.create("modeDuelGameEndForced", hmb)
                     .sendMessage(playersInArena.getFirst(), playersInArena.getLast());
             MessageBuilder.create("modeDuelGameEndForcedLog", hmb)
-                    .addPlaceholderReplace("%ARENA%", getName())
-                    .addPlaceholderReplace("%PLAYERA%", playersInArena.getFirst().getName())
-                    .addPlaceholderReplace("%PLAYERB", playersInArena.getLast().getName())
+                    .addPlaceholder("%ARENA%", getName())
+                    .addPlaceholder("%PLAYERA%", playersInArena.getFirst().getName())
+                    .addPlaceholder("%PLAYERB", playersInArena.getLast().getName())
                     .logMessage(Level.INFO);
             gameEnd();
             return true;

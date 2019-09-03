@@ -15,6 +15,7 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -101,7 +102,7 @@ public class GlobalMode extends AbstractMode {
                         }
                         if (pm.isInBattle(type, toRestore)) {
                             MessageBuilder.create("adminOpenInventoryRestoredError", hmb)
-                                    .addPlaceholderReplace("%PLAYER%", toRestore.getName())
+                                    .addPlaceholder("%PLAYER%", toRestore.getName())
                                     .sendMessage(sender);
                             return true;
                         }
@@ -118,7 +119,7 @@ public class GlobalMode extends AbstractMode {
                     if (toRestore != null) {
                         toRestore.getInventory().setContents(contents);
                         MessageBuilder.create("adminOpenInventoryRestored", hmb)
-                                .addPlaceholderReplace("%PLAYER%", toRestore.getName())
+                                .addPlaceholder("%PLAYER%", toRestore.getName())
                                 .sendMessage(sender);
                     }
 
@@ -228,15 +229,15 @@ public class GlobalMode extends AbstractMode {
 
     private void sendUsageInformation(CommandSender sendTo) {
         MessageBuilder.create("adminCommandUsage", hmb)
-                .addPlaceholderReplace("%VERSION%", hmb.getDescription().getVersion())
-                .addPlaceholderReplace("%SYSTEMVERSION%", hms.getDescription().getVersion())
+                .addPlaceholder("%VERSION%", hmb.getDescription().getVersion())
+                .addPlaceholder("%SYSTEMVERSION%", hms.getDescription().getVersion())
                 .sendMessage(sendTo);
     }
 
     private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName, BattleModeType mode) {
         MessageBuilder.create(messageKey, hmb)
-                .addPlaceholderReplace("%ARENA%", arenaName)
-                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(mode.toString()))
+                .addPlaceholder("%ARENA%", arenaName)
+                .addPlaceholder("%MODE%", Utils.makeStringFriendly(mode.toString()))
                 .sendMessage(sendTo);
     }
 
@@ -475,7 +476,7 @@ public class GlobalMode extends AbstractMode {
     @EventHandler
     public void onPlayerInteractCheckItem(PlayerInteractEvent e) {
         Player p = e.getPlayer();
-        if (pm.isInBattle(type, p)) {
+        if (e.getAction().equals(Action.PHYSICAL) && pm.isInBattle(type, p)) {
             if (pm.checkAndStoreItemStack(p, e.getItem())) {
 
                 e.setCancelled(true);

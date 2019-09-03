@@ -63,7 +63,7 @@ public class FFAArena extends AbstractArena {
             long secondsLeft = timestamp - (System.currentTimeMillis() / 1000);
             if (secondsLeft > 0L) {
                 MessageBuilder.create("modeFFACooldown", hmb)
-                        .addPlaceholderReplace("%TIMELEFT%", secondsLeft)
+                        .addPlaceholder("%TIMELEFT%", secondsLeft)
                         .sendMessage(toAdd);
                 return;
             } else bannedFromArena.invalidate(toAdd.getUniqueId());
@@ -88,7 +88,7 @@ public class FFAArena extends AbstractArena {
         toAdd.setGlowing(battleMode.isSetGlowingInArena());
 
         MessageBuilder.create("modeFFAJoined", hmb)
-                .addPlaceholderReplace("%ARENA%", getName())
+                .addPlaceholder("%ARENA%", getName())
                 .sendMessage(toAdd);
         HalfminerSystem.getInstance()
                 .getTitlesHandler()
@@ -144,11 +144,11 @@ public class FFAArena extends AbstractArena {
             scoreboardObjective.getScore(killer.getName()).setScore(streak);
 
             MessageBuilder.create("modeFFAKillLog", hmb)
-                    .addPlaceholderReplace("%ARENA%", getName())
-                    .addPlaceholderReplace("%KILLER%", killer.getName())
-                    .addPlaceholderReplace("%VICTIM%", hasDied.getName())
-                    .addPlaceholderReplace("%KILLSTREAK%", streak)
-                    .addPlaceholderReplace("%DEATHSTREAK%", Math.abs(streakDied))
+                    .addPlaceholder("%ARENA%", getName())
+                    .addPlaceholder("%KILLER%", killer.getName())
+                    .addPlaceholder("%VICTIM%", hasDied.getName())
+                    .addPlaceholder("%KILLSTREAK%", streak)
+                    .addPlaceholder("%DEATHSTREAK%", Math.abs(streakDied))
                     .logMessage(Level.INFO);
 
             try {
@@ -194,8 +194,8 @@ public class FFAArena extends AbstractArena {
                 allPlayerNames.append(player.getName()).append(", ");
             }
             MessageBuilder.create("modeFFAGameEndForcedLog", hmb)
-                    .addPlaceholderReplace("%ARENA%", getName())
-                    .addPlaceholderReplace("%PLAYERLIST%", allPlayerNames.substring(0, allPlayerNames.length() - 2))
+                    .addPlaceholder("%ARENA%", getName())
+                    .addPlaceholder("%PLAYERLIST%", allPlayerNames.substring(0, allPlayerNames.length() - 2))
                     .logMessage(Level.INFO);
             return true;
         }

@@ -106,7 +106,7 @@ public abstract class AbstractArena extends BattleClass implements Arena {
 
         GlobalMode global = (GlobalMode) hmb.getBattleMode(BattleModeType.GLOBAL);
         for (Location spawn : spawns) {
-            if (spawn.getWorld().equals(loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance()) {
+            if (Objects.equals(spawn.getWorld(), loc.getWorld()) && spawn.distance(loc) <= global.getTeleportSpawnDistance()) {
                 return true;
             }
         }
@@ -214,9 +214,9 @@ public abstract class AbstractArena extends BattleClass implements Arena {
     protected String getCustomLore(Player player) {
         return MessageBuilder.create("modeGlobalKitArenaCustomLore", hmb)
                 .togglePrefix()
-                .addPlaceholderReplace("%ARENA%", getName())
-                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
-                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage();
+                .addPlaceholder("%ARENA%", getName())
+                .addPlaceholder("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
+                .addPlaceholder("%PLAYER%", player.getName()).returnMessage();
     }
 
     protected String getCustomLoreID() {
@@ -228,6 +228,6 @@ public abstract class AbstractArena extends BattleClass implements Arena {
     }
 
     protected Player[] parameterToArray(Player... param) {
-        return param != null && param.length > 0 ? param : playersInArena.toArray(new Player[playersInArena.size()]);
+        return param != null && param.length > 0 ? param : playersInArena.toArray(new Player[0]);
     }
 }
