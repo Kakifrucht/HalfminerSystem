@@ -4,7 +4,7 @@ DIAMOND_SWORD
 name: &6&lDiamond Sword
 lore: &7Owner: &6%PLAYER%|&7Another line
 damage: 512
-enchant: sharpness:6 unbreaking:4d
+enchant: sharpness:6 unbreaking:4
 #sellmenu-1
 BOOK
 name: &2&lZurück zum Menü

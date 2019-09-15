@@ -1,6 +1,7 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
+import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModAntiXray;
 import de.halfminer.hmc.module.ModSkillLevel;
@@ -49,7 +50,7 @@ public class Cmdhmc extends HalfminerCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ModuleDisabledException {
 
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
@@ -87,12 +88,15 @@ public class Cmdhmc extends HalfminerCommand {
 
     private void antiXray() {
 
-        ModAntiXray antiXray = (ModAntiXray) hmc.getModule(ModuleType.ANTI_XRAY);
-
-        if (!antiXray.isEnabled()) {
+        if (!hmc.isModuleEnabled(ModuleType.ANTI_XRAY)) {
             MessageBuilder.create("cmdHmcXrayDisabled", hmc, PREFIX).sendMessage(sender);
             return;
         }
+
+        ModAntiXray antiXray = null;
+        try {
+            antiXray = (ModAntiXray) hmc.getModule(ModuleType.ANTI_XRAY);
+        } catch (ModuleDisabledException ignored) {}
 
         if (args.length > 1) {
 
@@ -459,7 +463,7 @@ public class Cmdhmc extends HalfminerCommand {
         });
     }
 
-    private void skilllevel() {
+    private void skilllevel() throws ModuleDisabledException {
 
         if (args.length < 2) {
             MessageBuilder.create("cmdHmcSkillUsage", hmc, "Skilllevel").sendMessage(sender);

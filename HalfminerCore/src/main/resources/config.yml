@@ -65,6 +65,11 @@ command:
     threshold: 2000
     #Command to execute when threshold has been met
     commandToExecute: mail send Notch Votecount reached
+#Specify modules to be disabled, not case sensitive and without their prefix ('Mod').
+#Disabling or re-enabling modules requires a full plugin reload.
+disabledModules:
+  - AntiXray
+  - InventorySave
 antiKillfarming:
   #Time in seconds the primary block will be, this doubles for every block
   blockTime: 300
@@ -83,8 +88,6 @@ antiKillfarming:
   - 'tempban'
   - 'bminfo'
 antiXray:
-  #Global antixray toggle
-  isEnabled: true
   #Time until a counted player won't be counted anymore since last protected break (if not permanently checked)
   intervalUntilClearSeconds: 300
   #Minimum amount of protected blocks that have to be broken to be permanently checked
@@ -291,6 +294,7 @@ tps:
 #Messages can be removed by simply setting the message to nothing ('')
 localization:
   prefix: '&7%PREFIX% &e>>&r '
+  moduleIsDisabled: '&cDieses Modul ist derzeit deaktiviert'
   cmdChatAll: 'alle'
   cmdChatBossbar: '&7Bossbar an &e%SENDTO% &7für &a%TIME% Sekunden &7versendet, Nachricht: &r%MESSAGE%'
   cmdChatCleared: '&7Der Chat wurde von &e%PLAYER% &7geleert'

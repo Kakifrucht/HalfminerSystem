@@ -86,7 +86,6 @@ public class HanHooks extends HalfminerClass {
 
     public Enchantment getEnchantmentFromString(String enchantment) {
 
-        //TODO test this or use something like this: Enchantment.getByKey(new NamespacedKey(hms, enchantment));
         for (Enchantment value : Enchantment.values()) {
             if (value.getKey().getKey().equals(enchantment.toLowerCase())) {
                 return value;

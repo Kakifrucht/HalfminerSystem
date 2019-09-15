@@ -4,6 +4,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
 
 ## Current features
 - Built to be modular, lightweight and efficient
+  - All modules can be disabled
 - Messages completely, functionality mostly configurable
   - Supports clickable commands by using ``~`` character and encapsulating command in ``/``
 - **Modules**

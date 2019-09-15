@@ -66,7 +66,7 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
         if (!(e.getExited() instanceof Player)) return;
 
         final Player p = (Player) e.getExited();
-        if (p.hasPermission("hmc.bypass.glitchcheck")) return;
+        if (p.hasPermission("hmc.bypass.glitchcheck") || p.isDead()) return;
 
         final Location loc = e.getVehicle().getLocation();
         final World w = loc.getWorld();
@@ -76,16 +76,8 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
 
         for (int i = 0; i < 3; i++) {
             if (protectedMaterial.contains(w.getBlockAt(x, y + i, z).getType())) {
-                //e.setCancelled(true); cancelling would be better but currently not working (JIRA #1588)
-                scheduler.runTask(hmc, () -> {
-                    ((ModRespawn) hmc.getModule(ModuleType.RESPAWN)).tpToSpawn(p);
-                    MessageBuilder.create("modGlitchProtectionDismountTped", hmc, "AntiGlitch").sendMessage(p);
-                    MessageBuilder.create("modGlitchProtectionDismountTpedNotify", hmc, "AntiGlitch")
-                            .addPlaceholder("%PLAYER%", p.getName())
-                            .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(loc))
-                            .addPlaceholder("%WORLD%", w.getName())
-                            .broadcastMessage("hmc.bypass.glitchcheck", true);
-                });
+                e.setCancelled(true);
+                return;
             }
         }
     }

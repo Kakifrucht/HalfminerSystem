@@ -2,6 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.module.ModStatsTop;
+import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.statstop.TopBoard;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
@@ -28,7 +29,6 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 public class Cmdstatstop extends HalfminerCommand {
 
-    private final ModStatsTop statsTop = (ModStatsTop) hmc.getModule(ModuleType.STATS_TOP);
     private List<Pair<UUID, Integer>> topBoardList;
 
     private List<MessageBuilder> messageQueue;
@@ -39,8 +39,9 @@ public class Cmdstatstop extends HalfminerCommand {
     }
 
     @Override
-    protected void execute() {
+    protected void execute() throws ModuleDisabledException {
 
+        final ModStatsTop statsTop = (ModStatsTop) hmc.getModule(ModuleType.STATS_TOP);
         Map<DataType, TopBoard> topBoardMap = statsTop.getBoards();
         if (args.length > 0) {
 

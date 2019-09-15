@@ -186,6 +186,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     @EventHandler(ignoreCancelled = true)
     public void tabCompleteFilter(TabCompleteEvent e) {
 
+        //TODO not working anymore :/
         String buffer = e.getBuffer();
         List<String> complete = e.getCompletions();
 

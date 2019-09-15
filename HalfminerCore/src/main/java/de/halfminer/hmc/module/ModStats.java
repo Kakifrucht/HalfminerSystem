@@ -124,11 +124,18 @@ public class ModStats extends HalfminerModule implements Listener, Sweepable {
         Player clicker = e.getPlayer();
         Player clicked = (Player) e.getRightClicked();
 
-        if (((ModCombatLog) hmc.getModule(ModuleType.COMBAT_LOG)).isTagged(clicker)
-                || lastInteract.getIfPresent(clicker) == clicked) return;
+        boolean isTagged = false;
+        try {
+            isTagged = ((ModCombatLog) hmc.getModule(ModuleType.COMBAT_LOG)).isTagged(clicker);
+        } catch (ModuleDisabledException ignored) {}
+
+        if (isTagged || lastInteract.getIfPresent(clicker) == clicked) return;
 
         HalfminerPlayer hClicked = storage.getPlayer(clicked);
-        String skillgroup = ((ModSkillLevel) hmc.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);
+        String skillgroup = "";
+        try {
+            skillgroup = ((ModSkillLevel) hmc.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);
+        } catch (ModuleDisabledException ignored) {}
 
         MessageBuilder.create(!clicked.hasPermission("hmc.bypass.statsrightclick") ?
                 "modStatsRightClick" : "modStatsRightClickExempt", hmc, clicked.getName())

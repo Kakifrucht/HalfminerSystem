@@ -2,6 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.module.ModSell;
+import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.util.MessageBuilder;
 
@@ -14,15 +15,14 @@ import de.halfminer.hms.util.MessageBuilder;
 @SuppressWarnings("unused")
 public class Cmdsell extends HalfminerCommand {
 
-    private final ModSell sellModule = (ModSell) hmc.getModule(ModuleType.SELL);
-
     public Cmdsell() {
         this.permission = "hmc.sell";
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ModuleDisabledException {
 
+        final ModSell sellModule = (ModSell) hmc.getModule(ModuleType.SELL);
         if (label.equals("clearcycle") && sender.hasPermission("hmc.sell.clearcycle")) {
             sellModule.startNewCycle();
             return;

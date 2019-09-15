@@ -1,6 +1,7 @@
 package de.halfminer.hmc.cmd.abs;
 
 import de.halfminer.hmc.CoreClass;
+import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
@@ -34,10 +35,16 @@ public abstract class HalfminerCommand extends CoreClass {
             isPlayer = true;
             player = (Player) sender;
         }
-        execute();
+        try {
+            execute();
+        } catch (ModuleDisabledException e) {
+            MessageBuilder.create("moduleIsDisabled", hmc, "Info")
+                    .addPlaceholder("%MODULE%", e.getType().getClassName())
+                    .sendMessage(sender);
+        }
     }
 
-    protected abstract void execute();
+    protected abstract void execute() throws ModuleDisabledException;
 
     public boolean hasPermission(CommandSender sender) {
         return sender.hasPermission(permission);
