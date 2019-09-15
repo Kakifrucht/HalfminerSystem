@@ -71,7 +71,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 int skillEloChange = (int) -Math.round((double) hPlayer.getInt(DataType.SKILL_ELO) * derankAmountPercent);
                 updateSkill(player, skillEloChange);
                 MessageBuilder.create("modSkillLevelDerank", hmc, "PvP")
-                        .addPlaceholderReplace("%DAYS%", timeUntilDerankThreshold / DAYS_IN_SECONDS)
+                        .addPlaceholder("%DAYS%", timeUntilDerankThreshold / DAYS_IN_SECONDS)
                         .sendMessage(player);
             } else {
                 updateSkill(player, 0);
@@ -175,17 +175,17 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                 titleHandler.sendTitle((Player) player,
                         MessageBuilder.create(newLevel > level ?
                                 "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle", hmc)
-                                .addPlaceholderReplace("%SKILLLEVEL%", newLevel)
-                                .addPlaceholderReplace("%SKILLGROUP%", newTeam.getName().substring(2))
+                                .addPlaceholder("%SKILLLEVEL%", newLevel)
+                                .addPlaceholder("%SKILLGROUP%", newTeam.getName().substring(2))
                                 .returnMessage(),
                         10, 50, 10, 10);
             }
 
             MessageBuilder.create("modSkillLevelLog", hmc)
-                    .addPlaceholderReplace("%PLAYER%", player.getName())
-                    .addPlaceholderReplace("%SKILLOLD%", level)
-                    .addPlaceholderReplace("%SKILLNEW%", newLevel)
-                    .addPlaceholderReplace("%SKILLNO%", elo)
+                    .addPlaceholder("%PLAYER%", player.getName())
+                    .addPlaceholder("%SKILLOLD%", level)
+                    .addPlaceholder("%SKILLNEW%", newLevel)
+                    .addPlaceholder("%SKILLNO%", elo)
                     .logMessage(Level.INFO);
         }
     }

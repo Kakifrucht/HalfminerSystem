@@ -3,6 +3,7 @@ version: ${project.version}
 description: Halfminer.de Plugin API
 author: Kakifrucht
 website: https://halfminer.de
+api-version: '1.14'
 
 main: de.halfminer.hms.HalfminerSystem
 softdepend: [Essentials, Vault]

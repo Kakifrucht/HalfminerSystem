@@ -61,8 +61,8 @@ public final class NMSUtils {
         PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
 
         try {
-            setField(packet, "a", header);
-            setField(packet, "b", footer);
+            setField(packet, "header", header);
+            setField(packet, "footer", footer);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             HalfminerSystem.getInstance().getLogger().log(Level.SEVERE,
                     "Error occurred during tablist packet send", e);

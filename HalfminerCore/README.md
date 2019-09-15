@@ -134,10 +134,10 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
         - Cycles are persistent through server/plugin restarts
         - Broadcast message one minute before and when a new cycle starts
           - Broadcasts player that sold most of a single item, which item and the total amount sold
-        - Cycle time is dependent on current player count on server, more players -\> more cycles
+        - Cycle time is dependent on current player count on server, more players online leads to more cycles
           - Define a max/min time and playercount for min time in config
       - Reads items and their groups from config
-        - Items are defined by their Material, durability/id, base price per unit and name of item
+        - Items are defined by their Material, base price per unit and friendly name of item
         - Items must be put into groups, which define how many items of said group will be put into a cycle
           - Price will be adjusted by a configurable amount every given amount (also configurable per group)
             - Shows original base price

@@ -22,7 +22,12 @@ public interface SellCycle {
 
     Sellable getSellableAtSlot(int slot);
 
-    Sellable getMatchingSellable(Material material, short data);
+    /**
+     * Get the Sellable from Material, if contained in this cycle
+     * @param material Sellable must match Material
+     * @return Sellable with same Material, or null
+     */
+    Sellable getSellable(Material material);
 
     @SuppressWarnings("SameParameterValue")
     void storeCurrentCycle(HanStorage storage);

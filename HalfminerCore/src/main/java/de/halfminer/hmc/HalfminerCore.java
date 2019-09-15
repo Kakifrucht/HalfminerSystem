@@ -53,7 +53,7 @@ public class HalfminerCore extends JavaPlugin {
             return;
         }
 
-        HalfminerSystem.getInstance().getHalfminerManager().reloadOcurred(this);
+        HalfminerSystem.getInstance().getHalfminerManager().reload(this);
         getLogger().info("HalfminerCore enabled");
     }
 

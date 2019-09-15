@@ -58,7 +58,7 @@ public class Cmdvote extends HalfminerCommand {
                 coreStorage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
                 hasVoted.incrementInt(DataType.VOTES, 1);
                 MessageBuilder.create("cmdVoteVoted", hmc, "Vote")
-                        .addPlaceholderReplace("%PLAYER%", hasVoted.getName())
+                        .addPlaceholder("%PLAYER%", hasVoted.getName())
                         .broadcastMessage(true);
 
                 // if the player is currently online, save his ip so that other people with same ip who cannot vote
@@ -75,7 +75,7 @@ public class Cmdvote extends HalfminerCommand {
                         MessageBuilder.create("cmdVoteRewardCouldNotExecute", hmc, "Vote").sendMessage(playerHasVoted);
                     }
 
-                    playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 2.0f);
+                    playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 2.0f);
                 } else {
                     // player not online, let him grab the reward later
                     coreStorage.incrementInt("vote.reward." + hasVoted.getUniqueId(), 1);
@@ -85,7 +85,7 @@ public class Cmdvote extends HalfminerCommand {
                 int totalvotes = coreStorage.incrementInt("totalvotes", 1);
                 if (totalvotes == hmc.getConfig().getInt("command.vote.threshold", 2000)) {
 
-                    String command = hmc.getConfig().getString("command.vote.commandToExecute");
+                    String command = hmc.getConfig().getString("command.vote.commandToExecute", "");
                     if (command.length() > 0) {
                         server.dispatchCommand(server.getConsoleSender(), command);
                     }
@@ -129,12 +129,12 @@ public class Cmdvote extends HalfminerCommand {
         int totalVotesThreshold = hmc.getConfig().getInt("command.vote.threshold", 2000);
 
         MessageBuilder.create("cmdVoteTop", hmc).sendMessage(sender);
-        MessageBuilder.create("cmdVoteMessage", hmc).addPlaceholderReplace("%PLAYER%", playername).sendMessage(sender);
+        MessageBuilder.create("cmdVoteMessage", hmc).addPlaceholder("%PLAYER%", playername).sendMessage(sender);
         MessageBuilder.create(" ", hmc).setDirectString().sendMessage(sender);
 
         boolean thresholdPassed = totalVotes < totalVotesThreshold;
         MessageBuilder.create(thresholdPassed ? "cmdVoteUntil" : "cmdVoteReached", hmc)
-                .addPlaceholderReplace("%TOTALVOTES%" + (thresholdPassed ? "" : "%THRESHOLD%"), totalVotes)
+                .addPlaceholder("%TOTALVOTES%" + (thresholdPassed ? "" : "%THRESHOLD%"), totalVotes)
                 .sendMessage(sender);
 
         if (rewardLeft > 0) MessageBuilder.create("cmdVoteGrabReward", hmc).sendMessage(sender);
@@ -151,8 +151,8 @@ public class Cmdvote extends HalfminerCommand {
             return actions.getNextAction().runAction(player);
         } catch (CachingException e) {
             MessageBuilder.create("cmdVoteActionCacheError", hmc)
-                    .addPlaceholderReplace("%PLAYER%", player.getName())
-                    .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                    .addPlaceholder("%PLAYER%", player.getName())
+                    .addPlaceholder("%REASON%", e.getCleanReason())
                     .logMessage(Level.WARNING);
             return false;
         }

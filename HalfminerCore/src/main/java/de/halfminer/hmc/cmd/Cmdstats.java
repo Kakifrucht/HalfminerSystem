@@ -55,19 +55,19 @@ public class Cmdstats extends HalfminerCommand {
 
         MessageBuilder.create("cmdStatsHeader", hmc).sendMessage(sender);
         MessageBuilder.create("cmdStatsShow", hmc)
-                .addPlaceholderReplace("%PLAYER%", player.getName())
-                .addPlaceholderReplace("%SKILLGROUP%",
+                .addPlaceholder("%PLAYER%", player.getName())
+                .addPlaceholder("%SKILLGROUP%",
                         ((ModSkillLevel) hmc.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(player.getBase()))
-                .addPlaceholderReplace("%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith))
-                .addPlaceholderReplace("%ONLINETIME%", getIntAndCompare(player, DataType.TIME_ONLINE, compareWith))
-                .addPlaceholderReplace("%KILLS%", getIntAndCompare(player, DataType.KILLS, compareWith))
-                .addPlaceholderReplace("%DEATHS%", getIntAndCompare(player, DataType.DEATHS, compareWith))
-                .addPlaceholderReplace("%KDRATIO%", getDoubleAndCompare(player, DataType.KD_RATIO, compareWith))
-                .addPlaceholderReplace("%VOTES%", getIntAndCompare(player, DataType.VOTES, compareWith))
-                .addPlaceholderReplace("%REVENUE%", getDoubleAndCompare(player, DataType.REVENUE, compareWith))
-                .addPlaceholderReplace("%MOBKILLS%", getIntAndCompare(player, DataType.MOB_KILLS, compareWith))
-                .addPlaceholderReplace("%BLOCKSPLACED%", getIntAndCompare(player, DataType.BLOCKS_PLACED, compareWith))
-                .addPlaceholderReplace("%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith))
+                .addPlaceholder("%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith))
+                .addPlaceholder("%ONLINETIME%", getIntAndCompare(player, DataType.TIME_ONLINE, compareWith))
+                .addPlaceholder("%KILLS%", getIntAndCompare(player, DataType.KILLS, compareWith))
+                .addPlaceholder("%DEATHS%", getIntAndCompare(player, DataType.DEATHS, compareWith))
+                .addPlaceholder("%KDRATIO%", getDoubleAndCompare(player, DataType.KD_RATIO, compareWith))
+                .addPlaceholder("%VOTES%", getIntAndCompare(player, DataType.VOTES, compareWith))
+                .addPlaceholder("%REVENUE%", getDoubleAndCompare(player, DataType.REVENUE, compareWith))
+                .addPlaceholder("%MOBKILLS%", getIntAndCompare(player, DataType.MOB_KILLS, compareWith))
+                .addPlaceholder("%BLOCKSPLACED%", getIntAndCompare(player, DataType.BLOCKS_PLACED, compareWith))
+                .addPlaceholder("%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith))
                 .sendMessage(sender);
 
         // filter out current name
@@ -113,7 +113,7 @@ public class Cmdstats extends HalfminerCommand {
             sb.setLength(sb.length() - spacer.length());
 
             MessageBuilder.create("cmdStatsPreviousNames", hmc)
-                    .addPlaceholderReplace("%PREVIOUSNAMES%", sb.toString())
+                    .addPlaceholder("%PREVIOUSNAMES%", sb.toString())
                     .sendMessage(sender);
         }
 
@@ -123,14 +123,13 @@ public class Cmdstats extends HalfminerCommand {
             MessageBuilder.create("cmdStatsCompareLegend", hmc).sendMessage(sender);
         } else if (sender instanceof Player) {
             MessageBuilder.create("cmdStatsCompareInfo", hmc)
-                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .addPlaceholder("%PLAYER%", player.getName())
                     .sendMessage(sender);
         }
 
         MessageBuilder.create("lineSeparator").sendMessage(sender);
     }
 
-    @SuppressWarnings("Duplicates")
     private String getIntAndCompare(HalfminerPlayer player, DataType type, HalfminerPlayer compareWith) {
         String returnString = "";
         int playerVar = player.getInt(type);
@@ -146,7 +145,6 @@ public class Cmdstats extends HalfminerCommand {
         return returnString + playerVar;
     }
 
-    @SuppressWarnings("Duplicates")
     private String getDoubleAndCompare(HalfminerPlayer player, DataType type, HalfminerPlayer compareWith) {
 
         // code duplicated, as Java doesn't offer simple ways to abstract primitive types

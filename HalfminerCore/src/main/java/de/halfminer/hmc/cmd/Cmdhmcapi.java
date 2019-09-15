@@ -72,9 +72,8 @@ public class Cmdhmcapi extends HalfminerCommand {
             } else if (args[0].equalsIgnoreCase("takehead")) {
 
                 ItemStack hand = player.getInventory().getItemInMainHand();
-                if (hand != null
-                        && hand.hasItemMeta()
-                        && hand.getType().equals(Material.SKULL_ITEM)) {
+                if (hand.hasItemMeta()
+                        && hand.getType().equals(Material.PLAYER_HEAD)) {
 
                     SkullMeta skull = (SkullMeta) hand.getItemMeta();
 
@@ -89,7 +88,7 @@ public class Cmdhmcapi extends HalfminerCommand {
                         return;
                     }
 
-                    if (reduceHandAmountOrRemove(Material.SKULL_ITEM, 1)) {
+                    if (reduceHandAmountOrRemove(Material.PLAYER_HEAD, 1)) {
                         int level = skullOwner.getInt(DataType.SKILL_LEVEL);
 
                         server.dispatchCommand(consoleInstance,

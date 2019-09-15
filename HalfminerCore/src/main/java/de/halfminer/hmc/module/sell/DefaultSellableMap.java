@@ -76,7 +76,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             StringArgumentSeparator separator = new StringArgumentSeparator(groupString, ',');
             if (!separator.meetsLength(2)) {
                 MessageBuilder.create("modSellMapLogGroupInvalid", hmc)
-                        .addPlaceholderReplace("%GROUP%", groupString)
+                        .addPlaceholder("%GROUP%", groupString)
                         .logMessage(Level.WARNING);
                 continue;
             }
@@ -117,21 +117,21 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
             for (String sellable : config.getStringList("sell.sellables." + groupString)) {
                 StringArgumentSeparator separator = new StringArgumentSeparator(sellable, ',');
-                if (!separator.meetsLength(4)) {
+                if (!separator.meetsLength(3)) {
                     MessageBuilder.create("modSellMapLogSellableInvalidFormat", hmc)
-                            .addPlaceholderReplace("%SELLABLE%", sellable)
+                            .addPlaceholder("%SELLABLE%", sellable)
                             .logMessage(Level.WARNING);
                     continue;
                 }
 
                 Material material = Material.matchMaterial(separator.getArgument(1));
-                short durability = (short) separator.getArgumentIntMinimum(2, -1);
-                String messageName = separator.getArgument(0);
-                int baseUnitAmount = separator.getArgumentIntMinimum(3, 1);
-
                 if (material != null) {
+
+                    String messageName = separator.getArgument(0);
+                    int baseUnitAmount = separator.getArgumentIntMinimum(2, 1);
+
                     Sellable currentSellable = new DefaultSellable(
-                            group, material, durability, messageName, baseUnitAmount
+                            group, material, messageName, baseUnitAmount
                     );
 
                     if (sellables.containsKey(group)) {
@@ -141,9 +141,10 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
                         newList.add(currentSellable);
                         sellables.put(group, newList);
                     }
+
                 } else {
                     MessageBuilder.create("modSellMapLogMaterialNotExists", hmc)
-                            .addPlaceholderReplace("%MATERIAL%", separator.getArgument(1))
+                            .addPlaceholder("%MATERIAL%", separator.getArgument(1))
                             .logMessage(Level.WARNING);
                 }
             }
@@ -174,13 +175,12 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
                         String group = cycleSection.getString(key + ".group");
                         Material material = Material.matchMaterial(cycleSection.getString(key + ".material", ""));
-                        short durability = (short) cycleSection.getInt(key + ".durability");
                         String stateString = cycleSection.getString(key + ".state");
 
                         if (material != null && groups.containsKey(group)) {
                             List<Sellable> sellablesInGroup = sellables.get(groups.get(group));
                             for (Sellable sellable : sellablesInGroup) {
-                                if (sellable.getMaterial().equals(material) && sellable.getDurability() == durability) {
+                                if (sellable.getMaterial().equals(material)) {
                                     sellable.setState(stateString);
                                     currentCycle.addSellableToCycle(sellable);
                                     break;
@@ -238,7 +238,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
     @Override
     public Sellable getSellableFromItemStack(ItemStack item) {
-        return currentCycle.getMatchingSellable(item.getType(), item.getDurability());
+        return currentCycle.getSellable(item.getType());
     }
 
     @Override
@@ -347,8 +347,8 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
             sellableString.setLength(sellableString.length() - 2);
             MessageBuilder.create("modSellCurrentCycleLog", hmc)
-                    .addPlaceholderReplace("%TIMELEFT%", currentCycle.getSecondsTillExpiry() / 60)
-                    .addPlaceholderReplace("%SELLABLES%", sellableString.toString())
+                    .addPlaceholder("%TIMELEFT%", currentCycle.getSecondsTillExpiry() / 60)
+                    .addPlaceholder("%SELLABLES%", sellableString.toString())
                     .logMessage(Level.INFO);
         }
     }

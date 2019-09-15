@@ -150,11 +150,11 @@ public class ModHealthBar extends HalfminerModule implements Listener {
 
             barHandler.sendBar(toUpdate,
                     MessageBuilder.create("modHealthBarBossBar" + (entityToUpdate instanceof Player ? "" : "Mob"), hmc)
-                            .addPlaceholderReplace("%PLAYER%", entityToUpdate.getName())
-                            .addPlaceholderReplace("%LEVEL%", otherPlayer != null ?
+                            .addPlaceholder("%PLAYER%", entityToUpdate.getName())
+                            .addPlaceholder("%LEVEL%", otherPlayer != null ?
                                     storage.getPlayer(otherPlayer).getString(DataType.SKILL_LEVEL) : "1")
-                            .addPlaceholderReplace("%HEALTH%", health)
-                            .addPlaceholderReplace("%MAXHEALTH%", (int) maxHealth)
+                            .addPlaceholder("%HEALTH%", health)
+                            .addPlaceholder("%MAXHEALTH%", (int) maxHealth)
                             .returnMessage(),
                     color,
                     style,

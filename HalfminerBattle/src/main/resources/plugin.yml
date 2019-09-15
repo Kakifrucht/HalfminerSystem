@@ -3,6 +3,7 @@ version: ${project.version}
 description: Halfminer.de Battle Arena
 author: Kakifrucht
 website: https://halfminer.de
+api-version: '1.14'
 
 main: de.halfminer.hmb.HalfminerBattle
 depend: [HalfminerSystem]

@@ -3,12 +3,13 @@ version: ${project.version}
 description: Halfminer.de Core Plugin
 author: Kakifrucht
 website: https://halfminer.de
+api-version: '1.14'
 
 main: de.halfminer.hmc.HalfminerCore
 depend: [HalfminerSystem, Essentials]
 
 commands:
-  ?:
+  '?':
     description: Bukkit override, protects from viewing all commands
     aliases: [alias]
   chat:

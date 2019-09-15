@@ -15,3 +15,6 @@ Halfminer Teamspeak Bot can be found [here](https://github.com/Kakifrucht/Halfmi
 may not be toggleable/configurable. The default localization is German and some localized strings are configured 
 specifically for our server. Feel free to fork and fix/translate the plugin to your likings. 
 It is presently fully localizable via the plugins configuration file.
+
+## Compile
+Additionally to the Maven dependencies, you need to manually add a craftbukkit.jar 

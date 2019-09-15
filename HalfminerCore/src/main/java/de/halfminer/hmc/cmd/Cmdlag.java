@@ -58,8 +58,8 @@ public class Cmdlag extends HalfminerCommand {
             }
 
             MessageBuilder.create("cmdLagPlayerInfo", hmc, "Lag")
-                    .addPlaceholderReplace("%PLAYER%", toLookup.getName())
-                    .addPlaceholderReplace("%LATENCY%", pingColored)
+                    .addPlaceholder("%PLAYER%", toLookup.getName())
+                    .addPlaceholder("%LATENCY%", pingColored)
                     .sendMessage(sender);
         }
 
@@ -76,7 +76,7 @@ public class Cmdlag extends HalfminerCommand {
         } else tpsColored = ChatColor.GREEN + tpsColored;
 
         MessageBuilder.create("cmdLagServerInfo", hmc, "Lag")
-                .addPlaceholderReplace("%TPS%", tpsColored)
+                .addPlaceholder("%TPS%", tpsColored)
                 .sendMessage(sender);
 
         // determines the summary message, only shown when viewing own status

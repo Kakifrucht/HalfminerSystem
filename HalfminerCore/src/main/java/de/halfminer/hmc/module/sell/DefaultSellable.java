@@ -17,7 +17,6 @@ class DefaultSellable implements Sellable {
 
     private final SellableGroup group;
     private final Material material;
-    private final short durability;
     private final String messageName;
 
     private final int baseUnitAmount;
@@ -26,11 +25,10 @@ class DefaultSellable implements Sellable {
     private int amountSoldTotal;
 
 
-    DefaultSellable(SellableGroup group, Material material, short durability, String messageName, int baseUnitAmount) {
+    DefaultSellable(SellableGroup group, Material material, String messageName, int baseUnitAmount) {
 
         this.group = group;
         this.material = material;
-        this.durability = durability;
         this.messageName = messageName;
 
         this.baseUnitAmount = baseUnitAmount;
@@ -46,11 +44,6 @@ class DefaultSellable implements Sellable {
     @Override
     public Material getMaterial() {
         return material;
-    }
-
-    @Override
-    public short getDurability() {
-        return durability;
     }
 
     @Override
@@ -156,7 +149,7 @@ class DefaultSellable implements Sellable {
 
     @Override
     public boolean isSimiliar(Sellable sellable) {
-        return sellable.getMaterial().equals(material) && sellable.getDurability() == durability;
+        return sellable.getMaterial().equals(material);
     }
 
     @Override
@@ -167,7 +160,7 @@ class DefaultSellable implements Sellable {
 
     @Override
     public ItemStack getItemStack() {
-        return new ItemStack(material, 1, (short) Math.max(durability, 0));
+        return new ItemStack(material, 1);
     }
 
     @Override
@@ -179,7 +172,6 @@ class DefaultSellable implements Sellable {
     public boolean isMatchingStack(ItemStack itemStack) {
         return itemStack != null
                 && material.equals(itemStack.getType())
-                && (durability < 0 || durability == itemStack.getDurability())
                 && !itemStack.hasItemMeta();
     }
 

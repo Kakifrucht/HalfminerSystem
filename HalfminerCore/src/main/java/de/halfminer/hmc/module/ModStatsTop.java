@@ -54,7 +54,7 @@ public class ModStatsTop extends HalfminerModule implements Listener {
 
             if (!argumentSeparator.meetsLength(3)) {
                 MessageBuilder.create("modStatsTopInvalidLine", hmc)
-                        .addPlaceholderReplace("%LINE%", line)
+                        .addPlaceholder("%LINE%", line)
                         .logMessage(Level.WARNING);
                 continue;
             }
@@ -66,7 +66,7 @@ public class ModStatsTop extends HalfminerModule implements Listener {
 
             if (type == null) {
                 MessageBuilder.create("modStatsTopInvalidType", hmc)
-                        .addPlaceholderReplace("%TYPE%", argumentSeparator.getArgument(1))
+                        .addPlaceholder("%TYPE%", argumentSeparator.getArgument(1))
                         .logMessage(Level.WARNING);
                 continue;
             }
@@ -74,7 +74,7 @@ public class ModStatsTop extends HalfminerModule implements Listener {
             // don't allow the same type twice
             if (boards.containsKey(type)) {
                 MessageBuilder.create("modStatsTopTypeAlreadyUsed", hmc)
-                        .addPlaceholderReplace("%TYPE%", argumentSeparator.getArgument(1))
+                        .addPlaceholder("%TYPE%", argumentSeparator.getArgument(1))
                         .logMessage(Level.WARNING);
                 continue;
             }

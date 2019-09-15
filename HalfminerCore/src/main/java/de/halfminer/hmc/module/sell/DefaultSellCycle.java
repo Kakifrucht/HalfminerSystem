@@ -1,7 +1,6 @@
 package de.halfminer.hmc.module.sell;
 
 import de.halfminer.hms.handler.HanStorage;
-import de.halfminer.hms.util.Pair;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ class DefaultSellCycle implements SellCycle {
     private final long expiry;
 
     private final List<Sellable> cycleSellables = new ArrayList<>();
-    private final Map<Pair<Material, Short>, Sellable> cycleSellablesLookup = new HashMap<>();
+    private final Map<Material, Sellable> cycleSellablesLookup = new HashMap<>();
 
 
     DefaultSellCycle(long expirySeconds) {
@@ -27,7 +26,7 @@ class DefaultSellCycle implements SellCycle {
     @Override
     public void addSellableToCycle(Sellable toAdd) {
         cycleSellables.add(toAdd);
-        cycleSellablesLookup.put(new Pair<>(toAdd.getMaterial(), toAdd.getDurability()), toAdd);
+        cycleSellablesLookup.put(toAdd.getMaterial(), toAdd);
     }
 
     @Override
@@ -56,15 +55,8 @@ class DefaultSellCycle implements SellCycle {
     }
 
     @Override
-    public Sellable getMatchingSellable(Material material, short data) {
-        Pair<Material, Short> lookupPair = new Pair<>(material, data);
-        if (cycleSellablesLookup.containsKey(lookupPair)) {
-            return cycleSellablesLookup.get(lookupPair);
-        } else if (lookupPair.getRight() >= 0) {
-            lookupPair.setRight((short) -1);
-            return cycleSellablesLookup.get(lookupPair);
-        }
-        return null;
+    public Sellable getSellable(Material material) {
+        return cycleSellablesLookup.get(material);
     }
 
     @Override
@@ -79,7 +71,6 @@ class DefaultSellCycle implements SellCycle {
                 String basePath = "sellcycle." + i + ".";
                 storage.set(basePath + "group", sellable.getGroup().getGroupName());
                 storage.set(basePath + "material", sellable.getMaterial().toString());
-                storage.set(basePath + "durability", sellable.getDurability());
                 storage.set(basePath + "state", sellable.getStateString());
             }
         }

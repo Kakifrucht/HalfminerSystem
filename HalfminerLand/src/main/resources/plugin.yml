@@ -3,6 +3,7 @@ version: ${project.version}
 description: Halfminer.de land protection and management
 author: Kakifrucht
 website: https://halfminer.de
+api-version: '1.14'
 
 main: de.halfminer.hml.HalfminerLand
 depend: [HalfminerSystem, Essentials, WorldGuard]

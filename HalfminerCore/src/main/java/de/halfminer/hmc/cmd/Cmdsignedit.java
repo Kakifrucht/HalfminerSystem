@@ -3,7 +3,6 @@ package de.halfminer.hmc.cmd;
 import de.halfminer.hmc.cmd.abs.HalfminerPersistenceCommand;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -57,7 +56,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
             }
 
             MessageBuilder.create("cmdSigneditCopy", hmc, PREFIX)
-                    .addPlaceholderReplace("%AMOUNT%", amountToCopy)
+                    .addPlaceholder("%AMOUNT%", amountToCopy)
                     .sendMessage(player);
             setPersistent(player.getUniqueId());
             return;
@@ -73,8 +72,8 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                     }
 
                     MessageBuilder.create("cmdSigneditSet", hmc, PREFIX)
-                            .addPlaceholderReplace("%LINE%", lineNumber + 1)
-                            .addPlaceholderReplace("%TEXT%", lineText)
+                            .addPlaceholder("%LINE%", lineNumber + 1)
+                            .addPlaceholder("%TEXT%", lineText)
                             .sendMessage(player);
                     setPersistent(player.getUniqueId());
                     return;
@@ -99,9 +98,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
 
         Block block = e.getClickedBlock();
         if (block != null
-                && (block.getType() == Material.SIGN
-                        || block.getType() == Material.SIGN_POST
-                        || block.getType() == Material.WALL_SIGN)) {
+                && /* block.getType().toString().endsWith("_SIGN") */block.getState() instanceof Sign) {
 
             Sign sign = (Sign) block.getState();
 
@@ -114,7 +111,7 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                     for (int i = 0; i < 4; i++) sign.setLine(i, signToBeCopied[i]);
                     if (--amountToCopy == 0) isDone = true;
                     MessageBuilder.create("cmdSigneditSignPasted", hmc, PREFIX)
-                            .addPlaceholderReplace("%AMOUNT%", amountToCopy)
+                            .addPlaceholder("%AMOUNT%", amountToCopy)
                             .sendMessage(player);
                 } else {
                     sign.setLine(lineNumber, lineText);

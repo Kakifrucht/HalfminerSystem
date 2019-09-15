@@ -51,8 +51,8 @@ public class Cmdcustomtext extends HalfminerCommand {
 
                 MessageBuilder builder = MessageBuilder.create(rawLine, hmc)
                         .setDirectString()
-                        .addPlaceholderReplace("%PLAYER%", Utils.getPlayername(sender))
-                        .addPlaceholderReplace("%ARGS%", Utils.arrayToString(args, 0, false));
+                        .addPlaceholder("%PLAYER%", Utils.getPlayername(sender))
+                        .addPlaceholder("%ARGS%", Utils.arrayToString(args, 0, false));
 
                 // check for command execution (only for players)
                 if (isPlayer) {
@@ -85,7 +85,7 @@ public class Cmdcustomtext extends HalfminerCommand {
             } else {
                 MessageBuilder.create("errorOccurred", "Info").sendMessage(sender);
                 MessageBuilder.create("cmdCustomtextCacheParseError", hmc)
-                        .addPlaceholderReplace("%ERROR%", e.getCleanReason())
+                        .addPlaceholder("%ERROR%", e.getCleanReason())
                         .logMessage(Level.WARNING);
             }
         }

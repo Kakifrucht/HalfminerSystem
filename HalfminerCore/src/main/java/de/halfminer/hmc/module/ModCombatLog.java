@@ -92,8 +92,8 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
                 if (broadcastLog) {
                     MessageBuilder.create("modCombatLogLoggedOut", hmc, "PvP")
-                            .addPlaceholderReplace("%PLAYER%", p.getName())
-                            .addPlaceholderReplace("%ENEMY%", lastOpponent.getName())
+                            .addPlaceholder("%PLAYER%", p.getName())
+                            .addPlaceholder("%ENEMY%", lastOpponent.getName())
                             .broadcastMessage(true);
                 }
             }
@@ -210,8 +210,8 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 }
 
                 if (time-- > 0) titleHandler.sendActionBar(p, MessageBuilder.create("modCombatLogCountdown", hmc)
-                        .addPlaceholderReplace("%TIME%", time + 1)
-                        .addPlaceholderReplace("%PROGRESSBAR%", progressBar.toString())
+                        .addPlaceholder("%TIME%", time + 1)
+                        .addPlaceholder("%PROGRESSBAR%", progressBar.toString())
                         .returnMessage());
                 else untagPlayer(p);
             }
@@ -224,7 +224,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         tagged.get(p).cancel();
         titleHandler.sendActionBar(p, MessageBuilder.returnMessage("modCombatLogUntagged", hmc));
-        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 2f);
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2f);
 
         tagged.remove(p);
     }

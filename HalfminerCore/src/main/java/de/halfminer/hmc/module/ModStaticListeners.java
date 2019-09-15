@@ -40,7 +40,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
     public void anvilKeepName(InventoryClickEvent e) {
 
         Inventory clickedInv = e.getInventory();
-        if (clickedInv == null || !(e.getWhoClicked() instanceof Player)) return;
+        if (!(e.getWhoClicked() instanceof Player)) return;
 
         ItemStack clickedItem = e.getCurrentItem();
         if (clickedItem != null
@@ -86,9 +86,10 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
 
         Player player = e.getPlayer();
 
-        if (e.getClickedBlock().getType().equals(Material.MOB_SPAWNER)
+        if (e.getClickedBlock() != null
+                && e.getClickedBlock().getType().equals(Material.SPAWNER)
                 && e.getItem() != null
-                && e.getItem().getType().equals(Material.MONSTER_EGG)
+                && e.getItem().getType().toString().endsWith("_MONSTER_EGG")
                 && !player.hasPermission("hmc.bypass.spawnerconvert")) {
 
             MessageBuilder.create("modStaticListenersSpawnerConvert", hmc, PREFIX).sendMessage(player);

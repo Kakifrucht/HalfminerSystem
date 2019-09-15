@@ -18,8 +18,6 @@ public interface Sellable {
 
     Material getMaterial();
 
-    short getDurability();
-
     String getStateString();
 
     int getBaseUnitAmount();
@@ -45,8 +43,7 @@ public interface Sellable {
     String getMessageName();
 
     /**
-     * Stack is matching if it is the same Material, has the same durability or any durability if this Sellable's
-     * durability is lower than 0 and has no ItemMeta.
+     * Stack is matching if it is the same Material.
      *
      * @param itemStack item to compare
      * @return true if stacks match, false else

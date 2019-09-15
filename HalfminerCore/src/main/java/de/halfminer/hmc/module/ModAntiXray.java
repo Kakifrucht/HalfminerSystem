@@ -136,12 +136,12 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             else if (counter.isCheckedPermanently()) color = ChatColor.RED;
 
             toReturn.append(MessageBuilder.create("modAntiXrayShowFormat", hmc)
-                    .addPlaceholderReplace("%PLAYER%", color + counter.getOwnerName())
-                    .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(last))
-                    .addPlaceholderReplace("%WORLD%", last.getWorld().getName())
-                    .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()))
-                    .addPlaceholderReplace("%PROTECTED%", counter.getProtectedBreakages())
-                    .addPlaceholderReplace("%BROKEN%", counter.getBreakages())
+                    .addPlaceholder("%PLAYER%", color + counter.getOwnerName())
+                    .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(last))
+                    .addPlaceholder("%WORLD%", last.getWorld().getName())
+                    .addPlaceholder("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()))
+                    .addPlaceholder("%PROTECTED%", counter.getProtectedBreakages())
+                    .addPlaceholder("%BROKEN%", counter.getBreakages())
                     .returnMessage()).append("\n");
         }
 
@@ -159,12 +159,12 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
         }
 
         MessageBuilder message = MessageBuilder.create("modAntiXrayDetected", hmc, "AntiXRay")
-                .addPlaceholderReplace("%PLAYER%", counter.getOwnerName())
-                .addPlaceholderReplace("%BROKENTOTAL%", counter.getBreakages())
-                .addPlaceholderReplace("%BROKENPROTECTED%", counter.getProtectedBreakages())
-                .addPlaceholderReplace("%LASTLOCATION%", Utils.getStringFromLocation(counter.getLastProtectedLocation()))
-                .addPlaceholderReplace("%WORLD%", counter.getLastProtectedLocation().getWorld().getName())
-                .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()));
+                .addPlaceholder("%PLAYER%", counter.getOwnerName())
+                .addPlaceholder("%BROKENTOTAL%", counter.getBreakages())
+                .addPlaceholder("%BROKENPROTECTED%", counter.getProtectedBreakages())
+                .addPlaceholder("%LASTLOCATION%", Utils.getStringFromLocation(counter.getLastProtectedLocation()))
+                .addPlaceholder("%WORLD%", counter.getLastProtectedLocation().getWorld().getName())
+                .addPlaceholder("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()));
 
         if (toNotify != null) message.sendMessage(toNotify);
         else message.broadcastMessage("hmc.antixray.notify", true);

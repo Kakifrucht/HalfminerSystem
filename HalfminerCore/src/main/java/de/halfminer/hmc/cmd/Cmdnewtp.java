@@ -70,9 +70,7 @@ public class Cmdnewtp extends HalfminerCommand {
             if (rnd.nextBoolean()) z = -z;
             int y = world.getHighestBlockAt(x, z).getLocation().getBlockY();
             block = world.getBlockAt(x, y - 1, z);
-        }
-        while (--iterations > 0 && block.getType() == Material.WATER || block.getType() == Material.LAVA
-                || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.STATIONARY_LAVA);
+        } while (--iterations > 0 && block.getType() == Material.WATER || block.getType() == Material.LAVA);
 
         final Location loc = block.getLocation();
         loc.setY(block.getLocation().getBlockY() + 1);
@@ -87,12 +85,12 @@ public class Cmdnewtp extends HalfminerCommand {
 
             for (int i = 0; i < 100; i++) player.sendMessage("");
             MessageBuilder.create("cmdNewtpTpDone", hmc, "Newtp")
-                    .addPlaceholderReplace("%PLAYER%", player.getName())
+                    .addPlaceholder("%PLAYER%", player.getName())
                     .sendMessage(player);
 
             MessageBuilder.create("cmdNewtpLog", hmc)
-                    .addPlaceholderReplace("%PLAYER%", player.getName())
-                    .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
+                    .addPlaceholder("%PLAYER%", player.getName())
+                    .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(loc))
                     .logMessage(Level.INFO);
 
             scheduler.runTaskLater(hmc, () -> {

@@ -1,9 +1,9 @@
 #First line must be material name, rest is optional
 #examplesword
 DIAMOND_SWORD
-itemid: 0
 name: &6&lDiamond Sword
 lore: &7Owner: &6%PLAYER%|&7Another line
+damage: 512
 enchant: sharpness:6 unbreaking:4d
 #sellmenu-1
 BOOK

@@ -97,7 +97,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
             execute(playerToReward);
         } else {
             MessageBuilder.create("cmdRankNotOnline", hmc, "Rank")
-                    .addPlaceholderReplace("%PLAYER%", args[0])
+                    .addPlaceholder("%PLAYER%", args[0])
                     .sendMessage(sender);
             setPersistent(uuidToReward);
         }
@@ -115,7 +115,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
 
         if (player.isOp()) {
             MessageBuilder send = MessageBuilder.create("cmdRankPlayerIsOp", hmc, "Rank")
-                    .addPlaceholderReplace("%PLAYER%", player.getName());
+                    .addPlaceholder("%PLAYER%", player.getName());
             sendAndLogMessageBuilder(send);
             return;
         }
@@ -126,8 +126,8 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
             int getFromList = playerLevel + upgradeAmount - 1;
             if (getFromList >= rankNameAndMultiplierPairs.size()) {
                 MessageBuilder send = MessageBuilder.create("cmdRankInvalidUpgradeParam", hmc, "Rank")
-                        .addPlaceholderReplace("%PLAYER%", player.getName())
-                        .addPlaceholderReplace("%UPGRADEAMOUNT%", upgradeAmount);
+                        .addPlaceholder("%PLAYER%", player.getName())
+                        .addPlaceholder("%UPGRADEAMOUNT%", upgradeAmount);
                 sendAndLogMessageBuilder(send);
                 return;
             }
@@ -147,8 +147,8 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
             int multiplierOfPreviousRank = rankNameAndMultiplierPairs.get(playerLevel - 1).getRight();
             if (multiplierOfPreviousRank >= rankToGiveMultiplier) {
                 MessageBuilder send = MessageBuilder.create("cmdRankNewLevelSameOrLower", hmc, "Rank")
-                        .addPlaceholderReplace("%PLAYER%", player.getName())
-                        .addPlaceholderReplace("%NEWRANK%", rankToGiveName);
+                        .addPlaceholder("%PLAYER%", player.getName())
+                        .addPlaceholder("%NEWRANK%", rankToGiveName);
                 sendAndLogMessageBuilder(send);
                 return;
             }
@@ -193,21 +193,21 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
         if (commandOnDisable.length() > 0) {
             String placeholderReplaced = MessageBuilder.create(commandOnDisable, hmc)
                     .setDirectString()
-                    .addPlaceholderReplace("%PLAYER%", args[0])
-                    .addPlaceholderReplace("%ARG%", args[1])
+                    .addPlaceholder("%PLAYER%", args[0])
+                    .addPlaceholder("%ARG%", args[1])
                     .returnMessage();
 
             server.dispatchCommand(server.getConsoleSender(), placeholderReplaced);
         }
         MessageBuilder.create("cmdRankPersistenceDisable", hmc)
-                .addPlaceholderReplace("%PLAYER%", args[0])
-                .addPlaceholderReplace("%ARG%", args[1])
+                .addPlaceholder("%PLAYER%", args[0])
+                .addPlaceholder("%ARG%", args[1])
                 .logMessage(Level.WARNING);
     }
 
     private void sendInvalidRankConfig(String level) {
         MessageBuilder.create("cmdRankInvalidRankConfig", hmc, "Rank")
-                .addPlaceholderReplace("%INVALIDINPUT%", level)
+                .addPlaceholder("%INVALIDINPUT%", level)
                 .sendMessage(sender);
     }
 
@@ -220,8 +220,8 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
 
     private void logActionNotFound(Player toReward, String actionName) {
         MessageBuilder notify = MessageBuilder.create("cmdRankActionNotFound", hmc, "Rank")
-                .addPlaceholderReplace("%PLAYER%", toReward.getName())
-                .addPlaceholderReplace("%ACTIONNAME%", actionName);
+                .addPlaceholder("%PLAYER%", toReward.getName())
+                .addPlaceholder("%ACTIONNAME%", actionName);
         sendAndLogMessageBuilder(notify);
     }
 

@@ -227,21 +227,21 @@ sell:
   #hms.level.0-5 permission, hms.level.0 omitted, separate numbers with comma and use '.' as decimal seperator
   multipliersPerLevel: '1.25, 1.5, 1.75, 2.0, 2.5'
   #Sellables and which group they belong in, put the group name as subkey and the items for this group in a list
-  #Items are defined as such: messageName, material, durability (item data) or -1 for any, base price (x for 1 currency, higher -> lower value)
+  #Items are defined as such: messageName, material, base price (how many to get $1 ingame currency)
   sellables:
     farmitems:
-    - Rote Beete, BEETROOT, 0, 30
-    - Braune Pilze, BROWN_MUSHROOM, 0, 20
-    - Kakteen, CACTUS, 0, 220
-    - Karotten, CARROT_ITEM, 0, 30
-    - Kakaobohnen, INK_SACK, 3, 45
-    - Melonen, MELON, 0, 110
-    - Nether Warzen, NETHER_STALK, 0, 40
-    - Kartoffeln, POTATO_ITEM, 0, 30
-    - Kürbisse, PUMPKIN, 0, 40
-    - Rote Pilze, RED_MUSHROOM, 0, 30
-    - Zuckerrohre, SUGAR_CANE, 0, 55
-    - Weizen, WHEAT, 0, 25
+    - Rote Beete, BEETROOT, 30
+    - Braune Pilze, BROWN_MUSHROOM, 20
+    - Kakteen, CACTUS, 220
+    - Karotten, CARROT, 30
+    - Kakaobohnen, COCOA_BEANS, 45
+    - Melonen, MELON, 110
+    - Nether Warzen, NETHER_WART, 40
+    - Kartoffeln, POTATO, 30
+    - Kürbisse, PUMPKIN, 40
+    - Rote Pilze, RED_MUSHROOM, 30
+    - Zuckerrohre, SUGAR_CANE, 55
+    - Weizen, WHEAT, 25
 skillLevel:
   #Amount of groups for the server team (players with permission hmc.bypass.skilllevel), will be shown on top of tablist
   amountTeamGroups: 3
