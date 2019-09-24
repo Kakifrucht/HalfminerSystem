@@ -56,12 +56,22 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDeathUntag(PlayerDeathEvent e) {
 
-        Player victim = e.getEntity().getPlayer();
+        Player victim = e.getEntity();
         Player killer = e.getEntity().getKiller();
 
         untagPlayer(victim);
         if (killer != null) {
             untagPlayer(killer);
+        } else {
+            // untag last opponent if the last opponent of victim's last opponent is the victim aswell
+            // this prevents untagging a player if they are currently fighting with a different player
+            Player lastOpponent = lastOpponentCache.getIfPresent(victim);
+            if (lastOpponent != null) {
+                Player lastOpponentOfOpponent = lastOpponentCache.getIfPresent(lastOpponent);
+                if (victim.equals(lastOpponentOfOpponent)) {
+                    untagPlayer(lastOpponent);
+                }
+            }
         }
     }
 
