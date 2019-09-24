@@ -1,0 +1,47 @@
+name: HalfminerHaro
+version: ${project.version}
+description: Halfminer Roleplay
+author: Kakifrucht
+website: https://halfminer.de
+api-version: '1.14'
+
+main: de.halfminer.hmh.HalfminerHaro
+depend: [HalfminerSystem]
+
+commands:
+  haro:
+    description: Base admin command
+    aliases: [hmh, harospawn]
+
+permissions:
+  hmh.*:
+    description: Access to all permissions
+    default: op
+    children:
+      - hmh.admin
+      - hmh.cmd.*
+  hmh.admin:
+    description: Allows joining the server and grants access to all /haro commands
+    default: op
+    children:
+      - hmh.cmd.add
+      - hmh.cmd.addtime
+      - hmh.cmd.end
+      - hmh.cmd.remove
+      - hmh.cmd.setspawn
+      - hmh.cmd.start
+      - hmh.cmd.status
+  hmh.cmd.add:
+    description: Grants access to /haro add command
+  hmh.cmd.addtime:
+    description: Grants access to /haro addtime command
+  hmh.cmd.end:
+    description: Grants access to /haro end command
+  hmh.cmd.remove:
+    description: Grants access to /haro remove command
+  hmh.cmd.setspawn:
+    description: Grants access to /haro setspawn command
+  hmh.cmd.start:
+    description: Grants access to /haro start command
+  hmh.cmd.status:
+    description: Grants access to /haro status command

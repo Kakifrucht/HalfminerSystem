@@ -1,0 +1,78 @@
+#HalfminerHaro Config
+init:
+  # Command lists to execute during initializion of game (/haro start)
+  gameCommands:
+    - time set day world
+    - weather clear world
+    - gamerule doDaylightCycle true
+    - gamerule doWeatherCycle true
+    - difficulty hard
+    - killall hostile
+  # Command lists to execute during initializion of player, use %PLAYER% placeholder to be replaced with player name
+  playerCommands:
+    - heal %PLAYER%
+    - feed %PLAYER%
+    - gamemode 0 %PLAYER%
+    - clearinventory %PLAYER% **
+    - experience set %PLAYER% 0 levels
+    - experience set %PLAYER% 0 points
+  # How many blocks a player can be from the spawn point, player will be forced to spawn point if farther away
+  maxDistanceFromSpawn: 20
+time:
+  # How much time in seconds to add when game is starting
+  start: 3600
+  # How much time in seconds to add when using /haro addtime day
+  day: 3600
+  # How much time in seconds a player can collect
+  max: 10800
+  # How much time in seconds should be left, until player gets a notification every 5 seconds
+  notifyTimeLeft: 30
+localization:
+  prefix: '&7Haro &e>>&r '
+  dataSaved: '&aDie Daten wurden gespeichert'
+  cmdUsage: '&fHalfminerHaro Version &6%VERSION% &r(System: &6%SYSTEMVERSION%&r)\n&6&lKommandos:&r\n &f/haro add <player>\n &f/haro remove <player>\n &f/haro addtime <-day|-all|player> [time]\n &f/haro setspawn\n &f/harospawn\n &f/haro start\n &f/haro status\n &f/haro end\n &f/haro save\n &f/haro reload'
+  cmdAddRemoveUsage: '&cVerwendung: &f/haro %ADD% <player>'
+  cmdAddRemoveAlreadyAdded: '&cDieser Spieler wurde bereits hinzugefügt'
+  cmdAddRemoveGameIsRunning: '~&cDas Spiel läuft bereits, weitere Spieler können nicht hinzugefügt werden (&b/haro end/&c zum beenden)'
+  cmdAddRemoveNotAdded: '&cDieser Spieler wurde nicht hinzugefügt'
+  cmdAddRemovePlayerKick: '&cDu wurdest aus dem Spiel entfernt'
+  cmdAddRemoveSuccessA: '&7Der Spieler &a%PLAYER% &7wurde erfolgreich hinzugefügt'
+  cmdAddRemoveSuccessR: '&7Der Spieler &a%PLAYER% &7wurde erfolgreich entfernt'
+  cmdAddtimeAll: '&a%AMOUNT% &7lebenden Spielern wurden erfolgreich &b%SECONDS% Sekunden &7Spielzeit hinzugefügt'
+  cmdAddtimeDead: '&cDieser Spieler ist nicht mehr am Leben'
+  cmdAddtimeNotAdded: '&cDieser Spieler wurde nicht hinzugefügt'
+  cmdAddtimeNotRunning: '&cDas Spiel läuft noch nicht, Zeit kann nicht hinzugefügt werden'
+  cmdAddtimePlayer: '&a%PLAYER%''s &7verbleibende Spielzeit wurde erfolgreich auf &b%SECONDS% Sekunden &7gesetzt'
+  cmdAddtimePlayerMessage: '&7Deine verbleibende Spielzeit wurde auf &b%NEWTIMEMINUTES% Minuten &7gesetzt'
+  cmdAddtimeUsage: '&cVerwendung: &f/haro addtime <-day|-all|player>'
+  cmdEndNotRunning: '&cDas Spiel ist derzeit nicht aktiv'
+  cmdEndPlayerKick: '&cDas Spiel wurde beendet'
+  cmdEndPromptForce: '~&cDas Spiel ist noch nicht beendet, bestätige das Ende mit &a/haro end -force/'
+  cmdEndSuccess: '&aDas Spiel wurde erfolgreich beendet und die damit verbundenen Daten gelöscht'
+  cmdSetspawnSet: '&7Spawnpunkt gesetzt!'
+  cmdSetspawnTeleportNotSet: '&cEs ist kein Spawnpunkt gesetzt'
+  cmdStartBroadcast: '&a&lHaro hat begonnen! &7Der letzte überlebende Spieler gewinnt'
+  cmdStartGameIsRunning: '~&cEs ist noch ein Haro aktiv, du kannst es beenden mit &b/haro end/'
+  cmdStartNotEnoughPlayers: '&cZum Starten müssen mindestens zwei Spieler hinzugefügt worden sein'
+  cmdStatusHeader: '&6Spiel ist aktiv: %GAMEISRUNNING%'
+  cmdStatusHeaderIsNotRunning: '&c&lNein'
+  cmdStatusHeaderIsOver: '&e&lNein&e, Sieger steht fest'
+  cmdStatusHeaderIsRunning: '&a&lJa'
+  cmdStatusLegend: ' &7Legende: &aSpieler online&7, &eSpieler offline&7, &cSpieler ausgeschieden'
+  cmdStatusNoPlayersAdded: ' &7Hinzugefügte Spieler: &cKeine'
+  cmdStatusPlayerList: ' &7Hinzugefügte Spieler: %PLAYERLIST%'
+  cmdStatusPlayerListSpacer: '&7, '
+  cmdStatusPlayerListTime: ' &7(%TIMELEFT% &7&osec)'
+  listenerAlreadyDead: '&cDu bist leider bereits ausgeschieden!'
+  listenerDeathBroadcast: '&c%PLAYER% &7ist soeben ausgeschieden, es leben noch &a%COUNTALIVE% &7Spieler'
+  listenerDeathKick: '&cDu bist leider ausgeschieden. &fDanke fürs mitspielen!'
+  listenerGameWon: '&6&lHerzlichen Glückwunsch, du hast gewonnen!'
+  listenerGameWonBroadcast: '&6&l%PLAYER% &7ist der letzte überlebende Spieler, und hat somit &a&lgewonnen&7!'
+  listenerJoinedInfo: '&7Deine übrige Spielzeit beträgt &a%TIMELEFT% Minuten&7, drücke Tab um deine Zeit jederzeit einzusehen'
+  listenerJoinedLogTime: 'Time remaining for %PLAYER%: %TIMELEFT% seconds'
+  listenerNoTimeLeft: 'Deine Zeit für heute ist bereits abgelaufen.'
+  listenerNotAdded: '&cDu nimmst leider nicht am Spiel Teil'
+  taskTitleUpdateTitle: '&6&lHaro\n&fZeit: &b&o%MINUTES% &7&oMinuten%BOTTOM%&fSpieler Online: &a%PLAYERCOUNT% &7&oSpieler'
+  taskTitleUpdateTitleNotStarted: '&6&lHaro\n&7Willkommen!%BOTTOM%&fSpieler Online: &a%PLAYERCOUNT% &7&oSpieler'
+  taskTimeCheckCountdown: '&7Dir verbleiben für heute noch &c%TIMELEFT% Sekunden &7Spielzeit'
+  taskTimeCheckNoTimeLeft: '&cDeine Zeit ist abgelaufen. &fMorgen ab 20 Uhr geht es weiter!'
