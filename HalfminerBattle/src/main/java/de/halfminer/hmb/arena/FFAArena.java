@@ -49,7 +49,7 @@ public class FFAArena extends AbstractArena {
     public FFAArena(String name) {
         super(BattleModeType.FFA, name);
 
-        scoreboardObjective = scoreboard.registerNewObjective("streak", "dummy");
+        scoreboardObjective = scoreboard.registerNewObjective("streak", "dummy", "KillStreak");
         scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
         scoreboardObjective.setDisplayName(MessageBuilder.returnMessage("modeFFAScoreboardHeader", hmb, false));
         scoreboardTeam = scoreboard.registerNewTeam("ingame");

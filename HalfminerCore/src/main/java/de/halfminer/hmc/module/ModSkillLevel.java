@@ -247,7 +247,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         // register skilllevel objective
         scoreboardObjective = scoreboard.getObjective(SCOREBOARD_OBJECTIVE_NAME);
         if (scoreboardObjective == null) {
-            scoreboardObjective = scoreboard.registerNewObjective(SCOREBOARD_OBJECTIVE_NAME, "dummy");
+            scoreboardObjective = scoreboard.registerNewObjective(SCOREBOARD_OBJECTIVE_NAME, "dummy", "SkillLevel");
         }
         scoreboardObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 

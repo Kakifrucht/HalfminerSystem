@@ -394,7 +394,7 @@ public class DuelQueue extends BattleClass {
 
         if (hasWinner) {
 
-            // ensure that winner gets the kill
+            // ensure that winner gets the kill, when player logged out during duel
             if (!playerA.isDead()) {
                 NMSUtils.setKiller(playerA, winner);
                 playerA.setHealth(0.0d);
