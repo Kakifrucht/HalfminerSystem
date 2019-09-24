@@ -8,6 +8,7 @@ Halfminer Teamspeak Bot can be found [here](https://github.com/Kakifrucht/Halfmi
 - **HalfminerSystem** - Base plugin API containing shared functionality and a centralized storage system.
   - **HalfminerBattle** - Battle arena Bukkit/Spigot plugin implementing various arena based game modes.
   - **HalfminerCore** - Core Bukkit/Spigot plugin containing Minecraft server modifications for various aspects of the game.
+  - **HalfminerHaro** - Converts the entire server into a *Ha*lfminer *Ro*leplay server.
   - **HalfminerLand** - Land protection and management plugin.
   - **HalfminerREST** - Bukkit plugin running a lightweight REST HTTP server responding in JSON.
 
@@ -16,5 +17,7 @@ may not be toggleable/configurable. The default localization is German and some 
 specifically for our server. Feel free to fork and fix/translate the plugin to your likings. 
 It is presently fully localizable via the plugins configuration file.
 
-## Compile
-Additionally to the Maven dependencies, you need to manually add a craftbukkit.jar 
+## Build
+Due to *net.minecraft.server* ('NMS') dependencies, you need to run 
+Spigot's [BuildTools.jar](https://www.spigotmc.org/wiki/buildtools) once to add CraftBukkit to your 
+local Maven repository. This dependency is isolated to one class, *NMSUtils*, and only used in the HalfminerSystem module.

@@ -15,11 +15,14 @@
         <module>HalfminerBattle</module>
         <module>HalfminerCore</module>
         <module>HalfminerREST</module>
+        <module>HalfminerLand</module>
+        <module>HalfminerHaro</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hms.version>4.2.0</hms.version>
+        <spigot.version>1.14.4-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
     <build>
@@ -61,13 +64,17 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.14.4-R0.1-SNAPSHOT</version>
+            <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!--
+            Run BuildTools.jar with currently used version specified once to add this dependency to your local repository.
+            Guide: https://www.spigotmc.org/wiki/buildtools/
+        -->
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>LATEST</version>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
