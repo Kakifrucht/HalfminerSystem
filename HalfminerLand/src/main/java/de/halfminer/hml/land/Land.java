@@ -190,6 +190,7 @@ public class Land extends LandClass {
 
     public void setOwner(HalfminerPlayer owner) {
         this.owner = owner;
+        this.isAbandoned = false;
         wgh.updateRegionOfLand(this, false, false);
 
         updateAbandonmentStatus();

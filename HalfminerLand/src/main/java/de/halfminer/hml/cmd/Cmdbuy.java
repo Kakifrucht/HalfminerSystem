@@ -142,9 +142,13 @@ public class Cmdbuy extends LandCommand {
 
         if (contract.canBeFulfilled()) {
 
+            // if we are taking the land from another player, remove the last paid amount from their history
             if (landToBuy.isAbandoned() && !landToBuy.isFreeLand()) {
-                landToBuy.removeTeleport();
                 hml.getLandStorage().getLandPlayer(landToBuy.getOwner()).removeHighestCost();
+            }
+
+            if (landToBuy.hasTeleportLocation()) {
+                landToBuy.removeTeleport();
             }
 
             // buy land

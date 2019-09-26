@@ -54,7 +54,7 @@ public class WorldGuardHelper {
 
         if (land.hasOwner()) {
 
-            // check if region has correct owner and is at correct location, else recreate
+            // check if region has correct owner and is at correct location, else remove it (to cause a regeneration)
             if (region != null) {
 
                 ProtectedRegion compareRegion = createRegionFromChunk(chunk);
@@ -67,7 +67,7 @@ public class WorldGuardHelper {
                         defaultDomain = region.getMembers();
                     }
 
-                    regionManager.removeRegion(region.getId());
+                    removeRegion(regionManager, region, land);
                     region = null;
                 }
             }
@@ -105,18 +105,20 @@ public class WorldGuardHelper {
 
                     logger.info("Set region for land " + land + " abandoned");
                 } else {
-                    // force refresh region fully
+                    // force region refresh, instead of changing flags manually
                     updateRegionOfLand(land, true, keepFriendsOnRefresh);
                 }
             }
 
-        } else {
+        } else /* land has no owner, remove region */ {
+            removeRegion(regionManager, region, land);
+        }
+    }
 
-            // delete region if exists
-            if (region != null) {
-                regionManager.removeRegion(region.getId());
-                logger.info("Removed region with id " + region.getId() + " for land " + land);
-            }
+    private void removeRegion(RegionManager regionManager, ProtectedRegion region, Land land) {
+        if (region != null) {
+            regionManager.removeRegion(region.getId());
+            logger.info("Removed region with id " + region.getId() + " for land " + land);
         }
     }
 
