@@ -1,5 +1,6 @@
 package de.halfminer.hmh.cmd;
 
+import de.halfminer.hmh.HalfminerHaro;
 import de.halfminer.hmh.HaroClass;
 import de.halfminer.hmh.data.HaroStorage;
 import de.halfminer.hms.util.MessageBuilder;
@@ -43,6 +44,6 @@ public abstract class HaroCommand extends HaroClass {
     }
 
     void sendNotAPlayerMessage() {
-        MessageBuilder.create("notAPlayer", "Haro").sendMessage(sender);
+        MessageBuilder.create("notAPlayer", HalfminerHaro.MESSAGE_PREFIX).sendMessage(sender);
     }
 }

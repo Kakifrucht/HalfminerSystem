@@ -20,6 +20,8 @@ import java.util.Arrays;
  */
 public class HalfminerHaro extends JavaPlugin {
 
+    public static final String MESSAGE_PREFIX = "Haro";
+
     private static HalfminerHaro instance;
 
     static HalfminerHaro getInstance() {
@@ -47,8 +49,6 @@ public class HalfminerHaro extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        final String MESSAGE_PREFIX = "Haro";
 
         if (!sender.hasPermission("hmh.admin")) {
             MessageBuilder.create("noPermission", MESSAGE_PREFIX).sendMessage(sender);

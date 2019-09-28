@@ -6,7 +6,9 @@ import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Reloadable;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -74,23 +76,48 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
         haroStorage.set(IS_GAME_RUNNING_KEY, isRunning);
     }
 
-    public List<HaroPlayer> getAddedPlayers(boolean isAlive) {
+    public List<HaroPlayer> getAddedPlayers(boolean isNotEliminated) {
 
         List<HaroPlayer> players = new ArrayList<>();
-        for (String uuid : haroStorage.getConfigurationSection(PLAYER_SECTION_KEY).getKeys(false)) {
+        for (String playerKey : haroStorage.getConfigurationSection(PLAYER_SECTION_KEY).getKeys(false)) {
+
             try {
-                HalfminerPlayer halfminerPlayer = systemStorage.getPlayer(UUID.fromString(uuid));
+                HalfminerPlayer halfminerPlayer = systemStorage.getPlayer(UUID.fromString(playerKey));
                 HaroPlayer haroPlayer = getHaroPlayer(halfminerPlayer);
-                if (!isAlive || !haroPlayer.isDead()) {
+                if (!isNotEliminated || !haroPlayer.isEliminated()) {
                     players.add(haroPlayer);
                 }
 
             } catch (PlayerNotFoundException e) {
-                hmh.getLogger().warning("Already added player with UUID '" + uuid + "' not found in system storage, skipping");
+                hmh.getLogger().warning("Already added player with UUID '" + playerKey + "' not found in system storage, skipping");
+            } catch (IllegalArgumentException ignored) {
+                // thrown by UUID.fromString() call, if not a UUID
+                players.add(getHaroPlayer(playerKey));
             }
         }
 
         return players;
+    }
+
+    /**
+     * Get player by username.
+     *
+     * @param name username of player, must be a valid username
+     * @throws IllegalArgumentException if parameter name is not a valid username
+     * @return if player is known a {@link UUIDHaroPlayer}, else a {@link NameHaroPlayer} instance
+     */
+    public HaroPlayer getHaroPlayer(String name) {
+
+        if (Utils.filterNonUsernameChars(name).length() != name.length()) {
+            throw new IllegalArgumentException("Supplied argument is not a valid username: " + name);
+        }
+
+        try {
+            HalfminerPlayer halfminerPlayer = systemStorage.getPlayer(name);
+            return getHaroPlayer(halfminerPlayer);
+        } catch (PlayerNotFoundException e) {
+            return new NameHaroPlayer(name, haroStorage.getConfigurationSection(PLAYER_SECTION_KEY));
+        }
     }
 
     public HaroPlayer getHaroPlayer(Player player) {
@@ -98,16 +125,23 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
     }
 
     public HaroPlayer getHaroPlayer(HalfminerPlayer hPlayer) {
-        return new HaroPlayer(hPlayer, haroStorage.getConfigurationSection(PLAYER_SECTION_KEY));
+
+        HaroPlayer uuidHaroPlayer = new UUIDHaroPlayer(hPlayer, haroStorage.getConfigurationSection(PLAYER_SECTION_KEY));
+
+        // check if player was added by username, migrate to UUID if necessary
+        HaroPlayer haroPlayerByUsername = getHaroPlayer(hPlayer.getName());
+        if (haroPlayerByUsername.isAdded()) {
+            ConfigurationSection sectionToCopy = getPlayerSection().getConfigurationSection(haroPlayerByUsername.getPlayerStorageKey());
+            getPlayerSection().set(uuidHaroPlayer.getPlayerStorageKey(), sectionToCopy);
+            removePlayer(haroPlayerByUsername);
+        }
+
+        return uuidHaroPlayer;
     }
 
     public void playerJoined(HaroPlayer haroPlayer) {
 
-        if (!haroPlayer.isAdded()) {
-            return;
-        }
-
-        if (isGameRunning()) {
+        if (haroPlayer.isAdded() && isGameRunning()) {
             haroPlayer.setTimeUntilKick(System.currentTimeMillis() / 1000L + haroPlayer.getTimeLeftSeconds());
         }
     }
@@ -117,7 +151,7 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
             return false;
         }
 
-        haroStorage.getRootSection().createSection(PLAYER_SECTION_KEY + '.' + haroPlayer.getUniqueId().toString());
+        getPlayerSection().createSection(haroPlayer.getPlayerStorageKey());
         return true;
     }
 
@@ -126,10 +160,13 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
             return false;
         }
 
-        haroStorage.getRootSection().set(PLAYER_SECTION_KEY + '.' + haroPlayer.getUniqueId().toString(), null);
+        getPlayerSection().set(haroPlayer.getPlayerStorageKey(), null);
         return true;
     }
 
+    /**
+     * Removes all added players.
+     */
     public void removeAllPlayers() {
         haroStorage.set(PLAYER_SECTION_KEY, null);
     }
@@ -184,5 +221,14 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
         }
 
         storeDataOnDisk();
+    }
+
+    private ConfigurationSection getPlayerSection() {
+
+        if (!haroStorage.getRootSection().contains(PLAYER_SECTION_KEY)) {
+            haroStorage.getRootSection().createSection(PLAYER_SECTION_KEY);
+        }
+
+        return haroStorage.getRootSection().getConfigurationSection(PLAYER_SECTION_KEY);
     }
 }

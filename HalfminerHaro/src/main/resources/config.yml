@@ -27,10 +27,14 @@ time:
   max: 10800
   # How much time in seconds should be left, until player gets a notification every 5 seconds
   notifyTimeLeft: 30
+#Use '&' as color code
+#Lines starting with '~' will be parsed to make commands clickable, close the command with another '/'
+#Messages can be removed by simply setting the message to nothing ('')
 localization:
   prefix: '&7Haro &e>>&r '
   dataSaved: '&aDie Daten wurden gespeichert'
   cmdUsage: '&fHalfminerHaro Version &6%VERSION% &r(System: &6%SYSTEMVERSION%&r)\n&6&lKommandos:&r\n &f/haro add <player>\n &f/haro remove <player>\n &f/haro addtime <-day|-all|player> [time]\n &f/haro setspawn\n &f/harospawn\n &f/haro start\n &f/haro status\n &f/haro end\n &f/haro save\n &f/haro reload'
+  cmdAddRemoveConfirm: '~&7Bitte bestätige, dass du diesen Spieler anhand des Nutzernamens hinzufügen willst: &b/haro add %PLAYER% -confirm/'
   cmdAddRemoveUsage: '&cVerwendung: &f/haro %ADD% <player>'
   cmdAddRemoveAlreadyAdded: '&cDieser Spieler wurde bereits hinzugefügt'
   cmdAddRemoveGameIsRunning: '~&cDas Spiel läuft bereits, weitere Spieler können nicht hinzugefügt werden (&b/haro end/&c zum beenden)'
@@ -39,7 +43,7 @@ localization:
   cmdAddRemoveSuccessA: '&7Der Spieler &a%PLAYER% &7wurde erfolgreich hinzugefügt'
   cmdAddRemoveSuccessR: '&7Der Spieler &a%PLAYER% &7wurde erfolgreich entfernt'
   cmdAddtimeAll: '&a%AMOUNT% &7lebenden Spielern wurden erfolgreich &b%SECONDS% Sekunden &7Spielzeit hinzugefügt'
-  cmdAddtimeDead: '&cDieser Spieler ist nicht mehr am Leben'
+  cmdAddtimeEliminated: '&cDieser Spieler ist nicht mehr am Leben'
   cmdAddtimeNotAdded: '&cDieser Spieler wurde nicht hinzugefügt'
   cmdAddtimeNotRunning: '&cDas Spiel läuft noch nicht, Zeit kann nicht hinzugefügt werden'
   cmdAddtimePlayer: '&a%PLAYER%''s &7verbleibende Spielzeit wurde erfolgreich auf &b%SECONDS% Sekunden &7gesetzt'
@@ -63,7 +67,7 @@ localization:
   cmdStatusPlayerList: ' &7Hinzugefügte Spieler: %PLAYERLIST%'
   cmdStatusPlayerListSpacer: '&7, '
   cmdStatusPlayerListTime: ' &7(%TIMELEFT% &7&osec)'
-  listenerAlreadyDead: '&cDu bist leider bereits ausgeschieden!'
+  listenerAlreadyEliminated: '&cDu bist leider bereits ausgeschieden!'
   listenerDeathBroadcast: '&c%PLAYER% &7ist soeben ausgeschieden, es leben noch &a%COUNTALIVE% &7Spieler'
   listenerDeathKick: '&cDu bist leider ausgeschieden. &fDanke fürs mitspielen!'
   listenerGameWon: '&6&lHerzlichen Glückwunsch, du hast gewonnen!'

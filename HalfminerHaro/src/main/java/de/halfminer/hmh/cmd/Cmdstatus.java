@@ -43,7 +43,7 @@ public class Cmdstatus extends HaroCommand {
                 ChatColor color;
                 if (addedPlayer.isOnline()) {
                     color = ChatColor.GREEN;
-                } else if (addedPlayer.isDead()) {
+                } else if (addedPlayer.isEliminated()) {
                     color = ChatColor.RED;
                 } else {
                     color  = ChatColor.YELLOW;
@@ -53,7 +53,7 @@ public class Cmdstatus extends HaroCommand {
                         .append(color)
                         .append(addedPlayer.getName());
 
-                if (isGameRunning && !addedPlayer.isDead()) {
+                if (isGameRunning && !addedPlayer.isEliminated()) {
                     String timeLeftString = MessageBuilder.create("cmdStatusPlayerListTime", hmh)
                             .togglePrefix()
                             .addPlaceholder("TIMELEFT", addedPlayer.getTimeLeftSeconds())

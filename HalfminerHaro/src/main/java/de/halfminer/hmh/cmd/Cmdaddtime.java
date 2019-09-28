@@ -1,5 +1,6 @@
 package de.halfminer.hmh.cmd;
 
+import de.halfminer.hmh.HalfminerHaro;
 import de.halfminer.hmh.data.HaroPlayer;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
@@ -58,15 +59,15 @@ public class Cmdaddtime extends HaroCommand {
                         return;
                     }
 
-                    if (haroPlayer.isDead()) {
-                        MessageBuilder.create("cmdAddtimeDead", hmh).sendMessage(sender);
+                    if (haroPlayer.isEliminated()) {
+                        MessageBuilder.create("cmdAddtimeEliminated", hmh).sendMessage(sender);
                         return;
                     }
 
                     playersToUpdate.add(haroPlayer);
 
                 } catch (PlayerNotFoundException e) {
-                    e.sendNotFoundMessage(sender, "Haro");
+                    e.sendNotFoundMessage(sender, HalfminerHaro.MESSAGE_PREFIX);
                     return;
                 }
             }
@@ -75,7 +76,7 @@ public class Cmdaddtime extends HaroCommand {
         int maxTotalTime = haroStorage.getHaroConfig().getMaxTime();
         for (HaroPlayer haroPlayer : playersToUpdate) {
 
-            if (haroPlayer.isDead()) {
+            if (haroPlayer.isEliminated()) {
                 continue;
             }
 

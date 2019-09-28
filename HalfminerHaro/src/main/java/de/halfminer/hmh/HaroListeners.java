@@ -34,24 +34,27 @@ public class HaroListeners extends HaroClass implements Listener {
             return;
         }
 
-        HalfminerPlayer halfminerPlayer = null;
+        HaroPlayer haroPlayer;
         try {
-            halfminerPlayer = systemStorage.getPlayer(e.getPlayer().getUniqueId());
-        } catch (PlayerNotFoundException ignored) {}
+            HalfminerPlayer halfminerPlayer = systemStorage.getPlayer(e.getPlayer().getUniqueId());
+            haroPlayer = haroStorage.getHaroPlayer(halfminerPlayer);
+        } catch (PlayerNotFoundException ex) {
+            // if player hasn't joined before, systemStorage.getPlayer will throw this exception in PlayerLoginEvent
+            // migration from username to uuid in the db will be handled during login instead
+            haroPlayer = haroStorage.getHaroPlayer(e.getPlayer().getName());
+        }
 
-        HaroPlayer haroPlayer = halfminerPlayer != null ? haroStorage.getHaroPlayer(halfminerPlayer) : null;
         String disallowMessageKey = null;
-
-        if (haroPlayer == null || !haroPlayer.isAdded()) {
+        if (!haroPlayer.isAdded()) {
             disallowMessageKey = "listenerNotAdded";
         } else if (haroStorage.isGameRunning()) {
 
-            if (!haroPlayer.hasTimeLeft()) {
-                disallowMessageKey = "listenerNoTimeLeft";
+            if (haroPlayer.isEliminated()) {
+                disallowMessageKey = "listenerAlreadyEliminated";
             }
 
-            if (haroPlayer.isDead()) {
-                disallowMessageKey = "listenerAlreadyDead";
+            if (!haroPlayer.hasTimeLeft()) {
+                disallowMessageKey = "listenerNoTimeLeft";
             }
         }
 
@@ -92,8 +95,8 @@ public class HaroListeners extends HaroClass implements Listener {
         HaroPlayer haroPlayer = haroStorage.getHaroPlayer(e.getPlayer());
         haroPlayer.setOffline();
 
-        // hide quit message when kicking after dying
-        if (haroStorage.isGameRunning() && haroPlayer.isDead()) {
+        // hide quit message when kicking after dying, as we already broadcast a message in onDeath
+        if (haroStorage.isGameRunning() && haroPlayer.isEliminated()) {
             e.setQuitMessage("");
         }
 
@@ -107,9 +110,9 @@ public class HaroListeners extends HaroClass implements Listener {
         if (haroStorage.isGameRunning() && !player.hasPermission("hmh.admin")) {
 
             HaroPlayer haroPlayer = haroStorage.getHaroPlayer(player);
-            haroPlayer.setDead(true);
+            haroPlayer.setEliminated(true);
 
-            // kick on next tick, also moves the messages below default death message
+            // kick on next tick, also moves the messages below the default death message in chat order
             scheduler.runTaskLater(hmh, () -> {
                 String kickMessage = MessageBuilder.returnMessage("listenerDeathKick", hmh, false);
                 player.kickPlayer(kickMessage);

@@ -1,9 +1,10 @@
 package de.halfminer.hmh.cmd;
 
+import de.halfminer.hmh.HalfminerHaro;
 import de.halfminer.hmh.data.HaroPlayer;
-import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.handler.storage.PlayerNotFoundException;
+import de.halfminer.hmh.data.NameHaroPlayer;
 import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Player;
 
 public class Cmdaddremove extends HaroCommand {
@@ -32,30 +33,34 @@ public class Cmdaddremove extends HaroCommand {
             return;
         }
 
-        HalfminerPlayer player;
-        try {
-            player = hms.getStorageHandler().getPlayer(args[0]);
-        } catch (PlayerNotFoundException e) {
-            //TODO ask for confirmation with /haro add <player> -confirm
-            //TODO check custom section for removal
-            //TODO add check on custom section for PlayerLoginEvent
-            e.sendNotFoundMessage(sender, "Land");
+        String filteredUsername = Utils.filterNonUsernameChars(args[0]);
+        if (filteredUsername.length() != args[0].length()) {
+            MessageBuilder.create("playerDoesNotExist", HalfminerHaro.MESSAGE_PREFIX).sendMessage(sender);
             return;
         }
 
-        HaroPlayer haroPlayer = haroStorage.getHaroPlayer(player);
+        HaroPlayer haroPlayer = haroStorage.getHaroPlayer(args[0]);
+        if (haroPlayer instanceof NameHaroPlayer) {
+            // players who haven't joined before need to be confirmed with /haro add <player> -confirm
+            if (add && (args.length < 2 || !args[1].equalsIgnoreCase("-confirm"))) {
+                MessageBuilder.create("cmdAddRemoveConfirm", hmh)
+                        .addPlaceholder("%PLAYER%", args[0])
+                        .sendMessage(sender);
+                return;
+            }
+        }
 
         boolean success = add ? haroStorage.addPlayer(haroPlayer) : haroStorage.removePlayer(haroPlayer);
-        MessageBuilder.create(success ?
-                ("cmdAddRemoveSuccess" + (add ? "A" : "R"))
-                : ("cmdAddRemove" + (add ? "Already" : "Not") + "Added"), hmh)
-                .addPlaceholder("PLAYER", player.getName())
-                .sendMessage(sender);
-
         if (success && !add && haroPlayer.isOnline()) {
-            Player playerToRemove = player.getBase().getPlayer();
+            Player playerToRemove = haroPlayer.getBase().getPlayer();
             String kickMessage = MessageBuilder.returnMessage("cmdAddRemovePlayerKick", hmh, false);
             playerToRemove.kickPlayer(kickMessage);
         }
+
+        String messageKey = success ?
+                ("cmdAddRemoveSuccess" + (add ? "A" : "R")) : ("cmdAddRemove" + (add ? "Already" : "Not") + "Added");
+        MessageBuilder.create(messageKey, hmh)
+                .addPlaceholder("PLAYER", haroPlayer.getName())
+                .sendMessage(sender);
     }
 }
