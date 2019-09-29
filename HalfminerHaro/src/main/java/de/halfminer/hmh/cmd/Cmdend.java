@@ -3,6 +3,10 @@ package de.halfminer.hmh.cmd;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.entity.Player;
 
+/**
+ * - End the currently running game, by resetting it's state and clearing all added players.
+ * - Will print a warning, if more than one player is still in the game.
+ */
 public class Cmdend extends HaroCommand {
 
     public Cmdend() {

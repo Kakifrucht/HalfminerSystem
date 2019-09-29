@@ -44,22 +44,22 @@ public class HaroListeners extends HaroClass implements Listener {
             haroPlayer = haroStorage.getHaroPlayer(e.getPlayer().getName());
         }
 
-        String disallowMessageKey = null;
+        String kickMessageKey = null;
         if (!haroPlayer.isAdded()) {
-            disallowMessageKey = "listenerNotAdded";
+            kickMessageKey = "listenerNotAdded";
         } else if (haroStorage.isGameRunning()) {
 
             if (haroPlayer.isEliminated()) {
-                disallowMessageKey = "listenerAlreadyEliminated";
+                kickMessageKey = "listenerAlreadyEliminated";
             }
 
             if (!haroPlayer.hasTimeLeft()) {
-                disallowMessageKey = "listenerNoTimeLeft";
+                kickMessageKey = "listenerNoTimeLeft";
             }
         }
 
-        if (disallowMessageKey != null) {
-            String kickMessage = MessageBuilder.returnMessage(disallowMessageKey, hmh, false);
+        if (kickMessageKey != null) {
+            String kickMessage = MessageBuilder.returnMessage(kickMessageKey, hmh, false);
             e.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, kickMessage);
         }
     }

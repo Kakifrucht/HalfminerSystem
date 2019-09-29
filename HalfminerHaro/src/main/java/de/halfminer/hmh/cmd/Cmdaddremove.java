@@ -7,6 +7,12 @@ import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Player;
 
+/**
+ * - Add or remove a player from the game.
+ * - Added players can join the server before the game was started.
+ * - Players can be removed during the game, as a disqualification measure.
+ * - Players that haven't joined the server before can also be added.
+ */
 public class Cmdaddremove extends HaroCommand {
 
     private final boolean add;

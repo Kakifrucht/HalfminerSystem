@@ -11,7 +11,7 @@ depend: [HalfminerSystem]
 commands:
   haro:
     description: Base admin command
-    aliases: [hmh, harospawn]
+    aliases: [hmh, harospawn, spawn]
 
 permissions:
   hmh.*:

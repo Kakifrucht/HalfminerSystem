@@ -3,6 +3,11 @@ package de.halfminer.hmh.cmd;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.Location;
 
+/**
+ * - Will set the spawn point to the location the executing player is currently at.
+ * - Spawn point will be used for respawns, and as the starting point when the game starts.
+ * - Access the spawn point by using /harospawn (or /spawn, if not overloaded).
+ */
 public class Cmdsetspawn extends HaroCommand {
 
     private final boolean teleport;

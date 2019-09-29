@@ -58,7 +58,7 @@ public class HalfminerHaro extends JavaPlugin {
         String[] argsTruncated = args;
         HaroCommand haroCommand;
 
-        if (label.equalsIgnoreCase("harospawn")) {
+        if (label.toLowerCase().endsWith("harospawn") || label.toLowerCase().endsWith("spawn")) {
             haroCommand = new Cmdsetspawn(true);
         } else {
 

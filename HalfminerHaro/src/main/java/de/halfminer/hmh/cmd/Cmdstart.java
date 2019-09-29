@@ -3,6 +3,13 @@ package de.halfminer.hmh.cmd;
 import de.halfminer.hmh.data.HaroPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 
+/**
+ * - Start a game, at least two players must be added to the game.
+ * - Will run custom commands defined in the config file once when the game starts.
+ * - Will run custom commands to initialize all online players, players who are not online during the start will be initialized after their first join.
+ * - Will teleport all players to the specified spawn point, if their distance to it is higher than specified in the config file.
+ * - Will add the starting time (specified in config file) to all players as their remaining time left.
+ */
 public class Cmdstart extends HaroCommand {
 
     public Cmdstart() {

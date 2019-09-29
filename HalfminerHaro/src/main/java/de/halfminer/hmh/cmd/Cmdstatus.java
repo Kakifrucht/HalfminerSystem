@@ -6,6 +6,10 @@ import org.bukkit.ChatColor;
 
 import java.util.List;
 
+/**
+ * - Prints current game information (is the game running/over?).
+ * - Shows all added players, their online/elimination status, and their remaining time, if not yet eliminated.
+ */
 public class Cmdstatus extends HaroCommand {
 
     public Cmdstatus() {

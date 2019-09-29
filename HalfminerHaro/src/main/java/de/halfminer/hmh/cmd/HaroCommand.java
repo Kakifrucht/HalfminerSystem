@@ -7,6 +7,9 @@ import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Abstract base class for every Haro command.
+ */
 public abstract class HaroCommand extends HaroClass {
 
     private static final String BASE_PERMISSION = "hmh.cmd.";

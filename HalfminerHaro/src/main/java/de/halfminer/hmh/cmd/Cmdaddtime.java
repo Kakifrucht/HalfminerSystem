@@ -7,6 +7,14 @@ import de.halfminer.hms.util.MessageBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * - Add play time to either all players or a specific player.
+ * - When using /haro addtime -day, all players will get the time in seconds specified in config.
+ *   - Set this command to execute whenever a new day is starting via some external task scheduler.
+ * - To remove time from a player, use a negative value.
+ * - Players who are online will receive a notification that their playtime was changed.
+ * - Will take into account the maximum time a player can accumulate.
+ */
 public class Cmdaddtime extends HaroCommand {
 
     public Cmdaddtime() {
