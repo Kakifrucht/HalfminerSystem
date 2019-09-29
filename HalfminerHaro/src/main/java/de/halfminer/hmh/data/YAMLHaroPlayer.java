@@ -2,7 +2,11 @@ package de.halfminer.hmh.data;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-abstract class AbstractHaroPlayer implements HaroPlayer {
+/**
+ * Extending haro player implementation is backed by a YAML {@link ConfigurationSection}.
+ * Use {@link #getPlayerSection()} to access the players data section.
+ */
+abstract class YAMLHaroPlayer implements HaroPlayer {
 
     static final String TIME_LEFT_SECONDS_KEY = "timeLeftSeconds";
 
@@ -10,7 +14,7 @@ abstract class AbstractHaroPlayer implements HaroPlayer {
     private final String playerStorageKey;
 
 
-    AbstractHaroPlayer(ConfigurationSection playerStorageRoot, String playerStorageKey) {
+    YAMLHaroPlayer(ConfigurationSection playerStorageRoot, String playerStorageKey) {
         this.playerStorageRoot = playerStorageRoot;
         this.playerStorageKey = playerStorageKey;
     }

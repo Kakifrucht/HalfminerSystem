@@ -126,10 +126,11 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
 
     public HaroPlayer getHaroPlayer(HalfminerPlayer hPlayer) {
 
-        HaroPlayer uuidHaroPlayer = new UUIDHaroPlayer(hPlayer, haroStorage.getConfigurationSection(PLAYER_SECTION_KEY));
+        ConfigurationSection playerSection = haroStorage.getConfigurationSection(PLAYER_SECTION_KEY);
+        HaroPlayer uuidHaroPlayer = new UUIDHaroPlayer(hPlayer, playerSection);
 
         // check if player was added by username, migrate to UUID if necessary
-        HaroPlayer haroPlayerByUsername = getHaroPlayer(hPlayer.getName());
+        HaroPlayer haroPlayerByUsername = new NameHaroPlayer(hPlayer.getName(), playerSection);
         if (haroPlayerByUsername.isAdded()) {
             ConfigurationSection sectionToCopy = getPlayerSection().getConfigurationSection(haroPlayerByUsername.getPlayerStorageKey());
             getPlayerSection().set(uuidHaroPlayer.getPlayerStorageKey(), sectionToCopy);

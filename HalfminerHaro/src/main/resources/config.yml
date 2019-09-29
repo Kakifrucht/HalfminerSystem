@@ -3,7 +3,7 @@ init:
   # Command lists to execute during initializion of game (/haro start)
   gameCommands:
     - time set day world
-    - weather clear world
+    - weather world sun
     - gamerule doDaylightCycle true
     - gamerule doWeatherCycle true
     - difficulty hard

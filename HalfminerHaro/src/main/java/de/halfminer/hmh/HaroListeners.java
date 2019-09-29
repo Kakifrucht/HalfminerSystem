@@ -64,7 +64,7 @@ public class HaroListeners extends HaroClass implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
 
         Player player = e.getPlayer();

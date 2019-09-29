@@ -40,14 +40,16 @@ public class Cmdaddremove extends HaroCommand {
         }
 
         HaroPlayer haroPlayer = haroStorage.getHaroPlayer(args[0]);
-        if (haroPlayer instanceof NameHaroPlayer) {
-            // players who haven't joined before need to be confirmed with /haro add <player> -confirm
-            if (add && (args.length < 2 || !args[1].equalsIgnoreCase("-confirm"))) {
-                MessageBuilder.create("cmdAddRemoveConfirm", hmh)
-                        .addPlaceholder("%PLAYER%", args[0])
-                        .sendMessage(sender);
-                return;
-            }
+
+        // players who haven't joined before need to be confirmed with /haro add <player> -confirm
+        if (add && !haroPlayer.isAdded()
+                && haroPlayer instanceof NameHaroPlayer
+                && (args.length < 2 || !args[1].equalsIgnoreCase("-confirm"))) {
+
+            MessageBuilder.create("cmdAddRemoveConfirm", hmh)
+                    .addPlaceholder("%PLAYER%", args[0])
+                    .sendMessage(sender);
+            return;
         }
 
         boolean success = add ? haroStorage.addPlayer(haroPlayer) : haroStorage.removePlayer(haroPlayer);

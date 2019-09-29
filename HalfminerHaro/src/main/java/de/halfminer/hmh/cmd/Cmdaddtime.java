@@ -2,8 +2,6 @@ package de.halfminer.hmh.cmd;
 
 import de.halfminer.hmh.HalfminerHaro;
 import de.halfminer.hmh.data.HaroPlayer;
-import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 
 import java.util.ArrayList;
@@ -51,25 +49,26 @@ public class Cmdaddtime extends HaroCommand {
             if (args[0].equalsIgnoreCase("-all")) {
                 playersToUpdate = haroStorage.getAddedPlayers(true);
             } else /* add to specific player */ {
+
+                HaroPlayer haroPlayer;
                 try {
-                    HalfminerPlayer hPlayer = hms.getStorageHandler().getPlayer(args[0]);
-                    HaroPlayer haroPlayer = haroStorage.getHaroPlayer(hPlayer);
-                    if (!haroPlayer.isAdded()) {
-                        MessageBuilder.create("cmdAddtimeNotAdded", hmh).sendMessage(sender);
-                        return;
-                    }
-
-                    if (haroPlayer.isEliminated()) {
-                        MessageBuilder.create("cmdAddtimeEliminated", hmh).sendMessage(sender);
-                        return;
-                    }
-
-                    playersToUpdate.add(haroPlayer);
-
-                } catch (PlayerNotFoundException e) {
-                    e.sendNotFoundMessage(sender, HalfminerHaro.MESSAGE_PREFIX);
+                    haroPlayer = haroStorage.getHaroPlayer(args[0]);
+                } catch (IllegalArgumentException e) {
+                    MessageBuilder.create("playerDoesNotExist", HalfminerHaro.MESSAGE_PREFIX).sendMessage(sender);
                     return;
                 }
+
+                if (!haroPlayer.isAdded()) {
+                    MessageBuilder.create("cmdAddtimeNotAdded", hmh).sendMessage(sender);
+                    return;
+                }
+
+                if (haroPlayer.isEliminated()) {
+                    MessageBuilder.create("cmdAddtimeEliminated", hmh).sendMessage(sender);
+                    return;
+                }
+
+                playersToUpdate.add(haroPlayer);
             }
         }
 

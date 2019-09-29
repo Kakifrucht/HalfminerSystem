@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
  * Class represents a player that can be part of a game. Doesn't hold any state, objects don't have to be kept around.
  * Instead a new one is created on demand. Storage is handled through Bukkit's YAML API.
  */
-public class UUIDHaroPlayer extends AbstractHaroPlayer {
+public class UUIDHaroPlayer extends YAMLHaroPlayer {
 
     private static final String TIMESTAMP_UNTIL_KICK = "timestampUntilKick";
     private static final String INITIALIZED_KEY = "initialized";
@@ -111,7 +111,9 @@ public class UUIDHaroPlayer extends AbstractHaroPlayer {
 
     @Override
     public void setTimeUntilKick(long timeUntilKick) {
-        throw new UnsupportedOperationException("Cannot set time until kick of NameHaroPlayer instance");
+        if (isAdded()) {
+            getPlayerSection().set(TIMESTAMP_UNTIL_KICK, timeUntilKick);
+        }
     }
 
     @Override

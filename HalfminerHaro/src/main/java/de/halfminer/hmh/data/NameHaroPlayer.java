@@ -6,13 +6,17 @@ import org.bukkit.entity.Player;
 /**
  * Player where only the name is known. Used when a player hasn't joined the server before.
  */
-public class NameHaroPlayer extends AbstractHaroPlayer {
+public class NameHaroPlayer extends YAMLHaroPlayer {
 
     private final String name;
 
 
     NameHaroPlayer(String name, ConfigurationSection playerStorageRoot) {
         super(playerStorageRoot, name.toLowerCase());
+        if (name.length() == 0) {
+            throw new IllegalArgumentException("Tried to create a NameHaroPlayer with empty name");
+        }
+
         this.name = name;
     }
 
