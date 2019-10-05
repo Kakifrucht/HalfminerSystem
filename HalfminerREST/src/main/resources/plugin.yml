@@ -12,6 +12,7 @@ commands:
   hmr:
     description: Base command
     aliases: [hmrapi]
+    permission: hmr.command
 
 permissions:
   hmr.*:

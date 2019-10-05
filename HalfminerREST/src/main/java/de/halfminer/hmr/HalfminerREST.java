@@ -47,37 +47,33 @@ public class HalfminerREST extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (command.getName().equalsIgnoreCase("hmr")
-                && sender.hasPermission("hmr.command")) {
-
-            if (args.length < 1) {
-                sendUsage(sender);
-                return true;
-            }
-
-            switch (args[0].toLowerCase()) {
-                case "reload":
-                    if (load()) {
-                        sender.sendMessage(ChatColor.GREEN + "Reload was successful");
-                    } else {
-                        sender.sendMessage(ChatColor.RED + "Reload unsuccessful, see console for details");
-                    }
-                    break;
-                case "status":
-                    sender.sendMessage("HalfminerREST version " + ChatColor.GOLD + getDescription().getVersion());
-                    sender.sendMessage("HTTP server running? " +
-                            (server != null ?
-                                    ChatColor.GREEN + "Yes, on port " + server.getListeningPort()
-                                    : ChatColor.RED + "No"));
-                    sender.sendMessage("Proxy mode enabled? " + (server.isProxyMode() ?
-                            ChatColor.GREEN + "Yes" : ChatColor.RED + "No"));
-                    break;
-                default:
-                    sendUsage(sender);
-            }
+        if (args.length < 1) {
+            sendUsage(sender);
             return true;
-        } else sender.sendMessage(ChatColor.RED + "You don't have permission");
-        return false;
+        }
+
+        switch (args[0].toLowerCase()) {
+            case "reload":
+                if (load()) {
+                    sender.sendMessage(ChatColor.GREEN + "Reload was successful");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Reload unsuccessful, see console for details");
+                }
+                break;
+            case "status":
+                sender.sendMessage("HalfminerREST version " + ChatColor.GOLD + getDescription().getVersion());
+                sender.sendMessage("HTTP server running? " +
+                        (server != null ?
+                                ChatColor.GREEN + "Yes, on port " + server.getListeningPort()
+                                : ChatColor.RED + "No"));
+                sender.sendMessage("Proxy mode enabled? " + (server.isProxyMode() ?
+                        ChatColor.GREEN + "Yes" : ChatColor.RED + "No"));
+                break;
+            default:
+                sendUsage(sender);
+        }
+
+        return true;
     }
 
     private void sendUsage(CommandSender sendTo) {
