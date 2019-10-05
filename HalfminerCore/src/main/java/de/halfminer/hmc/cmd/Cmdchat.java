@@ -35,9 +35,6 @@ public class Cmdchat extends HalfminerCommand {
     private final HanTitles titles = hms.getTitlesHandler();
     private String message;
 
-    public Cmdchat() {
-        this.permission = "hmc.chat";
-    }
 
     @Override
     public void execute() throws ModuleDisabledException {

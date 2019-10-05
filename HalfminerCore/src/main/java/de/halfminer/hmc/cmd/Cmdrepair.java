@@ -19,9 +19,6 @@ public class Cmdrepair extends HalfminerCommand {
 
     private int totalRepairs = 0;
 
-    public Cmdrepair() {
-        this.permission = "hmc.repair";
-    }
 
     @Override
     public void execute() {
@@ -78,6 +75,7 @@ public class Cmdrepair extends HalfminerCommand {
 
     private boolean doRepair(ItemStack stack, boolean repairStacks) {
 
+        //TODO deprecation
         if (stack == null || stack.getType().getMaxDurability() == 0
                 || stack.getDurability() == 0
                 || (!repairStacks && stack.getAmount() > 1)) return false;

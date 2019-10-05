@@ -37,9 +37,6 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
     private String rankToGiveName;
     private int rankToGiveMultiplier;
 
-    public Cmdrank() {
-        this.permission = "hmc.rank";
-    }
 
     @Override
     protected void execute() {

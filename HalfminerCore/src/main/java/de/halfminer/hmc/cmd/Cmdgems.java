@@ -26,10 +26,6 @@ public class Cmdgems extends HalfminerCommand {
     private HalfminerPlayer hPlayer = null;
 
 
-    public Cmdgems() {
-        this.permission = "hmc.gems";
-    }
-
     @Override
     protected void execute() {
 

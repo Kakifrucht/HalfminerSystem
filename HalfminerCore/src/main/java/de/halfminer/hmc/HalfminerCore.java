@@ -6,7 +6,6 @@ import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;
-import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -73,8 +72,6 @@ public class HalfminerCore extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        if (cmd.getName().equals("?")) return true;
-
         HalfminerCommand command;
         try {
             command = (HalfminerCommand) this.getClassLoader()
@@ -86,10 +83,7 @@ public class HalfminerCore extends JavaPlugin {
             return true;
         }
 
-        if (command.hasPermission(sender)) {
-            command.run(sender, label, args);
-        } else MessageBuilder.create("noPermission", "Info").sendMessage(sender);
-
+        command.run(sender, label, args);
         return true;
     }
 

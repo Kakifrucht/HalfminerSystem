@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 public abstract class HalfminerCommand extends CoreClass {
 
     protected final static HanStorage storage = hms.getStorageHandler();
-    protected String permission = "hmc.default";
 
     protected CommandSender sender;
     protected String label;
@@ -45,10 +44,6 @@ public abstract class HalfminerCommand extends CoreClass {
     }
 
     protected abstract void execute() throws ModuleDisabledException;
-
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission(permission);
-    }
 
     protected void sendNotAPlayerMessage(String prefix) {
         MessageBuilder.create("notAPlayer", prefix).sendMessage(sender);

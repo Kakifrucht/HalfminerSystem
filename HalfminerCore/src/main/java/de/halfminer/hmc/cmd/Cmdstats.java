@@ -21,10 +21,6 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class Cmdstats extends HalfminerCommand {
 
-    public Cmdstats() {
-        this.permission = "hmc.stats";
-    }
-
     @Override
     public void execute() {
 

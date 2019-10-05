@@ -45,9 +45,6 @@ public class Cmdhmc extends HalfminerCommand {
 
     private static final String PREFIX = "HMC";
 
-    public Cmdhmc() {
-        this.permission = "hmc.moderator";
-    }
 
     @Override
     public void execute() throws ModuleDisabledException {

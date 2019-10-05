@@ -26,9 +26,6 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
     private int amountToCopy;
     private String[] signToBeCopied;
 
-    public Cmdsignedit() {
-        this.permission = "hmc.signedit";
-    }
 
     @Override
     public void execute() {

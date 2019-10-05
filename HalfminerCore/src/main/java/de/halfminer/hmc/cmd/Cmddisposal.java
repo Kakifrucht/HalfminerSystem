@@ -10,10 +10,6 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("unused")
 public class Cmddisposal extends HalfminerCommand {
 
-    public Cmddisposal() {
-        this.permission = "hmc.disposal";
-    }
-
     @Override
     public void execute() {
 

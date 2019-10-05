@@ -18,10 +18,6 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 public class Cmdpin extends HalfminerCommand {
 
-    public Cmdpin() {
-        permission = "hmc.pin";
-    }
-
     @Override
     protected void execute() {
 

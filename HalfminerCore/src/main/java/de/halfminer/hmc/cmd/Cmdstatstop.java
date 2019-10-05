@@ -34,10 +34,6 @@ public class Cmdstatstop extends HalfminerCommand {
     private List<MessageBuilder> messageQueue;
 
 
-    public Cmdstatstop() {
-        this.permission = "hmc.statstop";
-    }
-
     @Override
     protected void execute() throws ModuleDisabledException {
 

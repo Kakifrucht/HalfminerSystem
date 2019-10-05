@@ -9,64 +9,80 @@ main: de.halfminer.hmc.HalfminerCore
 depend: [HalfminerSystem, Essentials]
 
 commands:
-  '?':
-    description: Bukkit override, protects from viewing all commands
-    aliases: [alias]
   chat:
     description: Chat manipulation tools
     aliases: [c]
+    permission: hmc.chat
   customtext:
     description: Show parsed customtext
     aliases: [hmctext, hmstext]
+    permission: hmc.customttext
   disposal:
     description: Open portable disposal
     aliases: [bin]
+    permission: hmc.disposal
   gems:
     description: Shows the users gem account
     aliases: [gem]
+    permission: hmc.gems
   hmc:
     description: HalfminerCore base command and toolbox
     aliases: [halfminercore, hcore, hmcore]
+    permission: hmc.moderator
   hmcapi:
     description: Command API
     aliases: [hmsapi]
+    permission: hmc.admin
   hmstore:
     description: Data storage manipulation
+    permission: hmc.admin
   home:
     description: Teleports the player to his home
     aliases: [h]
+    permission: hmc.home
   lag:
     description: View the connection info
     aliases: [ping]
+    permission: hmc.lag
   newtp:
     description: Teleports the player to a random location
     aliases: [tpnew, neutp, tpneu]
+    permission: hmc.newtp
   pin:
     description: Generate temporary PIN code that identifes the player
     aliases: [code, key]
+    permission: hmc.pin
   rank:
     description: Give custom ranks to players
     aliases: [rang]
+    permission: hmc.rank
   repair:
     description: Repair the currently held item
     aliases: [fix]
+    permission: hmc.repair
   sell:
     description: Earn money by selling farm supplies
     aliases: [verkauf, vk, clearcycle]
+    permission: hmc.sell
   signedit:
     description: Edit the contents of a sign or copy it
     aliases: [se]
+    permission: hmc.signedit
   spawn:
     description: Teleport to the spawn
     aliases: [sa, setspawn]
+    permission: hmc.spawn
   stats:
     description: View the statistics of a player
     aliases: [st]
+    permission: hmc.stats
   statstop:
     description: View the servers leaderboards
     aliases: [sttop, top]
+    permission: hmc.statstop
   vote:
     description: Vote for the server
+    permission: hmc.vote
 permissions:
   hmc.*:
     description: Access to all permissions
@@ -119,7 +135,6 @@ permissions:
       hmc.bypass.skilllevel: true
       hmc.bypass.spawnerconvert: true
       hmc.bypass.statsrightclick: true
-      hmc.bypass.tabcomplete: true
       hmc.bypass.teleportcheck: true
   hmc.chat.*:
     description: Access to all chat manager related permissions (not the command)
@@ -194,8 +209,6 @@ permissions:
     description: Allow converting mobspawners with mobeggs
   hmc.bypass.statsrightclick:
     description: Bypass stats on rightclick
-  hmc.bypass.tabcomplete:
-    description: Bypass tabcomplete
   hmc.bypass.teleportcheck:
     description: Bypass glitch protection teleport check
   hmc.chat:

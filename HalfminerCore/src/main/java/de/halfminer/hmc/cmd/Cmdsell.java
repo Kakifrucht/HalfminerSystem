@@ -15,10 +15,6 @@ import de.halfminer.hms.util.MessageBuilder;
 @SuppressWarnings("unused")
 public class Cmdsell extends HalfminerCommand {
 
-    public Cmdsell() {
-        this.permission = "hmc.sell";
-    }
-
     @Override
     public void execute() throws ModuleDisabledException {
 

@@ -25,10 +25,6 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class Cmdcustomtext extends HalfminerCommand {
 
-    public Cmdcustomtext() {
-        this.permission = "hmc.customttext";
-    }
-
     @Override
     public void execute() {
 

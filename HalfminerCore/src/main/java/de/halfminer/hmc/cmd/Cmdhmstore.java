@@ -22,9 +22,6 @@ public class Cmdhmstore extends HalfminerCommand {
     private HalfminerPlayer playerLookup = null;
     private DataType typeLookup = null;
 
-    public Cmdhmstore() {
-        this.permission = "hmc.admin";
-    }
 
     @Override
     public void execute() {

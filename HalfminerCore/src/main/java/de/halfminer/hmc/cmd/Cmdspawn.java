@@ -20,10 +20,6 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("unused")
 public class Cmdspawn extends HalfminerCommand {
 
-    public Cmdspawn() {
-        this.permission = "hmc.spawn";
-    }
-
     @Override
     public void execute() throws ModuleDisabledException {
 

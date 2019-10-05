@@ -16,10 +16,6 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("unused")
 public class Cmdlag extends HalfminerCommand {
 
-    public Cmdlag() {
-        this.permission = "hmc.lag";
-    }
-
     @Override
     public void execute() {
 

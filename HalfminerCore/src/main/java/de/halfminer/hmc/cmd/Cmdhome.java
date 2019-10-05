@@ -17,10 +17,6 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class Cmdhome extends HalfminerCommand {
 
-    public Cmdhome() {
-        this.permission = "hmc.home";
-    }
-
     @Override
     public void execute() {
 

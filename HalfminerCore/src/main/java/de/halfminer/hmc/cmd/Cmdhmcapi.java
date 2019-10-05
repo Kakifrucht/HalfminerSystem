@@ -25,7 +25,7 @@ public class Cmdhmcapi extends HalfminerCommand {
     @Override
     public void execute() {
 
-        if (args.length == 0 || !sender.isOp()) return;
+        if (args.length == 0) return;
 
         if (args[0].equalsIgnoreCase("title") && args.length > 2) {
 

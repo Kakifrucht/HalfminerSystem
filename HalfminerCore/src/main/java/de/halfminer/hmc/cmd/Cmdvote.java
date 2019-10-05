@@ -25,10 +25,6 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class Cmdvote extends HalfminerCommand {
 
-    public Cmdvote() {
-        this.permission = "hmc.vote";
-    }
-
     @Override
     public void execute() {
 

@@ -28,10 +28,6 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class Cmdnewtp extends HalfminerCommand {
 
-    public Cmdnewtp() {
-        this.permission = "hmc.newtp";
-    }
-
     @Override
     public void execute() {
 
