@@ -247,9 +247,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
         ModCombatLog combatLog = null;
         try {
             combatLog = (ModCombatLog) hmc.getModule(ModuleType.COMBAT_LOG);
-        } catch (ModuleDisabledException ex) {
-            return;
-        }
+        } catch (ModuleDisabledException ignored) {}
 
         if (e.getEntity() instanceof Player
                 && e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.SATIATED)
@@ -262,22 +260,26 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     public void onGoldAppleEatRemoveRegeneration(PlayerItemConsumeEvent e) {
 
         Player p = e.getPlayer();
-        if (e.getItem().getType().equals(Material.GOLDEN_APPLE)
+        ItemStack item = e.getItem();
+        if (item.getType().equals(Material.GOLDEN_APPLE) || item.getType().equals(Material.ENCHANTED_GOLDEN_APPLE)
                 && !p.hasPermission("hmc.bypass.pvp")) {
 
             // if a player eats a Notch Apple first, and then a non Notch one, he will regain the 8
             // hearts from the Notch apple absorption, so we remove the effect first and readd it
             if (p.hasPotionEffect(PotionEffectType.ABSORPTION)
-                    && e.getItem().getDurability() == 0
+                    && item.getType().equals(Material.GOLDEN_APPLE)
                     && p.getPotionEffect(PotionEffectType.ABSORPTION).getAmplifier() > 1) {
 
                 PotionEffect oldEffect = p.getPotionEffect(PotionEffectType.ABSORPTION);
                 p.removePotionEffect(PotionEffectType.ABSORPTION);
-                p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,
+
+                PotionEffect potionEffect = new PotionEffect(PotionEffectType.ABSORPTION,
                         120 * 20, // measured in ticks, 120 seconds
                         oldEffect.getAmplifier() / 4,
-                        oldEffect.isAmbient()));
+                        oldEffect.isAmbient());
+                p.addPotionEffect(potionEffect);
             }
+
             scheduler.runTask(hmc, () -> p.removePotionEffect(PotionEffectType.REGENERATION));
         }
     }
