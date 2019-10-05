@@ -12,6 +12,7 @@ commands:
   haro:
     description: Base admin command
     aliases: [hmh, harospawn, spawn]
+    permission: hmh.cmd.haro
 
 permissions:
   hmh.*:
@@ -27,6 +28,7 @@ permissions:
       - hmh.cmd.add
       - hmh.cmd.addtime
       - hmh.cmd.end
+      - hmh.cmd.haro
       - hmh.cmd.remove
       - hmh.cmd.setspawn
       - hmh.cmd.start
@@ -37,6 +39,8 @@ permissions:
     description: Grants access to /haro addtime command
   hmh.cmd.end:
     description: Grants access to /haro end command
+  hmh.cmd.haro:
+    description: Grants access to base /haro command
   hmh.cmd.remove:
     description: Grants access to /haro remove command
   hmh.cmd.setspawn:
