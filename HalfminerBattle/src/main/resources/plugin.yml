@@ -12,12 +12,15 @@ commands:
   duel:
     description: Duel mode base command
     aliases: [1vs1, duell, 1v1]
+    permission: hmb.mode.duel.use
   ffa:
     description: Free for all mode base command
     aliases: [pvp]
+    permission: hmb.mode.ffa.use
   hmb:
     description: Access admin commands per battle mode, add, remove and edit arenas
     aliases: [hmbattle, hbattle, halfminerbattle, global]
+    permission: hmb.admin
 permissions:
   hmb.*:
     default: op

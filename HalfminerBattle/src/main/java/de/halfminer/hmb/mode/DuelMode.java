@@ -43,11 +43,6 @@ public class DuelMode extends AbstractMode {
         }
 
         Player player = (Player) sender;
-        if (!sender.hasPermission("hmb.mode.duel.use")) {
-            MessageBuilder.create("noPermission", "Battle").sendMessage(sender);
-            return true;
-        }
-
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "match":

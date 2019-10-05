@@ -54,11 +54,6 @@ public class FFAMode extends AbstractMode {
             return true;
         }
 
-        if (!sender.hasPermission("hmb.mode.ffa.use")) {
-            MessageBuilder.create("noPermission", "Battle").sendMessage(sender);
-            return true;
-        }
-
         Player player = (Player) sender;
 
         List<Arena> freeArenas = am.getFreeArenasFromType(type);

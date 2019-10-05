@@ -98,11 +98,6 @@ public class HalfminerBattle extends JavaPlugin {
         // admin commands
         if (cmd.getName().equalsIgnoreCase("hmb")) {
 
-            if (!sender.hasPermission("hmb.admin")) {
-                MessageBuilder.create("noPermission", "Battle").sendMessage(sender);
-                return true;
-            }
-
             if (args.length > 0) {
                 BattleMode called = getBattleMode(args[0]);
                 if (called != null) {
