@@ -6,6 +6,8 @@ import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * - Repair the held item or whole inventory
@@ -75,13 +77,23 @@ public class Cmdrepair extends HalfminerCommand {
 
     private boolean doRepair(ItemStack stack, boolean repairStacks) {
 
-        //TODO deprecation
-        if (stack == null || stack.getType().getMaxDurability() == 0
-                || stack.getDurability() == 0
-                || (!repairStacks && stack.getAmount() > 1)) return false;
+        if (stack == null || (!repairStacks && stack.getAmount() > 1)) {
+            return false;
+        }
 
-        stack.setDurability((short) 0);
-        totalRepairs += stack.getAmount();
-        return true;
+        ItemMeta itemMeta = stack.getItemMeta();
+        if (itemMeta instanceof Damageable) {
+
+            Damageable damageable = (Damageable) itemMeta;
+
+            if (damageable.getDamage() > 0) {
+                damageable.setDamage(0);
+                stack.setItemMeta(itemMeta);
+                totalRepairs += stack.getAmount();
+                return true;
+            }
+        }
+
+        return false;
     }
 }
