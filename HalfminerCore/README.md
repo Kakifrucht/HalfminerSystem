@@ -55,7 +55,6 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
       - using color codes and formatting codes via ``&``
       - Posting links/IPs
       - Writing all capitalized
-    - Disables tab completes that are too long, defaults to help instead
   - CombatLog
     - Tags players when hitting/being hit
     - Shows actionbar message containing time left in fight
