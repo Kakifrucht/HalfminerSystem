@@ -56,10 +56,8 @@ public class HalfminerSystem extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!sender.hasPermission("hms.command")) {
-            MessageBuilder.create("noPermission", "HMS").sendMessage(sender);
-            return true;
-        }
+        // empty command, useful for command overwriting through commands.yml bukkit file
+        if (command.getName().equalsIgnoreCase("alias")) return true;
 
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
 

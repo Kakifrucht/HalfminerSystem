@@ -12,6 +12,10 @@ commands:
   hms:
     description: HalfminerSystem base command showing version information and reloading every hooked plugin
     aliases: [halfminer, halfminersystem, hsystem, hmsystem]
+    permission: hms.command
+  alias:
+    description: Empty command, used for overwriting commands through commands.yml bukkit file
+
 permissions:
   hms.*:
     description: Access to all permission
@@ -34,7 +38,7 @@ permissions:
     default: true
     description: Access to features restricted to level 0
   hms.command:
-    description: Access to hms command
+    description: Access to /hms command
   hms.level.1:
     description: Access to commands restricted to level 1
   hms.level.2:

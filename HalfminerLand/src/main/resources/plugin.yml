@@ -12,12 +12,15 @@ commands:
   land:
     description: Base command
     aliases: [claim, zone, gebiet]
+    permission: hml.cmd
   landtp:
     description: Teleport to a land with a set teleport point
     aliases: [warpland, warpl]
+    permission: hml.cmd.land
   hml:
     description: Administrative commands
     aliases: [halfminerland, hmland]
+    permission: hml.cmd.hml
 
 permissions:
   hml.*:
@@ -32,6 +35,7 @@ permissions:
       - hml.cmd.friend
       - hml.cmd.hml
       - hml.cmd.info
+      - hml.cmd.land
       - hml.cmd.landtp
       - hml.cmd.list
       - hml.cmd.list.others
@@ -85,6 +89,9 @@ permissions:
     description: Grants access to /hml command
   hml.cmd.info:
     description: Grants access to /land info command
+    default: true
+  hml.cmd.land:
+    description: Grants access to /land base command
     default: true
   hml.cmd.landtp:
     description: Grants access to /landtp command
