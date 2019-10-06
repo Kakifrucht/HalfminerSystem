@@ -15,6 +15,7 @@
         <module>HalfminerBattle</module>
         <module>HalfminerCore</module>
         <module>HalfminerREST</module>
+        <module>HalfminerLand</module>
     </modules>
 
     <properties>
