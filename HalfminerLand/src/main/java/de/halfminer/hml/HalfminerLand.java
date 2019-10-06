@@ -40,7 +40,7 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
     public void onEnable() {
         instance = this;
 
-        this.worldGuardHelper = new WorldGuardHelper(getLogger(), getServer().getPluginManager());
+        this.worldGuardHelper = new WorldGuardHelper(getLogger());
         this.landStorage = new LandStorage(new HanStorage(this));
         reload();
 

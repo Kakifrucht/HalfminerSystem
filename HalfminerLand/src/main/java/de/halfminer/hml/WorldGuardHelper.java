@@ -1,10 +1,12 @@
 package de.halfminer.hml;
 
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldguard.bukkit.BukkitUtil;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.World;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
@@ -12,7 +14,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.halfminer.hml.land.Land;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.plugin.PluginManager;
 
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -24,19 +25,20 @@ import java.util.logging.Logger;
  */
 public class WorldGuardHelper {
 
+    private static final String ALLOW_SHOP_FLAG_NAME = "allow-shop";
     private static final int HIGHEST_BLOCK_Y = 255;
 
     private final Logger logger;
-    private final WorldGuardPlugin wg;
+    private final WorldGuard wg;
 
 
-    WorldGuardHelper(Logger logger, PluginManager pluginManager) {
+    WorldGuardHelper(Logger logger) {
         this.logger = logger;
-        this.wg = (WorldGuardPlugin) pluginManager.getPlugin("WorldGuard");
+        this.wg = WorldGuard.getInstance();
     }
 
     public boolean isLandFree(Land land) {
-        RegionManager regionManager = wg.getRegionManager(land.getWorld());
+        RegionManager regionManager = getRegionManager(land.getWorld());
         return regionManager.getApplicableRegions(createRegionFromChunk(land.getChunk())).size() == 0;
     }
 
@@ -44,11 +46,10 @@ public class WorldGuardHelper {
         updateRegionOfLand(land, false, true);
     }
 
-    @SuppressWarnings("deprecation")
     public void updateRegionOfLand(Land land, boolean forceRefresh, boolean keepFriendsOnRefresh) {
         Chunk chunk = land.getChunk();
 
-        RegionManager regionManager = wg.getRegionManager(chunk.getWorld());
+        RegionManager regionManager = getRegionManager(land.getWorld());
         DefaultDomain defaultDomain = null;
         ProtectedRegion region = getRegionFromRegionManager(chunk);
 
@@ -77,10 +78,14 @@ public class WorldGuardHelper {
                 // create region
                 region = createRegionFromChunk(chunk);
 
-                region.setFlag(DefaultFlag.ENABLE_SHOP, StateFlag.State.ALLOW);
-                region.setFlag(DefaultFlag.USE, StateFlag.State.ALLOW);
-                region.setFlag(DefaultFlag.PVP, StateFlag.State.DENY);
-                region.setFlag(DefaultFlag.ENDERPEARL, StateFlag.State.DENY);
+                Flag<?> flag = wg.getFlagRegistry().get(ALLOW_SHOP_FLAG_NAME);
+                if (flag instanceof StateFlag) {
+                    region.setFlag((StateFlag) flag, StateFlag.State.ALLOW);
+                }
+
+                region.setFlag(Flags.USE, StateFlag.State.ALLOW);
+                region.setFlag(Flags.PVP, StateFlag.State.DENY);
+                region.setFlag(Flags.ENDERPEARL, StateFlag.State.DENY);
 
                 if (defaultDomain != null) {
                     region.setMembers(defaultDomain);
@@ -96,12 +101,12 @@ public class WorldGuardHelper {
 
             if (land.isAbandoned() != isAbandoned(region)) {
                 if (land.isAbandoned()) {
-                    region.setFlag(DefaultFlag.PVP, StateFlag.State.ALLOW);
-                    region.setFlag(DefaultFlag.ENDERPEARL, StateFlag.State.ALLOW);
+                    region.setFlag(Flags.PVP, StateFlag.State.ALLOW);
+                    region.setFlag(Flags.ENDERPEARL, StateFlag.State.ALLOW);
 
-                    region.setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
-                    region.setFlag(DefaultFlag.CHEST_ACCESS, StateFlag.State.ALLOW);
-                    region.setFlag(DefaultFlag.TNT, StateFlag.State.ALLOW);
+                    region.setFlag(Flags.BUILD, StateFlag.State.ALLOW);
+                    region.setFlag(Flags.CHEST_ACCESS, StateFlag.State.ALLOW);
+                    region.setFlag(Flags.TNT, StateFlag.State.ALLOW);
 
                     logger.info("Set region for land " + land + " abandoned");
                 } else {
@@ -128,7 +133,7 @@ public class WorldGuardHelper {
     }
 
     private boolean isAbandoned(ProtectedRegion region) {
-        return region.getFlag(DefaultFlag.BUILD) == StateFlag.State.ALLOW;
+        return region.getFlag(Flags.BUILD) == StateFlag.State.ALLOW;
     }
 
     public DefaultDomain getMemberList(Land land) {
@@ -172,20 +177,25 @@ public class WorldGuardHelper {
             location.setY(HIGHEST_BLOCK_Y);
         }
 
-        return wg.getRegionManager(location.getWorld())
-                .getApplicableRegions(location)
-                .queryValue(null, DefaultFlag.PVP) != StateFlag.State.DENY;
+        return getRegionManager(location.getWorld())
+                .getApplicableRegions(BukkitAdapter.asBlockVector(loc))
+                .queryValue(null, Flags.PVP) != StateFlag.State.DENY;
     }
 
     private ProtectedRegion getRegionFromRegionManager(Chunk chunk) {
-        return wg.getRegionManager(chunk.getWorld()).getRegion(getRegionName(chunk));
+        return getRegionManager(chunk.getWorld()).getRegion(getRegionName(chunk));
     }
 
     private ProtectedRegion createRegionFromChunk(Chunk chunk) {
         String regionName = getRegionName(chunk);
-        BlockVector min = BukkitUtil.toVector(chunk.getBlock(0, 0, 0));
-        BlockVector max = BukkitUtil.toVector(chunk.getBlock(15, 255, 15));
+        BlockVector3 min = BukkitAdapter.asBlockVector(chunk.getBlock(0, 0, 0).getLocation());
+        BlockVector3 max = BukkitAdapter.asBlockVector(chunk.getBlock(15, 255, 15).getLocation());
         return new ProtectedCuboidRegion(regionName, min, max);
+    }
+
+    private RegionManager getRegionManager(org.bukkit.World world) {
+        World wgWorld = BukkitAdapter.adapt(world);
+        return wg.getPlatform().getRegionContainer().get(wgWorld);
     }
 
     private String getRegionName(Chunk chunk) {
