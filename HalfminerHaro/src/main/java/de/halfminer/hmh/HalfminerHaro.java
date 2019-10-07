@@ -50,11 +50,6 @@ public class HalfminerHaro extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!sender.hasPermission("hmh.admin")) {
-            MessageBuilder.create("noPermission", MESSAGE_PREFIX).sendMessage(sender);
-            return true;
-        }
-
         String[] argsTruncated = args;
         HaroCommand haroCommand;
 

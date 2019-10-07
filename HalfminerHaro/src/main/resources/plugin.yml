@@ -21,8 +21,8 @@ permissions:
     children:
       - hmh.admin
       - hmh.cmd.*
-  hmh.admin:
-    description: Allows joining the server and grants access to all /haro commands
+  hmh.cmd.*:
+    description: Grants access to all /haro commands
     default: op
     children:
       - hmh.cmd.add
@@ -33,6 +33,8 @@ permissions:
       - hmh.cmd.setspawn
       - hmh.cmd.start
       - hmh.cmd.status
+  hmh.admin:
+    description: Allows accessing the server as an admin player that doesn't partake in the game
   hmh.cmd.add:
     description: Grants access to /haro add command
   hmh.cmd.addtime:
