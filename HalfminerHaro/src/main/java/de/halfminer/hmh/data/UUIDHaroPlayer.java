@@ -41,11 +41,6 @@ public class UUIDHaroPlayer extends YAMLHaroPlayer {
         return player.getBase().getPlayer();
     }
 
-    /**
-     * Check if player was initialized for the current game.
-     *
-     * @return true if player was initialized before for the current game, else false
-     */
     @Override
     public boolean isInitialized() {
         if (!isAdded()) {
@@ -74,9 +69,6 @@ public class UUIDHaroPlayer extends YAMLHaroPlayer {
         getPlayerSection().set(IS_ELIMINATED_KEY, eliminated);
     }
 
-    /**
-     * @return true if the player still has time left to play
-     */
     @Override
     public boolean hasTimeLeft() {
         return getTimeLeftSeconds() > 0;

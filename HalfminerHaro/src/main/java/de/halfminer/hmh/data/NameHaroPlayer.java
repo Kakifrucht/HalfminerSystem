@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 /**
  * Player where only the name is known. Used when a player hasn't joined the server before.
+ * Objects can be created and discarded on demand, as this class does not store any state in memory.
  */
 public class NameHaroPlayer extends YAMLHaroPlayer {
 

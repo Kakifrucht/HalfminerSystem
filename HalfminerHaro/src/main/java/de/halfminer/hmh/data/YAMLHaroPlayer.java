@@ -3,7 +3,7 @@ package de.halfminer.hmh.data;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- * Extending haro player implementation is backed by a YAML {@link ConfigurationSection}.
+ * Implementations where data is backed by a YAML {@link ConfigurationSection}.
  * Use {@link #getPlayerSection()} to access the players data section.
  */
 abstract class YAMLHaroPlayer implements HaroPlayer {
