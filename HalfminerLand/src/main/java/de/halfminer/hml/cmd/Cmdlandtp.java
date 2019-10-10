@@ -47,6 +47,8 @@ public class Cmdlandtp extends LandCommand {
             Land teleportTo = board.getLandFromTeleport(teleportName);
             if (teleportTo != null) {
 
+                teleportTo.updateAbandonmentStatus();
+
                 if (teleportTo.isAbandoned()) {
                     boolean isStealingEnabled = hml.getConfig().getBoolean("teleport.allowStealingAbandoned", false);
                     MessageBuilder.create("cmdLandtpIsAbandoned" + (isStealingEnabled ? "Steal" : ""), hml)
