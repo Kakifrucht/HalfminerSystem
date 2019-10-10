@@ -157,6 +157,7 @@ public class Cmdbuy extends LandCommand {
                     .addPlaceholderReplace("%COST%", cost)
                     .addPlaceholderReplace("%FREELANDSOWNED%", freeLandsOwned + 1)
                     .addPlaceholderReplace("%FREELANDSMAX%", freeLandsMax == Integer.MAX_VALUE ? "-" : freeLandsMax)
+                    .addPlaceholderReplace("%DAYSUNTILABANDONED%", hml.getConfig().getInt("landAbandonedAfterDays", 21))
                     .sendMessage(player);
 
             if (buyAsServer) {

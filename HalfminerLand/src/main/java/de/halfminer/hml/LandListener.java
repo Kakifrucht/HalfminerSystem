@@ -68,6 +68,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             if (count > 0) {
                 MessageBuilder.create("listenerLandUnabandoned", hml)
                         .addPlaceholderReplace("%COUNT%", count)
+                        .addPlaceholderReplace("%DAYSUNTILABANDONED%", hml.getConfig().getInt("landAbandonedAfterDays", 21))
                         .sendMessage(e.getPlayer());
             }
         }
