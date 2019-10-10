@@ -12,11 +12,11 @@ commands:
   land:
     description: Base command
     aliases: [claim, zone, gebiet]
-    permission: hml.cmd
+    permission: hml.cmd.land
   landtp:
     description: Teleport to a land with a set teleport point
     aliases: [warpland, warpl]
-    permission: hml.cmd.land
+    permission: hml.cmd.landtp
   hml:
     description: Administrative commands
     aliases: [halfminerland, hmland]
