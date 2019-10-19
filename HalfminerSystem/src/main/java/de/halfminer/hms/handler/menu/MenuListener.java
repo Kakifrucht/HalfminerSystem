@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class MenuListener extends HalfminerClass implements Disableable, Sweepable, Listener {
 
-    private final Map<Player, MenuContainer> menuMap = new HashMap<>();
+    private final Map<Player, MenuContainer> menuMap = new WeakHashMap<>();
 
 
     @EventHandler
@@ -55,9 +55,8 @@ public class MenuListener extends HalfminerClass implements Disableable, Sweepab
 
     @EventHandler
     public void onPluginDisable(PluginDisableEvent e) {
-        // close all menus of plugin, copy to new hashset to prevent concurrentmodificationexception
-        new HashSet<>(menuMap.values())
-                .stream()
+        // close all menus belonging to disabled plugin
+        menuMap.values().stream()
                 .filter(m -> m.getPlugin().equals(e.getPlugin()) && m.isOpened())
                 .forEach(menuContainer -> menuContainer.getPlayer().closeInventory());
     }
@@ -91,7 +90,7 @@ public class MenuListener extends HalfminerClass implements Disableable, Sweepab
 
     @Override
     public void onDisable() {
-        new HashSet<>(menuMap.values()).forEach(MenuContainer::closeMenu);
+        menuMap.values().forEach(menu -> menu.getPlayer().closeInventory());
     }
 
     @Override
