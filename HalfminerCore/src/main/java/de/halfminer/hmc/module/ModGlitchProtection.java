@@ -49,11 +49,11 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                 && lastGlitchAlert.getIfPresent(e.getPlayer()) == null) {
 
             MessageBuilder.create("modGlitchProtectionMove", hmc, "AntiGlitch")
-                    .addPlaceholderReplace("%PREFIX%", "Warnung")
-                    .addPlaceholderReplace("%PLAYER%", e.getPlayer().getName())
-                    .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(e.getTo()))
-                    .addPlaceholderReplace("%WORLD%", e.getTo().getWorld().getName())
-                    .addPlaceholderReplace("%MATERIAL%",
+                    .addPlaceholder("%PREFIX%", "Warnung")
+                    .addPlaceholder("%PLAYER%", e.getPlayer().getName())
+                    .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(e.getTo()))
+                    .addPlaceholder("%WORLD%", e.getTo().getWorld().getName())
+                    .addPlaceholder("%MATERIAL%",
                             Utils.makeStringFriendly(e.getFrom().getBlock().getType().toString()))
                     .broadcastMessage("hmc.bypass.glitchcheck", true);
             lastGlitchAlert.put(e.getPlayer(), true);
@@ -81,9 +81,9 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                     ((ModRespawn) hmc.getModule(ModuleType.RESPAWN)).tpToSpawn(p);
                     MessageBuilder.create("modGlitchProtectionDismountTped", hmc, "AntiGlitch").sendMessage(p);
                     MessageBuilder.create("modGlitchProtectionDismountTpedNotify", hmc, "AntiGlitch")
-                            .addPlaceholderReplace("%PLAYER%", p.getName())
-                            .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
-                            .addPlaceholderReplace("%WORLD%", w.getName())
+                            .addPlaceholder("%PLAYER%", p.getName())
+                            .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(loc))
+                            .addPlaceholder("%WORLD%", w.getName())
                             .broadcastMessage("hmc.bypass.glitchcheck", true);
                 });
             }
@@ -154,8 +154,8 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                         p.setHealth(0.0d);
                         MessageBuilder.create("modGlitchProtectionNether", hmc, "AntiGlitch").sendMessage(p);
                         MessageBuilder.create("modGlitchProtectionNetherNotify", hmc, "AntiGlitch")
-                                .addPlaceholderReplace("%PLAYER%", p.getName())
-                                .addPlaceholderReplace("%LOCATION%", Utils.getStringFromLocation(loc))
+                                .addPlaceholder("%PLAYER%", p.getName())
+                                .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(loc))
                                 .broadcastMessage("hmc.bypass.nethercheck", true);
                     }
                 }

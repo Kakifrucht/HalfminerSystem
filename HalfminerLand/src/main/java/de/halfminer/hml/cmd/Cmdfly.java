@@ -24,7 +24,7 @@ public class Cmdfly extends LandCommand {
         if (flyBoard.isPlayerFlying(player)) {
             flyBoard.togglePlayerFlying(player);
             MessageBuilder.create("cmdFlyDisable", hml)
-                    .addPlaceholderReplace("%TIME%", flyBoard.getFlyTimeLeft(player))
+                    .addPlaceholder("%TIME%", flyBoard.getFlyTimeLeft(player))
                     .sendMessage(player);
         } else {
 
@@ -48,12 +48,12 @@ public class Cmdfly extends LandCommand {
                 boolean flyEnabled = flyBoard.togglePlayerFlying(player);
                 if (flyEnabled) {
                     MessageBuilder.create("cmdFlyEnable", hml)
-                            .addPlaceholderReplace("%TIME%", flyBoard.getFlyTimeLeft(player))
+                            .addPlaceholder("%TIME%", flyBoard.getFlyTimeLeft(player))
                             .sendMessage(player);
                 } else {
                     MessageBuilder.create("cmdFlyNotEnoughMoney", hml)
-                            .addPlaceholderReplace("%COST%", flyBoard.getCost())
-                            .addPlaceholderReplace("%TIME%", flyBoard.getFlyDurationSeconds())
+                            .addPlaceholder("%COST%", flyBoard.getCost())
+                            .addPlaceholder("%TIME%", flyBoard.getFlyDurationSeconds())
                             .sendMessage(player);
                 }
 

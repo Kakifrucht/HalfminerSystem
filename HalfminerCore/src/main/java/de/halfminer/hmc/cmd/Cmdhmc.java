@@ -101,7 +101,7 @@ public class Cmdhmc extends HalfminerCommand {
                 p = storage.getPlayer(args[1]).getBase();
                 MessageBuilder.create(antiXray.setBypassed(p) ?
                         "cmdHmcXrayBypassSet" : "cmdHmcXrayBypassUnset", hmc, "AntiXRay")
-                        .addPlaceholderReplace("%PLAYER%", p.getName())
+                        .addPlaceholder("%PLAYER%", p.getName())
                         .sendMessage(sender);
 
             } catch (PlayerNotFoundException e) {
@@ -184,7 +184,7 @@ public class Cmdhmc extends HalfminerCommand {
         }
 
         MessageBuilder.create(success ? "cmdHmcCopySchematicDeleted" : "cmdHmcCopySchematicDeletedError", hmc)
-                .addPlaceholderReplace("%PATH%", toDelete.toPath().toString())
+                .addPlaceholder("%PATH%", toDelete.toPath().toString())
                 .logMessage(success ? Level.INFO : Level.WARNING);
     }
 
@@ -195,7 +195,7 @@ public class Cmdhmc extends HalfminerCommand {
             cache = coreStorage.getCache("customitems.txt");
         } catch (CachingException e) {
             MessageBuilder.create("cmdCustomtextCacheParseError", hmc, PREFIX)
-                    .addPlaceholderReplace("%ERROR%", e.getCleanReason())
+                    .addPlaceholder("%ERROR%", e.getCleanReason())
                     .sendMessage(sender);
             return;
         }
@@ -211,7 +211,7 @@ public class Cmdhmc extends HalfminerCommand {
                 allItemString = new StringBuilder(allItemString.substring(0, allItemString.length() - 1));
 
                 MessageBuilder.create("cmdHmcGiveList", hmc, PREFIX)
-                        .addPlaceholderReplace("%LIST%", allItemString.toString())
+                        .addPlaceholder("%LIST%", allItemString.toString())
                         .sendMessage(sender);
 
             } else MessageBuilder.create("cmdHmcGiveListNone", hmc, PREFIX).sendMessage(sender);
@@ -238,9 +238,9 @@ public class Cmdhmc extends HalfminerCommand {
         try {
             itemCache.giveItem(itemName, giveTo, amount);
             MessageBuilder.create("cmdHmcGiveSuccessful", hmc, PREFIX)
-                    .addPlaceholderReplace("%PLAYER%", giveTo.getName())
-                    .addPlaceholderReplace("%ITEM%", itemName)
-                    .addPlaceholderReplace("%AMOUNT%", amount)
+                    .addPlaceholder("%PLAYER%", giveTo.getName())
+                    .addPlaceholder("%ITEM%", itemName)
+                    .addPlaceholder("%AMOUNT%", amount)
                     .sendMessage(sender);
         } catch (ItemCacheException e) {
 
@@ -251,26 +251,26 @@ public class Cmdhmc extends HalfminerCommand {
                     totalLost += lost.getAmount();
                 }
                 MessageBuilder.create("cmdHmcGiveInventoryFull", hmc, PREFIX)
-                        .addPlaceholderReplace("%PLAYER%", giveTo.getName())
-                        .addPlaceholderReplace("%ITEM%", itemName)
-                        .addPlaceholderReplace("%AMOUNT%", totalLost)
+                        .addPlaceholder("%PLAYER%", giveTo.getName())
+                        .addPlaceholder("%ITEM%", itemName)
+                        .addPlaceholder("%AMOUNT%", totalLost)
                         .sendMessage(sender);
             } else if (e.getReason().equals(ItemCacheException.Reason.ITEM_NOT_FOUND)) {
                 MessageBuilder.create("cmdHmcGiveItemNotFound", hmc, PREFIX)
-                        .addPlaceholderReplace("%ITEM%", itemName)
+                        .addPlaceholder("%ITEM%", itemName)
                         .sendMessage(sender);
             } else {
                 MessageBuilder.create("cmdHmcGiveError", hmc, PREFIX)
-                        .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                        .addPlaceholder("%REASON%", e.getCleanReason())
                         .sendMessage(sender);
             }
         }
     }
 
     private void reload() {
-        hms.getHalfminerManager().reloadOcurred(hmc);
+        hms.getHalfminerManager().reload(hmc);
         MessageBuilder.create("pluginReloaded", "HMC")
-                .addPlaceholderReplace("%PLUGINNAME%", hmc.getName())
+                .addPlaceholder("%PLUGINNAME%", hmc.getName())
                 .sendMessage(sender);
     }
 
@@ -341,7 +341,7 @@ public class Cmdhmc extends HalfminerCommand {
             if (newName == null) newName = "";
 
             MessageBuilder.create("cmdHmcRenameDone", hmc, PREFIX)
-                    .addPlaceholderReplace("%NAME%", newName)
+                    .addPlaceholder("%NAME%", newName)
                     .sendMessage(player);
         } else showUsage();
     }
@@ -356,7 +356,7 @@ public class Cmdhmc extends HalfminerCommand {
                 coreStorage.set("vote." + playerUid, Long.MAX_VALUE);
 
                 MessageBuilder.create("cmdHmcHomeblockRemove", hmc, PREFIX)
-                        .addPlaceholderReplace("%PLAYER%", p.getName())
+                        .addPlaceholder("%PLAYER%", p.getName())
                         .sendMessage(sender);
             } catch (PlayerNotFoundException e) {
                 e.sendNotFoundMessage(sender, PREFIX);
@@ -387,13 +387,13 @@ public class Cmdhmc extends HalfminerCommand {
             boolean success = action.runAction(players);
 
             MessageBuilder.create(success ? "cmdHmcRunActionSuccess" : "cmdHmcRunActionExecuteError", hmc, PREFIX)
-                    .addPlaceholderReplace("%ACTIONNAME%", args[1])
+                    .addPlaceholder("%ACTIONNAME%", args[1])
                     .sendMessage(sender);
 
         } catch (CachingException e) {
             MessageBuilder.create("cmdHmcRunActionCacheError", hmc, PREFIX)
-                    .addPlaceholderReplace("%ACTIONNAME%", args[1])
-                    .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                    .addPlaceholder("%ACTIONNAME%", args[1])
+                    .addPlaceholder("%REASON%", e.getCleanReason())
                     .sendMessage(sender);
         }
     }
@@ -424,7 +424,7 @@ public class Cmdhmc extends HalfminerCommand {
         } else checkRadius = 5;
 
         MessageBuilder.create("cmdHmcSearchhomesStarted", hmc, PREFIX)
-                .addPlaceholderReplace("%RADIUS%", checkRadius)
+                .addPlaceholder("%RADIUS%", checkRadius)
                 .sendMessage(player);
 
         scheduler.runTaskAsynchronously(hmc, () -> {
@@ -443,8 +443,8 @@ public class Cmdhmc extends HalfminerCommand {
                                 && z - checkRadius < zHome && z + checkRadius > zHome) {
 
                             homeMessages.add(MessageBuilder.create("cmdHmcSearchhomesResults", hmc)
-                                    .addPlaceholderReplace("%PLAYER%", user.getName())
-                                    .addPlaceholderReplace("%HOMENAME%", homeName)
+                                    .addPlaceholder("%PLAYER%", user.getName())
+                                    .addPlaceholder("%HOMENAME%", homeName)
                                     .returnMessage());
                         }
                     } catch (Exception ignored) {
@@ -482,27 +482,27 @@ public class Cmdhmc extends HalfminerCommand {
                 ((ModSkillLevel) hmc.getModule(ModuleType.SKILL_LEVEL)).updateSkill(p.getBase(), modifier);
 
                 MessageBuilder.create("cmdHmcSkillUpdated", hmc, "Skilllevel")
-                        .addPlaceholderReplace("%PLAYER%", p.getName())
-                        .addPlaceholderReplace("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
-                        .addPlaceholderReplace("%OLDELO%", oldValue)
-                        .addPlaceholderReplace("%NEWELO%", p.getString(DataType.SKILL_ELO))
+                        .addPlaceholder("%PLAYER%", p.getName())
+                        .addPlaceholder("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
+                        .addPlaceholder("%OLDELO%", oldValue)
+                        .addPlaceholder("%NEWELO%", p.getString(DataType.SKILL_ELO))
                         .sendMessage(sender);
             } catch (NumberFormatException e) {
                 MessageBuilder.create("cmdHmcSkillUsage", hmc, "Skilllevel").sendMessage(sender);
             }
         } else {
             MessageBuilder.create("cmdHmcSkillShow", hmc, "Skilllevel")
-                    .addPlaceholderReplace("%PLAYER%", p.getName())
-                    .addPlaceholderReplace("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
-                    .addPlaceholderReplace("%ELO%", oldValue)
+                    .addPlaceholder("%PLAYER%", p.getName())
+                    .addPlaceholder("%SKILLLEVEL%", p.getString(DataType.SKILL_LEVEL))
+                    .addPlaceholder("%ELO%", oldValue)
                     .sendMessage(sender);
         }
     }
 
     private void showUsage() {
         MessageBuilder.create("cmdHmcUsage", hmc, PREFIX)
-                .addPlaceholderReplace("%VERSION%", hmc.getDescription().getVersion())
-                .addPlaceholderReplace("%SYSTEMVERSION%", hms.getDescription().getVersion())
+                .addPlaceholder("%VERSION%", hmc.getDescription().getVersion())
+                .addPlaceholder("%SYSTEMVERSION%", hms.getDescription().getVersion())
                 .sendMessage(sender);
     }
 }

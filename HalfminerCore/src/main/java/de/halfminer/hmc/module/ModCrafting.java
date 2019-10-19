@@ -70,8 +70,8 @@ public class ModCrafting extends HalfminerModule implements Listener {
             } else {
                 inventory.setResult(null);
                 MessageBuilder.create("modCraftingRemoved", hmc, "Crafting")
-                        .addPlaceholderReplace("%MATERIAL%", Utils.makeStringFriendly(result.getType().toString()))
-                        .addPlaceholderReplace("%AMOUNT%", amount)
+                        .addPlaceholder("%MATERIAL%", Utils.makeStringFriendly(result.getType().toString()))
+                        .addPlaceholder("%AMOUNT%", amount)
                         .sendMessage(e.getWhoClicked());
             }
         }
@@ -128,7 +128,7 @@ public class ModCrafting extends HalfminerModule implements Listener {
 
     private void logInvalidPair(String invalidPair) {
         MessageBuilder.create("modCraftingInvalidLog", hmc)
-                .addPlaceholderReplace("%INVALID%", invalidPair)
+                .addPlaceholder("%INVALID%", invalidPair)
                 .logMessage(Level.WARNING);
     }
 }

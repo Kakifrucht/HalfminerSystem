@@ -46,7 +46,7 @@ public class MessageBuilder {
      * @return MessageBuilder that can send a parsed message
      */
     public static MessageBuilder create(String lang, Plugin plugin, String prefix) {
-        return create(lang, plugin).addPlaceholderReplace("PREFIX", prefix);
+        return create(lang, plugin).addPlaceholder("PREFIX", prefix);
     }
 
     /**
@@ -110,13 +110,13 @@ public class MessageBuilder {
      * @param replaceWith String with what to replace with
      * @return MessageBuilder, same instance
      */
-    public MessageBuilder addPlaceholderReplace(String placeholder, String replaceWith) {
+    public MessageBuilder addPlaceholder(String placeholder, String replaceWith) {
         placeholders.put(placeholder.replaceAll(PLACEHOLDER_CHARACTER + "", "").trim(), replaceWith);
         return this;
     }
 
-    public MessageBuilder addPlaceholderReplace(String placeholder, Object replaceWith) {
-        addPlaceholderReplace(placeholder, String.valueOf(replaceWith));
+    public MessageBuilder addPlaceholder(String placeholder, Object replaceWith) {
+        addPlaceholder(placeholder, String.valueOf(replaceWith));
         return this;
     }
 

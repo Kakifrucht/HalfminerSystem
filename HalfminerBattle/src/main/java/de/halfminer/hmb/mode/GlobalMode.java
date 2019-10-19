@@ -101,7 +101,7 @@ public class GlobalMode extends AbstractMode {
                         }
                         if (pm.isInBattle(type, toRestore)) {
                             MessageBuilder.create("adminOpenInventoryRestoredError", hmb)
-                                    .addPlaceholderReplace("%PLAYER%", toRestore.getName())
+                                    .addPlaceholder("%PLAYER%", toRestore.getName())
                                     .sendMessage(sender);
                             return true;
                         }
@@ -118,7 +118,7 @@ public class GlobalMode extends AbstractMode {
                     if (toRestore != null) {
                         toRestore.getInventory().setContents(contents);
                         MessageBuilder.create("adminOpenInventoryRestored", hmb)
-                                .addPlaceholderReplace("%PLAYER%", toRestore.getName())
+                                .addPlaceholder("%PLAYER%", toRestore.getName())
                                 .sendMessage(sender);
                     }
 
@@ -228,15 +228,15 @@ public class GlobalMode extends AbstractMode {
 
     private void sendUsageInformation(CommandSender sendTo) {
         MessageBuilder.create("adminCommandUsage", hmb)
-                .addPlaceholderReplace("%VERSION%", hmb.getDescription().getVersion())
-                .addPlaceholderReplace("%SYSTEMVERSION%", hms.getDescription().getVersion())
+                .addPlaceholder("%VERSION%", hmb.getDescription().getVersion())
+                .addPlaceholder("%SYSTEMVERSION%", hms.getDescription().getVersion())
                 .sendMessage(sendTo);
     }
 
     private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName, BattleModeType mode) {
         MessageBuilder.create(messageKey, hmb)
-                .addPlaceholderReplace("%ARENA%", arenaName)
-                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(mode.toString()))
+                .addPlaceholder("%ARENA%", arenaName)
+                .addPlaceholder("%MODE%", Utils.makeStringFriendly(mode.toString()))
                 .sendMessage(sendTo);
     }
 

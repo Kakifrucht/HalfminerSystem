@@ -65,10 +65,10 @@ public class CustomitemCache {
 
             MessageBuilder parameterParse = MessageBuilder.create(keyParamPair.getRight())
                     .setDirectString()
-                    .addPlaceholderReplace("%PLAYER%", owner.getName());
+                    .addPlaceholder("%PLAYER%", owner.getName());
 
             if (additionalPlaceholders != null) {
-                additionalPlaceholders.forEach(parameterParse::addPlaceholderReplace);
+                additionalPlaceholders.forEach(parameterParse::addPlaceholder);
             }
             // get the actual parameter and replace player placeholder
             String parameter = parameterParse.returnMessage();
@@ -155,9 +155,9 @@ public class CustomitemCache {
             throw new ItemCacheException(notGiven);
         } else {
             MessageBuilder.create("cacheCustomitemCacheLogSuccess")
-                    .addPlaceholderReplace("%PLAYER%", giveTo.getName())
-                    .addPlaceholderReplace("%AMOUNT%", amount)
-                    .addPlaceholderReplace("%ITEMNAME%", itemKey)
+                    .addPlaceholder("%PLAYER%", giveTo.getName())
+                    .addPlaceholder("%AMOUNT%", amount)
+                    .addPlaceholder("%ITEMNAME%", itemKey)
                     .logMessage(Level.INFO);
         }
     }
@@ -172,14 +172,14 @@ public class CustomitemCache {
 
     private void logInvalidKey(String key) {
         MessageBuilder.create("cacheCustomitemCacheInvalidKey")
-                .addPlaceholderReplace("%KEY%", key)
+                .addPlaceholder("%KEY%", key)
                 .logMessage(Level.WARNING);
     }
 
     private void logInvalidParameter(String key, String param) {
         MessageBuilder.create("cacheCustomitemCacheInvalidParameter")
-                .addPlaceholderReplace("%KEY%", key)
-                .addPlaceholderReplace("%PARAMETER%", param)
+                .addPlaceholder("%KEY%", key)
+                .addPlaceholder("%PARAMETER%", param)
                 .logMessage(Level.WARNING);
     }
 }

@@ -186,7 +186,7 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
 
             if (cacheFile.exists()) {
                 MessageBuilder.create("hanStorageCacheCreate")
-                        .addPlaceholderReplace("%FILENAME%", cacheFile.getName())
+                        .addPlaceholder("%FILENAME%", cacheFile.getName())
                         .logMessage(Level.INFO);
             } else {
                 MessageBuilder.create("hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);

@@ -214,9 +214,9 @@ public abstract class AbstractArena extends BattleClass implements Arena {
     protected String getCustomLore(Player player) {
         return MessageBuilder.create("modeGlobalKitArenaCustomLore", hmb)
                 .togglePrefix()
-                .addPlaceholderReplace("%ARENA%", getName())
-                .addPlaceholderReplace("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
-                .addPlaceholderReplace("%PLAYER%", player.getName()).returnMessage();
+                .addPlaceholder("%ARENA%", getName())
+                .addPlaceholder("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))
+                .addPlaceholder("%PLAYER%", player.getName()).returnMessage();
     }
 
     protected String getCustomLoreID() {

@@ -136,8 +136,8 @@ public class FFAMode extends AbstractMode {
             }
             MessageBuilder.create("modeFFAListPlayers", hmb)
                     .togglePrefix()
-                    .addPlaceholderReplace("%ARENA%", arena.getName())
-                    .addPlaceholderReplace("%PLAYERS%", playerString.toString())
+                    .addPlaceholder("%ARENA%", arena.getName())
+                    .addPlaceholder("%PLAYERS%", playerString.toString())
                     .sendMessage(sendTo);
         }
     }
@@ -172,8 +172,8 @@ public class FFAMode extends AbstractMode {
             arena.removePlayer(p);
             if (!isDead) p.setHealth(0.0d);
             MessageBuilder.create("modeFFALoggedOutLog", hmb)
-                    .addPlaceholderReplace("%PLAYER%", p.getName())
-                    .addPlaceholderReplace("%ARENA%", arena.getName())
+                    .addPlaceholder("%PLAYER%", p.getName())
+                    .addPlaceholder("%ARENA%", arena.getName())
                     .logMessage(Level.INFO);
         }
     }
@@ -195,7 +195,7 @@ public class FFAMode extends AbstractMode {
             e.setCancelled(attackerProtected || victimProtected);
             if (victimProtected) {
                 MessageBuilder.create("modeFFASpawnProtected", hmb)
-                        .addPlaceholderReplace("%PLAYER%", p.getName())
+                        .addPlaceholder("%PLAYER%", p.getName())
                         .sendMessage(attacker);
             }
         }

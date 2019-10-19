@@ -44,7 +44,7 @@ public class Cmdteleport extends LandCommand {
                     teleportLand.removeTeleport();
                 } else {
                     MessageBuilder.create("cmdTeleportBuyAlreadyExists" + (teleportLand.isOwner(player) ? "Owned" : ""), hml)
-                            .addPlaceholderReplace("%TELEPORT%", teleportLand.getTeleportName())
+                            .addPlaceholder("%TELEPORT%", teleportLand.getTeleportName())
                             .sendMessage(player);
                     return;
                 }
@@ -71,8 +71,8 @@ public class Cmdteleport extends LandCommand {
                         || !CharMatcher.ascii().matchesAllOf(teleportName)) {
 
                     MessageBuilder.create("cmdTeleportBuyNameFormat", hml)
-                            .addPlaceholderReplace("%MINLENGTH%", minLength)
-                            .addPlaceholderReplace("%MAXLENGTH%", maxLength)
+                            .addPlaceholder("%MINLENGTH%", minLength)
+                            .addPlaceholder("%MAXLENGTH%", maxLength)
                             .sendMessage(player);
                     return;
                 }
@@ -100,7 +100,7 @@ public class Cmdteleport extends LandCommand {
 
                 if (hasTeleports >= maximumTeleports) {
                     MessageBuilder.create("cmdTeleportBuyLimitReached", hml)
-                            .addPlaceholderReplace("%LIMIT%", maximumTeleports)
+                            .addPlaceholder("%LIMIT%", maximumTeleports)
                             .sendMessage(player);
                     return;
                 }
@@ -112,8 +112,8 @@ public class Cmdteleport extends LandCommand {
                 board.landWasUpdated(land);
 
                 MessageBuilder.create("cmdTeleportBuySuccess", hml)
-                        .addPlaceholderReplace("%TELEPORT%", teleportName)
-                        .addPlaceholderReplace("%COST%", cost)
+                        .addPlaceholder("%TELEPORT%", teleportName)
+                        .addPlaceholder("%COST%", cost)
                         .sendMessage(player);
 
                 hml.getLogger().info(player.getName() + " bought teleport "
@@ -150,8 +150,8 @@ public class Cmdteleport extends LandCommand {
                 }
 
                 MessageBuilder.create("cmdTeleportSetSuccess", hml)
-                        .addPlaceholderReplace("%TELEPORT%", teleportName)
-                        .addPlaceholderReplace("%COST%", cost)
+                        .addPlaceholder("%TELEPORT%", teleportName)
+                        .addPlaceholder("%COST%", cost)
                         .sendMessage(player);
 
                 hml.getLogger().info(player.getName() + " set teleport "
@@ -167,7 +167,7 @@ public class Cmdteleport extends LandCommand {
                 board.landWasUpdated(teleportLand);
 
                 MessageBuilder.create("cmdTeleportDeleteSuccess", hml)
-                        .addPlaceholderReplace("%TELEPORT%", teleportName)
+                        .addPlaceholder("%TELEPORT%", teleportName)
                         .sendMessage(player);
 
                 hml.getLogger().info(player.getName() + " deleted teleport " + teleportName);
@@ -198,7 +198,7 @@ public class Cmdteleport extends LandCommand {
 
             landPlayer.setShownTeleport(setTo);
             MessageBuilder.create(localeKey, hml)
-                    .addPlaceholderReplace("%TELEPORT%", teleportName)
+                    .addPlaceholder("%TELEPORT%", teleportName)
                     .sendMessage(player);
 
         } else {
@@ -209,7 +209,7 @@ public class Cmdteleport extends LandCommand {
     private boolean takeMoney(double cost) {
         if (hms.getHooksHandler().getMoney(player) < cost) {
             MessageBuilder.create("notEnoughMoney", hml)
-                    .addPlaceholderReplace("%COST%", cost)
+                    .addPlaceholder("%COST%", cost)
                     .sendMessage(player);
             return false;
         }
@@ -229,7 +229,7 @@ public class Cmdteleport extends LandCommand {
 
     private void sendLandAlreadyHasTeleportMessage(Land land) {
         MessageBuilder.create("cmdTeleportLandAlreadyHasTeleport", hml)
-                .addPlaceholderReplace("%TELEPORT%", land.getTeleportName())
+                .addPlaceholder("%TELEPORT%", land.getTeleportName())
                 .sendMessage(player);
     }
 

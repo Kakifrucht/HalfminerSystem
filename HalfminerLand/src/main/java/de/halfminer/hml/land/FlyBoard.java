@@ -162,8 +162,8 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
                     + " (" + flyDurationSeconds + " seconds, $" + flyCost + ")");
 
             MessageBuilder.create("flyBoardRenewed", hml)
-                    .addPlaceholderReplace("%TIME%", flyDurationSeconds)
-                    .addPlaceholderReplace("%COST%", flyCost)
+                    .addPlaceholder("%TIME%", flyDurationSeconds)
+                    .addPlaceholder("%COST%", flyCost)
                     .sendMessage(player);
 
             return true;

@@ -84,8 +84,8 @@ public class ActionProbabilityContainer {
 
     private void logError(String type, int lineNumber) {
         MessageBuilder.create("cacheActionProbabilityContainerError", plugin)
-                .addPlaceholderReplace("%TYPE%", type)
-                .addPlaceholderReplace("%LINE%", lineNumber + 1)
+                .addPlaceholder("%TYPE%", type)
+                .addPlaceholder("%LINE%", lineNumber + 1)
                 .logMessage(Level.WARNING);
     }
 }

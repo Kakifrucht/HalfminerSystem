@@ -125,7 +125,7 @@ public final class Utils {
                 toReturn.add(Material.matchMaterial(material));
             } catch (IllegalArgumentException ignored) {
                 MessageBuilder.create("utilInvalidMaterial")
-                        .addPlaceholderReplace("%MATERIAL%", material)
+                        .addPlaceholder("%MATERIAL%", material)
                         .logMessage(Level.WARNING);
             }
         }

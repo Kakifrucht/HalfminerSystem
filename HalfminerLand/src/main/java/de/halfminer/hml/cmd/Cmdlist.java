@@ -61,7 +61,7 @@ public class Cmdlist extends LandCommand implements MenuCreator {
 
         if (ownedLands.isEmpty()) {
             MessageBuilder.create("noLandOwned" + (isLookup ? "Player" : ""), hml)
-                    .addPlaceholderReplace("%PLAYER%", name)
+                    .addPlaceholder("%PLAYER%", name)
                     .sendMessage(sender);
             return;
         }
@@ -107,10 +107,10 @@ public class Cmdlist extends LandCommand implements MenuCreator {
                 String teleportString = ownedLand.hasTeleportLocation() ? ownedLand.getTeleportName() : "";
                 MessageBuilder localeBuilder = MessageBuilder.create(localeKey, hml)
                         .togglePrefix()
-                        .addPlaceholderReplace("%WORLD%", ownedLand.getWorld().getName())
-                        .addPlaceholderReplace("%X%", ownedLand.getXLandCorner())
-                        .addPlaceholderReplace("%Z%", ownedLand.getZLandCorner())
-                        .addPlaceholderReplace("%TELEPORT%", teleportString);
+                        .addPlaceholder("%WORLD%", ownedLand.getWorld().getName())
+                        .addPlaceholder("%X%", ownedLand.getXLandCorner())
+                        .addPlaceholder("%Z%", ownedLand.getZLandCorner())
+                        .addPlaceholder("%TELEPORT%", teleportString);
 
                 Utils.applyLocaleToItemStack(landItem, localeBuilder);
                 menuItems[currentMenuIndex++] = landItem;
@@ -118,7 +118,7 @@ public class Cmdlist extends LandCommand implements MenuCreator {
 
             String menuTitle = MessageBuilder.create("cmdListMenuTitle" + (isAbandoned ? "Abandoned" : ""), hml)
                     .togglePrefix()
-                    .addPlaceholderReplace("%PLAYER%", name)
+                    .addPlaceholder("%PLAYER%", name)
                     .returnMessage();
 
             // teleport to land on inventory click, only with permission
@@ -153,12 +153,12 @@ public class Cmdlist extends LandCommand implements MenuCreator {
 
                 MessageBuilder toAppendBuilder = MessageBuilder
                         .create("cmdListAsTextFormat" + (land.hasTeleportLocation() ? "Teleport" : ""), hml)
-                        .addPlaceholderReplace("%WORLD%", land.getWorld().getName())
-                        .addPlaceholderReplace("%X%", land.getXLandCorner())
-                        .addPlaceholderReplace("%Z%", land.getZLandCorner());
+                        .addPlaceholder("%WORLD%", land.getWorld().getName())
+                        .addPlaceholder("%X%", land.getXLandCorner())
+                        .addPlaceholder("%Z%", land.getZLandCorner());
 
                 if (land.hasTeleportLocation()) {
-                    toAppendBuilder.addPlaceholderReplace("%TELEPORT%", land.getTeleportName());
+                    toAppendBuilder.addPlaceholder("%TELEPORT%", land.getTeleportName());
                 }
 
                 landListStringBuilder
@@ -167,9 +167,9 @@ public class Cmdlist extends LandCommand implements MenuCreator {
             }
 
             MessageBuilder.create("cmdListAsText", hml)
-                    .addPlaceholderReplace("%PLAYER%", name)
-                    .addPlaceholderReplace("%LANDAMOUNT%", sortedLandList.size())
-                    .addPlaceholderReplace("%LANDLIST%", landListStringBuilder.toString().trim())
+                    .addPlaceholder("%PLAYER%", name)
+                    .addPlaceholder("%LANDAMOUNT%", sortedLandList.size())
+                    .addPlaceholder("%LANDLIST%", landListStringBuilder.toString().trim())
                     .sendMessage(sender);
         }
     }

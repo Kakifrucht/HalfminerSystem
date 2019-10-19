@@ -116,8 +116,8 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         if (blockTime >= 0) {
             if (messageKey.length() > 0)
                 MessageBuilder.create(messageKey, hmc, "PvP")
-                        .addPlaceholderReplace("%PLAYER%", toCheck.getName())
-                        .addPlaceholderReplace("%TIME%", blockTime)
+                        .addPlaceholder("%PLAYER%", toCheck.getName())
+                        .addPlaceholder("%TIME%", blockTime)
                         .sendMessage(toMessage);
             return true;
         }
@@ -145,7 +145,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
             String command = e.getMessage().split(" ")[0].toLowerCase();
             if (!exemptCommands.contains(command.substring(1, command.length()))) {
                 MessageBuilder.create("modAntiKillfarmingNoCommand", hmc, "PvP")
-                        .addPlaceholderReplace("%TIME%", time)
+                        .addPlaceholder("%TIME%", time)
                         .sendMessage(e.getPlayer());
                 e.setCancelled(true);
             }
@@ -210,18 +210,18 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         killerCon.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
 
         MessageBuilder.create("modAntiKillfarmingBlockedBroadcast", hmc, "PvP")
-                .addPlaceholderReplace("%KILLER%", killer.getName())
-                .addPlaceholderReplace("%VICTIM%", victim.getName())
+                .addPlaceholder("%KILLER%", killer.getName())
+                .addPlaceholder("%VICTIM%", victim.getName())
                 .broadcastMessage(true);
 
         MessageBuilder.create("modAntiKillfarmingBlockedKiller", hmc, "PvP")
-                .addPlaceholderReplace("%TIME%", blockTimeKiller / 60)
-                .addPlaceholderReplace("%PLAYER%", victim.getName())
+                .addPlaceholder("%TIME%", blockTimeKiller / 60)
+                .addPlaceholder("%PLAYER%", victim.getName())
                 .sendMessage(killer);
 
         MessageBuilder.create("modAntiKillfarmingBlockedVictim", hmc, "PvP")
-                .addPlaceholderReplace("%TIME%", blockTimeVictim / 60)
-                .addPlaceholderReplace("%PLAYER%", killer.getName())
+                .addPlaceholder("%TIME%", blockTimeVictim / 60)
+                .addPlaceholder("%PLAYER%", killer.getName())
                 .sendMessage(victim);
     }
 

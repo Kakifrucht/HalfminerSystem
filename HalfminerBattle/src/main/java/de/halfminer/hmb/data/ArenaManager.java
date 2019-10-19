@@ -129,8 +129,8 @@ public class ArenaManager {
         }
 
         MessageBuilder.create("modeGlobalArenaLoadLog", hmb)
-                .addPlaceholderReplace("%ARENAS%", totalArenasLoaded)
-                .addPlaceholderReplace("%KITS%", totalKitsLoaded)
+                .addPlaceholder("%ARENAS%", totalArenasLoaded)
+                .addPlaceholder("%KITS%", totalKitsLoaded)
                 .logMessage(Level.INFO);
     }
 
@@ -231,7 +231,7 @@ public class ArenaManager {
         for (Arena freeArena : freeArenas) {
             String tooltipOnHover = MessageBuilder.create("modeGlobalChooseArenaHover", hmb)
                     .togglePrefix()
-                    .addPlaceholderReplace("%ARENA%", freeArena.getName())
+                    .addPlaceholder("%ARENA%", freeArena.getName())
                     .returnMessage();
 
             builder.append(freeArena.getName())
@@ -242,7 +242,7 @@ public class ArenaManager {
             if (addPlayercounts) {
                 String playerCount = " " + MessageBuilder.create("modeGlobalChoosePlayerCount", hmb)
                         .togglePrefix()
-                        .addPlaceholderReplace("%AMOUNT%", freeArena.getPlayerCount())
+                        .addPlaceholder("%AMOUNT%", freeArena.getPlayerCount())
                         .returnMessage();
                 builder.append(playerCount).reset().color(ChatColor.GRAY);
             }

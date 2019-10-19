@@ -137,10 +137,10 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
         format = MessageBuilder.create(format, hmc)
                 .setDirectString()
-                .addPlaceholderReplace("%PLAYER%", "%1$s")
-                .addPlaceholderReplace("%CPREFIX%", prefix)
-                .addPlaceholderReplace("%SUFFIX%", suffix)
-                .addPlaceholderReplace("%MESSAGE%", "%2$s")
+                .addPlaceholder("%PLAYER%", "%1$s")
+                .addPlaceholder("%CPREFIX%", prefix)
+                .addPlaceholder("%SUFFIX%", suffix)
+                .addPlaceholder("%MESSAGE%", "%2$s")
                 .returnMessage();
 
         e.setFormat(format);
@@ -165,12 +165,12 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
             if (hookHandler.isAfk(wasMentioned)) {
                 titleHandler.sendActionBar(p, MessageBuilder.create("modChatManIsAfk", hmc)
-                                .addPlaceholderReplace("%PLAYER%", wasMentioned.getName())
+                                .addPlaceholder("%PLAYER%", wasMentioned.getName())
                                 .returnMessage());
             }
 
             titleHandler.sendActionBar(wasMentioned, MessageBuilder.create("modChatManMentioned", hmc)
-                            .addPlaceholderReplace("%PLAYER%", p.getName())
+                            .addPlaceholder("%PLAYER%", p.getName())
                             .returnMessage());
 
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.2f, 1.8f);

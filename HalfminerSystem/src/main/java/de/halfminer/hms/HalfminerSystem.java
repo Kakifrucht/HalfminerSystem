@@ -49,7 +49,7 @@ public class HalfminerSystem extends JavaPlugin {
             return;
         }
 
-        manager.reloadOcurred(this);
+        manager.reload(this);
         getLogger().info("HalfminerSystem enabled");
     }
 
@@ -70,16 +70,16 @@ public class HalfminerSystem extends JavaPlugin {
                     continue;
                 }
 
-                manager.reloadOcurred(plugin);
+                manager.reload(plugin);
                 MessageBuilder.create("pluginReloaded", "HMS")
-                        .addPlaceholderReplace("%PLUGINNAME%", plugin.getName())
+                        .addPlaceholder("%PLUGINNAME%", plugin.getName())
                         .sendMessage(sender);
             }
             return true;
         }
 
         MessageBuilder.create("cmdHmsSystem", "HMS")
-                .addPlaceholderReplace("%VERSION%", getDescription().getVersion())
+                .addPlaceholder("%VERSION%", getDescription().getVersion())
                 .sendMessage(sender);
 
         Set<Plugin> managedPlugins = manager.getManagedPlugins();
@@ -95,8 +95,8 @@ public class HalfminerSystem extends JavaPlugin {
                 }
 
                 MessageBuilder.create("cmdHmsHooked")
-                        .addPlaceholderReplace("%NAME%", pluginName)
-                        .addPlaceholderReplace("%VERSION%", plugin.getDescription().getVersion())
+                        .addPlaceholder("%NAME%", pluginName)
+                        .addPlaceholder("%VERSION%", plugin.getDescription().getVersion())
                         .sendMessage(sender);
             }
 

@@ -64,8 +64,8 @@ public class StorageListener extends HalfminerClass implements Disableable, List
             }
 
             MessageBuilder.create("hanStorageNameChange", "Name")
-                    .addPlaceholderReplace("%OLDNAME%", previousName)
-                    .addPlaceholderReplace("%NAME%", player.getName())
+                    .addPlaceholder("%OLDNAME%", previousName)
+                    .addPlaceholder("%NAME%", player.getName())
                     .broadcastMessage(true);
         }
 

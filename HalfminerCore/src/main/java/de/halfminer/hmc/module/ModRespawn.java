@@ -72,7 +72,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             // send different message if player already has online time in his stats (if played longer than 15 minutes)
             boolean hasActuallyPlayedBefore = storage.getPlayer(joined).getInt(DataType.TIME_ONLINE) > 15 * 60;
             message = MessageBuilder.create(hasActuallyPlayedBefore ? "modRespawnFirstJoinHasPlayed" : "modRespawnFirstJoin", hmc)
-                    .addPlaceholderReplace("%PLAYER%", joined.getName())
+                    .addPlaceholder("%PLAYER%", joined.getName())
                     .returnMessage();
 
             scheduler.runTaskLater(hmc, () -> {
@@ -84,7 +84,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                     server.dispatchCommand(server.getConsoleSender(),
                             MessageBuilder.create(firstSpawnCommand, hmc)
                                     .setDirectString()
-                                    .addPlaceholderReplace("%PLAYER%", joined.getName())
+                                    .addPlaceholder("%PLAYER%", joined.getName())
                                     .returnMessage());
                 }
             }, 1L);
@@ -206,7 +206,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             action = new CustomAction(config.getString("respawn.customActionWelcomeBonus", "nothing"), coreStorage);
         } catch (CachingException e) {
             MessageBuilder.create("modRespawnWelcomeBonusActionError", hmc)
-                    .addPlaceholderReplace("%REASON%", e.getCleanReason())
+                    .addPlaceholder("%REASON%", e.getCleanReason())
                     .logMessage(Level.WARNING);
             try {
                 action = new CustomAction("nothing", coreStorage);

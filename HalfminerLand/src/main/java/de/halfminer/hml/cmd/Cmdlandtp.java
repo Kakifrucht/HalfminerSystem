@@ -52,7 +52,7 @@ public class Cmdlandtp extends LandCommand {
                 if (teleportTo.isAbandoned()) {
                     boolean isStealingEnabled = hml.getConfig().getBoolean("teleport.allowStealingAbandoned", false);
                     MessageBuilder.create("cmdLandtpIsAbandoned" + (isStealingEnabled ? "Steal" : ""), hml)
-                            .addPlaceholderReplace("%NAME%", teleportName)
+                            .addPlaceholder("%NAME%", teleportName)
                             .sendMessage(player);
                 } else {
 
@@ -233,8 +233,8 @@ public class Cmdlandtp extends LandCommand {
     private MessageBuilder getLocaleBuilder(String localeKey, String ownerName, String teleportName) {
         return MessageBuilder.create(localeKey, hml)
                 .togglePrefix()
-                .addPlaceholderReplace("%PLAYER%", ownerName)
-                .addPlaceholderReplace("%TELEPORT%", teleportName)
-                .addPlaceholderReplace("%TELEPORTFRIENDLY%", Utils.makeStringFriendly(teleportName));
+                .addPlaceholder("%PLAYER%", ownerName)
+                .addPlaceholder("%TELEPORT%", teleportName)
+                .addPlaceholder("%TELEPORTFRIENDLY%", Utils.makeStringFriendly(teleportName));
     }
 }

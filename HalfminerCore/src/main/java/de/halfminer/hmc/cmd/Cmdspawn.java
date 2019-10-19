@@ -43,7 +43,7 @@ public class Cmdspawn extends HalfminerCommand {
 
                     teleport(toTeleport, true);
                     MessageBuilder.create("cmdSpawnOthers", hmc, "Spawn")
-                            .addPlaceholderReplace("%PLAYER%", toTeleport.getName())
+                            .addPlaceholder("%PLAYER%", toTeleport.getName())
                             .sendMessage(sender);
                 }
             } else {
@@ -52,7 +52,7 @@ public class Cmdspawn extends HalfminerCommand {
                     OfflinePlayer p = storage.getPlayer(args[0]).getBase();
                     MessageBuilder.create(respawn.teleportToSpawnOnJoin(p) ?
                             "cmdSpawnOthersOfflineAdd" : "cmdSpawnOthersOfflineRemove", hmc, "Spawn")
-                            .addPlaceholderReplace("%PLAYER%", p.getName())
+                            .addPlaceholder("%PLAYER%", p.getName())
                             .sendMessage(sender);
                 } catch (PlayerNotFoundException e) {
                     e.sendNotFoundMessage(sender, "Spawn");

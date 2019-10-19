@@ -118,22 +118,22 @@ public class HalfminerManager implements Listener {
         pluginToDisable.getLogger().info(pluginToDisable.getName() + " disabled");
     }
 
-    public void reloadOcurred(Plugin pluginToReload) {
+    public void reload(Plugin plugin) {
 
-        managedPlugins.add(pluginToReload);
+        managedPlugins.add(plugin);
 
         // Save default config.yml if not yet done
-        pluginToReload.saveDefaultConfig();
+        plugin.saveDefaultConfig();
         // Make sure that if the file changed, it is reread
-        pluginToReload.reloadConfig();
+        plugin.reloadConfig();
         // If parameters are missing, add them (reload again afterwards)
-        pluginToReload.getConfig().options().copyDefaults(true);
+        plugin.getConfig().options().copyDefaults(true);
         // Save config.yml to disk
-        pluginToReload.saveConfig();
-        pluginToReload.reloadConfig();
+        plugin.saveConfig();
+        plugin.reloadConfig();
 
-        if (toReload.containsKey(pluginToReload)) {
-            List<Reloadable> toReloadCopy = new ArrayList<>(toReload.get(pluginToReload));
+        if (toReload.containsKey(plugin)) {
+            List<Reloadable> toReloadCopy = new ArrayList<>(toReload.get(plugin));
             toReloadCopy.forEach(Reloadable::loadConfig);
         }
     }

@@ -76,7 +76,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             StringArgumentSeparator separator = new StringArgumentSeparator(groupString, ',');
             if (!separator.meetsLength(2)) {
                 MessageBuilder.create("modSellMapLogGroupInvalid", hmc)
-                        .addPlaceholderReplace("%GROUP%", groupString)
+                        .addPlaceholder("%GROUP%", groupString)
                         .logMessage(Level.WARNING);
                 continue;
             }
@@ -119,7 +119,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
                 StringArgumentSeparator separator = new StringArgumentSeparator(sellable, ',');
                 if (!separator.meetsLength(4)) {
                     MessageBuilder.create("modSellMapLogSellableInvalidFormat", hmc)
-                            .addPlaceholderReplace("%SELLABLE%", sellable)
+                            .addPlaceholder("%SELLABLE%", sellable)
                             .logMessage(Level.WARNING);
                     continue;
                 }
@@ -143,7 +143,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
                     }
                 } else {
                     MessageBuilder.create("modSellMapLogMaterialNotExists", hmc)
-                            .addPlaceholderReplace("%MATERIAL%", separator.getArgument(1))
+                            .addPlaceholder("%MATERIAL%", separator.getArgument(1))
                             .logMessage(Level.WARNING);
                 }
             }
@@ -347,8 +347,8 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
             sellableString.setLength(sellableString.length() - 2);
             MessageBuilder.create("modSellCurrentCycleLog", hmc)
-                    .addPlaceholderReplace("%TIMELEFT%", currentCycle.getSecondsTillExpiry() / 60)
-                    .addPlaceholderReplace("%SELLABLES%", sellableString.toString())
+                    .addPlaceholder("%TIMELEFT%", currentCycle.getSecondsTillExpiry() / 60)
+                    .addPlaceholder("%SELLABLES%", sellableString.toString())
                     .logMessage(Level.INFO);
         }
     }
