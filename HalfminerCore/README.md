@@ -257,6 +257,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
   - /lag
     - Information if player or server lags
     - View other players latency/ping
+      - Use permission *hmc.lag.protected* to prevent other players to view your latency
   - /newtp
     - Teleport to random location
       - Set min/max x/z values

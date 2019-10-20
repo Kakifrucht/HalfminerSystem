@@ -12,9 +12,12 @@ import org.bukkit.entity.Player;
 /**
  * - Information if player or server lags
  * - View other players latency/ping
+ *   - Use permission 'hmc.lag.protected' to prevent other players to view your latency
  */
 @SuppressWarnings("unused")
 public class Cmdlag extends HalfminerCommand {
+
+    private static final String PREFIX = "Lag";
 
     @Override
     public void execute() {
@@ -23,7 +26,7 @@ public class Cmdlag extends HalfminerCommand {
         if (args.length > 0) {
 
             if (!sender.hasPermission("hmc.lag.others")) {
-                sendNoPermissionMessage("Lag");
+                sendNoPermissionMessage(PREFIX);
                 return;
             }
 
@@ -31,7 +34,12 @@ public class Cmdlag extends HalfminerCommand {
             toLookup = server.getPlayer(args[0]);
 
             if (toLookup == null) {
-                MessageBuilder.create("playerNotOnline", "Lag").sendMessage(sender);
+                MessageBuilder.create("playerNotOnline", PREFIX).sendMessage(sender);
+                return;
+            }
+
+            if (toLookup.hasPermission("hmc.lag.protected") && !sender.hasPermission("hmc.lag.protected")) {
+                MessageBuilder.create("cmdLagProtected", hmc, PREFIX).sendMessage(sender);
                 return;
             }
         }
@@ -54,7 +62,7 @@ public class Cmdlag extends HalfminerCommand {
                 }
             }
 
-            MessageBuilder.create("cmdLagPlayerInfo", hmc, "Lag")
+            MessageBuilder.create("cmdLagPlayerInfo", hmc, PREFIX)
                     .addPlaceholder("%PLAYER%", toLookup.getName())
                     .addPlaceholder("%LATENCY%", pingColored)
                     .sendMessage(sender);
@@ -78,7 +86,7 @@ public class Cmdlag extends HalfminerCommand {
                 serverLagStatus = ServerStatus.UNSTABLE;
             } else tpsColored = ChatColor.GREEN + tpsColored;
 
-            MessageBuilder.create("cmdLagServerInfo", hmc, "Lag")
+            MessageBuilder.create("cmdLagServerInfo", hmc, PREFIX)
                     .addPlaceholder("%TPS%", tpsColored)
                     .sendMessage(sender);
         }
@@ -90,7 +98,7 @@ public class Cmdlag extends HalfminerCommand {
             else if (serverLagStatus == ServerStatus.UNSTABLE) messageKey = "cmdLagServerUnstable";
             else if (serverLagStatus == ServerStatus.LAGGING) messageKey = "cmdLagServerLag";
             else messageKey = "cmdLagPlayerLag";
-            MessageBuilder.create(messageKey, hmc, "Lag").sendMessage(sender);
+            MessageBuilder.create(messageKey, hmc, PREFIX).sendMessage(sender);
         }
     }
 

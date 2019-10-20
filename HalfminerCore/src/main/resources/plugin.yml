@@ -99,6 +99,7 @@ permissions:
       hmc.home: true
       hmc.lag: true
       hmc.lag.others: true
+      hmc.lag.protected: true
       hmc.lag.notify: true
       hmc.moderator: true
       hmc.newtp: true
@@ -239,6 +240,8 @@ permissions:
     description: Access to lag command
   hmc.lag.others:
     description: View the latency of other players
+  hmc.lag.protected:
+    description: Players with this permission are exempt from ping lookup, if hmc.lag.others permission is granted
   hmc.lag.notify:
     description: Sends lag notifications to admin
   hmc.moderator:

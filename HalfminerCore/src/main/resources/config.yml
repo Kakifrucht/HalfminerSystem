@@ -370,6 +370,7 @@ localization:
   cmdHomeDeniedLog: 'Home: %PLAYER% wurde /home verweigert'
   cmdLagPlayerInfo: '&7Latenz von %PLAYER%: %LATENCY% &7ms (niedriger ist besser)'
   cmdLagPlayerLag: '&cDeine Verbindung ist instabil &7(Server ist &astabil&7)'
+  cmdLagProtected: '&cDu kannst diesen Spieler nicht einsehen'
   cmdLagServerInfo: '&7Server Zustand: %TPS%&7/20.0 TPS'
   cmdLagServerLag: '&cDer Server ist sehr instabil, das Team arbeitet daran'
   cmdLagServerUnstable: '&eDer Server ist etwas instabil, das Team arbeitet daran'
