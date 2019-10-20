@@ -1,5 +1,6 @@
 package de.halfminer.hmh.data;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -33,6 +34,11 @@ public class NameHaroPlayer extends YAMLHaroPlayer {
 
     @Override
     public Player getBase() {
+        return null;
+    }
+
+    @Override
+    public OfflinePlayer getOfflinePlayer() {
         return null;
     }
 
@@ -79,5 +85,20 @@ public class NameHaroPlayer extends YAMLHaroPlayer {
     @Override
     public void setOffline() {
         throw new UnsupportedOperationException("Cannot set online state of NameHaroPlayer instance");
+    }
+
+    @Override
+    public void setHealth(double currentHealth, double maxHealth) {
+        throw new UnsupportedOperationException("Cannot set the health of NameHaroPlayer instance");
+    }
+
+    @Override
+    public double getCurrentHealth() {
+        return 0d;
+    }
+
+    @Override
+    public double getMaxHealth() {
+        return 0d;
     }
 }

@@ -1,5 +1,6 @@
 package de.halfminer.hmh;
 
+import de.halfminer.hmh.data.HaroConfig;
 import de.halfminer.hmh.data.HaroPlayer;
 import de.halfminer.hmh.data.HaroStorage;
 import de.halfminer.hmh.tasks.TitleUpdateTask;
@@ -13,7 +14,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.logging.Level;
 
@@ -71,10 +75,8 @@ public class HaroListeners extends HaroClass implements Listener {
         HalfminerPlayer hPlayer = hms.getStorageHandler().getPlayer(player);
         HaroPlayer haroPlayer = haroStorage.getHaroPlayer(hPlayer);
 
-        if (haroStorage.isGameRunning() && !player.hasPermission("hmh.admin")) {
-            if (!haroPlayer.isInitialized()) {
-                haroStorage.initializePlayer(player);
-            }
+        if (isInGame(player)) {
+            hmh.getPlayerInitializer().initializePlayer(player);
 
             MessageBuilder.create("listenerJoinedInfo", hmh)
                     .addPlaceholder("TIMELEFT", haroPlayer.getTimeLeftSeconds() / 60)
@@ -87,17 +89,24 @@ public class HaroListeners extends HaroClass implements Listener {
         }
 
         titleUpdateTask.updateTitles();
-        hmh.getHaroStorage().playerJoined(haroPlayer);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        HaroPlayer haroPlayer = haroStorage.getHaroPlayer(e.getPlayer());
+        Player player = e.getPlayer();
+        HaroPlayer haroPlayer = haroStorage.getHaroPlayer(player);
         haroPlayer.setOffline();
 
-        // hide quit message when kicking after dying, as we already broadcast a message in onDeath
-        if (haroStorage.isGameRunning() && haroPlayer.isEliminated()) {
-            e.setQuitMessage("");
+        if (isInGame(player)) {
+
+            HealthManager healthManager = hmh.getHealthManager();
+            healthManager.storeCurrentHealth(player);
+            healthManager.resetPlayerHealth(player);
+
+            // hide quit message when kicking after dying, as we already broadcast a message in onDeath
+            if (haroPlayer.isEliminated()) {
+                e.setQuitMessage("");
+            }
         }
 
         titleUpdateTask.updateTitles();
@@ -107,33 +116,64 @@ public class HaroListeners extends HaroClass implements Listener {
     public void onDeath(PlayerDeathEvent e) {
 
         Player player = e.getEntity();
-        if (haroStorage.isGameRunning() && !player.hasPermission("hmh.admin")) {
+        if (isInGame(player)) {
 
             HaroPlayer haroPlayer = haroStorage.getHaroPlayer(player);
-            haroPlayer.setEliminated(true);
+            HaroConfig haroConfig = haroStorage.getHaroConfig();
+            if (haroConfig.isHealthEnabled()) {
 
-            // kick on next tick, also moves the messages below the default death message in chat order
-            scheduler.runTaskLater(hmh, () -> {
-                String kickMessage = MessageBuilder.returnMessage("listenerDeathKick", hmh, false);
-                player.kickPlayer(kickMessage);
+                Player killer = player.getKiller();
 
-                MessageBuilder.create("listenerDeathBroadcast", hmh)
-                        .addPlaceholder("PLAYER", player.getName())
-                        .addPlaceholder("COUNTALIVE", haroStorage.getAddedPlayers(true).size())
-                        .broadcastMessage(false);
-
-                if (haroStorage.isGameOver()) {
-                    HaroPlayer winner = haroStorage.getAddedPlayers(true).get(0);
-                    MessageBuilder.create("listenerGameWonBroadcast", hmh)
-                            .addPlaceholder("PLAYER", winner.getName())
-                            .broadcastMessage(true);
-
-                    if (winner.isOnline()) {
-                        MessageBuilder.create("listenerGameWon", hmh).sendMessage(winner.getBase());
+                HealthManager healthManager = hmh.getHealthManager();
+                if (killer != null) {
+                    setEliminatedAndKickPlayer(player, haroPlayer);
+                    if (healthManager.increaseHealth(killer)) {
+                        MessageBuilder.create("listenerHealthIncreased", hmh)
+                                .addPlaceholder("NEWHEARTS", (int) healthManager.getMinecraftMaxHealth(killer) / 2)
+                                .sendMessage(killer);
+                    }
+                } else {
+                    if (healthManager.reduceHealth(player)) {
+                        MessageBuilder.create("listenerHealthReduced", hmh)
+                                .addPlaceholder("NEWHEARTS", (int) healthManager.getMinecraftMaxHealth(player) / 2)
+                                .sendMessage(player);
                     }
                 }
-            }, 1L);
+
+            } else {
+                setEliminatedAndKickPlayer(player, haroPlayer);
+            }
         }
+    }
+
+    private void setEliminatedAndKickPlayer(Player player, HaroPlayer haroPlayer) {
+        haroPlayer.setEliminated(true);
+
+        // kick on next tick, also moves the messages below the default death message in chat order
+        scheduler.runTaskLater(hmh, () -> {
+            String kickMessage = MessageBuilder.returnMessage("listenerDeathKick", hmh, false);
+            player.kickPlayer(kickMessage);
+
+            MessageBuilder.create("listenerDeathBroadcast", hmh)
+                    .addPlaceholder("PLAYER", player.getName())
+                    .addPlaceholder("COUNTALIVE", haroStorage.getAddedPlayers(true).size())
+                    .broadcastMessage(false);
+
+            if (haroStorage.isGameOver()) {
+                HaroPlayer winner = haroStorage.getAddedPlayers(true).get(0);
+                MessageBuilder.create("listenerGameWonBroadcast", hmh)
+                        .addPlaceholder("PLAYER", winner.getName())
+                        .broadcastMessage(true);
+
+                if (winner.isOnline()) {
+                    MessageBuilder.create("listenerGameWon", hmh).sendMessage(winner.getBase());
+                }
+            }
+        }, 1L);
+    }
+
+    private boolean isInGame(Player player) {
+        return haroStorage.isGameRunning() && !player.hasPermission("hmh.admin");
     }
 
     @EventHandler

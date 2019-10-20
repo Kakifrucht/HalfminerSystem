@@ -20,13 +20,13 @@ abstract class YAMLHaroPlayer implements HaroPlayer {
     }
 
     @Override
-    public String getPlayerStorageKey() {
-        return playerStorageKey;
+    public boolean isAdded() {
+        return playerStorageRoot.contains(playerStorageKey);
     }
 
     @Override
-    public boolean isAdded() {
-        return playerStorageRoot.contains(playerStorageKey);
+    public String getPlayerStorageKey() {
+        return playerStorageKey;
     }
 
     ConfigurationSection getPlayerSection() {

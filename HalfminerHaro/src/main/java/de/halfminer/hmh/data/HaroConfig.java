@@ -17,6 +17,13 @@ public class HaroConfig {
     }
 
     /**
+     * @return max player health when game starts
+     */
+    public double getStartingMaxHealth() {
+        return configuration.getDouble("init.startMaxHealth", 20d);
+    }
+
+    /**
      * @return list with commands that were set to be executed when the game starts
      */
     public List<String> getGameInitCommands() {
@@ -26,14 +33,14 @@ public class HaroConfig {
     /**
      * @return list with commands to be executed when the player gets initialized
      */
-    List<String> getPlayerInitCommands() {
+    public List<String> getPlayerInitCommands() {
         return configuration.getStringList("init.playerCommands");
     }
 
     /**
      * @return double that represents the maximum distance a player can have from a specified spawn point
      */
-    double getMaxSpawnDistance() {
+    public double getMaxSpawnDistance() {
         return configuration.getDouble("init.maxDistanceFromSpawn", 0d);
     }
 
@@ -63,5 +70,40 @@ public class HaroConfig {
      */
     public int getTimeLeftNotify() {
         return configuration.getInt("time.notifyTimeLeft", 30);
+    }
+
+    /**
+     * @return true if players should lose health when dying in PvE combat, or gain health when killing a player
+     */
+    public boolean isHealthEnabled() {
+        return configuration.getBoolean("health.enabled", true);
+    }
+
+    /**
+     * @return minimum health a player can have
+     */
+    public double getHealthMin() {
+        return configuration.getDouble("health.min", 2);
+    }
+
+    /**
+     * @return maximum health a player can have
+     */
+    public double getHealthMax() {
+        return configuration.getDouble("health.max", 26);
+    }
+
+    /**
+     * @return how much health a player gains per kill
+     */
+    public double getHealthGain() {
+        return configuration.getDouble("health.gainPerKill", 2);
+    }
+
+    /**
+     * @return how much health a player loses upon dying
+     */
+    public double getHealthLoss() {
+        return configuration.getDouble("health.lossPerDeath", 2);
     }
 }

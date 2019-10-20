@@ -1,6 +1,7 @@
 package de.halfminer.hmh.data;
 
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -11,8 +12,11 @@ import org.bukkit.entity.Player;
 public class UUIDHaroPlayer extends YAMLHaroPlayer {
 
     private static final String TIMESTAMP_UNTIL_KICK = "timestampUntilKick";
-    private static final String INITIALIZED_KEY = "initialized";
+    private static final String IS_INITIALIZED_KEY = "isInitialized";
     private static final String IS_ELIMINATED_KEY = "isEliminated";
+    private static final String CURRENT_HEALTH_KEY = "currentHealth";
+    private static final String MAX_HEALTH_KEY = "maxHealth";
+    private static final double DEFAULT_MINECRAFT_HEALTH = 20d;
 
     private final HalfminerPlayer player;
 
@@ -38,7 +42,12 @@ public class UUIDHaroPlayer extends YAMLHaroPlayer {
             return null;
         }
 
-        return player.getBase().getPlayer();
+        return getOfflinePlayer().getPlayer();
+    }
+
+    @Override
+    public OfflinePlayer getOfflinePlayer() {
+        return player.getBase();
     }
 
     @Override
@@ -47,12 +56,12 @@ public class UUIDHaroPlayer extends YAMLHaroPlayer {
             return false;
         }
 
-        return getPlayerSection().getBoolean(INITIALIZED_KEY, false);
+        return getPlayerSection().getBoolean(IS_INITIALIZED_KEY, false);
     }
 
     @Override
     public void setInitialized(boolean initialized) {
-        getPlayerSection().set(INITIALIZED_KEY, initialized);
+        getPlayerSection().set(IS_INITIALIZED_KEY, initialized);
     }
 
     @Override
@@ -118,5 +127,25 @@ public class UUIDHaroPlayer extends YAMLHaroPlayer {
         ConfigurationSection playerSection = getPlayerSection();
         playerSection.set(TIME_LEFT_SECONDS_KEY, getTimeLeftSeconds());
         playerSection.set(TIMESTAMP_UNTIL_KICK, null);
+    }
+
+    @Override
+    public void setHealth(double currentHealth, double maxHealth) {
+
+        if (isAdded()) {
+            ConfigurationSection playerSection = getPlayerSection();
+            playerSection.set(CURRENT_HEALTH_KEY, currentHealth);
+            playerSection.set(MAX_HEALTH_KEY, maxHealth);
+        }
+    }
+
+    @Override
+    public double getCurrentHealth() {
+        return getPlayerSection().getDouble(CURRENT_HEALTH_KEY, DEFAULT_MINECRAFT_HEALTH);
+    }
+
+    @Override
+    public double getMaxHealth() {
+        return getPlayerSection().getDouble(MAX_HEALTH_KEY, DEFAULT_MINECRAFT_HEALTH);
     }
 }

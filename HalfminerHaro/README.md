@@ -11,6 +11,12 @@
   - Kicks players after their playtime is over.
   - Displays countdown to warn players before their time is running out.
   - Kicks a player after being eliminated from the game.
+- Custom health mode, where players don't get eliminated after dying and instead lose health.
+  - Elimination only happens in PvP.
+  - Max/min health configurable.
+  - Configurable health gain for PvP killer.
+  - Configurable health loss on non PvP death.
+  - Custom health will be reset when players leave the server.
 - **Commands**
   - */haro <add|remove> \<Player>*
     - Add or remove a player from the game.
@@ -35,6 +41,7 @@
     - Start a game, at least two players must be added to the game.
     - Will run custom commands defined in the config file once when the game starts.
     - Will run custom commands to initialize all online players, players who are not online during the start will be initialized after their first join.
+      - Configurable max health on game start.
     - Will teleport all players to the specified spawn point, if their distance to it is higher than specified in the config file.
     - Will add the starting time (specified in config file) to all players as their remaining time left.
   - */haro status*

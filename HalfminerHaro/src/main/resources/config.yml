@@ -1,5 +1,7 @@
 #HalfminerHaro Config
 init:
+  # How much maximum health a player should have when the game starts
+  startMaxHealth: 20.0
   # Command lists to execute during initializion of game (/haro start)
   gameCommands:
     - time set day world
@@ -8,9 +10,9 @@ init:
     - gamerule doWeatherCycle true
     - difficulty hard
     - killall hostile
-  # Command lists to execute during initializion of player, use %PLAYER% placeholder to be replaced with player name
+  # Command lists to execute during Initialization of player, use %PLAYER% placeholder to be replaced with player name
+  # Will be executed once per player, either when the game starts, or when player first joins the game
   playerCommands:
-    - heal %PLAYER%
     - feed %PLAYER%
     - gamemode 0 %PLAYER%
     - clearinventory %PLAYER% **
@@ -23,10 +25,22 @@ time:
   start: 3600
   # How much time in seconds to add when using /haro addtime day
   day: 3600
-  # How much time in seconds a player can collect
+  # How much time in seconds a player can accumulate
   max: 10800
-  # How much time in seconds should be left, until player gets a notification every 5 seconds
+  # How much time in seconds should be left, until player gets a notification every 5 seconds before getting kicked
   notifyTimeLeft: 30
+health:
+  # If enabled, players who die in survival won't be eliminated, and will instead permanently lose health
+  # Players can only be eliminated by dying during PvP, which will award more hearts to the killer
+  enabled: true
+  # Minimum amount of health a player can have (one heart contains 2 full health points)
+  min: 2.0
+  # Maximum amount of health a player can have
+  max: 26.0
+  # How much health a player gets for a PvP kill
+  gainPerKill: 2.0
+  # How much health a player loses when dying in survival (dying in PvP will eliminate the player from the game)
+  lossPerDeath: 2.0
 #Use '&' as color code
 #Lines starting with '~' will be parsed to make commands clickable, close the command with another '/'
 #Messages can be removed by simply setting the message to nothing ('')
@@ -72,6 +86,8 @@ localization:
   listenerDeathKick: '&cDu bist leider ausgeschieden. &fDanke fürs mitspielen!'
   listenerGameWon: '&6&lHerzlichen Glückwunsch, du hast gewonnen!'
   listenerGameWonBroadcast: '&6&l%PLAYER% &7ist der letzte überlebende Spieler, und hat somit &a&lgewonnen&7!'
+  listenerHealthIncreased: '&aDein Leben wurde auf &b%NEWHEARTS% Herzen &aerhöht'
+  listenerHealthReduced: '&cDein Leben wurde auf &b%NEWHEARTS% Herzen &creduziert'
   listenerJoinedInfo: '&7Deine übrige Spielzeit beträgt &a%TIMELEFT% Minuten&7, drücke Tab um deine Zeit jederzeit einzusehen'
   listenerJoinedLogTime: 'Time remaining for %PLAYER%: %TIMELEFT% seconds'
   listenerNoTimeLeft: 'Deine Zeit für heute ist bereits abgelaufen.'

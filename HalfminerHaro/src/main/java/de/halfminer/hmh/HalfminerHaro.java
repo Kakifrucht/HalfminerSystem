@@ -31,6 +31,9 @@ public class HalfminerHaro extends JavaPlugin {
     private HaroStorage haroStorage;
     private TitleUpdateTask titleUpdateTask;
 
+    private PlayerInitializer playerInitializer;
+    private HealthManager healthManager;
+
 
     @Override
     public void onEnable() {
@@ -40,9 +43,11 @@ public class HalfminerHaro extends JavaPlugin {
 
         this.haroStorage = new HaroStorage();
         this.titleUpdateTask = new TitleUpdateTask();
+        new TimeCheckTask();
 
         new HaroListeners();
-        new TimeCheckTask();
+        this.playerInitializer = new PlayerInitializer();
+        this.healthManager = new HealthManager();
 
         getLogger().info("HalfminerHaro enabled");
     }
@@ -124,6 +129,14 @@ public class HalfminerHaro extends JavaPlugin {
 
     public TitleUpdateTask getTitleUpdateTask() {
         return titleUpdateTask;
+    }
+
+    public PlayerInitializer getPlayerInitializer() {
+        return playerInitializer;
+    }
+
+    public HealthManager getHealthManager() {
+        return healthManager;
     }
 
     private void reload() {

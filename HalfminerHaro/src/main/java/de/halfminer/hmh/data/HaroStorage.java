@@ -25,9 +25,6 @@ import java.util.UUID;
  * Returns all added players via {@link #getAddedPlayers(boolean)}, where the parameter specifies if players
  * to be returned should still be alive.
  *
- * In order to set a players current time remaining, {@link #playerJoined(HaroPlayer)} must be called after join event.
- * Initialize players by calling {@link #initializePlayer(Player)}. This method should only be called once per game.
- *
  * All player data is wrapped by a stateless {@link HaroPlayer} instance.
  */
 public class HaroStorage extends HaroClass implements Disableable, Reloadable {
@@ -49,17 +46,16 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
         this.haroStorage.loadConfig();
 
         this.haroConfig = new HaroConfig(hmh.getConfig());
-
-        // set players online, if plugin was completely reloaded and players are already online
-        for (Player onlinePlayer : server.getOnlinePlayers()) {
-            playerJoined(getHaroPlayer(onlinePlayer));
-        }
     }
 
     public void storeDataOnDisk() {
         haroStorage.saveConfig();
     }
 
+    /**
+     * @return this plugins config, instances should not be kept around, as they are completely
+     *          discarded after a plugin reload
+     */
     public HaroConfig getHaroConfig() {
         return haroConfig;
     }
@@ -140,13 +136,6 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
         return uuidHaroPlayer;
     }
 
-    public void playerJoined(HaroPlayer haroPlayer) {
-
-        if (haroPlayer.isAdded() && isGameRunning()) {
-            haroPlayer.setTimeUntilKick(System.currentTimeMillis() / 1000L + haroPlayer.getTimeLeftSeconds());
-        }
-    }
-
     public boolean addPlayer(HaroPlayer haroPlayer) {
         if (haroPlayer.isAdded()) {
             return false;
@@ -170,29 +159,6 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
      */
     public void removeAllPlayers() {
         haroStorage.set(PLAYER_SECTION_KEY, null);
-    }
-
-    public void initializePlayer(Player player) {
-
-        HaroPlayer haroPlayer = getHaroPlayer(player);
-        List<String> playerInitCommands = haroConfig.getPlayerInitCommands();
-        for (String playerInitCommand : playerInitCommands) {
-            String command = playerInitCommand.replace("%PLAYER%", haroPlayer.getName());
-            server.dispatchCommand(server.getConsoleSender(), command);
-        }
-
-        // check distance to spawn, teleport if too far away
-        Location spawnPoint = getSpawnPoint();
-        if (spawnPoint != null) {
-            double maxDistance = haroConfig.getMaxSpawnDistance();
-            if (spawnPoint.distance(player.getLocation()) > maxDistance) {
-                player.teleport(spawnPoint);
-            }
-        }
-
-        haroPlayer.setTimeUntilKick(System.currentTimeMillis() / 1000L + haroPlayer.getTimeLeftSeconds());
-        haroPlayer.setInitialized(true);
-        hmh.getLogger().info("Player " + player.getName() + " was initialized");
     }
 
     public Location getSpawnPoint() {

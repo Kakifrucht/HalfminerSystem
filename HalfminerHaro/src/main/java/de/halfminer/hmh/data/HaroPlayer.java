@@ -1,12 +1,12 @@
 package de.halfminer.hmh.data;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
  * Interface represents a player that can be part of a game.
  */
 public interface HaroPlayer {
-    String getPlayerStorageKey();
 
     String getName();
 
@@ -14,6 +14,11 @@ public interface HaroPlayer {
 
     Player getBase();
 
+    OfflinePlayer getOfflinePlayer();
+
+    /**
+     * @return true if player has been added to the game, else false
+     */
     boolean isAdded();
 
     /**
@@ -59,4 +64,27 @@ public interface HaroPlayer {
      * Needs to be called if {@link #setTimeUntilKick(long)} was used on this player.
      */
     void setOffline();
+
+    /**
+     * Set the players last known health.
+     *
+     * @param currentHealth health points the player should have
+     * @param maxHealth maximum health of player
+     */
+    void setHealth(double currentHealth, double maxHealth);
+
+    /**
+     * @return health points of player
+     */
+    double getCurrentHealth();
+
+    /**
+     * @return maximum health of player
+     */
+    double getMaxHealth();
+
+    /**
+     * @return the players yaml storage key
+     */
+    String getPlayerStorageKey();
 }

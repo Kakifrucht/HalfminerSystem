@@ -1,5 +1,6 @@
 package de.halfminer.hmh.cmd;
 
+import de.halfminer.hmh.HealthManager;
 import de.halfminer.hms.util.MessageBuilder;
 import org.bukkit.entity.Player;
 
@@ -27,8 +28,12 @@ public class Cmdend extends HaroCommand {
             haroStorage.setGameRunning(false);
             haroStorage.removeAllPlayers();
 
+            HealthManager healthManager = hmh.getHealthManager();
             for (Player onlinePlayer : server.getOnlinePlayers()) {
+
                 if (!onlinePlayer.hasPermission("hmh.admin")) {
+                    healthManager.resetPlayerHealth(onlinePlayer);
+
                     String kickMessage = MessageBuilder.returnMessage("cmdEndPlayerKick", hmh, false);
                     onlinePlayer.kickPlayer(kickMessage);
                 }
