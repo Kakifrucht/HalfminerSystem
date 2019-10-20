@@ -87,7 +87,13 @@ public class Cmdaddtime extends HaroCommand {
                 continue;
             }
 
-            int timeToSet = Math.min(haroPlayer.getTimeLeftSeconds() + timeToAdd, maxTotalTime);
+            int currentTimeLeft = haroPlayer.getTimeLeftSeconds();
+            if (timeToAdd > 0 && currentTimeLeft >= maxTotalTime && playersToUpdate.size() > 1) {
+                hmh.getLogger().info("Player " + haroPlayer.getName() + " already has the maximum time of " + maxTotalTime + " seconds");
+                continue;
+            }
+
+            int timeToSet = Math.min(currentTimeLeft + timeToAdd, maxTotalTime);
             timeToSet = Math.max(0, timeToSet);
             haroPlayer.setTimeLeftSeconds(timeToSet);
 
