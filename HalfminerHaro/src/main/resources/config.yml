@@ -51,7 +51,6 @@ localization:
   cmdAddRemoveConfirm: '~&7Bitte bestätige, dass du diesen Spieler anhand des Nutzernamens hinzufügen willst: &b/haro add %PLAYER% -confirm/'
   cmdAddRemoveUsage: '&cVerwendung: &f/haro %ADD% <player>'
   cmdAddRemoveAlreadyAdded: '&cDieser Spieler wurde bereits hinzugefügt'
-  cmdAddRemoveGameIsRunning: '~&cDas Spiel läuft bereits, weitere Spieler können nicht hinzugefügt werden (&b/haro end/&c zum beenden)'
   cmdAddRemoveNotAdded: '&cDieser Spieler wurde nicht hinzugefügt'
   cmdAddRemovePlayerKick: '&cDu wurdest aus dem Spiel entfernt'
   cmdAddRemoveSuccessA: '&7Der Spieler &a%PLAYER% &7wurde erfolgreich hinzugefügt'

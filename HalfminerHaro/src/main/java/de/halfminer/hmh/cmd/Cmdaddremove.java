@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 /**
  * - Add or remove a player from the game.
  * - Added players can join the server before the game was started.
- * - Players can be removed during the game, as a disqualification measure.
+ * - Players can be removed during the game, which will set them eliminated and kick them if online.
  * - Players that haven't joined the server before can also be added.
  */
 public class Cmdaddremove extends HaroCommand {
@@ -24,13 +24,6 @@ public class Cmdaddremove extends HaroCommand {
 
     @Override
     protected void execute() {
-
-        // can only add player if game is not running
-        boolean isGameRunning = haroStorage.isGameRunning();
-        if (add && isGameRunning) {
-            MessageBuilder.create("cmdAddRemoveGameIsRunning", hmh).sendMessage(sender);
-            return;
-        }
 
         if (args.length < 1) {
             MessageBuilder.create("cmdAddRemoveUsage", hmh)
@@ -58,7 +51,14 @@ public class Cmdaddremove extends HaroCommand {
             return;
         }
 
-        boolean success = add ? haroStorage.addPlayer(haroPlayer) : haroStorage.removePlayer(haroPlayer);
+        boolean success;
+        if (!add && haroStorage.isGameRunning() && haroPlayer.isAdded()) {
+            haroPlayer.setEliminated(true);
+            success = true;
+        } else {
+            success = add ? haroStorage.addPlayer(haroPlayer) : haroStorage.removePlayer(haroPlayer);
+        }
+
         if (success && !add && haroPlayer.isOnline()) {
             Player playerToRemove = haroPlayer.getBase().getPlayer();
             String kickMessage = MessageBuilder.returnMessage("cmdAddRemovePlayerKick", hmh, false);

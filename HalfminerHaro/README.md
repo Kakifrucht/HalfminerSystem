@@ -21,7 +21,7 @@
   - */haro <add|remove> \<Player>*
     - Add or remove a player from the game.
     - Added players can join the server before the game was started.
-    - Players can be removed during the game, as a disqualification measure.
+    - Players can be removed during the game, which will set them eliminated and kick them if online.
     - Players that haven't joined the server before can also be added.
   - */haro addtime <-day|-all|Player> [time]*
     - Add play time to either all players or a specific player.
