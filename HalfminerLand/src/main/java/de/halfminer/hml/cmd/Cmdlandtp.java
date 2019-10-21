@@ -70,6 +70,7 @@ public class Cmdlandtp extends LandCommand {
 
         } else { // open land GUI
 
+            //TODO build GUI with skulls async, show temporary default skull GUI, wait a couple of ticks if async task is faster, replace menu once async task is done
             LandStorage landStorage = hml.getLandStorage();
             List<Pair<ItemStack, String>> menuEntries = new ArrayList<>();
 

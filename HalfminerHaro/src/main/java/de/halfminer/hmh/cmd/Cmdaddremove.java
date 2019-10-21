@@ -51,10 +51,12 @@ public class Cmdaddremove extends HaroCommand {
             return;
         }
 
-        boolean success;
+        boolean success = false;
         if (!add && haroStorage.isGameRunning() && haroPlayer.isAdded()) {
-            haroPlayer.setEliminated(true);
-            success = true;
+            if (!haroPlayer.isEliminated()) {
+                haroPlayer.setEliminated(true);
+                success = true;
+            }
         } else {
             success = add ? haroStorage.addPlayer(haroPlayer) : haroStorage.removePlayer(haroPlayer);
         }
