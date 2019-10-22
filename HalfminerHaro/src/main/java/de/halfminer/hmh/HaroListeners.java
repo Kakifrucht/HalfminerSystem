@@ -109,7 +109,7 @@ public class HaroListeners extends HaroClass implements Listener {
             }
         }
 
-        titleUpdateTask.updateTitles();
+        titleUpdateTask.updateTitles(true);
     }
 
     @EventHandler
