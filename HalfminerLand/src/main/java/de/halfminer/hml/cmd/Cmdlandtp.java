@@ -1,5 +1,6 @@
 package de.halfminer.hml.cmd;
 
+import de.halfminer.hml.HalfminerLand;
 import de.halfminer.hml.data.LandPlayer;
 import de.halfminer.hml.data.LandStorage;
 import de.halfminer.hml.data.PinnedTeleport;
@@ -9,7 +10,6 @@ import de.halfminer.hms.handler.menu.MenuClickHandler;
 import de.halfminer.hms.handler.menu.MenuContainer;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.MessageBuilder;
-import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -21,7 +21,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Cmdlandtp extends LandCommand {
@@ -68,174 +67,225 @@ public class Cmdlandtp extends LandCommand {
                 MessageBuilder.create("teleportNotExist", hml).sendMessage(player);
             }
 
-        } else { // open land GUI
+        } else {
+            openMenu();
+        }
+    }
 
-            //TODO build GUI with skulls async, show temporary default skull GUI, wait a couple of ticks if async task is faster, replace menu once async task is done
-            LandStorage landStorage = hml.getLandStorage();
-            List<Pair<ItemStack, String>> menuEntries = new ArrayList<>();
+    private void openMenu() {
+        LandStorage landStorage = hml.getLandStorage();
+        List<TeleportEntry> menuEntries = new ArrayList<>();
 
-            List<PinnedTeleport> pinnedTeleports = landStorage.getPinnedTeleportList();
-            for (PinnedTeleport pinnedTeleport : pinnedTeleports) {
+        for (PinnedTeleport pinnedTeleport : landStorage.getPinnedTeleportList()) {
 
-                ItemStack itemStack;
-                if (pinnedTeleport.hasMaterial()) {
-                    itemStack = getPinnedItemStack(pinnedTeleport.getMaterial());
+            TeleportEntry teleportEntry;
+            if (pinnedTeleport.hasMaterial()) {
+                teleportEntry = new TeleportEntry(pinnedTeleport.getMaterial(), pinnedTeleport.getTeleport(), pinnedTeleport.getOwnerName());
+            } else {
+
+                OfflinePlayer teleportOwner = null;
+                HalfminerPlayer hTeleportOwner = pinnedTeleport.getOwner();
+                if (hTeleportOwner != null) {
+                    teleportOwner = hTeleportOwner.getBase();
+                }
+
+                if (teleportOwner == null) {
+                    // get default material from config, if land has no owner / is server land
+                    String defaultMaterialServerLandString = hml.getConfig().getString("teleport.pinnedTeleportServerLandMaterial");
+                    Material material = Material.matchMaterial(defaultMaterialServerLandString);
+                    if (material == null) {
+                        material = Material.DIRT;
+                        hml.getLogger().warning("Invalid default material set in config under 'teleport.pinnedTeleportServerLandMaterial'");
+                    }
+
+                    teleportEntry = new TeleportEntry(material, pinnedTeleport.getTeleport(), pinnedTeleport.getOwnerName());
                 } else {
-
-                    OfflinePlayer teleportOwner = null;
-                    HalfminerPlayer hTeleportOwner = pinnedTeleport.getOwner();
-                    if (hTeleportOwner != null) {
-                        teleportOwner = hTeleportOwner.getBase();
-                    }
-
-                    if (teleportOwner == null) {
-                        // get default material from config, if land has no owner / is server land
-                        String defaultMaterialServerLandString = hml.getConfig().getString("teleport.pinnedTeleportServerLandMaterial");
-                        Material material = Material.matchMaterial(defaultMaterialServerLandString);
-                        if (material == null) {
-                            material = Material.DIRT;
-                            hml.getLogger().warning("Invalid default material set in config under 'teleport.pinnedTeleportServerLandMaterial'");
-                        }
-
-                        itemStack = getPinnedItemStack(material);
-                    } else {
-                        itemStack = getSkullItem(teleportOwner);
-                    }
-                }
-
-                MessageBuilder localeBuilder = getLocaleBuilder("cmdLandtpMenuItemFormatPinned",
-                        pinnedTeleport.getOwnerName(), pinnedTeleport.getTeleport());
-
-                Utils.applyLocaleToItemStack(itemStack, localeBuilder);
-                menuEntries.add(new Pair<>(itemStack, pinnedTeleport.getTeleport()));
-            }
-
-            if (!pinnedTeleports.isEmpty()) {
-
-                ItemStack stackBar = new ItemStack(Material.WHITE_STAINED_GLASS_PANE, 1);
-                Utils.setDisplayName(stackBar, " ");
-                Pair<ItemStack, String> pairAir = new Pair<>(new ItemStack(Material.AIR), "");
-                Pair<ItemStack, String> pairBar = new Pair<>(stackBar, "");
-
-                // fill up line with air if necessary
-                while (menuEntries.size() % INVENTORY_SLOTS_PER_LINE != 0) {
-                    menuEntries.add(pairAir);
-                }
-
-                // add spacer line between pins and playerskulls
-                for (int i = 0; i < INVENTORY_SLOTS_PER_LINE; i++) {
-                    menuEntries.add(pairBar);
+                    teleportEntry = new TeleportEntry(teleportOwner, pinnedTeleport.getTeleport(), true);
                 }
             }
 
-            // add owned teleports to front
-            String shownTeleportOfExecutingPlayer = landStorage.getLandPlayer(player).getShownTeleport();
-            for (Land land : board.getLandsWithTeleport(player)) {
-                boolean isShown = land.getTeleportName().equalsIgnoreCase(shownTeleportOfExecutingPlayer);
-                addSkullToCollection(menuEntries, player, land.getTeleportName(), isShown);
-            }
-
-            // add shown teleports by online players
-            for (Player onlinePlayer : server.getOnlinePlayers()) {
-
-                LandPlayer lPlayer = landStorage.getLandPlayer(onlinePlayer);
-                String teleport = lPlayer.getShownTeleport();
-
-                if (teleport != null) {
-
-                    Land teleportLand = board.getLandFromTeleport(teleport);
-                    if (teleportLand != null && !onlinePlayer.equals(player) && teleportLand.isOwner(onlinePlayer)) {
-                        addSkullToCollection(menuEntries, onlinePlayer, teleport, true);
-                    } else if (!onlinePlayer.equals(player)) {
-                        lPlayer.setShownTeleport(null);
-                    }
-                }
-            }
-
-            if (menuEntries.isEmpty()) {
-                MessageBuilder.create("cmdLandtpMenuEmpty", hml).sendMessage(player);
-                return;
-            }
-
-            // build menu
-            String inventoryTitle = MessageBuilder.returnMessage("cmdLandtpMenuTitle", hml, false);
-            ItemStack[] menuItems = new ItemStack[menuEntries.size()];
-            for (int i = 0; i < menuEntries.size(); i++) {
-                Pair<ItemStack, String> pair = menuEntries.get(i);
-
-                if (pair != null) {
-                    menuItems[i] = pair.getLeft();
-                }
-            }
-
-            HanMenu menuHandler = hms.getMenuHandler();
-            MenuClickHandler menuClickHandler = (e, rawSlot) -> {
-                ItemStack clickedItem = e.getCurrentItem();
-                if (clickedItem != null && !clickedItem.getType().equals(Material.AIR)) {
-
-                    String teleportName = menuEntries.get(rawSlot).getRight();
-                    if (!teleportName.isEmpty()) {
-                        player.chat("/" + command + " " + teleportName);
-
-                        menuHandler.closeMenu(player);
-                    }
-                }
-            };
-
-            MenuContainer menuContainer = new MenuContainer(hml, player, inventoryTitle, menuItems, menuClickHandler);
-            menuHandler.openMenu(menuContainer);
+            menuEntries.add(teleportEntry);
         }
-    }
 
-    private void addSkullToCollection(Collection<Pair<ItemStack, String>> collection,
-                                      OfflinePlayer owner, String teleportName, boolean isShown) {
+        if (!menuEntries.isEmpty()) {
 
-        // don't add same teleport twice
-        for (Pair<ItemStack, String> itemStackStringPair : collection) {
-            if (itemStackStringPair != null) {
-                if (itemStackStringPair.getRight().equals(teleportName)) {
-                    return;
+            // fill up line with air if necessary
+            while (menuEntries.size() % INVENTORY_SLOTS_PER_LINE != 0) {
+                menuEntries.add(new TeleportEntry(true));
+            }
+
+            // add spacer line between pins and playerskulls
+            for (int i = 0; i < INVENTORY_SLOTS_PER_LINE; i++) {
+                menuEntries.add(new TeleportEntry(false));
+            }
+        }
+
+        // add owned teleports to front
+        String shownTeleport = landStorage.getLandPlayer(player).getShownTeleport();
+        for (Land land : board.getLandsWithTeleport(player)) {
+            boolean isShown = !land.getTeleportName().equalsIgnoreCase(shownTeleport);
+            if (!containsTeleport(menuEntries, land.getTeleportName())) {
+                menuEntries.add(new TeleportEntry(player, land.getTeleportName(), false, isShown));
+            }
+        }
+
+        // add shown teleports of online players
+        for (Player onlinePlayer : server.getOnlinePlayers()) {
+
+            LandPlayer lPlayer = landStorage.getLandPlayer(onlinePlayer);
+            String teleportName = lPlayer.getShownTeleport();
+
+            if (teleportName != null) {
+
+                Land teleportLand = board.getLandFromTeleport(teleportName);
+                if (!onlinePlayer.equals(player)) {
+                    lPlayer.setShownTeleport(null);
+                } else if (teleportLand != null
+                        && teleportLand.isOwner(onlinePlayer)
+                        && !containsTeleport(menuEntries, teleportName)) {
+
+                    menuEntries.add(new TeleportEntry(onlinePlayer, teleportName, false));
                 }
             }
         }
 
-        ItemStack skull = getSkullItem(owner);
-
-        String localeKey = "cmdLandtpMenuItemFormat" + (isShown ? "" : "NotShown");
-        Utils.applyLocaleToItemStack(skull, getLocaleBuilder(localeKey, owner.getName(), teleportName));
-
-        collection.add(new Pair<>(skull, teleportName));
-    }
-
-    private ItemStack getSkullItem(OfflinePlayer owner) {
-
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
-        if (owner != null) {
-            SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-            skullMeta.setOwningPlayer(owner);
-            skull.setItemMeta(skullMeta);
+        if (menuEntries.isEmpty()) {
+            MessageBuilder.create("cmdLandtpMenuEmpty", hml).sendMessage(player);
+            return;
         }
 
-        return skull;
+        hms.getMenuHandler().openMenu(createMenuContainer(menuEntries));
     }
 
-    private ItemStack getPinnedItemStack(Material material) {
-        ItemStack itemStack = new ItemStack(material);
-
-        // add durability enchant, hide from item description
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemStack.setItemMeta(itemMeta);
-        itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-
-        return itemStack;
+    private boolean containsTeleport(List<TeleportEntry> list, String teleport) {
+        return list.stream().anyMatch(teleportEntry -> teleportEntry.getTeleportName().equalsIgnoreCase(teleport));
     }
 
-    private MessageBuilder getLocaleBuilder(String localeKey, String ownerName, String teleportName) {
-        return MessageBuilder.create(localeKey, hml)
-                .togglePrefix()
-                .addPlaceholder("%PLAYER%", ownerName)
-                .addPlaceholder("%TELEPORT%", teleportName)
-                .addPlaceholder("%TELEPORTFRIENDLY%", Utils.makeStringFriendly(teleportName));
+    private MenuContainer createMenuContainer(List<TeleportEntry> menuEntries) {
+
+        String inventoryTitle = MessageBuilder.returnMessage("cmdLandtpMenuTitle", hml, false);
+        ItemStack[] menuItems = new ItemStack[menuEntries.size()];
+        for (int i = 0; i < menuEntries.size(); i++) {
+            menuItems[i] = menuEntries.get(i).getMenuEntry();
+        }
+
+        HanMenu menuHandler = hms.getMenuHandler();
+        MenuClickHandler menuClickHandler = (e, rawSlot) -> {
+            ItemStack clickedItem = e.getCurrentItem();
+            if (clickedItem != null && !clickedItem.getType().equals(Material.AIR)) {
+
+                String teleportName = menuEntries.get(rawSlot).getTeleportName();
+                if (!teleportName.isEmpty()) {
+                    player.chat("/" + command + " " + teleportName);
+                    menuHandler.closeMenu(player);
+                }
+            }
+        };
+
+        return new MenuContainer(hml, player, inventoryTitle, menuItems, menuClickHandler);
+    }
+
+
+    private static class TeleportEntry {
+
+        private final Material material;
+        private final OfflinePlayer owner;
+
+        private final String teleportName;
+        private final String teleportOwner;
+        private final boolean pinned;
+        private final boolean notShown;
+
+
+        TeleportEntry(Material material, String teleportName, String teleportOwner) {
+            this.material = material;
+            this.owner = null;
+
+            this.teleportName = teleportName;
+            this.teleportOwner = teleportOwner;
+            this.pinned = true;
+            this.notShown = false;
+        }
+
+        TeleportEntry(OfflinePlayer owner, String teleportName, boolean pinned) {
+            this(owner, teleportName, pinned, false);
+        }
+
+        TeleportEntry(OfflinePlayer owner, String teleportName, boolean pinned, boolean notShown) {
+            this.material = null;
+            this.owner = owner;
+
+            this.teleportName = teleportName;
+            this.teleportOwner = owner.getName();
+            this.pinned = pinned;
+            this.notShown = notShown;
+        }
+
+        TeleportEntry(boolean air) {
+            this.material = air ? Material.AIR : Material.WHITE_STAINED_GLASS_PANE;
+            this.owner = null;
+
+            this.teleportName = "";
+            this.teleportOwner = "";
+            this.pinned = false;
+            this.notShown = false;
+        }
+
+        private String getTeleportName() {
+            return teleportName;
+        }
+
+        private ItemStack getMenuEntry() {
+
+            /* expected itemstacks:
+                - Material -> Assume we are pinned, apply Durability/Hideenchants
+                - Spacer -> Use given Material, remove item name, don't apply locale
+                - Playerskull -> Use player skull, set to current owner
+             */
+            ItemStack itemStack = null;
+            if (material != null) {
+
+                if (!teleportName.isEmpty()) { // pinned teleport with custom material
+                    itemStack = new ItemStack(material);
+
+                    // add durability enchant, hide from item description
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    itemStack.setItemMeta(itemMeta);
+                    itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+                } else { // spacer
+                    itemStack = new ItemStack(material, 1);
+                    if (!material.equals(Material.AIR)) {
+                        Utils.setDisplayName(itemStack, " ");
+                    }
+
+                    return itemStack;
+                }
+
+            } else if (owner != null) { // playerskull
+                itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
+
+                // don't resolve skulls of offline players, as it hogs the main thread
+                if (owner.isOnline()) {
+                    SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+                    skullMeta.setOwningPlayer(owner);
+                    itemStack.setItemMeta(skullMeta);
+                }
+            }
+
+            String localeSuffix = (pinned ? "Pinned" : (notShown ? "NotShown" : ""));
+            MessageBuilder localeBuilder = getLocaleBuilder("cmdLandtpMenuItemFormat" + localeSuffix, teleportOwner, teleportName);
+            Utils.applyLocaleToItemStack(itemStack, localeBuilder);
+
+            return itemStack;
+        }
+
+        private MessageBuilder getLocaleBuilder(String localeKey, String ownerName, String teleportName) {
+            return MessageBuilder.create(localeKey, HalfminerLand.getInstance())
+                    .togglePrefix()
+                    .addPlaceholder("%PLAYER%", ownerName)
+                    .addPlaceholder("%TELEPORT%", teleportName)
+                    .addPlaceholder("%TELEPORTFRIENDLY%", Utils.makeStringFriendly(teleportName));
+        }
     }
 }
