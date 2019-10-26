@@ -26,7 +26,7 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
     private static final String PREFIX = "Land";
     private static HalfminerLand instance;
 
-    static HalfminerLand getInstance() {
+    public static HalfminerLand getInstance() {
         return instance;
     }
 
