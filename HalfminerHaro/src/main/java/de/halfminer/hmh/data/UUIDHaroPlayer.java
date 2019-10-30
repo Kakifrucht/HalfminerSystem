@@ -90,7 +90,7 @@ public class UUIDHaroPlayer extends YAMLHaroPlayer {
             ConfigurationSection playerSection = getPlayerSection();
             if (isOnline() && playerSection.contains(TIMESTAMP_UNTIL_KICK)) {
                 long timestampUntilKick = playerSection.getLong(TIMESTAMP_UNTIL_KICK);
-                return (int) (timestampUntilKick - (System.currentTimeMillis() / 1000L));
+                return (int) Math.max((timestampUntilKick - (System.currentTimeMillis() / 1000L)), 0);
             }
 
             return playerSection.getInt(TIME_LEFT_SECONDS_KEY, 0);

@@ -22,7 +22,7 @@ public class TimeCheckTask extends HaroClass {
         HaroStorage haroStorage = hmh.getHaroStorage();
         server.getScheduler().runTaskTimer(hmh, () -> {
 
-            if (!haroStorage.isGameRunning()) {
+            if (!haroStorage.isGameRunning() || haroStorage.isGameOver()) {
                 return;
             }
 

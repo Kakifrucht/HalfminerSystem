@@ -97,7 +97,7 @@ public class HaroListeners extends HaroClass implements Listener {
         HaroPlayer haroPlayer = haroStorage.getHaroPlayer(player);
         haroPlayer.setOffline();
 
-        if (isInGame(player)) {
+        if (haroStorage.isGameRunning() && isNotAdmin(player)) {
 
             HealthManager healthManager = hmh.getHealthManager();
             healthManager.storeCurrentHealth(player);
@@ -125,7 +125,7 @@ public class HaroListeners extends HaroClass implements Listener {
                 Player killer = player.getKiller();
 
                 HealthManager healthManager = hmh.getHealthManager();
-                if (killer != null) {
+                if (killer != null && !player.equals(killer)) {
                     setEliminatedAndKickPlayer(player, haroPlayer);
                     if (healthManager.increaseHealth(killer)) {
                         MessageBuilder.create("listenerHealthIncreased", hmh)
@@ -173,7 +173,13 @@ public class HaroListeners extends HaroClass implements Listener {
     }
 
     private boolean isInGame(Player player) {
-        return haroStorage.isGameRunning() && !player.hasPermission("hmh.admin");
+        return haroStorage.isGameRunning()
+                && !haroStorage.isGameOver()
+                && isNotAdmin(player);
+    }
+
+    private boolean isNotAdmin(Player player) {
+        return !player.hasPermission("hmh.admin");
     }
 
     @EventHandler

@@ -60,16 +60,23 @@ public class HaroStorage extends HaroClass implements Disableable, Reloadable {
         return haroConfig;
     }
 
+    /**
+     * @return true if the game was started
+     *         (does not take into account if the game is running, use {@link #isGameOver()})
+     */
     public boolean isGameRunning() {
         return haroStorage.getRootSection().getBoolean(IS_GAME_RUNNING_KEY, false);
     }
 
-    public boolean isGameOver() {
-        return isGameRunning() && getAddedPlayers(true).size() <= 1;
-    }
-
     public void setGameRunning(boolean isRunning) {
         haroStorage.set(IS_GAME_RUNNING_KEY, isRunning);
+    }
+
+    /**
+     * @return true if the game is running and only one player is alive
+     */
+    public boolean isGameOver() {
+        return isGameRunning() && getAddedPlayers(true).size() <= 1;
     }
 
     public List<HaroPlayer> getAddedPlayers(boolean isNotEliminated) {
