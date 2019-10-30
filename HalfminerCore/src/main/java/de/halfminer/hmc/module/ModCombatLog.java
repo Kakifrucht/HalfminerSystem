@@ -109,7 +109,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
             Player victim = (Player) e.getEntity();
             Player attacker = Utils.getPlayerSourceFromEntity(e.getDamager());
 
-            if (isPvP(victim, attacker)) {
+            if (!victim.equals(attacker) && isPvP(victim, attacker)) {
 
                 lastOpponentCache.put(victim, attacker);
                 lastOpponentCache.put(attacker, victim);

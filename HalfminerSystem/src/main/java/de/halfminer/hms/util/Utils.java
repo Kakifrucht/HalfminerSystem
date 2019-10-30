@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 /**
  * Static methods that are shared between other classes
  */
-@SuppressWarnings("WeakerAccess")
 public final class Utils {
 
     private Utils() {}

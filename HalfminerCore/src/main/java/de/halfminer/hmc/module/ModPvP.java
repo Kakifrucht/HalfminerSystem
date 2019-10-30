@@ -37,7 +37,6 @@ import java.util.concurrent.TimeUnit;
  *   - Reduces damage immunity
  * - Strength potions damage nerfed, configurable
  * - Bow spamming disabled
- *   - Disable hitting self with bow
  * - Killstreak via actionbar
  * - Run custom actions with custom probabilities on kill
  *   - See customactions.txt for example actions
@@ -99,12 +98,6 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
         final Player damagee = (Player) e.getEntity();
         Player damager = Utils.getPlayerSourceFromEntity(e.getDamager());
-
-        // disable hitting self with bow
-        if (damagee.equals(damager) && e.getDamager() instanceof Projectile) {
-            e.setCancelled(true);
-            return;
-        }
 
         if ((damager != null && damager.hasPermission("hmc.bypass.pvp"))
                 || damagee.hasPermission("hmc.bypass.pvp")) {

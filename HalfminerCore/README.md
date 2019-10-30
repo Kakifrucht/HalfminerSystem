@@ -108,7 +108,6 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
       - Reduces damage immunity
     - Strength potions damage nerfed (*configurable*)
     - Bow spamming disabled
-      - Disable hitting self with bow
     - Broadcasts killstreaks via actionbar
     - Run custom actions with custom probabilities on kill
       - See ``customactions.txt`` in plugin directory for example actions
