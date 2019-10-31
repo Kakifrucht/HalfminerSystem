@@ -15,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -106,8 +105,8 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
         // half damage immunity on next tick, else overwritten
         scheduler.runTaskLater(hmc, () -> {
-            // damage immunity passes when 10/20 has been reached (weird), 15 would be halving it
             if (!e.isCancelled()) {
+                // for whatever reason damage immunity passes when 10/20 has been reached, setting to 15 halves it
                 damagee.setNoDamageTicks(15);
             }
         }, 0L);
@@ -136,13 +135,6 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             }
 
         }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void preventSelfHitWithBowCombust(EntityCombustByEntityEvent e) {
-
-        if (e.getEntity() instanceof Player && e.getCombuster() instanceof Projectile)
-            e.setCancelled(e.getEntity().equals(((Projectile) e.getCombuster()).getShooter()));
     }
 
     @EventHandler(ignoreCancelled = true)
