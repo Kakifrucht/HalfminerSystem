@@ -178,7 +178,7 @@ public class MenuContainer {
             return 1;
         }
 
-        return (menuItems.length / slotsUntilPagination) + 1;
+        return ((menuItems.length - 1) / slotsUntilPagination) + 1;
     }
 
     private boolean hasPreviousPage() {
