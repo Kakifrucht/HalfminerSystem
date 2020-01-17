@@ -26,7 +26,7 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
       - ``players |number|``: define a minimum amount of players that must be passed to this action to execute
       - ``hasroom |number| [stacksize]``: execution flow will only continue if given amount of slots are free, optional stacksize parameter that will divide the given number
       - ``cmd |command|``: execute command as console
-      - ``give |customitem|``: hands out customitem defined in customitems.txt
+      - ``give |customitem| [amount]``: hands out customitem defined in customitems.txt
       - ``broadcast |message|``: broadcast a given message
       - ``tell |message|``: send a given message to main player
     - Stops execution flow if previous action fails 
