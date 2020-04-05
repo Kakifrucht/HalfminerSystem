@@ -37,11 +37,12 @@ public class Cmdteleport extends LandCommand {
 
         if (args[0].equalsIgnoreCase("buy")) {
 
+            boolean removeTeleport = false;
             if (teleportLand != null) {
 
                 boolean isStealingEnabled = hml.getConfig().getBoolean("teleport.allowStealingAbandoned", false);
                 if (isStealingEnabled && teleportLand.isAbandoned()) {
-                    teleportLand.removeTeleport();
+                    removeTeleport = true;
                 } else {
                     MessageBuilder.create("cmdTeleportBuyAlreadyExists" + (teleportLand.isOwner(player) ? "Owned" : ""), hml)
                             .addPlaceholder("%TELEPORT%", teleportLand.getTeleportName())
@@ -108,6 +109,11 @@ public class Cmdteleport extends LandCommand {
 
             double cost = hml.getConfig().getDouble("teleport.price", 10d);
             if (takeMoney(cost)) {
+
+                if (removeTeleport) {
+                    teleportLand.removeTeleport();
+                }
+
                 land.setTeleport(teleportName, location);
                 board.landWasUpdated(land);
 
