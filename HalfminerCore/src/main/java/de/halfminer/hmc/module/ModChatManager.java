@@ -42,10 +42,16 @@ import java.util.concurrent.TimeUnit;
  *   - Posting links/IPs
  *   - Writing capitalized
  * - Disables tab completes that are too long, defaults to help instead
+ * - Fixes accidental commands that land in chat, due to caps lock being active
  */
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
     private static final String PREFIX = "Chat";
+    /**
+     * On german keyboards, the command prefix '/' is situated on the 7 key, so players who
+     * want to send a command often type '7' instead (for example when caps lock is active).
+     */
+    private static final String ACCIDENTAL_CHAT_CHARACTER = "7";
 
     private List<Pair<String, String>> chatFormats;
     private String topFormat;
@@ -70,13 +76,23 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     public void onChat(AsyncPlayerChatEvent e) {
 
         Player p = e.getPlayer();
+        String message = filterMessage(p, e.getMessage());
+
+        // test if player wanted to send a command instead of chatting, correct their mistake
+        if (message.startsWith(ACCIDENTAL_CHAT_CHARACTER) && message.length() > 1) {
+            String command = message.substring(1).split(" ")[0].toLowerCase();
+            if (server.getCommandAliases().containsKey(command) || server.getPluginCommand(command) != null) {
+                server.getScheduler().runTask(hmc, () -> p.chat("/" + message.substring(1)));
+                e.setCancelled(true);
+                return;
+            }
+        }
+
         if (isGlobalmuted && !p.hasPermission("hmc.chat.bypassglobalmute")) {
             MessageBuilder.create("modChatManGlobalmuteDenied", hmc, PREFIX).sendMessage(p);
             e.setCancelled(true);
             return;
         }
-
-        String message = filterMessage(p, e.getMessage());
 
         // spam filter
         if (!p.hasPermission("hmc.chat.spam")) {

@@ -55,6 +55,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
       - Posting links/IPs
       - Writing all capitalized
     - Disables tab completes that are too long, defaults to help instead
+    - Fixes accidental commands that land in chat, due to caps lock being active
   - CombatLog
     - Tags players when hitting/being hit
     - Shows actionbar message containing time left in fight
