@@ -2,6 +2,7 @@ package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.module.ModSkillLevel;
+import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
@@ -53,11 +54,17 @@ public class Cmdstats extends HalfminerCommand {
             compareWith = storage.getPlayer((Player) sender);
         }
 
+        String skillGroup = "";
+        if (hmc.isModuleEnabled(ModuleType.SKILL_LEVEL)) {
+            try {
+                skillGroup = ((ModSkillLevel) hmc.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(player.getBase());
+            } catch (ModuleDisabledException ignored) {}
+        }
+
         MessageBuilder.create("cmdStatsHeader", hmc).sendMessage(sender);
         MessageBuilder.create("cmdStatsShow", hmc)
                 .addPlaceholder("%PLAYER%", player.getName())
-                .addPlaceholder("%SKILLGROUP%",
-                        ((ModSkillLevel) hmc.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(player.getBase()))
+                .addPlaceholder("%SKILLGROUP%", skillGroup)
                 .addPlaceholder("%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith))
                 .addPlaceholder("%ONLINETIME%", getIntAndCompare(player, DataType.TIME_ONLINE, compareWith))
                 .addPlaceholder("%KILLS%", getIntAndCompare(player, DataType.KILLS, compareWith))

@@ -48,10 +48,6 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
 
-        if (!isEnabled) {
-            return;
-        }
-
         Player p = e.getPlayer();
         if (p.hasPermission("hmc.bypass.antixray")) return;
 
@@ -91,18 +87,10 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
     @EventHandler
     public void onLoginNotify(PlayerJoinEvent e) {
 
-        if (!isEnabled) {
-            return;
-        }
-
         Player joined = e.getPlayer();
         if (joined.hasPermission("hmc.antixray.notify"))
             for (UUID checked : observedPermanently)
                 notify(joined, observedPlayers.get(checked), true);
-    }
-
-    public boolean isEnabled() {
-        return isEnabled;
     }
 
     public boolean setBypassed(OfflinePlayer p) {
@@ -183,7 +171,6 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
     public void loadConfig() {
 
         FileConfiguration configuration = hmc.getConfig();
-        isEnabled = configuration.getBoolean("antiXray.isEnabled", true);
 
         timeUntilClear = configuration.getInt("antiXray.intervalUntilClearSeconds", 300);
         protectedBlockThreshold = configuration.getInt("antiXray.protectedBlockThreshold", 20);

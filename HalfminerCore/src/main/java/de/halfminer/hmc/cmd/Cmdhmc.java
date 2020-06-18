@@ -1,22 +1,26 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModAntiXray;
 import de.halfminer.hmc.module.ModSkillLevel;
+import de.halfminer.hmc.module.ModuleDisabledException;
+import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.cache.CustomitemCache;
 import de.halfminer.hms.cache.CustomtextCache;
-import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.cache.exceptions.ItemCacheException;
-import de.halfminer.hms.handler.storage.PlayerNotFoundException;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
+import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.IEssentials;
 import net.ess3.api.IUser;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,7 +53,7 @@ public class Cmdhmc extends HalfminerCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ModuleDisabledException {
 
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
@@ -87,12 +91,15 @@ public class Cmdhmc extends HalfminerCommand {
 
     private void antiXray() {
 
-        ModAntiXray antiXray = (ModAntiXray) hmc.getModule(ModuleType.ANTI_XRAY);
-
-        if (!antiXray.isEnabled()) {
+        if (!hmc.isModuleEnabled(ModuleType.ANTI_XRAY)) {
             MessageBuilder.create("cmdHmcXrayDisabled", hmc, PREFIX).sendMessage(sender);
             return;
         }
+
+        ModAntiXray antiXray = null;
+        try {
+            antiXray = (ModAntiXray) hmc.getModule(ModuleType.ANTI_XRAY);
+        } catch (ModuleDisabledException ignored) {}
 
         if (args.length > 1) {
 
@@ -459,7 +466,7 @@ public class Cmdhmc extends HalfminerCommand {
         });
     }
 
-    private void skilllevel() {
+    private void skilllevel() throws ModuleDisabledException {
 
         if (args.length < 2) {
             MessageBuilder.create("cmdHmcSkillUsage", hmc, "Skilllevel").sendMessage(sender);

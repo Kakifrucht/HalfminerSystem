@@ -145,12 +145,6 @@ permissions:
   hmc.gems:
     default: true
     description: Access to gems command
-  hmc.home:
-    default: true
-    description: Access to home command
-  hmc.newtp:
-    default: true
-    description: Access to newtp command
   hmc.stats:
     default: true
     description: Access to stats command
@@ -225,6 +219,8 @@ permissions:
     description: Access to disposal command
   hmc.gems.admin:
     description: View and modify players gems accounts
+  hmc.home:
+    description: Access to home command
   hmc.lag:
     description: Access to lag command
   hmc.lag.others:
@@ -233,6 +229,8 @@ permissions:
     description: Sends lag notifications to admin
   hmc.moderator:
     description: Access to moderative commands
+  hmc.newtp:
+    description: Access to newtp command
   hmc.pin:
     description: Access to pin command
   hmc.rank:

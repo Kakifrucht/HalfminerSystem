@@ -1,8 +1,9 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModChatManager;
+import de.halfminer.hmc.module.ModuleDisabledException;
+import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.handler.HanBossBar;
 import de.halfminer.hms.handler.HanTitles;
 import de.halfminer.hms.util.MessageBuilder;
@@ -39,7 +40,7 @@ public class Cmdchat extends HalfminerCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ModuleDisabledException {
 
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
@@ -265,7 +266,6 @@ public class Cmdchat extends HalfminerCommand {
         if (!verifyMessage()) return;
 
         coreStorage.set("news", message);
-        hmc.getModule(ModuleType.MOTD).loadConfig();
         if (sender instanceof Player) {
             bossBar.sendBar((Player) sender, MessageBuilder.create("modTitlesNewsFormat", hmc)
                     .addPlaceholder("%NEWS%", message)
@@ -273,6 +273,10 @@ public class Cmdchat extends HalfminerCommand {
             titles.sendTitle((Player) sender, " \n" + message, 10, 100, 10);
         }
 
+        // try to reload MOTD module, as it reads it's string from storage (which we have now updated)
+        try {
+            hmc.getModule(ModuleType.MOTD).loadConfig();
+        } catch (ModuleDisabledException ignored) {}
         MessageBuilder.create("cmdChatNewsSetTo", hmc, "Chat").sendMessage(sender);
     }
 

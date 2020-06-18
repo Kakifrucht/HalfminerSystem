@@ -1,8 +1,9 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModTps;
+import de.halfminer.hmc.module.ModuleDisabledException;
+import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.ChatColor;
@@ -64,20 +65,27 @@ public class Cmdlag extends HalfminerCommand {
         }
 
         // get tps
-        double tps = ((ModTps) hmc.getModule(ModuleType.TPS)).getTps();
         ServerStatus serverLagStatus = ServerStatus.STABLE;
-        String tpsColored = String.valueOf(tps);
-        if (tps < 12.0d) {
-            tpsColored = ChatColor.RED + tpsColored;
-            serverLagStatus = ServerStatus.LAGGING;
-        } else if (tps < 16.0d) {
-            tpsColored = ChatColor.YELLOW + tpsColored;
-            serverLagStatus = ServerStatus.UNSTABLE;
-        } else tpsColored = ChatColor.GREEN + tpsColored;
+        if (hmc.isModuleEnabled(ModuleType.TPS)) {
 
-        MessageBuilder.create("cmdLagServerInfo", hmc, "Lag")
-                .addPlaceholder("%TPS%", tpsColored)
-                .sendMessage(sender);
+            double tps = 0;
+            try {
+                tps = ((ModTps) hmc.getModule(ModuleType.TPS)).getTps();
+            } catch (ModuleDisabledException ignored) {}
+
+            String tpsColored = String.valueOf(tps);
+            if (tps < 12.0d) {
+                tpsColored = ChatColor.RED + tpsColored;
+                serverLagStatus = ServerStatus.LAGGING;
+            } else if (tps < 16.0d) {
+                tpsColored = ChatColor.YELLOW + tpsColored;
+                serverLagStatus = ServerStatus.UNSTABLE;
+            } else tpsColored = ChatColor.GREEN + tpsColored;
+
+            MessageBuilder.create("cmdLagServerInfo", hmc, "Lag")
+                    .addPlaceholder("%TPS%", tpsColored)
+                    .sendMessage(sender);
+        }
 
         // determines the summary message, only shown when viewing own status
         if (isPlayer && player.equals(toLookup)) {

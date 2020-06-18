@@ -1,6 +1,7 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
+import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModRespawn;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
@@ -19,16 +20,15 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("unused")
 public class Cmdspawn extends HalfminerCommand {
 
-    private final ModRespawn respawn = (ModRespawn) hmc.getModule(ModuleType.RESPAWN);
-
     public Cmdspawn() {
         this.permission = "hmc.spawn";
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ModuleDisabledException {
 
         if (isPlayer && label.equals("setspawn") && sender.hasPermission("hmc.spawn.set")) {
+            ModRespawn respawn = (ModRespawn) hmc.getModule(ModuleType.RESPAWN);
             respawn.setSpawn(player.getLocation());
             MessageBuilder.create("cmdSpawnSet", hmc, "Spawn").sendMessage(player);
             return;
@@ -48,8 +48,8 @@ public class Cmdspawn extends HalfminerCommand {
                 }
             } else {
                 try {
-
                     OfflinePlayer p = storage.getPlayer(args[0]).getBase();
+                    ModRespawn respawn = (ModRespawn) hmc.getModule(ModuleType.RESPAWN);
                     MessageBuilder.create(respawn.teleportToSpawnOnJoin(p) ?
                             "cmdSpawnOthersOfflineAdd" : "cmdSpawnOthersOfflineRemove", hmc, "Spawn")
                             .addPlaceholder("%PLAYER%", p.getName())
@@ -63,10 +63,11 @@ public class Cmdspawn extends HalfminerCommand {
         }
     }
 
-    private void teleport(CommandSender toTeleport, boolean forced) {
+    private void teleport(CommandSender toTeleport, boolean forced) throws ModuleDisabledException {
 
         if (toTeleport instanceof Player) {
 
+            ModRespawn respawn = (ModRespawn) hmc.getModule(ModuleType.RESPAWN);
             HanTeleport tp = hms.getTeleportHandler();
 
             if (forced) {

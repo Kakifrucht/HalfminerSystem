@@ -21,7 +21,6 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class ModInventorySave extends HalfminerModule implements Listener {
 
-    private boolean isEnabled;
     private boolean keepLevel;
 
 
@@ -31,8 +30,7 @@ public class ModInventorySave extends HalfminerModule implements Listener {
         Player player = e.getEntity();
 
         // if player has inventory bypass permission and keepInventory is not set
-        if (!isEnabled
-                || (player.hasPermission("hmc.bypass.inventorysave") && e.getKeepInventory())) {
+        if (player.hasPermission("hmc.bypass.inventorysave") && e.getKeepInventory()) {
             return;
         }
 
@@ -86,7 +84,6 @@ public class ModInventorySave extends HalfminerModule implements Listener {
 
     @Override
     public void loadConfig() {
-        isEnabled = hmc.getConfig().getBoolean("inventorySave.enable", false);
         keepLevel = hmc.getConfig().getBoolean("inventorySave.keepLevel", false);
     }
 }

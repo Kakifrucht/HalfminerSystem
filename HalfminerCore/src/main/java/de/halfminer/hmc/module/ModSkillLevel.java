@@ -94,8 +94,12 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
             HalfminerPlayer hVictim = storage.getPlayer(victim);
 
             // Prevent grinding
-            ModAntiKillfarming antiKillfarming = (ModAntiKillfarming) hmc.getModule(ModuleType.ANTI_KILLFARMING);
-            if (antiKillfarming.isNotRepeatedKill(killer, victim)) {
+            boolean isNotRepeatedKill = true;
+            try {
+                ModAntiKillfarming antiKillfarming = (ModAntiKillfarming) hmc.getModule(ModuleType.ANTI_KILLFARMING);
+                isNotRepeatedKill = antiKillfarming.isNotRepeatedKill(killer, victim);
+            } catch (ModuleDisabledException ignored) {}
+            if (isNotRepeatedKill) {
 
                 // Calculate skill modifier
                 int killerElo = hKiller.getInt(DataType.SKILL_ELO);

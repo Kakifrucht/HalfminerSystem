@@ -171,10 +171,13 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                 killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
             }, 5);
 
-            // run action on kill
-            if (container != null &&
-                    ((ModAntiKillfarming) hmc.getModule(ModuleType.ANTI_KILLFARMING))
-                            .isNotRepeatedKill(killer, victim)) {
+            boolean isNotRepeatedKill = true;
+            try {
+                ModAntiKillfarming antiKillfarming = (ModAntiKillfarming) hmc.getModule(ModuleType.ANTI_KILLFARMING);
+                isNotRepeatedKill = antiKillfarming.isNotRepeatedKill(killer, victim);
+            } catch (ModuleDisabledException ignored) {}
+
+            if (container != null && isNotRepeatedKill) {
                 CustomAction action = container.getNextAction();
                 action.addPlaceholderForNextRun("%KILLNO%", storage.getPlayer(killer).getString(DataType.KILLS));
                 action.runAction(killer, victim);
@@ -221,9 +224,16 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     @EventHandler(ignoreCancelled = true)
     public void lowerRegenerationDuringFight(EntityRegainHealthEvent e) {
 
+        ModCombatLog combatLog;
+        try {
+            combatLog = (ModCombatLog) hmc.getModule(ModuleType.COMBAT_LOG);
+        } catch (ModuleDisabledException ignored) {
+            return;
+        }
+
         if (e.getEntity() instanceof Player
                 && e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.SATIATED)
-                && (((ModCombatLog) hmc.getModule(ModuleType.COMBAT_LOG)).isTagged((Player) e.getEntity()))) {
+                && combatLog.isTagged((Player) e.getEntity())) {
             e.setAmount(e.getAmount() / 2);
         }
     }

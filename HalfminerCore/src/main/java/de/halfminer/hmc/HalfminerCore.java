@@ -2,6 +2,7 @@ package de.halfminer.hmc;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.module.HalfminerModule;
+import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;
@@ -11,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -39,7 +41,18 @@ public class HalfminerCore extends JavaPlugin {
 
         storage = new HanStorage(this);
         try {
+
+            List<String> disabledModules = getConfig().getStringList("disabledModules");
+
+            outerLoop:
             for (ModuleType module : ModuleType.values()) {
+                for (String disabledModule : disabledModules) {
+                    if (module.getClassName().toLowerCase().endsWith(disabledModule.toLowerCase())) {
+                        getLogger().info("The module " + module.getClassName() + " has been disabled");
+                        continue outerLoop;
+                    }
+                }
+
                 HalfminerModule mod = (HalfminerModule) this.getClassLoader()
                         .loadClass(PACKAGE_PATH + ".module." + module.getClassName())
                         .getDeclaredConstructor()
@@ -84,9 +97,15 @@ public class HalfminerCore extends JavaPlugin {
         return storage;
     }
 
-    public HalfminerModule getModule(ModuleType type) {
-        if (modules.size() != ModuleType.values().length)
-            throw new RuntimeException("Illegal call to getModule before all modules were initialized");
-        return modules.get(type);
+    public HalfminerModule getModule(ModuleType type) throws ModuleDisabledException {
+        if (modules.containsKey(type)) {
+            return modules.get(type);
+        } else {
+            throw new ModuleDisabledException(type);
+        }
+    }
+
+    public boolean isModuleEnabled(ModuleType type) {
+        return modules.containsKey(type);
     }
 }
