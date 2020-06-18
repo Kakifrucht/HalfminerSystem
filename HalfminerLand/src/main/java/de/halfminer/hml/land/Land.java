@@ -364,7 +364,8 @@ public class Land extends LandClass {
 
     @Override
     public String toString() {
-        return getWorld().getName() + ",x" + getX() + ",z" + getZ();
+        return getWorld().getName() + ",x" + getX() + ",z" + getZ()
+                + (hasOwner() ? " (Owner: " + getOwner().getUniqueId() + ")" : "");
     }
 
     @Override
