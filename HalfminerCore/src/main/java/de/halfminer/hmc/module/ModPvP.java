@@ -225,14 +225,12 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
     @EventHandler(ignoreCancelled = true)
     public void lowerRegenerationDuringFight(EntityRegainHealthEvent e) {
 
-        if (!hmc.isModuleEnabled(ModuleType.COMBAT_LOG)) {
-            return;
-        }
-
-        ModCombatLog combatLog = null;
+        ModCombatLog combatLog;
         try {
             combatLog = (ModCombatLog) hmc.getModule(ModuleType.COMBAT_LOG);
-        } catch (ModuleDisabledException ignored) {}
+        } catch (ModuleDisabledException ignored) {
+            return;
+        }
 
         if (e.getEntity() instanceof Player
                 && e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.SATIATED)
