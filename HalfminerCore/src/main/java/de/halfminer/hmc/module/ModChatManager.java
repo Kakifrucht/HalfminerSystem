@@ -47,15 +47,11 @@ import java.util.concurrent.TimeUnit;
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
     private static final String PREFIX = "Chat";
-    /**
-     * On german keyboards, the command prefix '/' is situated on the 7 key, so players who
-     * want to send a command often type '7' instead (for example when caps lock is active).
-     */
-    private static final String ACCIDENTAL_CHAT_CHARACTER = "7";
 
     private List<Pair<String, String>> chatFormats;
     private String topFormat;
     private String defaultFormat;
+    private String accidentalChatCharacter;
 
     private Cache<Player, Boolean> wasMentioned;
 
@@ -79,10 +75,17 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
         String message = filterMessage(p, e.getMessage());
 
         // test if player wanted to send a command instead of chatting, correct their mistake
-        if (message.startsWith(ACCIDENTAL_CHAT_CHARACTER) && message.length() > 1) {
+        if (accidentalChatCharacter.length() > 0
+                && message.startsWith(accidentalChatCharacter)
+                && message.length() > 1) {
+
             String command = message.substring(1).split(" ")[0].toLowerCase();
             if (server.getCommandAliases().containsKey(command) || server.getPluginCommand(command) != null) {
-                server.getScheduler().runTask(hmc, () -> p.chat("/" + message.substring(1)));
+                server.getScheduler().runTask(hmc, () -> {
+                    p.chat("/" + message.substring(1));
+                    hmc.getLogger().info(p.getName() + " used accidental chat character and has been corrected");
+                });
+
                 e.setCancelled(true);
                 return;
             }
@@ -331,6 +334,8 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
             chatFormats.remove(chatFormats.size() - 1);
         }
+
+        accidentalChatCharacter = hmc.getConfig().getString("chat.accidentalChatCharacter", "");
     }
 
     @Override
