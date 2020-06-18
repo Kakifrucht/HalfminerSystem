@@ -39,6 +39,7 @@ import java.util.concurrent.TimeUnit;
  *   - Using formatting codes
  *   - Posting links/IPs
  *   - Writing capitalized
+ * - Fixes accidental commands that land in chat, due to caps lock being active
  */
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
@@ -47,6 +48,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     private List<Pair<String, String>> chatFormats;
     private String topFormat;
     private String defaultFormat;
+    private String accidentalChatCharacter;
 
     private Cache<Player, Boolean> wasMentioned;
 
@@ -62,13 +64,30 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     public void onChat(AsyncPlayerChatEvent e) {
 
         Player p = e.getPlayer();
+        String message = filterMessage(p, e.getMessage());
+
+        // test if player wanted to send a command instead of chatting, correct their mistake
+        if (accidentalChatCharacter.length() > 0
+                && message.startsWith(accidentalChatCharacter)
+                && message.length() > 1) {
+
+            String command = message.substring(1).split(" ")[0].toLowerCase();
+            if (server.getCommandAliases().containsKey(command) || server.getPluginCommand(command) != null) {
+                server.getScheduler().runTask(hmc, () -> {
+                    p.chat("/" + message.substring(1));
+                    hmc.getLogger().info(p.getName() + " used accidental chat character and has been corrected");
+                });
+
+                e.setCancelled(true);
+                return;
+            }
+        }
+
         if (isGlobalmuted && !p.hasPermission("hmc.chat.bypassglobalmute")) {
             MessageBuilder.create("modChatManGlobalmuteDenied", hmc, PREFIX).sendMessage(p);
             e.setCancelled(true);
             return;
         }
-
-        String message = filterMessage(p, e.getMessage());
 
         // spam filter
         if (!p.hasPermission("hmc.chat.spam")) {
@@ -273,6 +292,8 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
 
             chatFormats.remove(chatFormats.size() - 1);
         }
+
+        accidentalChatCharacter = hmc.getConfig().getString("chat.accidentalChatCharacter", "");
     }
 
     @Override

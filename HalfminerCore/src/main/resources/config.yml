@@ -119,6 +119,10 @@ chat:
   formats:
   - 'owner:%CPREFIX% &r- &l%PLAYER%%SUFFIX%: &7%MESSAGE%'
   - 'default:%CPREFIX% &r- %PLAYER%: &7%MESSAGE%'
+  #If message in chat starts with given character the server will check if the player wanted to type a command instead and correct them
+  #On german keyboards, the command prefix '/' is situated on the key for number 7, set this to your key that contains the '/'
+  #Set to empty string ('') to disable feature
+  accidentalChatCharacter: '7'
 combatLog:
   #Broadcast when a player logs out
   broadcastLog: true
