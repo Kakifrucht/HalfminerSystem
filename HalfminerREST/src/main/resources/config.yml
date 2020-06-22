@@ -2,5 +2,7 @@ server:
   port: 8080
   whitelistedIPs:
   - '0.0.0.0'
-  #Set to true if server runs behind reverse proxy, such as nginx, to parse real ip from header instead of proxy ip
+  # Set to true if server runs behind reverse proxy, such as nginx, to parse real ip from header instead of proxy ip
   proxyMode: false
+  # Will log all incoming requests if set to true
+  logRequests: false

@@ -7,6 +7,7 @@ To use SSL it is recommended to setup a reverse proxy pointing to the configured
 - Includes very light HTTP server ([nanohttpd](https://github.com/NanoHttpd/nanohttpd))
 - Define port and whitelisted IP's via config
   - Toggle proxy mode to read real IP from header if running behind reverse proxy
+- Toggle request logging to Minecraft console
 - Returns JSON messages
 - **REST Commands**
   - ``/player``
