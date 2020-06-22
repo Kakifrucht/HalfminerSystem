@@ -79,13 +79,13 @@ public class Cmdhmcapi extends HalfminerCommand {
                     SkullMeta skull = (SkullMeta) hand.getItemMeta();
 
                     if (!skull.hasOwner()) {
-                        showErrorMessage();
+                        showNotPlayerHeadErrorMessage();
                         return;
                     }
 
                     HalfminerPlayer skullOwner = storage.getPlayer(skull.getOwningPlayer());
                     if (!skullOwner.wasSeenBefore()) {
-                        showErrorMessage();
+                        showNotPlayerHeadErrorMessage();
                         return;
                     }
 
@@ -150,5 +150,9 @@ public class Cmdhmcapi extends HalfminerCommand {
 
     private void showErrorMessage() {
         server.dispatchCommand(server.getConsoleSender(), "vt run casino:error " + player.getName());
+    }
+
+    private void showNotPlayerHeadErrorMessage() {
+        server.dispatchCommand(server.getConsoleSender(), "vt run casino:rouletteplayernotfound " + player.getName());
     }
 }
