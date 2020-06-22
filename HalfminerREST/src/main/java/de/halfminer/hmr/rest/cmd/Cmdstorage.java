@@ -39,6 +39,11 @@ public class Cmdstorage extends RESTCommand implements MethodDELETE, MethodGET, 
 
             basePath = basePath.substring(0, basePath.length() - 1);
 
+            // return error if sanitized string doesn't match
+            if (basePath.length() != basePath.replaceAll("[^a-zA-Z0-9]","").length()) {
+                return false;
+            }
+
             long expiryStamp = storage.getLong(basePath + ".expiry");
             if (expiryStamp > 0 && expiryStamp < System.currentTimeMillis() / 1000) {
                 storage.set(basePath, null);

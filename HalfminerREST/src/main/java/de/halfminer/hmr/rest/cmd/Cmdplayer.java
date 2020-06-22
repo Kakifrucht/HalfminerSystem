@@ -28,6 +28,12 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
 
             UUID toResolve = null;
             String param = uriParsed.getArgument(0);
+
+            // if string needs sanitation return not found
+            if (param.length() != param.replaceAll("[^a-zA-Z0-9_]","").length()) {
+                return ResponseBuilder.getNotFoundResponse("invalid uuid");
+            }
+
             if (param.length() == 36) {
                 try {
                     toResolve = UUID.fromString(param);
@@ -90,7 +96,7 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
         return returnNotFoundDefault();
     }
 
-    private class Response {
+    private static class Response {
 
         final String name;
         final String uuid;
