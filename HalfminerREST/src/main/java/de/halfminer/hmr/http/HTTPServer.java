@@ -20,12 +20,14 @@ public class HTTPServer extends NanoHTTPD {
     private final Logger logger;
     private final Set<String> whitelistedIPs;
     private final boolean proxyMode;
+    private final boolean logRequests;
 
-    public HTTPServer(Logger logger, int port, Set<String> whitelistedIPs, boolean proxyMode) throws IOException {
+    public HTTPServer(Logger logger, int port, Set<String> whitelistedIPs, boolean proxyMode, boolean logRequests) throws IOException {
         super(port);
         this.logger = logger;
         this.whitelistedIPs = whitelistedIPs;
         this.proxyMode = proxyMode;
+        this.logRequests = logRequests;
         this.start();
     }
 
@@ -41,6 +43,11 @@ public class HTTPServer extends NanoHTTPD {
         }
 
         if (!whitelistedIPs.contains(ipAddress)) {
+
+            if (logRequests) {
+                logger.info("HalfminerREST received request from non whitelisted entity " + ipAddress);
+            }
+
             return ResponseBuilder.create().setStatus(Response.Status.FORBIDDEN).setMimeType("").returnResponse();
         }
 
@@ -48,6 +55,7 @@ public class HTTPServer extends NanoHTTPD {
         Method method = session.getMethod();
 
         // read body for POST/PUT/DELETE
+        String payload = null;
         if (!Method.GET.equals(method)) {
 
             // only parse application/x-www-form-urlencoded, disallow different body types for the time being
@@ -79,22 +87,27 @@ public class HTTPServer extends NanoHTTPD {
             // parse content body
             int lastSubstring = 0;
             String currentKey = "";
-            String toParse = new String(buffer);
-            for (int i = 0; i < toParse.length(); i++) {
-                if (toParse.charAt(i) == '=' || toParse.charAt(i) == '&') {
+            payload = new String(buffer);
+            for (int i = 0; i < payload.length(); i++) {
+                if (payload.charAt(i) == '=' || payload.charAt(i) == '&') {
                     if (currentKey.length() > 0) {
-                        bodyParsed.put(currentKey, toParse.substring(lastSubstring, i));
+                        bodyParsed.put(currentKey, payload.substring(lastSubstring, i));
                         currentKey = "";
                     } else {
-                        currentKey = toParse.substring(lastSubstring, i);
+                        currentKey = payload.substring(lastSubstring, i);
                     }
                     lastSubstring = i + 1;
                 }
             }
 
             if (currentKey.length() > 0) {
-                bodyParsed.put(currentKey, toParse.substring(lastSubstring, toParse.length()));
+                bodyParsed.put(currentKey, payload.substring(lastSubstring));
             }
+        }
+
+        if (logRequests) {
+            logger.info("HalfminerREST received " + method.toString() + " request: " + session.getUri()
+                    + (payload != null ? " " + payload : ""));
         }
 
         RESTCommand command;

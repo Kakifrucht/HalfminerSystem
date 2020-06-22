@@ -107,13 +107,15 @@ public class HalfminerREST extends JavaPlugin {
         }
 
         boolean proxyMode = getConfig().getBoolean("server.proxyMode", false);
+        boolean logRequests = getConfig().getBoolean("server.logRequests", false);
         try {
-            server = new HTTPServer(getLogger(), port, whitelist, proxyMode);
+            server = new HTTPServer(getLogger(), port, whitelist, proxyMode, logRequests);
         } catch (IOException e) {
             getLogger().severe("Couldn't bind port " + port + ", disabling");
             return false;
         }
 
+        getLogger().info("Reload successful");
         return true;
     }
 }
