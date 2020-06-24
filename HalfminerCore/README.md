@@ -36,6 +36,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
   - AutoMessage
     - Broadcasts messages in a given interval
     - Messages configurable with support for clickable commands
+    - Text separators and blank lines can be toggled for every message
   - ChatManager
     - Hooks into Vault to get prefix and suffix
     - Custom chatformats

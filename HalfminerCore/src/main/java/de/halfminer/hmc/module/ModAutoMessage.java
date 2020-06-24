@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * - Sends messages in a given interval
- * - Messages configurable
- *   - Commands can be made clickable (start with '~' and encapsulate command with trailing '/')
+ * - Broadcasts messages in a given interval
+ * - Messages configurable with support for clickable commands
+ * - Text separators and blank lines can be toggled for every message
  */
 @SuppressWarnings("unused")
 public class ModAutoMessage extends HalfminerModule {
@@ -27,7 +27,9 @@ public class ModAutoMessage extends HalfminerModule {
     public void loadConfig() {
 
         List<String> messagesList = hmc.getConfig().getStringList("autoMessage.messages");
-        String separator = MessageBuilder.returnMessage("lineSeparator");
+        boolean addSeparators = hmc.getConfig().getBoolean("autoMessage.addSeparators", true);
+        boolean addBlankLines = hmc.getConfig().getBoolean("autoMessage.addBlankLines", true);
+        String separator = MessageBuilder.returnMessage("lineSeparator") + ChatColor.RESET;
 
         // If no messages are set disable
         if (messagesList.size() == 0) {
@@ -41,12 +43,19 @@ public class ModAutoMessage extends HalfminerModule {
             boolean parseMessage = message.startsWith("~");
 
             String buildMessage = parseMessage ? message.substring(1) : message;
-            buildMessage = " \n" + separator + ChatColor.RESET
-                    + ChatColor.translateAlternateColorCodes('&', buildMessage) + ChatColor.RESET
-                    + "\n" + separator + ChatColor.RESET
-                    + " ";
+            buildMessage = ChatColor.translateAlternateColorCodes('&', buildMessage);
+            if (addSeparators) {
+                buildMessage = separator + "\n" + buildMessage + ChatColor.RESET + "\n" + separator;
+            }
 
-            if (parseMessage) buildMessage = "~" + buildMessage;
+            if (addBlankLines) {
+                buildMessage = ChatColor.RESET + " \n" + buildMessage + "\n ";
+            }
+
+            if (parseMessage) {
+                buildMessage = "~" + buildMessage;
+            }
+
             messages.add(buildMessage);
         }
 

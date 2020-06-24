@@ -22,7 +22,7 @@ localization:
   commandClickHover: 'Klicken, um das Kommando auszuführen'
   consoleName: 'Konsole'
   errorOccurred: '&cEin Fehler ist aufgetreten, bitte wende dich an ein Teammitglied'
-  lineSeparator: '&e&m------------------------------------------------\n'
+  lineSeparator: '&e&m------------------------------------------------'
   noPermission: '&cDu hast nicht die Berechtigung dies zu verwenden'
   notAPlayer: 'Dieses Kommando kann nur als Spieler ausgeführt werden'
   playerDoesNotExist: '&cDieser Spieler existiert nicht'

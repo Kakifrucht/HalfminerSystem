@@ -108,6 +108,10 @@ antiXray:
 autoMessage:
   #Time between each message
   intervalSeconds: 240
+  #Adds lineSeparators before and after messages
+  addSeparators: true
+  #Adds a blank line before and after messages
+  addBlankLines: true
   messages:
   - 'A message'
   - 'Another message'
