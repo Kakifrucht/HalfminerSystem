@@ -4,16 +4,17 @@ import de.halfminer.hml.WorldGuardHelper;
 import de.halfminer.hml.data.LandPlayer;
 import de.halfminer.hml.data.LandStorage;
 import de.halfminer.hml.data.PinnedTeleport;
+import de.halfminer.hml.land.FlyBoard;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Cmdhml extends LandCommand {
 
@@ -129,7 +130,11 @@ public class Cmdhml extends LandCommand {
         }
 
         LandPlayer landPlayer = hml.getLandStorage().getLandPlayer(halfminerPlayer);
-        int flyTimeLeft = landPlayer.getFlyTimeLeft();
+        FlyBoard flyBoard = hml.getBoard().getFlyBoard();
+        OfflinePlayer offlinePlayer = halfminerPlayer.getBase();
+        boolean isFlying = offlinePlayer.isOnline() && flyBoard.isPlayerFlying(offlinePlayer.getPlayer());
+
+        int flyTimeLeft = isFlying ? flyBoard.getFlyTimeLeft(offlinePlayer.getPlayer()) : landPlayer.getFlyTimeLeft();
 
         int setTo = -1;
         if (args.length > 2) {
@@ -140,7 +145,16 @@ public class Cmdhml extends LandCommand {
 
         boolean setFlyTime = setTo >= 0;
         if (setFlyTime) {
+            // if player is currently flying set fly time while fly is not active
+            if (isFlying) {
+                flyBoard.togglePlayerFlying(offlinePlayer.getPlayer());
+            }
+
             landPlayer.setFlyTimeLeft(setTo);
+
+            if (isFlying) {
+                flyBoard.togglePlayerFlying(offlinePlayer.getPlayer());
+            }
         }
 
         MessageBuilder.create("cmdHmlFlyTime" + (setFlyTime ? "Set" : ""), hml)
@@ -174,11 +188,10 @@ public class Cmdhml extends LandCommand {
         }
 
         int setFreeAmount = landPlayer.getFreeLands();
-        int hasFreeAmount = board.getLands(toEdit)
+        int hasFreeAmount = (int) board.getLands(toEdit)
                 .stream()
                 .filter(Land::isFreeLand)
-                .collect(Collectors.toList())
-                .size();
+                .count();
 
         boolean setFreeLands = setTo >= 0;
         if (setFreeLands) {
