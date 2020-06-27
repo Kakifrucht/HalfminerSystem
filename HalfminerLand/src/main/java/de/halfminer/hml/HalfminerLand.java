@@ -74,24 +74,31 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
 
             switch (args[0].toLowerCase()) {
                 case "buy":
+                case "b":
                     landCommand = new Cmdbuy();
                     break;
                 case "friend":
+                case "fr":
                     landCommand = new Cmdfriend();
                     break;
                 case "fly":
+                case "f":
                     landCommand = new Cmdfly();
                     break;
                 case "info":
+                case "i":
                     landCommand = new Cmdinfo();
                     break;
                 case "sell":
+                case "s":
                     landCommand = new Cmdsell();
                     break;
                 case "teleport":
+                case "t":
                     landCommand = new Cmdteleport();
                     break;
                 case "list":
+                case "l":
                     landCommand = new Cmdlist();
                     break;
                 default:
