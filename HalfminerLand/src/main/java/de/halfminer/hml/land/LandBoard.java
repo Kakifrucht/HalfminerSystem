@@ -195,19 +195,20 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
             return Collections.singletonList(land);
         }
 
-        List<Land> ownedLandSet;
+        List<Land> ownedLandList;
         if (land.isServerLand()) {
-            ownedLandSet = getLandsOfServer();
+            ownedLandList = getLandsOfServer();
         } else {
-            ownedLandSet = getLands(land.getOwner());
+            ownedLandList = getLands(land.getOwner());
         }
 
         List<Land> connectedList = new ArrayList<>();
-        List<Land> leftToInsert = new LinkedList<>(ownedLandSet);
+        List<Land> leftToInsert = new LinkedList<>(ownedLandList);
         connectedList.add(land);
 
         // artificially cap at 10 iterations, as we run this on main server thread and don't want to take too long
-        for (int i = 0; i < 10; i++) {
+        final int MAX_ITERATIONS = 10;
+        for (int i = 0; i < MAX_ITERATIONS; i++) {
 
             List<Land> addToConnected = new ArrayList<>();
             for (Land ownedLand : leftToInsert) {

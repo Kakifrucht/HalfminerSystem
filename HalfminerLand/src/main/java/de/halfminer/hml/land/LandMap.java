@@ -89,13 +89,13 @@ class LandMap {
 
     List<Land> getOwnedLandList(HalfminerPlayer halfminerPlayer) {
 
-        List<Land> set = ownedLandMap.getOrDefault(halfminerPlayer, Collections.emptyList());
-        boolean removed = set.removeIf(land -> !land.hasOwner() || !land.getOwner().equals(halfminerPlayer) || land.isServerLand());
-        if (removed && set.isEmpty()) {
+        List<Land> ownedList = ownedLandMap.getOrDefault(halfminerPlayer, Collections.emptyList());
+        boolean removed = ownedList.removeIf(land -> !land.hasOwner() || !land.getOwner().equals(halfminerPlayer) || land.isServerLand());
+        if (removed && ownedList.isEmpty()) {
             ownedLandMap.remove(halfminerPlayer);
         }
 
-        return new ArrayList<>(set);
+        return new ArrayList<>(ownedList);
     }
 
     Collection<Land> getLandCollection() {

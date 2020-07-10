@@ -169,7 +169,7 @@ public class Message {
         toReturn = doPlaceholderReplace(toReturn);
         toReturn = ChatColor.translateAlternateColorCodes(COLOR_CODE, toReturn).replace("\\n", "\n");
 
-        // if logging, remove color codes and remove encapsulating command '/' if necessary
+        // if logging, remove color codes and remove encapsulating COMMAND_PREFIX if necessary
         if (loggingMode) {
             toReturn = ChatColor.stripColor(toReturn);
             if (startsWithClickableChar) {
@@ -273,7 +273,7 @@ public class Message {
     /**
      * Parses a string using the Component API ({@link net.md_5.bungee.api.chat.BaseComponent}).
      * Commands will be made clickable and italic, adding a hover message to the command. Commands
-     * must be incapsulated with trailing '/' character.
+     * must be incapsulated with trailing {@link #COMMAND_PREFIX} character.
      *
      * @param text string that will be parsed
      * @return TextComponent that is ready to be sent to a {@link org.bukkit.entity.Player}
