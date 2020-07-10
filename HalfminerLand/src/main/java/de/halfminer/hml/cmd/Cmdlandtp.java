@@ -138,13 +138,13 @@ public class Cmdlandtp extends LandCommand {
             if (teleportName != null) {
 
                 Land teleportLand = board.getLandFromTeleport(teleportName);
-                if (!onlinePlayer.equals(player)) {
-                    lPlayer.setShownTeleport(null);
-                } else if (teleportLand != null
+                if (teleportLand != null
                         && teleportLand.isOwner(onlinePlayer)
                         && !containsTeleport(menuEntries, teleportName)) {
 
                     menuEntries.add(new TeleportEntry(onlinePlayer, teleportName, false));
+                } else if (!onlinePlayer.equals(player)) { // remove pinned teleport, since it is no longer valid
+                    lPlayer.setShownTeleport(null);
                 }
             }
         }
@@ -265,7 +265,7 @@ public class Cmdlandtp extends LandCommand {
             } else if (owner != null) { // playerskull
                 itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
 
-                // don't resolve skulls of offline players, as it hogs the main thread
+                // don't resolve skulls of offline players, as it hangs the main thread
                 if (owner.isOnline()) {
                     SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
                     skullMeta.setOwningPlayer(owner);
