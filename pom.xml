@@ -21,7 +21,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hms.version>4.2.2</hms.version>
+        <hms.version>4.2.3</hms.version>
         <spigot.version>1.15.2-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
