@@ -4,7 +4,7 @@ import de.halfminer.hmc.module.statstop.DefaultTopBoard;
 import de.halfminer.hmc.module.statstop.TopBoard;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -53,9 +53,9 @@ public class ModStatsTop extends HalfminerModule implements Listener {
             StringArgumentSeparator argumentSeparator = new StringArgumentSeparator(line, ',');
 
             if (!argumentSeparator.meetsLength(3)) {
-                MessageBuilder.create("modStatsTopInvalidLine", hmc)
+                Message.create("modStatsTopInvalidLine", hmc)
                         .addPlaceholder("%LINE%", line)
-                        .logMessage(Level.WARNING);
+                        .log(Level.WARNING);
                 continue;
             }
 
@@ -65,17 +65,17 @@ public class ModStatsTop extends HalfminerModule implements Listener {
             int maximumValue = Integer.MAX_VALUE;
 
             if (type == null) {
-                MessageBuilder.create("modStatsTopInvalidType", hmc)
+                Message.create("modStatsTopInvalidType", hmc)
                         .addPlaceholder("%TYPE%", argumentSeparator.getArgument(1))
-                        .logMessage(Level.WARNING);
+                        .log(Level.WARNING);
                 continue;
             }
 
             // don't allow the same type twice
             if (boards.containsKey(type)) {
-                MessageBuilder.create("modStatsTopTypeAlreadyUsed", hmc)
+                Message.create("modStatsTopTypeAlreadyUsed", hmc)
                         .addPlaceholder("%TYPE%", argumentSeparator.getArgument(1))
-                        .logMessage(Level.WARNING);
+                        .log(Level.WARNING);
                 continue;
             }
 

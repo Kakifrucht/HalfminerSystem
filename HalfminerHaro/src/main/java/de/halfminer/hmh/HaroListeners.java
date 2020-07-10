@@ -7,7 +7,7 @@ import de.halfminer.hmh.tasks.TitleUpdateTask;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -63,7 +63,7 @@ public class HaroListeners extends HaroClass implements Listener {
         }
 
         if (kickMessageKey != null) {
-            String kickMessage = MessageBuilder.returnMessage(kickMessageKey, hmh, false);
+            String kickMessage = Message.returnMessage(kickMessageKey, hmh, false);
             e.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, kickMessage);
         }
     }
@@ -78,14 +78,14 @@ public class HaroListeners extends HaroClass implements Listener {
         if (isInGame(player)) {
             hmh.getPlayerInitializer().initializePlayer(player);
 
-            MessageBuilder.create("listenerJoinedInfo", hmh)
+            Message.create("listenerJoinedInfo", hmh)
                     .addPlaceholder("TIMELEFT", haroPlayer.getTimeLeftSeconds() / 60)
-                    .sendMessage(player);
+                    .send(player);
 
-            MessageBuilder.create("listenerJoinedLogTime", hmh)
+            Message.create("listenerJoinedLogTime", hmh)
                     .addPlaceholder("PLAYER", player.getName())
                     .addPlaceholder("TIMELEFT", haroPlayer.getTimeLeftSeconds())
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
         }
 
         titleUpdateTask.updateTitles();
@@ -128,15 +128,15 @@ public class HaroListeners extends HaroClass implements Listener {
                 if (killer != null && !player.equals(killer)) {
                     setEliminatedAndKickPlayer(player, haroPlayer);
                     if (healthManager.increaseHealth(killer)) {
-                        MessageBuilder.create("listenerHealthIncreased", hmh)
+                        Message.create("listenerHealthIncreased", hmh)
                                 .addPlaceholder("NEWHEARTS", (int) healthManager.getMinecraftMaxHealth(killer) / 2)
-                                .sendMessage(killer);
+                                .send(killer);
                     }
                 } else {
                     if (healthManager.reduceHealth(player)) {
-                        MessageBuilder.create("listenerHealthReduced", hmh)
+                        Message.create("listenerHealthReduced", hmh)
                                 .addPlaceholder("NEWHEARTS", (int) healthManager.getMinecraftMaxHealth(player) / 2)
-                                .sendMessage(player);
+                                .send(player);
                     }
                 }
 
@@ -151,22 +151,22 @@ public class HaroListeners extends HaroClass implements Listener {
 
         // kick on next tick, also moves the messages below the default death message in chat order
         scheduler.runTaskLater(hmh, () -> {
-            String kickMessage = MessageBuilder.returnMessage("listenerDeathKick", hmh, false);
+            String kickMessage = Message.returnMessage("listenerDeathKick", hmh, false);
             player.kickPlayer(kickMessage);
 
-            MessageBuilder.create("listenerDeathBroadcast", hmh)
+            Message.create("listenerDeathBroadcast", hmh)
                     .addPlaceholder("PLAYER", player.getName())
                     .addPlaceholder("COUNTALIVE", haroStorage.getAddedPlayers(true).size())
-                    .broadcastMessage(false);
+                    .broadcast(false);
 
             if (haroStorage.isGameOver()) {
                 HaroPlayer winner = haroStorage.getAddedPlayers(true).get(0);
-                MessageBuilder.create("listenerGameWonBroadcast", hmh)
+                Message.create("listenerGameWonBroadcast", hmh)
                         .addPlaceholder("PLAYER", winner.getName())
-                        .broadcastMessage(true);
+                        .broadcast(true);
 
                 if (winner.isOnline()) {
-                    MessageBuilder.create("listenerGameWon", hmh).sendMessage(winner.getBase());
+                    Message.create("listenerGameWon", hmh).send(winner.getBase());
                 }
             }
         }, 1L);

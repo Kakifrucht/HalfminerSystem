@@ -5,7 +5,7 @@ import de.halfminer.hmh.data.HaroStorage;
 import de.halfminer.hmh.tasks.TimeCheckTask;
 import de.halfminer.hmh.tasks.TitleUpdateTask;
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -91,13 +91,13 @@ public class HalfminerHaro extends JavaPlugin {
                     break;
                 case "save":
                     haroStorage.storeDataOnDisk();
-                    MessageBuilder.create("dataSaved", this, MESSAGE_PREFIX).sendMessage(sender);
+                    Message.create("dataSaved", this, MESSAGE_PREFIX).send(sender);
                     return true;
                 case "reload":
                     reload();
-                    MessageBuilder.create("pluginReloaded", MESSAGE_PREFIX)
+                    Message.create("pluginReloaded", MESSAGE_PREFIX)
                             .addPlaceholder("%PLUGINNAME%", getName())
-                            .sendMessage(sender);
+                            .send(sender);
                     return true;
                 default:
                     sendUsage(sender);
@@ -110,17 +110,17 @@ public class HalfminerHaro extends JavaPlugin {
         if (haroCommand.hasPermission(sender)) {
             haroCommand.run(sender, argsTruncated);
         } else {
-            MessageBuilder.create("noPermission", MESSAGE_PREFIX).sendMessage(sender);
+            Message.create("noPermission", MESSAGE_PREFIX).send(sender);
         }
 
         return true;
     }
 
     private void sendUsage(CommandSender sender) {
-        MessageBuilder.create("cmdUsage", this)
+        Message.create("cmdUsage", this)
                 .addPlaceholder("VERSION", getDescription().getVersion())
                 .addPlaceholder("SYSTEMVERSION", HalfminerSystem.getInstance().getDescription().getVersion())
-                .sendMessage(sender);
+                .send(sender);
     }
 
     public HaroStorage getHaroStorage() {

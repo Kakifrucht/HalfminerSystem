@@ -1,7 +1,7 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
@@ -74,8 +74,8 @@ public class Cmdpin extends HalfminerCommand {
         storage.set(path + "ip", storage.getPlayer(player).getIPAddress());
         storage.set(path + "isUpgraded", level > 0);
 
-        MessageBuilder.create("cmdPinShow", hmc, "PIN")
+        Message.create("cmdPinShow", hmc, "PIN")
                 .addPlaceholder("%PIN%", pinCode)
-                .sendMessage(player);
+                .send(player);
     }
 }

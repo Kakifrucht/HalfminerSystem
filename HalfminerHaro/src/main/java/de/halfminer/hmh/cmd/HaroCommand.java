@@ -3,7 +3,7 @@ package de.halfminer.hmh.cmd;
 import de.halfminer.hmh.HalfminerHaro;
 import de.halfminer.hmh.HaroClass;
 import de.halfminer.hmh.data.HaroStorage;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -47,6 +47,6 @@ public abstract class HaroCommand extends HaroClass {
     }
 
     void sendNotAPlayerMessage() {
-        MessageBuilder.create("notAPlayer", HalfminerHaro.MESSAGE_PREFIX).sendMessage(sender);
+        Message.create("notAPlayer", HalfminerHaro.MESSAGE_PREFIX).send(sender);
     }
 }

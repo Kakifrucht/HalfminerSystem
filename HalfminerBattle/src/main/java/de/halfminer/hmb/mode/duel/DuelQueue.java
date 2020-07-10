@@ -8,7 +8,7 @@ import de.halfminer.hmb.data.BattleState;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanTitles;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -46,19 +46,19 @@ public class DuelQueue extends BattleClass {
     public void matchPlayer(final Player toMatch) {
 
         if (pm.hasQueueCooldown(toMatch)) {
-            MessageBuilder.create("modeGlobalQueueCooldown", hmb).sendMessage(toMatch);
+            Message.create("modeGlobalQueueCooldown", hmb).send(toMatch);
             return;
         }
 
         if (pm.isNotIdle(toMatch)) {
-            MessageBuilder.create("modeGlobalNotIdle", hmb).sendMessage(toMatch);
+            Message.create("modeGlobalNotIdle", hmb).send(toMatch);
             return;
         }
 
         if (waitingForMatch == null) {
             waitingForMatch = toMatch;
             pm.addToQueue(MODE, toMatch);
-            MessageBuilder.create("modeDuelAddedToQueue", hmb).sendMessage(toMatch);
+            Message.create("modeDuelAddedToQueue", hmb).send(toMatch);
 
             int time;
             if ((time = duelMode.getWaitingForMatchRemind()) > 0) {
@@ -70,9 +70,9 @@ public class DuelQueue extends BattleClass {
                             .filter(o -> !waitingForMatch.equals(o))
                             .collect(Collectors.toList());
 
-                    MessageBuilder.create("modeDuelPlayerWaitingForMatch", hmb)
+                    Message.create("modeDuelPlayerWaitingForMatch", hmb)
                             .addPlaceholder("%PLAYER%", toMatch.getName())
-                            .broadcastMessage(sendTo, false, "");
+                            .broadcast(sendTo, false, "");
                 }, time * 20);
             }
         } else {
@@ -99,37 +99,37 @@ public class DuelQueue extends BattleClass {
     public void requestSend(Player sender, Player sendTo, boolean useKit) {
 
         if (sender.equals(sendTo)) {
-            MessageBuilder.create("modeDuelRequestYourself", hmb).sendMessage(sender);
+            Message.create("modeDuelRequestYourself", hmb).send(sender);
             return;
         }
 
         if (sendTo == null || !sender.canSee(sendTo)) {
-            MessageBuilder.create("playerNotOnline", "Battle").sendMessage(sender);
+            Message.create("playerNotOnline", "Battle").send(sender);
             return;
         }
 
         if (sendTo.hasPermission("hmb.mode.duel.exempt.request")) {
-            MessageBuilder.create("modeDuelRequestExempt", hmb)
+            Message.create("modeDuelRequestExempt", hmb)
                     .addPlaceholder("%PLAYER%", sendTo.getName())
-                    .sendMessage(sender);
+                    .send(sender);
             return;
         }
 
         if (pm.hasQueueCooldown(sender)) {
-            MessageBuilder.create("modeGlobalQueueCooldown", hmb).sendMessage(sender);
+            Message.create("modeGlobalQueueCooldown", hmb).send(sender);
             return;
         }
 
         if (pm.isNotIdle(sender)) {
-            MessageBuilder.create("modeGlobalNotIdle", hmb).sendMessage(sender);
+            Message.create("modeGlobalNotIdle", hmb).send(sender);
             return;
         }
 
         // Requestee is waiting for match
         if (sendTo.equals(waitingForMatch) && useKit) {
-            MessageBuilder.create("modeDuelRequestWasWaitingForMatch", hmb)
+            Message.create("modeDuelRequestWasWaitingForMatch", hmb)
                     .addPlaceholder("%PLAYER%", sendTo.getName())
-                    .sendMessage(sender);
+                    .send(sender);
             playersMatched(sendTo, sender);
             clearWaitingForMatch();
             return;
@@ -138,35 +138,35 @@ public class DuelQueue extends BattleClass {
         // Requestee sent a request already, match if requestee sent the request before
         if (hasRequestedDuelWith(sendTo, sender)) {
             if (hasRequestedNokit.contains(sendTo) == useKit) {
-                MessageBuilder.create(useKit ? "modeDuelRequestAcceptErrorNokit" : "modeDuelRequestAcceptError", hmb)
+                Message.create(useKit ? "modeDuelRequestAcceptErrorNokit" : "modeDuelRequestAcceptError", hmb)
                         .addPlaceholder("%PLAYER%", sendTo.getName())
-                        .sendMessage(sender);
+                        .send(sender);
                 return;
             }
-            MessageBuilder.create("modeDuelRequestAccepted", hmb)
+            Message.create("modeDuelRequestAccepted", hmb)
                     .addPlaceholder("%PLAYER%", sendTo.getName())
-                    .sendMessage(sender);
-            MessageBuilder.create("modeDuelRequestWasAccepted", hmb)
+                    .send(sender);
+            Message.create("modeDuelRequestWasAccepted", hmb)
                     .addPlaceholder("%PLAYER%", sender.getName())
-                    .sendMessage(sendTo);
+                    .send(sendTo);
             playersMatched(sendTo, sender);
             return;
         }
 
         if (pm.isNotIdle(sendTo) && !pm.hasQueueCooldown(sendTo)) {
-            MessageBuilder.create("modeDuelRequesteeNotAvailable", hmb)
+            Message.create("modeDuelRequesteeNotAvailable", hmb)
                     .addPlaceholder("%PLAYER%", sendTo.getName())
-                    .sendMessage(sender);
+                    .send(sender);
             return;
         }
 
         // if none apply create a new request
-        MessageBuilder.create(useKit ? "modeDuelRequestSent" : "modeDuelRequestSentNokit", hmb)
+        Message.create(useKit ? "modeDuelRequestSent" : "modeDuelRequestSentNokit", hmb)
                 .addPlaceholder("%PLAYER%", sendTo.getName())
-                .sendMessage(sender);
-        MessageBuilder.create(useKit ? "modeDuelRequested" : "modeDuelRequestedNokit", hmb)
+                .send(sender);
+        Message.create(useKit ? "modeDuelRequested" : "modeDuelRequestedNokit", hmb)
                 .addPlaceholder("%PLAYER%", sender.getName())
-                .sendMessage(sendTo);
+                .send(sendTo);
 
         if (!useKit) {
             hasRequestedNokit.add(sender);
@@ -193,7 +193,7 @@ public class DuelQueue extends BattleClass {
     public void removeFromQueue(Player toRemove) {
 
         if (!pm.isInQueue(BattleModeType.DUEL, toRemove)) {
-            MessageBuilder.create("modeDuelNotInQueue", hmb).sendMessage(toRemove);
+            Message.create("modeDuelNotInQueue", hmb).send(toRemove);
             return;
         }
 
@@ -207,29 +207,29 @@ public class DuelQueue extends BattleClass {
             // if the partner of the partner is the player to be removed,
             // they are already matched, else notify about duel request cancel
             if (toRemove.equals(partnerOfPartner)) {
-                MessageBuilder.create("modeGlobalLeftQueue", hmb).sendMessage(toRemove);
-                MessageBuilder.create("modeDuelQueueRemovedNotTheCause", hmb)
+                Message.create("modeGlobalLeftQueue", hmb).send(toRemove);
+                Message.create("modeDuelQueueRemovedNotTheCause", hmb)
                         .addPlaceholder("%PLAYER%", toRemove.getName())
-                        .sendMessage(partner);
+                        .send(partner);
                 pm.setState(BattleState.IDLE, partner);
                 isSelectingArena.remove(partner);
                 hasRequestedNokit.remove(partner);
             } else {
-                MessageBuilder.create("modeDuelRequestCancel", hmb).sendMessage(toRemove);
+                Message.create("modeDuelRequestCancel", hmb).send(toRemove);
                 if (partner.isOnline()) {
-                    MessageBuilder.create("modeDuelRequestCancelled", hmb)
+                    Message.create("modeDuelRequestCancelled", hmb)
                             .addPlaceholder("%PLAYER%", toRemove.getName())
-                            .sendMessage(partner);
+                            .send(partner);
                 }
             }
 
         } else {
             if (waitingForMatch == toRemove) {
                 clearWaitingForMatch();
-                MessageBuilder.create("modeGlobalLeftQueue", hmb).sendMessage(toRemove);
+                Message.create("modeGlobalLeftQueue", hmb).send(toRemove);
             } else {
                 // if not waiting for match, the duel requested player has already left
-                MessageBuilder.create("modeDuelRequestCancel", hmb).sendMessage(toRemove);
+                Message.create("modeDuelRequestCancel", hmb).send(toRemove);
             }
         }
 
@@ -260,7 +260,7 @@ public class DuelQueue extends BattleClass {
 
         // send title containing name of duel partner
         HanTitles titleHandler = HalfminerSystem.getInstance().getTitlesHandler();
-        MessageBuilder titleMessage = MessageBuilder.create("modeDuelShowPartnerTitle", hmb)
+        Message titleMessage = Message.create("modeDuelShowPartnerTitle", hmb)
                 .togglePrefix()
                 .addPlaceholder("%PLAYER%", playerB.getName());
         titleHandler.sendTitle(playerA, titleMessage.returnMessage());
@@ -288,23 +288,23 @@ public class DuelQueue extends BattleClass {
 
         switch (freeArenas.size()) {
             case 0:
-                MessageBuilder.create("modeDuelChooseArenaNoneAvailable", hmb)
-                        .sendMessage(selector, partner);
+                Message.create("modeDuelChooseArenaNoneAvailable", hmb)
+                        .send(selector, partner);
                 break;
             case 1:
                 arenaWasSelected(selector, "random");
                 break;
             default:
                 if (refreshMessage) {
-                    MessageBuilder.create("modeDuelChooseArenaRefreshed", hmb).sendMessage(selector);
+                    Message.create("modeDuelChooseArenaRefreshed", hmb).send(selector);
                 } else {
-                    MessageBuilder.create("modeDuelChooseArena", hmb)
+                    Message.create("modeDuelChooseArena", hmb)
                             .addPlaceholder("%PLAYER%", partner.getName())
-                            .sendMessage(selector);
+                            .send(selector);
 
-                    MessageBuilder.create("modeDuelPartnerChoosingArena", hmb)
+                    Message.create("modeDuelPartnerChoosingArena", hmb)
                             .addPlaceholder("%PLAYER%", selector.getName())
-                            .sendMessage(partner);
+                            .send(partner);
                 }
 
                 am.sendArenaSelection(selector, freeArenas, "/duel choose ", "modeDuelChooseArenaRandom", false);
@@ -331,34 +331,34 @@ public class DuelQueue extends BattleClass {
         if (arenaName.equalsIgnoreCase("random")) {
             List<Arena> freeArenas = am.getFreeArenasFromType(MODE);
             selectedArena = (DuelArena) freeArenas.get(new Random().nextInt(freeArenas.size()));
-            MessageBuilder.create("modeDuelOpponentChoseRandom", hmb)
+            Message.create("modeDuelOpponentChoseRandom", hmb)
                     .addPlaceholder("%PLAYER%", player.getName())
-                    .sendMessage(playerB);
+                    .send(playerB);
         } else {
             selectedArena = (DuelArena) am.getArena(MODE, arenaName);
         }
 
         if (selectedArena == null || !selectedArena.isFree()) {
-            MessageBuilder.create("modeDuelChooseArenaInvalid", hmb).sendMessage(player);
+            Message.create("modeDuelChooseArenaInvalid", hmb).send(player);
             return true;
         }
 
         boolean useKit = !hasRequestedNokit.contains(player) && !hasRequestedNokit.contains(playerB);
         selectedArena.gameStart(player, playerB, useKit);
 
-        MessageBuilder messageBuilder = MessageBuilder.create(
+        Message messageBuilder = Message.create(
                 useKit ? "modeDuelCountdownStart" : "modeDuelCountdownStartNokit", hmb)
                 .addPlaceholder("%PLAYER%", playerB.getName())
                 .addPlaceholder("%ARENA%", selectedArena.getName());
 
-        messageBuilder.sendMessage(player);
-        messageBuilder.addPlaceholder("%PLAYER%", player.getName()).sendMessage(playerB);
+        messageBuilder.send(player);
+        messageBuilder.addPlaceholder("%PLAYER%", player.getName()).send(playerB);
 
-        MessageBuilder.create(useKit ? "modeDuelStartingLog" : "modeDuelStartingLogNokit", hmb)
+        Message.create(useKit ? "modeDuelStartingLog" : "modeDuelStartingLogNokit", hmb)
                 .addPlaceholder("%PLAYERA%", player.getName())
                 .addPlaceholder("%PLAYERB%", playerB.getName())
                 .addPlaceholder("%ARENA%", selectedArena.getName())
-                .logMessage(Level.INFO);
+                .log(Level.INFO);
 
         isSelectingArena.remove(player);
         hasRequestedNokit.removeAll(Arrays.asList(player, playerB));
@@ -385,12 +385,12 @@ public class DuelQueue extends BattleClass {
         arena.gameEnd();
 
         // Messaging
-        MessageBuilder.create(hasWinner ? "modeDuelGameWon" : "modeDuelGameTime", hmb)
+        Message.create(hasWinner ? "modeDuelGameWon" : "modeDuelGameTime", hmb)
                 .addPlaceholder("%PLAYER%", playerA.getName())
-                .sendMessage(winner);
-        MessageBuilder.create(hasWinner ? "modeDuelGameLost" : "modeDuelGameTime", hmb)
+                .send(winner);
+        Message.create(hasWinner ? "modeDuelGameLost" : "modeDuelGameTime", hmb)
                 .addPlaceholder("%PLAYER%", winner.getName())
-                .sendMessage(playerA);
+                .send(playerA);
 
         if (hasWinner) {
 
@@ -406,18 +406,18 @@ public class DuelQueue extends BattleClass {
                         .filter(obj -> !(obj.equals(winner) || obj.equals(playerA)))
                         .collect(Collectors.toList());
 
-                MessageBuilder.create(arena.isUseKit() ? "modeDuelWinBroadcast" : "modeDuelWinBroadcastNokit", hmb)
+                Message.create(arena.isUseKit() ? "modeDuelWinBroadcast" : "modeDuelWinBroadcastNokit", hmb)
                         .addPlaceholder("%WINNER%", winner.getName())
                         .addPlaceholder("%LOSER%", playerA.getName())
                         .addPlaceholder("%ARENA%", arena.getName())
-                        .broadcastMessage(sendTo, true, "");
+                        .broadcast(sendTo, true, "");
             }
         } else {
-            MessageBuilder.create("modeDuelTieLog", hmb)
+            Message.create("modeDuelTieLog", hmb)
                     .addPlaceholder("%PLAYERA%", winner.getName())
                     .addPlaceholder("%PLAYERB%", playerA.getName())
                     .addPlaceholder("%ARENA%", arena.getName())
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
         }
 
         isSelectingArena.forEach(p -> showFreeArenaSelection(p, true));

@@ -3,7 +3,7 @@ package de.halfminer.hmc.module;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,14 +48,14 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                 && Math.round(e.getFrom().getY()) == e.getFrom().getBlockY()
                 && lastGlitchAlert.getIfPresent(e.getPlayer()) == null) {
 
-            MessageBuilder.create("modGlitchProtectionMove", hmc, "AntiGlitch")
+            Message.create("modGlitchProtectionMove", hmc, "AntiGlitch")
                     .addPlaceholder("%PREFIX%", "Warnung")
                     .addPlaceholder("%PLAYER%", e.getPlayer().getName())
                     .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(e.getTo()))
                     .addPlaceholder("%WORLD%", e.getTo().getWorld().getName())
                     .addPlaceholder("%MATERIAL%",
                             Utils.makeStringFriendly(e.getFrom().getBlock().getType().toString()))
-                    .broadcastMessage("hmc.bypass.glitchcheck", true);
+                    .broadcast("hmc.bypass.glitchcheck", true);
             lastGlitchAlert.put(e.getPlayer(), true);
         }
     }
@@ -144,11 +144,11 @@ public class ModGlitchProtection extends HalfminerModule implements Listener, Sw
                             && loc.getWorld().getEnvironment().equals(World.Environment.NETHER)
                             && loc.getBlockY() > 127) {
                         p.setHealth(0.0d);
-                        MessageBuilder.create("modGlitchProtectionNether", hmc, "AntiGlitch").sendMessage(p);
-                        MessageBuilder.create("modGlitchProtectionNetherNotify", hmc, "AntiGlitch")
+                        Message.create("modGlitchProtectionNether", hmc, "AntiGlitch").send(p);
+                        Message.create("modGlitchProtectionNetherNotify", hmc, "AntiGlitch")
                                 .addPlaceholder("%PLAYER%", p.getName())
                                 .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(loc))
-                                .broadcastMessage("hmc.bypass.nethercheck", true);
+                                .broadcast("hmc.bypass.nethercheck", true);
                     }
                 }
             }, 100L, 100L);

@@ -1,6 +1,6 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,14 +49,14 @@ public class ModMotd extends HalfminerModule implements Listener {
         String newsString = coreStorage.getString("news");
         newsString = ChatColor.RESET + newsString;
 
-        String setMotd = MessageBuilder.create("modMotdLine", hmc)
+        String setMotd = Message.create("modMotdLine", hmc)
                 .addPlaceholder("%REPLACE%", newsString)
                 .returnMessage();
 
         List<String> strList = hmc.getConfig().getStringList("motd.randomColors");
         motd = new String[strList.size()];
         for (int i = 0; i < strList.size(); i++)
-            motd[i] = MessageBuilder.create(setMotd, hmc)
+            motd[i] = Message.create(setMotd, hmc)
                     .setDirectString()
                     .addPlaceholder("%COLOR%", '&' + strList.get(i))
                     .returnMessage();

@@ -113,7 +113,7 @@ public final class Utils {
      */
     public static String getPlayername(CommandSender toGet) {
         return toGet instanceof Player ?
-                toGet.getName() : MessageBuilder.returnMessage("consoleName");
+                toGet.getName() : Message.returnMessage("consoleName");
     }
 
     public static Set<Material> stringListToMaterialSet(List<String> list) {
@@ -123,9 +123,9 @@ public final class Utils {
             try {
                 toReturn.add(Material.matchMaterial(material));
             } catch (IllegalArgumentException ignored) {
-                MessageBuilder.create("utilInvalidMaterial")
+                Message.create("utilInvalidMaterial")
                         .addPlaceholder("%MATERIAL%", material)
-                        .logMessage(Level.WARNING);
+                        .log(Level.WARNING);
             }
         }
         return toReturn;
@@ -165,13 +165,13 @@ public final class Utils {
     }
 
     /**
-     * Splits the message from a given {@link MessageBuilder} at the <i>|</i> character and sets
+     * Splits the message from a given {@link Message} at the <i>|</i> character and sets
      * the first value to become the item's displayname and the rest to become the item lore.
      *
      * @param toModify {@link ItemStack} to modify
      * @param locale MessageBuilder with <i>|</i> character to split at
      */
-    public static void applyLocaleToItemStack(ItemStack toModify, MessageBuilder locale) {
+    public static void applyLocaleToItemStack(ItemStack toModify, Message locale) {
 
         String[] stackDataSplit = locale.returnMessage().split(Pattern.quote("|"));
 

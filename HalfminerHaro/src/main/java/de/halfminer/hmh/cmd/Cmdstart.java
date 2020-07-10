@@ -1,7 +1,7 @@
 package de.halfminer.hmh.cmd;
 
 import de.halfminer.hmh.data.HaroPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 
 /**
  * - Start a game, at least two players must be added to the game.
@@ -21,12 +21,12 @@ public class Cmdstart extends HaroCommand {
     protected void execute() {
 
         if (haroStorage.isGameRunning()) {
-            MessageBuilder.create("cmdStartGameIsRunning", hmh).sendMessage(sender);
+            Message.create("cmdStartGameIsRunning", hmh).send(sender);
             return;
         }
 
         if (haroStorage.getAddedPlayers(false).size() < 2) {
-            MessageBuilder.create("cmdStartNotEnoughPlayers", hmh).sendMessage(sender);
+            Message.create("cmdStartNotEnoughPlayers", hmh).send(sender);
             return;
         }
 
@@ -46,6 +46,6 @@ public class Cmdstart extends HaroCommand {
         haroStorage.setGameRunning(true);
 
         hmh.getTitleUpdateTask().updateTitles();
-        MessageBuilder.create("cmdStartBroadcast", hmh).broadcastMessage(true);
+        Message.create("cmdStartBroadcast", hmh).broadcast(true);
     }
 }

@@ -1,6 +1,6 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -101,13 +101,13 @@ public class ModPerformance extends HalfminerModule implements Listener {
         Block block = e.getBlock();
         if (block.getType() == Material.HOPPER && tooManyHoppers(block.getLocation())) {
             e.setCancelled(true);
-            MessageBuilder.create("modPerformanceReachedHopper", hmc, "Info").sendMessage(e.getPlayer());
+            Message.create("modPerformanceReachedHopper", hmc, "Info").send(e.getPlayer());
             if (logHopperLimit) {
-                MessageBuilder.create("modPerformanceReachedHopperLog", hmc)
+                Message.create("modPerformanceReachedHopperLog", hmc)
                         .addPlaceholder("%PLAYER%", e.getPlayer().getName())
                         .addPlaceholder("%LIMIT%", hopperLimit)
                         .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(block.getLocation()))
-                        .logMessage(Level.INFO);
+                        .log(Level.INFO);
             }
         }
     }

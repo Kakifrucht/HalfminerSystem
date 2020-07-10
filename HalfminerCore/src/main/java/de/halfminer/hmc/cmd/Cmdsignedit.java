@@ -1,7 +1,7 @@
 package de.halfminer.hmc.cmd;
 
 import de.halfminer.hmc.cmd.abs.HalfminerPersistenceCommand;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -52,9 +52,9 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                 }
             }
 
-            MessageBuilder.create("cmdSigneditCopy", hmc, PREFIX)
+            Message.create("cmdSigneditCopy", hmc, PREFIX)
                     .addPlaceholder("%AMOUNT%", amountToCopy)
-                    .sendMessage(player);
+                    .send(player);
             setPersistent(player.getUniqueId());
             return;
 
@@ -68,10 +68,10 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
                         lineText = Utils.arrayToString(args, 1, true);
                     }
 
-                    MessageBuilder.create("cmdSigneditSet", hmc, PREFIX)
+                    Message.create("cmdSigneditSet", hmc, PREFIX)
                             .addPlaceholder("%LINE%", lineNumber + 1)
                             .addPlaceholder("%TEXT%", lineText)
-                            .sendMessage(player);
+                            .send(player);
                     setPersistent(player.getUniqueId());
                     return;
                 } else {
@@ -101,19 +101,19 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
 
             if (amountToCopy > 0 && signToBeCopied == null) {
                 signToBeCopied = sign.getLines();
-                MessageBuilder.create("cmdSigneditSignCopied", hmc, PREFIX).sendMessage(player);
+                Message.create("cmdSigneditSignCopied", hmc, PREFIX).send(player);
             } else {
 
                 if (signToBeCopied != null) {
                     for (int i = 0; i < 4; i++) sign.setLine(i, signToBeCopied[i]);
                     if (--amountToCopy == 0) isDone = true;
-                    MessageBuilder.create("cmdSigneditSignPasted", hmc, PREFIX)
+                    Message.create("cmdSigneditSignPasted", hmc, PREFIX)
                             .addPlaceholder("%AMOUNT%", amountToCopy)
-                            .sendMessage(player);
+                            .send(player);
                 } else {
                     sign.setLine(lineNumber, lineText);
                     String messageKey = lineText.length() > 15 ? "cmdSigneditLinePastedWarn" : "cmdSigneditLinePasted";
-                    MessageBuilder.create(messageKey, hmc, PREFIX).sendMessage(player);
+                    Message.create(messageKey, hmc, PREFIX).send(player);
                     isDone = true;
                 }
 
@@ -128,6 +128,6 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
     }
 
     private void showUsage() {
-        MessageBuilder.create("cmdSigneditUsage", hmc, PREFIX).sendMessage(player);
+        Message.create("cmdSigneditUsage", hmc, PREFIX).send(player);
     }
 }

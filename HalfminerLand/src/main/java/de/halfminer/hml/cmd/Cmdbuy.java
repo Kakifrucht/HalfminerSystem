@@ -3,7 +3,7 @@ package de.halfminer.hml.cmd;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.BuyContract;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.StringArgumentSeparator;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class Cmdbuy extends LandCommand {
 
                     // check if world is disabled
                     if (minimumCoordinateInt < 0 && !player.hasPermission("hml.bypass.buydisabledworld")) {
-                        MessageBuilder.create("cmdBuyNotBuyableWorld", hml).sendMessage(player);
+                        Message.create("cmdBuyNotBuyableWorld", hml).send(player);
                         return;
                     }
 
@@ -55,9 +55,9 @@ public class Cmdbuy extends LandCommand {
                                 && landToBuy.getZLandCorner() < minimumCoordinateInt
                                 && landToBuy.getZLandCorner() > -minimumCoordinateInt) {
 
-                            MessageBuilder.create("cmdBuyNotBuyableCoordinate", hml)
+                            Message.create("cmdBuyNotBuyableCoordinate", hml)
                                     .addPlaceholder("%MINIMUMCOORDS%", minimumCoordinateInt)
-                                    .sendMessage(player);
+                                    .send(player);
                             return;
                         }
                     }
@@ -72,21 +72,21 @@ public class Cmdbuy extends LandCommand {
 
         if (status.equals(Land.BuyableStatus.ALREADY_OWNED)) {
 
-            MessageBuilder.create("cmdBuyAlreadyOwned" + (landToBuy.isOwner(player) ? "Self" : ""), hml)
+            Message.create("cmdBuyAlreadyOwned" + (landToBuy.isOwner(player) ? "Self" : ""), hml)
                     .addPlaceholder("%PLAYER%", landToBuy.getOwnerName())
-                    .sendMessage(player);
+                    .send(player);
             return;
         }
 
         if (!buyAsServer) {
 
             if (status.equals(Land.BuyableStatus.LAND_NOT_BUYABLE)) {
-                MessageBuilder.create("cmdBuyNotBuyable", hml).sendMessage(player);
+                Message.create("cmdBuyNotBuyable", hml).send(player);
                 return;
             }
 
             if (status.equals(Land.BuyableStatus.OTHER_PLAYERS_ON_LAND)) {
-                MessageBuilder.create("cmdBuyNotBuyableNotVacant", hml).sendMessage(player);
+                Message.create("cmdBuyNotBuyableNotVacant", hml).send(player);
                 return;
             }
         }
@@ -134,9 +134,9 @@ public class Cmdbuy extends LandCommand {
         double money = hms.getHooksHandler().getMoney(player);
         double cost = contract.getCost();
         if (cost > money) {
-            MessageBuilder.create("notEnoughMoney", hml)
+            Message.create("notEnoughMoney", hml)
                     .addPlaceholder("%COST%", cost)
-                    .sendMessage(player);
+                    .send(player);
             return;
         }
 
@@ -154,12 +154,12 @@ public class Cmdbuy extends LandCommand {
             // buy land
             contractManager.fulfillContract(contract);
             String messageKey = "cmdBuySuccess" + (buyAsServer ? "AsServer" : (contract.isFreeBuy() ? "Free" : ""));
-            MessageBuilder.create(messageKey, hml)
+            Message.create(messageKey, hml)
                     .addPlaceholder("%COST%", cost)
                     .addPlaceholder("%FREELANDSOWNED%", freeLandsOwned + 1)
                     .addPlaceholder("%FREELANDSMAX%", freeLandsMax == Integer.MAX_VALUE ? "-" : freeLandsMax)
                     .addPlaceholder("%DAYSUNTILABANDONED%", hml.getConfig().getInt("landAbandonedAfterDays", 21))
-                    .sendMessage(player);
+                    .send(player);
 
             if (buyAsServer) {
                 landToBuy.setServerLand(true);
@@ -170,9 +170,9 @@ public class Cmdbuy extends LandCommand {
             board.showChunkParticles(player, landToBuy);
             contract.setCanBeFulfilled();
 
-            MessageBuilder.create("cmdBuyConfirm" + (contract.isFreeBuy() ? "Free" : ""), hml)
+            Message.create("cmdBuyConfirm" + (contract.isFreeBuy() ? "Free" : ""), hml)
                     .addPlaceholder("%COST%", cost)
-                    .sendMessage(player);
+                    .send(player);
         }
     }
 }

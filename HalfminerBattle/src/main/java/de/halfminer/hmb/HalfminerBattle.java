@@ -8,7 +8,7 @@ import de.halfminer.hms.manageable.HalfminerManager;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.cache.CacheHolder;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -102,9 +102,9 @@ public class HalfminerBattle extends JavaPlugin {
                 BattleMode called = getBattleMode(args[0]);
                 if (called != null) {
                     if (!called.onAdminCommand(sender, args)) {
-                        MessageBuilder.create("adminNotDefined", this)
+                        Message.create("adminNotDefined", this)
                                 .addPlaceholder("%BATTLEMODE%", args[0])
-                                .sendMessage(sender);
+                                .send(sender);
                     }
                     return true;
                 }
@@ -117,13 +117,13 @@ public class HalfminerBattle extends JavaPlugin {
 
         // no battleMode specific commands in bed, as teleports are not possible while sleeping
         if (sender instanceof Player && ((Player) sender).isSleeping()) {
-            MessageBuilder.create("modeGlobalCommandsInBedDisabled", this).sendMessage(sender);
+            Message.create("modeGlobalCommandsInBedDisabled", this).send(sender);
             return true;
         }
 
         BattleMode calledMode = getBattleMode(cmd.getName());
         if (arenaManager.getArenasFromType(calledMode.getType()).size() == 0) {
-            MessageBuilder.create("modeGlobalBattleModeDisabled", this).sendMessage(sender);
+            Message.create("modeGlobalBattleModeDisabled", this).send(sender);
             return true;
         }
 

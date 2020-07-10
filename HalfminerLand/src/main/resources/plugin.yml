@@ -11,7 +11,7 @@ depend: [HalfminerSystem, Essentials, WorldGuard]
 commands:
   land:
     description: Base command
-    aliases: [claim, zone, gebiet]
+    aliases: [claim, zone, gebiet, l]
     permission: hml.cmd.land
   landtp:
     description: Teleport to a land with a set teleport point

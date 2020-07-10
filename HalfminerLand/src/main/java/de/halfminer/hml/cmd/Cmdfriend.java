@@ -3,7 +3,7 @@ package de.halfminer.hml.cmd;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 
 import java.util.Set;
 import java.util.UUID;
@@ -45,7 +45,7 @@ public class Cmdfriend extends LandCommand {
         }
 
         if (player.equals(toModify.getBase())) {
-            MessageBuilder.create("cmdFriendSelf", hml).sendMessage(player);
+            Message.create("cmdFriendSelf", hml).send(player);
             return;
         }
 
@@ -62,13 +62,13 @@ public class Cmdfriend extends LandCommand {
             boolean doForAll = args[2].equalsIgnoreCase("all");
 
             if (!doForAll && !land.isOwner(player)) {
-                MessageBuilder.create("landNotOwned", hml).sendMessage(player);
+                Message.create("landNotOwned", hml).send(player);
                 return;
             }
 
             Set<Land> lands = doForAll ? board.getLands(player) : board.getConnectedLand(land);
             if (lands.size() == 0) {
-                MessageBuilder.create("noLandOwned", hml).sendMessage(player);
+                Message.create("noLandOwned", hml).send(player);
                 return;
             }
 
@@ -101,15 +101,15 @@ public class Cmdfriend extends LandCommand {
                 messageLocale += success ? "Success" : "Failure";
 
             } else {
-                MessageBuilder.create("landNotOwned", hml).sendMessage(player);
+                Message.create("landNotOwned", hml).send(player);
                 return;
             }
         }
 
-        MessageBuilder.create(messageLocale, hml)
+        Message.create(messageLocale, hml)
                 .addPlaceholder("%PLAYER%", toModify.getName())
                 .addPlaceholder("%COUNT%", modifiedCount)
-                .sendMessage(player);
+                .send(player);
 
         if (success) {
             hml.getLogger().info(player.getName() + " successfully modified "
@@ -127,17 +127,17 @@ public class Cmdfriend extends LandCommand {
 
         boolean limitReached = land.getMemberSet().size() >= friendLimit;
         if (limitReached && sendMessage) {
-            MessageBuilder.create("cmdFriendAddLimitReached", hml)
+            Message.create("cmdFriendAddLimitReached", hml)
                     .addPlaceholder("%LIMIT%", friendLimit)
-                    .sendMessage(player);
+                    .send(player);
         }
 
         return limitReached;
     }
 
     private void sendUsage() {
-        MessageBuilder.create("cmdFriendUsage", hml)
+        Message.create("cmdFriendUsage", hml)
                 .togglePrefix()
-                .sendMessage(player);
+                .send(player);
     }
 }

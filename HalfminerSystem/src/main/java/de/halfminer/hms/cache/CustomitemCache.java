@@ -69,7 +69,7 @@ public class CustomitemCache {
                 continue;
             }
 
-            MessageBuilder parameterParse = MessageBuilder.create(keyParamPair.getRight())
+            Message parameterParse = Message.create(keyParamPair.getRight())
                     .setDirectString()
                     .addPlaceholder("%PLAYER%", owner.getName());
 
@@ -167,11 +167,11 @@ public class CustomitemCache {
         if (notGiven.size() != 0) {
             throw new ItemCacheException(notGiven);
         } else {
-            MessageBuilder.create("cacheCustomitemCacheLogSuccess")
+            Message.create("cacheCustomitemCacheLogSuccess")
                     .addPlaceholder("%PLAYER%", giveTo.getName())
                     .addPlaceholder("%AMOUNT%", amount)
                     .addPlaceholder("%ITEMNAME%", itemKey)
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
         }
     }
 
@@ -184,15 +184,15 @@ public class CustomitemCache {
     }
 
     private void logInvalidKey(String key) {
-        MessageBuilder.create("cacheCustomitemCacheInvalidKey")
+        Message.create("cacheCustomitemCacheInvalidKey")
                 .addPlaceholder("%KEY%", key)
-                .logMessage(Level.WARNING);
+                .log(Level.WARNING);
     }
 
     private void logInvalidParameter(String key, String param) {
-        MessageBuilder.create("cacheCustomitemCacheInvalidParameter")
+        Message.create("cacheCustomitemCacheInvalidParameter")
                 .addPlaceholder("%KEY%", key)
                 .addPlaceholder("%PARAMETER%", param)
-                .logMessage(Level.WARNING);
+                .log(Level.WARNING);
     }
 }

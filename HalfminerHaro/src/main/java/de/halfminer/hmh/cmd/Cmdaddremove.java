@@ -3,7 +3,7 @@ package de.halfminer.hmh.cmd;
 import de.halfminer.hmh.HalfminerHaro;
 import de.halfminer.hmh.data.HaroPlayer;
 import de.halfminer.hmh.data.NameHaroPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Player;
 
@@ -26,15 +26,15 @@ public class Cmdaddremove extends HaroCommand {
     protected void execute() {
 
         if (args.length < 1) {
-            MessageBuilder.create("cmdAddRemoveUsage", hmh)
+            Message.create("cmdAddRemoveUsage", hmh)
                     .addPlaceholder("ADD", add ? "add" : "remove")
-                    .sendMessage(sender);
+                    .send(sender);
             return;
         }
 
         String filteredUsername = Utils.filterNonUsernameChars(args[0]);
         if (filteredUsername.length() != args[0].length()) {
-            MessageBuilder.create("playerDoesNotExist", HalfminerHaro.MESSAGE_PREFIX).sendMessage(sender);
+            Message.create("playerDoesNotExist", HalfminerHaro.MESSAGE_PREFIX).send(sender);
             return;
         }
 
@@ -45,9 +45,9 @@ public class Cmdaddremove extends HaroCommand {
                 && haroPlayer instanceof NameHaroPlayer
                 && (args.length < 2 || !args[1].equalsIgnoreCase("-confirm"))) {
 
-            MessageBuilder.create("cmdAddRemoveConfirm", hmh)
+            Message.create("cmdAddRemoveConfirm", hmh)
                     .addPlaceholder("%PLAYER%", args[0])
-                    .sendMessage(sender);
+                    .send(sender);
             return;
         }
 
@@ -63,14 +63,14 @@ public class Cmdaddremove extends HaroCommand {
 
         if (success && !add && haroPlayer.isOnline()) {
             Player playerToRemove = haroPlayer.getBase().getPlayer();
-            String kickMessage = MessageBuilder.returnMessage("cmdAddRemovePlayerKick", hmh, false);
+            String kickMessage = Message.returnMessage("cmdAddRemovePlayerKick", hmh, false);
             playerToRemove.kickPlayer(kickMessage);
         }
 
         String messageKey = success ?
                 ("cmdAddRemoveSuccess" + (add ? "A" : "R")) : ("cmdAddRemove" + (add ? "Already" : "Not") + "Added");
-        MessageBuilder.create(messageKey, hmh)
+        Message.create(messageKey, hmh)
                 .addPlaceholder("PLAYER", haroPlayer.getName())
-                .sendMessage(sender);
+                .send(sender);
     }
 }

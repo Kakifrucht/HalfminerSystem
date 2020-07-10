@@ -3,7 +3,7 @@ package de.halfminer.hmb.data;
 import de.halfminer.hmb.HalfminerBattle;
 import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.mode.abs.BattleModeType;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -128,10 +128,10 @@ public class ArenaManager {
             }
         }
 
-        MessageBuilder.create("modeGlobalArenaLoadLog", hmb)
+        Message.create("modeGlobalArenaLoadLog", hmb)
                 .addPlaceholder("%ARENAS%", totalArenasLoaded)
                 .addPlaceholder("%KITS%", totalKitsLoaded)
-                .logMessage(Level.INFO);
+                .log(Level.INFO);
     }
 
     public boolean addArena(BattleModeType modeType, String name, List<Location> spawns) {
@@ -229,7 +229,7 @@ public class ArenaManager {
         ComponentBuilder builder = new ComponentBuilder("");
 
         for (Arena freeArena : freeArenas) {
-            String tooltipOnHover = MessageBuilder.create("modeGlobalChooseArenaHover", hmb)
+            String tooltipOnHover = Message.create("modeGlobalChooseArenaHover", hmb)
                     .togglePrefix()
                     .addPlaceholder("%ARENA%", freeArena.getName())
                     .returnMessage();
@@ -240,7 +240,7 @@ public class ArenaManager {
                     .color(ChatColor.GREEN).bold(true);
 
             if (addPlayercounts) {
-                String playerCount = " " + MessageBuilder.create("modeGlobalChoosePlayerCount", hmb)
+                String playerCount = " " + Message.create("modeGlobalChoosePlayerCount", hmb)
                         .togglePrefix()
                         .addPlaceholder("%AMOUNT%", freeArena.getPlayerCount())
                         .returnMessage();
@@ -251,10 +251,10 @@ public class ArenaManager {
         }
 
         if (randomHoverKey.length() > 0) {
-            builder.append(MessageBuilder.returnMessage("modeGlobalRandomArena", hmb, false))
+            builder.append(Message.returnMessage("modeGlobalRandomArena", hmb, false))
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + "random"))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder(MessageBuilder.returnMessage(randomHoverKey, hmb, false)).create()))
+                            new ComponentBuilder(Message.returnMessage(randomHoverKey, hmb, false)).create()))
                     .color(ChatColor.GRAY);
         }
 

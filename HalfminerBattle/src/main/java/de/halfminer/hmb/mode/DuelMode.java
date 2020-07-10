@@ -3,7 +3,7 @@ package de.halfminer.hmb.mode;
 import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.duel.DuelQueue;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -62,16 +62,16 @@ public class DuelMode extends AbstractMode {
                     boolean useKit = !(args.length > 1 && args[1].equalsIgnoreCase("nokit"));
                     queue.requestSend(player, server.getPlayer(args[0]), useKit);
             }
-        } else MessageBuilder.create("modeDuelShowHelp", hmb).sendMessage(sender);
+        } else Message.create("modeDuelShowHelp", hmb).send(sender);
 
         return true;
     }
 
     private void sendArenaList(CommandSender sender) {
-        MessageBuilder.create("modeGlobalShowArenaList", hmb).sendMessage(sender);
-        MessageBuilder.create(am.getStringFromBattleMode(type), hmb)
+        Message.create("modeGlobalShowArenaList", hmb).send(sender);
+        Message.create(am.getStringFromBattleMode(type), hmb)
                 .setDirectString()
-                .sendMessage(sender);
+                .send(sender);
     }
 
     @Override

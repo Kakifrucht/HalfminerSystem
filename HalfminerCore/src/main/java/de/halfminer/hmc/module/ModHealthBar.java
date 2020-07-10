@@ -1,7 +1,7 @@
 package de.halfminer.hmc.module;
 
 import de.halfminer.hms.handler.storage.DataType;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -149,7 +149,7 @@ public class ModHealthBar extends HalfminerModule implements Listener {
             if (!toUpdate.isOnline()) continue;
 
             barHandler.sendBar(toUpdate,
-                    MessageBuilder.create("modHealthBarBossBar" + (entityToUpdate instanceof Player ? "" : "Mob"), hmc)
+                    Message.create("modHealthBarBossBar" + (entityToUpdate instanceof Player ? "" : "Mob"), hmc)
                             .addPlaceholder("%PLAYER%", entityToUpdate.getName())
                             .addPlaceholder("%LEVEL%", otherPlayer != null ?
                                     storage.getPlayer(otherPlayer).getString(DataType.SKILL_LEVEL) : "1")

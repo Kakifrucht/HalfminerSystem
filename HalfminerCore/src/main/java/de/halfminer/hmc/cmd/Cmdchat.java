@@ -6,7 +6,7 @@ import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModChatManager;
 import de.halfminer.hms.handler.HanBossBar;
 import de.halfminer.hms.handler.HanTitles;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -103,16 +103,16 @@ public class Cmdchat extends HalfminerCommand {
         }
 
         String recipientName;
-        if (sendTo == null) recipientName = MessageBuilder.returnMessage("cmdChatAll", hmc);
+        if (sendTo == null) recipientName = Message.returnMessage("cmdChatAll", hmc);
         else recipientName = sendTo.getName();
 
         String notifySender = useBossbar ? "cmdChatBossbar" : "cmdChatTitle";
 
-        MessageBuilder.create(notifySender, hmc, "Chat")
+        Message.create(notifySender, hmc, "Chat")
                 .addPlaceholder("%SENDTO%", recipientName)
                 .addPlaceholder("%TIME%", time)
                 .addPlaceholder("%MESSAGE%", message)
-                .sendMessage(sender);
+                .send(sender);
 
         if (useBossbar) {
 
@@ -148,13 +148,13 @@ public class Cmdchat extends HalfminerCommand {
                 .filter(p -> !p.hasPermission("hmc.chat.advanced"))
                 .forEach(p -> p.sendMessage(clearMessage.toString()));
 
-        MessageBuilder.create("cmdChatCleared", hmc, "Chat")
+        Message.create("cmdChatCleared", hmc, "Chat")
                 .addPlaceholder("%PLAYER%", whoCleared)
-                .broadcastMessage(false);
+                .broadcast(false);
 
-        MessageBuilder.create("cmdChatClearedLog", hmc)
+        Message.create("cmdChatClearedLog", hmc)
                 .addPlaceholder("%PLAYER%", whoCleared)
-                .logMessage(Level.INFO);
+                .log(Level.INFO);
     }
 
     private void countdown() {
@@ -175,9 +175,9 @@ public class Cmdchat extends HalfminerCommand {
         if (countdown > 30) showUsage();
         else {
 
-            MessageBuilder.create("cmdChatCountdownStarted", hmc, "Chat")
+            Message.create("cmdChatCountdownStarted", hmc, "Chat")
                     .addPlaceholder("%COUNT%", countdown)
-                    .sendMessage(sender);
+                    .send(sender);
 
             final HanBossBar bar = hms.getBarHandler();
             final BukkitTask task = scheduler.runTaskTimer(hmc, new Runnable() {
@@ -190,7 +190,7 @@ public class Cmdchat extends HalfminerCommand {
                         return;
                     }
 
-                    bar.broadcastBar(MessageBuilder.create("cmdChatCountdown", hmc)
+                    bar.broadcastBar(Message.create("cmdChatCountdown", hmc)
                                     .addPlaceholder("%COUNT%", count)
                                     .returnMessage(),
                             BarColor.GREEN, BarStyle.SOLID, 35, (double) count / countdown);
@@ -221,22 +221,22 @@ public class Cmdchat extends HalfminerCommand {
         String senderName = Utils.getPlayername(sender);
 
         if (toRing == null) {
-            MessageBuilder.create("playerNotOnline", "Chat").sendMessage(sender);
+            Message.create("playerNotOnline", "Chat").send(sender);
             return;
         }
 
         hms.getTitlesHandler().sendTitle(toRing,
-                MessageBuilder.create("cmdChatRingTitle", hmc)
+                Message.create("cmdChatRingTitle", hmc)
                         .addPlaceholder("%PLAYER%", senderName)
                         .returnMessage());
 
-        MessageBuilder.create("cmdChatRingMessage", hmc, "Chat")
+        Message.create("cmdChatRingMessage", hmc, "Chat")
                 .addPlaceholder("%PLAYER%", senderName)
-                .sendMessage(toRing);
+                .send(toRing);
 
-        MessageBuilder.create("cmdChatRingSent", hmc, "Chat")
+        Message.create("cmdChatRingSent", hmc, "Chat")
                 .addPlaceholder("%PLAYER%", toRing.getName())
-                .sendMessage(sender);
+                .send(sender);
 
         scheduler.runTaskAsynchronously(hmc, () -> {
             float ringHeight = 2.0f;
@@ -264,7 +264,7 @@ public class Cmdchat extends HalfminerCommand {
 
         coreStorage.set("news", message);
         if (sender instanceof Player) {
-            bossBar.sendBar((Player) sender, MessageBuilder.create("modTitlesNewsFormat", hmc)
+            bossBar.sendBar((Player) sender, Message.create("modTitlesNewsFormat", hmc)
                     .addPlaceholder("%NEWS%", message)
                     .returnMessage(), BarColor.YELLOW, BarStyle.SOLID, 5);
             titles.sendTitle((Player) sender, " \n" + message, 10, 100, 10);
@@ -274,7 +274,7 @@ public class Cmdchat extends HalfminerCommand {
         try {
             hmc.getModule(ModuleType.MOTD).loadConfig();
         } catch (ModuleDisabledException ignored) {}
-        MessageBuilder.create("cmdChatNewsSetTo", hmc, "Chat").sendMessage(sender);
+        Message.create("cmdChatNewsSetTo", hmc, "Chat").send(sender);
     }
 
     private void sendMessage() {
@@ -292,18 +292,18 @@ public class Cmdchat extends HalfminerCommand {
                 sendToString = player.getName();
             } else {
 
-                MessageBuilder.create("playerNotOnline", "Chat").sendMessage(sender);
+                Message.create("playerNotOnline", "Chat").send(sender);
                 return;
             }
         } else {
 
             server.broadcast(message, "hmc.default");
-            sendToString = MessageBuilder.returnMessage("cmdChatAll", hmc);
+            sendToString = Message.returnMessage("cmdChatAll", hmc);
         }
 
-        MessageBuilder.create("cmdChatSend", hmc, "Chat")
+        Message.create("cmdChatSend", hmc, "Chat")
                 .addPlaceholder("%SENDTO%", sendToString)
-                .sendMessage(sender);
+                .send(sender);
     }
 
     private void sendCommand() {
@@ -315,17 +315,17 @@ public class Cmdchat extends HalfminerCommand {
 
         Player directRecipient = server.getPlayer(args[1]);
         if (directRecipient == null) {
-            MessageBuilder.create("playerNotOnline", "Chat").sendMessage(sender);
+            Message.create("playerNotOnline", "Chat").send(sender);
             return;
         }
 
         String command = Utils.arrayToString(args, 2, false);
         if (!command.startsWith("/")) command = "/" + command;
 
-        MessageBuilder.create("cmdChatClickableCommand", hmc, Utils.getPlayername(sender))
+        Message.create("cmdChatClickableCommand", hmc, Utils.getPlayername(sender))
                 .addPlaceholder("%PLAYER%", directRecipient.getName())
                 .addPlaceholder("%COMMAND%", command + "/") // append slash since it will be parsed
-                .broadcastMessage(false);
+                .broadcast(false);
 
         directRecipient.playSound(directRecipient.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 0.5f, 1.0f);
     }
@@ -340,9 +340,9 @@ public class Cmdchat extends HalfminerCommand {
         String message = Utils.arrayToString(args, 1, true).replace("\\n", "\n");
         coreStorage.set("chatmessage", message);
         coreStorage.set("chatmessagetime", (System.currentTimeMillis() / 1000));
-        MessageBuilder.create("cmdChatMessageSet", hmc, "Chat")
+        Message.create("cmdChatMessageSet", hmc, "Chat")
                 .addPlaceholder("%MESSAGE%", message)
-                .sendMessage(sender);
+                .send(sender);
     }
 
     /**
@@ -356,7 +356,7 @@ public class Cmdchat extends HalfminerCommand {
 
         if (message.length() == 0) {
 
-            MessageBuilder.create("cmdChatMessageNotSet", hmc, "Chat").sendMessage(sender);
+            Message.create("cmdChatMessageNotSet", hmc, "Chat").send(sender);
             return false;
         } else {
 
@@ -367,7 +367,7 @@ public class Cmdchat extends HalfminerCommand {
                 message = "";
                 coreStorage.set("chatmessage", null);
 
-                MessageBuilder.create("cmdChatMessageNotSet", hmc, "Chat").sendMessage(sender);
+                Message.create("cmdChatMessageNotSet", hmc, "Chat").send(sender);
                 return false;
             } else return true;
         }
@@ -380,6 +380,6 @@ public class Cmdchat extends HalfminerCommand {
     }
 
     private void showUsage() {
-        MessageBuilder.create("cmdChatUsage", hmc, "Chat").sendMessage(sender);
+        Message.create("cmdChatUsage", hmc, "Chat").send(sender);
     }
 }

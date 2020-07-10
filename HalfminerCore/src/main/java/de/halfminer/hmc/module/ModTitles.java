@@ -3,7 +3,7 @@ package de.halfminer.hmc.module;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.hooks.HookException;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.UserDoesNotExistException;
 import net.ess3.api.events.UserBalanceUpdateEvent;
@@ -43,11 +43,11 @@ public class ModTitles extends HalfminerModule implements Listener {
         // if player hasn't used newtp and didn't pass 5000 minutes gametime, show newtp info instead of server news
         if (!hJoined.getBoolean(DataType.NEWTP_USED) && hJoined.getInt(DataType.TIME_ONLINE) < 300000) {
 
-            titleHandler.sendTitle(joined, MessageBuilder.create("modTitlesNewPlayerFormat", hmc)
+            titleHandler.sendTitle(joined, Message.create("modTitlesNewPlayerFormat", hmc)
                     .addPlaceholder("%PLAYER%", joined.getName())
                     .returnMessage(), 10, 200, 10);
 
-            barHandler.sendBar(joined, MessageBuilder.create("modTitlesNewPlayerFormatBar", hmc)
+            barHandler.sendBar(joined, Message.create("modTitlesNewPlayerFormatBar", hmc)
                     .addPlaceholder("%PLAYER%", joined.getName())
                     .returnMessage(), BarColor.GREEN, BarStyle.SOLID, 60, 1.0d);
 
@@ -57,7 +57,7 @@ public class ModTitles extends HalfminerModule implements Listener {
             // delay due to potential Essentials issues
             scheduler.runTaskLater(hmc, () -> {
 
-                titleHandler.sendTitle(joined, MessageBuilder.create("modTitlesJoinFormat", hmc)
+                titleHandler.sendTitle(joined, Message.create("modTitlesJoinFormat", hmc)
                         .addPlaceholder("%BALANCE%", updateBalanceAndTablist(joined))
                         .addPlaceholder("%PLAYERCOUNT%", getPlayercountString())
                         .returnMessage(), 10, 100, 10);
@@ -65,7 +65,7 @@ public class ModTitles extends HalfminerModule implements Listener {
                 final String news = coreStorage.getString("news");
                 if (news.length() > 0) {
                     scheduler.runTaskLater(hmc, () -> {
-                        barHandler.sendBar(joined, MessageBuilder.create("modTitlesNewsFormat", hmc)
+                        barHandler.sendBar(joined, Message.create("modTitlesNewsFormat", hmc)
                                 .addPlaceholder("%NEWS%", news)
                                 .returnMessage(), BarColor.YELLOW, BarStyle.SOLID, 30);
                         titleHandler.sendTitle(joined, " \n" + news, 10, 100, 10);
@@ -122,7 +122,7 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     private void updateTablist(Player player) {
 
-        titleHandler.setTablistHeaderFooter(player, MessageBuilder.create("modTitlesTablist", hmc)
+        titleHandler.setTablistHeaderFooter(player, Message.create("modTitlesTablist", hmc)
                 .addPlaceholder("%BALANCE%", balances.get(player))
                 .addPlaceholder("%PLAYERCOUNT%", getPlayercountString())
                 .returnMessage());

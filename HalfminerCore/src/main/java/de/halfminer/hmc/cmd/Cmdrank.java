@@ -5,7 +5,7 @@ import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.manageable.Disableable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.command.CommandSender;
@@ -42,7 +42,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
     protected void execute() {
 
         if (args.length < 2) {
-            MessageBuilder.create("cmdRankUsage", hmc, "Rank").sendMessage(sender);
+            Message.create("cmdRankUsage", hmc, "Rank").send(sender);
             return;
         }
 
@@ -85,7 +85,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
             } catch (NumberFormatException ignored) {}
 
             if (upgradeAmount > rankNameAndMultiplierPairs.size() || upgradeAmount < 1) {
-                MessageBuilder.create("cmdRankInvalidRankCommand", hmc, "Rank").sendMessage(sender);
+                Message.create("cmdRankInvalidRankCommand", hmc, "Rank").send(sender);
                 return;
             }
         }
@@ -93,9 +93,9 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
         if (playerToReward != null) {
             execute(playerToReward);
         } else {
-            MessageBuilder.create("cmdRankNotOnline", hmc, "Rank")
+            Message.create("cmdRankNotOnline", hmc, "Rank")
                     .addPlaceholder("%PLAYER%", args[0])
-                    .sendMessage(sender);
+                    .send(sender);
             setPersistent(uuidToReward);
         }
     }
@@ -111,7 +111,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
     private void execute(Player player) {
 
         if (player.isOp()) {
-            MessageBuilder send = MessageBuilder.create("cmdRankPlayerIsOp", hmc, "Rank")
+            Message send = Message.create("cmdRankPlayerIsOp", hmc, "Rank")
                     .addPlaceholder("%PLAYER%", player.getName());
             sendAndLogMessageBuilder(send);
             return;
@@ -122,7 +122,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
         if (rankToGiveName == null) {
             int getFromList = playerLevel + upgradeAmount - 1;
             if (getFromList >= rankNameAndMultiplierPairs.size()) {
-                MessageBuilder send = MessageBuilder.create("cmdRankInvalidUpgradeParam", hmc, "Rank")
+                Message send = Message.create("cmdRankInvalidUpgradeParam", hmc, "Rank")
                         .addPlaceholder("%PLAYER%", player.getName())
                         .addPlaceholder("%UPGRADEAMOUNT%", upgradeAmount);
                 sendAndLogMessageBuilder(send);
@@ -143,7 +143,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
             // check if new level is lower/same as old one
             int multiplierOfPreviousRank = rankNameAndMultiplierPairs.get(playerLevel - 1).getRight();
             if (multiplierOfPreviousRank >= rankToGiveMultiplier) {
-                MessageBuilder send = MessageBuilder.create("cmdRankNewLevelSameOrLower", hmc, "Rank")
+                Message send = Message.create("cmdRankNewLevelSameOrLower", hmc, "Rank")
                         .addPlaceholder("%PLAYER%", player.getName())
                         .addPlaceholder("%NEWRANK%", rankToGiveName);
                 sendAndLogMessageBuilder(send);
@@ -188,7 +188,7 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
 
         String commandOnDisable = hmc.getConfig().getString("command.rank.commandToExecuteOnDisable");
         if (commandOnDisable.length() > 0) {
-            String placeholderReplaced = MessageBuilder.create(commandOnDisable, hmc)
+            String placeholderReplaced = Message.create(commandOnDisable, hmc)
                     .setDirectString()
                     .addPlaceholder("%PLAYER%", args[0])
                     .addPlaceholder("%ARG%", args[1])
@@ -196,16 +196,16 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
 
             server.dispatchCommand(server.getConsoleSender(), placeholderReplaced);
         }
-        MessageBuilder.create("cmdRankPersistenceDisable", hmc)
+        Message.create("cmdRankPersistenceDisable", hmc)
                 .addPlaceholder("%PLAYER%", args[0])
                 .addPlaceholder("%ARG%", args[1])
-                .logMessage(Level.WARNING);
+                .log(Level.WARNING);
     }
 
     private void sendInvalidRankConfig(String level) {
-        MessageBuilder.create("cmdRankInvalidRankConfig", hmc, "Rank")
+        Message.create("cmdRankInvalidRankConfig", hmc, "Rank")
                 .addPlaceholder("%INVALIDINPUT%", level)
-                .sendMessage(sender);
+                .send(sender);
     }
 
     private void addPlaceholdersToAction(CustomAction action, List<Integer> multipliedAmounts) {
@@ -216,15 +216,15 @@ public class Cmdrank extends HalfminerPersistenceCommand implements Disableable 
     }
 
     private void logActionNotFound(Player toReward, String actionName) {
-        MessageBuilder notify = MessageBuilder.create("cmdRankActionNotFound", hmc, "Rank")
+        Message notify = Message.create("cmdRankActionNotFound", hmc, "Rank")
                 .addPlaceholder("%PLAYER%", toReward.getName())
                 .addPlaceholder("%ACTIONNAME%", actionName);
         sendAndLogMessageBuilder(notify);
     }
 
-    private void sendAndLogMessageBuilder(MessageBuilder toSendAndLog) {
-        toSendAndLog.logMessage(Level.WARNING);
+    private void sendAndLogMessageBuilder(Message toSendAndLog) {
+        toSendAndLog.log(Level.WARNING);
         CommandSender originalSender = getOriginalSender();
-        if (originalSender != null) toSendAndLog.sendMessage(originalSender);
+        if (originalSender != null) toSendAndLog.send(originalSender);
     }
 }

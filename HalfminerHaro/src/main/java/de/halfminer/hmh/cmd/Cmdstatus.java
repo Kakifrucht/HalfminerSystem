@@ -1,7 +1,7 @@
 package de.halfminer.hmh.cmd;
 
 import de.halfminer.hmh.data.HaroPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -33,15 +33,15 @@ public class Cmdstatus extends HaroCommand {
             gameStatusMessageKey += "NotRunning";
         }
 
-        MessageBuilder.create("cmdStatusHeader", hmh)
-                .addPlaceholder("GAMEISRUNNING", MessageBuilder.returnMessage(gameStatusMessageKey, hmh, false))
-                .sendMessage(sender);
+        Message.create("cmdStatusHeader", hmh)
+                .addPlaceholder("GAMEISRUNNING", Message.returnMessage(gameStatusMessageKey, hmh, false))
+                .send(sender);
 
         if (addedPlayers.isEmpty()) {
-            MessageBuilder.create("cmdStatusNoPlayersAdded", hmh).togglePrefix().sendMessage(sender);
+            Message.create("cmdStatusNoPlayersAdded", hmh).togglePrefix().send(sender);
         } else {
 
-            String playerSpacer = MessageBuilder.returnMessage("cmdStatusPlayerListSpacer", hmh, false);
+            String playerSpacer = Message.returnMessage("cmdStatusPlayerListSpacer", hmh, false);
             StringBuilder playerListBuilder = new StringBuilder();
             for (HaroPlayer addedPlayer : addedPlayers) {
                 ChatColor color;
@@ -58,7 +58,7 @@ public class Cmdstatus extends HaroCommand {
                         .append(addedPlayer.getName());
 
                 if (isGameRunning && !addedPlayer.isEliminated()) {
-                    String timeLeftString = MessageBuilder.create("cmdStatusPlayerListTime", hmh)
+                    String timeLeftString = Message.create("cmdStatusPlayerListTime", hmh)
                             .togglePrefix()
                             .addPlaceholder("TIMELEFT", addedPlayer.getTimeLeftSeconds())
                             .returnMessage();
@@ -69,14 +69,14 @@ public class Cmdstatus extends HaroCommand {
             }
 
             String playerListString = playerListBuilder.substring(0, playerListBuilder.length() - playerSpacer.length());
-            MessageBuilder.create("cmdStatusPlayerList", hmh)
+            Message.create("cmdStatusPlayerList", hmh)
                     .togglePrefix()
                     .addPlaceholder("PLAYERLIST", playerListString)
-                    .sendMessage(sender);
+                    .send(sender);
 
-            MessageBuilder.create("cmdStatusLegend", hmh)
+            Message.create("cmdStatusLegend", hmh)
                     .togglePrefix()
-                    .sendMessage(sender);
+                    .send(sender);
         }
     }
 }

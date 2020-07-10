@@ -4,7 +4,7 @@ import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModTps;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.NMSUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -34,12 +34,12 @@ public class Cmdlag extends HalfminerCommand {
             toLookup = server.getPlayer(args[0]);
 
             if (toLookup == null) {
-                MessageBuilder.create("playerNotOnline", PREFIX).sendMessage(sender);
+                Message.create("playerNotOnline", PREFIX).send(sender);
                 return;
             }
 
             if (toLookup.hasPermission("hmc.lag.protected") && !sender.hasPermission("hmc.lag.protected")) {
-                MessageBuilder.create("cmdLagProtected", hmc, PREFIX).sendMessage(sender);
+                Message.create("cmdLagProtected", hmc, PREFIX).send(sender);
                 return;
             }
         }
@@ -62,10 +62,10 @@ public class Cmdlag extends HalfminerCommand {
                 }
             }
 
-            MessageBuilder.create("cmdLagPlayerInfo", hmc, PREFIX)
+            Message.create("cmdLagPlayerInfo", hmc, PREFIX)
                     .addPlaceholder("%PLAYER%", toLookup.getName())
                     .addPlaceholder("%LATENCY%", pingColored)
-                    .sendMessage(sender);
+                    .send(sender);
         }
 
         // get tps
@@ -86,9 +86,9 @@ public class Cmdlag extends HalfminerCommand {
                 serverLagStatus = ServerStatus.UNSTABLE;
             } else tpsColored = ChatColor.GREEN + tpsColored;
 
-            MessageBuilder.create("cmdLagServerInfo", hmc, PREFIX)
+            Message.create("cmdLagServerInfo", hmc, PREFIX)
                     .addPlaceholder("%TPS%", tpsColored)
-                    .sendMessage(sender);
+                    .send(sender);
         }
 
         // determines the summary message, only shown when viewing own status
@@ -98,7 +98,7 @@ public class Cmdlag extends HalfminerCommand {
             else if (serverLagStatus == ServerStatus.UNSTABLE) messageKey = "cmdLagServerUnstable";
             else if (serverLagStatus == ServerStatus.LAGGING) messageKey = "cmdLagServerLag";
             else messageKey = "cmdLagPlayerLag";
-            MessageBuilder.create(messageKey, hmc, PREFIX).sendMessage(sender);
+            Message.create(messageKey, hmc, PREFIX).send(sender);
         }
     }
 

@@ -3,7 +3,7 @@ package de.halfminer.hmh.tasks;
 import de.halfminer.hmh.HaroClass;
 import de.halfminer.hmh.data.HaroPlayer;
 import de.halfminer.hmh.data.HaroStorage;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -35,12 +35,12 @@ public class TimeCheckTask extends HaroClass {
                     int notifyAtEverySecond = 5;
 
                     if (timeLeft <= 0) {
-                        String kickMessage = MessageBuilder.returnMessage("taskTimeCheckNoTimeLeft", hmh, false);
+                        String kickMessage = Message.returnMessage("taskTimeCheckNoTimeLeft", hmh, false);
                         onlinePlayer.kickPlayer(kickMessage);
                     } else if (timeLeft <= notifyAtEverySecond || (timeLeft <= notifyAt && timeLeft % 5 == 0)) {
-                        MessageBuilder.create("taskTimeCheckCountdown", hmh)
+                        Message.create("taskTimeCheckCountdown", hmh)
                                 .addPlaceholder("TIMELEFT", timeLeft)
-                                .sendMessage(onlinePlayer);
+                                .send(onlinePlayer);
                     }
                 }
             }

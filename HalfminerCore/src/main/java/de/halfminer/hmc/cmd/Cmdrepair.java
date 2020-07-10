@@ -3,7 +3,7 @@ package de.halfminer.hmc.cmd;
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -35,9 +35,9 @@ public class Cmdrepair extends HalfminerCommand {
             doRepair(player.getInventory().getItemInOffHand(), true);
             for (ItemStack item : player.getInventory().getStorageContents()) doRepair(item, true);
             for (ItemStack item : player.getInventory().getArmorContents()) doRepair(item, true);
-            MessageBuilder.create("cmdRepairDoneAll", hmc, "Repair")
+            Message.create("cmdRepairDoneAll", hmc, "Repair")
                     .addPlaceholder("%AMOUNT%", totalRepairs)
-                    .sendMessage(sender);
+                    .send(sender);
         } else {
 
             HalfminerPlayer hPlayer = storage.getPlayer(player);
@@ -58,9 +58,9 @@ public class Cmdrepair extends HalfminerCommand {
             long repairTime = hPlayer.getLong(DataType.LAST_REPAIR) + secondsUntil;
             long currentTime = System.currentTimeMillis() / 1000;
             if (currentTime < repairTime) {
-                MessageBuilder.create("cmdRepairCooldown", hmc, "Repair")
+                Message.create("cmdRepairCooldown", hmc, "Repair")
                         .addPlaceholder("%MINUTES%", ((repairTime - currentTime) / 60) + 1)
-                        .sendMessage(sender);
+                        .send(sender);
                 return;
             }
 
@@ -68,10 +68,10 @@ public class Cmdrepair extends HalfminerCommand {
             if (doRepair(hand, player.hasPermission("hmc.repair.stacks"))) {
 
                 hPlayer.set(DataType.LAST_REPAIR, System.currentTimeMillis() / 1000);
-                MessageBuilder.create("cmdRepairDone", hmc, "Repair")
+                Message.create("cmdRepairDone", hmc, "Repair")
                         .addPlaceholder("%NAME%", Utils.makeStringFriendly(hand.getType().toString()))
-                        .sendMessage(sender);
-            } else MessageBuilder.create("cmdRepairError", hmc, "Repair").sendMessage(sender);
+                        .send(sender);
+            } else Message.create("cmdRepairError", hmc, "Repair").send(sender);
         }
     }
 

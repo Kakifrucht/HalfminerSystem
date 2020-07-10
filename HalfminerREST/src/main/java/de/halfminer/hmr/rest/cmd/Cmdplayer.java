@@ -30,7 +30,7 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
             String param = uriParsed.getArgument(0);
 
             // if string needs sanitation return not found
-            if (param.length() != param.replaceAll("[^a-zA-Z0-9_]","").length()) {
+            if (param.length() != param.replaceAll("[^a-zA-Z0-9_-]","").length()) {
                 return ResponseBuilder.getNotFoundResponse("invalid uuid");
             }
 

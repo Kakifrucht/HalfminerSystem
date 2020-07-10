@@ -4,7 +4,7 @@ import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -63,10 +63,10 @@ public class StorageListener extends HalfminerClass implements Disableable, List
                 hPlayer.set(DataType.PREVIOUS_NAMES, previousNames);
             }
 
-            MessageBuilder.create("hanStorageNameChange", "Name")
+            Message.create("hanStorageNameChange", "Name")
                     .addPlaceholder("%OLDNAME%", previousName)
                     .addPlaceholder("%NAME%", player.getName())
-                    .broadcastMessage(true);
+                    .broadcast(true);
         }
 
         storage.getPlayer(player).set(DataType.LAST_NAME, player.getName());

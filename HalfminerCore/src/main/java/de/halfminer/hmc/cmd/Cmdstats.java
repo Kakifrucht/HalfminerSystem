@@ -7,7 +7,7 @@ import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -57,8 +57,8 @@ public class Cmdstats extends HalfminerCommand {
             } catch (ModuleDisabledException ignored) {}
         }
 
-        MessageBuilder.create("cmdStatsHeader", hmc).sendMessage(sender);
-        MessageBuilder.create("cmdStatsShow", hmc)
+        Message.create("cmdStatsHeader", hmc).send(sender);
+        Message.create("cmdStatsShow", hmc)
                 .addPlaceholder("%PLAYER%", player.getName())
                 .addPlaceholder("%SKILLGROUP%", skillGroup)
                 .addPlaceholder("%SKILLLEVEL%", getIntAndCompare(player, DataType.SKILL_LEVEL, compareWith))
@@ -71,7 +71,7 @@ public class Cmdstats extends HalfminerCommand {
                 .addPlaceholder("%MOBKILLS%", getIntAndCompare(player, DataType.MOB_KILLS, compareWith))
                 .addPlaceholder("%BLOCKSPLACED%", getIntAndCompare(player, DataType.BLOCKS_PLACED, compareWith))
                 .addPlaceholder("%BLOCKSBROKEN%", getIntAndCompare(player, DataType.BLOCKS_BROKEN, compareWith))
-                .sendMessage(sender);
+                .send(sender);
 
         // filter out current name
         List<String> previousNames = player.getPreviousNames().stream()
@@ -108,29 +108,29 @@ public class Cmdstats extends HalfminerCommand {
                 previousNamesToDisplay.addAll(previousNames);
             }
 
-            final String spacer = MessageBuilder.returnMessage("cmdStatsPreviousNamesSpacer", hmc, false);
+            final String spacer = Message.returnMessage("cmdStatsPreviousNamesSpacer", hmc, false);
             StringBuilder sb = new StringBuilder();
             for (String displayedName : previousNamesToDisplay) {
                 sb.append(displayedName).append(spacer);
             }
             sb.setLength(sb.length() - spacer.length());
 
-            MessageBuilder.create("cmdStatsPreviousNames", hmc)
+            Message.create("cmdStatsPreviousNames", hmc)
                     .addPlaceholder("%PREVIOUSNAMES%", sb.toString())
-                    .sendMessage(sender);
+                    .send(sender);
         }
 
         if (sender.equals(player.getBase())) {
-            MessageBuilder.create("cmdStatsShowotherStats", hmc).sendMessage(sender);
+            Message.create("cmdStatsShowotherStats", hmc).send(sender);
         } else if (compare) {
-            MessageBuilder.create("cmdStatsCompareLegend", hmc).sendMessage(sender);
+            Message.create("cmdStatsCompareLegend", hmc).send(sender);
         } else if (sender instanceof Player) {
-            MessageBuilder.create("cmdStatsCompareInfo", hmc)
+            Message.create("cmdStatsCompareInfo", hmc)
                     .addPlaceholder("%PLAYER%", player.getName())
-                    .sendMessage(sender);
+                    .send(sender);
         }
 
-        MessageBuilder.create("lineSeparator").sendMessage(sender);
+        Message.create("lineSeparator").send(sender);
     }
 
     private String getIntAndCompare(HalfminerPlayer player, DataType type, HalfminerPlayer compareWith) {

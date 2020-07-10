@@ -1,7 +1,7 @@
 package de.halfminer.hmh.cmd;
 
 import de.halfminer.hmh.HealthManager;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.entity.Player;
 
 /**
@@ -18,7 +18,7 @@ public class Cmdend extends HaroCommand {
     protected void execute() {
 
         if (!haroStorage.isGameRunning()) {
-            MessageBuilder.create("cmdEndNotRunning", hmh).sendMessage(sender);
+            Message.create("cmdEndNotRunning", hmh).send(sender);
             return;
         }
 
@@ -34,16 +34,16 @@ public class Cmdend extends HaroCommand {
                 if (!onlinePlayer.hasPermission("hmh.admin")) {
                     healthManager.resetPlayerHealth(onlinePlayer);
 
-                    String kickMessage = MessageBuilder.returnMessage("cmdEndPlayerKick", hmh, false);
+                    String kickMessage = Message.returnMessage("cmdEndPlayerKick", hmh, false);
                     onlinePlayer.kickPlayer(kickMessage);
                 }
             }
 
             hmh.getLogger().info("The game has finished and was successfully reset");
-            MessageBuilder.create("cmdEndSuccess", hmh).sendMessage(sender);
+            Message.create("cmdEndSuccess", hmh).send(sender);
 
         } else {
-            MessageBuilder.create("cmdEndPromptForce", hmh).sendMessage(sender);
+            Message.create("cmdEndPromptForce", hmh).send(sender);
         }
     }
 }

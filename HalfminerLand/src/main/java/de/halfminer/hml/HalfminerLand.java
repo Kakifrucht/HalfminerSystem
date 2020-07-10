@@ -8,7 +8,7 @@ import de.halfminer.hml.land.contract.ContractManager;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.handler.menu.MenuCreator;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -74,24 +74,31 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
 
             switch (args[0].toLowerCase()) {
                 case "buy":
+                case "b":
                     landCommand = new Cmdbuy();
                     break;
                 case "friend":
+                case "fr":
                     landCommand = new Cmdfriend();
                     break;
                 case "fly":
+                case "f":
                     landCommand = new Cmdfly();
                     break;
                 case "info":
+                case "i":
                     landCommand = new Cmdinfo();
                     break;
                 case "sell":
+                case "s":
                     landCommand = new Cmdsell();
                     break;
                 case "teleport":
+                case "t":
                     landCommand = new Cmdteleport();
                     break;
                 case "list":
+                case "l":
                     landCommand = new Cmdlist();
                     break;
                 default:
@@ -105,14 +112,14 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
         if (landCommand.hasPermission(sender)) {
             landCommand.run(sender, argsTruncated);
         } else {
-            MessageBuilder.create("noPermission", PREFIX).sendMessage(sender);
+            Message.create("noPermission", PREFIX).send(sender);
         }
 
         return true;
     }
 
     private void showUsage(CommandSender sender) {
-        MessageBuilder.create("usage", this).togglePrefix().sendMessage(sender);
+        Message.create("usage", this).togglePrefix().send(sender);
     }
 
     public void reload() {

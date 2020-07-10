@@ -3,7 +3,7 @@ package de.halfminer.hmh.tasks;
 import de.halfminer.hmh.HaroClass;
 import de.halfminer.hmh.data.HaroPlayer;
 import de.halfminer.hmh.data.HaroStorage;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.entity.Player;
 
 /**
@@ -50,7 +50,7 @@ public class TitleUpdateTask extends HaroClass {
             int timeLeftMinutes = haroPlayer.getTimeLeftSeconds() / 60;
             String timeLeftString = (isGameRunning && haroPlayer.isAdded()) ? String.valueOf(timeLeftMinutes) : "-";
 
-            String titleMessage = MessageBuilder.create("taskTitleUpdateTitle" + (isGameRunning ? "" : "NotStarted"), hmh)
+            String titleMessage = Message.create("taskTitleUpdateTitle" + (isGameRunning ? "" : "NotStarted"), hmh)
                     .togglePrefix()
                     .addPlaceholder("PLAYERCOUNT", playersOnline)
                     .addPlaceholder("MINUTES", timeLeftString)

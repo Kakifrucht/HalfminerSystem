@@ -3,7 +3,7 @@ package de.halfminer.hml.cmd;
 import com.google.common.base.CharMatcher;
 import de.halfminer.hml.data.LandPlayer;
 import de.halfminer.hml.land.Land;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 
@@ -44,9 +44,9 @@ public class Cmdteleport extends LandCommand {
                 if (isStealingEnabled && teleportLand.isAbandoned()) {
                     removeTeleport = true;
                 } else {
-                    MessageBuilder.create("cmdTeleportBuyAlreadyExists" + (teleportLand.isOwner(player) ? "Owned" : ""), hml)
+                    Message.create("cmdTeleportBuyAlreadyExists" + (teleportLand.isOwner(player) ? "Owned" : ""), hml)
                             .addPlaceholder("%TELEPORT%", teleportLand.getTeleportName())
-                            .sendMessage(player);
+                            .send(player);
                     return;
                 }
             }
@@ -56,7 +56,7 @@ public class Cmdteleport extends LandCommand {
 
                 for (String blacklistedName : blacklist) {
                     if (blacklistedName.equalsIgnoreCase(teleportName)) {
-                        MessageBuilder.create("cmdTeleportBuyBlacklisted", hml).sendMessage(player);
+                        Message.create("cmdTeleportBuyBlacklisted", hml).send(player);
                         return;
                     }
                 }
@@ -71,16 +71,16 @@ public class Cmdteleport extends LandCommand {
                         || teleportName.length() > maxLength
                         || !CharMatcher.ascii().matchesAllOf(teleportName)) {
 
-                    MessageBuilder.create("cmdTeleportBuyNameFormat", hml)
+                    Message.create("cmdTeleportBuyNameFormat", hml)
                             .addPlaceholder("%MINLENGTH%", minLength)
                             .addPlaceholder("%MAXLENGTH%", maxLength)
-                            .sendMessage(player);
+                            .send(player);
                     return;
                 }
             }
 
             if (!land.isOwner(player)) {
-                MessageBuilder.create("landNotOwned", hml).sendMessage(player);
+                Message.create("landNotOwned", hml).send(player);
                 return;
             }
 
@@ -100,9 +100,9 @@ public class Cmdteleport extends LandCommand {
                 }
 
                 if (hasTeleports >= maximumTeleports) {
-                    MessageBuilder.create("cmdTeleportBuyLimitReached", hml)
+                    Message.create("cmdTeleportBuyLimitReached", hml)
                             .addPlaceholder("%LIMIT%", maximumTeleports)
-                            .sendMessage(player);
+                            .send(player);
                     return;
                 }
             }
@@ -117,10 +117,10 @@ public class Cmdteleport extends LandCommand {
                 land.setTeleport(teleportName, location);
                 board.landWasUpdated(land);
 
-                MessageBuilder.create("cmdTeleportBuySuccess", hml)
+                Message.create("cmdTeleportBuySuccess", hml)
                         .addPlaceholder("%TELEPORT%", teleportName)
                         .addPlaceholder("%COST%", cost)
-                        .sendMessage(player);
+                        .send(player);
 
                 hml.getLogger().info(player.getName() + " bought teleport "
                         + teleportName + " at " + Utils.getStringFromLocation(location) + " for $" + cost);
@@ -130,7 +130,7 @@ public class Cmdteleport extends LandCommand {
 
             // check if land is owned by player setting the teleport
             if (!land.isOwner(player)) {
-                MessageBuilder.create("landNotOwned", hml).sendMessage(player);
+                Message.create("landNotOwned", hml).send(player);
                 return;
             }
 
@@ -155,10 +155,10 @@ public class Cmdteleport extends LandCommand {
                     board.landWasUpdated(teleportLand);
                 }
 
-                MessageBuilder.create("cmdTeleportSetSuccess", hml)
+                Message.create("cmdTeleportSetSuccess", hml)
                         .addPlaceholder("%TELEPORT%", teleportName)
                         .addPlaceholder("%COST%", cost)
-                        .sendMessage(player);
+                        .send(player);
 
                 hml.getLogger().info(player.getName() + " set teleport "
                         + teleportName + " at " + Utils.getStringFromLocation(location) + " for $" + cost);
@@ -172,14 +172,14 @@ public class Cmdteleport extends LandCommand {
                 teleportLand.removeTeleport();
                 board.landWasUpdated(teleportLand);
 
-                MessageBuilder.create("cmdTeleportDeleteSuccess", hml)
+                Message.create("cmdTeleportDeleteSuccess", hml)
                         .addPlaceholder("%TELEPORT%", teleportName)
-                        .sendMessage(player);
+                        .send(player);
 
                 hml.getLogger().info(player.getName() + " deleted teleport " + teleportName);
             } else {
-                MessageBuilder.create(canDeleteOthers ? "teleportNotExist" : "cmdTeleportNotOwned", hml)
-                        .sendMessage(player);
+                Message.create(canDeleteOthers ? "teleportNotExist" : "cmdTeleportNotOwned", hml)
+                        .send(player);
             }
 
         } else if (args[0].equalsIgnoreCase("show")) {
@@ -203,9 +203,9 @@ public class Cmdteleport extends LandCommand {
             }
 
             landPlayer.setShownTeleport(setTo);
-            MessageBuilder.create(localeKey, hml)
+            Message.create(localeKey, hml)
                     .addPlaceholder("%TELEPORT%", teleportName)
-                    .sendMessage(player);
+                    .send(player);
 
         } else {
             showUsage();
@@ -214,9 +214,9 @@ public class Cmdteleport extends LandCommand {
 
     private boolean takeMoney(double cost) {
         if (hms.getHooksHandler().getMoney(player) < cost) {
-            MessageBuilder.create("notEnoughMoney", hml)
+            Message.create("notEnoughMoney", hml)
                     .addPlaceholder("%COST%", cost)
-                    .sendMessage(player);
+                    .send(player);
             return false;
         }
 
@@ -226,7 +226,7 @@ public class Cmdteleport extends LandCommand {
 
     private boolean isLandNotOwned(Land teleportLand) {
         if (teleportLand == null || !teleportLand.isOwner(player)) {
-            MessageBuilder.create("cmdTeleportNotOwned", hml).sendMessage(player);
+            Message.create("cmdTeleportNotOwned", hml).send(player);
             return true;
         }
 
@@ -234,14 +234,14 @@ public class Cmdteleport extends LandCommand {
     }
 
     private void sendLandAlreadyHasTeleportMessage(Land land) {
-        MessageBuilder.create("cmdTeleportLandAlreadyHasTeleport", hml)
+        Message.create("cmdTeleportLandAlreadyHasTeleport", hml)
                 .addPlaceholder("%TELEPORT%", land.getTeleportName())
-                .sendMessage(player);
+                .send(player);
     }
 
     private void showUsage() {
-        MessageBuilder.create("cmdTeleportUsage", hml)
+        Message.create("cmdTeleportUsage", hml)
                 .togglePrefix()
-                .sendMessage(player);
+                .send(player);
     }
 }

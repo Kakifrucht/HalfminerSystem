@@ -5,7 +5,7 @@ import de.halfminer.hml.land.contract.AbstractContract;
 import de.halfminer.hml.land.contract.ForceSellContract;
 import de.halfminer.hml.land.contract.SellContract;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 
 public class Cmdsell extends LandCommand {
 
@@ -31,7 +31,7 @@ public class Cmdsell extends LandCommand {
         Land.SellableStatus sellableStatus = landToSell.getSellableStatus(player);
 
         if (sellableStatus.equals(Land.SellableStatus.NO_OWNER)) {
-            MessageBuilder.create("landNotOwned", hml).sendMessage(player);
+            Message.create("landNotOwned", hml).send(player);
             return;
         }
 
@@ -51,19 +51,19 @@ public class Cmdsell extends LandCommand {
         if (!isForceSell) {
 
             if (sellableStatus.equals(Land.SellableStatus.NOT_OWNED)) {
-                MessageBuilder.create(hasForceSellPermission ? "cmdSellForceUsage" : "landNotOwned", hml).sendMessage(player);
+                Message.create(hasForceSellPermission ? "cmdSellForceUsage" : "landNotOwned", hml).send(player);
                 return;
             }
 
             if (sellableStatus.equals(Land.SellableStatus.OTHER_PLAYERS_ON_LAND)) {
-                MessageBuilder.create("cmdSellOthersOnLand", hml).sendMessage(player);
+                Message.create("cmdSellOthersOnLand", hml).send(player);
                 return;
             }
 
             if (sellableStatus.equals(Land.SellableStatus.HAS_TELEPORT)) {
-                MessageBuilder.create("cmdSellHasTeleport", hml)
+                Message.create("cmdSellHasTeleport", hml)
                         .addPlaceholder("%TELEPORT%", landToSell.getTeleportName())
-                        .sendMessage(player);
+                        .send(player);
                 return;
             }
         }
@@ -84,10 +84,10 @@ public class Cmdsell extends LandCommand {
             // notify player if land was force sold (only if online)
             HalfminerPlayer landOwner = landToSell.getOwner();
             if (isForceSell && !landToSell.isServerLand() && landOwner.getBase().isOnline()) {
-                MessageBuilder.create("cmdSellForceNotify", hml)
+                Message.create("cmdSellForceNotify", hml)
                         .addPlaceholder("%FORCINGPLAYER%", player.getName())
                         .addPlaceholder("%LAND%", landToSell.toString())
-                        .sendMessage(landOwner.getBase().getPlayer());
+                        .send(landOwner.getBase().getPlayer());
             }
 
             // sell land
@@ -102,18 +102,18 @@ public class Cmdsell extends LandCommand {
                 localeKey += "Free";
             }
 
-            MessageBuilder.create(localeKey, hml)
+            Message.create(localeKey, hml)
                     .addPlaceholder("%COST%", contract.getCost())
                     .addPlaceholder("%LANDOWNER%", landOwner.getName())
-                    .sendMessage(player);
+                    .send(player);
 
         } else {
             board.showChunkParticles(player, landToSell);
             contract.setCanBeFulfilled();
 
-            MessageBuilder.create("cmdSellConfirm" + (isFreeLand ? "Free" : ""), hml)
+            Message.create("cmdSellConfirm" + (isFreeLand ? "Free" : ""), hml)
                     .addPlaceholder("%COST%", contract.getCost())
-                    .sendMessage(player);
+                    .send(player);
         }
     }
 }

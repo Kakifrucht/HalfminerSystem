@@ -1,6 +1,6 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -64,7 +64,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
         Player player = e.getPlayer();
         if (player.hasPermission("hmc.bypass.commandfilter")) return;
         if (player.isSleeping()) {
-            MessageBuilder.create("modStaticListenersCommandSleep", hmc, PREFIX).sendMessage(player);
+            Message.create("modStaticListenersCommandSleep", hmc, PREFIX).send(player);
             e.setCancelled(true);
         } else {
 
@@ -92,7 +92,7 @@ public class ModStaticListeners extends HalfminerModule implements Listener {
                 && e.getItem().getType().toString().endsWith("_MONSTER_EGG")
                 && !player.hasPermission("hmc.bypass.spawnerconvert")) {
 
-            MessageBuilder.create("modStaticListenersSpawnerConvert", hmc, PREFIX).sendMessage(player);
+            Message.create("modStaticListenersSpawnerConvert", hmc, PREFIX).send(player);
             e.setCancelled(true);
         }
     }

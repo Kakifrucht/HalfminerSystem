@@ -3,7 +3,7 @@ package de.halfminer.hmc.module;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.manageable.Disableable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -70,9 +70,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
                 int skillEloChange = (int) -Math.round((double) hPlayer.getInt(DataType.SKILL_ELO) * derankAmountPercent);
                 updateSkill(player, skillEloChange);
-                MessageBuilder.create("modSkillLevelDerank", hmc, "PvP")
+                Message.create("modSkillLevelDerank", hmc, "PvP")
                         .addPlaceholder("%DAYS%", timeUntilDerankThreshold / DAYS_IN_SECONDS)
-                        .sendMessage(player);
+                        .send(player);
             } else {
                 updateSkill(player, 0);
             }
@@ -177,7 +177,7 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
 
             if (player instanceof Player) {
                 titleHandler.sendTitle((Player) player,
-                        MessageBuilder.create(newLevel > level ?
+                        Message.create(newLevel > level ?
                                 "modSkillLevelUprankTitle" : "modSkillLevelDerankTitle", hmc)
                                 .addPlaceholder("%SKILLLEVEL%", newLevel)
                                 .addPlaceholder("%SKILLGROUP%", newTeam.getName().substring(2))
@@ -185,12 +185,12 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
                         10, 50, 10, 10);
             }
 
-            MessageBuilder.create("modSkillLevelLog", hmc)
+            Message.create("modSkillLevelLog", hmc)
                     .addPlaceholder("%PLAYER%", player.getName())
                     .addPlaceholder("%SKILLOLD%", level)
                     .addPlaceholder("%SKILLNEW%", newLevel)
                     .addPlaceholder("%SKILLNO%", elo)
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
         }
     }
 
@@ -234,8 +234,8 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
         eloModifierSameLevel = config.getInt("eloModifierSameLevel", 80);
         maxLevelDifference = config.getInt("maxLevelDifference", 10);
 
-        skillgroupNameAdmin = MessageBuilder.returnMessage("modSkillLevelAdmingroupName", hmc);
-        skillgroupNameNone = MessageBuilder.returnMessage("modSkillLevelNoGroup", hmc);
+        skillgroupNameAdmin = Message.returnMessage("modSkillLevelAdmingroupName", hmc);
+        skillgroupNameNone = Message.returnMessage("modSkillLevelNoGroup", hmc);
 
         if (scoreboard == null) {
             scoreboard = server.getScoreboardManager().getMainScoreboard();

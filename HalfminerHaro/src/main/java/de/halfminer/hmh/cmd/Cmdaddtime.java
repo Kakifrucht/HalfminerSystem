@@ -2,7 +2,7 @@ package de.halfminer.hmh.cmd;
 
 import de.halfminer.hmh.HalfminerHaro;
 import de.halfminer.hmh.data.HaroPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class Cmdaddtime extends HaroCommand {
     protected void execute() {
 
         if (!haroStorage.isGameRunning()) {
-            MessageBuilder.create("cmdAddtimeNotRunning", hmh).sendMessage(sender);
+            Message.create("cmdAddtimeNotRunning", hmh).send(sender);
             return;
         }
 
@@ -62,17 +62,17 @@ public class Cmdaddtime extends HaroCommand {
                 try {
                     haroPlayer = haroStorage.getHaroPlayer(args[0]);
                 } catch (IllegalArgumentException e) {
-                    MessageBuilder.create("playerDoesNotExist", HalfminerHaro.MESSAGE_PREFIX).sendMessage(sender);
+                    Message.create("playerDoesNotExist", HalfminerHaro.MESSAGE_PREFIX).send(sender);
                     return;
                 }
 
                 if (!haroPlayer.isAdded()) {
-                    MessageBuilder.create("cmdAddtimeNotAdded", hmh).sendMessage(sender);
+                    Message.create("cmdAddtimeNotAdded", hmh).send(sender);
                     return;
                 }
 
                 if (haroPlayer.isEliminated()) {
-                    MessageBuilder.create("cmdAddtimeEliminated", hmh).sendMessage(sender);
+                    Message.create("cmdAddtimeEliminated", hmh).send(sender);
                     return;
                 }
 
@@ -98,30 +98,30 @@ public class Cmdaddtime extends HaroCommand {
             haroPlayer.setTimeLeftSeconds(timeToSet);
 
             if (haroPlayer.isOnline()) {
-                MessageBuilder.create("cmdAddtimePlayerMessage", hmh)
+                Message.create("cmdAddtimePlayerMessage", hmh)
                         .addPlaceholder("NEWTIMEMINUTES", timeToSet / 60)
-                        .sendMessage(haroPlayer.getBase().getPlayer());
+                        .send(haroPlayer.getBase().getPlayer());
             }
 
             if (playersToUpdate.size() == 1) {
-                MessageBuilder.create("cmdAddtimePlayer", hmh)
+                Message.create("cmdAddtimePlayer", hmh)
                         .addPlaceholder("PLAYER", haroPlayer.getName())
                         .addPlaceholder("SECONDS", timeToSet)
-                        .sendMessage(sender);
+                        .send(sender);
             }
         }
 
         if (playersToUpdate.size() > 1) {
-            MessageBuilder.create("cmdAddtimeAll", hmh)
+            Message.create("cmdAddtimeAll", hmh)
                     .addPlaceholder("SECONDS", timeToAdd)
                     .addPlaceholder("AMOUNT", playersToUpdate.size())
-                    .sendMessage(sender);
+                    .send(sender);
         }
 
         hmh.getTitleUpdateTask().updateTitles();
     }
 
     private void sendUsage() {
-        MessageBuilder.create("cmdAddtimeUsage", hmh).sendMessage(sender);
+        Message.create("cmdAddtimeUsage", hmh).send(sender);
     }
 }

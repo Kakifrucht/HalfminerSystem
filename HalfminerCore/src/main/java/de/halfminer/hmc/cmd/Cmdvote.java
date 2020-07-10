@@ -6,7 +6,7 @@ import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.cache.ActionProbabilityContainer;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -53,9 +53,9 @@ public class Cmdvote extends HalfminerCommand {
                 // increment stats, broadcast
                 coreStorage.set("vote." + hasVoted.getUniqueId().toString(), Long.MAX_VALUE);
                 hasVoted.incrementInt(DataType.VOTES, 1);
-                MessageBuilder.create("cmdVoteVoted", hmc, "Vote")
+                Message.create("cmdVoteVoted", hmc, "Vote")
                         .addPlaceholder("%PLAYER%", hasVoted.getName())
-                        .broadcastMessage(true);
+                        .broadcast(true);
 
                 // if the player is currently online, save his ip so that other people with same ip who cannot vote
                 // can also bypass the block, also drop vote reward, or increment background reward counter
@@ -68,7 +68,7 @@ public class Cmdvote extends HalfminerCommand {
                     boolean receivedReward = giveReward(playerHasVoted);
                     if (!receivedReward) {
                         coreStorage.incrementInt("vote.reward." + playerHasVoted.getUniqueId(), 1);
-                        MessageBuilder.create("cmdVoteRewardCouldNotExecute", hmc, "Vote").sendMessage(playerHasVoted);
+                        Message.create("cmdVoteRewardCouldNotExecute", hmc, "Vote").send(playerHasVoted);
                     }
 
                     playerHasVoted.playSound(playerHasVoted.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 2.0f);
@@ -93,14 +93,14 @@ public class Cmdvote extends HalfminerCommand {
                 int rewardAmount = coreStorage.getInt(storageKey);
 
                 if (rewardAmount == 0) {
-                    MessageBuilder.create("cmdVoteRewardDeny", hmc, "Vote").sendMessage(player);
+                    Message.create("cmdVoteRewardDeny", hmc, "Vote").send(player);
                     return;
                 }
 
                 while (rewardAmount > 0) {
                     if (giveReward(player)) rewardAmount--;
                     else {
-                        MessageBuilder.create("cmdVoteRewardCouldNotExecute", hmc, "Vote").sendMessage(player);
+                        Message.create("cmdVoteRewardCouldNotExecute", hmc, "Vote").send(player);
                         break;
                     }
                 }
@@ -124,18 +124,18 @@ public class Cmdvote extends HalfminerCommand {
         int totalVotes = coreStorage.getInt("totalvotes");
         int totalVotesThreshold = hmc.getConfig().getInt("command.vote.threshold", 2000);
 
-        MessageBuilder.create("cmdVoteTop", hmc).sendMessage(sender);
-        MessageBuilder.create("cmdVoteMessage", hmc).addPlaceholder("%PLAYER%", playername).sendMessage(sender);
-        MessageBuilder.create(" ", hmc).setDirectString().sendMessage(sender);
+        Message.create("cmdVoteTop", hmc).send(sender);
+        Message.create("cmdVoteMessage", hmc).addPlaceholder("%PLAYER%", playername).send(sender);
+        Message.create(" ", hmc).setDirectString().send(sender);
 
         boolean thresholdPassed = totalVotes < totalVotesThreshold;
-        MessageBuilder.create(thresholdPassed ? "cmdVoteUntil" : "cmdVoteReached", hmc)
+        Message.create(thresholdPassed ? "cmdVoteUntil" : "cmdVoteReached", hmc)
                 .addPlaceholder("%TOTALVOTES%" + (thresholdPassed ? "" : "%THRESHOLD%"), totalVotes)
-                .sendMessage(sender);
+                .send(sender);
 
-        if (rewardLeft > 0) MessageBuilder.create("cmdVoteGrabReward", hmc).sendMessage(sender);
+        if (rewardLeft > 0) Message.create("cmdVoteGrabReward", hmc).send(sender);
 
-        MessageBuilder.create("lineSeparator").sendMessage(sender);
+        Message.create("lineSeparator").send(sender);
     }
 
     private boolean giveReward(Player player) {
@@ -146,10 +146,10 @@ public class Cmdvote extends HalfminerCommand {
             ActionProbabilityContainer actions = new ActionProbabilityContainer(probabilityList, hmc, coreStorage);
             return actions.getNextAction().runAction(player);
         } catch (CachingException e) {
-            MessageBuilder.create("cmdVoteActionCacheError", hmc)
+            Message.create("cmdVoteActionCacheError", hmc)
                     .addPlaceholder("%PLAYER%", player.getName())
                     .addPlaceholder("%REASON%", e.getCleanReason())
-                    .logMessage(Level.WARNING);
+                    .log(Level.WARNING);
             return false;
         }
     }

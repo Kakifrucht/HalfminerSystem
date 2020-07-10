@@ -1,7 +1,7 @@
 package de.halfminer.hms.handler.menu;
 
 import de.halfminer.hms.HalfminerSystem;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -127,8 +127,8 @@ public class MenuContainer {
         player.openInventory(inventory);
     }
 
-    private MessageBuilder getPaginationMessageBuilder(String langKey) {
-        return MessageBuilder.create(langKey, HalfminerSystem.getInstance())
+    private Message getPaginationMessageBuilder(String langKey) {
+        return Message.create(langKey, HalfminerSystem.getInstance())
                 .addPlaceholder("%PAGE%", getCurrentPage())
                 .addPlaceholder("%PAGECOUNT%", getPageCount());
     }

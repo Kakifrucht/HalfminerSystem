@@ -1,6 +1,6 @@
 package de.halfminer.hmh.cmd;
 
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.Location;
 
 /**
@@ -30,12 +30,12 @@ public class Cmdsetspawn extends HaroCommand {
             if (spawnPoint != null) {
                 hms.getTeleportHandler().startTeleport(player, spawnPoint);
             } else {
-                MessageBuilder.create("cmdSetspawnTeleportNotSet", hmh).sendMessage(sender);
+                Message.create("cmdSetspawnTeleportNotSet", hmh).send(sender);
             }
 
         } else /* set teleport */ {
             haroStorage.setSpawnPoint(player.getLocation());
-            MessageBuilder.create("cmdSetspawnSet", hmh).sendMessage(sender);
+            Message.create("cmdSetspawnSet", hmh).send(sender);
         }
     }
 }
