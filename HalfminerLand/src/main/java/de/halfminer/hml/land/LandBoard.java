@@ -146,21 +146,21 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     }
 
     @Override
-    public Set<Land> getLands(UUID uuid) {
+    public List<Land> getLands(UUID uuid) {
         try {
-            return landMap.getOwnedLandSet(systemStorage.getPlayer(uuid));
+            return landMap.getOwnedLandList(systemStorage.getPlayer(uuid));
         } catch (PlayerNotFoundException e) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
     }
 
     @Override
-    public Set<Land> getLands(Player player) {
+    public List<Land> getLands(Player player) {
         return getLands(player.getUniqueId());
     }
 
     @Override
-    public Set<Land> getLands(HalfminerPlayer player) {
+    public List<Land> getLands(HalfminerPlayer player) {
         return getLands(player.getUniqueId());
     }
 
@@ -173,11 +173,11 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     }
 
     @Override
-    public Set<Land> getLandsOfServer() {
+    public List<Land> getLandsOfServer() {
         return getOwnedLandSet()
                 .stream()
                 .filter(Land::isServerLand)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -189,29 +189,29 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
     }
 
     @Override
-    public Set<Land> getConnectedLand(Land land) {
+    public List<Land> getConnectedLand(Land land) {
 
         if (!land.hasOwner()) {
-            return Collections.singleton(land);
+            return Collections.singletonList(land);
         }
 
-        Set<Land> ownedLandSet;
+        List<Land> ownedLandSet;
         if (land.isServerLand()) {
             ownedLandSet = getLandsOfServer();
         } else {
             ownedLandSet = getLands(land.getOwner());
         }
 
-        Set<Land> connectedSet = new HashSet<>();
-        Set<Land> leftToInsert = new HashSet<>(ownedLandSet);
-        connectedSet.add(land);
+        List<Land> connectedList = new ArrayList<>();
+        List<Land> leftToInsert = new LinkedList<>(ownedLandSet);
+        connectedList.add(land);
 
         // artificially cap at 10 iterations, as we run this on main server thread and don't want to take too long
         for (int i = 0; i < 10; i++) {
 
-            Set<Land> addToConnected = new HashSet<>();
+            List<Land> addToConnected = new ArrayList<>();
             for (Land ownedLand : leftToInsert) {
-                for (Land connectedLand : connectedSet) {
+                for (Land connectedLand : connectedList) {
                     if (connectedLand.isNeighbour(ownedLand)) {
                         addToConnected.add(ownedLand);
                         break;
@@ -224,11 +224,11 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
                 break;
             }
 
-            connectedSet.addAll(addToConnected);
+            connectedList.addAll(addToConnected);
             leftToInsert.removeAll(addToConnected);
         }
 
-        return connectedSet;
+        return connectedList;
     }
 
     @Override

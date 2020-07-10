@@ -14,7 +14,6 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Cmdlist extends LandCommand implements MenuCreator {
@@ -34,7 +33,7 @@ public class Cmdlist extends LandCommand implements MenuCreator {
             return;
         }
 
-        Set<Land> ownedLands;
+        List<Land> ownedLands;
         String name;
         if (isLookup) {
 

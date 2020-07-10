@@ -5,7 +5,7 @@ import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.MessageBuilder;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 public class Cmdfriend extends LandCommand {
@@ -66,7 +66,7 @@ public class Cmdfriend extends LandCommand {
                 return;
             }
 
-            Set<Land> lands = doForAll ? board.getLands(player) : board.getConnectedLand(land);
+            List<Land> lands = doForAll ? board.getLands(player) : board.getConnectedLand(land);
             if (lands.size() == 0) {
                 MessageBuilder.create("noLandOwned", hml).sendMessage(player);
                 return;

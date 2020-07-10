@@ -12,7 +12,7 @@ class LandMap {
     private final Map<Pair<World, Pair<Integer, Integer>>, Land> chunkLandMap;
     private final Map<String, Land> teleportMap;
 
-    private final Map<HalfminerPlayer, Set<Land>> ownedLandMap;
+    private final Map<HalfminerPlayer, List<Land>> ownedLandMap;
 
 
     LandMap() {
@@ -31,13 +31,13 @@ class LandMap {
 
         chunkLandMap.put(chunkPair, land);
 
-        if (land.hasOwner()) {
+        if (land.hasOwner() && !land.isServerLand()) {
             if (ownedLandMap.containsKey(land.getOwner())) {
                 ownedLandMap.get(land.getOwner()).add(land);
             } else {
-                HashSet<Land> newSet = new HashSet<>();
-                newSet.add(land);
-                ownedLandMap.put(land.getOwner(), newSet);
+                List<Land> newList = new ArrayList<>();
+                newList.add(land);
+                ownedLandMap.put(land.getOwner(), newList);
             }
         }
 
@@ -54,7 +54,7 @@ class LandMap {
         }
 
         if (land.hasOwner() && ownedLandMap.containsKey(land.getOwner())) {
-            Set<Land> ownedLand = ownedLandMap.get(land.getOwner());
+            List<Land> ownedLand = ownedLandMap.get(land.getOwner());
             ownedLand.remove(land);
             if (ownedLand.isEmpty()) {
                 ownedLandMap.remove(land.getOwner());
@@ -87,15 +87,15 @@ class LandMap {
         return null;
     }
 
-    Set<Land> getOwnedLandSet(HalfminerPlayer halfminerPlayer) {
+    List<Land> getOwnedLandList(HalfminerPlayer halfminerPlayer) {
 
-        Set<Land> set = ownedLandMap.getOrDefault(halfminerPlayer, Collections.emptySet());
-        set.removeIf(land -> !land.hasOwner() || !land.getOwner().equals(halfminerPlayer) || land.isServerLand());
-        if (set.isEmpty()) {
+        List<Land> set = ownedLandMap.getOrDefault(halfminerPlayer, Collections.emptyList());
+        boolean removed = set.removeIf(land -> !land.hasOwner() || !land.getOwner().equals(halfminerPlayer) || land.isServerLand());
+        if (removed && set.isEmpty()) {
             ownedLandMap.remove(halfminerPlayer);
         }
 
-        return new HashSet<>(set);
+        return new ArrayList<>(set);
     }
 
     Collection<Land> getLandCollection() {

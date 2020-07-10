@@ -54,7 +54,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         board.updatePlayerLocation(e.getPlayer(), null, e.getPlayer().getLocation().getChunk());
 
         // remove abandonment status if land is abandoned
-        Set<Land> ownedLands = board.getLands(e.getPlayer());
+        List<Land> ownedLands = board.getLands(e.getPlayer());
         if (!ownedLands.isEmpty()) {
 
             int count = 0;
