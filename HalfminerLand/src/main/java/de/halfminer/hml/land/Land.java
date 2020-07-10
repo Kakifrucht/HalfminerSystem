@@ -362,10 +362,13 @@ public class Land extends LandClass {
         return wgh.removeMemberFromRegion(this, toRemove);
     }
 
+    private String getLocationString() {
+        return getWorld().getName() + ",x" + getX() + ",z" + getZ();
+    }
+
     @Override
     public String toString() {
-        return getWorld().getName() + ",x" + getX() + ",z" + getZ()
-                + (hasOwner() ? " (Owner: " + getOwner().getUniqueId() + ")" : "");
+        return getLocationString() + (hasOwner() ? " (Owner: " + getOwner().getUniqueId() + ")" : "");
     }
 
     @Override
@@ -378,12 +381,12 @@ public class Land extends LandClass {
         }
 
         Land land = (Land) o;
-        return toString().equals(land.toString());
+        return getLocationString().equals(land.getLocationString());
     }
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return getLocationString().hashCode();
     }
 
 

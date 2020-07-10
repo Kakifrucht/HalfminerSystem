@@ -54,21 +54,21 @@ public interface Board {
 
     /**
      * @param uuid uuid
-     * @return a set containing all lands owned by given uuid
+     * @return a list containing all lands owned by given uuid
      */
-    Set<Land> getLands(UUID uuid);
+    List<Land> getLands(UUID uuid);
 
     /**
      * @param player player
-     * @return a set containing all lands owned by given player
+     * @return a list containing all lands owned by given player
      */
-    Set<Land> getLands(Player player);
+    List<Land> getLands(Player player);
 
     /**
      * @param player halfminer player that may be offline
-     * @return a set containing all lands owned by given player
+     * @return a list containing all lands owned by given player
      */
-    Set<Land> getLands(HalfminerPlayer player);
+    List<Land> getLands(HalfminerPlayer player);
 
     /**
      * @param player player
@@ -77,9 +77,9 @@ public interface Board {
     List<Land> getLandsWithTeleport(Player player);
 
     /**
-     * @return a set containing all lands owned by the server
+     * @return a list containing all lands owned by the server
      */
-    Set<Land> getLandsOfServer();
+    List<Land> getLandsOfServer();
 
     /**
      * @return a set containing all lands owned by a player or the server
@@ -94,9 +94,9 @@ public interface Board {
      * every connected land may be returned.
      *
      * @param land to get all connected lands of that are owned by the same player
-     * @return a set containing all lands that are connected to the given land and owned by the same player
+     * @return a list containing all lands that are connected to the given land and owned by the same player
      */
-    Set<Land> getConnectedLand(Land land);
+    List<Land> getConnectedLand(Land land);
 
     /**
      * Display particles that will mark this chunk.
