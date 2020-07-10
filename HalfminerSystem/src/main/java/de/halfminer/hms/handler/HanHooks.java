@@ -5,7 +5,7 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.handler.hooks.HookException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.enchantments.Enchantment;
@@ -40,12 +40,12 @@ public class HanHooks extends HalfminerClass {
                     .getRegistration(net.milkbowl.vault.chat.Chat.class);
             if (provider != null) vaultChatHook = provider.getProvider();
             else {
-                MessageBuilder.create("hanHooksLoadChatFailed").logMessage(Level.WARNING);
+                Message.create("hanHooksLoadChatFailed").log(Level.WARNING);
                 vaultChatHook = null;
             }
 
         } else {
-            MessageBuilder.create("hanHooksLoadChatFailed").logMessage(Level.WARNING);
+            Message.create("hanHooksLoadChatFailed").log(Level.WARNING);
             vaultChatHook = null;
         }
     }

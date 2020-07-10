@@ -6,7 +6,7 @@ import de.halfminer.hms.handler.HanHooks;
 import de.halfminer.hms.handler.hooks.HookException;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -73,7 +73,7 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
                     setFlyTimeLeft(player, flyDurationSeconds, null);
                 } else {
                     togglePlayerFlying(player);
-                    MessageBuilder.create("flyBoardDisableNotEnoughMoney", hml).sendMessage(player);
+                    Message.create("flyBoardDisableNotEnoughMoney", hml).send(player);
                 }
 
             }, timeLeftFlying * 20L, interval);
@@ -105,10 +105,10 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
 
                     if (hms.getHooksHandler().isAfk(flyingPlayer)) {
                         togglePlayerFlying(flyingPlayer);
-                        MessageBuilder.create("flyBoardDisableAfk", hml).sendMessage(flyingPlayer);
+                        Message.create("flyBoardDisableAfk", hml).send(flyingPlayer);
                     } else if (flyingPlayer.getLocation().getBlockY() > MAX_FLY_HEIGHT) {
                         togglePlayerFlying(flyingPlayer);
-                        MessageBuilder.create("flyBoardFlyHeightLimit", hml).sendMessage(flyingPlayer);
+                        Message.create("flyBoardFlyHeightLimit", hml).send(flyingPlayer);
                     }
                 }
 
@@ -161,10 +161,10 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
             hml.getLogger().info("Renewed fly time for player " + player.getName()
                     + " (" + flyDurationSeconds + " seconds, $" + flyCost + ")");
 
-            MessageBuilder.create("flyBoardRenewed", hml)
+            Message.create("flyBoardRenewed", hml)
                     .addPlaceholder("%TIME%", flyDurationSeconds)
                     .addPlaceholder("%COST%", flyCost)
-                    .sendMessage(player);
+                    .send(player);
 
             return true;
         } catch (HookException e) {
@@ -199,7 +199,7 @@ public class FlyBoard extends LandClass implements Disableable, Reloadable {
     public void onDisable() {
         for (Player player : new HashSet<>(flyMap.keySet())) {
             togglePlayerFlying(player);
-            MessageBuilder.create("flyBoardDisableForce", hml).sendMessage(player);
+            Message.create("flyBoardDisableForce", hml).send(player);
         }
     }
 }

@@ -3,7 +3,7 @@ package de.halfminer.hmc.cmd.abs;
 import de.halfminer.hmc.CoreClass;
 import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hms.handler.HanStorage;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -38,9 +38,9 @@ public abstract class HalfminerCommand extends CoreClass {
         try {
             execute();
         } catch (ModuleDisabledException e) {
-            MessageBuilder.create("moduleIsDisabled", hmc, "Info")
+            Message.create("moduleIsDisabled", hmc, "Info")
                     .addPlaceholder("%MODULE%", e.getType().getClassName())
-                    .sendMessage(sender);
+                    .send(sender);
         }
     }
 
@@ -51,10 +51,10 @@ public abstract class HalfminerCommand extends CoreClass {
     }
 
     protected void sendNotAPlayerMessage(String prefix) {
-        MessageBuilder.create("notAPlayer", prefix).sendMessage(sender);
+        Message.create("notAPlayer", prefix).send(sender);
     }
 
     protected void sendNoPermissionMessage(String prefix) {
-        MessageBuilder.create("noPermission", prefix).sendMessage(sender);
+        Message.create("noPermission", prefix).send(sender);
     }
 }

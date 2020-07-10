@@ -4,7 +4,7 @@ import de.halfminer.hmb.arena.abs.Arena;
 import de.halfminer.hmb.mode.abs.AbstractMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
 import de.halfminer.hmb.mode.abs.BattleModeType;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -69,8 +69,8 @@ public class GlobalMode extends AbstractMode {
         if (args[0].equalsIgnoreCase("reload")) {
 
             boolean success = hmb.saveAndReloadConfig();
-            MessageBuilder.create(success ? "adminSettingsReloaded" : "adminSettingsReloadedError", hmb)
-                    .sendMessage(sender);
+            Message.create(success ? "adminSettingsReloaded" : "adminSettingsReloadedError", hmb)
+                    .send(sender);
         } else if (args[0].equalsIgnoreCase("openinventory")) {
 
             if (args.length < 2) {
@@ -95,14 +95,14 @@ public class GlobalMode extends AbstractMode {
                         String uuidString = yaml.getString("uuid");
                         toRestore = server.getPlayer(UUID.fromString(uuidString));
                         if (toRestore == null || !toRestore.isOnline()) {
-                            MessageBuilder.create("playerNotOnline", "Battle")
-                                    .sendMessage(sender);
+                            Message.create("playerNotOnline", "Battle")
+                                    .send(sender);
                             return true;
                         }
                         if (pm.isInBattle(type, toRestore)) {
-                            MessageBuilder.create("adminOpenInventoryRestoredError", hmb)
+                            Message.create("adminOpenInventoryRestoredError", hmb)
                                     .addPlaceholder("%PLAYER%", toRestore.getName())
-                                    .sendMessage(sender);
+                                    .send(sender);
                             return true;
                         }
                     }
@@ -117,9 +117,9 @@ public class GlobalMode extends AbstractMode {
 
                     if (toRestore != null) {
                         toRestore.getInventory().setContents(contents);
-                        MessageBuilder.create("adminOpenInventoryRestored", hmb)
+                        Message.create("adminOpenInventoryRestored", hmb)
                                 .addPlaceholder("%PLAYER%", toRestore.getName())
-                                .sendMessage(sender);
+                                .send(sender);
                     }
 
                     if (!(sender instanceof Player)) {
@@ -138,10 +138,10 @@ public class GlobalMode extends AbstractMode {
                     player.openInventory(toOpen);
 
                 } else {
-                    MessageBuilder.create("adminOpenInventoryInvalid", hmb).sendMessage(sender);
+                    Message.create("adminOpenInventoryInvalid", hmb).send(sender);
                 }
             } else {
-                MessageBuilder.create("adminOpenInventoryUnknownFile", hmb).sendMessage(sender);
+                Message.create("adminOpenInventoryUnknownFile", hmb).send(sender);
             }
 
         } else {
@@ -153,7 +153,7 @@ public class GlobalMode extends AbstractMode {
 
             BattleModeType type = BattleModeType.getBattleMode(args[1]);
             if (type == null || type.equals(BattleModeType.GLOBAL)) {
-                MessageBuilder.create("adminUnknownBattleMode", hmb).sendMessage(sender);
+                Message.create("adminUnknownBattleMode", hmb).send(sender);
                 return true;
             }
 
@@ -227,17 +227,17 @@ public class GlobalMode extends AbstractMode {
     }
 
     private void sendUsageInformation(CommandSender sendTo) {
-        MessageBuilder.create("adminCommandUsage", hmb)
+        Message.create("adminCommandUsage", hmb)
                 .addPlaceholder("%VERSION%", hmb.getDescription().getVersion())
                 .addPlaceholder("%SYSTEMVERSION%", hms.getDescription().getVersion())
-                .sendMessage(sendTo);
+                .send(sendTo);
     }
 
     private void sendStatusMessage(CommandSender sendTo, String messageKey, String arenaName, BattleModeType mode) {
-        MessageBuilder.create(messageKey, hmb)
+        Message.create(messageKey, hmb)
                 .addPlaceholder("%ARENA%", arenaName)
                 .addPlaceholder("%MODE%", Utils.makeStringFriendly(mode.toString()))
-                .sendMessage(sendTo);
+                .send(sendTo);
     }
 
     private int getNumberFromString(String toParse) {
@@ -249,7 +249,7 @@ public class GlobalMode extends AbstractMode {
     }
 
     private void sendNotAPlayerMessage(CommandSender sendTo) {
-        MessageBuilder.create("notAPlayer", "Battle").sendMessage(sendTo);
+        Message.create("notAPlayer", "Battle").send(sendTo);
     }
 
     @Override
@@ -371,7 +371,7 @@ public class GlobalMode extends AbstractMode {
                 && !nonBlockedCommands.contains(e.getMessage().substring(1).toLowerCase())
                 && (!pm.isInBattle(BattleModeType.FFA, e.getPlayer()) || !e.getMessage().startsWith("/ffa"))) {
 
-            MessageBuilder.create("modeGlobalNoCommandInGame", hmb).sendMessage(e.getPlayer());
+            Message.create("modeGlobalNoCommandInGame", hmb).send(e.getPlayer());
             e.setCancelled(true);
         }
     }
@@ -415,7 +415,7 @@ public class GlobalMode extends AbstractMode {
         if (!pm.isInBattle(type, e.getPlayer())
                 && !e.getPlayer().hasPermission("hmb.mode.global.bypass.teleportintoarena")
                 && am.isArenaSpawn(e.getTo())) {
-            MessageBuilder.create("modeGlobalTeleportIntoArenaDenied", hmb).sendMessage(e.getPlayer());
+            Message.create("modeGlobalTeleportIntoArenaDenied", hmb).send(e.getPlayer());
             e.setCancelled(true);
         }
     }

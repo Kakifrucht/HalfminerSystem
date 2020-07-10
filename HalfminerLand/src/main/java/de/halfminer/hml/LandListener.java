@@ -4,7 +4,7 @@ import de.halfminer.hml.land.Board;
 import de.halfminer.hml.land.FlyBoard;
 import de.halfminer.hml.land.Land;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import de.halfminer.hms.util.Utils;
@@ -66,10 +66,10 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             }
 
             if (count > 0) {
-                MessageBuilder.create("listenerLandUnabandoned", hml)
+                Message.create("listenerLandUnabandoned", hml)
                         .addPlaceholder("%COUNT%", count)
                         .addPlaceholder("%DAYSUNTILABANDONED%", hml.getConfig().getInt("landAbandonedAfterDays", 21))
-                        .sendMessage(e.getPlayer());
+                        .send(e.getPlayer());
             }
         }
     }
@@ -128,7 +128,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             boolean pvpStateChanged = wgh.isPvPEnabled(from) ^ currentIsPvP;
 
             if (pvpStateChanged) {
-                pvpMessageInTitle = MessageBuilder.returnMessage("listenerPvP" + (currentIsPvP ? "On" : "Off"), hml, false);
+                pvpMessageInTitle = Message.returnMessage("listenerPvP" + (currentIsPvP ? "On" : "Off"), hml, false);
             }
 
             if (!newLand.hasOwner()) {
@@ -137,12 +137,12 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
                 if (previousLand.hasOwner() || (newLandIsFree != wgh.isLandFree(previousLand))) {
                     String messageKey = "listenerOwner" + (newLandIsFree ? "Free" : "Protected");
-                    ownerMessageInTitle = MessageBuilder.returnMessage(messageKey, hml, false);
+                    ownerMessageInTitle = Message.returnMessage(messageKey, hml, false);
                 }
 
             } else if (newLand.hasOwner() && hasDifferentOwner(newLand, previousLand)) {
 
-                ownerMessageInTitle = MessageBuilder.create("listenerOwnerOwned" + (newLand.isAbandoned() ? "Abandoned" : ""), hml)
+                ownerMessageInTitle = Message.create("listenerOwnerOwned" + (newLand.isAbandoned() ? "Abandoned" : ""), hml)
                         .togglePrefix()
                         .addPlaceholder("%OWNER%", newLand.getOwnerName())
                         .returnMessage();
@@ -150,12 +150,12 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             // add spacer if necessary
             if (pvpStateChanged && !ownerMessageInTitle.isEmpty()) {
-                spacer = MessageBuilder.returnMessage("listenerFormatSpacer", hml, false);
+                spacer = Message.returnMessage("listenerFormatSpacer", hml, false);
             }
 
             if (pvpStateChanged || !ownerMessageInTitle.isEmpty()) {
 
-                hms.getTitlesHandler().sendTitle(player, MessageBuilder.create("listenerFormatTitle", hml)
+                hms.getTitlesHandler().sendTitle(player, Message.create("listenerFormatTitle", hml)
                         .togglePrefix()
                         .addPlaceholder("%PVPLINE%", pvpMessageInTitle)
                         .addPlaceholder("%SPACER%", spacer)
@@ -189,9 +189,9 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
                 if (command.startsWith(blockedCmd)) {
                     e.setCancelled(true);
-                    MessageBuilder.create("listenerCmdBlocked", hml)
+                    Message.create("listenerCmdBlocked", hml)
                             .addPlaceholder("%OWNER%", currentLand.getOwnerName())
-                            .sendMessage(e.getPlayer());
+                            .send(e.getPlayer());
                     return;
                 }
             }
@@ -220,9 +220,9 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         if (!land.hasPermission(player)) {
 
             String locale = e instanceof BlockBreakEvent ? "listenerBlockBreakBlocked" : "listenerBlockPlaceBlocked";
-            MessageBuilder.create(locale, hml)
+            Message.create(locale, hml)
                     .addPlaceholder("%OWNER%", land.getOwnerName())
-                    .sendMessage(player);
+                    .send(player);
 
             return true;
         }
@@ -233,7 +233,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 && e instanceof BlockPlaceEvent
                 && board.getLands(player).isEmpty()) {
 
-            MessageBuilder.create("listenerUnprotectedLandMessage", hml).sendMessage(player);
+            Message.create("listenerUnprotectedLandMessage", hml).send(player);
         }
 
         return false;
@@ -265,9 +265,9 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 && (entity instanceof HopperMinecart
                 || entity instanceof StorageMinecart)) {
 
-            MessageBuilder.create("listenerNoInteract", hml)
+            Message.create("listenerNoInteract", hml)
                     .addPlaceholder("%OWNER%", land.getOwnerName())
-                    .sendMessage(player);
+                    .send(player);
 
             e.setCancelled(true);
 
@@ -363,9 +363,9 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
         if (flyBoard.isPlayerFlying(player)) {
             flyBoard.togglePlayerFlying(player);
-            MessageBuilder.create("listenerFlyPvPDisabled", hml)
+            Message.create("listenerFlyPvPDisabled", hml)
                     .addPlaceholder("%TIME%", flyBoard.getFlyTimeLeft(player))
-                    .sendMessage(player);
+                    .send(player);
         }
     }
 

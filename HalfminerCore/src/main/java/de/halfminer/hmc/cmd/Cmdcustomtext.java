@@ -3,7 +3,7 @@ package de.halfminer.hmc.cmd;
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.cache.CustomtextCache;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Player;
 
@@ -38,7 +38,7 @@ public class Cmdcustomtext extends HalfminerCommand {
         try {
             cache = coreStorage.getCache("customtext.txt");
         } catch (CachingException e) {
-            MessageBuilder.create("errorOccurred", "Info").sendMessage(sender);
+            Message.create("errorOccurred", "Info").send(sender);
             hmc.getLogger().log(Level.WARNING, "An error has occurred: " + e.getCleanReason(), e);
             return;
         }
@@ -49,7 +49,7 @@ public class Cmdcustomtext extends HalfminerCommand {
 
             for (String rawLine : chapter) {
 
-                MessageBuilder builder = MessageBuilder.create(rawLine, hmc)
+                Message builder = Message.create(rawLine, hmc)
                         .setDirectString()
                         .addPlaceholder("%PLAYER%", Utils.getPlayername(sender))
                         .addPlaceholder("%ARGS%", Utils.arrayToString(args, 0, false));
@@ -74,19 +74,19 @@ public class Cmdcustomtext extends HalfminerCommand {
                     }
                 }
 
-                builder.sendMessage(sender);
+                builder.send(sender);
             }
 
         } catch (CachingException e) {
 
             if (e.getReason().equals(CachingException.Reason.CHAPTER_NOT_FOUND)
                     || e.getReason().equals(CachingException.Reason.FILE_EMPTY)) {
-                MessageBuilder.create("cmdCustomtextNotFound", hmc, "Info").sendMessage(sender);
+                Message.create("cmdCustomtextNotFound", hmc, "Info").send(sender);
             } else {
-                MessageBuilder.create("errorOccurred", "Info").sendMessage(sender);
-                MessageBuilder.create("cmdCustomtextCacheParseError", hmc)
+                Message.create("errorOccurred", "Info").send(sender);
+                Message.create("cmdCustomtextCacheParseError", hmc)
                         .addPlaceholder("%ERROR%", e.getCleanReason())
-                        .logMessage(Level.WARNING);
+                        .log(Level.WARNING);
             }
         }
     }

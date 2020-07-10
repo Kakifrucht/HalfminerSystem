@@ -6,7 +6,7 @@ import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanStorage;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -88,7 +88,7 @@ public class HalfminerCore extends JavaPlugin {
 
         if (command.hasPermission(sender)) {
             command.run(sender, label, args);
-        } else MessageBuilder.create("noPermission", "Info").sendMessage(sender);
+        } else Message.create("noPermission", "Info").send(sender);
 
         return true;
     }

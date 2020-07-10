@@ -1,6 +1,6 @@
 package de.halfminer.hms.handler.storage;
 
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -9,6 +9,6 @@ import org.bukkit.command.CommandSender;
 public class PlayerNotFoundException extends Exception {
 
     public void sendNotFoundMessage(CommandSender sendTo, String prefix) {
-        MessageBuilder.create("playerDoesNotExist", prefix).sendMessage(sendTo);
+        Message.create("playerDoesNotExist", prefix).send(sendTo);
     }
 }

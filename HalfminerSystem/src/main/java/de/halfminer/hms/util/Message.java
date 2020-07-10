@@ -11,10 +11,24 @@ import java.util.*;
 import java.util.logging.Level;
 
 /**
- * Class containing a builder used for messaging players / console
+ * Class wrapping a builder like object for messaging purposes.
+ * To access use it's static {@link #create(String, Plugin, String)} method.
+ * To use the default plugins locale section (HalfminerSystem) the plugin parameter can be ommited.
+ * Translations will be pulled from the supplied plugins config.yml "localization" section,
+ * or if {@link #setDirectString()} is set to true they can also be hardcoded and passed
+ * directly as parameter instead of the message key.
+ *
+ * Message color will be filtered if message is printed to console, otherwise {@link #COLOR_CODE}
+ * character will be replaced automatically with the actual color code for Minecraft.
+ *
+ * If messages in config start with {@link #CLICKABLE_PREFIX} character and the message
+ * is sent to a player, the plugin will make commands in the message (encapsulated with the
+ * {@link #COMMAND_PREFIX} character) clickable.
+ *
+ * There are also shortcuts to just quickly return a message string in one line,
+ * use the static {@link #returnMessage(String, Plugin, boolean)} methods (and overloads).
  */
-@SuppressWarnings("SameParameterValue")
-public class MessageBuilder {
+public class Message {
 
     /**
      * Create a new MessageBuilder with default plugin
@@ -22,7 +36,7 @@ public class MessageBuilder {
      * @param lang either the language key, or the message directly passed
      * @return MessageBuilder that can send a parsed message
      */
-    public static MessageBuilder create(String lang) {
+    public static Message create(String lang) {
         return create(lang, HalfminerSystem.getInstance());
     }
 
@@ -33,7 +47,7 @@ public class MessageBuilder {
      * @param prefix %PREFIX% placeholder to be added
      * @return MessageBuilder that can send a parsed message
      */
-    public static MessageBuilder create(String lang, String prefix) {
+    public static Message create(String lang, String prefix) {
         return create(lang, HalfminerSystem.getInstance(), prefix);
     }
 
@@ -45,7 +59,7 @@ public class MessageBuilder {
      * @param prefix %PREFIX% placeholder to be added
      * @return MessageBuilder that can send a parsed message
      */
-    public static MessageBuilder create(String lang, Plugin plugin, String prefix) {
+    public static Message create(String lang, Plugin plugin, String prefix) {
         return create(lang, plugin).addPlaceholder("PREFIX", prefix);
     }
 
@@ -56,8 +70,8 @@ public class MessageBuilder {
      * @param plugin plugin calling the builder or null to use default API locale keys
      * @return MessageBuilder that can send a parsed message
      */
-    public static MessageBuilder create(String lang, Plugin plugin) {
-        return new MessageBuilder(plugin, lang);
+    public static Message create(String lang, Plugin plugin) {
+        return new Message(plugin, lang);
     }
 
     public static String returnMessage(String lang) {
@@ -69,14 +83,15 @@ public class MessageBuilder {
     }
 
     public static String returnMessage(String lang, Plugin plugin, boolean usePrefix) {
-        MessageBuilder builder = create(lang, plugin);
+        Message builder = create(lang, plugin);
         if (!usePrefix) builder.togglePrefix();
         return builder.returnMessage();
     }
 
-    private final static char COLOR_CODE = '&';
-    private final static char CLICKABLE_PREFIX = '~';
-    private final static char PLACEHOLDER_CHARACTER = '%';
+    private static final char COLOR_CODE = '&';
+    private static final char CLICKABLE_PREFIX = '~';
+    private static final char PLACEHOLDER_CHARACTER = '%';
+    private static final char COMMAND_PREFIX = '/';
 
     private final Plugin plugin;
 
@@ -87,18 +102,18 @@ public class MessageBuilder {
     private boolean usePrefix = true;
     private boolean startsWithClickableChar = false;
 
-    private MessageBuilder(Plugin plugin, String lang) {
+    private Message(Plugin plugin, String lang) {
         this.plugin = plugin != null ? plugin : HalfminerSystem.getInstance();
         this.lang = lang;
     }
 
-    public MessageBuilder setDirectString() {
+    public Message setDirectString() {
         getFromLocale = false;
         usePrefix = false;
         return this;
     }
 
-    public MessageBuilder togglePrefix() {
+    public Message togglePrefix() {
         usePrefix = !usePrefix;
         return this;
     }
@@ -110,12 +125,12 @@ public class MessageBuilder {
      * @param replaceWith String with what to replace with
      * @return MessageBuilder, same instance
      */
-    public MessageBuilder addPlaceholder(String placeholder, String replaceWith) {
+    public Message addPlaceholder(String placeholder, String replaceWith) {
         placeholders.put(placeholder.replaceAll(PLACEHOLDER_CHARACTER + "", "").trim(), replaceWith);
         return this;
     }
 
-    public MessageBuilder addPlaceholder(String placeholder, Object replaceWith) {
+    public Message addPlaceholder(String placeholder, Object replaceWith) {
         addPlaceholder(placeholder, String.valueOf(replaceWith));
         return this;
     }
@@ -128,7 +143,7 @@ public class MessageBuilder {
 
         String toReturn;
         if (getFromLocale) {
-            toReturn = getMessage(lang);
+            toReturn = getMessageFromLocale(lang);
             // allow removal of messages
             if (toReturn == null || toReturn.length() == 0)
                 return "";
@@ -142,7 +157,7 @@ public class MessageBuilder {
         }
 
         if (usePrefix && !loggingMode) {
-            String prefixPlaceholder = getMessage("prefix");
+            String prefixPlaceholder = getMessageFromLocale("prefix");
             // if %PREFIX% placeholder is part of plugins prefix, check if MessageBuilder contains
             // said placeholder, only add prefix if placeholder will be replaced
             if (prefixPlaceholder.length() > 0
@@ -151,7 +166,7 @@ public class MessageBuilder {
             }
         }
 
-        toReturn = placeholderReplace(toReturn);
+        toReturn = doPlaceholderReplace(toReturn);
         toReturn = ChatColor.translateAlternateColorCodes(COLOR_CODE, toReturn).replace("\\n", "\n");
 
         // if logging, remove color codes and remove encapsulating command '/' if necessary
@@ -161,7 +176,7 @@ public class MessageBuilder {
                 StringBuilder removeSlash = new StringBuilder(toReturn);
                 boolean removeNextSlash = false;
                 for (int i = 0; i < removeSlash.length(); i++) {
-                    if (removeSlash.charAt(i) == '/') {
+                    if (removeSlash.charAt(i) == COMMAND_PREFIX) {
                         if (removeNextSlash) removeSlash.deleteCharAt(i);
                         removeNextSlash = !removeNextSlash;
                     }
@@ -172,7 +187,7 @@ public class MessageBuilder {
         return toReturn;
     }
 
-    public void sendMessage(CommandSender... sendToPlayers) {
+    public void send(CommandSender... sendToPlayers) {
 
         String messageToSend = returnMessage();
 
@@ -191,30 +206,30 @@ public class MessageBuilder {
         }
     }
 
-    public void broadcastMessage(boolean log) {
-        broadcastMessage(plugin.getServer().getOnlinePlayers(), log, "");
+    public void broadcast(boolean log) {
+        broadcast(plugin.getServer().getOnlinePlayers(), log, "");
     }
 
-    public void broadcastMessage(String permission, boolean log) {
-        broadcastMessage(plugin.getServer().getOnlinePlayers(), log, permission);
+    public void broadcast(String permission, boolean log) {
+        broadcast(plugin.getServer().getOnlinePlayers(), log, permission);
     }
 
-    public void broadcastMessage(Collection<? extends CommandSender> sendTo, boolean log, String permission) {
+    public void broadcast(Collection<? extends CommandSender> sendTo, boolean log, String permission) {
 
         sendTo.stream()
                 .filter(player -> permission.length() == 0 || player.hasPermission(permission))
-                .forEach(this::sendMessage);
+                .forEach(this::send);
 
-        if (log) logMessage(Level.INFO);
+        if (log) log(Level.INFO);
     }
 
-    public void logMessage(Level logLevel) {
+    public void log(Level logLevel) {
         String toLog = returnMessage(true);
         if (toLog.length() > 0)
             plugin.getLogger().log(logLevel, toLog);
     }
 
-    private String getMessage(String messageKey) {
+    private String getMessageFromLocale(String messageKey) {
         return plugin.getConfig().getString("localization." + messageKey, "");
     }
 
@@ -225,7 +240,7 @@ public class MessageBuilder {
      * @param toReplace string containing the message that contains the placeholders
      * @return String containing the finished replaced message
      */
-    private String placeholderReplace(String toReplace) {
+    private String doPlaceholderReplace(String toReplace) {
 
         if (placeholders.size() == 0) return toReplace;
 
@@ -289,7 +304,7 @@ public class MessageBuilder {
 
             for (int i = 0; i < originalText.length(); i++) {
 
-                if (originalText.charAt(i) == '/') {
+                if (originalText.charAt(i) == COMMAND_PREFIX) {
 
                     if (readingCommand) {
 
@@ -298,7 +313,7 @@ public class MessageBuilder {
                         newComponent.setText(command);
                         newComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
 
-                        String clickHoverMessage = MessageBuilder.returnMessage("commandClickHover");
+                        String clickHoverMessage = Message.returnMessage("commandClickHover");
                         if (clickHoverMessage.length() > 0) {
                             newComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                     new ComponentBuilder(clickHoverMessage).create()));

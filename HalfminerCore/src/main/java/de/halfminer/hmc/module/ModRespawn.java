@@ -6,7 +6,7 @@ import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.manageable.Sweepable;
 import de.halfminer.hms.cache.CustomAction;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -71,7 +71,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
             // send different message if player already has online time in his stats (if played longer than 15 minutes)
             boolean hasActuallyPlayedBefore = storage.getPlayer(joined).getInt(DataType.TIME_ONLINE) > 15 * 60;
-            message = MessageBuilder.create(hasActuallyPlayedBefore ? "modRespawnFirstJoinHasPlayed" : "modRespawnFirstJoin", hmc)
+            message = Message.create(hasActuallyPlayedBefore ? "modRespawnFirstJoinHasPlayed" : "modRespawnFirstJoin", hmc)
                     .addPlaceholder("%PLAYER%", joined.getName())
                     .returnMessage();
 
@@ -82,7 +82,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                 if (firstSpawnCommand.length() > 0) {
 
                     server.dispatchCommand(server.getConsoleSender(),
-                            MessageBuilder.create(firstSpawnCommand, hmc)
+                            Message.create(firstSpawnCommand, hmc)
                                     .setDirectString()
                                     .addPlaceholder("%PLAYER%", joined.getName())
                                     .returnMessage());
@@ -92,7 +92,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         } else if (toTeleportOnJoin.contains(joined)) {
             scheduler.runTaskLater(hmc, () -> {
                 joined.teleport(respawnLoc);
-                MessageBuilder.create("modRespawnForced", hmc, "Spawn").sendMessage(joined);
+                Message.create("modRespawnForced", hmc, "Spawn").send(joined);
                 toTeleportOnJoin.remove(joined);
             }, 1L);
         }
@@ -128,8 +128,8 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         if (containsWelcome && mentioned != null) {
 
             lastWelcome.put(p.getUniqueId(), true);
-            titleHandler.sendTitle(p, MessageBuilder.returnMessage("modRespawnWelcomeBonusTitle", hmc), 10, 30, 0);
-            barHandler.sendBar(p, MessageBuilder.returnMessage("modRespawnWelcomeBonusBossbar", hmc),
+            titleHandler.sendTitle(p, Message.returnMessage("modRespawnWelcomeBonusTitle", hmc), 10, 30, 0);
+            barHandler.sendBar(p, Message.returnMessage("modRespawnWelcomeBonusBossbar", hmc),
                     BarColor.WHITE, BarStyle.SOLID, 10, 1.0d);
 
             scheduler.runTaskLater(hmc, () -> {
@@ -137,17 +137,17 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
                 if (Utils.random(randomRange)) {
 
                     action.addPlaceholderForNextRun("%CUSTOM%",
-                            MessageBuilder.returnMessage("modRespawnWelcomeBonusCustom", hmc));
+                            Message.returnMessage("modRespawnWelcomeBonusCustom", hmc));
 
                     if (action.runAction(p)) {
                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
                         titleHandler.sendTitle(p,
-                                MessageBuilder.returnMessage("modRespawnWelcomeBonusTitleYes", hmc), 0, 60, 10);
+                                Message.returnMessage("modRespawnWelcomeBonusTitleYes", hmc), 0, 60, 10);
                         return;
                     }
                 }
 
-                titleHandler.sendTitle(p, MessageBuilder.returnMessage("modRespawnWelcomeBonusTitleNo", hmc), 0, 30, 10);
+                titleHandler.sendTitle(p, Message.returnMessage("modRespawnWelcomeBonusTitleNo", hmc), 0, 30, 10);
                 p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT, 1.0f, 2.0f);
             }, 20L);
         }
@@ -205,9 +205,9 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         try {
             action = new CustomAction(config.getString("respawn.customActionWelcomeBonus", "nothing"), coreStorage);
         } catch (CachingException e) {
-            MessageBuilder.create("modRespawnWelcomeBonusActionError", hmc)
+            Message.create("modRespawnWelcomeBonusActionError", hmc)
                     .addPlaceholder("%REASON%", e.getCleanReason())
-                    .logMessage(Level.WARNING);
+                    .log(Level.WARNING);
             try {
                 action = new CustomAction("nothing", coreStorage);
             } catch (CachingException ignored) {

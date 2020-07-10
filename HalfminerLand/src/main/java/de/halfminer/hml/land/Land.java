@@ -5,7 +5,7 @@ import de.halfminer.hml.WorldGuardHelper;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -172,7 +172,7 @@ public class Land extends LandClass {
             return isServerLand ? hml.getConfig().getString("serverName", "") : owner.getName();
         }
 
-        return MessageBuilder.returnMessage("noOwner", hml, false);
+        return Message.returnMessage("noOwner", hml, false);
     }
 
     public boolean isOwner(Player player) {

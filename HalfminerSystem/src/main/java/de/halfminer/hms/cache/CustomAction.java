@@ -3,7 +3,7 @@ package de.halfminer.hms.cache;
 import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.util.FormattingException;
 import de.halfminer.hms.cache.exceptions.ItemCacheException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import de.halfminer.hms.util.Utils;
@@ -123,16 +123,16 @@ public class CustomAction {
 
         for (Pair<Type, String> action : parsedActionList) {
 
-            MessageBuilder parsedMessage = replaceWithPlaceholders(action.getRight());
+            Message parsedMessage = replaceWithPlaceholders(action.getRight());
 
             switch (action.getLeft()) {
                 case CONSOLE_COMMAND:
                     boolean success = plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),
                             parsedMessage.returnMessage());
                     if (!success) {
-                        MessageBuilder.create("cacheCustomActionCommandNotFound")
+                        Message.create("cacheCustomActionCommandNotFound")
                                 .addPlaceholder("%COMMAND%", parsedMessage.returnMessage())
-                                .logMessage(Level.WARNING);
+                                .log(Level.WARNING);
                         return false;
                     }
                     break;
@@ -144,10 +144,10 @@ public class CustomAction {
                     } catch (ItemCacheException e) {
 
                         if (!e.getReason().equals(ItemCacheException.Reason.INVENTORY_FULL)) {
-                            MessageBuilder.create("cacheCustomActionGiveItemError")
+                            Message.create("cacheCustomActionGiveItemError")
                                     .addPlaceholder("%ITEM%", parsedMessage.returnMessage())
                                     .addPlaceholder("%REASON%", e.getCleanReason())
-                                    .logMessage(Level.WARNING);
+                                    .log(Level.WARNING);
                         }
                         // quit execution of action on fail
                         placeholders.clear();
@@ -170,8 +170,8 @@ public class CustomAction {
                     break;
                 case BROADCAST:
                 case TELL:
-                    if (action.getLeft() == Type.BROADCAST) parsedMessage.broadcastMessage(true);
-                    else parsedMessage.sendMessage(players[0]);
+                    if (action.getLeft() == Type.BROADCAST) parsedMessage.broadcast(true);
+                    else parsedMessage.send(players[0]);
             }
         }
         placeholders.clear();
@@ -182,21 +182,21 @@ public class CustomAction {
         placeholders.put(placeholder, replaceWith);
     }
 
-    private MessageBuilder replaceWithPlaceholders(String toReplace) {
+    private Message replaceWithPlaceholders(String toReplace) {
 
-        MessageBuilder message = MessageBuilder.create(toReplace).setDirectString();
+        Message message = Message.create(toReplace).setDirectString();
         placeholders.forEach(message::addPlaceholder);
         return message;
     }
 
     private void logError(String type, int lineNumber) {
         boolean addLineNumber = lineNumber >= 0;
-        MessageBuilder builder = MessageBuilder.create(
+        Message builder = Message.create(
                 addLineNumber ? "cacheCustomActionParseError" : "cacheCustomActionParseErrorNoLine")
                 .addPlaceholder("%NAME%", actionName)
                 .addPlaceholder("%TYPE%", type);
         if (addLineNumber) builder.addPlaceholder("%LINE%", lineNumber + 1);
-        builder.logMessage(Level.WARNING);
+        builder.log(Level.WARNING);
     }
 
     private enum Type {

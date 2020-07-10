@@ -8,7 +8,7 @@ import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -198,7 +198,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
             if (streak > thresholdUntilShown || streak % 5 == 0) {
                 scheduler.runTaskLater(hmc, () -> titleHandler.sendActionBar(null,
-                        MessageBuilder.create("modPvPKillStreak", hmc)
+                        Message.create("modPvPKillStreak", hmc)
                                 .addPlaceholder("%PLAYER%", killer.getName())
                                 .addPlaceholder("%STREAK%", streak)
                                 .returnMessage()), 0L);
@@ -275,12 +275,12 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
             killer = ((EntityDamageByEntityEvent) p.getLastDamageCause()).getDamager().getName();
         }
 
-        MessageBuilder broadcast = MessageBuilder.create(killer.length() > 0 ? "modPvPResurrect" : "modPvPResurrectSuicide", hmc,
+        Message broadcast = Message.create(killer.length() > 0 ? "modPvPResurrect" : "modPvPResurrectSuicide", hmc,
                 "PvP")
                 .addPlaceholder("%PLAYER%", p.getName());
 
         if (killer.length() > 0) broadcast.addPlaceholder("%KILLER%", killer);
-        broadcast.broadcastMessage(true);
+        broadcast.broadcast(true);
     }
 
     @Override

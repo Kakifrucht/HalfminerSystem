@@ -2,7 +2,7 @@ package de.halfminer.hms;
 
 import de.halfminer.hms.handler.*;
 import de.halfminer.hms.manageable.HalfminerManager;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -57,7 +57,7 @@ public class HalfminerSystem extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (!sender.hasPermission("hms.command")) {
-            MessageBuilder.create("noPermission", "HMS").sendMessage(sender);
+            Message.create("noPermission", "HMS").send(sender);
             return true;
         }
 
@@ -71,20 +71,20 @@ public class HalfminerSystem extends JavaPlugin {
                 }
 
                 manager.reload(plugin);
-                MessageBuilder.create("pluginReloaded", "HMS")
+                Message.create("pluginReloaded", "HMS")
                         .addPlaceholder("%PLUGINNAME%", plugin.getName())
-                        .sendMessage(sender);
+                        .send(sender);
             }
             return true;
         }
 
-        MessageBuilder.create("cmdHmsSystem", "HMS")
+        Message.create("cmdHmsSystem", "HMS")
                 .addPlaceholder("%VERSION%", getDescription().getVersion())
-                .sendMessage(sender);
+                .send(sender);
 
         Set<Plugin> managedPlugins = manager.getManagedPlugins();
         if (managedPlugins.size() <= 1) {
-            MessageBuilder.create("cmdHmsNoneHooked").sendMessage(sender);
+            Message.create("cmdHmsNoneHooked").send(sender);
         } else {
             for (Plugin plugin : managedPlugins) {
                 if (plugin == this) continue;
@@ -94,14 +94,14 @@ public class HalfminerSystem extends JavaPlugin {
                     pluginName = pluginName.substring(9);
                 }
 
-                MessageBuilder.create("cmdHmsHooked")
+                Message.create("cmdHmsHooked")
                         .addPlaceholder("%NAME%", pluginName)
                         .addPlaceholder("%VERSION%", plugin.getDescription().getVersion())
-                        .sendMessage(sender);
+                        .send(sender);
             }
 
             if (getServer().getPluginCommand("hmc") != null) {
-                MessageBuilder.create("cmdHmsCoreCommand").sendMessage(sender);
+                Message.create("cmdHmsCoreCommand").send(sender);
             }
         }
 

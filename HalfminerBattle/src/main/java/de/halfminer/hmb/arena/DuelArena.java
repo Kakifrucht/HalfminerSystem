@@ -5,7 +5,7 @@ import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.DuelMode;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanTitles;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -48,7 +48,7 @@ public class DuelArena extends AbstractArena {
 
                 timeLeft -= 1;
                 if (timeLeft > timeStart) {
-                    String toSend = MessageBuilder.create("modeDuelTitleCountdown", hmb)
+                    String toSend = Message.create("modeDuelTitleCountdown", hmb)
                             .togglePrefix()
                             .addPlaceholder("%TIME%", timeLeft - timeStart)
                             .returnMessage();
@@ -62,8 +62,8 @@ public class DuelArena extends AbstractArena {
                 if (timeLeft == timeStart) {
                     for (Player player : playersInArena) {
                         player.setWalkSpeed(0.2F);
-                        MessageBuilder.create("modeDuelGameStarting", hmb).sendMessage(player);
-                        titles.sendTitle(player, MessageBuilder.returnMessage("modeDuelTitleStart", hmb, false),
+                        Message.create("modeDuelGameStarting", hmb).send(player);
+                        titles.sendTitle(player, Message.returnMessage("modeDuelTitleStart", hmb, false),
                                 0, 30, 0);
                         equipPlayer(useKit, player);
                     }
@@ -72,7 +72,7 @@ public class DuelArena extends AbstractArena {
 
                 if (timeLeft <= 5 && timeLeft > 0) {
                     if (timeLeft == 5) {
-                        MessageBuilder.create("modeDuelTimeRunningOut", hmb).sendMessage(playerA, playerB);
+                        Message.create("modeDuelTimeRunningOut", hmb).send(playerA, playerB);
                     }
                     playPlingSound();
                 }
@@ -101,13 +101,13 @@ public class DuelArena extends AbstractArena {
     @Override
     public boolean forceGameEnd() {
         if (playersInArena.size() > 0) {
-            MessageBuilder.create("modeDuelGameEndForced", hmb)
-                    .sendMessage(playersInArena.getFirst(), playersInArena.getLast());
-            MessageBuilder.create("modeDuelGameEndForcedLog", hmb)
+            Message.create("modeDuelGameEndForced", hmb)
+                    .send(playersInArena.getFirst(), playersInArena.getLast());
+            Message.create("modeDuelGameEndForcedLog", hmb)
                     .addPlaceholder("%ARENA%", getName())
                     .addPlaceholder("%PLAYERA%", playersInArena.getFirst().getName())
                     .addPlaceholder("%PLAYERB", playersInArena.getLast().getName())
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
             gameEnd();
             return true;
         }

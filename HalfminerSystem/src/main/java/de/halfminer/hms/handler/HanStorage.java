@@ -10,7 +10,7 @@ import de.halfminer.hms.handler.storage.StorageListener;
 import de.halfminer.hms.handler.storage.YamlHalfminerPlayer;
 import de.halfminer.hms.manageable.Disableable;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -185,11 +185,11 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
             }
 
             if (cacheFile.exists()) {
-                MessageBuilder.create("hanStorageCacheCreate")
+                Message.create("hanStorageCacheCreate")
                         .addPlaceholder("%FILENAME%", cacheFile.getName())
-                        .logMessage(Level.INFO);
+                        .log(Level.INFO);
             } else {
-                MessageBuilder.create("hanStorageCacheCouldNotCreate").logMessage(Level.SEVERE);
+                Message.create("hanStorageCacheCouldNotCreate").log(Level.SEVERE);
                 throw new CachingException(fileName, CachingException.Reason.CANNOT_WRITE);
             }
         }
@@ -210,10 +210,10 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
             if (plugin == hms) {
                 uuidConfig.save(uuidFile);
                 playerConfig.save(playerFile);
-                MessageBuilder.create("hanStorageSaveSuccessful").logMessage(Level.INFO);
+                Message.create("hanStorageSaveSuccessful").log(Level.INFO);
             }
         } catch (Exception e) {
-            MessageBuilder.create("hanStorageSaveUnsuccessful").logMessage(Level.WARNING);
+            Message.create("hanStorageSaveUnsuccessful").log(Level.WARNING);
             plugin.getLogger().log(Level.WARNING, "Could not save storage for " + plugin.getName(), e);
         }
     }

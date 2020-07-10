@@ -1,6 +1,6 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -29,7 +29,7 @@ public class ModAutoMessage extends HalfminerModule {
         List<String> messagesList = hmc.getConfig().getStringList("autoMessage.messages");
         boolean addSeparators = hmc.getConfig().getBoolean("autoMessage.addSeparators", true);
         boolean addBlankLines = hmc.getConfig().getBoolean("autoMessage.addBlankLines", true);
-        String separator = MessageBuilder.returnMessage("lineSeparator") + ChatColor.RESET;
+        String separator = Message.returnMessage("lineSeparator") + ChatColor.RESET;
 
         // If no messages are set disable
         if (messagesList.size() == 0) {
@@ -73,9 +73,9 @@ public class ModAutoMessage extends HalfminerModule {
             lastRandom = messageIndex;
 
             String message = messages.get(messageIndex);
-            MessageBuilder.create(message, hmc)
+            Message.create(message, hmc)
                     .setDirectString()
-                    .broadcastMessage(false);
+                    .broadcast(false);
         }, interval, interval);
     }
 }

@@ -2,7 +2,7 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.NMSUtils;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
@@ -91,10 +91,10 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 NMSUtils.setKiller(p, lastOpponent);
 
                 if (broadcastLog) {
-                    MessageBuilder.create("modCombatLogLoggedOut", hmc, "PvP")
+                    Message.create("modCombatLogLoggedOut", hmc, "PvP")
                             .addPlaceholder("%PLAYER%", p.getName())
                             .addPlaceholder("%ENEMY%", lastOpponent.getName())
-                            .broadcastMessage(true);
+                            .broadcast(true);
                 }
             }
             p.setHealth(0.0d);
@@ -160,7 +160,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                 && e.getSlot() <= 39
                 && e.getCurrentItem() != null
                 && !e.getCurrentItem().getType().equals(Material.AIR)) {
-            MessageBuilder.create("modCombatLogNoArmorChange", hmc, "PvP").sendMessage(e.getWhoClicked());
+            Message.create("modCombatLogNoArmorChange", hmc, "PvP").send(e.getWhoClicked());
             e.setCancelled(true);
         }
     }
@@ -169,7 +169,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     public void onCommandCheckIfBlocked(PlayerCommandPreprocessEvent e) {
 
         if (isTagged(e.getPlayer())) {
-            MessageBuilder.create("modCombatLogNoCommand", hmc, "PvP").sendMessage(e.getPlayer());
+            Message.create("modCombatLogNoCommand", hmc, "PvP").send(e.getPlayer());
             e.setCancelled(true);
         }
     }
@@ -179,7 +179,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
         if (isTagged(e.getPlayer()) && e.hasItem() && e.getItem().getType() == Material.ENDER_PEARL
                 && ((e.getAction() == Action.RIGHT_CLICK_BLOCK) || (e.getAction() == Action.RIGHT_CLICK_AIR))) {
-            MessageBuilder.create("modCombatLogNoEnderpearl", hmc, "PvP").sendMessage(e.getPlayer());
+            Message.create("modCombatLogNoEnderpearl", hmc, "PvP").send(e.getPlayer());
             e.getPlayer().updateInventory();
             e.setCancelled(true);
         }
@@ -192,7 +192,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         if (isTagged(p)) tagged.get(p).cancel();
         tagged.put(p, scheduler.runTaskTimerAsynchronously(hmc, new Runnable() {
 
-            final String symbols = MessageBuilder.returnMessage("modCombatLogProgressSymbols", hmc);
+            final String symbols = Message.returnMessage("modCombatLogProgressSymbols", hmc);
             int time = tagTime;
 
             @Override
@@ -209,7 +209,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
                     progressBar.append(symbols);
                 }
 
-                if (time-- > 0) titleHandler.sendActionBar(p, MessageBuilder.create("modCombatLogCountdown", hmc)
+                if (time-- > 0) titleHandler.sendActionBar(p, Message.create("modCombatLogCountdown", hmc)
                         .addPlaceholder("%TIME%", time + 1)
                         .addPlaceholder("%PROGRESSBAR%", progressBar.toString())
                         .returnMessage());
@@ -223,7 +223,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         if (!isTagged(p)) return;
 
         tagged.get(p).cancel();
-        titleHandler.sendActionBar(p, MessageBuilder.returnMessage("modCombatLogUntagged", hmc));
+        titleHandler.sendActionBar(p, Message.returnMessage("modCombatLogUntagged", hmc));
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 2f);
 
         tagged.remove(p);

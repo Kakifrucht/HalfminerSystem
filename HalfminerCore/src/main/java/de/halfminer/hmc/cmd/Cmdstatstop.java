@@ -8,7 +8,7 @@ import de.halfminer.hmc.module.statstop.TopBoard;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Pair;
 import org.bukkit.ChatColor;
 
@@ -31,7 +31,7 @@ public class Cmdstatstop extends HalfminerCommand {
 
     private List<Pair<UUID, Integer>> topBoardList;
 
-    private List<MessageBuilder> messageQueue;
+    private List<Message> messageQueue;
 
 
     public Cmdstatstop() {
@@ -73,7 +73,7 @@ public class Cmdstatstop extends HalfminerCommand {
                 scheduler.runTaskAsynchronously(hmc, () -> {
 
                     String headerKey = doCompare ? "cmdStatstopPlayerHeaderCompare" : "cmdStatstopPlayerHeader";
-                    messageQueue.add(MessageBuilder.create(headerKey, hmc, "Statstop")
+                    messageQueue.add(Message.create(headerKey, hmc, "Statstop")
                             .addPlaceholder("%PLAYER%", toLookup.getName()));
 
                     for (TopBoard board : topBoardMap.values()) {
@@ -81,7 +81,7 @@ public class Cmdstatstop extends HalfminerCommand {
                         int index = board.getIndex(toLookup) + 1;
                         String indexStr;
                         if (index > 0) {
-                            indexStr = MessageBuilder.create("cmdStatstopPlayerEntryRank", hmc)
+                            indexStr = Message.create("cmdStatstopPlayerEntryRank", hmc)
                                     .addPlaceholder("%RANK%", index)
                                     .returnMessage();
                         } else {
@@ -102,18 +102,18 @@ public class Cmdstatstop extends HalfminerCommand {
 
                             // green if we are ranked higher, else red
                             ChatColor color = indexCompare < index ? ChatColor.GREEN : ChatColor.RED;
-                            indexCompareStr = MessageBuilder.create("cmdStatstopPlayerEntryRank", hmc)
+                            indexCompareStr = Message.create("cmdStatstopPlayerEntryRank", hmc)
                                     .addPlaceholder("%RANK%", color.toString() + indexCompare)
                                     .returnMessage();
                         }
 
-                        messageQueue.add(MessageBuilder.create(messageKey, hmc)
+                        messageQueue.add(Message.create(messageKey, hmc)
                                 .addPlaceholder("%BOARD%", board.getName())
                                 .addPlaceholder("%RANK%", indexStr)
                                 .addPlaceholder("%RANKCOMP%", indexCompareStr));
                     }
 
-                    messageQueue.add(MessageBuilder.create("cmdStatstopPlayerFooter", hmc)
+                    messageQueue.add(Message.create("cmdStatstopPlayerFooter", hmc)
                             .addPlaceholder("%PLAYER%", toLookup.getName()));
 
                     sendMessageQueue();
@@ -134,7 +134,7 @@ public class Cmdstatstop extends HalfminerCommand {
 
             DataType type = matchingType;
             if (type == null || !topBoardMap.containsKey(type)) {
-                MessageBuilder.create("cmdStatstopDoesntExist", hmc, "Statstop").sendMessage(sender);
+                Message.create("cmdStatstopDoesntExist", hmc, "Statstop").send(sender);
                 return;
             }
 
@@ -159,7 +159,7 @@ public class Cmdstatstop extends HalfminerCommand {
                         return;
                     }
 
-                    messageQueue.add(MessageBuilder.create("cmdStatstopHeaderPaged", hmc, "Statstop")
+                    messageQueue.add(Message.create("cmdStatstopHeaderPaged", hmc, "Statstop")
                             .addPlaceholder("%BOARDNAME%", topBoard.getName())
                             .addPlaceholder("%PAGE%", page));
 
@@ -168,14 +168,14 @@ public class Cmdstatstop extends HalfminerCommand {
                     }
 
                     if (startingAt + 10 < topBoardList.size()) {
-                        messageQueue.add(MessageBuilder.create("cmdStatstopPageNext", hmc)
+                        messageQueue.add(Message.create("cmdStatstopPageNext", hmc)
                                 .addPlaceholder("%TYPE%", type.toString())
                                 .addPlaceholder("%PAGE%", page + 1));
                     }
 
                 } else { // default view (top 5 + own position)
 
-                    messageQueue.add(MessageBuilder.create("cmdStatstopHeader", hmc, "Statstop")
+                    messageQueue.add(Message.create("cmdStatstopHeader", hmc, "Statstop")
                             .addPlaceholder("%BOARDNAME%", topBoard.getName()));
 
                     for (int i = 0; i < 5 && i < topBoardList.size(); i++) {
@@ -194,16 +194,16 @@ public class Cmdstatstop extends HalfminerCommand {
                             if (topBoardList.size() > 5) {
                                 addEntryMessageToQueue(topBoardList.size() - 1);
                             }
-                            messageQueue.add(MessageBuilder.create("cmdStatstopPosition", hmc)
+                            messageQueue.add(Message.create("cmdStatstopPosition", hmc)
                                     .addPlaceholder("%RANK%", getUnrankedString())
-                                    .addPlaceholder("%SELFPREFIX%", MessageBuilder.returnMessage("cmdStatstopSelfPrefix", hmc))
+                                    .addPlaceholder("%SELFPREFIX%", Message.returnMessage("cmdStatstopSelfPrefix", hmc))
                                     .addPlaceholder("%PLAYER%", player.getName())
                                     .addPlaceholder("%VALUE%", hPlayer.getInt(type)));
                         }
                     }
 
                     if (topBoardList.size() > 5) {
-                        messageQueue.add(MessageBuilder.create("cmdStatstopPageInfo", hmc)
+                        messageQueue.add(Message.create("cmdStatstopPageInfo", hmc)
                                 .addPlaceholder("%TYPE%", type.toString()));
                     }
                 }
@@ -213,14 +213,14 @@ public class Cmdstatstop extends HalfminerCommand {
 
         } else { // board list
 
-            MessageBuilder.create("cmdStatstopListHeader", hmc).sendMessage(sender);
+            Message.create("cmdStatstopListHeader", hmc).send(sender);
             for (TopBoard topBoard : topBoardMap.values()) {
                 sendListMessage(topBoard.getName(), topBoard.getDataType().toString());
             }
 
             // send command for /statstop player
-            sendListMessage(MessageBuilder.returnMessage("cmdStatstopListEntryPlayer", hmc), "player");
-            MessageBuilder.create("lineSeparator").sendMessage(sender);
+            sendListMessage(Message.returnMessage("cmdStatstopListEntryPlayer", hmc), "player");
+            Message.create("lineSeparator").send(sender);
         }
     }
 
@@ -231,10 +231,10 @@ public class Cmdstatstop extends HalfminerCommand {
             // check if player at position is himself, if that is the case get the prefix from locale file
             String selfPrefix = "";
             if (isPlayer && currentPlayer.getUniqueId().equals(player.getUniqueId())) {
-                selfPrefix = MessageBuilder.returnMessage("cmdStatstopSelfPrefix", hmc);
+                selfPrefix = Message.returnMessage("cmdStatstopSelfPrefix", hmc);
             }
 
-            messageQueue.add(MessageBuilder.create("cmdStatstopPosition", hmc)
+            messageQueue.add(Message.create("cmdStatstopPosition", hmc)
                     .addPlaceholder("%RANK%", position + 1)
                     .addPlaceholder("%SELFPREFIX%", selfPrefix)
                     .addPlaceholder("%PLAYER%", currentPlayer.getName())
@@ -243,23 +243,23 @@ public class Cmdstatstop extends HalfminerCommand {
     }
 
     private String getUnrankedString() {
-        return MessageBuilder.returnMessage("cmdStatstopUnranked", hmc);
+        return Message.returnMessage("cmdStatstopUnranked", hmc);
     }
 
     private void sendInvalidPageNumber() {
-        MessageBuilder.create("cmdStatstopInvalidPage", hmc, "Statstop")
+        Message.create("cmdStatstopInvalidPage", hmc, "Statstop")
                 .addPlaceholder("%MAXPAGE%", ((topBoardList.size() - 1) / 10) + 1)
-                .sendMessage(sender);
+                .send(sender);
     }
 
     private void sendListMessage(String boardName, String boardString) {
-        MessageBuilder.create("cmdStatstopListEntry", hmc)
+        Message.create("cmdStatstopListEntry", hmc)
                 .addPlaceholder("%NAME%", boardName)
                 .addPlaceholder("%TYPE%", boardString)
-                .sendMessage(sender);
+                .send(sender);
     }
 
     private void sendMessageQueue() {
-        scheduler.runTask(hmc, () -> messageQueue.forEach(messageBuilder -> messageBuilder.sendMessage(sender)));
+        scheduler.runTask(hmc, () -> messageQueue.forEach(messageBuilder -> messageBuilder.send(sender)));
     }
 }

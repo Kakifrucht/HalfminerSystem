@@ -2,7 +2,7 @@ package de.halfminer.hmc.module;
 
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -123,7 +123,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             if (counter.isBypassed()) color = ChatColor.YELLOW;
             else if (counter.isCheckedPermanently()) color = ChatColor.RED;
 
-            toReturn.append(MessageBuilder.create("modAntiXrayShowFormat", hmc)
+            toReturn.append(Message.create("modAntiXrayShowFormat", hmc)
                     .addPlaceholder("%PLAYER%", color + counter.getOwnerName())
                     .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(last))
                     .addPlaceholder("%WORLD%", last.getWorld().getName())
@@ -146,7 +146,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
             else counter.setInformed((Player) toNotify);
         }
 
-        MessageBuilder message = MessageBuilder.create("modAntiXrayDetected", hmc, "AntiXRay")
+        Message message = Message.create("modAntiXrayDetected", hmc, "AntiXRay")
                 .addPlaceholder("%PLAYER%", counter.getOwnerName())
                 .addPlaceholder("%BROKENTOTAL%", counter.getBreakages())
                 .addPlaceholder("%BROKENPROTECTED%", counter.getProtectedBreakages())
@@ -154,8 +154,8 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
                 .addPlaceholder("%WORLD%", counter.getLastProtectedLocation().getWorld().getName())
                 .addPlaceholder("%MATERIAL%", Utils.makeStringFriendly(counter.getLastMaterial().toString()));
 
-        if (toNotify != null) message.sendMessage(toNotify);
-        else message.broadcastMessage("hmc.antixray.notify", true);
+        if (toNotify != null) message.send(toNotify);
+        else message.broadcast("hmc.antixray.notify", true);
     }
 
     private boolean counterExists(UUID player) {

@@ -9,7 +9,7 @@ import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.cache.exceptions.CachingException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -51,7 +51,7 @@ public class FFAArena extends AbstractArena {
 
         scoreboardObjective = scoreboard.registerNewObjective("streak", "dummy");
         scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        scoreboardObjective.setDisplayName(MessageBuilder.returnMessage("modeFFAScoreboardHeader", hmb, false));
+        scoreboardObjective.setDisplayName(Message.returnMessage("modeFFAScoreboardHeader", hmb, false));
         scoreboardTeam = scoreboard.registerNewTeam("ingame");
         scoreboardTeam.setPrefix(ChatColor.BLUE + "");
     }
@@ -62,9 +62,9 @@ public class FFAArena extends AbstractArena {
         if (timestamp != null) {
             long secondsLeft = timestamp - (System.currentTimeMillis() / 1000);
             if (secondsLeft > 0L) {
-                MessageBuilder.create("modeFFACooldown", hmb)
+                Message.create("modeFFACooldown", hmb)
                         .addPlaceholder("%TIMELEFT%", secondsLeft)
-                        .sendMessage(toAdd);
+                        .send(toAdd);
                 return;
             } else bannedFromArena.invalidate(toAdd.getUniqueId());
         }
@@ -87,12 +87,12 @@ public class FFAArena extends AbstractArena {
 
         toAdd.setGlowing(battleMode.isSetGlowingInArena());
 
-        MessageBuilder.create("modeFFAJoined", hmb)
+        Message.create("modeFFAJoined", hmb)
                 .addPlaceholder("%ARENA%", getName())
-                .sendMessage(toAdd);
+                .send(toAdd);
         HalfminerSystem.getInstance()
                 .getTitlesHandler()
-                .sendTitle(toAdd, MessageBuilder.returnMessage("modeFFAJoinTitle", hmb, false));
+                .sendTitle(toAdd, Message.returnMessage("modeFFAJoinTitle", hmb, false));
     }
 
     public void removePlayer(Player toRemove) {
@@ -118,7 +118,7 @@ public class FFAArena extends AbstractArena {
         scoreboardObjective.getScore(hasDied.getName()).setScore(streakDied);
 
         if (-streakDied == battleMode.getRemoveAfterDeaths()) {
-            MessageBuilder.create("modeFFADiedTooOften", hmb).sendMessage(hasDied);
+            Message.create("modeFFADiedTooOften", hmb).send(hasDied);
             bannedFromArena.put(hasDied.getUniqueId(), System.currentTimeMillis() / 1000 + battleMode.getRemoveForMinutes() * 60);
             removePlayer(hasDied);
         } else {
@@ -143,13 +143,13 @@ public class FFAArena extends AbstractArena {
             streaks.put(killer, streak);
             scoreboardObjective.getScore(killer.getName()).setScore(streak);
 
-            MessageBuilder.create("modeFFAKillLog", hmb)
+            Message.create("modeFFAKillLog", hmb)
                     .addPlaceholder("%ARENA%", getName())
                     .addPlaceholder("%KILLER%", killer.getName())
                     .addPlaceholder("%VICTIM%", hasDied.getName())
                     .addPlaceholder("%KILLSTREAK%", streak)
                     .addPlaceholder("%DEATHSTREAK%", Math.abs(streakDied))
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
 
             try {
                 CustomAction action = new CustomAction("ffa-" + streak, hmb.getCacheHolder());
@@ -176,7 +176,7 @@ public class FFAArena extends AbstractArena {
         HalfminerSystem.getInstance()
                 .getBarHandler()
                 .sendBar(toProtect,
-                        MessageBuilder.returnMessage("modeFFASpawnProtectBar", hmb, false),
+                        Message.returnMessage("modeFFASpawnProtectBar", hmb, false),
                         BarColor.GREEN, BarStyle.SOLID, 5);
     }
 
@@ -184,19 +184,19 @@ public class FFAArena extends AbstractArena {
     public boolean forceGameEnd() {
         if (playersInArena.size() > 0) {
             List<Player> inArenaCopy = new ArrayList<>(playersInArena);
-            MessageBuilder message = MessageBuilder.create("modeFFAGameEndForced", hmb);
+            Message message = Message.create("modeFFAGameEndForced", hmb);
             for (Player player : inArenaCopy) {
                 removePlayer(player);
-                message.sendMessage(player);
+                message.send(player);
             }
             StringBuilder allPlayerNames = new StringBuilder();
             for (Player player : inArenaCopy) {
                 allPlayerNames.append(player.getName()).append(", ");
             }
-            MessageBuilder.create("modeFFAGameEndForcedLog", hmb)
+            Message.create("modeFFAGameEndForcedLog", hmb)
                     .addPlaceholder("%ARENA%", getName())
                     .addPlaceholder("%PLAYERLIST%", allPlayerNames.substring(0, allPlayerNames.length() - 2))
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
             return true;
         }
         return false;

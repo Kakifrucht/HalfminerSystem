@@ -4,7 +4,7 @@ import de.halfminer.hmb.BattleClass;
 import de.halfminer.hmb.mode.GlobalMode;
 import de.halfminer.hmb.mode.abs.BattleMode;
 import de.halfminer.hmb.mode.abs.BattleModeType;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -212,7 +212,7 @@ public abstract class AbstractArena extends BattleClass implements Arena {
     }
 
     protected String getCustomLore(Player player) {
-        return MessageBuilder.create("modeGlobalKitArenaCustomLore", hmb)
+        return Message.create("modeGlobalKitArenaCustomLore", hmb)
                 .togglePrefix()
                 .addPlaceholder("%ARENA%", getName())
                 .addPlaceholder("%MODE%", Utils.makeStringFriendly(battleModeType.toString()))

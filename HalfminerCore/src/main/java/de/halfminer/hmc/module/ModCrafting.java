@@ -1,6 +1,6 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
@@ -69,10 +69,10 @@ public class ModCrafting extends HalfminerModule implements Listener {
 
             } else {
                 inventory.setResult(null);
-                MessageBuilder.create("modCraftingRemoved", hmc, "Crafting")
+                Message.create("modCraftingRemoved", hmc, "Crafting")
                         .addPlaceholder("%MATERIAL%", Utils.makeStringFriendly(result.getType().toString()))
                         .addPlaceholder("%AMOUNT%", amount)
-                        .sendMessage(e.getWhoClicked());
+                        .send(e.getWhoClicked());
             }
         }
     }
@@ -127,8 +127,8 @@ public class ModCrafting extends HalfminerModule implements Listener {
     }
 
     private void logInvalidPair(String invalidPair) {
-        MessageBuilder.create("modCraftingInvalidLog", hmc)
+        Message.create("modCraftingInvalidLog", hmc)
                 .addPlaceholder("%INVALID%", invalidPair)
-                .logMessage(Level.WARNING);
+                .log(Level.WARNING);
     }
 }

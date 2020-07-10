@@ -2,7 +2,7 @@ package de.halfminer.hms.cache;
 
 import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.util.FormattingException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.plugin.Plugin;
@@ -68,7 +68,7 @@ public class ActionProbabilityContainer {
         if (actionList.size() == 0) {
             probabilityTotal = 1;
             actionList.add(new Pair<>(1, new CustomAction("nothing", cacheHolder)));
-            MessageBuilder.create("cacheActionProbabilityContainerNoActions").logMessage(Level.WARNING);
+            Message.create("cacheActionProbabilityContainerNoActions").log(Level.WARNING);
         }
     }
 
@@ -83,9 +83,9 @@ public class ActionProbabilityContainer {
     }
 
     private void logError(String type, int lineNumber) {
-        MessageBuilder.create("cacheActionProbabilityContainerError", plugin)
+        Message.create("cacheActionProbabilityContainerError", plugin)
                 .addPlaceholder("%TYPE%", type)
                 .addPlaceholder("%LINE%", lineNumber + 1)
-                .logMessage(Level.WARNING);
+                .log(Level.WARNING);
     }
 }

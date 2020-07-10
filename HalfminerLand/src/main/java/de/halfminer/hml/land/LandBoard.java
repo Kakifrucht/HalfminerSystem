@@ -9,7 +9,7 @@ import de.halfminer.hms.handler.HanStorage;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Chunk;
@@ -241,7 +241,7 @@ public class LandBoard extends LandClass implements Board, ContractManager, Swee
         int chunkX = chunk.getX() * 16;
         int chunkZ = chunk.getZ() * 16;
 
-        String barMessage = MessageBuilder.returnMessage("boardShowChunkBar", hml, false);
+        String barMessage = Message.returnMessage("boardShowChunkBar", hml, false);
         hms.getBarHandler().sendBar(player, barMessage, BarColor.GREEN, BarStyle.SOLID, CHUNK_SHOWN_SECONDS);
 
         BukkitTask newTask = server.getScheduler().runTaskTimer(hml, new Runnable() {

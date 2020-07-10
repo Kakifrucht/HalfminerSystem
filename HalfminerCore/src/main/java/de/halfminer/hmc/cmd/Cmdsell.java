@@ -4,7 +4,7 @@ import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hmc.module.ModSell;
 import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 
 /**
  * - Show sell menu
@@ -41,8 +41,8 @@ public class Cmdsell extends HalfminerCommand {
                 }
 
                 boolean toggledOn = sellModule.toggleAutoSell(player);
-                MessageBuilder.create(toggledOn ? "cmdSellAutoOn" : "cmdSellAutoOff", hmc, "Sell")
-                        .sendMessage(player);
+                Message.create(toggledOn ? "cmdSellAutoOn" : "cmdSellAutoOff", hmc, "Sell")
+                        .send(player);
 
                 return;
             } else {

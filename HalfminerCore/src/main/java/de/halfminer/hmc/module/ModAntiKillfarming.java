@@ -3,7 +3,7 @@ package de.halfminer.hmc.module;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Pair;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.entity.Arrow;
@@ -88,7 +88,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
 
             if (container.getAmountKilled(victim) == thresholdUntilBlock - 1) {
                 // warn players
-                MessageBuilder.create("modAntiKillfarmingWarning", hmc, "PvP").sendMessage(killer, victim);
+                Message.create("modAntiKillfarmingWarning", hmc, "PvP").send(killer, victim);
             } else if (container.getAmountKilled(victim) >= thresholdUntilBlock) blockPlayers(killer, victim);
         }
     }
@@ -115,10 +115,10 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         int blockTime = getBlockTime(toCheck);
         if (blockTime >= 0) {
             if (messageKey.length() > 0)
-                MessageBuilder.create(messageKey, hmc, "PvP")
+                Message.create(messageKey, hmc, "PvP")
                         .addPlaceholder("%PLAYER%", toCheck.getName())
                         .addPlaceholder("%TIME%", blockTime)
-                        .sendMessage(toMessage);
+                        .send(toMessage);
             return true;
         }
         return false;
@@ -144,9 +144,9 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         if (time > 0) {
             String command = e.getMessage().split(" ")[0].toLowerCase();
             if (!exemptCommands.contains(command.substring(1, command.length()))) {
-                MessageBuilder.create("modAntiKillfarmingNoCommand", hmc, "PvP")
+                Message.create("modAntiKillfarmingNoCommand", hmc, "PvP")
                         .addPlaceholder("%TIME%", time)
-                        .sendMessage(e.getPlayer());
+                        .send(e.getPlayer());
                 e.setCancelled(true);
             }
         }
@@ -209,20 +209,20 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         // ensure that once both blocks run out they get reblocked when trying to kill directly again
         killerCon.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
 
-        MessageBuilder.create("modAntiKillfarmingBlockedBroadcast", hmc, "PvP")
+        Message.create("modAntiKillfarmingBlockedBroadcast", hmc, "PvP")
                 .addPlaceholder("%KILLER%", killer.getName())
                 .addPlaceholder("%VICTIM%", victim.getName())
-                .broadcastMessage(true);
+                .broadcast(true);
 
-        MessageBuilder.create("modAntiKillfarmingBlockedKiller", hmc, "PvP")
+        Message.create("modAntiKillfarmingBlockedKiller", hmc, "PvP")
                 .addPlaceholder("%TIME%", blockTimeKiller / 60)
                 .addPlaceholder("%PLAYER%", victim.getName())
-                .sendMessage(killer);
+                .send(killer);
 
-        MessageBuilder.create("modAntiKillfarmingBlockedVictim", hmc, "PvP")
+        Message.create("modAntiKillfarmingBlockedVictim", hmc, "PvP")
                 .addPlaceholder("%TIME%", blockTimeVictim / 60)
                 .addPlaceholder("%PLAYER%", killer.getName())
-                .sendMessage(victim);
+                .send(victim);
     }
 
     @Override

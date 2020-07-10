@@ -6,7 +6,7 @@ import de.halfminer.hms.handler.menu.MenuContainer;
 import de.halfminer.hms.handler.menu.MenuCreator;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -59,9 +59,9 @@ public class Cmdlist extends LandCommand implements MenuCreator {
         }
 
         if (ownedLands.isEmpty()) {
-            MessageBuilder.create("noLandOwned" + (isLookup ? "Player" : ""), hml)
+            Message.create("noLandOwned" + (isLookup ? "Player" : ""), hml)
                     .addPlaceholder("%PLAYER%", name)
-                    .sendMessage(sender);
+                    .send(sender);
             return;
         }
 
@@ -104,7 +104,7 @@ public class Cmdlist extends LandCommand implements MenuCreator {
 
                 String localeKey = "cmdListMenuLandEntry" + (ownedLand.hasTeleportLocation() ? "Teleport" : "");
                 String teleportString = ownedLand.hasTeleportLocation() ? ownedLand.getTeleportName() : "";
-                MessageBuilder localeBuilder = MessageBuilder.create(localeKey, hml)
+                Message localeBuilder = Message.create(localeKey, hml)
                         .togglePrefix()
                         .addPlaceholder("%WORLD%", ownedLand.getWorld().getName())
                         .addPlaceholder("%X%", ownedLand.getXLandCorner())
@@ -115,7 +115,7 @@ public class Cmdlist extends LandCommand implements MenuCreator {
                 menuItems[currentMenuIndex++] = landItem;
             }
 
-            String menuTitle = MessageBuilder.create("cmdListMenuTitle" + (isAbandoned ? "Abandoned" : ""), hml)
+            String menuTitle = Message.create("cmdListMenuTitle" + (isAbandoned ? "Abandoned" : ""), hml)
                     .togglePrefix()
                     .addPlaceholder("%PLAYER%", name)
                     .returnMessage();
@@ -150,7 +150,7 @@ public class Cmdlist extends LandCommand implements MenuCreator {
             StringBuilder landListStringBuilder = new StringBuilder();
             for (Land land : sortedLandList) {
 
-                MessageBuilder toAppendBuilder = MessageBuilder
+                Message toAppendBuilder = Message
                         .create("cmdListAsTextFormat" + (land.hasTeleportLocation() ? "Teleport" : ""), hml)
                         .addPlaceholder("%WORLD%", land.getWorld().getName())
                         .addPlaceholder("%X%", land.getXLandCorner())
@@ -165,11 +165,11 @@ public class Cmdlist extends LandCommand implements MenuCreator {
                         .append(" ");
             }
 
-            MessageBuilder.create("cmdListAsText", hml)
+            Message.create("cmdListAsText", hml)
                     .addPlaceholder("%PLAYER%", name)
                     .addPlaceholder("%LANDAMOUNT%", sortedLandList.size())
                     .addPlaceholder("%LANDLIST%", landListStringBuilder.toString().trim())
-                    .sendMessage(sender);
+                    .send(sender);
         }
     }
 }

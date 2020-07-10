@@ -3,7 +3,7 @@ package de.halfminer.hms.handler;
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.handler.hooks.HookException;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -61,9 +61,9 @@ public class HanTeleport extends HalfminerClass implements Reloadable {
             return;
         }
 
-        MessageBuilder.create(lang.get("start")).setDirectString()
+        Message.create(lang.get("start")).setDirectString()
                 .addPlaceholder("%TIME%", delay)
-                .sendMessage(player);
+                .send(player);
         hms.getBarHandler().sendBar(player, lang.get("startbar"), BarColor.YELLOW, BarStyle.SOLID, delay);
         currentTeleport.put(player, scheduler.runTaskTimer(hms, tp, 25L, 20L));
     }
@@ -81,11 +81,11 @@ public class HanTeleport extends HalfminerClass implements Reloadable {
         defaultTime = hms.getConfig().getInt("handler.teleport.cooldownSeconds", 3);
 
         lang = new HashMap<>();
-        lang.put("start", MessageBuilder.create("hanTeleportStart", "Teleport").returnMessage());
-        lang.put("startbar", MessageBuilder.create("hanTeleportBar").returnMessage());
-        lang.put("pending", MessageBuilder.create("hanTeleportPending", "Teleport").returnMessage());
-        lang.put("moved", MessageBuilder.create("hanTeleportMoved", "Teleport").returnMessage());
-        lang.put("done", MessageBuilder.create("hanTeleportDone", "Teleport").returnMessage());
+        lang.put("start", Message.create("hanTeleportStart", "Teleport").returnMessage());
+        lang.put("startbar", Message.create("hanTeleportBar").returnMessage());
+        lang.put("pending", Message.create("hanTeleportPending", "Teleport").returnMessage());
+        lang.put("moved", Message.create("hanTeleportMoved", "Teleport").returnMessage());
+        lang.put("done", Message.create("hanTeleportDone", "Teleport").returnMessage());
     }
 
     private class Teleport implements Runnable {

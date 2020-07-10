@@ -2,7 +2,7 @@ package de.halfminer.hmc.module.sell;
 
 import de.halfminer.hmc.CoreClass;
 import de.halfminer.hms.manageable.Reloadable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.StringArgumentSeparator;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -75,9 +75,9 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
 
             StringArgumentSeparator separator = new StringArgumentSeparator(groupString, ',');
             if (!separator.meetsLength(2)) {
-                MessageBuilder.create("modSellMapLogGroupInvalid", hmc)
+                Message.create("modSellMapLogGroupInvalid", hmc)
                         .addPlaceholder("%GROUP%", groupString)
-                        .logMessage(Level.WARNING);
+                        .log(Level.WARNING);
                 continue;
             }
 
@@ -118,9 +118,9 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             for (String sellable : config.getStringList("sell.sellables." + groupString)) {
                 StringArgumentSeparator separator = new StringArgumentSeparator(sellable, ',');
                 if (!separator.meetsLength(4)) {
-                    MessageBuilder.create("modSellMapLogSellableInvalidFormat", hmc)
+                    Message.create("modSellMapLogSellableInvalidFormat", hmc)
                             .addPlaceholder("%SELLABLE%", sellable)
-                            .logMessage(Level.WARNING);
+                            .log(Level.WARNING);
                     continue;
                 }
 
@@ -142,9 +142,9 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
                         sellables.put(group, newList);
                     }
                 } else {
-                    MessageBuilder.create("modSellMapLogMaterialNotExists", hmc)
+                    Message.create("modSellMapLogMaterialNotExists", hmc)
                             .addPlaceholder("%MATERIAL%", separator.getArgument(1))
-                            .logMessage(Level.WARNING);
+                            .log(Level.WARNING);
                 }
             }
         }
@@ -193,7 +193,7 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
                 }
 
             } else if (cycleSectionObject != null) {
-                MessageBuilder.create("modSellMapLogCycleInvalidFormat", hmc).logMessage(Level.WARNING);
+                Message.create("modSellMapLogCycleInvalidFormat", hmc).log(Level.WARNING);
             }
 
             checkNextCycle();
@@ -328,8 +328,8 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             } else if (expiresInSeconds < 60) {
                 runTaskLater(this::createNewCycle, expiresInSeconds);
             } else if (expiresInSeconds < 120) {
-                runTaskLater(() -> MessageBuilder.create("modSellMapCycleMinuteLeftBroadcast", hmc, "Sell")
-                        .broadcastMessage(false), expiresInSeconds - 60);
+                runTaskLater(() -> Message.create("modSellMapCycleMinuteLeftBroadcast", hmc, "Sell")
+                        .broadcast(false), expiresInSeconds - 60);
             }
         } else {
             createNewCycle();
@@ -346,10 +346,10 @@ public class DefaultSellableMap extends CoreClass implements Reloadable, Sellabl
             }
 
             sellableString.setLength(sellableString.length() - 2);
-            MessageBuilder.create("modSellCurrentCycleLog", hmc)
+            Message.create("modSellCurrentCycleLog", hmc)
                     .addPlaceholder("%TIMELEFT%", currentCycle.getSecondsTillExpiry() / 60)
                     .addPlaceholder("%SELLABLES%", sellableString.toString())
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
         }
     }
 

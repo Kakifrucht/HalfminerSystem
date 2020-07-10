@@ -9,7 +9,7 @@ import de.halfminer.hms.handler.HanMenu;
 import de.halfminer.hms.handler.menu.MenuClickHandler;
 import de.halfminer.hms.handler.menu.MenuContainer;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -50,13 +50,13 @@ public class Cmdlandtp extends LandCommand {
 
                 if (teleportTo.isAbandoned()) {
                     boolean isStealingEnabled = hml.getConfig().getBoolean("teleport.allowStealingAbandoned", false);
-                    MessageBuilder.create("cmdLandtpIsAbandoned" + (isStealingEnabled ? "Steal" : ""), hml)
+                    Message.create("cmdLandtpIsAbandoned" + (isStealingEnabled ? "Steal" : ""), hml)
                             .addPlaceholder("%NAME%", teleportName)
-                            .sendMessage(player);
+                            .send(player);
                 } else {
 
                     if (teleportTo.isOwner(player) && !player.hasPermission("hml.bypass.landtptimer")) {
-                        MessageBuilder.create("cmdLandtpOwnTimer", hml).sendMessage(player);
+                        Message.create("cmdLandtpOwnTimer", hml).send(player);
                         hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation(), OWN_TELEPORT_DELAY_SECONDS);
                     } else {
                         hms.getTeleportHandler().startTeleport(player, teleportTo.getTeleportLocation());
@@ -64,7 +64,7 @@ public class Cmdlandtp extends LandCommand {
                 }
 
             } else {
-                MessageBuilder.create("teleportNotExist", hml).sendMessage(player);
+                Message.create("teleportNotExist", hml).send(player);
             }
 
         } else {
@@ -150,7 +150,7 @@ public class Cmdlandtp extends LandCommand {
         }
 
         if (menuEntries.isEmpty()) {
-            MessageBuilder.create("cmdLandtpMenuEmpty", hml).sendMessage(player);
+            Message.create("cmdLandtpMenuEmpty", hml).send(player);
             return;
         }
 
@@ -163,7 +163,7 @@ public class Cmdlandtp extends LandCommand {
 
     private MenuContainer createMenuContainer(List<TeleportEntry> menuEntries) {
 
-        String inventoryTitle = MessageBuilder.returnMessage("cmdLandtpMenuTitle", hml, false);
+        String inventoryTitle = Message.returnMessage("cmdLandtpMenuTitle", hml, false);
         ItemStack[] menuItems = new ItemStack[menuEntries.size()];
         for (int i = 0; i < menuEntries.size(); i++) {
             menuItems[i] = menuEntries.get(i).getMenuEntry();
@@ -275,14 +275,14 @@ public class Cmdlandtp extends LandCommand {
             }
 
             String localeSuffix = (pinned ? "Pinned" : (notShown ? "NotShown" : ""));
-            MessageBuilder localeBuilder = getLocaleBuilder("cmdLandtpMenuItemFormat" + localeSuffix, teleportOwner, teleportName);
+            Message localeBuilder = getLocaleBuilder("cmdLandtpMenuItemFormat" + localeSuffix, teleportOwner, teleportName);
             Utils.applyLocaleToItemStack(itemStack, localeBuilder);
 
             return itemStack;
         }
 
-        private MessageBuilder getLocaleBuilder(String localeKey, String ownerName, String teleportName) {
-            return MessageBuilder.create(localeKey, HalfminerLand.getInstance())
+        private Message getLocaleBuilder(String localeKey, String ownerName, String teleportName) {
+            return Message.create(localeKey, HalfminerLand.getInstance())
                     .togglePrefix()
                     .addPlaceholder("%PLAYER%", ownerName)
                     .addPlaceholder("%TELEPORT%", teleportName)

@@ -4,7 +4,7 @@ import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.HanTeleport;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -46,11 +46,11 @@ public class Cmdnewtp extends HalfminerCommand {
         if (tp.hasPendingTeleport(player, true)) return;
 
         if (hPlayer.getBoolean(DataType.NEWTP_USED)){
-            MessageBuilder.create("cmdNewtpAlreadyUsed", hmc, "Newtp").sendMessage(player);
+            Message.create("cmdNewtpAlreadyUsed", hmc, "Newtp").send(player);
             return;
         }
 
-        MessageBuilder.create("cmdNewtpStart", hmc, "Newtp").sendMessage(player);
+        Message.create("cmdNewtpStart", hmc, "Newtp").send(player);
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 127));
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 127));
 
@@ -86,19 +86,19 @@ public class Cmdnewtp extends HalfminerCommand {
             server.dispatchCommand(player, "sethome newtp");
 
             for (int i = 0; i < 100; i++) player.sendMessage("");
-            MessageBuilder.create("cmdNewtpTpDone", hmc, "Newtp")
+            Message.create("cmdNewtpTpDone", hmc, "Newtp")
                     .addPlaceholder("%PLAYER%", player.getName())
-                    .sendMessage(player);
+                    .send(player);
 
-            MessageBuilder.create("cmdNewtpLog", hmc)
+            Message.create("cmdNewtpLog", hmc)
                     .addPlaceholder("%PLAYER%", player.getName())
                     .addPlaceholder("%LOCATION%", Utils.getStringFromLocation(loc))
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
 
             scheduler.runTaskLater(hmc, () -> {
-                MessageBuilder.create("cmdNewtpDocumentation", hmc, "Newtp").sendMessage(player);
+                Message.create("cmdNewtpDocumentation", hmc, "Newtp").send(player);
                 hms.getBarHandler().sendBar(player,
-                        MessageBuilder.returnMessage("cmdNewtpBossbar", hmc), BarColor.BLUE, BarStyle.SOLID, 50);
+                        Message.returnMessage("cmdNewtpBossbar", hmc), BarColor.BLUE, BarStyle.SOLID, 50);
             }, 120L);
         }, () -> {
 

@@ -3,7 +3,7 @@ package de.halfminer.hmc.cmd;
 import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 
 import java.util.logging.Level;
@@ -44,13 +44,13 @@ public class Cmdhome extends HalfminerCommand {
                 server.dispatchCommand(player, command);
             } else {
 
-                MessageBuilder.create("cmdHomeDenied", hmc, "Home")
+                Message.create("cmdHomeDenied", hmc, "Home")
                         .addPlaceholder("%PLAYER%", player.getName())
-                        .sendMessage(player);
+                        .send(player);
 
-                MessageBuilder.create("cmdHomeDeniedLog", hmc)
+                Message.create("cmdHomeDeniedLog", hmc)
                         .addPlaceholder("%PLAYER%", player.getName())
-                        .logMessage(Level.INFO);
+                        .log(Level.INFO);
             }
         }
     }

@@ -5,7 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -76,18 +76,18 @@ public class ModStats extends HalfminerModule implements Listener, Sweepable {
             hKiller.set(DataType.KD_RATIO, kdRatioKiller);
             hVictim.set(DataType.KD_RATIO, kdRatioVictim);
 
-            MessageBuilder.create("modStatsPvPKill", hmc, "PvP")
+            Message.create("modStatsPvPKill", hmc, "PvP")
                     .addPlaceholder("%VICTIM%", victim.getName())
                     .addPlaceholder("%KILLS%", killsKiller)
                     .addPlaceholder("%KDRATIO%", kdRatioKiller)
-                    .sendMessage(killer);
+                    .send(killer);
 
             ItemStack weapon = killer.getInventory().getItemInMainHand();
             boolean addKillingWeapon = weapon != null
                     && weapon.hasItemMeta()
                     && weapon.getItemMeta().hasDisplayName();
 
-            MessageBuilder victimMessage = MessageBuilder.create(
+            Message victimMessage = Message.create(
                     addKillingWeapon ? "modStatsPvPDeathWeapon" : "modStatsPvPDeath", hmc, "PvP")
                     .addPlaceholder("%KILLER%", killer.getName());
 
@@ -95,26 +95,26 @@ public class ModStats extends HalfminerModule implements Listener, Sweepable {
                 victimMessage.addPlaceholder("%WEAPON%", weapon.getItemMeta().getDisplayName());
             }
 
-            victimMessage.sendMessage(victim);
+            victimMessage.send(victim);
 
-            MessageBuilder.create("modStatsPvPLog", hmc)
+            Message.create("modStatsPvPLog", hmc)
                     .addPlaceholder("%KILLER%", killer.getName())
                     .addPlaceholder("%VICTIM%", victim.getName())
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
         } else {
 
             hVictim.incrementInt(DataType.DEATHS, 1);
             hVictim.set(DataType.KD_RATIO, calculateKDRatio(hVictim));
 
-            MessageBuilder.create("modStatsDeath", hmc, "PvP")
+            Message.create("modStatsDeath", hmc, "PvP")
                     .addPlaceholder("%DEATHS%", hVictim.getString(DataType.DEATHS))
-                    .sendMessage(victim);
+                    .send(victim);
 
             String deathCause = victim.getLastDamageCause() != null ? victim.getLastDamageCause().getCause().toString() : "null";
-            MessageBuilder.create("modStatsDeathLog", hmc)
+            Message.create("modStatsDeathLog", hmc)
                     .addPlaceholder("%PLAYER%", victim.getName())
                     .addPlaceholder("%CAUSE%", deathCause)
-                    .logMessage(Level.INFO);
+                    .log(Level.INFO);
         }
     }
 
@@ -139,14 +139,14 @@ public class ModStats extends HalfminerModule implements Listener, Sweepable {
             skillgroup = ((ModSkillLevel) hmc.getModule(ModuleType.SKILL_LEVEL)).getSkillgroup(clicked);
         } catch (ModuleDisabledException ignored) {}
 
-        MessageBuilder.create(!clicked.hasPermission("hmc.bypass.statsrightclick") ?
+        Message.create(!clicked.hasPermission("hmc.bypass.statsrightclick") ?
                 "modStatsRightClick" : "modStatsRightClickExempt", hmc, clicked.getName())
                 .addPlaceholder("%SKILLGROUP%", skillgroup)
                 .addPlaceholder("%KILLS%", hClicked.getInt(DataType.KILLS))
                 .addPlaceholder("%KDRATIO%", hClicked.getDouble(DataType.KD_RATIO))
                 .addPlaceholder("%AFK%", hookHandler.isAfk(clicked) ?
-                        MessageBuilder.returnMessage("modStatsRightClickAFKAppend", hmc) : "")
-                .sendMessage(clicker);
+                        Message.returnMessage("modStatsRightClickAFKAppend", hmc) : "")
+                .send(clicker);
 
         clicker.playSound(clicked.getLocation(), Sound.BLOCK_NOTE_XYLOPHONE, 0.5f, 1.9f);
         lastInteract.put(clicker, clicked);

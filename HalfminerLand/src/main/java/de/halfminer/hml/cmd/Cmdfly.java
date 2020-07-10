@@ -2,7 +2,7 @@ package de.halfminer.hml.cmd;
 
 import de.halfminer.hml.land.FlyBoard;
 import de.halfminer.hml.land.Land;
-import de.halfminer.hms.util.MessageBuilder;
+import de.halfminer.hms.util.Message;
 import org.bukkit.GameMode;
 
 public class Cmdfly extends LandCommand {
@@ -23,16 +23,16 @@ public class Cmdfly extends LandCommand {
         FlyBoard flyBoard = board.getFlyBoard();
         if (flyBoard.isPlayerFlying(player)) {
             flyBoard.togglePlayerFlying(player);
-            MessageBuilder.create("cmdFlyDisable", hml)
+            Message.create("cmdFlyDisable", hml)
                     .addPlaceholder("%TIME%", flyBoard.getFlyTimeLeft(player))
-                    .sendMessage(player);
+                    .send(player);
         } else {
 
             if (player.isFlying()
                     || player.getAllowFlight()
                     || player.getGameMode().equals(GameMode.CREATIVE)
                     || player.getGameMode().equals(GameMode.SPECTATOR)) {
-                MessageBuilder.create("cmdFlyAlreadyFlying", hml).sendMessage(player);
+                Message.create("cmdFlyAlreadyFlying", hml).send(player);
                 return;
             }
 
@@ -41,24 +41,24 @@ public class Cmdfly extends LandCommand {
 
                 // player must stand still to start flying
                 if (player.getVelocity().length() > 0.1d) {
-                    MessageBuilder.create("cmdFlyNotStandingStill", hml).sendMessage(player);
+                    Message.create("cmdFlyNotStandingStill", hml).send(player);
                     return;
                 }
 
                 boolean flyEnabled = flyBoard.togglePlayerFlying(player);
                 if (flyEnabled) {
-                    MessageBuilder.create("cmdFlyEnable", hml)
+                    Message.create("cmdFlyEnable", hml)
                             .addPlaceholder("%TIME%", flyBoard.getFlyTimeLeft(player))
-                            .sendMessage(player);
+                            .send(player);
                 } else {
-                    MessageBuilder.create("cmdFlyNotEnoughMoney", hml)
+                    Message.create("cmdFlyNotEnoughMoney", hml)
                             .addPlaceholder("%COST%", flyBoard.getCost())
                             .addPlaceholder("%TIME%", flyBoard.getFlyDurationSeconds())
-                            .sendMessage(player);
+                            .send(player);
                 }
 
             } else {
-                MessageBuilder.create("cmdFlyNoPermission", hml).sendMessage(player);
+                Message.create("cmdFlyNoPermission", hml).send(player);
             }
         }
     }
