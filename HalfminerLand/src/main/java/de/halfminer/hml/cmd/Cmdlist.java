@@ -102,7 +102,10 @@ public class Cmdlist extends LandCommand implements MenuCreator {
 
                 ItemStack landItem = new ItemStack(material);
 
-                String localeKey = "cmdListMenuLandEntry" + (ownedLand.hasTeleportLocation() ? "Teleport" : "");
+                String localeKey = "cmdListMenuLandEntry"
+                        + (ownedLand.hasTeleportLocation() ? "Teleport" : "")
+                        + (ownedLand.isFreeLand() ? "Free" : "");
+
                 String teleportString = ownedLand.hasTeleportLocation() ? ownedLand.getTeleportName() : "";
                 Message localeBuilder = Message.create(localeKey, hml)
                         .togglePrefix()
