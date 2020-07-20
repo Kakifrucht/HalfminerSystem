@@ -1,31 +1,19 @@
 package de.halfminer.hmc.cmd;
 
-import de.halfminer.hmc.cmd.abs.HalfminerPersistenceCommand;
+import de.halfminer.hmc.cmd.abs.HalfminerCommand;
 import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
- * - Copy signs, define copy amount
- * - Edit signs, define line number
+ * - Edit specific lines of signs by looking at them while executing the command
  */
 @SuppressWarnings("unused")
-public class Cmdsignedit extends HalfminerPersistenceCommand {
+public class Cmdsignedit extends HalfminerCommand {
 
     private final static String PREFIX = "Signedit";
 
-    // Single line editing data
-    private int lineNumber;
-    private String lineText = "";
-
-    // Sign copy data
-    private int amountToCopy;
-    private String[] signToBeCopied;
 
     public Cmdsignedit() {
         this.permission = "hmc.signedit";
@@ -44,93 +32,33 @@ public class Cmdsignedit extends HalfminerPersistenceCommand {
             return;
         }
 
-        if (args[0].equalsIgnoreCase("copy")) {
+        int lineNumber = -1;
+        String lineText = "";
+        try {
+            lineNumber = Integer.parseInt(args[0]) - 1;
+        } catch (NumberFormatException ignored) {}
 
-            amountToCopy = 1;
-
-            if (args.length > 1) {
-                try {
-                    amountToCopy = Byte.parseByte(args[1]);
-                    if (amountToCopy > 9 || amountToCopy < 1) amountToCopy = 1;
-                } catch (NumberFormatException ignored) {
-                }
-            }
-
-            Message.create("cmdSigneditCopy", hmc, PREFIX)
-                    .addPlaceholder("%AMOUNT%", amountToCopy)
-                    .send(player);
-            setPersistent(player.getUniqueId());
+        if (lineNumber < 0 || lineNumber > 3) {
+            showUsage();
             return;
-
-        } else {
-
-            try {
-                lineNumber = Integer.parseInt(args[0]) - 1;
-                if (lineNumber >= 0 && lineNumber < 4) {
-
-                    if (args.length > 1) {
-                        lineText = Utils.arrayToString(args, 1, true);
-                    }
-
-                    Message.create("cmdSigneditSet", hmc, PREFIX)
-                            .addPlaceholder("%LINE%", lineNumber + 1)
-                            .addPlaceholder("%TEXT%", lineText)
-                            .send(player);
-                    setPersistent(player.getUniqueId());
-                    return;
-                } else {
-                    showUsage();
-                    return;
-                }
-            } catch (NumberFormatException ignored) {}
         }
 
-        showUsage();
-    }
+        if (args.length > 1) {
+            lineText = Utils.arrayToString(args, 1, true);
+        }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onSignInteract(PlayerInteractEvent e) {
-
-        Player player = e.getPlayer();
-        if (!isPersistenceOwner(e.getPlayer()))
+        Block block = player.getTargetBlock(null, 5);
+        if (block == null || !(block.getState() instanceof Sign)) {
+            Message.create("cmdSigneditLookAtSign", hmc, PREFIX).send(player);
             return;
-
-        boolean isDone = false;
-
-        Block block = e.getClickedBlock();
-        if (block != null
-                && (block.getType() == Material.SIGN
-                        || block.getType() == Material.SIGN_POST
-                        || block.getType() == Material.WALL_SIGN)) {
-
-            Sign sign = (Sign) block.getState();
-
-            if (amountToCopy > 0 && signToBeCopied == null) {
-                signToBeCopied = sign.getLines();
-                Message.create("cmdSigneditSignCopied", hmc, PREFIX).send(player);
-            } else {
-
-                if (signToBeCopied != null) {
-                    for (int i = 0; i < 4; i++) sign.setLine(i, signToBeCopied[i]);
-                    if (--amountToCopy == 0) isDone = true;
-                    Message.create("cmdSigneditSignPasted", hmc, PREFIX)
-                            .addPlaceholder("%AMOUNT%", amountToCopy)
-                            .send(player);
-                } else {
-                    sign.setLine(lineNumber, lineText);
-                    String messageKey = lineText.length() > 15 ? "cmdSigneditLinePastedWarn" : "cmdSigneditLinePasted";
-                    Message.create(messageKey, hmc, PREFIX).send(player);
-                    isDone = true;
-                }
-
-                sign.update();
-            }
-            e.setCancelled(true);
         }
 
-        if (isDone) {
-            unregisterClass();
-        }
+        Sign sign = (Sign) block.getState();
+        sign.setLine(lineNumber, lineText);
+        sign.update();
+
+        String messageKey = lineText.length() > 15 ? "cmdSigneditLinePastedWarn" : "cmdSigneditLinePasted";
+        Message.create(messageKey, hmc, PREFIX).send(player);
     }
 
     private void showUsage() {
