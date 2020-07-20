@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class Cmdlist extends LandCommand implements MenuCreator {
 
+    private static final int CHUNK_RADIUS_BLOCKS = 8;
 
     public Cmdlist() {
         super("list");
@@ -110,8 +111,8 @@ public class Cmdlist extends LandCommand implements MenuCreator {
                 Message localeBuilder = Message.create(localeKey, hml)
                         .togglePrefix()
                         .addPlaceholder("%WORLD%", ownedLand.getWorld().getName())
-                        .addPlaceholder("%X%", ownedLand.getXLandCorner())
-                        .addPlaceholder("%Z%", ownedLand.getZLandCorner())
+                        .addPlaceholder("%X%", ownedLand.getXLandCorner() + CHUNK_RADIUS_BLOCKS)
+                        .addPlaceholder("%Z%", ownedLand.getZLandCorner() + CHUNK_RADIUS_BLOCKS)
                         .addPlaceholder("%TELEPORT%", teleportString);
 
                 Utils.applyLocaleToItemStack(landItem, localeBuilder);
