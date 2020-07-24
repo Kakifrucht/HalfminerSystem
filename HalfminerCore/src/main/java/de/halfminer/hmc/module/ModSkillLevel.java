@@ -227,9 +227,9 @@ public class ModSkillLevel extends HalfminerModule implements Disableable, Liste
     public void loadConfig() {
 
         ConfigurationSection config = hmc.getConfig().getConfigurationSection("skillLevel");
-        derankLevelThreshold = config.getInt("derankThreshold", 16);
-        timeUntilDerankThreshold = config.getInt("timeUntilDerankDays", 4) * 24 * 60 * 60;
-        derankAmountPercent = config.getDouble("derankAmountPercent", .15d);
+        derankLevelThreshold = config.getInt("derank.levelThreshold", 16);
+        timeUntilDerankThreshold = config.getInt("derank.timeInDays", 4) * 24 * 60 * 60;
+        derankAmountPercent = config.getDouble("derank.amountPercent", .15d);
 
         eloModifierSameLevel = config.getInt("eloModifierSameLevel", 80);
         maxLevelDifference = config.getInt("maxLevelDifference", 10);

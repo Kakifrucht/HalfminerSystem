@@ -2,10 +2,10 @@ package de.halfminer.hmc.module;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.cache.exceptions.CachingException;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.manageable.Sweepable;
-import de.halfminer.hms.cache.CustomAction;
 import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
@@ -13,7 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -185,22 +185,25 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
     @Override
     public void loadConfig() {
 
-        FileConfiguration config = hmc.getConfig();
+        ConfigurationSection config = hmc.getConfig().getConfigurationSection("respawn");
 
         Object loc = coreStorage.get("spawnlocation");
-        if (loc instanceof Location) respawnLoc = (Location) loc;
-        else respawnLoc = server.getWorlds().get(0).getSpawnLocation();
+        if (loc instanceof Location) {
+            respawnLoc = (Location) loc;
+        } else {
+            respawnLoc = server.getWorlds().get(0).getSpawnLocation();
+        }
 
-        firstSpawnCommand = config.getString("respawn.firstJoinCommand", "");
+        firstSpawnCommand = config.getString("firstJoinCommand", "");
 
         welcomeWords = new HashSet<>();
-        welcomeWords.addAll(config.getStringList("respawn.welcomeWords")
+        welcomeWords.addAll(config.getStringList("welcomeBonus.words")
                 .stream()
                 .map(String::toLowerCase)
                 .collect(Collectors.toList()));
 
         try {
-            action = new CustomAction(config.getString("respawn.customActionWelcomeBonus", "nothing"), coreStorage);
+            action = new CustomAction(config.getString("welcomeBonus.customAction", "nothing"), coreStorage);
         } catch (CachingException e) {
             Message.create("modRespawnWelcomeBonusActionError", hmc)
                     .addPlaceholder("%REASON%", e.getCleanReason())
@@ -212,8 +215,8 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             }
         }
 
-        int timeForWelcomeSeconds = config.getInt("respawn.timeForWelcomeSeconds", 300);
-        randomRange = hmc.getConfig().getInt("respawn.randomRange", 1);
+        int timeForWelcomeSeconds = config.getInt("welcomeBonus.timeSeconds", 300);
+        randomRange = hmc.getConfig().getInt("welcomeBonus.randomRange", 1);
 
         newPlayers = Utils.copyValues(newPlayers,
                 CacheBuilder.newBuilder()

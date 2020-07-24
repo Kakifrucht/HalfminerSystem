@@ -165,14 +165,14 @@ public class ModPerformance extends HalfminerModule implements Listener {
 
         int ticksDelayUntilClear = config.getInt("ticksDelayUntilClear", 160);
         howManyRedstoneUpdatesAllowed = config.getInt("howManyRedstoneUpdatesAllowed", 32);
-        howManyPistonsAllowed = config.getInt("howManyPistonsAllowed", 200);
-        pistonLimitRegionSize = config.getInt("pistonLimitRegionSize", 64);
-        hopperLimit = config.getInt("hopperLimit", 64);
-        hopperLimitRadius = config.getInt("hopperLimitRadius", 7);
-        logHopperLimit = config.getBoolean("hopperLimitLog", false);
-        entityLimitLiving = config.getInt("entityLimitLiving", 100);
-        entityLimitSame = config.getInt("entityLimitSame", 25);
-        boxSize = config.getInt("boxSize", 16);
+        howManyPistonsAllowed = config.getInt("piston.limit", 32);
+        pistonLimitRegionSize = config.getInt("piston.regionSize", 64);
+        hopperLimit = config.getInt("hopper.limit", 64);
+        hopperLimitRadius = config.getInt("hopper.radius", 7);
+        logHopperLimit = config.getBoolean("hopper.log", false);
+        entityLimitLiving = config.getInt("entity.limitLiving", 100);
+        entityLimitSame = config.getInt("entity.limitSame", 25);
+        boxSize = config.getInt("entity.boxSize", 16);
 
         if (clearTask != null) {
             clearTask.cancel();
