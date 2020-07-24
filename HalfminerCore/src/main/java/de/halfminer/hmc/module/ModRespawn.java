@@ -93,6 +93,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
             scheduler.runTaskLater(hmc, () -> {
                 joined.teleport(respawnLoc);
                 Message.create("modRespawnForced", hmc, "Spawn").send(joined);
+                hmc.getLogger().info("Respawn: Force-teleported " + joined.getName() + " to spawn");
                 toTeleportOnJoin.remove(joined);
             }, 1L);
         }
@@ -155,10 +156,6 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
     public Location getSpawn() {
         return respawnLoc;
-    }
-
-    void tpToSpawn(Player p) {
-        p.teleport(respawnLoc);
     }
 
     public boolean teleportToSpawnOnJoin(OfflinePlayer p) {
