@@ -11,6 +11,7 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -52,6 +53,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     private String topFormat;
     private String defaultFormat;
     private String accidentalChatCharacter;
+    private boolean logAccidentalChatCharacter;
 
     private Cache<Player, Boolean> wasMentioned;
 
@@ -82,8 +84,12 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             String command = message.substring(1).split(" ")[0].toLowerCase();
             if (server.getCommandAliases().containsKey(command) || server.getPluginCommand(command) != null) {
                 server.getScheduler().runTask(hmc, () -> {
+
+                    if (logAccidentalChatCharacter) {
+                        hmc.getLogger().info(p.getName() + " used accidental chat character and has been corrected");
+                    }
+
                     p.chat("/" + message.substring(1));
-                    hmc.getLogger().info(p.getName() + " used accidental chat character and has been corrected");
                 });
 
                 e.setCancelled(true);
@@ -305,7 +311,9 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
     @Override
     public void loadConfig() {
 
-        int mentionDelay = hmc.getConfig().getInt("chat.mentionDelay", 10);
+        ConfigurationSection config = hmc.getConfig().getConfigurationSection("chat");
+
+        int mentionDelay = config.getInt("mentionDelay", 10);
 
         wasMentioned = Utils.copyValues(wasMentioned,
                 CacheBuilder.newBuilder()
@@ -313,7 +321,7 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
                 .build());
 
         chatFormats = new ArrayList<>();
-        for (String formatUnparsed : hmc.getConfig().getStringList("chat.formats")) {
+        for (String formatUnparsed : config.getStringList("formats")) {
             try {
                 Pair<String, String> keyValue = Utils.getKeyValuePair(formatUnparsed);
                 keyValue.setLeft(keyValue.getLeft().toLowerCase());
@@ -335,7 +343,8 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             chatFormats.remove(chatFormats.size() - 1);
         }
 
-        accidentalChatCharacter = hmc.getConfig().getString("chat.accidentalChatCharacter", "");
+        accidentalChatCharacter = config.getString("accidentalChat.character", "");
+        logAccidentalChatCharacter = config.getBoolean("accidentalChat.log", true);
     }
 
     @Override

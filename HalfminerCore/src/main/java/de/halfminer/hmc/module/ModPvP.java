@@ -288,7 +288,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
         strengthReducePerLevel = hmc.getConfig().getDouble("pvp.strengthEffectReducePerLevel", 1.5d);
         strengthReducePerLevel = Math.min(3.0d, strengthReducePerLevel);
-        thresholdUntilShown = hmc.getConfig().getInt("pvp.streakThreshold", 30);
+        thresholdUntilShown = hmc.getConfig().getInt("pvp.streakActionbarThreshold", 30);
 
         try {
             List<String> actionList = hmc.getConfig().getStringList("pvp.actionsOnKill");
