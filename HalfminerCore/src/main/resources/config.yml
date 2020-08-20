@@ -168,7 +168,7 @@ motd:
   - 9
   - b
 performance:
-  #Delay in ticks until redstone and piston limits will be reset
+  #Delay in ticks until redstone and piston limits will be re-counted
   ticksDelayUntilClear: 160
   #Number in block updates until redstone will be blocked, ticksDelayUntilClear clears this
   howManyRedstoneUpdatesAllowed: 32
@@ -214,9 +214,9 @@ respawn:
     timeSeconds: 300
     #Words of which one needs to be matched (case insensitive) to get a custom action execute
     words:
-      - 'willkommen'
-      - 'willkommen,'
-      - 'hallo'
+    - 'willkommen'
+    - 'willkommen,'
+    - 'hallo'
 sell:
   #Time in minutes until new sell cycle starts
   cycleTime:
@@ -226,7 +226,7 @@ sell:
     minMinutes: 50
     #How many players must be online to meet the minMinutes value
     minPlayerCount: 40
-  #Per group, put [up to] 5 values separated via comma
+  #Per group, put [up to] 4 values separated via comma
   #Values:
   # 1. String (required) - name of group: to be defined below in the list
   # 2. Integer (required) - amount per cycle: amount of sellables in this group that will be included per cycle
