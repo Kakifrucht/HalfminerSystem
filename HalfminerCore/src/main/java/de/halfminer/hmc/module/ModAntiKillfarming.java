@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
  * - Allows other modules to check if a kill was farmed
  * - Punishment doubles for every additional block
  */
-@SuppressWarnings("unused")
 public class ModAntiKillfarming extends HalfminerModule implements Listener, Sweepable {
 
     private int blockTime;
@@ -143,7 +142,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         int time = getBlockTime(e.getPlayer());
         if (time > 0) {
             String command = e.getMessage().split(" ")[0].toLowerCase();
-            if (!exemptCommands.contains(command.substring(1, command.length()))) {
+            if (!exemptCommands.contains(command.substring(1))) {
                 Message.create("modAntiKillfarmingNoCommand", hmc, "PvP")
                         .addPlaceholder("%TIME%", time)
                         .send(e.getPlayer());
@@ -207,7 +206,7 @@ public class ModAntiKillfarming extends HalfminerModule implements Listener, Swe
         int blockTimeVictim = victimCon.blockOwner();
 
         // ensure that once both blocks run out they get reblocked when trying to kill directly again
-        killerCon.incrementPlayer(victim, blockTimeKiller > blockTimeVictim ? blockTimeKiller : blockTimeVictim);
+        killerCon.incrementPlayer(victim, Math.max(blockTimeKiller, blockTimeVictim));
 
         Message.create("modAntiKillfarmingBlockedBroadcast", hmc, "PvP")
                 .addPlaceholder("%KILLER%", killer.getName())

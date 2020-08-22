@@ -33,8 +33,6 @@ import java.util.*;
  */
 public class ModAntiXray extends HalfminerModule implements Listener, Sweepable {
 
-    private boolean isEnabled;
-
     private int timeUntilClear;
     private int protectedBlockThreshold;
     private int yLevelThreshold;

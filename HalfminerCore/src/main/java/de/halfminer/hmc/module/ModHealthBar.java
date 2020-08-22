@@ -31,7 +31,6 @@ import java.util.Map;
  *   - Shows bar and updates for 8 seconds max, or until other entity was hit
  *   - When entity was killed, shows bar in green and only for 2 seconds
  */
-@SuppressWarnings("unused")
 public class ModHealthBar extends HalfminerModule implements Listener {
 
     private final Map<Player, BarUpdateContainer> playerSeesBar = new HashMap<>();
@@ -57,6 +56,8 @@ public class ModHealthBar extends HalfminerModule implements Listener {
             else return;
 
         } else attacker = (Damageable) e.getDamager();
+
+        if (victim.equals(attacker)) return;
 
         if (victim instanceof Player) addToDamageable(attacker, (Player) victim);
         if (attacker instanceof Player) addToDamageable(victim, (Player) attacker);
