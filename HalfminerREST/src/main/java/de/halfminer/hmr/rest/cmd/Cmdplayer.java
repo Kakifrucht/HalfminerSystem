@@ -79,12 +79,15 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
                             String value = hPlayer.getString(dataType);
                             if (!value.isEmpty()) {
                                 Object valueObject;
-                                if (StringUtils.isNumeric(value)) {
+                                if (StringUtils.isNumeric(value)) { // number check
                                     valueObject = Long.parseLong(value);
-                                } else {
+                                } else if (value.equals("true") || value.equals("false")) { // boolean check
+                                    valueObject = value.equals("true");
+                                } else { // double or else, string check
                                     Double valueDouble = Doubles.tryParse(value);
                                     valueObject = valueDouble != null ? valueDouble : value;
                                 }
+
                                 stats.put(dataType.toString(), valueObject);
                             }
                         }
