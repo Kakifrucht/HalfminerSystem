@@ -1,10 +1,12 @@
 package de.halfminer.hmr.rest.cmd;
 
+import com.google.common.primitives.Doubles;
 import de.halfminer.hmr.http.ResponseBuilder;
 import de.halfminer.hmr.rest.methods.MethodGET;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,6 @@ import java.util.UUID;
  *   - If /stats argument supplied via URI, will append all recorded stats about player
  *   - If /nodashes argument supplied, will remove dashes from returned UUID
  */
-@SuppressWarnings("unused")
 public class Cmdplayer extends RESTCommand implements MethodGET {
 
     @Override
@@ -68,7 +69,7 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
                 }
 
                 String uuid = hPlayer.getUniqueId().toString();
-                Map<String, String> stats = null;
+                Map<String, Object> stats = null;
                 if (uriParsed.meetsLength(2)) {
 
                     String argument = uriParsed.getArgument(1).toLowerCase();
@@ -76,8 +77,15 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
                         stats = new HashMap<>();
                         for (DataType dataType : DataType.values()) {
                             String value = hPlayer.getString(dataType);
-                            if (value.length() > 0) {
-                                stats.put(dataType.toString(), value);
+                            if (!value.isEmpty()) {
+                                Object valueObject;
+                                if (StringUtils.isNumeric(value)) {
+                                    valueObject = Long.parseLong(value);
+                                } else {
+                                    Double valueDouble = Doubles.tryParse(value);
+                                    valueObject = valueDouble != null ? valueDouble : value;
+                                }
+                                stats.put(dataType.toString(), valueObject);
                             }
                         }
                     } else if (argument.equals("nodashes")) {
@@ -85,8 +93,7 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
                     }
                 }
 
-                return ResponseBuilder
-                        .getOKResponse(new Response(hPlayer.getName(), uuid, nameChanged, stats));
+                return ResponseBuilder.getOKResponse(new Response(hPlayer.getName(), uuid, nameChanged, stats));
 
             } catch (PlayerNotFoundException e) {
                 return ResponseBuilder.getNotFoundResponse("unknown player");
@@ -101,9 +108,9 @@ public class Cmdplayer extends RESTCommand implements MethodGET {
         final String name;
         final String uuid;
         final boolean namechanged;
-        final Map<String, String> stats;
+        final Map<String, Object> stats;
 
-        Response(String name, String uuid, boolean nameChanged, Map<String, String> stats) {
+        Response(String name, String uuid, boolean nameChanged, Map<String, Object> stats) {
             this.name = name;
             this.uuid = uuid;
             this.namechanged = nameChanged;
