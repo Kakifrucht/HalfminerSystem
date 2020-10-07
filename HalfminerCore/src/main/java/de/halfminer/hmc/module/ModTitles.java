@@ -121,9 +121,12 @@ public class ModTitles extends HalfminerModule implements Listener {
     }
 
     private void updateTablist(Player player) {
+        BigDecimal balance = new BigDecimal(balances.get(player));
+        NumberFormat formatter= NumberFormat.getInstance(new Locale("de_DE"));
+        String formatted_balance = formatter.format(balance.longValue());
 
         titleHandler.setTablistHeaderFooter(player, Message.create("modTitlesTablist", hmc)
-                .addPlaceholder("%BALANCE%", balances.get(player))
+                .addPlaceholder("%BALANCE%", formatted_balance)
                 .addPlaceholder("%PLAYERCOUNT%", getPlayercountString())
                 .returnMessage());
     }
