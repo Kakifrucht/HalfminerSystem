@@ -1,12 +1,13 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.hooks.HookException;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.UserDoesNotExistException;
 import net.ess3.api.events.UserBalanceUpdateEvent;
+import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -16,6 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,10 +31,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Tab titles containing amount of money and playercount
  * - Money through Essentials hook, automatic update
  */
-@SuppressWarnings("unused")
 public class ModTitles extends HalfminerModule implements Listener {
 
     private Map<Player, Double> balances;
+    private NumberFormat numberFormat;
 
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -123,7 +126,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     private void updateTablist(Player player) {
 
         titleHandler.setTablistHeaderFooter(player, Message.create("modTitlesTablist", hmc)
-                .addPlaceholder("%BALANCE%", balances.get(player))
+                .addPlaceholder("%BALANCE%", numberFormat.format(balances.get(player)))
                 .addPlaceholder("%PLAYERCOUNT%", getPlayercountString())
                 .returnMessage());
     }
@@ -134,6 +137,11 @@ public class ModTitles extends HalfminerModule implements Listener {
 
     @Override
     public void loadConfig() {
+
+        String localeCountryString = hmc.getConfig().getString("titles.numberFormat", "");
+        Locale numberFormatLocale = localeCountryString.isEmpty() ? Locale.GERMANY : LocaleUtils.toLocale(localeCountryString);
+        this.numberFormat = NumberFormat.getInstance(numberFormatLocale);
+
         if (balances == null) {
             balances = new ConcurrentHashMap<>();
             server.getOnlinePlayers().forEach(this::updateBalanceAndTablist);
