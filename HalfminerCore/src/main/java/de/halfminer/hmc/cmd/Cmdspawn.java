@@ -15,10 +15,13 @@ import org.bukkit.entity.Player;
  * - Teleport player to spawn
  * - Teleport other players to spawn with permission
  * - Teleport offline players to spawn once they login
- * - Set the spawnpoint with /setspawn
+ * - Set the spawnpoint with command alias /setspawn
+ *   - Set the ender portal spawnpoint with /setspawn end
  */
 @SuppressWarnings("unused")
 public class Cmdspawn extends HalfminerCommand {
+
+    private static final String PREFIX = "Spawn";
 
     public Cmdspawn() {
         this.permission = "hmc.spawn";
@@ -28,9 +31,20 @@ public class Cmdspawn extends HalfminerCommand {
     public void execute() throws ModuleDisabledException {
 
         if (isPlayer && label.equals("setspawn") && sender.hasPermission("hmc.spawn.set")) {
+
             ModRespawn respawn = (ModRespawn) hmc.getModule(ModuleType.RESPAWN);
-            respawn.setSpawn(player.getLocation());
-            Message.create("cmdSpawnSet", hmc, "Spawn").send(player);
+            if (args.length > 0) {
+                if (args[0].equalsIgnoreCase("end")) {
+                    boolean success = respawn.setEndPortalSpawn(player.getLocation());
+                    Message.create( "cmdSpawnSetEnd" + (success ? "" : "WrongWorld"), hmc, PREFIX).send(player);
+                } else {
+                    Message.create("cmdSpawnSetUsage", hmc, PREFIX).send(player);
+                }
+            } else {
+                respawn.setSpawn(player.getLocation());
+                Message.create("cmdSpawnSet", hmc, PREFIX).send(player);
+            }
+
             return;
         }
 
@@ -42,7 +56,7 @@ public class Cmdspawn extends HalfminerCommand {
                 else {
 
                     teleport(toTeleport, true);
-                    Message.create("cmdSpawnOthers", hmc, "Spawn")
+                    Message.create("cmdSpawnOthers", hmc, PREFIX)
                             .addPlaceholder("%PLAYER%", toTeleport.getName())
                             .send(sender);
                 }
@@ -51,11 +65,11 @@ public class Cmdspawn extends HalfminerCommand {
                     OfflinePlayer p = storage.getPlayer(args[0]).getBase();
                     ModRespawn respawn = (ModRespawn) hmc.getModule(ModuleType.RESPAWN);
                     Message.create(respawn.teleportToSpawnOnJoin(p) ?
-                            "cmdSpawnOthersOfflineAdd" : "cmdSpawnOthersOfflineRemove", hmc, "Spawn")
+                            "cmdSpawnOthersOfflineAdd" : "cmdSpawnOthersOfflineRemove", hmc, PREFIX)
                             .addPlaceholder("%PLAYER%", p.getName())
                             .send(sender);
                 } catch (PlayerNotFoundException e) {
-                    e.sendNotFoundMessage(sender, "Spawn");
+                    e.sendNotFoundMessage(sender, PREFIX);
                 }
             }
         } else {
@@ -71,11 +85,11 @@ public class Cmdspawn extends HalfminerCommand {
             HanTeleport tp = hms.getTeleportHandler();
 
             if (forced) {
-                Message.create("modRespawnForced", hmc, "Spawn").send(toTeleport);
+                Message.create("modRespawnForced", hmc, PREFIX).send(toTeleport);
                 tp.startTeleport((Player) toTeleport, respawn.getSpawn(), 0);
             }
             else tp.startTeleport((Player) toTeleport, respawn.getSpawn());
 
-        } else sendNotAPlayerMessage("Spawn");
+        } else sendNotAPlayerMessage(PREFIX);
     }
 }

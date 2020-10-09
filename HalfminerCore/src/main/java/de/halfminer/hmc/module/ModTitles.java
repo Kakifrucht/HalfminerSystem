@@ -95,13 +95,13 @@ public class ModTitles extends HalfminerModule implements Listener {
         updateTablist(e.getPlayer());
     }
 
-    private double updateBalanceAndTablist(final Player player) {
+    private String updateBalanceAndTablist(final Player player) {
 
         double balance = Double.MIN_VALUE;
 
         if (!player.isOnline()) {
             balances.remove(player);
-            return balance;
+            return getFormattedBalance(balance);
         }
 
         try {
@@ -111,12 +111,12 @@ public class ModTitles extends HalfminerModule implements Listener {
                 // Try again two ticks later
                 scheduler.runTaskLater(hmc, () -> updateBalanceAndTablist(player), 2L);
             }
-            return balance;
+            return getFormattedBalance(balance);
         }
 
         balances.put(player, balance);
         updateTablist(player);
-        return balance;
+        return getFormattedBalance(balance);
     }
 
     private void updateTablist() {
@@ -126,13 +126,17 @@ public class ModTitles extends HalfminerModule implements Listener {
     private void updateTablist(Player player) {
 
         titleHandler.setTablistHeaderFooter(player, Message.create("modTitlesTablist", hmc)
-                .addPlaceholder("%BALANCE%", numberFormat.format(balances.get(player)))
+                .addPlaceholder("%BALANCE%", getFormattedBalance(balances.get(player)))
                 .addPlaceholder("%PLAYERCOUNT%", getPlayercountString())
                 .returnMessage());
     }
 
     private String getPlayercountString() {
         return String.valueOf(server.getOnlinePlayers().size());
+    }
+
+    private String getFormattedBalance(double balance) {
+        return numberFormat.format(balance);
     }
 
     @Override

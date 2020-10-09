@@ -36,7 +36,7 @@ public class SellContract extends AbstractContract {
             landStorage.getLandPlayer(player).removeHighestCost();
             hml.getLogger().info(player.getName() + " received $" + cost + " for selling land at [" + land + "]");
         } else {
-            hml.getLogger().info(player.getName() + " sold his free land at [" + land + "]");
+            hml.getLogger().info(player.getName() + " sold free land at [" + land + "]");
         }
     }
 

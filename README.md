@@ -4,7 +4,7 @@ All modules are currently compatible with version ``1.12.2`` of Spigot/Paper.
 
 All changes on this branch will also be pushed to the main branch at some point.
 
-Halfminer Teamspeak Bot can be found [here](https://github.com/Kakifrucht/HalfminerBot).
+Halfminer TeamSpeak Bot can be found [here](https://github.com/Kakifrucht/HalfminerBot).
 
 ## Current Modules
 - **HalfminerSystem** - Base plugin API containing shared functionality and a centralized storage system.

@@ -122,6 +122,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
     - Broadcast resurrection via Totem of Undying
   - Respawn
     - Respawns player at custom location
+      - Spawns player at custom location when travelling through end portal, and a point has been set with /setspawn end
     - Shows a join message for new players
       - Removes join messages for other players
       - Execute custom command on first join
@@ -299,6 +300,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
     - Teleport other players to spawn with permission
     - Teleport offline players to spawn once they login
     - Set the spawnpoint with command alias */setspawn*
+      - Set the ender portal spawnpoint with /setspawn end
   - /stats
     - View own and other players stats
     - Allows to compare statistics easily via */stats \<playername> compare*
