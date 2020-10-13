@@ -86,7 +86,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
         - Pinned teleports are always visible, even if owning player is offline
         - Default material for server land can be configured
     - Teleports into abandoned lands are disabled, if teleport stealing is enabled shows command to steal teleport name
-  - /hml \<customtitle|forcewgrefresh|flytime|free|pintp|reload|save|status>
+  - /hml \<customtitle|forcewgrefresh|flytime|free|pintp|reload|removeallwgregions|save|status>
     - Reload the configuration
     - Save board data on disk
     - View global land status
@@ -97,5 +97,6 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - Forces all WorldGuard regions to be regenerated (can take a while)
     - See the current free land amount a player can buy or change it
     - Pin (and unpin) a teleport point at the top in the */landtp* menu
+    - Remove all WorldGuard regions, without deleting the associated lands
     - Specify a custom title for a currently owned land via */hml customtitle [title]*, remove it by using */hml customtitle -c*
     - Get and set the remaining fly time (for */land fly*)

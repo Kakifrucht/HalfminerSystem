@@ -52,6 +52,9 @@ public class Cmdhml extends LandCommand {
             case "reload":
                 reload();
                 break;
+            case "removeallwgregions":
+                removeAllWGRegions();
+                break;
             case "save":
                 save();
                 break;
@@ -259,6 +262,13 @@ public class Cmdhml extends LandCommand {
         hml.reload();
         Message.create("pluginReloaded", PREFIX)
                 .addPlaceholder("%PLUGINNAME%", hml.getName())
+                .send(sender);
+    }
+
+    private void removeAllWGRegions() {
+        int count = hml.getWorldGuardHelper().removeAllRegions(server.getWorlds());
+        Message.create("cmdHmlRegionsRemoved" + (count == 0 ? "None" : ""), PREFIX)
+                .addPlaceholder("%COUNT%", count)
                 .send(sender);
     }
 
