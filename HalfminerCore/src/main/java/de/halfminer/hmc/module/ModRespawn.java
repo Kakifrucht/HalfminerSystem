@@ -159,12 +159,8 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
     public void onPortalEvent(PlayerPortalEvent e) {
 
         if (e.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL && endPortalLocation != null) {
-            scheduler.runTask(hmc, () -> {
-                if (!e.isCancelled()) {
-                    e.getPlayer().teleport(endPortalLocation);
-                }
-            });
-            // simpler solution that doesn't work: e.setTo(endPortalLocation);
+            e.useTravelAgent(false);
+            e.setTo(endPortalLocation);
         }
     }
 
