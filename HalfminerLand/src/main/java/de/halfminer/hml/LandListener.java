@@ -24,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -368,6 +369,23 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                     .send(player);
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEnderpearlDeny(PlayerTeleportEvent e) {
+        if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL)) {
+            Player player = e.getPlayer();
+            Land destination = board.getLandAt(e.getTo());
+            if (!destination.hasPermission(player)) {
+
+                e.setCancelled(true);
+                player.getInventory().addItem(new ItemStack(Material.ENDER_PEARL));
+                Message.create("listenerEnderpearlDisallowed", hml)
+                        .addPlaceholder("%OWNER%", destination.getOwnerName())
+                        .send(player);
+            }
+        }
+    }
+
 
     private boolean hasDifferentOwner(Land landA, Land landB) {
 

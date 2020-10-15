@@ -15,6 +15,7 @@ import de.halfminer.hml.land.Land;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -27,6 +28,7 @@ public class WorldGuardHelper {
 
     private static final String ALLOW_SHOP_FLAG_NAME = "allow-shop";
     private static final int HIGHEST_BLOCK_Y = 255;
+    private static final String REGION_PREFIX = "hmland_";
 
     private final Logger logger;
     private final WorldGuard wg;
@@ -85,7 +87,6 @@ public class WorldGuardHelper {
 
                 region.setFlag(Flags.USE, StateFlag.State.ALLOW);
                 region.setFlag(Flags.PVP, StateFlag.State.DENY);
-                region.setFlag(Flags.ENDERPEARL, StateFlag.State.DENY);
 
                 if (defaultDomain != null) {
                     region.setMembers(defaultDomain);
@@ -102,7 +103,6 @@ public class WorldGuardHelper {
             if (land.isAbandoned() != isAbandoned(region)) {
                 if (land.isAbandoned()) {
                     region.setFlag(Flags.PVP, StateFlag.State.ALLOW);
-                    region.setFlag(Flags.ENDERPEARL, StateFlag.State.ALLOW);
 
                     region.setFlag(Flags.BUILD, StateFlag.State.ALLOW);
                     region.setFlag(Flags.CHEST_ACCESS, StateFlag.State.ALLOW);
@@ -125,6 +125,21 @@ public class WorldGuardHelper {
             regionManager.removeRegion(region.getId());
             logger.info("Removed region with id " + region.getId() + " for land " + land);
         }
+    }
+
+    public int removeAllRegions(List<org.bukkit.World> worldList) {
+        int count = 0;
+        for (org.bukkit.World world : worldList) {
+            RegionManager regionManager = getRegionManager(world);
+            for (ProtectedRegion region : regionManager.getRegions().values()) {
+                String id = region.getId();
+                if (id.startsWith(REGION_PREFIX)) {
+                    regionManager.removeRegion(id);
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     public boolean isMarkedAbandoned(Land land) {
@@ -199,6 +214,6 @@ public class WorldGuardHelper {
     }
 
     private String getRegionName(Chunk chunk) {
-        return "hmland_" + chunk.getX() + "," + chunk.getZ();
+        return REGION_PREFIX + chunk.getX() + "," + chunk.getZ();
     }
 }
