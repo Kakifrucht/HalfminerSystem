@@ -11,6 +11,7 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,9 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +30,7 @@ import java.util.stream.Collectors;
 
 /**
  * - Respawns player at custom location
+ *   - Spawns player at custom location when travelling through end portal, and a point has been set with /setspawn end
  * - Adds a first time join
  *   - Else, removes join message
  *   - Execute custom command on first join
@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
     private Location respawnLoc;
+    private Location endPortalLocation;
     private String firstSpawnCommand;
 
     private final Set<OfflinePlayer> toTeleportOnJoin = new HashSet<>();
@@ -154,6 +155,15 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onPortalEvent(PlayerPortalEvent e) {
+
+        if (e.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL && endPortalLocation != null) {
+            e.setCanCreatePortal(false);
+            e.setTo(endPortalLocation);
+        }
+    }
+
     public Location getSpawn() {
         return respawnLoc;
     }
@@ -172,8 +182,19 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
     public void setSpawn(Location loc) {
 
         respawnLoc = loc;
-        coreStorage.set("spawnlocation", loc);
+        coreStorage.set("respawn.spawnLocation", loc);
         loc.getWorld().setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+
+    public boolean setEndPortalSpawn(Location loc) {
+
+        if (loc == null || !loc.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
+            return false;
+        }
+
+        endPortalLocation = loc;
+        coreStorage.set("respawn.spawnEndLocation", loc);
+        return true;
     }
 
     @Override
@@ -187,11 +208,18 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
         ConfigurationSection config = hmc.getConfig().getConfigurationSection("respawn");
 
-        Object loc = coreStorage.get("spawnlocation");
-        if (loc instanceof Location) {
-            respawnLoc = (Location) loc;
+        Object spawnLocation = coreStorage.get("respawn.spawnLocation");
+        if (spawnLocation instanceof Location) {
+            respawnLoc = (Location) spawnLocation;
         } else {
             respawnLoc = server.getWorlds().get(0).getSpawnLocation();
+        }
+
+        Object spawnEndLocation = coreStorage.get("respawn.spawnEndLocation");
+        if (spawnEndLocation instanceof Location) {
+            endPortalLocation = (Location) spawnEndLocation;
+        } else {
+            endPortalLocation = null;
         }
 
         firstSpawnCommand = config.getString("firstJoinCommand", "");
@@ -220,8 +248,8 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
 
         newPlayers = Utils.copyValues(newPlayers,
                 CacheBuilder.newBuilder()
-                .expireAfterWrite(timeForWelcomeSeconds, TimeUnit.SECONDS)
-                .build());
+                        .expireAfterWrite(timeForWelcomeSeconds, TimeUnit.SECONDS)
+                        .build());
 
         lastWelcome = Utils.copyValues(lastWelcome,
                 CacheBuilder.newBuilder()
