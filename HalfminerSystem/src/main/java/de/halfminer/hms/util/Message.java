@@ -207,20 +207,24 @@ public class Message {
     }
 
     public void broadcast(boolean log) {
-        broadcast(plugin.getServer().getOnlinePlayers(), log, "");
+        broadcast("", log);
     }
 
     public void broadcast(String permission, boolean log) {
-        broadcast(plugin.getServer().getOnlinePlayers(), log, permission);
+        broadcast(permission, log, Collections.emptyList());
     }
 
-    public void broadcast(Collection<? extends CommandSender> sendTo, boolean log, String permission) {
+    public void broadcast(String permission, boolean log, Collection<Player> filterCollection) {
 
-        sendTo.stream()
-                .filter(player -> permission.length() == 0 || player.hasPermission(permission))
-                .forEach(this::send);
+        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
+            if ((permission.length() == 0 || onlinePlayer.hasPermission(permission)) && !filterCollection.contains(onlinePlayer)) {
+                send(onlinePlayer);
+            }
+        }
 
-        if (log) log(Level.INFO);
+        if (log) {
+            log(Level.INFO);
+        }
     }
 
     public void log(Level logLevel) {
@@ -295,6 +299,8 @@ public class Message {
             int currentLowerBound = 0;
 
             StringBuilder originalText = new StringBuilder(currentComponent.getText());
+
+            // don't parse links
             if (originalText.toString().startsWith("http")) {
                 components.add(newComponent);
                 continue;
