@@ -216,7 +216,7 @@ public class ModRespawn extends HalfminerModule implements Listener, Sweepable {
         }
 
         int timeForWelcomeSeconds = config.getInt("welcomeBonus.timeSeconds", 300);
-        randomRange = hmc.getConfig().getInt("welcomeBonus.randomRange", 1);
+        randomRange = config.getInt("welcomeBonus.randomRange", 1);
 
         newPlayers = Utils.copyValues(newPlayers,
                 CacheBuilder.newBuilder()

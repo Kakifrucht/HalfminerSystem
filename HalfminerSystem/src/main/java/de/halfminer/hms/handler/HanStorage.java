@@ -40,7 +40,7 @@ import java.util.logging.Level;
  *   - Thread safe
  * - Holds customtext caches
  */
-@SuppressWarnings({"unused", "SameParameterValue"})
+@SuppressWarnings("SameParameterValue")
 public class HanStorage extends HalfminerClass implements CacheHolder, Disableable, Reloadable {
 
     private File sysFile;
@@ -119,6 +119,10 @@ public class HanStorage extends HalfminerClass implements CacheHolder, Disableab
 
         if (uuidConfig == null) {
             throw new RuntimeException("getPlayer(String) called on non HalfminerSystem HanStorage instance");
+        }
+
+        if (playerString == null || !playerString.matches("^[a-zA-Z0-9_-]+$")) {
+            throw new PlayerNotFoundException();
         }
 
         UUID uuid;

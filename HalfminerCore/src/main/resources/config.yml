@@ -127,7 +127,7 @@ chat:
     #If message in chat starts with given character the server will check if the player wanted to type a command instead and correct them
     #On german keyboards, the command prefix '/' is situated on the key for number 7, set this to your key that contains the '/'
     #Set to empty string ('') to disable feature
-    accidentalChatCharacter: '7'
+    character: '7'
     #Log if input got corrected
     log: true
 combatLog:
@@ -166,7 +166,7 @@ motd:
   - 9
   - b
 performance:
-  #Delay in ticks until redstone and piston limits will be reset
+  #Delay in ticks until redstone and piston limits will be re-counted
   ticksDelayUntilClear: 160
   #Number in block updates until redstone will be blocked, ticksDelayUntilClear clears this
   howManyRedstoneUpdatesAllowed: 32
@@ -224,7 +224,7 @@ sell:
     minMinutes: 50
     #How many players must be online to meet the minMinutes value
     minPlayerCount: 40
-  #Per group, put [up to] 5 values separated via comma
+  #Per group, put [up to] 4 values separated via comma
   #Values:
   # 1. String (required) - name of group: to be defined below in the list
   # 2. Integer (required) - amount per cycle: amount of sellables in this group that will be included per cycle

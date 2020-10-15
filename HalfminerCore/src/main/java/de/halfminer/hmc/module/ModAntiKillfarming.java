@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
  * - Allows other modules to check if a kill was farmed
  * - Punishment doubles for every additional block
  */
-@SuppressWarnings("unused")
 public class ModAntiKillfarming extends HalfminerModule implements Listener, Sweepable {
 
     private int blockTime;

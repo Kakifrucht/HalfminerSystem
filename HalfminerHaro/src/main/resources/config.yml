@@ -2,7 +2,7 @@
 init:
   # How much maximum health a player should have when the game starts
   startMaxHealth: 20.0
-  # Command lists to execute during initializion of game (/haro start)
+  # Command lists to execute during initialization of game (/haro start)
   gameCommands:
     - time set day world
     - weather world sun
