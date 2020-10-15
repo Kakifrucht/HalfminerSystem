@@ -27,8 +27,9 @@ import java.util.logging.Level;
 /**
  * Free for all arena used by {@link FFAMode}, implementing custom killstreaks, timeouts, scoreboard and auto respawns
  */
-@SuppressWarnings("unused")
 public class FFAArena extends AbstractArena {
+
+    private static final int TELEPORT_DELAY = 3;
 
     private final FFAMode battleMode = (FFAMode) getBattleMode();
 
@@ -56,23 +57,23 @@ public class FFAArena extends AbstractArena {
         scoreboardTeam.setPrefix(ChatColor.BLUE + "");
     }
 
-    public void addPlayer(Player toAdd) {
+    public long addPlayer(Player toAdd, Runnable runIfSuccess) {
 
         Long timestamp = bannedFromArena.getIfPresent(toAdd.getUniqueId());
         if (timestamp != null) {
             long secondsLeft = timestamp - (System.currentTimeMillis() / 1000);
             if (secondsLeft > 0L) {
-                Message.create("modeFFACooldown", hmb)
-                        .addPlaceholder("%TIMELEFT%", secondsLeft)
-                        .send(toAdd);
-                return;
+                return secondsLeft;
             } else bannedFromArena.invalidate(toAdd.getUniqueId());
         }
 
         pm.addToQueue(battleModeType, toAdd);
-        battleMode.teleportWithDelay(toAdd, 3,
-                () -> addPlayerInternal(toAdd),
-                () -> pm.setState(BattleState.IDLE, toAdd));
+        battleMode.teleportWithDelay(toAdd, TELEPORT_DELAY,
+                () -> { // on successful teleport
+                    addPlayerInternal(toAdd);
+                    runIfSuccess.run();
+                }, () -> pm.setState(BattleState.IDLE, toAdd));
+        return 0L;
     }
 
     private void addPlayerInternal(Player toAdd) {
@@ -86,13 +87,6 @@ public class FFAArena extends AbstractArena {
         scoreboardTeam.addEntry(toAdd.getName());
 
         toAdd.setGlowing(battleMode.isSetGlowingInArena());
-
-        Message.create("modeFFAJoined", hmb)
-                .addPlaceholder("%ARENA%", getName())
-                .send(toAdd);
-        HalfminerSystem.getInstance()
-                .getTitlesHandler()
-                .sendTitle(toAdd, Message.returnMessage("modeFFAJoinTitle", hmb, false));
     }
 
     public void removePlayer(Player toRemove) {

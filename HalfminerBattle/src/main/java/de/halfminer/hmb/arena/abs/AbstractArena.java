@@ -228,6 +228,6 @@ public abstract class AbstractArena extends BattleClass implements Arena {
     }
 
     protected Player[] parameterToArray(Player... param) {
-        return param != null && param.length > 0 ? param : playersInArena.toArray(new Player[playersInArena.size()]);
+        return param != null && param.length > 0 ? param : playersInArena.toArray(new Player[0]);
     }
 }

@@ -3,10 +3,11 @@ package de.halfminer.hmb.mode.duel;
 import de.halfminer.hmb.BattleClass;
 import de.halfminer.hmb.arena.DuelArena;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.data.BattleState;
 import de.halfminer.hmb.mode.DuelMode;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hms.handler.HanHooks;
 import de.halfminer.hms.handler.HanTitles;
 import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.NMSUtils;
@@ -16,7 +17,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 public class DuelQueue extends BattleClass {
 
@@ -55,29 +55,35 @@ public class DuelQueue extends BattleClass {
             return;
         }
 
-        if (waitingForMatch == null) {
-            waitingForMatch = toMatch;
-            pm.addToQueue(MODE, toMatch);
-            Message.create("modeDuelAddedToQueue", hmb).send(toMatch);
+        HanHooks hooks = hms.getHooksHandler();
+        if (waitingForMatch != null) {
 
-            int time;
-            if ((time = duelMode.getWaitingForMatchRemind()) > 0) {
-
-                waitingForMatchTask = scheduler.runTaskLater(hmb, () -> {
-
-                    List<Player> sendTo = server.getOnlinePlayers()
-                            .stream()
-                            .filter(o -> !waitingForMatch.equals(o))
-                            .collect(Collectors.toList());
-
-                    Message.create("modeDuelPlayerWaitingForMatch", hmb)
-                            .addPlaceholder("%PLAYER%", toMatch.getName())
-                            .broadcast(sendTo, false, "");
-                }, time * 20);
+            if (hooks.isAfk(waitingForMatch)) {
+                removeFromQueue(waitingForMatch);
+            } else {
+                playersMatched(waitingForMatch, toMatch);
+                clearWaitingForMatch();
+                return;
             }
-        } else {
-            playersMatched(waitingForMatch, toMatch);
-            clearWaitingForMatch();
+        }
+
+        waitingForMatch = toMatch;
+        pm.addToQueue(MODE, toMatch);
+        Message.create("modeDuelAddedToQueue", hmb).send(toMatch);
+
+        int time = duelMode.getWaitingForMatchRemind();
+        if (time > 0) {
+
+            waitingForMatchTask = scheduler.runTaskLater(hmb, () -> {
+
+                if (hooks.isAfk(waitingForMatch)) {
+                    return;
+                }
+
+                Message.create("modeDuelPlayerWaitingForMatch", hmb)
+                        .addPlaceholder("%PLAYER%", toMatch.getName())
+                        .broadcast("", false, Collections.singleton(waitingForMatch));
+            }, time * 20);
         }
     }
 
@@ -125,13 +131,9 @@ public class DuelQueue extends BattleClass {
             return;
         }
 
-        // Requestee is waiting for match
+        // Requested player is waiting for match
         if (sendTo.equals(waitingForMatch) && useKit) {
-            Message.create("modeDuelRequestWasWaitingForMatch", hmb)
-                    .addPlaceholder("%PLAYER%", sendTo.getName())
-                    .send(sender);
-            playersMatched(sendTo, sender);
-            clearWaitingForMatch();
+            matchPlayer(sender);
             return;
         }
 
@@ -312,8 +314,6 @@ public class DuelQueue extends BattleClass {
         }
     }
 
-
-
     /**
      * Called if a player that is currently selecting an arena made an input, information picked up by
      * {@link DuelMode#onCommand(CommandSender, String[])}
@@ -402,15 +402,12 @@ public class DuelQueue extends BattleClass {
 
             // broadcasting
             if (duelMode.doWinBroadcast()) {
-                List<Player> sendTo = server.getOnlinePlayers().stream()
-                        .filter(obj -> !(obj.equals(winner) || obj.equals(playerA)))
-                        .collect(Collectors.toList());
 
                 Message.create(arena.isUseKit() ? "modeDuelWinBroadcast" : "modeDuelWinBroadcastNokit", hmb)
                         .addPlaceholder("%WINNER%", winner.getName())
                         .addPlaceholder("%LOSER%", playerA.getName())
                         .addPlaceholder("%ARENA%", arena.getName())
-                        .broadcast(sendTo, true, "");
+                        .broadcast("", true, Arrays.asList(winner, playerA));
             }
         } else {
             Message.create("modeDuelTieLog", hmb)

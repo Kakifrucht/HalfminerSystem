@@ -17,13 +17,13 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
 /**
  * Implementing free for all games with automatic respawns in kit arenas and killstreaks
  */
-@SuppressWarnings("unused")
 public class FFAMode extends AbstractMode {
 
     private int removeAfterDeaths;
@@ -62,7 +62,7 @@ public class FFAMode extends AbstractMode {
         Player player = (Player) sender;
 
         List<Arena> freeArenas = am.getFreeArenasFromType(type);
-        if (freeArenas.size() == 0) {
+        if (freeArenas.isEmpty()) {
             Message.create("modeGlobalBattleModeDisabled", hmb).send(sender);
             return true;
         }
@@ -72,33 +72,63 @@ public class FFAMode extends AbstractMode {
             return true;
         }
 
-        if (pm.hasQueueCooldown(player)) {
+        if (pm.hasQueueCooldown(player) && args[0].equalsIgnoreCase("join")) {
             Message.create("modeGlobalQueueCooldown", hmb).send(player);
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "join":
-                // recheck because ffa does not cause command blockage
                 if (pm.isNotIdle(player)) {
                     Message.create("modeGlobalNotIdle", hmb).send(player);
                     return true;
                 }
 
-                if (args.length > 1) {
+                FFAArena arena = null;
+                if (freeArenas.size() == 1) {
+                    arena = (FFAArena) freeArenas.get(0);
+                } else if (args.length > 1) {
                     Arena selected = am.getArena(type, args[1]);
-                    if (selected != null && selected.isFree()) {
-                        ((FFAArena) selected).addPlayer(player);
-                        break;
+                    if (selected == null) {
+                        Message.create("modeFFAUnknownArena", hmb).send(player);
+                        return true;
+                    } else if (!selected.isFree()) {
+                        Message.create("modeFFAArenaNotFree", hmb).send(player);
+                        return true;
                     }
+
+                    arena = (FFAArena) selected;
                 }
 
-                if (freeArenas.size() == 1) {
-                    ((FFAArena) freeArenas.get(0)).addPlayer(player);
-                } else {
+                if (arena == null) {
                     Message.create("modeFFAChooseArena", hmb).send(player);
                     am.sendArenaSelection(player, freeArenas, "/ffa join ", "", true);
+                    return true;
                 }
+
+                final FFAArena selectedArena = arena;
+                long playerCooldownSeconds = selectedArena.addPlayer(player, () -> {
+                    Message.create("modeFFAJoined", hmb)
+                            .addPlaceholder("%ARENA%", selectedArena.getName())
+                            .send(player);
+
+                    Message.create("modeFFAJoinedBroadcast" + (freeArenas.size() == 1 ? "OneArena" : ""), hmb)
+                            .addPlaceholder("%PLAYER%", player.getName())
+                            .addPlaceholder("%ARENA%", selectedArena.getName())
+                            .broadcast("", false, Collections.singleton(player));
+                    hmb.getLogger().info(player.getName() + " joined FFA arena " + selectedArena.getName());
+
+                    HalfminerSystem.getInstance()
+                            .getTitlesHandler()
+                            .sendTitle(player, Message.returnMessage("modeFFAJoinTitle", hmb, false));
+                });
+
+                if (playerCooldownSeconds > 0) {
+                    Message.create("modeFFACooldown", hmb)
+                            .addPlaceholder("%TIMELEFT%", playerCooldownSeconds)
+                            .send(player);
+                }
+
                 break;
             case "leave":
                 if (!pm.isInBattle(type, player)) {
@@ -109,7 +139,10 @@ public class FFAMode extends AbstractMode {
                 boolean hasSpawnProtection = ((FFAArena) pm.getArena(player)).hasSpawnProtection(player);
                 teleportWithDelay(player, hasSpawnProtection ? 0 : 2, () -> {
                     ((FFAArena) pm.getArena(player)).removePlayer(player);
-                    Message.create("modeFFAArenaLeft", hmb).send(player);
+                    Message.create("modeFFALeft", hmb).send(player);
+                    Message.create("modeFFALeftBroadcast", hmb)
+                            .addPlaceholder("%PLAYER%", player.getName())
+                            .broadcast("", true, Collections.singleton(player));
                 }, null);
                 break;
             case "list":

@@ -9,20 +9,20 @@ Current features
 - Localization configurable, commands are clickable
 - **Battle Modes**
   - Global functionality
-    - Endless amount of arenas
+    - No limitation on arena count
     - Custom kits per arena
       - Adds item lore to kits to easily identify possibly extracted items from a badly secured arena
       - Can toggle inventory store to disk, to prevent any inventory data loss from ever ocurring
         - Command */hmb openinventory [filename]* allows retrieval of said items by file name
-          - Add -r flag to automatically restore while player is online
+          - Add -r flag to automatically restore while the player is online
         - Automatically cleaning up old files
-      - Must assign kit first to activate arena, empty kit can be set via */hmb setkit mode arenaname -e*
+      - Must assign kit first to activate an arena, empty kit can be set via */hmb setkit mode arenaname -e*
     - Recovers players completely after fight (position, health/status, inventory if kit was used, potion effects)
       - Sets gamemode to adventure during fight
       - If a player has received non battle drops during battle, the items will be removed during battle and restored after
-    - Allows damage dealing even if hit is being cancelled by other plugins, for example due to fighting a clan member
+    - Allows damage dealing even if a hit has been cancelled by other plugins, for example due to fighting a clan member
     - Prevents teleporting into arenas via teleport delay glitches (Essentials */tpa*)
-      - Prevents teleport of tameable mobs, such as wolves, into arenas
+      - Prevents teleportation of tameable mobs, such as wolves, into arenas
     - Games can be force ended with */hmb forceend*
     - Configurable custom permissions, that will be added during arena stay (useful for bypasses for other plugins)
       - Individual permissions per battle mode
@@ -46,8 +46,8 @@ Current features
       - When waiting too long for match will broadcast that a player is waiting (*configurable*)
       - Will start duel if a player duel requests a player that is waiting for a match
     - Dynamic arena selection system, only shows vacant arenas
-      - Randomly selects player to choose the map
-        - Sends message to non selecting player if selecting player chose the *Random* option
+      - Randomly selects a player to choose the map
+        - Sends a message to non selecting player if selecting player chose the *Random* option
     - Kills player if he logs out during battle and ensures that opponent gets the kill counted
     - Shows current arena status with */duel list*
     - Countdown before game start
@@ -58,16 +58,17 @@ Current features
     - Custom kit in arena
     - Players in same arena are colored in tablist
       - Use */ffa list* to see all arenas and currently playing players
-      - Players glow while in arena (*configurable*)
+      - Players glow while in an arena (*configurable*)
     - Custom killstreaks
       - Define what should happen at which streak in ``customactions.txt``
         - Supports commands, custom item drops, messaging (see HalfminerSystem ``CustomAction`` functionality)
       - Kill (and death) streaks shown in scoreboard
     - Logging out causes immediate death (or counts kill towards last hitting player)
-    - Players get kicked from arena after configurable streak of deaths
-      - They will remain banned for configured amount of time
-    - Auto respawn in arena while keeping items
+    - Players get kicked from arena after a configurable streak of deaths
+      - They will remain banned for a configured amount of time
+    - Auto respawn in an arena while keeping items
       - Players get PvP protected for 5 seconds after (re-)spawning
     - Arena can be left via command */ffa leave*
-    - Arena selection screen (only shown when more than one arenas are available) shows players currently in arena
+    - Arena selection screen (only shown when more than one arena is available) shows players currently in arena
+      - A message on arena join/leave gets broadcasted to allow players to follow a player into the arena
     
