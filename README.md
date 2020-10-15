@@ -2,7 +2,7 @@
 Modification repository for Minecraft Server [Two and a half Miner](https://halfminer.de).
 All modules are currently compatible with version ``1.15.2`` of Spigot/Paper.
 
-Halfminer Teamspeak Bot can be found [here](https://github.com/Kakifrucht/HalfminerBot).
+Halfminer TeamSpeak Bot can be found [here](https://github.com/Kakifrucht/HalfminerBot).
 
 ## Current Modules
 - **HalfminerSystem** - Base plugin API containing shared functionality and a centralized storage system.

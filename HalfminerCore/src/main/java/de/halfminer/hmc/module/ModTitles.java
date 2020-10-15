@@ -1,12 +1,13 @@
 package de.halfminer.hmc.module;
 
-import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.hooks.HookException;
+import de.halfminer.hms.handler.storage.DataType;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import net.ess3.api.UserDoesNotExistException;
 import net.ess3.api.events.UserBalanceUpdateEvent;
+import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -16,6 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ModTitles extends HalfminerModule implements Listener {
 
     private Map<Player, Double> balances;
+    private NumberFormat numberFormat;
 
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -92,13 +96,13 @@ public class ModTitles extends HalfminerModule implements Listener {
         updateTablist(e.getPlayer());
     }
 
-    private double updateBalanceAndTablist(final Player player) {
+    private String updateBalanceAndTablist(final Player player) {
 
         double balance = Double.MIN_VALUE;
 
         if (!player.isOnline()) {
             balances.remove(player);
-            return balance;
+            return getFormattedBalance(balance);
         }
 
         try {
@@ -108,12 +112,12 @@ public class ModTitles extends HalfminerModule implements Listener {
                 // Try again two ticks later
                 scheduler.runTaskLater(hmc, () -> updateBalanceAndTablist(player), 2L);
             }
-            return balance;
+            return getFormattedBalance(balance);
         }
 
         balances.put(player, balance);
         updateTablist(player);
-        return balance;
+        return getFormattedBalance(balance);
     }
 
     private void updateTablist() {
@@ -123,7 +127,7 @@ public class ModTitles extends HalfminerModule implements Listener {
     private void updateTablist(Player player) {
 
         titleHandler.setTablistHeaderFooter(player, Message.create("modTitlesTablist", hmc)
-                .addPlaceholder("%BALANCE%", balances.get(player))
+                .addPlaceholder("%BALANCE%", numberFormat.format(balances.get(player)))
                 .addPlaceholder("%PLAYERCOUNT%", getPlayercountString())
                 .returnMessage());
     }
@@ -132,8 +136,17 @@ public class ModTitles extends HalfminerModule implements Listener {
         return String.valueOf(server.getOnlinePlayers().size());
     }
 
+    private String getFormattedBalance(double balance) {
+        return numberFormat.format(balance);
+    }
+
     @Override
     public void loadConfig() {
+
+        String localeCountryString = hmc.getConfig().getString("titles.numberFormat", "");
+        Locale numberFormatLocale = localeCountryString.isEmpty() ? Locale.GERMANY : LocaleUtils.toLocale(localeCountryString);
+        this.numberFormat = NumberFormat.getInstance(numberFormatLocale);
+
         if (balances == null) {
             balances = new ConcurrentHashMap<>();
             server.getOnlinePlayers().forEach(this::updateBalanceAndTablist);
