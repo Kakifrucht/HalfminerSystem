@@ -2,6 +2,7 @@ package de.halfminer.hms.handler;
 
 import de.halfminer.hms.HalfminerClass;
 import de.halfminer.hms.util.NMSUtils;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -56,10 +57,10 @@ public class HanTitles extends HalfminerClass {
 
         if (player == null) {
             for (Player sendTo : server.getOnlinePlayers()) {
-                NMSUtils.sendTitlePackets(sendTo, topTitle, subTitle, fadeIn, stay, fadeOut);
+                sendTo.sendTitle(topTitle, subTitle, fadeIn, stay, fadeOut);
             }
         } else {
-            NMSUtils.sendTitlePackets(player, topTitle, subTitle, fadeIn, stay, fadeOut);
+            player.sendTitle(topTitle, subTitle, fadeIn, stay, fadeOut);
         }
     }
 
@@ -86,7 +87,9 @@ public class HanTitles extends HalfminerClass {
             for (Player sendTo : server.getOnlinePlayers()) {
                 NMSUtils.sendActionBarPacket(sendTo, send);
             }
-        } else NMSUtils.sendActionBarPacket(player, send);
+        } else {
+            NMSUtils.sendActionBarPacket(player, send);
+        }
     }
 
     /**
@@ -103,6 +106,6 @@ public class HanTitles extends HalfminerClass {
         if (messagesParsed.length > 1)
             footer = messagesParsed[1];
 
-        NMSUtils.sendTablistPackets(player, header, footer);
+        player.setPlayerListHeaderFooter(new TextComponent(header), new TextComponent(footer));
     }
 }

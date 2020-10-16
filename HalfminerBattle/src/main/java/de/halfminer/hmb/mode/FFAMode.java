@@ -2,9 +2,8 @@ package de.halfminer.hmb.mode;
 
 import de.halfminer.hmb.arena.FFAArena;
 import de.halfminer.hmb.arena.abs.Arena;
-import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hmb.mode.abs.AbstractMode;
-import de.halfminer.hms.HalfminerSystem;
+import de.halfminer.hmb.mode.abs.BattleModeType;
 import de.halfminer.hms.util.Message;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
@@ -118,8 +117,7 @@ public class FFAMode extends AbstractMode {
                             .broadcast("", false, Collections.singleton(player));
                     hmb.getLogger().info(player.getName() + " joined FFA arena " + selectedArena.getName());
 
-                    HalfminerSystem.getInstance()
-                            .getTitlesHandler()
+                    hms.getTitlesHandler()
                             .sendTitle(player, Message.returnMessage("modeFFAJoinTitle", hmb, false));
                 });
 
@@ -236,8 +234,7 @@ public class FFAMode extends AbstractMode {
 
     public void teleportWithDelay(Player toTeleport, int delay,
                                   @Nullable Runnable runIfSuccess, @Nullable Runnable runIfCancelled) {
-        HalfminerSystem.getInstance()
-                .getTeleportHandler()
+        hms.getTeleportHandler()
                 .startTeleport(toTeleport, toTeleport.getLocation(), delay, false, runIfSuccess, runIfCancelled);
     }
 }

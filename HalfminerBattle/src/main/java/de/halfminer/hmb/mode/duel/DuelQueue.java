@@ -137,7 +137,7 @@ public class DuelQueue extends BattleClass {
             return;
         }
 
-        // Requestee sent a request already, match if requestee sent the request before
+        // Requested player sent a request already, match if requested player sent the request before
         if (hasRequestedDuelWith(sendTo, sender)) {
             if (hasRequestedNokit.contains(sendTo) == useKit) {
                 Message.create(useKit ? "modeDuelRequestAcceptErrorNokit" : "modeDuelRequestAcceptError", hmb)
