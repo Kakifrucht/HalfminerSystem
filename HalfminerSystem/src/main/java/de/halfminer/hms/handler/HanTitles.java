@@ -1,11 +1,10 @@
 package de.halfminer.hms.handler;
 
 import de.halfminer.hms.HalfminerClass;
-import de.halfminer.hms.util.NMSUtils;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import javax.annotation.Nullable;
 
 /**
  * - Main title/subtitle
@@ -23,7 +22,7 @@ public class HanTitles extends HalfminerClass {
      * @param player to send the title to, or null to broadcast
      * @param title  message containing the title, color codes do not need to be translated
      */
-    public void sendTitle(@Nullable Player player, String title) {
+    public void sendTitle(Player player, String title) {
         sendTitle(player, title, 10, 100, 10);
     }
 
@@ -39,7 +38,7 @@ public class HanTitles extends HalfminerClass {
      * @param stay    time in ticks message stays
      * @param fadeOut time in ticks until message faded out after it stay
      */
-    public void sendTitle(@Nullable Player player, String title, int fadeIn, int stay, int fadeOut) {
+    public void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut) {
 
         String[] split = ChatColor.translateAlternateColorCodes('&', title)
                 .replace("\\n", "\n")
@@ -56,10 +55,10 @@ public class HanTitles extends HalfminerClass {
 
         if (player == null) {
             for (Player sendTo : server.getOnlinePlayers()) {
-                NMSUtils.sendTitlePackets(sendTo, topTitle, subTitle, fadeIn, stay, fadeOut);
+                sendTo.sendTitle(topTitle, subTitle, fadeIn, stay, fadeOut);
             }
         } else {
-            NMSUtils.sendTitlePackets(player, topTitle, subTitle, fadeIn, stay, fadeOut);
+            player.sendTitle(topTitle, subTitle, fadeIn, stay, fadeOut);
         }
     }
 
@@ -69,7 +68,7 @@ public class HanTitles extends HalfminerClass {
      *
      * @param delay ticks to delay
      */
-    public void sendTitle(@Nullable Player player, String title, int fadeIn, int stay, int fadeOut, int delay) {
+    public void sendTitle(Player player, String title, int fadeIn, int stay, int fadeOut, int delay) {
         scheduler.runTaskLater(hms, () -> sendTitle(player, title, fadeIn, stay, fadeOut), delay);
     }
 
@@ -79,14 +78,16 @@ public class HanTitles extends HalfminerClass {
      * @param player  to send the title to, or null to broadcast
      * @param message message to send
      */
-    public void sendActionBar(@Nullable Player player, String message) {
+    public void sendActionBar(Player player, String message) {
 
-        String send = ChatColor.translateAlternateColorCodes('&', message);
+        String messageTranslated = ChatColor.translateAlternateColorCodes('&', message);
         if (player == null) {
             for (Player sendTo : server.getOnlinePlayers()) {
-                NMSUtils.sendActionBarPacket(sendTo, send);
+                sendTo.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageTranslated));
             }
-        } else NMSUtils.sendActionBarPacket(player, send);
+        } else {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageTranslated));
+        }
     }
 
     /**
@@ -103,6 +104,6 @@ public class HanTitles extends HalfminerClass {
         if (messagesParsed.length > 1)
             footer = messagesParsed[1];
 
-        NMSUtils.sendTablistPackets(player, header, footer);
+        player.setPlayerListHeaderFooter(header, footer);
     }
 }

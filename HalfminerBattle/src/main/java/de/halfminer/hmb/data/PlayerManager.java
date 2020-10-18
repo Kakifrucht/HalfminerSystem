@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -154,7 +153,7 @@ public class PlayerManager implements Sweepable {
      * @param toCheck ItemStack in question
      * @return true if ItemStack must be removed from the players inventory
      */
-    public boolean checkAndStoreItemStack(Player player, @Nullable ItemStack toCheck) {
+    public boolean checkAndStoreItemStack(Player player, ItemStack toCheck) {
         return getBattlePlayer(player).checkAndStoreItemStack(toCheck);
     }
 

@@ -5,7 +5,7 @@ import de.halfminer.hmc.module.ModuleDisabledException;
 import de.halfminer.hmc.module.ModuleType;
 import de.halfminer.hmc.module.ModTps;
 import de.halfminer.hms.util.Message;
-import de.halfminer.hms.util.NMSUtils;
+import de.halfminer.hms.util.ReflectUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -47,7 +47,7 @@ public class Cmdlag extends HalfminerCommand {
         // get ping/latency
         boolean playerIsLagging = true;
         if (toLookup != null) {
-            int ping = NMSUtils.getPing(toLookup);
+            int ping = ReflectUtils.getPing(toLookup);
             String pingColored;
             if (ping > 1000 || ping < 0) {
                 // ping not known (e.g. just logged in)

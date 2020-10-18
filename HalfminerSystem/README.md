@@ -95,15 +95,15 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
     - Send actionbar title
     - Send tablist header/footer
 - **Utils**
-  - MessageBuilder
+  - Message
     - Used for messaging, broadcasting and logging of messages
     - Supports custom placeholders
     - Supports clickable commands via ``~`` prefix and encapsulation of command with ``/``
     - Supports colors via ``&`` code
-  - NMSUtils
-    - Collection of static methods accessing NMS (``net.minecraft.server``) and CraftBukkit classes
-    - References must be updated manually, as no reflection is being used
-    - Set the last killer of a player, get players ping and send title/tablist packets
+  - ReflectUtils
+    - Collection of static methods accessing NMS (``net.minecraft.server``) and CraftBukkit classes via Reflection
+    - These might break with updates to Minecraft, since accessing them isn't supported by Spigot API
+    - Set the last killer of a player, get players ping and send actionbar packets
   - StringArgumentSeparator
     - Helper class splitting a given string and allowing easy access of arguments
     - Allows to easily retrieve numbers from the given String

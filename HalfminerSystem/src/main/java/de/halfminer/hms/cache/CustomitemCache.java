@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -34,7 +33,7 @@ public class CustomitemCache {
     }
 
     public ItemStack getItem(String itemKey, Player owner, int amount,
-                             @Nullable Map<String, String> additionalPlaceholders) throws ItemCacheException {
+                             Map<String, String> additionalPlaceholders) throws ItemCacheException {
 
         List<String> itemUnparsed;
         try {
@@ -160,7 +159,7 @@ public class CustomitemCache {
     }
 
     void giveItem(String itemKey, Player giveTo, int amount,
-                  @Nullable Map<String, String> additionalPlaceholders) throws ItemCacheException {
+                  Map<String, String> additionalPlaceholders) throws ItemCacheException {
 
         ItemStack toGive = getItem(itemKey, giveTo, amount, additionalPlaceholders);
         Map<Integer, ItemStack> notGiven = giveTo.getInventory().addItem(toGive);

@@ -21,8 +21,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hms.version>4.2.5</hms.version>
-        <spigot.version>1.15.2-R0.1-SNAPSHOT</spigot.version>
+        <hms.version>4.3.0</hms.version>
+        <spigot.version>1.16.3-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
     <build>
@@ -65,16 +65,6 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>${spigot.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--
-        Run BuildTools.jar with currently used version specified once to add this dependency to your local repository.
-        Guide: https://www.spigotmc.org/wiki/buildtools/
-        -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>

@@ -15,7 +15,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -228,8 +227,7 @@ public class FFAMode extends AbstractMode {
         }
     }
 
-    public void teleportWithDelay(Player toTeleport, int delay,
-                                  @Nullable Runnable runIfSuccess, @Nullable Runnable runIfCancelled) {
+    public void teleportWithDelay(Player toTeleport, int delay, Runnable runIfSuccess, Runnable runIfCancelled) {
         hms.getTeleportHandler()
                 .startTeleport(toTeleport, toTeleport.getLocation(), delay, false, runIfSuccess, runIfCancelled);
     }

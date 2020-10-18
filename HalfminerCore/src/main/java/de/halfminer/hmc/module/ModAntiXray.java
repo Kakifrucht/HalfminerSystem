@@ -18,7 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -135,7 +134,7 @@ public class ModAntiXray extends HalfminerModule implements Listener, Sweepable 
         return toReturn.toString();
     }
 
-    private void notify(@Nullable CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotified) {
+    private void notify(CommandSender toNotify, BreakCounter counter, boolean checkIfAlreadyNotified) {
 
         if (counter.isBypassed()) return;
 

@@ -3,7 +3,7 @@ package de.halfminer.hmc.module;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.halfminer.hms.util.Message;
-import de.halfminer.hms.util.NMSUtils;
+import de.halfminer.hms.util.ReflectUtils;
 import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -88,7 +88,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
 
                 // untag last damaging player, ensure that last player gets the kill
                 untagPlayer(lastOpponent);
-                NMSUtils.setKiller(p, lastOpponent);
+                ReflectUtils.setKiller(p, lastOpponent);
 
                 if (broadcastLog) {
                     Message.create("modCombatLogLoggedOut", hmc, "PvP")

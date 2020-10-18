@@ -18,7 +18,6 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.potion.PotionEffect;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -122,7 +121,7 @@ class BattlePlayer extends BattleClass {
         data = new PlayerData();
     }
 
-    boolean checkAndStoreItemStack(@Nullable ItemStack toCheck) {
+    boolean checkAndStoreItemStack(ItemStack toCheck) {
 
         if (arena == null) {
             throw new RuntimeException("checkAndStoreItemStack() called for " + getBase().getName() + " without set arena");

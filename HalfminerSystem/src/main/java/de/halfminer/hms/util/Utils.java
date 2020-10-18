@@ -9,7 +9,6 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -190,7 +189,7 @@ public final class Utils {
      * @param <V> entry value of both caches
      * @return newCache copied values
      */
-    public static <K, V> Cache<K, V> copyValues(@Nullable Cache<K, V> oldCache, Cache<K, V> newCache) {
+    public static <K, V> Cache<K, V> copyValues(Cache<K, V> oldCache, Cache<K, V> newCache) {
 
         if (oldCache != null) {
             oldCache.cleanUp();
@@ -237,7 +236,6 @@ public final class Utils {
      * @param entity to get the player from
      * @return player if source found or null
      */
-    @Nullable
     public static Player getPlayerSourceFromEntity(Entity entity) {
 
         if (entity instanceof Player) {
