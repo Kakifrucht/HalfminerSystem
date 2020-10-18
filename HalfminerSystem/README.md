@@ -103,7 +103,7 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
   - ReflectUtils
     - Collection of static methods accessing NMS (``net.minecraft.server``) and CraftBukkit classes via Reflection
     - These might break with updates to Minecraft, since accessing them isn't supported by Spigot API
-    - Set the last killer of a player, get players ping and send actionbar packets
+    - Set the last killer of a player and get a player's ping
   - StringArgumentSeparator
     - Helper class splitting a given string and allowing easy access of arguments
     - Allows to easily retrieve numbers from the given String

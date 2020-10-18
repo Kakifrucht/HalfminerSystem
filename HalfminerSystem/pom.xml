@@ -31,7 +31,7 @@
             <version>1.6</version>
             <scope>provided</scope>
             <exclusions>
-                <exclusion> <!-- Exclude, as we already it in our parents dependencies -->
+                <exclusion> <!-- Exclude, as we already have it in our parents dependencies -->
                     <groupId>org.bukkit</groupId>
                     <artifactId>bukkit</artifactId>
                 </exclusion>
@@ -43,7 +43,7 @@
             <version>2.13-SNAPSHOT</version>
             <scope>provided</scope>
             <exclusions>
-                <exclusion> <!-- Exclude, as we already it in our parents dependencies -->
+                <exclusion> <!-- Exclude, as we already have it in our parents dependencies -->
                     <groupId>org.bukkit</groupId>
                     <artifactId>bukkit</artifactId>
                 </exclusion>

@@ -4,7 +4,6 @@ import de.halfminer.hms.HalfminerSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,13 +27,8 @@ public final class ReflectUtils {
         */
 
         try {
-            Class<?> craftPlayerClass = toKill.getClass();
-            Object craftPlayerToKill = craftPlayerClass.cast(toKill);
-            Object craftPlayerKiller = craftPlayerClass.cast(killer);
-
-            Method getHandleMethod = craftPlayerClass.getDeclaredMethod("getHandle");
-            Object entityPlayerToKill = getHandleMethod.invoke(craftPlayerToKill);
-            Object entityPlayerKiller = getHandleMethod.invoke(craftPlayerKiller);
+            Object entityPlayerToKill = getEntityPlayerObject(toKill);
+            Object entityPlayerKiller = getEntityPlayerObject(killer);
 
             Field killerField = entityPlayerToKill.getClass().getField("killer");
             killerField.set(entityPlayerToKill, entityPlayerKiller);
@@ -58,49 +52,12 @@ public final class ReflectUtils {
     public static int getPing(Player player) {
 
         try {
-            Method getHandleMethod = player.getClass().getDeclaredMethod("getHandle");
-
-            Object entityPlayer = getHandleMethod.invoke(player);
+            Object entityPlayer = getEntityPlayerObject(player);
             Field pingField = entityPlayer.getClass().getDeclaredField("ping");
 
             return Math.max(pingField.getInt(entityPlayer), 0);
         } catch (Exception e) {
             return -1;
-        }
-    }
-
-    public static void sendActionBarPacket(Player player, String message) {
-
-        if (!player.isOnline() || message.length() == 0) return;
-
-        try {
-            Class<?> packetPlayOutChatClass = getNMSClass("PacketPlayOutChat");
-            Class<?> iChatBaseComponentClass = getNMSClass("IChatBaseComponent");
-            Class<?> chatMessageTypeClass = getNMSClass("ChatMessageType");
-
-            Constructor<?> packetPlayOutChatConstructor = packetPlayOutChatClass.getConstructor(iChatBaseComponentClass, chatMessageTypeClass);
-
-            Class<?> chatComponentTextClass = getNMSClass("ChatComponentText");
-            Object chatComponentText = chatComponentTextClass.getConstructor(String.class).newInstance(message);
-
-            Object chatMessageType = null;
-            for (Object obj : chatMessageTypeClass.getEnumConstants()) {
-                if (obj.toString().equals("GAME_INFO")) {
-                    chatMessageType = obj;
-                }
-            }
-
-            Object packetPlayOutChatObject = packetPlayOutChatConstructor.newInstance(chatComponentText, chatMessageType);
-
-            Object entityPlayerObject = getEntityPlayerObject(player);
-            Object playerConnectionObject = entityPlayerObject.getClass().getDeclaredField("playerConnection").get(entityPlayerObject);
-            Method sendPacketMethod = playerConnectionObject.getClass().getMethod("sendPacket", getNMSClass("Packet"));
-
-            sendPacketMethod.invoke(playerConnectionObject, packetPlayOutChatObject);
-
-        } catch (Exception e) {
-            HalfminerSystem.getInstance().getSLF4JLogger()
-                    .error("Exception ocurred during sending an action bar title to player {}", player.getName(), e);
         }
     }
 
