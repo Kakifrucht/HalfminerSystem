@@ -10,7 +10,7 @@ import de.halfminer.hms.HalfminerSystem;
 import de.halfminer.hms.handler.HanHooks;
 import de.halfminer.hms.handler.HanTitles;
 import de.halfminer.hms.util.Message;
-import de.halfminer.hms.util.NMSUtils;
+import de.halfminer.hms.util.ReflectUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -396,7 +396,7 @@ public class DuelQueue extends BattleClass {
 
             // ensure that winner gets the kill
             if (!playerA.isDead()) {
-                NMSUtils.setKiller(playerA, winner);
+                ReflectUtils.setKiller(playerA, winner);
                 playerA.setHealth(0.0d);
             }
 

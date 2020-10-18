@@ -1,7 +1,7 @@
 package de.halfminer.hms.handler;
 
 import de.halfminer.hms.HalfminerClass;
-import de.halfminer.hms.util.NMSUtils;
+import de.halfminer.hms.util.ReflectUtils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -85,10 +85,10 @@ public class HanTitles extends HalfminerClass {
         String send = ChatColor.translateAlternateColorCodes('&', message);
         if (player == null) {
             for (Player sendTo : server.getOnlinePlayers()) {
-                NMSUtils.sendActionBarPacket(sendTo, send);
+                ReflectUtils.sendActionBarPacket(sendTo, send);
             }
         } else {
-            NMSUtils.sendActionBarPacket(player, send);
+            ReflectUtils.sendActionBarPacket(player, send);
         }
     }
 
