@@ -267,7 +267,7 @@ public class Cmdhml extends LandCommand {
 
     private void removeAllWGRegions() {
         int count = hml.getWorldGuardHelper().removeAllRegions(server.getWorlds());
-        Message.create("cmdHmlRegionsRemoved" + (count == 0 ? "None" : ""), PREFIX)
+        Message.create("cmdHmlRegionsRemoved" + (count == 0 ? "None" : ""), hml)
                 .addPlaceholder("%COUNT%", count)
                 .send(sender);
     }

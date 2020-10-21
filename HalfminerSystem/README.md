@@ -92,7 +92,7 @@ Contains handlers, caches and utilities that are shared between all Halfminer Bu
   - Titles
     - Send main title/subtitle
       - Send title with delay, to prioritize titles
-    - Send actionbar title
+    - Send actionbar title, where duration can be set
     - Send tablist header/footer
 - **Utils**
   - Message

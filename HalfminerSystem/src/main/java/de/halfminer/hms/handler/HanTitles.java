@@ -4,17 +4,24 @@ import de.halfminer.hms.HalfminerClass;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * - Main title/subtitle
  *   - Send title with delay, to prioritize titles
- * - Actionbar title
+ * - Actionbar title, where duration can be set
  * - Tablist titles
  */
 @SuppressWarnings("SameParameterValue")
 public class HanTitles extends HalfminerClass {
+
+    private final Map<Player, BukkitTask> activeActionBarMap = new HashMap<>();
+
 
     /**
      * Sends a title to the given player, or broadcasts the title, if player is null.
@@ -45,13 +52,13 @@ public class HanTitles extends HalfminerClass {
                 .replace("\\n", "\n")
                 .split("\n");
 
-        String topTitle = split[0];
-        String subTitle = "";
+        String topTitle = split[0].isEmpty() ? null : split[0];
+        String subTitle = null;
         if (split.length > 1) {
-            subTitle = split[1];
+            subTitle = split[1].isEmpty() ? null : split[1];
         }
-        if (split.length > 2) {
-            sendActionBar(player, split[2]);
+        if (split.length > 2 && !split[2].isEmpty()) {
+            sendActionBar(player, split[2], Math.max(1, (fadeIn + stay + fadeOut) / 20));
         }
 
         if (player == null) {
@@ -74,20 +81,71 @@ public class HanTitles extends HalfminerClass {
     }
 
     /**
-     * Sends a actionbar message to a specified player or broadcast, if player is null.
+     * Overload for {@link #sendActionBar(Player, String, int)}, where the time in seconds will be set to 2,
+     * as this is the client default.
      *
      * @param player  to send the title to, or null to broadcast
      * @param message message to send
      */
     public void sendActionBar(@Nullable Player player, String message) {
+        sendActionBar(player, message, 2);
+    }
+
+    /**
+     * Sends a actionbar message to a specified player or broadcast, if player is null.
+     *
+     * @param player  to send the title to, or null to broadcast
+     * @param message message to send
+     * @param timeSeconds time in seconds to send the title for, must be greater than 0
+     */
+    public void sendActionBar(@Nullable Player player, String message, int timeSeconds) {
+
+        if (timeSeconds <= 0) {
+            throw new IllegalArgumentException("timeSeconds must be greater than 0");
+        }
 
         if (player == null) {
-            for (Player sendTo : server.getOnlinePlayers()) {
-                sendTo.sendActionBar('&', message);
-            }
+            server.getOnlinePlayers().forEach(sendTo -> addActionBarTask(sendTo, message, timeSeconds));
         } else {
-            player.sendActionBar('&', message);
+            addActionBarTask(player, message, timeSeconds);
         }
+    }
+
+    private void addActionBarTask(Player player, String message, int timeSeconds) {
+
+        if (activeActionBarMap.containsKey(player)) {
+            removeAndCancelActionBarTask(player);
+        }
+
+        // no need for custom task if the message is empty (just clear) or
+        // if it should stay for 2 seconds (client default)
+        if (message.isEmpty() || timeSeconds == 2) {
+            player.sendActionBar(message.isEmpty() ? " " : message);
+            return;
+        }
+
+        AtomicInteger atomicTimeLeft = new AtomicInteger(timeSeconds + 1);
+        BukkitTask task = scheduler.runTaskTimer(hms, () -> {
+
+            if (!player.isOnline()) {
+                removeAndCancelActionBarTask(player);
+                return;
+            }
+
+            int timeLeft = atomicTimeLeft.decrementAndGet();
+            if (timeLeft == 0) {
+                player.sendActionBar(" ");
+                removeAndCancelActionBarTask(player);
+            } else {
+                player.sendActionBar('&', message);
+            }
+        }, 0L, 20L);
+
+        activeActionBarMap.put(player, task);
+    }
+
+    private void removeAndCancelActionBarTask(Player player) {
+        activeActionBarMap.remove(player).cancel();
     }
 
     /**
