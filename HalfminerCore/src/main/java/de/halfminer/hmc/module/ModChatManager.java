@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 public class ModChatManager extends HalfminerModule implements Listener, Sweepable {
 
     private static final String PREFIX = "Chat";
+    private static final int ACTIONBAR_TIME_SECONDS = 10;
 
     private List<Pair<String, String>> chatFormats;
     private String topFormat;
@@ -191,12 +192,12 @@ public class ModChatManager extends HalfminerModule implements Listener, Sweepab
             if (hookHandler.isAfk(wasMentioned)) {
                 titleHandler.sendActionBar(p, Message.create("modChatManIsAfk", hmc)
                                 .addPlaceholder("%PLAYER%", wasMentioned.getName())
-                                .returnMessage());
+                                .returnMessage(), ACTIONBAR_TIME_SECONDS);
             }
 
             titleHandler.sendActionBar(wasMentioned, Message.create("modChatManMentioned", hmc)
                             .addPlaceholder("%PLAYER%", p.getName())
-                            .returnMessage());
+                            .returnMessage(), ACTIONBAR_TIME_SECONDS);
 
             wasMentioned.playSound(wasMentioned.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.2f, 1.8f);
             this.wasMentioned.put(wasMentioned, true);

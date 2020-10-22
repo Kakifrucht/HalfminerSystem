@@ -49,6 +49,8 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class ModPvP extends HalfminerModule implements Listener, Sweepable {
 
+    private static final int KILLSTREAK_TIME_SECONDS = 8;
+
     private double strengthReducePerLevel;
     private int thresholdUntilShown;
 
@@ -201,7 +203,7 @@ public class ModPvP extends HalfminerModule implements Listener, Sweepable {
                         Message.create("modPvPKillStreak", hmc)
                                 .addPlaceholder("%PLAYER%", killer.getName())
                                 .addPlaceholder("%STREAK%", streak)
-                                .returnMessage()), 0L);
+                                .returnMessage(), KILLSTREAK_TIME_SECONDS), 0L);
             }
         } else {
             victim.playSound(e.getEntity().getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.4f);
