@@ -37,7 +37,11 @@ public abstract class RESTCommand extends HalfminerClass {
         this.uriParsed = uriParsed;
         this.paramsParsed = paramsParsed;
         this.bodyParsed = bodyParsed;
-        if (!doForAll()) returnNotFoundDefault();
+        boolean wasDone = doForAll();
+        if (!wasDone) {
+            return returnNotFoundDefault();
+        }
+
         switch (method) {
             case GET:
                 if (this instanceof MethodGET) {

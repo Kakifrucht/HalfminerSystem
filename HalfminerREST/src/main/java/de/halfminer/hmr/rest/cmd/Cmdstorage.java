@@ -30,7 +30,7 @@ public class Cmdstorage extends RESTCommand implements MethodDELETE, MethodGET, 
     private String basePath = "";
 
     @Override
-    protected boolean doForAll() {
+    public boolean doForAll() {
         if (uriParsed.meetsLength(1)) {
 
             for (String uriPart : uriParsed.getArguments()) {
@@ -40,7 +40,7 @@ public class Cmdstorage extends RESTCommand implements MethodDELETE, MethodGET, 
             basePath = basePath.substring(0, basePath.length() - 1);
 
             // return error if sanitized string doesn't match
-            if (basePath.length() != basePath.replaceAll("[^a-zA-Z0-9]","").length()) {
+            if (basePath.length() != basePath.replaceAll("[^a-zA-Z0-9.-]","").length()) {
                 return false;
             }
 

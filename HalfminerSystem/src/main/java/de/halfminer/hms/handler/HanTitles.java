@@ -58,7 +58,8 @@ public class HanTitles extends HalfminerClass {
             subTitle = split[1].isEmpty() ? null : split[1];
         }
         if (split.length > 2 && !split[2].isEmpty()) {
-            sendActionBar(player, split[2], Math.max(1, (fadeIn + stay + fadeOut) / 20));
+            int timeInSeconds = (fadeIn + stay + fadeOut) / 20;
+            sendActionBar(player, split[2], Math.max(1, timeInSeconds));
         }
 
         if (player == null) {
