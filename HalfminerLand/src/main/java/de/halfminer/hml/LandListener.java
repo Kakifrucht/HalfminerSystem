@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
@@ -23,6 +24,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
@@ -177,6 +179,11 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
             // update currently shown title
             titleActionbarHandler.updateLocation(player, newLand);
+
+            // disable elytra if crossing into land without permissions
+            if (player.isGliding() && !newLand.hasPermission(player)) {
+                player.setGliding(false);
+            }
         }
     }
 
@@ -390,6 +397,18 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                         .addPlaceholder("%OWNER%", destination.getOwnerName())
                         .send(player);
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onElytraFly(EntityToggleGlideEvent e) {
+        if (!e.isGliding() || e.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
+        Player player = (Player) e.getEntity();
+        Land land = board.getLandAt(player);
+        if (!land.hasPermission(player)) {
+            e.setCancelled(true);
         }
     }
 
