@@ -53,7 +53,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - If *all* parameter is specified, the given player will be added/removed to all lands
       - If *connected* parameter is specified, the given player will be added/removed to all lands connected to the current land
     - Friend limit per land is configurable (bypass permission available)
-  - /land teleport <buy|set|delete> \<Teleport>
+  - /land teleport \<buy|set|delete> \<Teleport>
     - Buy/set a teleport to the position you are currently standing on
       - Can only be set if player owns land
         - Only one teleport per land
@@ -77,6 +77,12 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
       - Disables fly when leaving the server or entering combat with players
     - Custom cost and duration to fly
     - Automatically renews fly if currently used
+  - /land title \<chunk|all|clearall> \<title|-clear|playername>
+    - Allows players to define a custom title per chunk or globally for all lands
+      - Will show the chunks title, if both a global title and a per chunk title is set
+    - The title will be shown in the actionbar of a player for the duration of their stay on the land
+    - Admins can override per chunk titles, and clear a global title via */land title clearall <player>*
+    - Use *-clear* to remove the title
   - /landtp [teleport]
     - Teleport to a public teleport point
       - If player owns the teleport point a delay will be added to prevent teleports being used as private homes (bypass available)
@@ -86,7 +92,7 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
         - Pinned teleports are always visible, even if owning player is offline
         - Default material for server land can be configured
     - Teleports into abandoned lands are disabled, if teleport stealing is enabled shows command to steal teleport name
-  - /hml \<customtitle|forcewgrefresh|flytime|free|pintp|reload|removeallwgregions|save|status>
+  - /hml \<forcewgrefresh|flytime|free|pintp|reload|removeallwgregions|save|status>
     - Reload the configuration
     - Save board data on disk
     - View global land status
@@ -98,5 +104,4 @@ using [WorldGuard](https://github.com/sk89q/WorldGuard) as it's protection backe
     - See the current free land amount a player can buy or change it
     - Pin (and unpin) a teleport point at the top in the */landtp* menu
     - Remove all WorldGuard regions, without deleting the associated lands
-    - Specify a custom title for a currently owned land via */hml customtitle [title]*, remove it by using */hml customtitle -c*
     - Get and set the remaining fly time (for */land fly*)
