@@ -71,6 +71,7 @@ Runs as Spigot plugin powered by Bukkit, depends on [Essentials](https://github.
       - Taking off armor
       - Commands
       - Enderpearls
+      - Elytra usage
   - Crafting
     - Add minimum required amounts per item on a crafting field for vanilla recipes
       - For example, amount set for TNT at 8 requires at least 8 sand/gunpowder on every field in crafting field

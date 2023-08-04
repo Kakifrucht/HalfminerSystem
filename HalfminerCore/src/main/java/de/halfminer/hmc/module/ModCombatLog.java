@@ -8,7 +8,9 @@ import de.halfminer.hms.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -17,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -42,6 +45,7 @@ import java.util.concurrent.TimeUnit;
  *   - Taking off armor
  *   - Commands
  *   - Enderpearls
+ *   - Elytra usage
  */
 public class ModCombatLog extends HalfminerModule implements Listener {
 
@@ -51,6 +55,7 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     private boolean broadcastLog;
     private boolean preventBorderHopping;
     private int tagTime;
+    private boolean allowGliding;
 
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -185,11 +190,24 @@ public class ModCombatLog extends HalfminerModule implements Listener {
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onElytraGlide(EntityToggleGlideEvent e) {
+        if (!allowGliding && e.getEntityType() == EntityType.PLAYER) {
+            Player player = (Player) e.getEntity();
+            e.setCancelled(isTagged(player));
+        }
+    }
+
     private void tagPlayer(final Player p) {
 
         if (p.hasPermission("hmc.bypass.combatlog")) return;
 
         if (isTagged(p)) tagged.get(p).cancel();
+
+        if (!allowGliding && p.isGliding()) {
+            p.setGliding(false);
+        }
+
         tagged.put(p, scheduler.runTaskTimerAsynchronously(hmc, new Runnable() {
 
             final String symbols = Message.returnMessage("modCombatLogProgressSymbols", hmc);
@@ -236,9 +254,11 @@ public class ModCombatLog extends HalfminerModule implements Listener {
     @Override
     public void loadConfig() {
 
-        broadcastLog = hmc.getConfig().getBoolean("combatLog.broadcastLog", true);
-        preventBorderHopping = hmc.getConfig().getBoolean("combatLog.preventBorderHopping", true);
-        tagTime = hmc.getConfig().getInt("combatLog.tagTime", 15);
+        ConfigurationSection config = hmc.getConfig().getConfigurationSection("combatLog");
+        broadcastLog = config.getBoolean("broadcastLog", true);
+        preventBorderHopping = config.getBoolean("preventBorderHopping", true);
+        tagTime = config.getInt("tagTime", 15);
+        allowGliding = config.getBoolean("allowGliding", false);
 
         lastOpponentCache = Utils.copyValues(lastOpponentCache,
                 CacheBuilder.newBuilder()
