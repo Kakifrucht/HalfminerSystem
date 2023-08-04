@@ -34,6 +34,7 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
     private LandStorage landStorage;
 
     private LandBoard board;
+    private TitleActionbarHandler titleActionbarHandler;
 
 
     @Override
@@ -45,7 +46,8 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
         reload();
 
         this.board = new LandBoard();
-        new LandListener(board, worldGuardHelper);
+        this.titleActionbarHandler = new TitleActionbarHandler();
+        new LandListener(board, worldGuardHelper, titleActionbarHandler);
         reload();
 
         getLogger().info("HalfminerLand enabled");
@@ -101,6 +103,10 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
                 case "l":
                     landCommand = new Cmdlist();
                     break;
+                case "title":
+                case "ti":
+                    landCommand = new Cmdtitle();
+                    break;
                 default:
                     showUsage(sender);
                     return true;
@@ -146,6 +152,10 @@ public class HalfminerLand extends JavaPlugin implements MenuCreator {
 
     ContractManager getContractManager() {
         return board;
+    }
+
+    public TitleActionbarHandler getTitleActionbarHandler() {
+        return titleActionbarHandler;
     }
 
     @Override

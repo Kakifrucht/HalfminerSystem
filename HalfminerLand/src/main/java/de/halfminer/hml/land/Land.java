@@ -188,15 +188,22 @@ public class Land extends LandClass {
         return player.getUniqueId().equals(owner.getUniqueId());
     }
 
-    public void setOwner(HalfminerPlayer owner) {
-        this.owner = owner;
+    public void setOwner(HalfminerPlayer newOwner) {
+
+        if (newOwner != null
+                && owner != null
+                && owner.getUniqueId().equals(newOwner.getUniqueId())) {
+            return;
+        }
+
+        this.owner = newOwner;
         this.isAbandoned = false;
         wgh.updateRegionOfLand(this, false, false);
 
         updateAbandonmentStatus();
 
-        if (owner != null) {
-            mapSection.set(path + STORAGE_OWNER, owner.getUniqueId().toString());
+        if (newOwner != null) {
+            mapSection.set(path + STORAGE_OWNER, newOwner.getUniqueId().toString());
         } else {
             removeTeleport();
             setFreeLand(false);

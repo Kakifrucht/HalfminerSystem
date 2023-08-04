@@ -35,6 +35,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
     private final Board board;
     private final WorldGuardHelper wgh;
+    private final TitleActionbarHandler titleActionbarHandler;
 
     private final Map<Player, Chunk> lastKnownChunk;
 
@@ -42,20 +43,26 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     private double landNotProtectedMessagePercentage;
 
 
-    LandListener(Board board, WorldGuardHelper wgh) {
+    LandListener(Board board, WorldGuardHelper wgh, TitleActionbarHandler titleActionbarHandler) {
         this.board = board;
         this.wgh = wgh;
+
+        this.titleActionbarHandler = titleActionbarHandler;
 
         this.lastKnownChunk = new HashMap<>();
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        setLastKnownChunk(e.getPlayer());
-        board.updatePlayerLocation(e.getPlayer(), null, e.getPlayer().getLocation().getChunk());
+
+        Player player = e.getPlayer();
+
+        setLastKnownChunk(player);
+        board.updatePlayerLocation(player, null, e.getPlayer().getLocation().getChunk());
+        titleActionbarHandler.updateLocation(player, board.getLandAt(player));
 
         // remove abandonment status if land is abandoned
-        List<Land> ownedLands = board.getLands(e.getPlayer());
+        List<Land> ownedLands = board.getLands(player);
         if (!ownedLands.isEmpty()) {
 
             int count = 0;
@@ -70,7 +77,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
                 Message.create("listenerLandUnabandoned", hml)
                         .addPlaceholder("%COUNT%", count)
                         .addPlaceholder("%DAYSUNTILABANDONED%", hml.getConfig().getInt("landAbandonedAfterDays", 21))
-                        .send(e.getPlayer());
+                        .send(player);
             }
         }
     }
@@ -80,6 +87,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
         Player player = e.getPlayer();
         board.updatePlayerLocation(player, e.getPlayer().getLocation().getChunk(), null);
+        titleActionbarHandler.playerLeft(player);
 
         FlyBoard flyBoard = board.getFlyBoard();
         if (flyBoard.isPlayerFlying(player)) {
@@ -167,9 +175,8 @@ public class LandListener extends LandClass implements Listener, Reloadable {
             // toggle flying if entering/leaving owned land
             board.getFlyBoard().updatePlayerAllowFlight(player, newLand);
 
-            if (newLand.hasTitle()) {
-                hms.getTitlesHandler().sendActionBar(player, newLand.getTitle());
-            }
+            // update currently shown title
+            titleActionbarHandler.updateLocation(player, newLand);
         }
     }
 

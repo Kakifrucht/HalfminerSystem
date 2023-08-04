@@ -10,12 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>HalfminerLand</artifactId>
-    <version>1.5.8-mc1_12</version>
+    <version>1.6.0-mc1_12-SNAPSHOT</version>
 
     <repositories>
         <repository>
             <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
+            <url>https://maven.enginehub.org/repo/</url>
         </repository>
     </repositories>
 

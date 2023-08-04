@@ -9,7 +9,6 @@ import de.halfminer.hml.land.Land;
 import de.halfminer.hms.handler.storage.HalfminerPlayer;
 import de.halfminer.hms.handler.storage.PlayerNotFoundException;
 import de.halfminer.hms.util.Message;
-import de.halfminer.hms.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -34,9 +33,6 @@ public class Cmdhml extends LandCommand {
         }
 
         switch (args[0].toLowerCase()) {
-            case "customtitle":
-                customTitle();
-                break;
             case "forcewgrefresh":
                 forceWGRefresh();
                 break;
@@ -64,46 +60,6 @@ public class Cmdhml extends LandCommand {
             default:
                 showUsage();
         }
-    }
-
-    private void customTitle() {
-
-        if (args.length < 2) {
-            showUsage();
-            return;
-        }
-
-        if (!isPlayer) {
-            sendNotAPlayerMessage();
-            return;
-        }
-
-        Land land = board.getLandAt(player);
-        if (!land.hasOwner()) {
-            Message.create("cmdHmlCustomTitleNotOwned", hml).send(player);
-            return;
-        }
-
-        if (args[1].equalsIgnoreCase("-c")) {
-
-            if (!land.hasTitle()) {
-                Message.create("cmdHmlCustomTitleNoneSet", hml).send(player);
-                return;
-            }
-
-            String title = land.getTitle();
-            land.setTitle(null);
-            Message.create("cmdHmlCustomTitleRemoved", hml)
-                    .addPlaceholder("%TITLE%", title)
-                    .send(player);
-            return;
-        }
-
-        String title = Utils.arrayToString(args, 1, true);
-        land.setTitle(title);
-        Message.create("cmdHmlCustomTitleSet", hml)
-                .addPlaceholder("%TITLE%", title)
-                .send(player);
     }
 
     private void forceWGRefresh() {

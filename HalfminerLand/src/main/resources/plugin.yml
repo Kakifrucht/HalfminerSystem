@@ -40,6 +40,9 @@ permissions:
       - hml.cmd.teleport
       - hml.cmd.teleport.deleteothers
       - hml.cmd.teleport.unlimited
+      - hml.cmd.title
+      - hml.cmd.title.formatting
+      - hml.cmd.title.others
       - hml.ownsserverland
   hml.bypass.*:
     description: Access to all bypass permissions
@@ -107,5 +110,11 @@ permissions:
     description: Allows player to delete other players warps
   hml.cmd.teleport.unlimited:
     description: Allows the purchase of unlimited teleports
+  hml.cmd.title:
+    description: Allows setting land title messages that will be shown players actionbar
+  hml.cmd.title.formatting:
+    description: Allows using formatting codes in land title
+  hml.cmd.title.others:
+    description: Allows setting land titles for other players
   hml.ownsserverland:
     description: Players with this permission node are considered owners of land claimed for the server
