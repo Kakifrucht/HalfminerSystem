@@ -11,16 +11,16 @@
     </parent>
 
     <artifactId>HalfminerSystem</artifactId>
-    <version>${hms.version}</version>
+    <version>4.3.1-mc1_12</version>
 
     <repositories>
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+            <url>https://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
             <id>ess-repo</id>
-            <url>http://repo.ess3.net/content/groups/essentials</url>
+            <url>https://repo.essentialsx.net/releases/</url>
         </repository>
     </repositories>
 

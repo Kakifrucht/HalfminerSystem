@@ -359,8 +359,6 @@ localization:
   cmdHmcGiveListNone: '&cEs wurden keine Gegenstände definiert'
   cmdHmcGiveSuccessful: '&7Gebe &e%PLAYER% &a%AMOUNT% &7mal &e%ITEM%'
   cmdHmcHomeblockRemove: '&a%PLAYER% &7kann jetzt /home benutzen'
-  cmdHmcMotdFailed: '&cVerwendung: &f/hmc setmotd <motd>'
-  cmdHmcMotdUpdated: '&7Die MOTD wurde geändert zu: &r&7%NEWMOTD%'
   cmdHmcRenameDone: '&aDer Gegenstand wurde umbenannt in &r"%NAME%&r"'
   cmdHmcRenameFailed: '&cHalte den Gegenstand, den du umbenennen willst in deiner Hand'
   cmdHmcRunActionCacheError: '&cDie Aktion &e%ACTIONNAME% &ckonnte nicht geladen werden, Grund: %REASON%'
