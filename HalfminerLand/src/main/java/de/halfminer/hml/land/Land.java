@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -205,12 +206,13 @@ public class Land extends LandClass {
         if (newOwner != null) {
             mapSection.set(path + STORAGE_OWNER, newOwner.getUniqueId().toString());
         } else {
-            removeTeleport();
-            setFreeLand(false);
-            setServerLand(false);
-            setTitle(null);
             mapSection.set(path, null);
         }
+
+        removeTeleport();
+        setServerLand(false);
+        setFreeLand(false);
+        setTitle(null);
     }
 
     public boolean isProtected() {
@@ -364,6 +366,9 @@ public class Land extends LandClass {
     }
 
     public Set<UUID> getMemberSet() {
+        if (!hasOwner()) {
+            return Collections.emptySet();
+        }
         return wgh.getMemberList(this).getUniqueIds();
     }
 
