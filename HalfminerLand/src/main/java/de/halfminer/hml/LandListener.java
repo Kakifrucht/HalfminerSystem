@@ -65,22 +65,23 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
         // remove abandonment status if land is abandoned
         List<Land> ownedLands = board.getLands(player);
-        if (!ownedLands.isEmpty()) {
+        if (ownedLands.isEmpty()) {
+            return;
+        }
 
-            int count = 0;
-            for (Land ownedLand : ownedLands) {
-                if (ownedLand.isAbandoned()) {
-                    ownedLand.updateAbandonmentStatus();
-                    count++;
-                }
+        int count = 0;
+        for (Land ownedLand : ownedLands) {
+            if (ownedLand.isAbandoned()) {
+                ownedLand.updateAbandonmentStatus();
+                count++;
             }
+        }
 
-            if (count > 0) {
-                Message.create("listenerLandUnabandoned", hml)
-                        .addPlaceholder("%COUNT%", count)
-                        .addPlaceholder("%DAYSUNTILABANDONED%", hml.getConfig().getInt("landAbandonedAfterDays", 21))
-                        .send(player);
-            }
+        if (count > 0) {
+            Message.create("listenerLandUnabandoned", hml)
+                    .addPlaceholder("%COUNT%", count)
+                    .addPlaceholder("%DAYSUNTILABANDONED%", hml.getConfig().getInt("landAbandonedAfterDays", 21))
+                    .send(player);
         }
     }
 
@@ -123,92 +124,82 @@ public class LandListener extends LandClass implements Listener, Reloadable {
 
         Chunk previousChunk = lastKnownChunk.get(player);
         Chunk newChunk = to.getChunk();
-        if (!newChunk.equals(previousChunk)) {
+        if (newChunk.equals(previousChunk)) {
+            return;
+        }
 
-            lastKnownChunk.put(player, newChunk);
+        lastKnownChunk.put(player, newChunk);
 
-            Pair<Land, Land> previousAndNewLandPair = board.updatePlayerLocation(player, previousChunk, newChunk);
-            Land previousLand = previousAndNewLandPair.getLeft();
-            Land newLand = previousAndNewLandPair.getRight();
+        Pair<Land, Land> previousAndNewLandPair = board.updatePlayerLocation(player, previousChunk, newChunk);
+        Land previousLand = previousAndNewLandPair.getLeft();
+        Land newLand = previousAndNewLandPair.getRight();
 
-            String pvpMessageInTitle = "";
-            String spacer = "";
-            String ownerMessageInTitle = "";
+        String pvpMessageInTitle = "";
+        String spacer = "";
+        String ownerMessageInTitle = "";
 
-            boolean currentIsPvP = wgh.isPvPEnabled(to);
-            boolean pvpStateChanged = wgh.isPvPEnabled(from) ^ currentIsPvP;
+        boolean currentIsPvP = wgh.isPvPEnabled(to);
+        boolean pvpStateChanged = wgh.isPvPEnabled(from) ^ currentIsPvP;
 
-            if (pvpStateChanged) {
-                pvpMessageInTitle = Message.returnMessage("listenerPvP" + (currentIsPvP ? "On" : "Off"), hml, false);
-            }
+        if (pvpStateChanged) {
+            pvpMessageInTitle = Message.returnMessage("listenerPvP" + (currentIsPvP ? "On" : "Off"), hml, false);
+        }
 
-            if (!newLand.hasOwner()) {
+        if (!newLand.hasOwner() && (previousLand.hasOwner() || newLand.isProtected() != previousLand.isProtected())) {
+            String messageKey = "listenerOwner" + (newLand.isProtected() ? "Protected" : "Free");
+            ownerMessageInTitle = Message.returnMessage(messageKey, hml, false);
+        } else if (newLand.hasOwner() && hasDifferentOwner(newLand, previousLand)) {
+            String messageKey = "listenerOwnerOwned" + (newLand.isAbandoned() ? "Abandoned" : "");
+            ownerMessageInTitle = Message.create(messageKey, hml)
+                    .togglePrefix()
+                    .addPlaceholder("%OWNER%", newLand.getOwnerName())
+                    .returnMessage();
+        }
 
-                boolean newLandIsFree = wgh.isLandFree(newLand);
+        // add spacer if necessary
+        if (pvpStateChanged && !ownerMessageInTitle.isEmpty()) {
+            spacer = Message.returnMessage("listenerFormatSpacer", hml, false);
+        }
 
-                if (previousLand.hasOwner() || (newLandIsFree != wgh.isLandFree(previousLand))) {
-                    String messageKey = "listenerOwner" + (newLandIsFree ? "Free" : "Protected");
-                    ownerMessageInTitle = Message.returnMessage(messageKey, hml, false);
-                }
+        if (pvpStateChanged || !ownerMessageInTitle.isEmpty()) {
+            hms.getTitlesHandler().sendTitle(player, Message.create("listenerFormatTitle", hml)
+                    .togglePrefix()
+                    .addPlaceholder("%PVPLINE%", pvpMessageInTitle)
+                    .addPlaceholder("%SPACER%", spacer)
+                    .addPlaceholder("%OWNERLINE%", ownerMessageInTitle)
+                    .returnMessage(), 0, 40, 10);
+        }
 
-            } else if (newLand.hasOwner() && hasDifferentOwner(newLand, previousLand)) {
+        // toggle flying if entering/leaving owned land
+        board.getFlyBoard().updatePlayerAllowFlight(player, newLand);
 
-                ownerMessageInTitle = Message.create("listenerOwnerOwned" + (newLand.isAbandoned() ? "Abandoned" : ""), hml)
-                        .togglePrefix()
-                        .addPlaceholder("%OWNER%", newLand.getOwnerName())
-                        .returnMessage();
-            }
+        // update currently shown title
+        titleActionbarHandler.updateLocation(player, newLand);
 
-            // add spacer if necessary
-            if (pvpStateChanged && !ownerMessageInTitle.isEmpty()) {
-                spacer = Message.returnMessage("listenerFormatSpacer", hml, false);
-            }
-
-            if (pvpStateChanged || !ownerMessageInTitle.isEmpty()) {
-
-                hms.getTitlesHandler().sendTitle(player, Message.create("listenerFormatTitle", hml)
-                        .togglePrefix()
-                        .addPlaceholder("%PVPLINE%", pvpMessageInTitle)
-                        .addPlaceholder("%SPACER%", spacer)
-                        .addPlaceholder("%OWNERLINE%", ownerMessageInTitle)
-                        .returnMessage(), 0, 40, 10);
-            }
-
-            // toggle flying if entering/leaving owned land
-            board.getFlyBoard().updatePlayerAllowFlight(player, newLand);
-
-            // update currently shown title
-            titleActionbarHandler.updateLocation(player, newLand);
-
-            // disable elytra if crossing into land without permissions
-            if (player.isGliding() && !newLand.hasPermission(player)) {
-                player.setGliding(false);
-            }
+        // disable elytra if crossing into land without permissions
+        if (player.isGliding() && !newLand.hasPermission(player)) {
+            player.setGliding(false);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent e) {
 
-        if (e.getPlayer().hasPermission("hml.bypass.cmd")) {
+        // check for blocked cmds on land
+        Land currentLand = board.getLandAt(e.getPlayer());
+        if (currentLand.hasPermission(e.getPlayer())) {
             return;
         }
 
-        // check for blocked cmds on land
-        Land currentLand = board.getLandAt(e.getPlayer());
-        if (!currentLand.hasPermission(e.getPlayer())) {
+        String command = e.getMessage().substring(1).toLowerCase();
+        for (String blockedCmd : blockedCmds) {
 
-            String command = e.getMessage().substring(1).toLowerCase();
-
-            for (String blockedCmd : blockedCmds) {
-
-                if (command.startsWith(blockedCmd)) {
-                    e.setCancelled(true);
-                    Message.create("listenerCmdBlocked", hml)
-                            .addPlaceholder("%OWNER%", currentLand.getOwnerName())
-                            .send(e.getPlayer());
-                    return;
-                }
+            if (command.startsWith(blockedCmd)) {
+                e.setCancelled(true);
+                Message.create("listenerCmdBlocked", hml)
+                        .addPlaceholder("%OWNER%", currentLand.getOwnerName())
+                        .send(e.getPlayer());
+                return;
             }
         }
     }
@@ -226,10 +217,6 @@ public class LandListener extends LandClass implements Listener, Reloadable {
     }
 
     private boolean sendNoBreakPermissionMessage(BlockEvent e, Player player) {
-
-        if (player.hasPermission("hml.bypass.breakplace")) {
-            return false;
-        }
 
         Land land = board.getLandAt(e.getBlock().getLocation());
         if (!land.hasPermission(player)) {
@@ -407,9 +394,7 @@ public class LandListener extends LandClass implements Listener, Reloadable {
         }
         Player player = (Player) e.getEntity();
         Land land = board.getLandAt(player);
-        if (!land.hasPermission(player)) {
-            e.setCancelled(true);
-        }
+        e.setCancelled(!land.hasPermission(player));
     }
 
     private boolean hasDifferentOwner(Land landA, Land landB) {

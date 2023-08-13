@@ -38,6 +38,10 @@ public class WorldGuardHelper {
         this.wg = (WorldGuardPlugin) pluginManager.getPlugin("WorldGuard");
     }
 
+    /**
+     * @param land land to check
+     * @return true if land contains no worldguard regions, false if it does
+     */
     public boolean isLandFree(Land land) {
         RegionManager regionManager = wg.getRegionManager(land.getWorld());
         return regionManager.getApplicableRegions(createRegionFromChunk(land.getChunk())).size() == 0;
@@ -151,7 +155,7 @@ public class WorldGuardHelper {
 
         ProtectedRegion region = getRegionFromRegionManager(land.getChunk());
         if (region == null) {
-            throw new IllegalStateException("Region for land " + land.toString() + " not found");
+            throw new IllegalStateException("Region for land " + land + " not found");
         }
 
         return region.getMembers();

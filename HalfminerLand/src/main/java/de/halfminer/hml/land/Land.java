@@ -70,7 +70,7 @@ public class Land extends LandClass {
                 try {
                     owner = hms.getStorageHandler().getPlayer(UUID.fromString(uuidString));
                 } catch (PlayerNotFoundException e) {
-                    hml.getLogger().warning("Player with UUID " + uuidString + "' not found, skipping land at " + toString());
+                    hml.getLogger().warning("Player with UUID " + uuidString + "' not found, skipping land at " + this);
                 }
             }
 
@@ -125,7 +125,7 @@ public class Land extends LandClass {
                 return BuyableStatus.ALREADY_OWNED;
             }
 
-            if (!wgh.isLandFree(this)) {
+            if (isProtected()) {
                 return BuyableStatus.LAND_NOT_BUYABLE;
             }
         }
@@ -211,6 +211,10 @@ public class Land extends LandClass {
             setTitle(null);
             mapSection.set(path, null);
         }
+    }
+
+    public boolean isProtected() {
+        return !hasOwner() && !wgh.isLandFree(this);
     }
 
     public void setFreeLand(boolean isFreeLand) {
@@ -325,7 +329,7 @@ public class Land extends LandClass {
         if (playersOnLand > 0) {
             playersOnLand--;
         } else {
-            hml.getLogger().warning("playerLeft() method called for already empty land (" + toString() + ")");
+            hml.getLogger().warning("playerLeft() method called for already empty land (" + this + ")");
         }
     }
 
@@ -348,13 +352,15 @@ public class Land extends LandClass {
      * Check if a player can interact on this land.
      *
      * @param player to check
-     * @return true if land is not owned, abandoned, player is land owner or added as member of land
+     * @return true if land is not owned and not protected, abandoned, player is landowner,
+     *              added as member of land or has bypass permission
      */
     public boolean hasPermission(Player player) {
-        return !hasOwner()
+        return (!hasOwner() && !isProtected())
                 || isOwner(player)
                 || isAbandoned()
-                || wgh.getMemberList(this).getUniqueIds().contains(player.getUniqueId());
+                || player.hasPermission("hml.bypass.permission")
+                || getMemberSet().contains(player.getUniqueId());
     }
 
     public Set<UUID> getMemberSet() {
